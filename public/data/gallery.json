@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "the-peoples-comics-1-1771798765",
+      "title": "The Peoples Comics",
+      "slug": "the-peoples-comics",
+      "issue": 1,
+      "year": 1972,
+      "artist": "",
+      "image": "images/the-peoples-comics/issue-1-1771798765.jpg",
+      "notes": "static camera, schlub, cross-hatching",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:19:26.066Z"
+    },
+    {
       "id": "weird-magazine-10-1771798474",
       "title": "Weird Magazine",
       "slug": "weird-magazine",
