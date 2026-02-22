@@ -23,7 +23,7 @@ export default function App() {
     <div className="min-h-screen bg-surface">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-b border-ink-faint/30">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="content-container px-4 py-4 flex items-center justify-between">
           <h1 className="font-display text-xl tracking-tight text-ink">
             COMIC SNAPS
           </h1>
@@ -36,7 +36,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main className="max-w-6xl mx-auto px-1 pt-1 pb-12 sm:px-4 sm:pt-4">
+      <main className="content-container px-1 pt-1 pb-12 sm:px-4 sm:pt-4">
         {status === "loading" && <LoadingState />}
         {status === "error" && <ErrorState />}
         {status === "ready" && panels.length === 0 && <EmptyState />}

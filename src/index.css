@@ -92,3 +92,9 @@ body {
     transition-all duration-150 ease-out
     active:scale-95;
 }
+
+.content-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
