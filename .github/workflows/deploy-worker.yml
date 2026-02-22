@@ -12,13 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
           node-version: "22"
 
       - name: Install dependencies
         working-directory: worker
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Deploy to Cloudflare Workers
         working-directory: worker
