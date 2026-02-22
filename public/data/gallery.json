@@ -1,6 +1,21 @@
 {
   "panels": [
     {
+      "id": "minor-arcana-14-1771799033",
+      "title": "Minor Arcana",
+      "slug": "minor-arcana",
+      "issue": 14,
+      "year": 2026,
+      "artist": "Jeff Lemire",
+      "image": "images/minor-arcana/issue-14-1771799033.jpg",
+      "notes": null,
+      "tags": [
+        "watercolor"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:23:54.317Z"
+    },
+    {
       "id": "the-peoples-comics-1-1771798765",
       "title": "The Peoples Comics",
       "slug": "the-peoples-comics",
