@@ -85,10 +85,14 @@
       "slug": "the-peoples-comics",
       "issue": 1,
       "year": 1972,
-      "artist": "",
+      "artist": "Robert Crumb",
       "image": "images/the-peoples-comics/issue-1-1771798765.jpg",
-      "notes": "static camera, schlub, cross-hatching",
-      "tags": [],
+      "notes": "",
+      "tags": [
+        "static camera",
+        "schlub",
+        "cross-hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-22T22:19:26.066Z"
     },
