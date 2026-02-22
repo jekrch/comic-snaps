@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "weird-magazine-10-1771798474",
+      "title": "Weird Magazine",
+      "slug": "weird-magazine",
+      "issue": 10,
+      "year": 1984,
+      "artist": "Peter Bagge",
+      "image": "images/weird-magazine/issue-10-1771798474.jpg",
+      "notes": null,
+      "tags": [
+        "callout",
+        "infographic"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:14:35.151Z"
+    },
+    {
       "id": "thumpn-guts-1-1771798062",
       "title": "Thumpn Guts",
       "slug": "thumpn-guts",
