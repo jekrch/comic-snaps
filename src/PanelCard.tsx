@@ -12,7 +12,8 @@ export default function PanelCard({ panel }: Props) {
   return (
     <>
       <div
-        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised isolate"
+        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
+        style={{ WebkitMaskImage: 'radial-gradient(white, white)' }}
         onDoubleClick={() => setViewerOpen(true)}
       >
         <img
