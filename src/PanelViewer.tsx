@@ -6,24 +6,97 @@ interface Props {
   onClose: () => void;
 }
 
+interface Transform {
+  scale: number;
+  x: number;
+  y: number;
+}
+
 export default function PanelViewer({ panel, onClose }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
-  const [scale, setScale] = useState(1);
-  const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [translateStart, setTranslateStart] = useState({ x: 0, y: 0 });
-  const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
-  const [pinchStartScale, setPinchStartScale] = useState(1);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Use a ref for the live transform to avoid re-renders during gestures.
+  // The `displayScale` state is only for UI elements (zoom %, button states).
+  const [displayScale, setDisplayScale] = useState(1);
+  const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Gesture tracking refs — no re-renders during active gestures
+  const gestureRef = useRef<{
+    isDragging: boolean;
+    pointerStart: { x: number; y: number };
+    translateStart: { x: number; y: number };
+    pinchStartDist: number | null;
+    pinchStartScale: number;
+    pinchMidpoint: { x: number; y: number } | null;
+    lastTouchPos: { x: number; y: number } | null;
+  }>({
+    isDragging: false,
+    pointerStart: { x: 0, y: 0 },
+    translateStart: { x: 0, y: 0 },
+    pinchStartDist: null,
+    pinchStartScale: 1,
+    pinchMidpoint: null,
+    lastTouchPos: null,
+  });
 
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
 
-  // Animate in on mount
+  // Detect touch device
+  useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  // Apply transform directly to DOM — no React render cycle
+  const applyTransform = useCallback((t: Transform, animate = false) => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (animate) {
+      img.style.transition = "transform 0.2s ease-out";
+    } else {
+      img.style.transition = "none";
+    }
+    img.style.transform = `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
+  }, []);
+
+  const setTransform = useCallback(
+    (t: Transform, animate = false) => {
+      transformRef.current = t;
+      applyTransform(t, animate);
+      // Update display scale for UI (debounced via rAF is fine since this is just for buttons)
+      setDisplayScale(t.scale);
+    },
+    [applyTransform]
+  );
+
+  const resetTransform = useCallback(() => {
+    setTransform({ scale: 1, x: 0, y: 0 }, true);
+  }, [setTransform]);
+
+  // Clamp translation so the image doesn't drift too far off-screen
+  const clampTranslate = useCallback(
+    (x: number, y: number, scale: number): { x: number; y: number } => {
+      const img = imgRef.current;
+      if (!img || scale <= 1) return { x: 0, y: 0 };
+      const rect = img.getBoundingClientRect();
+      const baseW = rect.width / transformRef.current.scale;
+      const baseH = rect.height / transformRef.current.scale;
+      const maxX = ((scale - 1) * baseW) / 2;
+      const maxY = ((scale - 1) * baseH) / 2;
+      return {
+        x: Math.max(-maxX, Math.min(maxX, x)),
+        y: Math.max(-maxY, Math.min(maxY, y)),
+      };
+    },
+    []
+  );
+
+  // Animate in
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
   }, []);
@@ -43,139 +116,164 @@ export default function PanelViewer({ panel, onClose }: Props) {
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose]);
 
-  // Lock body scroll
+  // Lock body scroll and prevent overscroll/bounce on iOS
   useEffect(() => {
     const prev = document.body.style.overflow;
+    const prevTouch = document.body.style.touchAction;
     document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+
+    // Prevent iOS Safari rubber-banding
+    const preventScroll = (e: TouchEvent) => {
+      if (containerRef.current?.contains(e.target as Node)) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+
     return () => {
       document.body.style.overflow = prev;
+      document.body.style.touchAction = prevTouch;
+      document.removeEventListener("touchmove", preventScroll);
     };
   }, []);
 
-  // Reset transform
-  const resetTransform = useCallback(() => {
-    setScale(1);
-    setTranslate({ x: 0, y: 0 });
-  }, []);
-
-  // Scroll / wheel zoom
+  // --- Wheel zoom (desktop) ---
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
       e.preventDefault();
+      const t = transformRef.current;
       const delta = e.deltaY > 0 ? -0.15 : 0.15;
-      setScale((prev) => {
-        const next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, prev + delta));
-        if (next <= 1) setTranslate({ x: 0, y: 0 });
-        return next;
-      });
+      const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t.scale + delta));
+      const clamped = nextScale <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, nextScale);
+      setTransform({ scale: nextScale, ...clamped });
     },
-    []
+    [setTransform, clampTranslate]
   );
 
-  // Double-click/tap to toggle zoom
+  // --- Double click/tap toggle ---
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (scale > 1) {
+      if (transformRef.current.scale > 1) {
         resetTransform();
       } else {
-        setScale(2.5);
+        setTransform({ scale: 2.5, x: 0, y: 0 }, true);
       }
     },
-    [scale, resetTransform]
+    [resetTransform, setTransform]
   );
 
-  // --- Mouse drag ---
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      if (scale <= 1) return;
-      // Only handle single pointer (mouse or single touch)
-      if (e.pointerType === "touch") return; // Touch handled separately for pinch
-      e.preventDefault();
-      setIsDragging(true);
-      setDragStart({ x: e.clientX, y: e.clientY });
-      setTranslateStart({ ...translate });
-    },
-    [scale, translate]
-  );
+  // --- Mouse drag (desktop) ---
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (transformRef.current.scale <= 1) return;
+    if (e.pointerType === "touch") return;
+    e.preventDefault();
+    const g = gestureRef.current;
+    g.isDragging = true;
+    g.pointerStart = { x: e.clientX, y: e.clientY };
+    g.translateStart = { x: transformRef.current.x, y: transformRef.current.y };
+  }, []);
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
-      if (!isDragging) return;
-      if (e.pointerType === "touch") return;
-      const dx = e.clientX - dragStart.x;
-      const dy = e.clientY - dragStart.y;
-      setTranslate({
-        x: translateStart.x + dx,
-        y: translateStart.y + dy,
-      });
+      const g = gestureRef.current;
+      if (!g.isDragging || e.pointerType === "touch") return;
+      const dx = e.clientX - g.pointerStart.x;
+      const dy = e.clientY - g.pointerStart.y;
+      const t = transformRef.current;
+      const clamped = clampTranslate(g.translateStart.x + dx, g.translateStart.y + dy, t.scale);
+      setTransform({ scale: t.scale, ...clamped });
     },
-    [isDragging, dragStart, translateStart]
+    [setTransform, clampTranslate]
   );
 
   const handlePointerUp = useCallback(() => {
-    setIsDragging(false);
+    gestureRef.current.isDragging = false;
   }, []);
 
-  // --- Touch: drag + pinch ---
-  const touchRef = useRef<{ lastX: number; lastY: number } | null>(null);
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 2) {
-        // Pinch start
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        setPinchStartDist(dist);
-        setPinchStartScale(scale);
-        touchRef.current = null;
-      } else if (e.touches.length === 1 && scale > 1) {
-        // Pan start
-        touchRef.current = {
-          lastX: e.touches[0].clientX,
-          lastY: e.touches[0].clientY,
-        };
-      }
-    },
-    [scale]
-  );
+  // --- Touch: pinch + pan ---
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const g = gestureRef.current;
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      g.pinchStartDist = Math.hypot(dx, dy);
+      g.pinchStartScale = transformRef.current.scale;
+      g.pinchMidpoint = {
+        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+        y: (e.touches[0].clientY + e.touches[1].clientY) / 2,
+      };
+      g.lastTouchPos = null;
+    } else if (e.touches.length === 1 && transformRef.current.scale > 1) {
+      g.lastTouchPos = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    }
+  }, []);
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
-      e.preventDefault();
-      if (e.touches.length === 2 && pinchStartDist !== null) {
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        const ratio = dist / pinchStartDist;
-        const next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, pinchStartScale * ratio));
-        setScale(next);
-        if (next <= 1) setTranslate({ x: 0, y: 0 });
-      } else if (e.touches.length === 1 && touchRef.current && scale > 1) {
-        const dx = e.touches[0].clientX - touchRef.current.lastX;
-        const dy = e.touches[0].clientY - touchRef.current.lastY;
-        touchRef.current = {
-          lastX: e.touches[0].clientX,
-          lastY: e.touches[0].clientY,
-        };
-        setTranslate((prev) => ({
-          x: prev.x + dx,
-          y: prev.y + dy,
-        }));
+      const g = gestureRef.current;
+
+      if (e.touches.length === 2 && g.pinchStartDist !== null) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        const ratio = dist / g.pinchStartDist;
+        const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, g.pinchStartScale * ratio));
+        const t = transformRef.current;
+        const clamped =
+          nextScale <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, nextScale);
+
+        // Apply directly to DOM — no setState
+        const next = { scale: nextScale, ...clamped };
+        transformRef.current = next;
+        applyTransform(next);
+        // Throttled UI update
+        setDisplayScale(nextScale);
+      } else if (e.touches.length === 1 && g.lastTouchPos && transformRef.current.scale > 1) {
+        const touch = e.touches[0];
+        const dx = touch.clientX - g.lastTouchPos.x;
+        const dy = touch.clientY - g.lastTouchPos.y;
+        g.lastTouchPos = { x: touch.clientX, y: touch.clientY };
+
+        const t = transformRef.current;
+        const clamped = clampTranslate(t.x + dx, t.y + dy, t.scale);
+        const next = { scale: t.scale, ...clamped };
+        transformRef.current = next;
+        applyTransform(next);
       }
     },
-    [pinchStartDist, pinchStartScale, scale]
+    [applyTransform, clampTranslate]
   );
 
-  const handleTouchEnd = useCallback(() => {
-    setPinchStartDist(null);
-    touchRef.current = null;
-  }, []);
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const g = gestureRef.current;
+      g.pinchStartDist = null;
+      g.pinchMidpoint = null;
 
-  const isZoomed = scale > 1;
+      // If all fingers lifted while zoomed out, snap back
+      if (e.touches.length === 0 && transformRef.current.scale <= 1) {
+        resetTransform();
+      }
+
+      // If one finger remains after pinch, start panning from that finger
+      if (e.touches.length === 1 && transformRef.current.scale > 1) {
+        g.lastTouchPos = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+        };
+      } else {
+        g.lastTouchPos = null;
+      }
+    },
+    [resetTransform]
+  );
+
+  const isZoomed = displayScale > 1;
 
   return (
     <div
@@ -185,6 +283,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
         transition-all duration-250 ease-out
         ${visible && !closing ? "bg-black/90 backdrop-blur-sm" : "bg-black/0 backdrop-blur-0"}
       `}
+      style={{ touchAction: "none" }}
       onClick={(e) => {
         if (e.target === containerRef.current) handleClose();
       }}
@@ -192,15 +291,16 @@ export default function PanelViewer({ panel, onClose }: Props) {
       aria-modal="true"
       aria-label={`${panel.title} #${panel.issue} — full view`}
     >
-      {/* Top bar */}
+      {/* Top bar — always above image content via z-20 */}
       <div
         className={`
-          absolute top-0 inset-x-0 z-10 flex items-center justify-between
+          absolute top-0 inset-x-0 z-20 flex items-center justify-between
           px-4 py-3 sm:px-6 sm:py-4
-          bg-gradient-to-b from-black/60 to-transparent
+          bg-gradient-to-b from-black/70 via-black/40 to-transparent
           transition-all duration-250 ease-out
           ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}
         `}
+        style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <div className="min-w-0 flex-1">
           <p className="font-display text-sm text-white/90 truncate">
@@ -212,7 +312,6 @@ export default function PanelViewer({ panel, onClose }: Props) {
         </div>
 
         <div className="flex items-center gap-1 ml-3 shrink-0">
-          {/* Zoom indicator */}
           {isZoomed && (
             <button
               onClick={(e) => {
@@ -222,15 +321,17 @@ export default function PanelViewer({ panel, onClose }: Props) {
               className="viewer-btn text-[11px] tabular-nums"
               title="Reset zoom"
             >
-              {Math.round(scale * 100)}%
+              {Math.round(displayScale * 100)}%
             </button>
           )}
 
-          {/* Zoom in */}
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setScale((s) => Math.min(MAX_SCALE, s + 0.5));
+              const t = transformRef.current;
+              const next = Math.min(MAX_SCALE, t.scale + 0.5);
+              const clamped = clampTranslate(t.x, t.y, next);
+              setTransform({ scale: next, ...clamped }, true);
             }}
             className="viewer-btn"
             title="Zoom in"
@@ -242,15 +343,13 @@ export default function PanelViewer({ panel, onClose }: Props) {
             </svg>
           </button>
 
-          {/* Zoom out */}
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setScale((s) => {
-                const next = Math.max(MIN_SCALE, s - 0.5);
-                if (next <= 1) setTranslate({ x: 0, y: 0 });
-                return next;
-              });
+              const t = transformRef.current;
+              const next = Math.max(MIN_SCALE, t.scale - 0.5);
+              const clamped = next <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, next);
+              setTransform({ scale: next, ...clamped }, true);
             }}
             className="viewer-btn"
             title="Zoom out"
@@ -262,7 +361,6 @@ export default function PanelViewer({ panel, onClose }: Props) {
             </svg>
           </button>
 
-          {/* Close */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -278,17 +376,20 @@ export default function PanelViewer({ panel, onClose }: Props) {
         </div>
       </div>
 
-      {/* Image container */}
+      {/* Image container — z-10, clipped so scaled image doesn't cover controls */}
       <div
-        ref={imageRef}
         className={`
-          relative select-none
-          transition-all duration-250 ease-out
-          ${visible && !closing ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+          relative z-10 select-none overflow-hidden
+          transition-opacity duration-250 ease-out
+          ${visible && !closing ? "opacity-100" : "opacity-0"}
           ${isZoomed ? "cursor-grab" : "cursor-zoom-in"}
-          ${isDragging ? "!cursor-grabbing" : ""}
+          ${gestureRef.current.isDragging ? "!cursor-grabbing" : ""}
         `}
-        style={{ maxWidth: "92vw", maxHeight: "85vh" }}
+        style={{
+          maxWidth: "92vw",
+          maxHeight: "85vh",
+          touchAction: "none",
+        }}
         onWheel={handleWheel}
         onDoubleClick={handleDoubleClick}
         onPointerDown={handlePointerDown}
@@ -300,29 +401,32 @@ export default function PanelViewer({ panel, onClose }: Props) {
         onTouchEnd={handleTouchEnd}
       >
         <img
+          ref={imgRef}
           src={`${import.meta.env.BASE_URL}${panel.image}`}
           alt={`${panel.title} #${panel.issue}`}
           className="block max-w-[92vw] max-h-[85vh] w-auto h-auto object-contain rounded-sm"
           style={{
-            transform: `scale(${scale}) translate(${translate.x / scale}px, ${translate.y / scale}px)`,
-            transition: isDragging || pinchStartDist !== null ? "none" : "transform 0.2s ease-out",
+            transform: `scale(${transformRef.current.scale}) translate(${transformRef.current.x / transformRef.current.scale}px, ${transformRef.current.y / transformRef.current.scale}px)`,
             willChange: "transform",
           }}
           draggable={false}
         />
       </div>
 
-      {/* Bottom hint — shown briefly */}
+      {/* Bottom hint — context-aware for touch vs desktop */}
       {!isZoomed && (
         <div
           className={`
-            absolute bottom-4 inset-x-0 text-center pointer-events-none
+            absolute bottom-4 inset-x-0 text-center pointer-events-none z-20
             transition-all duration-250 ease-out
             ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
           `}
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <span className="text-[11px] text-white/30 tracking-wide">
-            scroll to zoom · double-click to enlarge · esc to close
+            {isTouchDevice
+              ? "pinch to zoom · double-tap to enlarge"
+              : "scroll to zoom · double-click to enlarge · esc to close"}
           </span>
         </div>
       )}
