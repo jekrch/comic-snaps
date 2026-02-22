@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "zap-1-1771799973",
+      "title": "Zap",
+      "slug": "zap",
+      "issue": 1,
+      "year": 1967,
+      "artist": "Robert Crumb",
+      "image": "images/zap/issue-1-1771799973.jpg",
+      "notes": null,
+      "tags": [
+        "grid",
+        "emanata",
+        "title-card"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:39:34.455Z"
+    },
+    {
       "id": "buzz-1-1771799398",
       "title": "Buzz",
       "slug": "buzz",
