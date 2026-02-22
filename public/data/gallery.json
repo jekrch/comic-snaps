@@ -1,0 +1,16 @@
+{
+  "panels": [
+    {
+      "id": "xyz-1-1771793421",
+      "title": "XYZ",
+      "slug": "xyz",
+      "issue": 1,
+      "year": 1972,
+      "artist": "Robert Crumb",
+      "image": "images/xyz/issue-1-1771793421.jpg",
+      "notes": null,
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T20:50:22.606Z"
+    }
+  ]
+}
