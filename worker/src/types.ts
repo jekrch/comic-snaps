@@ -55,6 +55,7 @@ export interface PanelMetadata {
   year: number;
   artist: string;
   notes: string | null;
+  tags: string[];
 }
 
 export interface PanelEntry extends PanelMetadata {

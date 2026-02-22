@@ -20,7 +20,7 @@ When a photo is sent to the Telegram group with a structured caption, the Worker
 ## Caption format
 
 ```
-Title // Issue # // Year // Artist // optional notes
+Title // Issue # // Year // Artist // optional notes // tag1, tag2, tag3
 ```
 
 A freeform fallback (`Saga #1 2012 Fiona Staples`) is also supported.

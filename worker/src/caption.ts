@@ -4,9 +4,15 @@ import type { PanelMetadata } from "./types";
  * Parse a Telegram caption into structured panel metadata.
  *
  * Primary format (// delimited):
- *   Title // Issue // Year // Artist // optional notes
+ *   Title // Issue // Year // Artist // optional notes // optional tags
  *
- * Fallback format (freeform):
+ * Tags are comma-separated and stored as an array:
+ *   Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera, BKV
+ *
+ * To include tags without notes, leave the notes segment empty:
+ *   Saga // 1 // 2012 // Fiona Staples // // sci-fi, space opera
+ *
+ * Fallback format (freeform, no notes/tags support):
  *   Title #Issue Year Artist
  */
 export function parseCaption(caption: string): PanelMetadata {
@@ -19,8 +25,10 @@ export function parseCaption(caption: string): PanelMetadata {
       if (isNaN(issue)) throw new Error(`Invalid issue number: "${parts[1]}"`);
       if (isNaN(year)) throw new Error(`Invalid year: "${parts[2]}"`);
 
-      const notes = parts.length > 4 ? parts.slice(4).join(" // ") : null;
-      return { title: parts[0], issue, year, artist: parts[3], notes };
+      const notes = parts.length > 4 && parts[4] !== "" ? parts[4] : null;
+      const tags = parts.length > 5 ? parseTags(parts[5]) : [];
+
+      return { title: parts[0], issue, year, artist: parts[3], notes, tags };
     }
   }
 
@@ -32,12 +40,21 @@ export function parseCaption(caption: string): PanelMetadata {
       year: parseInt(match[3], 10),
       artist: match[4].trim(),
       notes: null,
+      tags: [],
     };
   }
 
   throw new Error(
     `Could not parse caption: "${caption}"\n\nExpected format:\nTitle // Issue # // Year // Artist`
   );
+}
+
+/** Parse a comma-separated tag string into a trimmed, non-empty array. */
+function parseTags(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((t) => t.trim())
+    .filter((t) => t.length > 0);
 }
 
 /** Convert a title into a URL-safe slug. */

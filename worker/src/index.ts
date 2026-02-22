@@ -33,7 +33,7 @@ export default {
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue # // Year // Artist\n\nExample:\nSaga // 1 // 2012 // Fiona Staples"
+        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue # // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera"
       );
       return new Response("OK");
     }
@@ -82,6 +82,7 @@ export default {
         artist: metadata.artist,
         image: browserImagePath,
         notes: metadata.notes,
+        tags: metadata.tags,
         postedBy,
         addedAt: new Date().toISOString(),
       };
@@ -89,11 +90,12 @@ export default {
 
       // 7. Confirm via Telegram
       const notesLine = metadata.notes ? `\n  Notes: ${metadata.notes}` : "";
+      const tagsLine = metadata.tags.length > 0 ? `\n  Tags: ${metadata.tags.join(", ")}` : "";
       await sendReply(
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        `Added to gallery:\n  ${metadata.title} #${metadata.issue} (${metadata.year})\n  Artist: ${metadata.artist}${notesLine}\n  → ${browserImagePath}`
+        `Added to gallery:\n  ${metadata.title} #${metadata.issue} (${metadata.year})\n  Artist: ${metadata.artist}${notesLine}${tagsLine}\n  → ${browserImagePath}`
       );
     } catch (err) {
       const errorMessage =
