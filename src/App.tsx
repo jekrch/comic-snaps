@@ -7,7 +7,7 @@ export default function App() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
-    fetch("/data/gallery.json")
+    fetch(`${import.meta.env.BASE_URL}data/gallery.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`${res.status}`);
         return res.json() as Promise<Gallery>;

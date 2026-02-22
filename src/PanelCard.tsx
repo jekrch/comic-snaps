@@ -8,7 +8,7 @@ export default function PanelCard({ panel }: Props) {
   return (
     <div className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised">
       <img
-        src={`/${panel.image}`}
+        src={`${import.meta.env.BASE_URL}${panel.image}`}
         alt={`${panel.title} #${panel.issue}`}
         loading="lazy"
         className="block w-full"
