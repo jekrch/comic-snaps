@@ -1,0 +1,7 @@
+name = "comic-snaps-bot"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[vars]
+TELEGRAM_ALLOWED_CHAT_ID = "-5111065293"
+GITHUB_REPO = "jekrch/comic-snaps"
