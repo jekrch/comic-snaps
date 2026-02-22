@@ -376,18 +376,18 @@ export default function PanelViewer({ panel, onClose }: Props) {
         </div>
       </div>
 
-      {/* Image container — z-10, clipped so scaled image doesn't cover controls */}
+      {/* Image container — z-10, overflow visible when zoomed to use full screen */}
       <div
         className={`
-          relative z-10 select-none overflow-hidden
+          relative z-10 select-none
           transition-opacity duration-250 ease-out
           ${visible && !closing ? "opacity-100" : "opacity-0"}
-          ${isZoomed ? "cursor-grab" : "cursor-zoom-in"}
+          ${isZoomed ? "cursor-grab overflow-visible" : "cursor-zoom-in overflow-hidden"}
           ${gestureRef.current.isDragging ? "!cursor-grabbing" : ""}
         `}
         style={{
-          maxWidth: "92vw",
-          maxHeight: "85vh",
+          maxWidth: "96vw",
+          maxHeight: "94vh",
           touchAction: "none",
         }}
         onWheel={handleWheel}
@@ -404,7 +404,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
           ref={imgRef}
           src={`${import.meta.env.BASE_URL}${panel.image}`}
           alt={`${panel.title} #${panel.issue}`}
-          className="block max-w-[92vw] max-h-[85vh] w-auto h-auto object-contain rounded-sm"
+          className="block max-w-[96vw] max-h-[94vh] w-auto h-auto object-contain rounded-sm"
           style={{
             transform: `scale(${transformRef.current.scale}) translate(${transformRef.current.x / transformRef.current.scale}px, ${transformRef.current.y / transformRef.current.scale}px)`,
             willChange: "transform",
