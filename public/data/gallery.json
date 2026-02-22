@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "thumpn-guts-1-1771798062",
+      "title": "Thumpn Guts",
+      "slug": "thumpn-guts",
+      "issue": 1,
+      "year": 1993,
+      "artist": "Kevin Eastman",
+      "image": "images/thumpn-guts/issue-1-1771798062.jpg",
+      "notes": null,
+      "tags": [
+        "claustrophobic",
+        "sound effects"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:07:43.420Z"
+    },
+    {
       "id": "tales-of-ordinary-madness-2-1771797519",
       "title": "Tales of Ordinary Madness",
       "slug": "tales-of-ordinary-madness",
