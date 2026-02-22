@@ -83,3 +83,12 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+.viewer-btn {
+  @apply flex items-center justify-center
+    h-8 min-w-8 px-2
+    rounded-md bg-white/10 backdrop-blur-sm
+    text-white/70 hover:text-white hover:bg-white/20
+    transition-all duration-150 ease-out
+    active:scale-95;
+}
