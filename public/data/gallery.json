@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "buzz-1-1771799398",
+      "title": "Buzz",
+      "slug": "buzz",
+      "issue": 1,
+      "year": 1990,
+      "artist": "Daniel Clowes",
+      "image": "images/buzz/issue-1-1771799398.jpg",
+      "notes": null,
+      "tags": [
+        "title-card",
+        "clear line",
+        "lettering"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:29:59.985Z"
+    },
+    {
       "id": "minor-arcana-14-1771799033",
       "title": "Minor Arcana",
       "slug": "minor-arcana",
