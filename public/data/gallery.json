@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "zap-2-1771800991",
+      "title": "Zap",
+      "slug": "zap",
+      "issue": 2,
+      "year": 1968,
+      "artist": "Victor Moscoso",
+      "image": "images/zap/issue-2-1771800991.jpg",
+      "notes": null,
+      "tags": [
+        "stippling",
+        "grid",
+        "surrealism"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T22:56:32.138Z"
+    },
+    {
       "id": "zap-1-1771799973",
       "title": "Zap",
       "slug": "zap",
