@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "concrete-fragile-creature-1-1771801274",
+      "title": "Concrete: Fragile Creature",
+      "slug": "concrete-fragile-creature",
+      "issue": 1,
+      "year": 1991,
+      "artist": "Paul Chadwick",
+      "image": "images/concrete-fragile-creature/issue-1-1771801274.jpg",
+      "notes": "diegetic panel border, layering, paneling",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T23:01:15.100Z"
+    },
+    {
       "id": "zap-2-1771800991",
       "title": "Zap",
       "slug": "zap",
