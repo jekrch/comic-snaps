@@ -12,7 +12,7 @@ export default function PanelCard({ panel }: Props) {
   return (
     <>
       <div
-        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
+        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised isolate"
         onDoubleClick={() => setViewerOpen(true)}
       >
         <img
