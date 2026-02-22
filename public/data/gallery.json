@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "tales-of-ordinary-madness-2-1771797519",
+      "title": "Tales of Ordinary Madness",
+      "slug": "tales-of-ordinary-madness",
+      "issue": 2,
+      "year": 1992,
+      "artist": "Michael Allred",
+      "image": "images/tales-of-ordinary-madness/issue-2-1771797519.jpg",
+      "notes": null,
+      "tags": [
+        "screentone",
+        "chiaroscuro",
+        "hand-drawn typography"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-22T21:58:40.908Z"
+    },
+    {
       "id": "xyz-1-1771793421",
       "title": "XYZ",
       "slug": "xyz",
