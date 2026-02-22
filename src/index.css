@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #0a0a0a;
+  --color-surface-raised: #141414;
+  --color-surface-hover: #1a1a1a;
+  --color-ink: #e8e4df;
+  --color-ink-muted: #8a8580;
+  --color-ink-faint: #4a4745;
+  --color-accent: #e85d3a;
+  --color-accent-dim: #c44d2f;
+
+  --font-display: "Space Mono", monospace;
+  --font-body: "DM Sans", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Masonry-ish grid with CSS columns for varied panel heights */
+.panel-grid {
+  column-count: 3;
+  column-gap: 4px;
+}
+
+@media (max-width: 1024px) {
+  .panel-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 540px) {
+  .panel-grid {
+    column-count: 1;
+    column-gap: 2px;
+  }
+}
+
+.panel-item {
+  break-inside: avoid;
+  margin-bottom: 4px;
+}
+
+/* Overlay transition */
+.panel-overlay {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.panel-item:hover .panel-overlay,
+.panel-item:focus-within .panel-overlay {
+  opacity: 1;
+}
+
+/* Subtle image scale on hover */
+.panel-item img {
+  transition: transform 0.3s ease;
+}
+
+.panel-item:hover img {
+  transform: scale(1.02);
+}
+
+/* Placeholder shimmer for loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #141414 25%, #1e1e1e 50%, #141414 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
