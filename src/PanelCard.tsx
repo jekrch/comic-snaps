@@ -36,44 +36,42 @@ export default function PanelCard({ panel }: Props) {
           {panel.title} #{panel.issue}
         </div>
 
-        {/* Expand button — appears on hover/tap */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setViewerOpen(true);
-          }}
-          className="
-            absolute top-2 right-2 z-10
-            w-8 h-8 flex items-center justify-center
-            rounded-md bg-black/50 backdrop-blur-sm
-            text-white/70 hover:text-white hover:bg-black/70
-            opacity-0 group-hover:opacity-100
-            transition-all duration-200 ease-out
-            focus:opacity-100 focus:outline-none focus:ring-1 focus:ring-white/30
-            active:scale-95
-          "
-          aria-label={`View ${panel.title} #${panel.issue} full screen`}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {/* Expand arrows icon */}
-            <path d="M10 2h4v4" />
-            <path d="M6 14H2v-4" />
-            <path d="M14 2L9.5 6.5" />
-            <path d="M2 14l4.5-4.5" />
-          </svg>
-        </button>
-
         {/* Hover overlay */}
         <div className="panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3">
+          {/* Expand button — top right, inside overlay so it shares show/hide */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setViewerOpen(true);
+            }}
+            className="
+              absolute top-2 right-2
+              w-8 h-8 flex items-center justify-center
+              rounded-md bg-black/50 backdrop-blur-sm
+              text-white/70 hover:text-white hover:bg-black/70
+              transition-all duration-150 ease-out
+              focus:outline-none focus:ring-1 focus:ring-white/30
+              active:scale-95
+            "
+            aria-label={`View ${panel.title} #${panel.issue} full screen`}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M10 2h4v4" />
+              <path d="M6 14H2v-4" />
+              <path d="M14 2L9.5 6.5" />
+              <path d="M2 14l4.5-4.5" />
+            </svg>
+          </button>
+
           <p className="font-display text-sm text-ink leading-tight">
             {panel.title}{" "}
             <span className="text-accent">#{panel.issue}</span>
