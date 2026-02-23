@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-6-1771820424",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 6,
+      "year": 1983,
+      "artist": "Jose Martin Sauri",
+      "image": "images/heavy-metal/issue-6-1771820424.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-23T04:20:25.517Z"
+    },
+    {
       "id": "heavy-metal-6-1771820134",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
