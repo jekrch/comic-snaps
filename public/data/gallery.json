@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-6-1771814806",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 6,
+      "year": 1983,
+      "artist": "Liberatore",
+      "image": "images/heavy-metal/issue-6-1771814806.jpg",
+      "notes": null,
+      "tags": [
+        "realism",
+        "cyber-punk"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-23T02:46:47.839Z"
+    },
+    {
       "id": "assorted-crisis-events-8-1771813886",
       "title": "Assorted Crisis Events",
       "slug": "assorted-crisis-events",
