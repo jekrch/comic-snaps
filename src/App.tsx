@@ -22,16 +22,16 @@ export default function App() {
   return (
     <div className="min-h-screen bg-surface">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-b border-ink-faint/30">
+      <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-b border-ink-faint/30 pl-1!">
         <div className="content-container px-4 py-4 flex items-center justify-between">
           <h1 className="font-display text-xl tracking-tight text-ink">
             COMIC SNAPS
           </h1>
-          {status === "ready" && (
+          {/* {status === "ready" && (
             <span className="text-xs text-ink-muted font-body">
               {panels.length} panel{panels.length !== 1 ? "s" : ""}
             </span>
-          )}
+          )} */}
         </div>
       </header>
 

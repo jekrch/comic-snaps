@@ -308,7 +308,19 @@ export default function PanelViewer({ panel, onClose }: Props) {
             <span className="text-accent">#{panel.issue}</span>
             <span className="text-white/40 ml-1.5">({panel.year})</span>
           </p>
-          <p className="text-xs text-white/50 truncate mt-0.5">{panel.artist}</p>
+          <p className="text-xs text-white/50 truncate mt-0.5">
+            {panel.artist}
+            <span className="text-white/25 mx-1.5">·</span>
+            <span className="text-white/35">
+              (Posted by {panel.postedBy}
+              <span className="text-white/25 mx-1">·</span>
+              {new Date(panel.addedAt).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })})
+            </span>
+          </p>
         </div>
 
         <div className="flex items-center gap-1 ml-3 shrink-0">
