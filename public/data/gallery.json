@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-6-1771820851",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 6,
+      "year": 1983,
+      "artist": "Paul Kirchner",
+      "image": "images/heavy-metal/issue-6-1771820851.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-23T04:27:32.746Z"
+    },
+    {
       "id": "heavy-metal-6-1771820424",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
