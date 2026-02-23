@@ -302,7 +302,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
         `}
         style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 px-2!">
           <p className="font-display text-sm text-white/90 truncate">
             {panel.title}{" "}
             <span className="text-accent">#{panel.issue}</span>
@@ -399,7 +399,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
         `}
         style={{
           maxWidth: "96vw",
-          maxHeight: "94vh",
+          maxHeight: "85vh",
           touchAction: "none",
         }}
         onWheel={handleWheel}
