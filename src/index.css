@@ -34,7 +34,7 @@ body {
 
 /* Masonry-ish grid with CSS columns for varied panel heights */
 .panel-grid {
-  column-count: 4;
+  column-count: 3;
   column-gap: 4px;
 }
 
