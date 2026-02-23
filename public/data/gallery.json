@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "eightball-8-1771806205",
+      "title": "Eightball",
+      "slug": "eightball",
+      "issue": 8,
+      "year": 1992,
+      "artist": "Daniel Clowes",
+      "image": "images/eightball/issue-8-1771806205.jpg",
+      "notes": null,
+      "tags": [
+        "claustrophobic",
+        "spot blacks",
+        "title-card"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-23T00:23:26.382Z"
+    },
+    {
       "id": "concrete-fragile-creature-1-1771801274",
       "title": "Concrete: Fragile Creature",
       "slug": "concrete-fragile-creature",
