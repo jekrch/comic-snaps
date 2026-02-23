@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "assorted-crisis-events-8-1771813886",
+      "title": "Assorted Crisis Events",
+      "slug": "assorted-crisis-events",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Eric Zawadzki",
+      "image": "images/assorted-crisis-events/issue-8-1771813886.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-23T02:31:27.773Z"
+    },
+    {
       "id": "eightball-8-1771806205",
       "title": "Eightball",
       "slug": "eightball",
