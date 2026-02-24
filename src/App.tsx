@@ -35,7 +35,7 @@ export default function App() {
           const img = new Image();
           img.onload = () => resolve();
           img.onerror = () => resolve();
-          img.src = `${import.meta.env.BASE_URL}images/${panel.filename}`;
+          img.src = `${import.meta.env.BASE_URL}images/${panel.image}`;
         })
     );
 
