@@ -9,7 +9,7 @@
       "artist": "Rick Griffin",
       "image": "images/zap/issue-2-1771906187.jpg",
       "notes": null,
-      "tags": [],
+      "tags": ["stippling", "hatching", "parody", "title-card"],
       "postedBy": "Jacob",
       "addedAt": "2026-02-24T04:09:48.881Z"
     },
@@ -22,7 +22,7 @@
       "artist": "Paul Kirchner",
       "image": "images/heavy-metal/issue-6-1771820851.jpg",
       "notes": null,
-      "tags": [],
+      "tags": ["hatching", "hand-drawn typography", "minimalism"],
       "postedBy": "Jacob",
       "addedAt": "2026-02-23T04:27:32.746Z"
     },
@@ -35,7 +35,7 @@
       "artist": "Jose Martin Sauri",
       "image": "images/heavy-metal/issue-6-1771820424.jpg",
       "notes": null,
-      "tags": [],
+      "tags": ["chiaroscuro", "spot blacks", "negative space", "art nouveau"],
       "postedBy": "Jacob",
       "addedAt": "2026-02-23T04:20:25.517Z"
     },

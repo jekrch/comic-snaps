@@ -308,7 +308,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
             <span className="text-accent">#{panel.issue}</span>
             <span className="text-white/40 !ml-1">({panel.year})</span>
           </p>
-          <p className="text-xs text-white/50 truncate mt-0.5">
+          <p className="text-xs text-white/60 truncate mt-0.5">
             {panel.artist}
             <span className="text-white/25 mx-1.5">·</span>
             <span className="text-white/35">
