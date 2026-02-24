@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import type { Gallery, Panel } from "./types";
 import PanelCard from "./PanelCard";
+import InfoModal from "./InfoModal";
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/gallery.json`)
@@ -62,6 +64,19 @@ export default function App() {
           <h1 className="font-display text-xl tracking-tight text-ink">
             COMIC SNAPS
           </h1>
+          <button
+            onClick={() => setShowInfo(true)}
+            className="text-ink-muted/50 hover:text-ink transition-colors"
+            title="About"
+          >
+           
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4.5 3.5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H11l-3.5 3v-3H4.5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z" />
+              <circle cx="7" cy="8.5" r="0.6" fill="currentColor" stroke="none" />
+              <circle cx="10" cy="8.5" r="0.6" fill="currentColor" stroke="none" />
+              <circle cx="13" cy="8.5" r="0.6" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -81,6 +96,8 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
     </div>
   );
 }
