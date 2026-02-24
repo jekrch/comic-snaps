@@ -50,7 +50,7 @@ export default function InfoModal({ onClose }: Props) {
           width: "100%",
           maxWidth: "280px",
           margin: "0 24px",
-          padding: "48px 40px 56px",
+          padding: "58px 40px 66px",
           textAlign: "center",
         }}
         onClick={(e) => e.stopPropagation()}
