@@ -60,12 +60,12 @@ export default function InfoModal({ onClose }: Props) {
           onClick={handleClose}
           style={{
             position: "absolute",
-            top: "14px",
-            right: "14px",
+            top: "16px",
+            right: "16px",
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--color-ink-faint)",
+            color: "var(--color-ink-muted)",
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-ink-muted)")}
@@ -119,7 +119,7 @@ export default function InfoModal({ onClose }: Props) {
               display: "inline-flex",
               alignItems: "center",
               gap: "7px",
-              fontSize: "14px",
+              fontSize: "12px",
               color: "var(--color-ink)",
               textDecoration: "none",
               transition: "color 0.15s",
