@@ -19,7 +19,6 @@ export default function PanelCard({ panel }: Props) {
         <img
           src={`${import.meta.env.BASE_URL}${panel.image}`}
           alt={`${panel.title} #${panel.issue}`}
-          loading="lazy"
           className="block w-full"
           onError={(e) => {
             const el = e.currentTarget;
