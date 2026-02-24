@@ -66,7 +66,7 @@ export default function App() {
           </h1>
           <button
             onClick={() => setShowInfo(true)}
-            className="text-ink/80 hover:text-ink transition-colors"
+            className="text-ink/80 hover:text-ink transition-colors !ml-1"
             title="About"
           >
            
