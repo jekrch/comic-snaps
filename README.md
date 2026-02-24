@@ -2,7 +2,7 @@
 
 A gallery for collecting and studying comic book art with friends. Snap a panel, send it to a Telegram group with a caption, and it shows up on the site.
 
-(snaps.jacobkrch.com)[snaps.jacobkrch.com]
+[snaps.jacobkrch.com](snaps.jacobkrch.com)
 
 ## How it works
 
