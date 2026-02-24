@@ -5,6 +5,7 @@ import PanelCard from "./PanelCard";
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}data/gallery.json`)
@@ -19,6 +20,40 @@ export default function App() {
       .catch(() => setStatus("error"));
   }, []);
 
+  // Preload all panel images once data arrives
+  useEffect(() => {
+    if (status !== "ready" || panels.length === 0) return;
+
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      if (!cancelled) setImagesLoaded(true);
+    }, 8000);
+
+    const promises = panels.map(
+      (panel) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = `${import.meta.env.BASE_URL}images/${panel.filename}`;
+        })
+    );
+
+    Promise.all(promises).then(() => {
+      if (!cancelled) {
+        clearTimeout(timeout);
+        setImagesLoaded(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [status, panels]);
+
+  const showSpinner = status === "loading" || (status === "ready" && !imagesLoaded);
+
   return (
     <div className="min-h-screen bg-surface">
       {/* Header */}
@@ -27,21 +62,19 @@ export default function App() {
           <h1 className="font-display text-xl tracking-tight text-ink">
             COMIC SNAPS
           </h1>
-          {/* {status === "ready" && (
-            <span className="text-xs text-ink-muted font-body">
-              {panels.length} panel{panels.length !== 1 ? "s" : ""}
-            </span>
-          )} */}
         </div>
       </header>
 
       {/* Content */}
       <main className="content-container px-1 pt-1 pb-12 sm:px-4 sm:pt-4">
-        {status === "loading" && <LoadingState />}
+        {showSpinner && <SpinnerState />}
         {status === "error" && <ErrorState />}
-        {status === "ready" && panels.length === 0 && <EmptyState />}
+        {status === "ready" && panels.length === 0 && !showSpinner && <EmptyState />}
         {status === "ready" && panels.length > 0 && (
-          <div className="panel-grid">
+          <div
+            className="panel-grid transition-opacity duration-700 ease-out"
+            style={{ opacity: imagesLoaded ? 1 : 0 }}
+          >
             {panels.map((panel) => (
               <PanelCard key={panel.id} panel={panel} />
             ))}
@@ -52,17 +85,30 @@ export default function App() {
   );
 }
 
-function LoadingState() {
+function SpinnerState() {
   return (
-    <div className="panel-grid">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="panel-item">
-          <div
-            className="shimmer rounded-sm"
-            style={{ height: `${220 + (i % 3) * 80}px` }}
-          />
-        </div>
-      ))}
+    <div className="flex items-center justify-center py-32">
+      <svg
+        className="animate-spin h-8 w-8 text-ink-muted"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          className="opacity-20"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="2.5"
+        />
+        <path
+          className="opacity-70"
+          d="M12 2a10 10 0 0 1 10 10"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+      </svg>
     </div>
   );
 }
