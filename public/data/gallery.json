@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "madman-adventures-mini-comic-1-1771975358",
+      "title": "Madman Adventures Mini-Comic",
+      "slug": "madman-adventures-mini-comic",
+      "issue": 1,
+      "year": 1993,
+      "artist": "Michael Allred",
+      "image": "images/madman-adventures-mini-comic/issue-1-1771975358.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-24T23:22:39.341Z"
+    },
+    {
       "id": "the-invisible-man-3-1771911481",
       "title": "The Invisible Man",
       "slug": "the-invisible-man",
