@@ -119,8 +119,8 @@ export default function InfoModal({ onClose }: Props) {
               display: "inline-flex",
               alignItems: "center",
               gap: "7px",
-              fontSize: "12px",
-              color: "var(--color-ink-muted)",
+              fontSize: "14px",
+              color: "var(--color-ink)",
               textDecoration: "none",
               transition: "color 0.15s",
             }}
@@ -138,8 +138,8 @@ export default function InfoModal({ onClose }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              fontSize: "11px",
-              color: "var(--color-ink-faint)",
+              fontSize: "12px",
+              color: "var(--color-ink)",
               textDecoration: "none",
               transition: "color 0.15s",
             }}
