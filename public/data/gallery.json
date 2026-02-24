@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "the-invisible-man-3-1771911481",
+      "title": "The Invisible Man",
+      "slug": "the-invisible-man",
+      "issue": 3,
+      "year": 2025,
+      "artist": "Dani",
+      "image": "images/the-invisible-man/issue-3-1771911481.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-24T05:38:02.176Z"
+    },
+    {
       "id": "eerie-93-1771911152",
       "title": "Eerie",
       "slug": "eerie",
