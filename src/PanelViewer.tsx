@@ -306,13 +306,13 @@ export default function PanelViewer({ panel, onClose }: Props) {
           <p className="font-display text-sm text-white/90 truncate">
             {panel.title}{" "}
             <span className="text-accent">#{panel.issue}</span>
-            <span className="text-white/40 ml-1.5">({panel.year})</span>
+            <span className="text-white/40 !ml-1">({panel.year})</span>
           </p>
           <p className="text-xs text-white/50 truncate mt-0.5">
             {panel.artist}
             <span className="text-white/25 mx-1.5">·</span>
             <span className="text-white/35">
-              (Posted by {panel.postedBy}
+              (posted by {panel.postedBy}:
               <span className="text-white/25 mx-1">·</span>
               {new Date(panel.addedAt).toLocaleDateString(undefined, {
                 month: "short",
@@ -324,7 +324,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
         </div>
 
         <div className="flex items-center gap-1 ml-3 shrink-0">
-          {isZoomed && (
+          {!isTouchDevice && isZoomed && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -337,48 +337,52 @@ export default function PanelViewer({ panel, onClose }: Props) {
             </button>
           )}
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const t = transformRef.current;
-              const next = Math.min(MAX_SCALE, t.scale + 0.5);
-              const clamped = clampTranslate(t.x, t.y, next);
-              setTransform({ scale: next, ...clamped }, true);
-            }}
-            className="viewer-btn"
-            title="Zoom in"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="7" cy="7" r="4.5" />
-              <path d="M10.5 10.5L14 14" />
-              <path d="M5 7h4M7 5v4" />
-            </svg>
-          </button>
+          {!isTouchDevice && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const t = transformRef.current;
+                const next = Math.min(MAX_SCALE, t.scale + 0.5);
+                const clamped = clampTranslate(t.x, t.y, next);
+                setTransform({ scale: next, ...clamped }, true);
+              }}
+              className="viewer-btn"
+              title="Zoom in"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="7" cy="7" r="4.5" />
+                <path d="M10.5 10.5L14 14" />
+                <path d="M5 7h4M7 5v4" />
+              </svg>
+            </button>
+          )}
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const t = transformRef.current;
-              const next = Math.max(MIN_SCALE, t.scale - 0.5);
-              const clamped = next <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, next);
-              setTransform({ scale: next, ...clamped }, true);
-            }}
-            className="viewer-btn"
-            title="Zoom out"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="7" cy="7" r="4.5" />
-              <path d="M10.5 10.5L14 14" />
-              <path d="M5 7h4" />
-            </svg>
-          </button>
+          {!isTouchDevice && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                const t = transformRef.current;
+                const next = Math.max(MIN_SCALE, t.scale - 0.5);
+                const clamped = next <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, next);
+                setTransform({ scale: next, ...clamped }, true);
+              }}
+              className="viewer-btn"
+              title="Zoom out"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="7" cy="7" r="4.5" />
+                <path d="M10.5 10.5L14 14" />
+                <path d="M5 7h4" />
+              </svg>
+            </button>
+          )}
 
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleClose();
             }}
-            className="viewer-btn ml-1"
+            className={`viewer-btn ${!isTouchDevice ? "ml-1" : ""}`}
             title="Close (Esc)"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
