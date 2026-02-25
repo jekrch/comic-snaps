@@ -2,8 +2,8 @@ import { useState, useRef, useCallback } from "react";
 import type { Panel } from "./types";
 import PanelViewer from "./PanelViewer";
 
-const DOUBLE_CLICK_DELAY = 300;
-const DOUBLE_CLICK_TOLERANCE = 20;
+const DOUBLE_CLICK_DELAY = 400;
+const DOUBLE_CLICK_TOLERANCE = 30;
 
 interface Props {
   panel: Panel;
@@ -11,22 +11,28 @@ interface Props {
 
 export default function PanelCard({ panel }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
+  const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
 
-  const handleClick = useCallback((e: React.MouseEvent) => {
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
     const now = Date.now();
-    const prev = lastClick.current;
+    const isTouch = e.pointerType === "touch";
+    const ref = isTouch ? lastTap : lastClick;
+    const delay = isTouch ? DOUBLE_CLICK_DELAY : DOUBLE_CLICK_DELAY;
+    const tolerance = isTouch ? DOUBLE_CLICK_TOLERANCE : 20;
+
+    const prev = ref.current;
 
     if (
       prev &&
-      now - prev.time < DOUBLE_CLICK_DELAY &&
-      Math.abs(e.clientX - prev.x) <= DOUBLE_CLICK_TOLERANCE &&
-      Math.abs(e.clientY - prev.y) <= DOUBLE_CLICK_TOLERANCE
+      now - prev.time < delay &&
+      Math.abs(e.clientX - prev.x) <= tolerance &&
+      Math.abs(e.clientY - prev.y) <= tolerance
     ) {
-      lastClick.current = null;
+      ref.current = null;
       setViewerOpen(true);
     } else {
-      lastClick.current = { time: now, x: e.clientX, y: e.clientY };
+      ref.current = { time: now, x: e.clientX, y: e.clientY };
     }
   }, []);
 
@@ -35,7 +41,7 @@ export default function PanelCard({ panel }: Props) {
       <div
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
         style={{ WebkitMaskImage: 'radial-gradient(white, white)' }}
-        onClick={handleClick}
+        onPointerUp={handlePointerUp}
       >
         <img
           src={`${import.meta.env.BASE_URL}${panel.image}`}
