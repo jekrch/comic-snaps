@@ -47,6 +47,13 @@ export default function PanelViewer({ panel, onClose }: Props) {
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
 
+  // Double-tap detection for touch devices
+  const lastTapRef = useRef<{ time: number; x: number; y: number }>({
+    time: 0,
+    x: 0,
+    y: 0,
+  });
+
   // Detect touch device
   useEffect(() => {
     setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
@@ -252,6 +259,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
       const g = gestureRef.current;
+      const wasPinch = g.pinchStartDist !== null;
       g.pinchStartDist = null;
       g.pinchMidpoint = null;
 
@@ -269,8 +277,29 @@ export default function PanelViewer({ panel, onClose }: Props) {
       } else {
         g.lastTouchPos = null;
       }
+
+      // Double-tap detection (only for single-finger taps, not after pinch)
+      if (e.touches.length === 0 && e.changedTouches.length === 1 && !wasPinch) {
+        const touch = e.changedTouches[0];
+        const now = Date.now();
+        const last = lastTapRef.current;
+        const timeDelta = now - last.time;
+        const distDelta = Math.hypot(touch.clientX - last.x, touch.clientY - last.y);
+
+        if (timeDelta < 300 && distDelta < 30) {
+          // Double-tap detected — toggle zoom
+          lastTapRef.current = { time: 0, x: 0, y: 0 };
+          if (transformRef.current.scale > 1) {
+            resetTransform();
+          } else {
+            setTransform({ scale: 2.5, x: 0, y: 0 }, true);
+          }
+        } else {
+          lastTapRef.current = { time: now, x: touch.clientX, y: touch.clientY };
+        }
+      }
     },
-    [resetTransform]
+    [resetTransform, setTransform]
   );
 
   const isZoomed = displayScale > 1;
