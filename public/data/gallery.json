@@ -186,8 +186,12 @@
       "year": 1991,
       "artist": "Paul Chadwick",
       "image": "images/concrete-fragile-creature/issue-1-1771801274.jpg",
-      "notes": "diegetic panel border, layering, paneling",
-      "tags": [],
+      "notes": null,
+      "tags": [
+        "diegetic panel border",
+        "layering",
+        "paneling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-22T23:01:15.100Z"
     },
