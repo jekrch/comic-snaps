@@ -397,15 +397,13 @@ export default function PanelViewer({ panel, onClose }: Props) {
       {/* Image container — z-10, overflow visible when zoomed to use full screen */}
       <div
         className={`
-          relative z-10 select-none
+          relative z-10 flex items-center justify-center select-none
           transition-opacity duration-250 ease-out
           ${visible && !closing ? "opacity-100" : "opacity-0"}
           ${isZoomed ? "cursor-grab overflow-visible" : "cursor-zoom-in overflow-hidden"}
           ${gestureRef.current.isDragging ? "!cursor-grabbing" : ""}
         `}
         style={{
-          maxWidth: "96vw",
-          maxHeight: "85vh",
           touchAction: "none",
         }}
         onWheel={handleWheel}
@@ -422,8 +420,10 @@ export default function PanelViewer({ panel, onClose }: Props) {
           ref={imgRef}
           src={`${import.meta.env.BASE_URL}${panel.image}`}
           alt={`${panel.title} #${panel.issue}`}
-          className="block max-w-[96vw] max-h-[94vh] w-auto h-auto object-contain rounded-sm"
+          className="block w-auto h-auto object-contain rounded-sm"
           style={{
+            maxWidth: "96vw",
+            maxHeight: "calc(100vh - 10rem)",
             transform: `scale(${transformRef.current.scale}) translate(${transformRef.current.x / transformRef.current.scale}px, ${transformRef.current.y / transformRef.current.scale}px)`,
             willChange: "transform",
           }}
