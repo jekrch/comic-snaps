@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import type { Panel } from "./types";
 import PanelViewer from "./PanelViewer";
+
+const DOUBLE_CLICK_DELAY = 300;
+const DOUBLE_CLICK_TOLERANCE = 20;
 
 interface Props {
   panel: Panel;
@@ -8,13 +11,31 @@ interface Props {
 
 export default function PanelCard({ panel }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
+  const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
+
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    const now = Date.now();
+    const prev = lastClick.current;
+
+    if (
+      prev &&
+      now - prev.time < DOUBLE_CLICK_DELAY &&
+      Math.abs(e.clientX - prev.x) <= DOUBLE_CLICK_TOLERANCE &&
+      Math.abs(e.clientY - prev.y) <= DOUBLE_CLICK_TOLERANCE
+    ) {
+      lastClick.current = null;
+      setViewerOpen(true);
+    } else {
+      lastClick.current = { time: now, x: e.clientX, y: e.clientY };
+    }
+  }, []);
 
   return (
     <>
       <div
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
         style={{ WebkitMaskImage: 'radial-gradient(white, white)' }}
-        onDoubleClick={() => setViewerOpen(true)}
+        onClick={handleClick}
       >
         <img
           src={`${import.meta.env.BASE_URL}${panel.image}`}
