@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "lady-killer-1-1771986359",
+      "title": "Lady Killer",
+      "slug": "lady-killer",
+      "issue": 1,
+      "year": 2015,
+      "artist": "Joelle Jones",
+      "image": "images/lady-killer/issue-1-1771986359.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-25T02:26:00.237Z"
+    },
+    {
       "id": "madman-adventures-mini-comic-1-1771975358",
       "title": "Madman Adventures Mini-Comic",
       "slug": "madman-adventures-mini-comic",
