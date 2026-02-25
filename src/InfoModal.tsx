@@ -53,18 +53,18 @@ export default function InfoModal({ onClose }: Props) {
       >
         {/* Background typographic element */}
         <div
-          className="absolute select-none pointer-events-none top-0"
+          className={'absolute select-none pointer-events-none text-[120vh] bottom-20 '}
           aria-hidden="true"
           style={{
             fontFamily: "var(--font-display), monospace",
-            fontSize: "clamp(80px, 75vw, 620px)",
+            // fontSize: "clamp(80px, 75vw, 620px)",
             fontWeight: 300,
             lineHeight: 0.85,
             color: "var(--color-accent)",
             letterSpacing: "-0.06em",
             whiteSpace: "nowrap",
             opacity: active ? 0.37 : 0,
-            animation: active ? "letterSway 6s ease-in-out infinite" : "none",
+            animation: active ? "letterSway 8s ease-in-out infinite" : "none",
             transform: "rotate(-7deg) translate(-8%, 4%)",
             // fade out fast on close, fade in at normal speed
             transition: closing
@@ -73,7 +73,7 @@ export default function InfoModal({ onClose }: Props) {
           }}
         >
           <span>C</span>
-          <span style={{ marginLeft: "-0.12em", position: "relative", top: "0.38em" }}>S</span>
+          <span style={{ marginLeft: "-0.22em", position: "relative", top: "0.18em" }}>S</span>
         </div>
 
         <div
@@ -110,7 +110,7 @@ export default function InfoModal({ onClose }: Props) {
           <div className="w-6 h-0.5 bg-[var(--color-accent)] mx-auto mt-5 rounded-sm opacity-70" />
 
           {/* Links */}
-          <div className="mt-8 flex flex-col items-center gap-4">
+          <div className="mt-8 flex flex-col items-center gap-2">
             <a
               href="https://github.com/jekrch/comic-snaps"
               target="_blank"

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-    --font-sans: "DM Sans", sans-serif;
+  --font-sans: "DM Sans", sans-serif;
   --font-mono: "Space Mono", monospace;
   --font-display: "Space Mono", monospace;
-  
+
   --color-surface: #0a0a0a;
   --color-surface-raised: #141414;
   --color-surface-hover: #1a1a1a;

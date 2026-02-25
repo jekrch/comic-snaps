@@ -274,6 +274,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
   );
 
   const isZoomed = displayScale > 1;
+  const hasTags = panel.tags?.length > 0;
 
   return (
     <div
@@ -303,17 +304,18 @@ export default function PanelViewer({ panel, onClose }: Props) {
         style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <div className="min-w-0 flex-1 px-2!">
-          <p className="font-display text-sm text-white/90 truncate">
+          <p className="font-display text-sm text-white/90 flex flex-wrap items-baseline gap-x-1">
+          <span className="truncate min-w-0">
             {panel.title}{" "}
             <span className="text-accent">#{panel.issue}</span>
-            <span className="text-white/40 !ml-1">({panel.year})</span>
-          </p>
+          </span>
+          <span className="text-white/40 shrink-0">({panel.year})</span>
+        </p>
           <p className="text-xs text-white/60 truncate mt-0.5">
             {panel.artist}
             <span className="text-white/25 mx-1.5">·</span>
             <span className="text-white/35">
-              (posted by {panel.postedBy}:
-              <span className="text-white/25 mx-1">·</span>
+              (posted by {panel.postedBy}:{` `}               
               {new Date(panel.addedAt).toLocaleDateString(undefined, {
                 month: "short",
                 day: "numeric",
@@ -429,23 +431,40 @@ export default function PanelViewer({ panel, onClose }: Props) {
         />
       </div>
 
-      {/* Bottom hint — context-aware for touch vs desktop */}
-      {!isZoomed && (
-        <div
-          className={`
-            absolute bottom-4 inset-x-0 text-center pointer-events-none z-20
-            transition-all duration-250 ease-out
-            ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
-          `}
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-        >
-          <span className="text-[11px] text-white/30 tracking-wide">
-            {isTouchDevice
-              ? "pinch to zoom · double-tap to enlarge"
-              : "scroll to zoom · double-click to enlarge · esc to close"}
-          </span>
-        </div>
-      )}
+      {/* Bottom bar — tags + hint */}
+      <div
+        className={`
+          absolute bottom-0 inset-x-0 z-20 pointer-events-none
+          transition-all duration-250 ease-out
+          ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
+        `}
+        style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+      >
+        {/* Tags — hidden when zoomed to keep the view clean */}
+        {!isZoomed && hasTags && (
+          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0">
+            {panel.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] leading-none px-1.5 py-0.5 rounded-sm bg-white/8 text-white/35"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Hint text */}
+        {!isZoomed && (
+          <div className="text-center">
+            <span className="text-[11px] text-white/30 tracking-wide">
+              {isTouchDevice
+                ? "pinch to zoom · double-tap to enlarge"
+                : "scroll to zoom · double-click to enlarge · esc to close"}
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
