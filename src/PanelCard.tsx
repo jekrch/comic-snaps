@@ -3,7 +3,8 @@ import type { Panel } from "./types";
 import PanelViewer from "./PanelViewer";
 
 const DOUBLE_CLICK_DELAY = 400;
-const DOUBLE_CLICK_TOLERANCE = 30;
+const MOUSE_TOLERANCE = 20;
+const TOUCH_TOLERANCE = 30;
 
 interface Props {
   panel: Panel;
@@ -13,19 +14,30 @@ export default function PanelCard({ panel }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     const now = Date.now();
     const isTouch = e.pointerType === "touch";
-    const ref = isTouch ? lastTap : lastClick;
-    const delay = isTouch ? DOUBLE_CLICK_DELAY : DOUBLE_CLICK_DELAY;
-    const tolerance = isTouch ? DOUBLE_CLICK_TOLERANCE : 20;
 
+    // On touch, only register taps when the overlay is already visible.
+    // The first tap triggers the CSS hover state to show the overlay;
+    // double-tap detection begins from the next tap onward.
+    if (isTouch && overlayRef.current) {
+      const opacity = window.getComputedStyle(overlayRef.current).opacity;
+      if (opacity === "0") {
+        lastTap.current = null;
+        return;
+      }
+    }
+
+    const ref = isTouch ? lastTap : lastClick;
+    const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
     const prev = ref.current;
 
     if (
       prev &&
-      now - prev.time < delay &&
+      now - prev.time < DOUBLE_CLICK_DELAY &&
       Math.abs(e.clientX - prev.x) <= tolerance &&
       Math.abs(e.clientY - prev.y) <= tolerance
     ) {
@@ -63,7 +75,10 @@ export default function PanelCard({ panel }: Props) {
         </div>
 
         {/* Hover overlay */}
-        <div className="panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3">
+        <div
+          ref={overlayRef}
+          className="panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3"
+        >
           {/* Expand button — top right, inside overlay so it shares show/hide */}
           <button
             onClick={(e) => {
