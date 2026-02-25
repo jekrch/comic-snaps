@@ -60,16 +60,17 @@ export default function App() {
     <div className="min-h-screen bg-surface">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-b border-ink-faint/30 pl-1!">
-        <div className="content-container px-4 py-4 flex items-center justify-between">
-          <h1 className="font-display text-xl tracking-tight text-ink">
+        <div className="content-container px-1 py-0 flex items-center justify-between">
+          <h1 className="font-display font-bold text-xl tracking-tight text-ink">
             COMIC SNAPS
           </h1>
           <button
             onClick={() => setShowInfo(true)}
-            className="text-ink/80 hover:text-ink transition-colors !ml-1"
+            className="text-ink/80 hover:text-ink transition-colors 
+                        mr-2 cursor-pointer"
             title="About"
           >
-           
+
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4.5 3.5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H11l-3.5 3v-3H4.5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z" />
               <circle cx="7" cy="8.5" r="0.6" fill="currentColor" stroke="none" />
@@ -81,7 +82,7 @@ export default function App() {
       </header>
 
       {/* Content */}
-      <main className="content-container px-1 pt-1 pb-12 sm:px-4 sm:pt-4">
+      <main className="content-container px-1 pt-0 pb-12 sm:px-1 sm:pt-0">
         {showSpinner && <SpinnerState />}
         {status === "error" && <ErrorState />}
         {status === "ready" && panels.length === 0 && !showSpinner && <EmptyState />}

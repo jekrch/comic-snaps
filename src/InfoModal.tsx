@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { X, Github } from "lucide-react";
 
 interface Props {
   onClose: () => void;
@@ -26,12 +27,14 @@ export default function InfoModal({ onClose }: Props) {
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose]);
 
+  const active = visible && !closing;
+
   return (
     <div
       className={`
         fixed inset-0 z-50 flex items-center justify-center
         transition-all duration-250 ease-out
-        ${visible && !closing ? "bg-black/80 backdrop-blur-sm" : "bg-black/0 backdrop-blur-0"}
+        ${active ? "bg-black/80 backdrop-blur-sm" : "bg-black/0 backdrop-blur-none"}
       `}
       onClick={handleClose}
       role="dialog"
@@ -40,96 +43,48 @@ export default function InfoModal({ onClose }: Props) {
     >
       <div
         className={`
-          relative transition-all duration-250 ease-out
-          ${visible && !closing ? "opacity-100 scale-100" : "opacity-0 scale-95"}
+          relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
+          text-center rounded-md
+          border border-[var(--color-border,rgba(74,71,69,0.25))]
+          bg-[var(--color-surface-raised)]
+          transition-all duration-250 ease-out
+          ${active ? "opacity-100 scale-100" : "opacity-0 scale-95"}
         `}
-        style={{
-          background: "var(--color-surface-raised)",
-          border: "1px solid rgba(74, 71, 69, 0.25)",
-          borderRadius: "6px",
-          width: "100%",
-          maxWidth: "280px",
-          margin: "0 24px",
-          padding: "58px 40px 66px",
-          textAlign: "center",
-        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
         <button
           onClick={handleClose}
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--color-ink-muted)",
-            transition: "color 0.15s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-ink-muted)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-ink-faint)")}
+          className="absolute top-4 right-4 bg-transparent border-none cursor-pointer
+                     text-[var(--color-ink-muted)] hover:text-[var(--color-ink-faint)]
+                     transition-colors duration-150"
           title="Close"
         >
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M4 4l8 8M12 4l-8 8" />
-          </svg>
+          <X size={13} strokeWidth={1.5} />
         </button>
 
         {/* Title */}
         <h2
-          className="tracking-tight"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "15px",
-            color: "var(--color-ink)",
-          }}
+          className="tracking-tight text-[15px] text-[var(--color-ink)]"
+          style={{ fontFamily: "var(--font-display)" }}
         >
           COMIC SNAPS
         </h2>
 
         {/* Accent rule */}
-        <div
-          style={{
-            width: "24px",
-            height: "2px",
-            background: "var(--color-accent)",
-            margin: "20px auto 0",
-            borderRadius: "1px",
-            opacity: 0.7,
-          }}
-        />
+        <div className="w-6 h-0.5 bg-[var(--color-accent)] mx-auto mt-5 rounded-sm opacity-70" />
 
         {/* Links */}
-        <div
-          style={{
-            marginTop: "32px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
+        <div className="mt-8 flex flex-col items-center gap-4">
           <a
             href="https://github.com/jekrch/comic-snaps"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              fontSize: "12px",
-              color: "var(--color-ink)",
-              textDecoration: "none",
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-ink)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-ink-muted)")}
+            className="inline-flex items-center gap-[7px] text-xs
+                       text-[var(--color-ink)] hover:text-[var(--color-ink-muted)]
+                       no-underline transition-colors duration-150"
           >
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-            </svg>
+            <Github size={15} />
             jekrch/comic-snaps
           </a>
 
@@ -137,14 +92,8 @@ export default function InfoModal({ onClose }: Props) {
             href="https://www.jacobkrch.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              fontSize: "12px",
-              color: "var(--color-ink)",
-              textDecoration: "none",
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-ink-muted)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-ink-faint)")}
+            className="text-xs text-[var(--color-ink)] hover:text-[var(--color-ink-faint)]
+                       no-underline transition-colors duration-150"
           >
             jacobkrch.com
           </a>

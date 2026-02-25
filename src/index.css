@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+    --font-sans: "DM Sans", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  --font-display: "Space Mono", monospace;
+  
   --color-surface: #0a0a0a;
   --color-surface-raised: #141414;
   --color-surface-hover: #1a1a1a;
@@ -9,27 +13,26 @@
   --color-ink-faint: #4a4745;
   --color-accent: #e85d3a;
   --color-accent-dim: #c44d2f;
-
-  --font-display: "Space Mono", monospace;
-  --font-body: "DM Sans", sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-html {
-  scrollbar-gutter: stable;
-}
+  html {
+    scrollbar-gutter: stable;
+  }
 
-body {
-  font-family: var(--font-body);
-  background-color: var(--color-surface);
-  color: var(--color-ink);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* Masonry-ish grid with CSS columns for varied panel heights */
