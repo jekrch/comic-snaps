@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "concrete-killer-smile-4-1772080387",
+      "title": "Concrete: Killer Smile",
+      "slug": "concrete-killer-smile",
+      "issue": 4,
+      "year": 1994,
+      "artist": "Paul Chadwick",
+      "image": "images/concrete-killer-smile/issue-4-1772080387.jpg",
+      "notes": null,
+      "tags": [
+        "hatching",
+        "cover"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-26T04:33:09.310Z"
+    },
+    {
       "id": "stray-bullets-sunshine-roses-17-1771987399",
       "title": "Stray Bullets: Sunshine & Roses",
       "slug": "stray-bullets-sunshine-roses",
@@ -9,7 +25,12 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets-sunshine-roses/issue-17-1771987399.jpg",
       "notes": null,
-      "tags": ["hand-drawn typography", "grid", "hatching", "sound effects"],
+      "tags": [
+        "hand-drawn typography",
+        "grid",
+        "hatching",
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-25T02:43:21.060Z"
     },
@@ -22,7 +43,11 @@
       "artist": "Joelle Jones",
       "image": "images/lady-killer/issue-1-1771986359.jpg",
       "notes": null,
-      "tags": ["flat-coloring", "clean line", "layering"],
+      "tags": [
+        "flat-coloring",
+        "clean line",
+        "layering"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-25T02:26:00.237Z"
     },
