@@ -10,6 +10,8 @@ export interface Panel {
   tags: string[];
   postedBy: string;
   addedAt: string;
+  height: number;
+  width: number;
 }
 
 export interface Gallery {

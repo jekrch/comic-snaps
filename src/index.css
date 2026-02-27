@@ -35,28 +35,8 @@
   }
 }
 
-/* Masonry-ish grid with CSS columns for varied panel heights */
-.panel-grid {
-  column-count: 3;
-  column-gap: 4px;
-}
-
-@media (max-width: 1024px) {
-  .panel-grid {
-    column-count: 3;
-  }
-}
-
-@media (max-width: 620px) {
-  .panel-grid {
-    column-count: 2;
-    column-gap: 2px;
-  }
-}
-
 .panel-item {
   break-inside: avoid;
-  margin-bottom: 4px;
 }
 
 /* Overlay transition */
