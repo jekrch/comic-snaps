@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "eightball-13-1772234666",
+      "title": "Eightball",
+      "slug": "eightball",
+      "issue": 13,
+      "year": 1994,
+      "artist": "Daniel Clowes",
+      "image": "images/eightball/issue-13-1772234666.jpg",
+      "notes": null,
+      "tags": [
+        "schlub",
+        "lettering",
+        "surrealism"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-02-27T23:24:27.962Z"
+    },
+    {
       "id": "concrete-killer-smile-4-1772080387",
       "title": "Concrete: Killer Smile",
       "slug": "concrete-killer-smile",
