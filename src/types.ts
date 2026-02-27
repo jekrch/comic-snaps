@@ -12,6 +12,9 @@ export interface Panel {
   addedAt: string;
   height: number;
   width: number;
+  phash: string;
+  ahash: string;
+  dhash: string;
 }
 
 export interface Gallery {
