@@ -1,0 +1,33 @@
+name: Compute Image Metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/data/gallery.json"
+
+jobs:
+  compute-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install Pillow imagehash
+
+      - name: Compute missing image metadata
+        run: python scripts/compute-image-metadata.py
+
+      - name: Commit updated gallery.json
+        run: |
+          git diff --quiet public/data/gallery.json && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/gallery.json
+          git commit -m "Add image dimensions and perceptual hashes"
+          git push
