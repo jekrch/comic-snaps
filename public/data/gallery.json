@@ -16,7 +16,30 @@
         "ink splatter"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-02-28T06:58:02.844Z"
+      "addedAt": "2026-02-28T06:58:02.844Z",
+      "width": 1110,
+      "height": 1280,
+      "dominantColors": [
+        [
+          51.7,
+          67.8,
+          47.1
+        ],
+        [
+          22.1,
+          6.4,
+          10.0
+        ],
+        [
+          42.4,
+          28.6,
+          21.3
+        ]
+      ],
+      "colorfulness": 33.8,
+      "phash": "854fbf4898da2696",
+      "ahash": "992031387873ffff",
+      "dhash": "7552e7d3d7c7546e"
     },
     {
       "id": "eightball-13-1772234666",
