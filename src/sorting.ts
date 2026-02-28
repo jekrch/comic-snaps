@@ -14,7 +14,7 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
 // colorfulness threshold for partitioning chromatic vs achromatic panels.
 // based on RMS of std(a*) and std(b*) in CIELAB space. B&W scans with
 // paper tint typically score 2–8; muted color panels 10–15; vivid color 20+.
-const COLORFULNESS_THRESHOLD = 10;
+const COLORFULNESS_THRESHOLD = 5;
 
 /** euclidean distance between two CIELAB color vectors. */
 function labDistance(a: number[], b: number[]): number {

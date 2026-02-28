@@ -4,7 +4,7 @@ import type { Filters } from "../filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../filtering";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, XCircle } from "lucide-react";
 
 interface FilterControlProps {
   panels: Panel[];
@@ -21,7 +21,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, postedByCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -32,6 +32,14 @@ export default function FilterControl({
         .sort((a, b) => b[0].localeCompare(a[0]))
         .map(([label, c]) => ({ label, count: c })),
     [decadeCounts]
+  );
+
+  const postedByItems = useMemo(
+    () =>
+      Array.from(postedByCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [postedByCounts]
   );
 
   const tagItems = useMemo(
@@ -90,11 +98,11 @@ export default function FilterControl({
           )}
         </span>
         <ChevronDown
-  size={14}
-  className={`text-ink-faint transition-transform duration-200 ${
-    open ? "rotate-180" : ""
-  }`}
-/>
+          size={14}
+          className={`text-ink-faint transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {/* expanded body */}
@@ -107,6 +115,28 @@ export default function FilterControl({
       >
         <div className="overflow-hidden">
           <div className="border border-t-0 border-ink-faint/20 bg-surface-raised rounded-b-sm">
+            {/* clear filters action at top of list */}
+            {active && (
+              <div className="border-b border-ink-faint/10 px-3 py-2">
+                <button
+                  onClick={() => {
+                    clearAll();
+                    setOpen(false);
+                  }}
+                  className="
+                    flex items-center gap-1.5
+                    font-display text-[10px] tracking-wider uppercase
+                    text-white/60 hover:text-accent
+                    transition-colors duration-100
+                    cursor-pointer
+                  "
+                >
+                  <XCircle size={12} className="text-accent" />
+                  CLEAR {count} {count === 1 ? "FILTER" : "FILTERS"}
+                </button>
+              </div>
+            )}
+
             <FacetSection
               title="DECADE"
               items={decadeItems}
@@ -126,25 +156,12 @@ export default function FilterControl({
               selected={filters.artists}
               onToggle={(v) => toggleInSet("artists", v)}
             />
-
-            {active && (
-              <div className="border-t border-ink-faint/10 px-3 py-2">
-                <button
-                  onClick={() => {
-                    clearAll();
-                    setOpen(false);
-                  }}
-                  className="
-                    font-display text-[10px] tracking-wider uppercase
-                    text-ink-faint hover:text-accent
-                    transition-colors duration-100
-                    cursor-pointer
-                  "
-                >
-                  CLEAR ALL
-                </button>
-              </div>
-            )}
+            <FacetSection
+              title="POSTED BY"
+              items={postedByItems}
+              selected={filters.postedBy}
+              onToggle={(v) => toggleInSet("postedBy", v)}
+            />
           </div>
         </div>
       </div>

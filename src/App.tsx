@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanels } from "./sorting.ts";
 import type { Filters } from "./filtering.ts";
@@ -7,14 +7,32 @@ import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { MessageCircleMore } from "lucide-react";
+import { useFilterParams } from "./hooks/useFilterParams";
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [sortMode, setSortMode] = useState<SortMode>("newest");
-  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
+  const { initialFilters, initialSort, syncToURL } = useFilterParams();
+  const [sortMode, setSortMode] = useState<SortMode>(initialSort);
+  const [filters, setFilters] = useState<Filters>(initialFilters);
+
+  const handleFiltersChange = useCallback(
+  (next: Filters) => {
+    setFilters(next);
+    syncToURL(next, sortMode);
+  },
+  [sortMode, syncToURL]
+);
+
+const handleSortChange = useCallback(
+  (next: SortMode) => {
+    setSortMode(next);
+    syncToURL(filters, next);
+  },
+  [filters, syncToURL]
+);
 
   // fetch gallery data
   useEffect(() => {
@@ -111,9 +129,9 @@ export default function App() {
               panels={sortedPanels}
               allPanels={panels}
               sortMode={sortMode}
-              onSort={setSortMode}
+              onSort={handleSortChange}
               filters={filters}
-              onFiltersChange={setFilters}
+              onFiltersChange={handleFiltersChange}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
