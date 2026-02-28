@@ -46,9 +46,10 @@ const COLORFULNESS_THRESHOLD = 10;
 /**
  * Color distance between two panels' palettes.
  *
- * Strategy: compare the most dominant color (index 0) using LAB distance,
- * then add a chroma penalty so chromatic and achromatic panels separate
- * cleanly. The secondary colors contribute a smaller weighted term.
+ * Compares the most dominant color (index 0) with heavy weight, and
+ * secondary colors with lighter weight. The chromatic/achromatic
+ * separation is handled by the colorfulness partition, so no chroma
+ * penalty is needed here.
  */
 function paletteDistance(
   a: [number, number, number][] | null,
@@ -59,12 +60,7 @@ function paletteDistance(
   // Primary: distance between most dominant colors (heaviest weight)
   const primaryDist = labDistance(a[0], b[0]);
 
-  // Chroma penalty: large when one is chromatic and the other is not
-  const chromaA = labChroma(a[0]);
-  const chromaB = labChroma(b[0]);
-  const chromaPenalty = Math.abs(chromaA - chromaB);
-
-  // Secondary: average LAB distance of remaining palette colors (lighter weight)
+  // Secondary: average LAB distance of remaining palette colors
   let secondaryDist = 0;
   const minLen = Math.min(a.length, b.length);
   if (minLen > 1) {
@@ -74,8 +70,8 @@ function paletteDistance(
     secondaryDist /= (minLen - 1);
   }
 
-  // Weight: 60% primary, 25% chroma, 15% secondary
-  return primaryDist * 0.6 + chromaPenalty * 0.25 + secondaryDist * 0.15;
+  // Weight: 75% primary, 25% secondary
+  return primaryDist * 0.75 + secondaryDist * 0.25;
 }
 
 function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
@@ -277,7 +273,7 @@ function FacetSection({
           hover:bg-surface-hover transition-colors duration-100
         "
       >
-        <span className="font-display text-[10px] tracking-widest text-ink-faint uppercase">
+        <span className="font-display text-[font-display text-[10px] tracking-widest text-white/70 !text-accent uppercase10px] tracking-widest text-ink-faint uppercase">
           {title}
         </span>
         <span className="flex items-center gap-1.5">
