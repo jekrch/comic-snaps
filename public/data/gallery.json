@@ -37,7 +37,8 @@
           13.7,
           -21.1
         ]
-      ]
+      ],
+      "colorfulness": 27.0
     },
     {
       "id": "concrete-killer-smile-4-1772080387",
@@ -76,7 +77,8 @@
           8.5,
           61.8
         ]
-      ]
+      ],
+      "colorfulness": 17.8
     },
     {
       "id": "stray-bullets-sunshine-roses-17-1771987399",
@@ -116,7 +118,8 @@
           -0.5,
           -4.7
         ]
-      ]
+      ],
+      "colorfulness": 1.3
     },
     {
       "id": "lady-killer-1-1771986359",
@@ -155,7 +158,8 @@
           -0.8,
           40.8
         ]
-      ]
+      ],
+      "colorfulness": 19.0
     },
     {
       "id": "madman-adventures-mini-comic-1-1771975358",
@@ -166,7 +170,9 @@
       "artist": "Michael Allred",
       "image": "images/madman-adventures-mini-comic/issue-1-1771975358.jpg",
       "notes": null,
-      "tags": ["clear line"],
+      "tags": [
+        "clear line"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-24T23:22:39.341Z",
       "width": 960,
@@ -190,7 +196,8 @@
           9.6,
           -0.1
         ]
-      ]
+      ],
+      "colorfulness": 26.8
     },
     {
       "id": "the-invisible-man-3-1771911481",
@@ -225,7 +232,8 @@
           -3.8,
           4.0
         ]
-      ]
+      ],
+      "colorfulness": 26.3
     },
     {
       "id": "eerie-93-1771911152",
@@ -264,7 +272,8 @@
           53.1,
           5.9
         ]
-      ]
+      ],
+      "colorfulness": 21.5
     },
     {
       "id": "zap-2-1771906187",
@@ -304,7 +313,8 @@
           7.3,
           14.2
         ]
-      ]
+      ],
+      "colorfulness": 7.1
     },
     {
       "id": "heavy-metal-6-1771820851",
@@ -343,7 +353,8 @@
           3.3,
           3.2
         ]
-      ]
+      ],
+      "colorfulness": 3.8
     },
     {
       "id": "heavy-metal-6-1771820424",
@@ -383,7 +394,8 @@
           12.3,
           -21.4
         ]
-      ]
+      ],
+      "colorfulness": 3.9
     },
     {
       "id": "heavy-metal-6-1771820134",
@@ -418,7 +430,8 @@
           4.3,
           -9.4
         ]
-      ]
+      ],
+      "colorfulness": 3.1
     },
     {
       "id": "heavy-metal-6-1771814806",
@@ -456,7 +469,8 @@
           25.6,
           26.3
         ]
-      ]
+      ],
+      "colorfulness": 11.0
     },
     {
       "id": "assorted-crisis-events-8-1771813886",
@@ -491,7 +505,8 @@
           18.0,
           17.6
         ]
-      ]
+      ],
+      "colorfulness": 10.1
     },
     {
       "id": "eightball-8-1771806205",
@@ -531,7 +546,8 @@
           3.6,
           3.1
         ]
-      ]
+      ],
+      "colorfulness": 2.5
     },
     {
       "id": "concrete-fragile-creature-1-1771801274",
@@ -570,7 +586,8 @@
           10.6,
           7.9
         ]
-      ]
+      ],
+      "colorfulness": 9.6
     },
     {
       "id": "zap-2-1771800991",
@@ -609,7 +626,8 @@
           4.3,
           1.9
         ]
-      ]
+      ],
+      "colorfulness": 4.2
     },
     {
       "id": "zap-1-1771799973",
@@ -648,7 +666,8 @@
           -0.0,
           0.0
         ]
-      ]
+      ],
+      "colorfulness": 0.0
     },
     {
       "id": "buzz-1-1771799398",
@@ -687,7 +706,8 @@
           44.7,
           18.2
         ]
-      ]
+      ],
+      "colorfulness": 27.2
     },
     {
       "id": "minor-arcana-14-1771799033",
@@ -724,7 +744,8 @@
           7.8,
           5.3
         ]
-      ]
+      ],
+      "colorfulness": 7.0
     },
     {
       "id": "the-peoples-comics-1-1771798765",
@@ -763,7 +784,8 @@
           33.3,
           22.1
         ]
-      ]
+      ],
+      "colorfulness": 23.6
     },
     {
       "id": "weird-magazine-10-1771798474",
@@ -801,7 +823,8 @@
           -5.9,
           66.0
         ]
-      ]
+      ],
+      "colorfulness": 29.9
     },
     {
       "id": "thumpn-guts-1-1771798062",
@@ -840,7 +863,8 @@
           -1.4,
           66.1
         ]
-      ]
+      ],
+      "colorfulness": 34.3
     },
     {
       "id": "tales-of-ordinary-madness-2-1771797519",
@@ -879,7 +903,8 @@
           -0.6,
           1.2
         ]
-      ]
+      ],
+      "colorfulness": 1.9
     },
     {
       "id": "xyz-1-1771793421",
@@ -913,7 +938,8 @@
           1.4,
           -2.1
         ]
-      ]
+      ],
+      "colorfulness": 3.0
     }
   ]
 }
