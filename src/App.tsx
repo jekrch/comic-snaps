@@ -37,9 +37,18 @@ function labDistance(a: number[], b: number[]): number {
 }
 
 /**
- * Distance between two palettes: for each color in palette A, find the
- * closest color in palette B, then average those minimum distances.
- * Symmetric by averaging both directions.
+ * Colorfulness threshold for partitioning chromatic vs achromatic panels.
+ * Based on RMS of std(a*) and std(b*) in CIELAB space. B&W scans with
+ * paper tint typically score 2–8; muted color panels 10–15; vivid color 20+.
+ */
+const COLORFULNESS_THRESHOLD = 10;
+
+/**
+ * Color distance between two panels' palettes.
+ *
+ * Strategy: compare the most dominant color (index 0) using LAB distance,
+ * then add a chroma penalty so chromatic and achromatic panels separate
+ * cleanly. The secondary colors contribute a smaller weighted term.
  */
 function paletteDistance(
   a: [number, number, number][] | null,
@@ -47,20 +56,26 @@ function paletteDistance(
 ): number {
   if (!a || !b || a.length === 0 || b.length === 0) return Infinity;
 
-  const directed = (from: number[][], to: number[][]) => {
-    let sum = 0;
-    for (const c of from) {
-      let min = Infinity;
-      for (const d of to) {
-        const dist = labDistance(c, d);
-        if (dist < min) min = dist;
-      }
-      sum += min;
-    }
-    return sum / from.length;
-  };
+  // Primary: distance between most dominant colors (heaviest weight)
+  const primaryDist = labDistance(a[0], b[0]);
 
-  return (directed(a, b) + directed(b, a)) / 2;
+  // Chroma penalty: large when one is chromatic and the other is not
+  const chromaA = labChroma(a[0]);
+  const chromaB = labChroma(b[0]);
+  const chromaPenalty = Math.abs(chromaA - chromaB);
+
+  // Secondary: average LAB distance of remaining palette colors (lighter weight)
+  let secondaryDist = 0;
+  const minLen = Math.min(a.length, b.length);
+  if (minLen > 1) {
+    for (let i = 1; i < minLen; i++) {
+      secondaryDist += labDistance(a[i], b[i]);
+    }
+    secondaryDist /= (minLen - 1);
+  }
+
+  // Weight: 60% primary, 25% chroma, 15% secondary
+  return primaryDist * 0.6 + chromaPenalty * 0.25 + secondaryDist * 0.15;
 }
 
 function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
@@ -79,61 +94,71 @@ function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
     case "dhash": {
       if (sorted.length <= 1) return sorted;
       const hashKey = mode as "phash" | "ahash" | "dhash";
-      const used = new Set<number>();
-      const result: Panel[] = [];
-      let currentIdx = 0;
-      used.add(0);
-      result.push(sorted[0]);
 
-      while (result.length < sorted.length) {
-        let bestIdx = -1;
-        let bestDist = Infinity;
-        const currentHash = sorted[currentIdx][hashKey] ?? "";
-
-        for (let i = 0; i < sorted.length; i++) {
-          if (used.has(i)) continue;
-          const dist = hammingDistance(currentHash, sorted[i][hashKey] ?? "");
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestIdx = i;
-          }
+      // Find the newest panel to use as the reference point.
+      let seedIdx = 0;
+      let newestTime = -Infinity;
+      for (let i = 0; i < sorted.length; i++) {
+        const t = new Date(sorted[i].addedAt).getTime();
+        if (t > newestTime) {
+          newestTime = t;
+          seedIdx = i;
         }
-
-        if (bestIdx === -1) break;
-        used.add(bestIdx);
-        result.push(sorted[bestIdx]);
-        currentIdx = bestIdx;
       }
-      return result;
+
+      const seedHash = sorted[seedIdx][hashKey] ?? "";
+      // Sort all panels by distance from the seed (nearest first).
+      // The seed itself gets distance 0, so it stays first.
+      return sorted.sort((a, b) => {
+        const da = hammingDistance(seedHash, a[hashKey] ?? "");
+        const db = hammingDistance(seedHash, b[hashKey] ?? "");
+        return da - db;
+      });
     }
     case "color": {
       if (sorted.length <= 1) return sorted;
-      const used = new Set<number>();
-      const result: Panel[] = [];
-      let currentIdx = 0;
-      used.add(0);
-      result.push(sorted[0]);
 
-      while (result.length < sorted.length) {
-        let bestIdx = -1;
-        let bestDist = Infinity;
-        const currentColors = sorted[currentIdx].dominantColors;
-
-        for (let i = 0; i < sorted.length; i++) {
-          if (used.has(i)) continue;
-          const dist = paletteDistance(currentColors, sorted[i].dominantColors);
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestIdx = i;
-          }
+      // Find the newest panel to use as the reference point.
+      let seedIdx = 0;
+      let newestTime = -Infinity;
+      for (let i = 0; i < sorted.length; i++) {
+        const t = new Date(sorted[i].addedAt).getTime();
+        if (t > newestTime) {
+          newestTime = t;
+          seedIdx = i;
         }
-
-        if (bestIdx === -1) break;
-        used.add(bestIdx);
-        result.push(sorted[bestIdx]);
-        currentIdx = bestIdx;
       }
-      return result;
+
+      const seed = sorted[seedIdx];
+      const seedColors = seed.dominantColors;
+      const seedIsChromatic = (seed.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+
+      // Partition using the colorfulness score (std dev of a,b channels).
+      // This reliably separates B&W scans (low variance, even with warm
+      // paper tint) from genuinely colorful panels (high variance).
+      const chromatic: Panel[] = [];
+      const achromatic: Panel[] = [];
+      for (const p of sorted) {
+        if ((p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD) {
+          chromatic.push(p);
+        } else {
+          achromatic.push(p);
+        }
+      }
+
+      // Sort each group by palette distance from seed
+      const byDist = (a: Panel, b: Panel) => {
+        const da = paletteDistance(seedColors, a.dominantColors);
+        const db = paletteDistance(seedColors, b.dominantColors);
+        return da - db;
+      };
+      chromatic.sort(byDist);
+      achromatic.sort(byDist);
+
+      // Seed's group comes first
+      return seedIsChromatic
+        ? [...chromatic, ...achromatic]
+        : [...achromatic, ...chromatic];
     }
     default:
       return sorted;
@@ -741,6 +766,14 @@ function getColumnCount() {
   return 3;
 }
 
+/**
+ * Distribute panels into columns using shortest-column assignment for
+ * height balancing, with the constraint that the first panel always goes
+ * into column 0 (top-left) to preserve sort-order visibility.
+ *
+ * initialHeights accounts for the space occupied by controls above each
+ * column (filter in col 0, sort in the last col).
+ */
 function distributeToColumns(
   panels: Panel[],
   colCount: number,
@@ -752,19 +785,26 @@ function distributeToColumns(
     ? [...initialHeights]
     : new Array(colCount).fill(0);
 
-  for (const panel of panels) {
+  for (let idx = 0; idx < panels.length; idx++) {
+    const panel = panels[idx];
     let aspect = DEFAULT_ASPECT;
     if (panel.width && panel.height && panel.width > 0 && panel.height > 0) {
       aspect = panel.width / panel.height;
     }
     const renderedHeight = colWidth / aspect;
 
-    let targetCol = 0;
-    let minHeight = heights[0];
-    for (let i = 1; i < colCount; i++) {
-      if (heights[i] < minHeight) {
-        minHeight = heights[i];
-        targetCol = i;
+    // Force panel 0 into column 0 so the sort-order leader is top-left.
+    let targetCol: number;
+    if (idx === 0) {
+      targetCol = 0;
+    } else {
+      targetCol = 0;
+      let minHeight = heights[0];
+      for (let i = 1; i < colCount; i++) {
+        if (heights[i] < minHeight) {
+          minHeight = heights[i];
+          targetCol = i;
+        }
       }
     }
 
@@ -801,8 +841,6 @@ function MasonryGrid({
     const containerWidth = containerRef.current.offsetWidth;
     const colWidth = (containerWidth - GAP * (colCount - 1)) / colCount;
 
-    // Measure the actual rendered height of each control so the
-    // distribution algorithm accounts for the space they occupy.
     const initialHeights = new Array(colCount).fill(0);
     if (filterRef.current) {
       initialHeights[0] = filterRef.current.offsetHeight + GAP;
@@ -821,8 +859,6 @@ function MasonryGrid({
     return () => window.removeEventListener("resize", layout);
   }, [layout]);
 
-  // Re-layout when the controls expand/collapse, since their height changes.
-  // ResizeObserver catches the animated height transitions cleanly.
   useEffect(() => {
     const observer = new ResizeObserver(() => layout());
     if (filterRef.current) observer.observe(filterRef.current);
