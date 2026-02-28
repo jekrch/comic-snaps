@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install Pillow imagehash
+        run: pip install Pillow imagehash scikit-learn scikit-image numpy
 
       - name: Compute missing image metadata
         run: python scripts/compute-image-metadata.py
