@@ -15,6 +15,7 @@ export interface Panel {
   phash: string;
   ahash: string;
   dhash: string;
+  dominantColors: [number, number, number][] | null;
 }
 
 export interface Gallery {

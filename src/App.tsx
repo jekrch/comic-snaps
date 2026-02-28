@@ -8,7 +8,7 @@ import InfoModal from "./InfoModal";
 // Sort helpers
 // ---------------------------------------------------------------------------
 
-type SortMode = "newest" | "oldest" | "phash" | "ahash" | "dhash";
+type SortMode = "newest" | "oldest" | "phash" | "ahash" | "dhash" | "color";
 
 const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
@@ -16,6 +16,7 @@ const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "phash", label: "PHASH" },
   { value: "ahash", label: "AHASH" },
   { value: "dhash", label: "DHASH" },
+  { value: "color", label: "COLOR" },
 ];
 
 function hammingDistance(a: string, b: string): number {
@@ -25,6 +26,41 @@ function hammingDistance(a: string, b: string): number {
     if (a[i] !== b[i]) dist++;
   }
   return dist + Math.abs(a.length - b.length);
+}
+
+/** Euclidean distance between two CIELAB color vectors. */
+function labDistance(a: number[], b: number[]): number {
+  const dL = a[0] - b[0];
+  const da = a[1] - b[1];
+  const db = a[2] - b[2];
+  return Math.sqrt(dL * dL + da * da + db * db);
+}
+
+/**
+ * Distance between two palettes: for each color in palette A, find the
+ * closest color in palette B, then average those minimum distances.
+ * Symmetric by averaging both directions.
+ */
+function paletteDistance(
+  a: [number, number, number][] | null,
+  b: [number, number, number][] | null
+): number {
+  if (!a || !b || a.length === 0 || b.length === 0) return Infinity;
+
+  const directed = (from: number[][], to: number[][]) => {
+    let sum = 0;
+    for (const c of from) {
+      let min = Infinity;
+      for (const d of to) {
+        const dist = labDistance(c, d);
+        if (dist < min) min = dist;
+      }
+      sum += min;
+    }
+    return sum / from.length;
+  };
+
+  return (directed(a, b) + directed(b, a)) / 2;
 }
 
 function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
@@ -57,6 +93,35 @@ function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
         for (let i = 0; i < sorted.length; i++) {
           if (used.has(i)) continue;
           const dist = hammingDistance(currentHash, sorted[i][hashKey] ?? "");
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIdx = i;
+          }
+        }
+
+        if (bestIdx === -1) break;
+        used.add(bestIdx);
+        result.push(sorted[bestIdx]);
+        currentIdx = bestIdx;
+      }
+      return result;
+    }
+    case "color": {
+      if (sorted.length <= 1) return sorted;
+      const used = new Set<number>();
+      const result: Panel[] = [];
+      let currentIdx = 0;
+      used.add(0);
+      result.push(sorted[0]);
+
+      while (result.length < sorted.length) {
+        let bestIdx = -1;
+        let bestDist = Infinity;
+        const currentColors = sorted[currentIdx].dominantColors;
+
+        for (let i = 0; i < sorted.length; i++) {
+          if (used.has(i)) continue;
+          const dist = paletteDistance(currentColors, sorted[i].dominantColors);
           if (dist < bestDist) {
             bestDist = dist;
             bestIdx = i;
