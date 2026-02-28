@@ -19,21 +19,32 @@ const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "color", label: "COLOR" },
 ];
 
-function hammingDistance(a: string, b: string): number {
-  let dist = 0;
-  const len = Math.min(a.length, b.length);
-  for (let i = 0; i < len; i++) {
-    if (a[i] !== b[i]) dist++;
-  }
-  return dist + Math.abs(a.length - b.length);
-}
-
 /** Euclidean distance between two CIELAB color vectors. */
 function labDistance(a: number[], b: number[]): number {
   const dL = a[0] - b[0];
   const da = a[1] - b[1];
   const db = a[2] - b[2];
   return Math.sqrt(dL * dL + da * da + db * db);
+}
+
+/**
+ * Hamming distance between two hex-encoded hash strings.
+ * Counts the number of differing bits across all hex digits.
+ */
+function hammingDistanceHex(a: string, b: string): number {
+  const len = Math.max(a.length, b.length);
+  let dist = 0;
+  for (let i = 0; i < len; i++) {
+    const na = parseInt(a[i] ?? "0", 16);
+    const nb = parseInt(b[i] ?? "0", 16);
+    // XOR gives bits that differ; popcount via lookup
+    let xor = na ^ nb;
+    while (xor) {
+      dist += xor & 1;
+      xor >>= 1;
+    }
+  }
+  return dist;
 }
 
 /**
@@ -74,6 +85,23 @@ function paletteDistance(
   return primaryDist * 0.75 + secondaryDist * 0.25;
 }
 
+/**
+ * Compute a sort key for a panel's dominant color using a hue-based
+ * ordering. Within each chromatic/achromatic partition, panels are sorted
+ * by the hue angle (atan2(b*, a*)) of their most dominant CIELAB color,
+ * with lightness as a tiebreaker. This produces a natural spectrum walk.
+ */
+function colorSortKey(panel: Panel): number {
+  const colors = panel.dominantColors;
+  if (!colors || colors.length === 0) return Infinity;
+  const [L, a, b] = colors[0];
+  // atan2 gives radians in [-π, π]; shift to [0, 2π] for sorting.
+  const hue = Math.atan2(b, a);
+  const hueNorm = hue < 0 ? hue + 2 * Math.PI : hue;
+  // Primary sort by hue (scaled up), tiebreak by lightness.
+  return hueNorm * 1000 + L;
+}
+
 function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
   const sorted = [...panels];
   switch (mode) {
@@ -91,43 +119,50 @@ function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
       if (sorted.length <= 1) return sorted;
       const hashKey = mode as "phash" | "ahash" | "dhash";
 
-      // Find the newest panel to use as the reference point.
-      let seedIdx = 0;
-      let newestTime = -Infinity;
-      for (let i = 0; i < sorted.length; i++) {
-        const t = new Date(sorted[i].addedAt).getTime();
-        if (t > newestTime) {
-          newestTime = t;
-          seedIdx = i;
+      // Nearest-neighbor chain by Hamming distance: start from the first
+      // panel, then greedily pick the closest unvisited panel at each step.
+      // Panels with missing hashes are appended at the end (oldest-first).
+      const withHash: Panel[] = [];
+      const withoutHash: Panel[] = [];
+      for (const p of sorted) {
+        if (p[hashKey]) withHash.push(p);
+        else withoutHash.push(p);
+      }
+      withoutHash.sort(
+        (a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
+      );
+
+      if (withHash.length <= 1) return [...withHash, ...withoutHash];
+
+      const result: Panel[] = [];
+      const used = new Set<number>();
+
+      // Start with the first panel
+      result.push(withHash[0]);
+      used.add(0);
+
+      for (let step = 1; step < withHash.length; step++) {
+        const currentHash = String(withHash[result.length - 1][hashKey]);
+        let bestIdx = -1;
+        let bestDist = Infinity;
+        for (let i = 0; i < withHash.length; i++) {
+          if (used.has(i)) continue;
+          const dist = hammingDistanceHex(currentHash, String(withHash[i][hashKey]));
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIdx = i;
+          }
+        }
+        if (bestIdx >= 0) {
+          result.push(withHash[bestIdx]);
+          used.add(bestIdx);
         }
       }
 
-      const seedHash = sorted[seedIdx][hashKey] ?? "";
-      // Sort all panels by distance from the seed (nearest first).
-      // The seed itself gets distance 0, so it stays first.
-      return sorted.sort((a, b) => {
-        const da = hammingDistance(seedHash, a[hashKey] ?? "");
-        const db = hammingDistance(seedHash, b[hashKey] ?? "");
-        return da - db;
-      });
+      return [...result, ...withoutHash];
     }
     case "color": {
       if (sorted.length <= 1) return sorted;
-
-      // Find the newest panel to use as the reference point.
-      let seedIdx = 0;
-      let newestTime = -Infinity;
-      for (let i = 0; i < sorted.length; i++) {
-        const t = new Date(sorted[i].addedAt).getTime();
-        if (t > newestTime) {
-          newestTime = t;
-          seedIdx = i;
-        }
-      }
-
-      const seed = sorted[seedIdx];
-      const seedColors = seed.dominantColors;
-      const seedIsChromatic = (seed.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
 
       // Partition using the colorfulness score (std dev of a,b channels).
       // This reliably separates B&W scans (low variance, even with warm
@@ -142,19 +177,23 @@ function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
         }
       }
 
-      // Sort each group by palette distance from seed
-      const byDist = (a: Panel, b: Panel) => {
-        const da = paletteDistance(seedColors, a.dominantColors);
-        const db = paletteDistance(seedColors, b.dominantColors);
-        return da - db;
+      // Sort each group by hue angle of dominant color, with lightness tiebreak,
+      // then by oldest-first so the result is visibly different from newest-first
+      // even when color data is missing.
+      const byColor = (a: Panel, b: Panel) => {
+        const ka = colorSortKey(a);
+        const kb = colorSortKey(b);
+        if (ka === Infinity && kb === Infinity) {
+          return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+        }
+        if (ka !== kb) return ka - kb;
+        return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
       };
-      chromatic.sort(byDist);
-      achromatic.sort(byDist);
+      chromatic.sort(byColor);
+      achromatic.sort(byColor);
 
-      // Seed's group comes first
-      return seedIsChromatic
-        ? [...chromatic, ...achromatic]
-        : [...achromatic, ...chromatic];
+      // Chromatic panels first, then achromatic.
+      return [...chromatic, ...achromatic];
     }
     default:
       return sorted;
@@ -666,10 +705,14 @@ export default function App() {
     () => applyFilters(panels, filters),
     [panels, filters]
   );
-  const sortedPanels = useMemo(
-    () => sortPanels(filteredPanels, sortMode),
-    [filteredPanels, sortMode]
-  );
+  const sortedPanels = useMemo(() => {
+    const result = sortPanels(filteredPanels, sortMode);
+    console.log(
+      `[sort] mode=${sortMode} first3=`,
+      result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
+    );
+    return result;
+  }, [filteredPanels, sortMode]);
 
   const showSpinner =
     status === "loading" || (status === "ready" && !imagesLoaded);
@@ -789,7 +832,7 @@ function distributeToColumns(
     }
     const renderedHeight = colWidth / aspect;
 
-    // Force panel 0 into column 0 so the sort-order leader is top-left.
+    // First panel goes into column 0 so sort order reads left-to-right.
     let targetCol: number;
     if (idx === 0) {
       targetCol = 0;
