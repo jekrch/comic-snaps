@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Panel } from "./types";
+import type { Panel } from "../types";
 
 interface Props {
   panel: Panel;

@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import type { Panel } from "./types";
+import type { Panel } from "../types";
 import PanelViewer from "./PanelViewer";
 
 const DOUBLE_CLICK_DELAY = 400;
