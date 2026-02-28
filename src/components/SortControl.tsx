@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { SortMode } from "../sorting";
 import { SORT_OPTIONS } from "../sorting";
+import { ChevronDown } from "lucide-react";
 
 interface SortControlProps {
   activeSort: SortMode;
@@ -29,21 +30,11 @@ export default function SortControl({ activeSort, onSort }: SortControlProps) {
             ? activeSort
             : `BY ${activeSort.toUpperCase()}`}
         </span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={`text-ink-faint transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        >
-          <path d="M3.5 5.5L7 9L10.5 5.5" />
-        </svg>
+        <ChevronDown
+          size={14}
+          className={`text-ink-faint transition-transform duration-200 ${open ? "rotate-180" : ""
+            }`}
+        />
       </button>
 
       <div
@@ -69,10 +60,9 @@ export default function SortControl({ activeSort, onSort }: SortControlProps) {
                     font-display text-[11px] tracking-wider uppercase
                     transition-colors duration-100
                     cursor-pointer
-                    ${
-                      isActive
-                        ? "text-accent bg-accent/8"
-                        : "text-ink-muted hover:text-ink hover:bg-surface-hover"
+                    ${isActive
+                      ? "text-accent bg-accent/8"
+                      : "text-ink-muted hover:text-ink hover:bg-surface-hover"
                     }
                   `}
                 >

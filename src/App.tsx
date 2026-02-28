@@ -6,7 +6,7 @@ import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
-import { MessageCircleMore as MessageSquareMore } from "lucide-react";
+import { MessageCircleMore } from "lucide-react";
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
@@ -91,7 +91,8 @@ export default function App() {
             className="text-ink/80 hover:text-ink transition-colors mr-2 cursor-pointer"
             title="About"
           >
-            <MessageSquareMore size={20} strokeWidth={1.3} />
+
+            <MessageCircleMore size={20} strokeWidth={1.3} />
           </button>
         </div>
       </header>

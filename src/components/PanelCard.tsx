@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import type { Panel } from "../types";
 import PanelViewer from "./PanelViewer";
+import { Expand } from "lucide-react";
 
 const DOUBLE_CLICK_DELAY = 400;
 const MOUSE_TOLERANCE = 20;
@@ -96,21 +97,7 @@ export default function PanelCard({ panel }: Props) {
             "
             aria-label={`View ${panel.title} #${panel.issue} full screen`}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M10 2h4v4" />
-              <path d="M6 14H2v-4" />
-              <path d="M14 2L9.5 6.5" />
-              <path d="M2 14l4.5-4.5" />
-            </svg>
+            <Expand size={16} />
           </button>
 
           <p className="font-display text-sm text-ink leading-tight">

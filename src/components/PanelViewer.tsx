@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Panel } from "../types";
 
 interface Props {
@@ -324,7 +325,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
       {/* Top bar — always above image content via z-20 */}
       <div
         className={`
-          absolute top-0 inset-x-0 z-20 flex items-center justify-between
+          absolute top-0 inset-x-0 z-20 flex items-start justify-between
           px-4 py-3 sm:px-6 sm:py-4
           bg-gradient-to-b from-black/70 via-black/40 to-transparent
           transition-all duration-250 ease-out
@@ -333,18 +334,16 @@ export default function PanelViewer({ panel, onClose }: Props) {
         style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
       >
         <div className="min-w-0 flex-1 px-2!">
-          <p className="font-display text-sm text-white/90 flex flex-wrap items-baseline gap-x-1">
-          <span className="truncate min-w-0">
+          <p className="font-display text-sm text-white/90 leading-snug">
             {panel.title}{" "}
-            <span className="text-accent">#{panel.issue}</span>
-          </span>
-          <span className="text-white/40 shrink-0">({panel.year})</span>
-        </p>
-          <p className="text-xs text-white/60 truncate mt-0.5">
+            <span className="text-accent">#{panel.issue}</span>{" "}
+            <span className="text-white/40">({panel.year})</span>
+          </p>
+          <p className="text-xs text-white/60 mt-0.5 leading-snug">
             {panel.artist}
             <span className="text-white/25 mx-1.5">·</span>
             <span className="text-white/35">
-              (posted by {panel.postedBy}:{` `}               
+              (posted by {panel.postedBy}:{` `}
               {new Date(panel.addedAt).toLocaleDateString(undefined, {
                 month: "short",
                 day: "numeric",
@@ -380,11 +379,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
               className="viewer-btn"
               title="Zoom in"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="7" cy="7" r="4.5" />
-                <path d="M10.5 10.5L14 14" />
-                <path d="M5 7h4M7 5v4" />
-              </svg>
+              <ZoomIn size={16} strokeWidth={1.5} />
             </button>
           )}
 
@@ -400,11 +395,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
               className="viewer-btn"
               title="Zoom out"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="7" cy="7" r="4.5" />
-                <path d="M10.5 10.5L14 14" />
-                <path d="M5 7h4" />
-              </svg>
+              <ZoomOut size={16} strokeWidth={1.5} />
             </button>
           )}
 
@@ -416,9 +407,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
             className={`viewer-btn ${!isTouchDevice ? "ml-1" : ""}`}
             title="Close (Esc)"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M4 4l8 8M12 4l-8 8" />
-            </svg>
+            <X size={16} strokeWidth={1.5} />
           </button>
         </div>
       </div>

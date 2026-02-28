@@ -4,6 +4,7 @@ import type { Filters } from "../filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../filtering";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
+import { ChevronDown } from "lucide-react";
 
 interface FilterControlProps {
   panels: Panel[];
@@ -88,21 +89,12 @@ export default function FilterControl({
             </span>
           )}
         </span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={`text-ink-faint transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        >
-          <path d="M3.5 5.5L7 9L10.5 5.5" />
-        </svg>
+        <ChevronDown
+  size={14}
+  className={`text-ink-faint transition-transform duration-200 ${
+    open ? "rotate-180" : ""
+  }`}
+/>
       </button>
 
       {/* expanded body */}

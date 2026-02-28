@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface FacetSectionProps {
@@ -30,7 +31,7 @@ export default function FacetSection({
           hover:bg-surface-hover transition-colors duration-100
         "
       >
-        <span className="font-display text-[10px] tracking-widest text-ink-faint uppercase">
+        <span className="font-display text-[10px] tracking-widest text-accent uppercase">
           {title}
         </span>
         <span className="flex items-center gap-1.5">
@@ -39,21 +40,11 @@ export default function FacetSection({
               {selected.size}
             </span>
           )}
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`text-ink-faint transition-transform duration-150 ${
-              expanded ? "rotate-180" : ""
-            }`}
-          >
-            <path d="M2.5 4L5 6.5L7.5 4" />
-          </svg>
+          <ChevronDown
+            size={12}
+            className={`text-ink-faint transition-transform duration-200 ${expanded ? "rotate-180" : ""
+              }`}
+          />
         </span>
       </button>
 
@@ -77,10 +68,9 @@ export default function FacetSection({
                     flex items-center justify-between gap-2
                     transition-colors duration-100
                     cursor-pointer
-                    ${
-                      isActive
-                        ? "text-accent bg-accent/8"
-                        : "text-ink-muted hover:text-ink hover:bg-surface-hover"
+                    ${isActive
+                      ? "text-accent bg-accent/8"
+                      : "text-ink-muted hover:text-ink hover:bg-surface-hover"
                     }
                   `}
                 >
@@ -93,9 +83,8 @@ export default function FacetSection({
                     </span>
                   </span>
                   <span
-                    className={`font-display text-[9px] tabular-nums flex-shrink-0 ${
-                      isActive ? "text-accent/60" : "text-ink-faint"
-                    }`}
+                    className={`font-display text-[9px] tabular-nums flex-shrink-0 ${isActive ? "text-accent/60" : "text-ink-faint"
+                      }`}
                   >
                     {item.count}
                   </span>
