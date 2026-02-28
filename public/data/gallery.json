@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "space-riders-galaxy-of-brutality-1-1772313901",
+      "title": "Space Riders Galaxy of Brutality",
+      "slug": "space-riders-galaxy-of-brutality",
+      "issue": 1,
+      "year": 2017,
+      "artist": "",
+      "image": "images/space-riders-galaxy-of-brutality/issue-1-1772313901.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jenny",
+      "addedAt": "2026-02-28T21:25:02.872Z"
+    },
+    {
       "id": "creatures-of-the-id-1-1772261881",
       "title": "Creatures of the Id",
       "slug": "creatures-of-the-id",
@@ -28,7 +41,7 @@
         [
           22.1,
           6.4,
-          10.0
+          10
         ],
         [
           42.4,
