@@ -42,6 +42,14 @@ export default function InfoModal({ onClose }: Props) {
   return (
     <>
       <style>{`
+        @keyframes hatchFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 0.32; }
+        }
+        @keyframes hatchFadeOut {
+          from { opacity: 0.32; }
+          to   { opacity: 0; }
+        }
         @keyframes hatchDrift {
           0%, 100% { transform: rotate(-5deg) scale(1.15) translate(-4%, 3%); }
           50%       { transform: rotate(-3.5deg) scale(1.18) translate(-3%, 2%); }
@@ -54,6 +62,11 @@ export default function InfoModal({ onClose }: Props) {
           transition-all duration-250 ease-out
           ${active ? "bg-black/80 backdrop-blur-sm" : "bg-black/0 backdrop-blur-none"}
         `}
+        style={{
+          /* extend behind iOS Safari bottom toolbar */
+          minHeight: "100dvh",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
         onClick={handleClose}
         role="dialog"
         aria-modal="true"
@@ -64,10 +77,15 @@ export default function InfoModal({ onClose }: Props) {
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
           style={{
-            opacity: active ? 0.32 : 0,
-            animation: active ? "hatchDrift 10s ease-in-out infinite" : "none",
+            willChange: "opacity",
+            /* extend below safe area so hatching isn't clipped */
+            bottom: "calc(-1 * env(safe-area-inset-bottom, 0px))",
+            animation: closing
+              ? "hatchFadeOut 280ms ease-out forwards"
+              : visible
+                ? "hatchFadeIn 400ms ease-out forwards, hatchDrift 10s ease-in-out 400ms infinite"
+                : undefined,
             transform: "rotate(-5deg) scale(1.15) translate(-4%, 3%)",
-            transition: "opacity 280ms ease-out",
           }}
         >
           <svg
@@ -102,35 +120,7 @@ export default function InfoModal({ onClose }: Props) {
               </radialGradient>
 
               <mask id={maskId}>
-                {/* Perimeter fade layer */}
                 <rect width="100%" height="100%" fill={`url(#${fadeId})`} />
-                {/* Oversized CS letters — knocked out */}
-                {/* <text
-                  x="5%"
-                  y="75%"
-                  dominantBaseline="auto"
-                  textAnchor="start"
-                  fontFamily="var(--font-display), monospace"
-                  fontWeight="300"
-                  fontSize="800"
-                  letterSpacing="-0.06em"
-                  fill="black"
-                >
-                  C
-                </text>
-                <text
-                  x="38%"
-                  y="95%"
-                  dominantBaseline="auto"
-                  textAnchor="start"
-                  fontFamily="var(--font-display), monospace"
-                  fontWeight="300"
-                  fontSize="800"
-                  letterSpacing="-0.06em"
-                  fill="black"
-                >
-                  S
-                </text> */}
               </mask>
             </defs>
             <rect
