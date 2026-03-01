@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "absolute-martian-manhunter-8-1772397781",
+      "title": "Absolute Martian Manhunter",
+      "slug": "absolute-martian-manhunter",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Javier Rodriguez",
+      "image": "images/absolute-martian-manhunter/issue-8-1772397781.jpg",
+      "notes": null,
+      "tags": [
+        "lettering",
+        "diegetic thought balloon"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-01T20:43:03.096Z"
+    },
+    {
       "id": "frank-1-1772394369",
       "title": "Frank",
       "slug": "frank",
@@ -25,7 +41,7 @@
         ],
         [
           83.2,
-          3.0,
+          3,
           0.7
         ],
         [
@@ -34,7 +50,7 @@
           0.8
         ]
       ],
-      "colorfulness": 2.0,
+      "colorfulness": 2,
       "phash": "aac847cee8357863",
       "ahash": "f9fdc7c7f19d0700",
       "dhash": "d1518d8f21354c4d"
@@ -65,7 +81,7 @@
         [
           75.9,
           6.8,
-          15.0
+          15
         ],
         [
           35.4,
@@ -99,16 +115,16 @@
       "dominantColors": [
         [
           47.2,
-          7.0,
+          7,
           -11.8
         ],
         [
-          28.0,
+          28,
           8.2,
           -8.4
         ],
         [
-          68.0,
+          68,
           5.3,
           -13.7
         ]
