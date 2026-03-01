@@ -14,7 +14,30 @@
         "diegetic thought balloon"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-01T20:43:03.096Z"
+      "addedAt": "2026-03-01T20:43:03.096Z",
+      "width": 408,
+      "height": 1280,
+      "dominantColors": [
+        [
+          56.4,
+          5.5,
+          8.6
+        ],
+        [
+          19.3,
+          2.7,
+          8.4
+        ],
+        [
+          57.8,
+          40.3,
+          54.0
+        ]
+      ],
+      "colorfulness": 14.7,
+      "phash": "cb346be4381fe01e",
+      "ahash": "016d3d193cf93c38",
+      "dhash": "53d1457175c35151"
     },
     {
       "id": "frank-1-1772394369",
