@@ -248,7 +248,8 @@
       "image": "images/madman-adventures-mini-comic/issue-1-1771975358.jpg",
       "notes": null,
       "tags": [
-        "clear line"
+        "clear line", 
+        "emanata"
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-24T23:22:39.341Z",
@@ -836,7 +837,8 @@
       "tags": [
         "static camera",
         "schlub",
-        "hatching"
+        "hatching", 
+        "emanata"
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-22T22:19:26.066Z",
@@ -992,6 +994,7 @@
       "artist": "Robert Crumb",
       "image": "images/xyz/issue-1-1771793421.jpg",
       "notes": null,
+      "tags": ["sound effects", "surrealism", "paneling"]
       "postedBy": "Jacob",
       "addedAt": "2026-02-22T20:50:22.606Z",
       "width": 960,
