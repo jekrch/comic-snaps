@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "red-book-4-1772394229",
+      "title": "Red Book",
+      "slug": "red-book",
+      "issue": 4,
+      "year": 2026,
+      "artist": "Michael Avon Oeming",
+      "image": "images/red-book/issue-4-1772394229.jpg",
+      "notes": null,
+      "tags": [
+        "screentone",
+        "cel shading"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-01T19:43:50.349Z"
+    },
+    {
       "id": "hyde-street-10-1772390798",
       "title": "Hyde Street",
       "slug": "hyde-street",
@@ -23,7 +39,7 @@
         [
           69.8,
           5.2,
-          -13.0
+          -13
         ],
         [
           30.6,
@@ -31,7 +47,7 @@
           -8.6
         ]
       ],
-      "colorfulness": 5.0,
+      "colorfulness": 5,
       "phash": "c6f32262d56ea41b",
       "ahash": "fcfcfffe38300000",
       "dhash": "c580a26250e4e5f4"
