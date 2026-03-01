@@ -11,7 +11,6 @@ export default function InfoModal({ onClose }: Props) {
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
-  const [, setBlurActive] = useState(false);
 
   // randomise on mount, same as HatchFiller
   const { rotation, color } = useMemo(() => {
@@ -21,30 +20,30 @@ export default function InfoModal({ onClose }: Props) {
     return { rotation: pick(rotations), color: pick(colors) };
   }, []);
 
-  // Lock body scroll while modal is open
+  useEffect(() => {
+    requestAnimationFrame(() => setVisible(true));
+  }, []);
+
+  // Lock scroll without position:fixed (preserves Safari toolbar background)
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
 
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    body.style.overscrollBehavior = "none";
 
     return () => {
-      html.style.overflow = '';
-      body.style.overflow = '';
+      html.style.overflow = "";
+      body.style.overflow = "";
+      html.style.overscrollBehavior = "";
+      body.style.overscrollBehavior = "";
     };
-  }, []);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setVisible(true);
-      setBlurActive(true);
-    });
   }, []);
 
   const handleClose = useCallback(() => {
     setClosing(true);
-    setBlurActive(false);
     setTimeout(onClose, 300);
   }, [onClose]);
 
@@ -79,26 +78,32 @@ export default function InfoModal({ onClose }: Props) {
       <div
         className="fixed z-50 flex items-center justify-center"
         style={{
-          /* Extend beyond the viewport in all directions to cover
-             iOS Safari's toolbar/safe-area regions */
           top: "-100px",
           left: 0,
           right: 0,
           bottom: "-100px",
-          /* Prevent iOS rubber-band / momentum scrolling on the overlay */
           overscrollBehavior: "none",
           touchAction: "none",
         }}
-        onClick={handleClose}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleClose();
+        }}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleClose();
+        }}
         onTouchMove={(e) => e.preventDefault()}
         role="dialog"
         aria-modal="true"
         aria-label="About Comic Snaps"
       >
-        {/* Faux-blur scrim — opacity-only animation, no backdrop-filter */}
+        {/* Faux-blur scrim */}
         <div
           className={`
-            absolute inset-0 pointer-events-none
+            absolute inset-0
             transition-opacity duration-250 ease-out
             ${active ? "opacity-100" : "opacity-0"}
           `}
@@ -107,9 +112,10 @@ export default function InfoModal({ onClose }: Props) {
           }}
           aria-hidden="true"
         />
+
         {/* ── Hatch-pattern backdrop ── */}
         <div
-          className="absolute inset-0 pointer-events-none select-none"
+          className="absolute inset-0 select-none"
           aria-hidden="true"
           style={{
             willChange: "opacity",
@@ -176,8 +182,10 @@ export default function InfoModal({ onClose }: Props) {
             transition-all duration-250 ease-out
             ${active ? "opacity-100 scale-100" : "opacity-0 scale-95"}
           `}
-          style={{ touchAction: "auto" }}
           onClick={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           {/* Close */}
           <button
