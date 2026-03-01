@@ -69,7 +69,7 @@ export default function InfoModal({ onClose }: Props) {
       <div
         className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         style={{
-          minHeight: "100dvh",
+          minHeight: "150dvh",
           paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
         onClick={handleClose}
@@ -80,10 +80,10 @@ export default function InfoModal({ onClose }: Props) {
         {/* Faux-blur scrim — opacity-only animation, no backdrop-filter */}
         <div
           className={`
-      absolute inset-0 pointer-events-none
-      transition-opacity duration-250 ease-out
-      ${active ? "opacity-100" : "opacity-0"}
-    `}
+            absolute inset-0 pointer-events-none
+            transition-opacity duration-250 ease-out
+            ${active ? "opacity-100" : "opacity-0"}
+          `}
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.80)",
             /* static blur on a pseudo-element alternative: */
@@ -155,7 +155,7 @@ export default function InfoModal({ onClose }: Props) {
         {/* ── Modal card ── */}
         <div
           className={`
-            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
+            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px] -translate-y-5/6
             text-center rounded-md
             border border-[var(--color-border,rgba(74,71,69,0.25))]
             bg-[var(--color-surface-raised)]
