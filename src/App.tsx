@@ -106,10 +106,9 @@ const handleSortChange = useCallback(
           </h1>
           <button
             onClick={() => setShowInfo(true)}
-            className="text-ink/80 hover:text-ink transition-colors mr-2 cursor-pointer"
+            className="text-ink/80 hover:text-ink transition-colors mr-2 cursor-pointer p-2 -m-2"
             title="About"
           >
-
             <MessageCircleMore size={20} strokeWidth={1.3} />
           </button>
         </div>
