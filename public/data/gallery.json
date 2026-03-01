@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "hyde-street-10-1772390798",
+      "title": "Hyde Street",
+      "slug": "hyde-street",
+      "issue": 10,
+      "year": 2026,
+      "artist": "Francis Portela",
+      "image": "images/hyde-street/issue-10-1772390798.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jenny",
+      "addedAt": "2026-03-01T18:46:39.750Z"
+    },
+    {
       "id": "space-riders-galaxy-of-brutality-1-1772313901",
       "title": "Space Riders Galaxy of Brutality",
       "slug": "space-riders-galaxy-of-brutality",
@@ -9,14 +22,17 @@
       "artist": "Alexis Ziritt",
       "image": "images/space-riders-galaxy-of-brutality/issue-1-1772313901.jpg",
       "notes": null,
-      "tags": ["two-page spread", "surrealism"],
+      "tags": [
+        "two-page spread",
+        "surrealism"
+      ],
       "postedBy": "Jenny",
       "addedAt": "2026-02-28T21:25:02.872Z",
       "width": 1784,
       "height": 780,
       "dominantColors": [
         [
-          24.0,
+          24,
           16.4,
           16.1
         ],
@@ -248,7 +264,7 @@
       "image": "images/madman-adventures-mini-comic/issue-1-1771975358.jpg",
       "notes": null,
       "tags": [
-        "clear line", 
+        "clear line",
         "emanata"
       ],
       "postedBy": "Jacob",
@@ -837,7 +853,7 @@
       "tags": [
         "static camera",
         "schlub",
-        "hatching", 
+        "hatching",
         "emanata"
       ],
       "postedBy": "Jacob",
@@ -994,7 +1010,11 @@
       "artist": "Robert Crumb",
       "image": "images/xyz/issue-1-1771793421.jpg",
       "notes": null,
-      "tags": ["sound effects", "surrealism", "paneling"],
+      "tags": [
+        "sound effects",
+        "surrealism",
+        "paneling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-22T20:50:22.606Z",
       "width": 960,
