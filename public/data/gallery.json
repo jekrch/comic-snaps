@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "frank-1-1772394369",
+      "title": "Frank",
+      "slug": "frank",
+      "issue": 1,
+      "year": 1996,
+      "artist": "Jim Woodring",
+      "image": "images/frank/issue-1-1772394369.jpg",
+      "notes": null,
+      "tags": [
+        "hatching",
+        "contour hatching"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-01T19:46:10.899Z"
+    },
+    {
       "id": "red-book-4-1772394229",
       "title": "Red Book",
       "slug": "red-book",
@@ -20,7 +36,7 @@
       "dominantColors": [
         [
           55.9,
-          -0.0,
+          0,
           1.4
         ],
         [
@@ -31,7 +47,7 @@
         [
           39.9,
           2.2,
-          3.0
+          3
         ]
       ],
       "colorfulness": 8.8,
