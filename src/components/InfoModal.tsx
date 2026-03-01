@@ -70,7 +70,7 @@ export default function InfoModal({ onClose }: Props) {
         className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         style={{
           minHeight: "150dvh",
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          paddingBottom: "env(0px)",
         }}
         onClick={handleClose}
         role="dialog"
