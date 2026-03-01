@@ -17,6 +17,8 @@ export interface Panel {
   dhash: string;
   dominantColors: [number, number, number][] | null;
   colorfulness: number | null;
+  blur: "ew" | "nsfw" | null;
+  blurStart: "all" | "top" | "bottom" | "right" | "left" | null;
 }
 
 export interface Gallery {
