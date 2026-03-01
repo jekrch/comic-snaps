@@ -51,8 +51,8 @@ function generatePlacement(): PlacementStyle {
     return { scale: 1, offsetX: 0, offsetY: 0 };
   }
   return {
-    scale: randomBetween(1.1, 1.8),
-    offsetX: randomBetween(-30, 30),
+    scale: randomBetween(1.1, 2.8),
+    offsetX: randomBetween(-20, 20),
     offsetY: randomBetween(-25, 25),
   };
 }
