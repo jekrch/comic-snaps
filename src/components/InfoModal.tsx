@@ -24,21 +24,25 @@ export default function InfoModal({ onClose }: Props) {
     requestAnimationFrame(() => setVisible(true));
   }, []);
 
-  // Lock scroll without position:fixed (preserves Safari toolbar background)
+  // Lock scroll with position:fixed (gives solid bg behind Safari toolbar)
   useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    html.style.overscrollBehavior = "none";
-    body.style.overscrollBehavior = "none";
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+    const prevBg = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "rgba(0, 0, 0, 0.95)";
 
     return () => {
-      html.style.overflow = "";
-      body.style.overflow = "";
-      html.style.overscrollBehavior = "";
-      body.style.overscrollBehavior = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      document.body.style.backgroundColor = prevBg;
+      window.scrollTo(0, scrollY);
     };
   }, []);
 
