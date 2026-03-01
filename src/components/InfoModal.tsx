@@ -10,6 +10,7 @@ export default function InfoModal({ onClose }: Props) {
   const [closing, setClosing] = useState(false);
   const patternId = useId();
   const maskId = useId();
+  const fadeId = useId();
 
   // randomise on mount, same as HatchFiller
   const { rotation, color } = useMemo(() => {
@@ -25,7 +26,6 @@ export default function InfoModal({ onClose }: Props) {
 
   const handleClose = useCallback(() => {
     setClosing(true);
-    setTimeout(() => setVisible(false), 80);
     setTimeout(onClose, 300);
   }, [onClose]);
 
@@ -67,9 +67,7 @@ export default function InfoModal({ onClose }: Props) {
             opacity: active ? 0.32 : 0,
             animation: active ? "hatchDrift 10s ease-in-out infinite" : "none",
             transform: "rotate(-5deg) scale(1.15) translate(-4%, 3%)",
-            transition: closing
-              ? "opacity 100ms ease-out"
-              : "opacity 300ms ease-out",
+            transition: "opacity 280ms ease-out",
           }}
         >
           <svg
@@ -91,12 +89,22 @@ export default function InfoModal({ onClose }: Props) {
                   x1="0" y1="0" x2="0" y2="7"
                   stroke={color}
                   strokeWidth="5"
-                  strokeOpacity="0.8"
+                  strokeOpacity="1"
                 />
               </pattern>
+
+              {/* Radial fade: solid centre → transparent edges */}
+              <radialGradient id={fadeId} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="white" stopOpacity="1" />
+                <stop offset="55%" stopColor="white" stopOpacity="0.85" />
+                <stop offset="80%" stopColor="white" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="white" stopOpacity="0" />
+              </radialGradient>
+
               <mask id={maskId}>
-                <rect width="100%" height="100%" fill="white" />
-                {/* Oversized CS letters — knocked out, cropped at edges */}
+                {/* Perimeter fade layer */}
+                <rect width="100%" height="100%" fill={`url(#${fadeId})`} />
+                {/* Oversized CS letters — knocked out */}
                 <text
                   x="5%"
                   y="75%"
