@@ -105,7 +105,7 @@ export default function InfoModal({ onClose }: Props) {
                 {/* Perimeter fade layer */}
                 <rect width="100%" height="100%" fill={`url(#${fadeId})`} />
                 {/* Oversized CS letters — knocked out */}
-                <text
+                {/* <text
                   x="5%"
                   y="75%"
                   dominantBaseline="auto"
@@ -130,7 +130,7 @@ export default function InfoModal({ onClose }: Props) {
                   fill="black"
                 >
                   S
-                </text>
+                </text> */}
               </mask>
             </defs>
             <rect
