@@ -51,9 +51,9 @@ function generatePlacement(): PlacementStyle {
     return { scale: 1, offsetX: 0, offsetY: 0 };
   }
   return {
-    scale: randomBetween(1.1, 2.8),
-    offsetX: randomBetween(-20, 20),
-    offsetY: randomBetween(-25, 25),
+    scale: randomBetween(1.1, 2.0),
+    offsetX: randomBetween(-10, 10),
+    offsetY: randomBetween(-12, 12),
   };
 }
 
@@ -185,9 +185,14 @@ export default function HatchFiller({
       if (width > 0 && height > 0) setSize({ width, height });
     };
     update();
+    // iOS Safari often needs a second pass after layout settles
+    const timer = setTimeout(update, 150);
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      clearTimeout(timer);
+    };
   }, []);
 
   // Determine the stamp (assigned or random fallback), pinned on first render
@@ -236,11 +241,19 @@ export default function HatchFiller({
   );
 
   const baseIconSize = Math.min(size.width, size.height) * 0.7;
-  const iconSize = baseIconSize * placement.scale;
+  const iconSize = Math.min(
+    baseIconSize * placement.scale,
+    Math.min(size.width, size.height) * 0.95
+  );
   const half = iconSize / 2;
 
-  const cx = size.width / 2 + (placement.offsetX / 100) * size.width;
-  const cy = size.height / 2 + (placement.offsetY / 100) * size.height;
+  const rawCx = size.width / 2 + (placement.offsetX / 100) * size.width;
+  const rawCy = size.height / 2 + (placement.offsetY / 100) * size.height;
+
+  // Clamp so the icon stays mostly within the container
+  const margin = half * 0.3;
+  const cx = Math.max(margin, Math.min(size.width - margin, rawCx));
+  const cy = Math.max(margin, Math.min(size.height - margin, rawCy));
 
   const fontSize = 100;
 
