@@ -185,13 +185,15 @@ export default function HatchFiller({
       if (width > 0 && height > 0) setSize({ width, height });
     };
     update();
-    // iOS Safari often needs a second pass after layout settles
-    const timer = setTimeout(update, 150);
+    // iOS Safari often needs extra passes after layout settles
+    const t1 = setTimeout(update, 150);
+    const t2 = setTimeout(update, 500);
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => {
       ro.disconnect();
-      clearTimeout(timer);
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
   }, []);
 
@@ -282,16 +284,22 @@ export default function HatchFiller({
       'stroke="black"'
     );
 
+    // Use SVG transform attribute instead of CSS transform for positioning.
+    // iOS Safari / WebKit mobile does not reliably apply CSS transforms
+    // (e.g. style={{ transform: translate(...) }}) on nested <svg> elements.
+    // Baking the offset into a <g transform="..."> is universally supported.
     maskContent = (
-      <g className="hatch-text">
+      <g
+        className="hatch-text"
+        transform={`translate(${cx - half}, ${cy - half})`}
+      >
         <svg
-          x={cx}
-          y={cy}
+          x={0}
+          y={0}
           width={iconSize}
           height={iconSize}
           viewBox="0 0 24 24"
           overflow="visible"
-          style={{ transform: `translate(-${half}px, -${half}px)` }}
           fill="none"
           stroke="black"
           strokeWidth="2"
