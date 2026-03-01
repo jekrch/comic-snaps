@@ -65,15 +65,10 @@ export default function InfoModal({ onClose }: Props) {
         }
       `}</style>
 
+      {/* ── Overlay container ── */}
       <div
-        className={`
-          fixed inset-0 z-50 flex items-center justify-center overflow-hidden
-          ${blurActive ? "backdrop-blur-sm" : ""}
-          transition-[background-color] duration-250 ease-out
-          ${active ? "bg-black/80" : "bg-black/0"}
-        `}
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         style={{
-          /* extend behind iOS Safari bottom toolbar */
           minHeight: "100dvh",
           paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
@@ -82,12 +77,27 @@ export default function InfoModal({ onClose }: Props) {
         aria-modal="true"
         aria-label="About Comic Snaps"
       >
+        {/* Faux-blur scrim — opacity-only animation, no backdrop-filter */}
+        <div
+          className={`
+      absolute inset-0 pointer-events-none
+      transition-opacity duration-250 ease-out
+      ${active ? "opacity-100" : "opacity-0"}
+    `}
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.80)",
+            /* static blur on a pseudo-element alternative: */
+            /* or just use a solid dark scrim which is what most of the visual effect was anyway */
+          }}
+          aria-hidden="true"
+        />
         {/* ── Hatch-pattern backdrop ── */}
         <div
           className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
           style={{
             willChange: "opacity",
+            opacity: 0,
             /* extend below safe area so hatching isn't clipped */
             bottom: "calc(-1 * env(safe-area-inset-bottom, 0px))",
             animation: closing
