@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jenny",
-      "addedAt": "2026-03-01T18:46:39.750Z"
+      "addedAt": "2026-03-01T18:46:39.750Z",
+      "width": 978,
+      "height": 1280,
+      "dominantColors": [
+        [
+          49.9,
+          6.8,
+          -11.9
+        ],
+        [
+          69.8,
+          5.2,
+          -13.0
+        ],
+        [
+          30.6,
+          7.8,
+          -8.6
+        ]
+      ],
+      "colorfulness": 5.0,
+      "phash": "c6f32262d56ea41b",
+      "ahash": "fcfcfffe38300000",
+      "dhash": "c580a26250e4e5f4"
     },
     {
       "id": "space-riders-galaxy-of-brutality-1-1772313901",
