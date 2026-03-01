@@ -188,7 +188,7 @@ export default function PanelCard({ panel }: Props) {
             {/* Label */}
             {isBlurred && (
               <span className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
-                <span className="font-display text-xs text-ink/90 text-center px-3 py-1.5 leading-snug select-none bg-black/75">
+                <span className="font-display text-xs text-white text-center px-3 py-1.5 leading-snug select-none bg-black/75">
                   {BLUR_COPY[panel.blur!]}
                 </span>
               </span>
