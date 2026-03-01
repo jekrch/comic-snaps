@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import type { Filters } from "../filtering";
-import { EMPTY_FILTERS } from "../filtering";
 import type { SortMode } from "../sorting";
 
 const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "postedBy"];
