@@ -1,6 +1,13 @@
 import type { Panel } from "./types";
 
-export type SortMode = "newest" | "oldest" | "phash" | "ahash" | "dhash" | "color";
+export type SortMode =
+  | "newest"
+  | "oldest"
+  | "phash"
+  | "ahash"
+  | "dhash"
+  | "color"
+  | "embedding";
 
 export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
@@ -9,7 +16,41 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "ahash", label: "AHASH" },
   { value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
+  { value: "embedding", label: "SIMILAR" },
 ];
+
+// --- Embedding cache (lazy-loaded) ---
+
+export type EmbeddingMap = Record<string, number[]>;
+
+let embeddingCache: EmbeddingMap | null = null;
+let embeddingLoadPromise: Promise<EmbeddingMap> | null = null;
+
+/**
+ * Lazy-load embeddings.json. Returns the cached map on subsequent calls.
+ * The file is only fetched when the user first selects embedding-based sort.
+ */
+export async function loadEmbeddings(): Promise<EmbeddingMap> {
+  if (embeddingCache) return embeddingCache;
+  if (embeddingLoadPromise) return embeddingLoadPromise;
+
+  embeddingLoadPromise = fetch("/data/embeddings.json")
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to load embeddings: ${res.status}`);
+      return res.json();
+    })
+    .then((data: { embeddings: EmbeddingMap }) => {
+      embeddingCache = data.embeddings;
+      return embeddingCache;
+    })
+    .catch((err) => {
+      console.error("Could not load embeddings:", err);
+      embeddingLoadPromise = null;
+      return {} as EmbeddingMap;
+    });
+
+  return embeddingLoadPromise;
+}
 
 // colorfulness threshold for partitioning chromatic vs achromatic panels.
 // based on RMS of std(a*) and std(b*) in CIELAB space. B&W scans with
@@ -41,6 +82,19 @@ function hammingDistanceHex(a: string, b: string): number {
     }
   }
   return dist;
+}
+
+/**
+ * cosine distance between two unit-normalized embedding vectors.
+ * since vectors are pre-normalized, cosine similarity = dot product,
+ * and distance = 1 - dot product. range: [0, 2].
+ */
+function cosineDistance(a: number[], b: number[]): number {
+  let dot = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+  }
+  return 1 - dot;
 }
 
 /**
@@ -88,6 +142,74 @@ function colorSortKey(panel: Panel): number {
   return hueNorm * 1000 + L;
 }
 
+/**
+ * generic greedy nearest-neighbor chain.
+ *
+ * given a list of items and a distance function, starts from the first
+ * item and greedily picks the closest unvisited item at each step.
+ * O(n²) but fine for gallery-sized collections.
+ */
+function nearestNeighborChain<T>(
+  items: T[],
+  distanceFn: (a: T, b: T) => number
+): T[] {
+  if (items.length <= 1) return [...items];
+
+  const result: T[] = [items[0]];
+  const used = new Set<number>([0]);
+
+  for (let step = 1; step < items.length; step++) {
+    const current = result[result.length - 1];
+    let bestIdx = -1;
+    let bestDist = Infinity;
+
+    for (let i = 0; i < items.length; i++) {
+      if (used.has(i)) continue;
+      const dist = distanceFn(current, items[i]);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    }
+
+    if (bestIdx >= 0) {
+      result.push(items[bestIdx]);
+      used.add(bestIdx);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * sort panels by CLIP embedding similarity using a nearest-neighbor chain.
+ * panels without embeddings are appended at the end, oldest-first.
+ */
+function sortByEmbedding(panels: Panel[], embeddings: EmbeddingMap): Panel[] {
+  const withEmb: Panel[] = [];
+  const withoutEmb: Panel[] = [];
+
+  for (const p of panels) {
+    if (embeddings[p.id]) withEmb.push(p);
+    else withoutEmb.push(p);
+  }
+
+  withoutEmb.sort(
+    (a, b) => new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
+  );
+
+  if (withEmb.length <= 1) return [...withEmb, ...withoutEmb];
+
+  const sorted = nearestNeighborChain(withEmb, (a, b) =>
+    cosineDistance(embeddings[a.id], embeddings[b.id])
+  );
+
+  return [...sorted, ...withoutEmb];
+}
+
+/**
+ * synchronous sort for all modes except embedding.
+ */
 export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
   const sorted = [...panels];
 
@@ -108,9 +230,6 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
       if (sorted.length <= 1) return sorted;
       const hashKey = mode as "phash" | "ahash" | "dhash";
 
-      // nearest-neighbor chain by hamming distance: start from the first
-      // panel, then greedily pick the closest unvisited panel at each step.
-      // panels with missing hashes are appended at the end (oldest-first).
       const withHash: Panel[] = [];
       const withoutHash: Panel[] = [];
       for (const p of sorted) {
@@ -123,29 +242,9 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
 
       if (withHash.length <= 1) return [...withHash, ...withoutHash];
 
-      const result: Panel[] = [];
-      const used = new Set<number>();
-
-      result.push(withHash[0]);
-      used.add(0);
-
-      for (let step = 1; step < withHash.length; step++) {
-        const currentHash = String(withHash[result.length - 1][hashKey]);
-        let bestIdx = -1;
-        let bestDist = Infinity;
-        for (let i = 0; i < withHash.length; i++) {
-          if (used.has(i)) continue;
-          const dist = hammingDistanceHex(currentHash, String(withHash[i][hashKey]));
-          if (dist < bestDist) {
-            bestDist = dist;
-            bestIdx = i;
-          }
-        }
-        if (bestIdx >= 0) {
-          result.push(withHash[bestIdx]);
-          used.add(bestIdx);
-        }
-      }
+      const result = nearestNeighborChain(withHash, (a, b) =>
+        hammingDistanceHex(String(a[hashKey]), String(b[hashKey]))
+      );
 
       return [...result, ...withoutHash];
     }
@@ -153,8 +252,6 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
     case "color": {
       if (sorted.length <= 1) return sorted;
 
-      // partition using the colorfulness score (std dev of a,b channels).
-      // reliably separates B&W scans from genuinely colorful panels.
       const chromatic: Panel[] = [];
       const achromatic: Panel[] = [];
       for (const p of sorted) {
@@ -165,9 +262,6 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
         }
       }
 
-      // hue angle of dominant color, lightness tiebreak, then oldest-first
-      // so the result is visibly different from newest-first even when
-      // color data is missing
       const byColor = (a: Panel, b: Panel) => {
         const ka = colorSortKey(a);
         const kb = colorSortKey(b);
@@ -180,11 +274,34 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
       chromatic.sort(byColor);
       achromatic.sort(byColor);
 
-      // chromatic first, then achromatic
       return [...chromatic, ...achromatic];
     }
+
+    // embedding sort is async — this synchronous fallback returns unsorted
+    // if called directly. use sortPanelsAsync for embedding mode.
+    case "embedding":
+      return sorted;
 
     default:
       return sorted;
   }
+}
+
+/**
+ * async sort that handles embedding mode by lazy-loading the embeddings
+ * file. for all other modes, delegates to the synchronous sortPanels.
+ *
+ * usage:
+ *   const sorted = await sortPanelsAsync(panels, mode);
+ */
+export async function sortPanelsAsync(
+  panels: Panel[],
+  mode: SortMode
+): Promise<Panel[]> {
+  if (mode !== "embedding") {
+    return sortPanels(panels, mode);
+  }
+
+  const embeddings = await loadEmbeddings();
+  return sortByEmbedding([...panels], embeddings);
 }
