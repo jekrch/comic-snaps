@@ -11,7 +11,7 @@ export default function InfoModal({ onClose }: Props) {
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
-  const [blurActive, setBlurActive] = useState(false);
+  const [, setBlurActive] = useState(false);
 
   // randomise on mount, same as HatchFiller
   const { rotation, color } = useMemo(() => {
