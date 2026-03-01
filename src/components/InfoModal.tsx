@@ -21,15 +21,30 @@ export default function InfoModal({ onClose }: Props) {
     return { rotation: pick(rotations), color: pick(colors) };
   }, []);
 
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
   useEffect(() => {
     requestAnimationFrame(() => {
       setVisible(true);
       setBlurActive(true);
     });
-  }, []);
-
-  useEffect(() => {
-    requestAnimationFrame(() => setVisible(true));
   }, []);
 
   const handleClose = useCallback(() => {
@@ -67,12 +82,20 @@ export default function InfoModal({ onClose }: Props) {
 
       {/* ── Overlay container ── */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+        className="fixed z-50 flex items-center justify-center"
         style={{
-          minHeight: "200vh",
-          paddingBottom: "0px",
+          /* Extend beyond the viewport in all directions to cover
+             iOS Safari's toolbar/safe-area regions */
+          top: "-100px",
+          left: 0,
+          right: 0,
+          bottom: "-100px",
+          /* Prevent iOS rubber-band / momentum scrolling on the overlay */
+          overscrollBehavior: "none",
+          touchAction: "none",
         }}
         onClick={handleClose}
+        onTouchMove={(e) => e.preventDefault()}
         role="dialog"
         aria-modal="true"
         aria-label="About Comic Snaps"
@@ -86,8 +109,6 @@ export default function InfoModal({ onClose }: Props) {
           `}
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.80)",
-            /* static blur on a pseudo-element alternative: */
-            /* or just use a solid dark scrim which is what most of the visual effect was anyway */
           }}
           aria-hidden="true"
         />
@@ -98,8 +119,6 @@ export default function InfoModal({ onClose }: Props) {
           style={{
             willChange: "opacity",
             opacity: 0,
-            /* extend below safe area so hatching isn't clipped */
-            bottom: "calc(-1 * env(safe-area-inset-bottom, 0px))",
             animation: closing
               ? "hatchFadeOut 280ms ease-out forwards"
               : visible
@@ -155,13 +174,14 @@ export default function InfoModal({ onClose }: Props) {
         {/* ── Modal card ── */}
         <div
           className={`
-            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px] -translate-y-[50vh]
+            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
             text-center rounded-md
             border border-[var(--color-border,rgba(74,71,69,0.25))]
             bg-[var(--color-surface-raised)]
             transition-all duration-250 ease-out
             ${active ? "opacity-100 scale-100" : "opacity-0 scale-95"}
           `}
+          style={{ touchAction: "auto" }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close */}
