@@ -14,7 +14,30 @@
         "cel shading"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-01T19:43:50.349Z"
+      "addedAt": "2026-03-01T19:43:50.349Z",
+      "width": 998,
+      "height": 1280,
+      "dominantColors": [
+        [
+          55.9,
+          -0.0,
+          1.4
+        ],
+        [
+          76.7,
+          4.9,
+          15.7
+        ],
+        [
+          39.9,
+          2.2,
+          3.0
+        ]
+      ],
+      "colorfulness": 8.8,
+      "phash": "943458cb593b25ed",
+      "ahash": "1e1e07067f7f6c78",
+      "dhash": "b0acae9cf2ead8c8"
     },
     {
       "id": "hyde-street-10-1772390798",
