@@ -3,6 +3,8 @@ name: Deploy Gallery
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'public/images/**'
   workflow_dispatch:
 
 permissions:
