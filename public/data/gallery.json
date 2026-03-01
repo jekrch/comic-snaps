@@ -87,6 +87,8 @@
       "artist": "Francis Portela",
       "image": "images/hyde-street/issue-10-1772390798.jpg",
       "notes": null,
+      "blur": "ew",
+      "blurStart": "bottom",
       "tags": [
         "horror"
       ],

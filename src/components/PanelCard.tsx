@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useId, useMemo } from "react";
 import type { Panel } from "../types";
 import PanelViewer from "./PanelViewer";
 import { Expand } from "lucide-react";
@@ -6,6 +6,27 @@ import { Expand } from "lucide-react";
 const DOUBLE_CLICK_DELAY = 400;
 const MOUSE_TOLERANCE = 20;
 const TOUCH_TOLERANCE = 30;
+
+const BLUR_COPY = {
+  ew: "ew! open to view",
+  nsfw: "for adult intellectuals only! open to view",
+} as const;
+
+/** Maps blurStart to CSS gradient direction (blur is full at named edge, fades opposite). */
+const BLUR_GRADIENT_DIR: Record<string, string> = {
+  top: "to bottom",
+  bottom: "to top",
+  left: "to right",
+  right: "to left",
+};
+
+/** Maps blurStart to SVG linearGradient coordinates (1 = full hatch, 0 = clear). */
+const HATCH_GRAD_COORDS: Record<string, { x1: string; y1: string; x2: string; y2: string }> = {
+  top: { x1: "0", y1: "0", x2: "0", y2: "1" },
+  bottom: { x1: "0", y1: "1", x2: "0", y2: "0" },
+  left: { x1: "0", y1: "0", x2: "1", y2: "0" },
+  right: { x1: "1", y1: "0", x2: "0", y2: "0" },
+};
 
 interface Props {
   panel: Panel;
@@ -16,14 +37,14 @@ export default function PanelCard({ panel }: Props) {
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const hatchPatternId = useId();
+  const hatchFadeId = useId();
+  const hatchMaskId = useId();
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     const now = Date.now();
     const isTouch = e.pointerType === "touch";
 
-    // On touch, only register taps when the overlay is already visible.
-    // The first tap triggers the CSS hover state to show the overlay;
-    // double-tap detection begins from the next tap onward.
     if (isTouch && overlayRef.current) {
       const opacity = window.getComputedStyle(overlayRef.current).opacity;
       if (opacity === "0") {
@@ -49,21 +70,45 @@ export default function PanelCard({ panel }: Props) {
     }
   }, []);
 
+  const isBlurred = panel.blur === "ew" || panel.blur === "nsfw";
+  const hatchRotation = panel.blur === "ew" ? 45 : 135;
+  const isDirectional =
+    isBlurred && !!panel.blurStart && panel.blurStart !== "all";
+
+  /** For directional blur: backdrop-filter with a gradient CSS mask. */
+  const blurMaskStyle = useMemo(() => {
+    if (!isDirectional || !panel.blurStart) return undefined;
+    const dir = BLUR_GRADIENT_DIR[panel.blurStart];
+    return {
+      WebkitMaskImage: `linear-gradient(${dir}, black 50%, transparent 95%)`,
+      maskImage: `linear-gradient(${dir}, black 50%, transparent 95%)`,
+      backdropFilter: "blur(8px) saturate(0.6)",
+      WebkitBackdropFilter: "blur(8px) saturate(0.6)",
+    } as React.CSSProperties;
+  }, [isDirectional, panel.blurStart]);
+
   return (
     <>
       <div
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
-        style={{ WebkitMaskImage: 'radial-gradient(white, white)' }}
+        style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
         <img
           src={`${import.meta.env.BASE_URL}${panel.image}`}
           alt={`${panel.title} #${panel.issue}`}
           className="block w-full"
+          style={
+            isBlurred && !isDirectional
+              ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
+              : undefined
+          }
           onError={(e) => {
             const el = e.currentTarget;
             el.style.display = "none";
-            el.parentElement!.querySelector<HTMLDivElement>(".fallback")!.style.display = "flex";
+            el.parentElement!.querySelector<HTMLDivElement>(
+              ".fallback"
+            )!.style.display = "flex";
           }}
         />
 
@@ -75,12 +120,89 @@ export default function PanelCard({ panel }: Props) {
           {panel.title} #{panel.issue}
         </div>
 
+        {/* Directional blur: backdrop-filter with gradient CSS mask */}
+        {isDirectional && (
+          <div
+            className="absolute inset-0"
+            style={blurMaskStyle}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Hatching + label overlay */}
+        {isBlurred && (
+          <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center">
+            <svg
+              className="absolute inset-0 w-full h-full"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              style={{ opacity: 0.45, mixBlendMode: "overlay" }}
+            >
+              <defs>
+                <pattern
+                  id={hatchPatternId}
+                  width="9"
+                  height="9"
+                  patternUnits="userSpaceOnUse"
+                  patternTransform={`rotate(${hatchRotation})`}
+                >
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="9"
+                    stroke="white"
+                    strokeWidth="1.5"
+                  />
+                </pattern>
+
+                {/* Gradient + mask so hatching fades with the blur */}
+                {isDirectional && panel.blurStart && (
+                  <>
+                    <linearGradient
+                      id={hatchFadeId}
+                      {...HATCH_GRAD_COORDS[panel.blurStart]}
+                    >
+                      <stop offset="20%" stopColor="white" stopOpacity="1" />
+                      <stop offset="85%" stopColor="white" stopOpacity="0" />
+                    </linearGradient>
+                    <mask id={hatchMaskId}>
+                      <rect
+                        width="100%"
+                        height="100%"
+                        fill={`url(#${hatchFadeId})`}
+                      />
+                    </mask>
+                  </>
+                )}
+              </defs>
+
+              <rect
+                width="100%"
+                height="100%"
+                fill={`url(#${hatchPatternId})`}
+                mask={isDirectional ? `url(#${hatchMaskId})` : undefined}
+              />
+            </svg>
+
+            {/* Label */}
+            {isBlurred && (
+              <span className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
+                <span className="font-display text-xs text-ink/90 text-center px-3 py-1.5 leading-snug select-none bg-black/75">
+                  {BLUR_COPY[panel.blur!]}
+                </span>
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Hover overlay */}
         <div
           ref={overlayRef}
-          className="panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3"
+          className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${isBlurred ? "z-[2]" : ""
+            }`}
         >
-          {/* Expand button — top right, inside overlay so it shares show/hide */}
+          {/* Expand button — hover-only for all panels */}
           <button
             onClick={(e) => {
               e.stopPropagation();
