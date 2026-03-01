@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState, useEffect } from "react";
+import { useId, useRef, useState, useEffect } from "react";
 import { MessageCircleMore, Globe, MessageSquareQuote, Eye } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
@@ -123,6 +123,45 @@ function useLucideExtract(IconComponent: LucideIcon | null): string | null {
   return svgContent;
 }
 
+// ---------------------------------------------------------------------------
+// Stable style — generated once per component instance via useRef
+// ---------------------------------------------------------------------------
+
+interface StableStyle {
+  rotation: number;
+  color: string;
+  twist: string;
+  placement: PlacementStyle;
+}
+
+function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyle {
+  if (empty || !stamp) {
+    return {
+      rotation: pickRandom(ROTATIONS),
+      color: pickRandom(COLORS),
+      twist: "",
+      placement: { scale: 1, offsetX: 0, offsetY: 0 },
+    };
+  }
+
+  const angle = Math.random() * 6 - 3;
+  const scale = 1.05 + Math.random() * 0.1;
+
+  return {
+    rotation: pickRandom(ROTATIONS),
+    color: pickRandom(COLORS),
+    twist: `scale(${scale.toFixed(3)}) rotate(${angle.toFixed(2)}deg)`,
+    placement:
+      stamp.type === "icon"
+        ? generatePlacement()
+        : { scale: 1, offsetX: 0, offsetY: 0 },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
 interface HatchFillerProps {
   empty?: boolean;
   /** When provided, the filler uses this stamp instead of picking randomly. */
@@ -151,44 +190,26 @@ export default function HatchFiller({
     return () => ro.disconnect();
   }, []);
 
-  const { stamp, rotation, color, twist, placement } = useMemo(() => {
-    if (empty) {
-      return {
-        stamp: null as StampDef | null,
-        rotation: pickRandom(ROTATIONS),
-        color: pickRandom(COLORS),
-        twist: "",
-        placement: { scale: 1, offsetX: 0, offsetY: 0 } as PlacementStyle,
-      };
-    }
-
-    const angle = Math.random() * 6 - 3;
-    const scale = 1.05 + Math.random() * 0.1;
-
-    // Use assigned stamp if provided, otherwise fall back to random
-    let stamp: StampDef;
+  // Determine the stamp (assigned or random fallback), pinned on first render
+  const stampRef = useRef<StampDef | null>(null);
+  if (stampRef.current === null && !empty) {
     if (assignedStamp) {
-      stamp = assignedStamp;
+      stampRef.current = assignedStamp;
     } else {
       const useIcon = Math.random() > 0.3;
-      stamp = useIcon
+      stampRef.current = useIcon
         ? { type: "icon", value: pickRandom(LUCIDE_ICONS) }
         : { type: "word", value: pickRandom(WORDS) };
     }
+  }
+  const stamp = stampRef.current;
 
-    // Only icons get stylized placement; words stay centred
-    const placement = stamp.type === "icon"
-      ? generatePlacement()
-      : { scale: 1, offsetX: 0, offsetY: 0 };
-
-    return {
-      stamp,
-      rotation: pickRandom(ROTATIONS),
-      color: pickRandom(COLORS),
-      twist: `scale(${scale.toFixed(3)}) rotate(${angle.toFixed(2)}deg)`,
-      placement,
-    };
-  }, [empty, assignedStamp]);
+  // Pin all random visual properties (rotation, color, twist, placement) once
+  const styleRef = useRef<StableStyle | null>(null);
+  if (styleRef.current === null) {
+    styleRef.current = generateStableStyle(stamp, empty);
+  }
+  const { rotation, color, twist, placement } = styleRef.current;
 
   const iconSvgContent = useLucideExtract(
     stamp?.type === "icon" ? stamp.value : null

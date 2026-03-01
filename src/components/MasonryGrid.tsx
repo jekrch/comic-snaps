@@ -304,6 +304,11 @@ export default function MasonryGrid({
   const [colCount, setColCount] = useState(getColumnCount);
   const [colWidth, setColWidth] = useState(0);
 
+  // Cache stamps by filler key so they persist across layout recalculations.
+  // This prevents fillers from randomising new stamps on every resize or
+  // scroll-triggered re-layout on iOS.
+  const stampCacheRef = useRef<Map<string, StampDef>>(new Map());
+
   const layout = useCallback(() => {
     if (!containerRef.current) return;
     const cc = getColumnCount();
@@ -322,8 +327,34 @@ export default function MasonryGrid({
     }
 
     const result = computeLayout(panels, cc, containerWidth, initialHeights);
+
+    // Stabilise filler stamps: reuse cached stamps for known keys,
+    // cache any newly assigned ones.
+    const fillers = result.items.filter(
+      (i): i is PlacedFiller => i.kind === "filler"
+    );
+    for (const f of fillers) {
+      const cached = stampCacheRef.current.get(f.key);
+      if (cached) {
+        f.assignedStamp = cached;
+      } else {
+        stampCacheRef.current.set(f.key, f.assignedStamp);
+      }
+    }
+
     setPlaced(result.items);
     setTotalHeight(result.totalHeight);
+  }, [panels]);
+
+  // Clear the stamp cache when the panel list changes (sort/filter)
+  // so that new layouts get fresh stamp assignments.
+  const prevPanelIdsRef = useRef<string>("");
+  useEffect(() => {
+    const ids = panels.map((p) => p.id).join(",");
+    if (ids !== prevPanelIdsRef.current) {
+      prevPanelIdsRef.current = ids;
+      stampCacheRef.current.clear();
+    }
   }, [panels]);
 
   useEffect(() => {
