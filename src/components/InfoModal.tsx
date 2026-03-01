@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { X, Github } from "lucide-react";
 
 interface Props {
@@ -8,6 +8,16 @@ interface Props {
 export default function InfoModal({ onClose }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
+  const patternId = useId();
+  const maskId = useId();
+
+  // randomise on mount, same as HatchFiller
+  const { rotation, color } = useMemo(() => {
+    const rotations = [45, 135];
+    const colors = ["#e97d62", "#7A8B2A"];
+    const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
+    return { rotation: pick(rotations), color: pick(colors) };
+  }, []);
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -15,7 +25,6 @@ export default function InfoModal({ onClose }: Props) {
 
   const handleClose = useCallback(() => {
     setClosing(true);
-    // letters fade immediately; give the rest of the modal time to finish
     setTimeout(() => setVisible(false), 80);
     setTimeout(onClose, 300);
   }, [onClose]);
@@ -32,11 +41,10 @@ export default function InfoModal({ onClose }: Props) {
 
   return (
     <>
-      {/* Sway keyframes */}
       <style>{`
-        @keyframes letterSway {
-          0%, 100% { transform: rotate(-7deg) translate(-8%, 4%); }
-          50%      { transform: rotate(-5.5deg) translate(-7%, 3.5%); }
+        @keyframes hatchDrift {
+          0%, 100% { transform: rotate(-5deg) scale(1.15) translate(-4%, 3%); }
+          50%       { transform: rotate(-3.5deg) scale(1.18) translate(-3%, 2%); }
         }
       `}</style>
 
@@ -51,31 +59,82 @@ export default function InfoModal({ onClose }: Props) {
         aria-modal="true"
         aria-label="About Comic Snaps"
       >
-        {/* Background typographic element */}
+        {/* ── Hatch-pattern backdrop ── */}
         <div
-          className={'absolute select-none pointer-events-none text-[120vh] bottom-20 '}
+          className="absolute inset-0 pointer-events-none select-none"
           aria-hidden="true"
           style={{
-            fontFamily: "var(--font-display), monospace",
-            // fontSize: "clamp(80px, 75vw, 620px)",
-            fontWeight: 300,
-            lineHeight: 0.85,
-            color: "var(--color-accent)",
-            letterSpacing: "-0.06em",
-            whiteSpace: "nowrap",
-            opacity: active ? 0.37 : 0,
-            animation: active ? "letterSway 8s ease-in-out infinite" : "none",
-            transform: "rotate(-7deg) translate(-8%, 4%)",
-            // fade out fast on close, fade in at normal speed
+            opacity: active ? 0.32 : 0,
+            animation: active ? "hatchDrift 10s ease-in-out infinite" : "none",
+            transform: "rotate(-5deg) scale(1.15) translate(-4%, 3%)",
             transition: closing
               ? "opacity 100ms ease-out"
-              : "opacity 250ms ease-out",
+              : "opacity 300ms ease-out",
           }}
         >
-          <span>C</span>
-          <span style={{ marginLeft: "-0.22em", position: "relative", top: "0.18em" }}>S</span>
+          <svg
+            width="100%"
+            height="100%"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ overflow: "visible" }}
+          >
+            <defs>
+              <pattern
+                id={patternId}
+                width="7"
+                height="7"
+                patternUnits="userSpaceOnUse"
+                patternTransform={`rotate(${rotation})`}
+              >
+                <line
+                  x1="0" y1="0" x2="0" y2="7"
+                  stroke={color}
+                  strokeWidth="5"
+                  strokeOpacity="0.8"
+                />
+              </pattern>
+              <mask id={maskId}>
+                <rect width="100%" height="100%" fill="white" />
+                {/* Oversized CS letters — knocked out, cropped at edges */}
+                <text
+                  x="5%"
+                  y="75%"
+                  dominantBaseline="auto"
+                  textAnchor="start"
+                  fontFamily="var(--font-display), monospace"
+                  fontWeight="300"
+                  fontSize="800"
+                  letterSpacing="-0.06em"
+                  fill="black"
+                >
+                  C
+                </text>
+                <text
+                  x="38%"
+                  y="95%"
+                  dominantBaseline="auto"
+                  textAnchor="start"
+                  fontFamily="var(--font-display), monospace"
+                  fontWeight="300"
+                  fontSize="800"
+                  letterSpacing="-0.06em"
+                  fill="black"
+                >
+                  S
+                </text>
+              </mask>
+            </defs>
+            <rect
+              width="100%"
+              height="100%"
+              fill={`url(#${patternId})`}
+              mask={`url(#${maskId})`}
+            />
+          </svg>
         </div>
 
+        {/* ── Modal card ── */}
         <div
           className={`
             relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
