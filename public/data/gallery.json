@@ -14,7 +14,30 @@
         "contour hatching"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-01T19:46:10.899Z"
+      "addedAt": "2026-03-01T19:46:10.899Z",
+      "width": 701,
+      "height": 1280,
+      "dominantColors": [
+        [
+          63.7,
+          2.8,
+          0.3
+        ],
+        [
+          83.2,
+          3.0,
+          0.7
+        ],
+        [
+          40.6,
+          2.1,
+          0.8
+        ]
+      ],
+      "colorfulness": 2.0,
+      "phash": "aac847cee8357863",
+      "ahash": "f9fdc7c7f19d0700",
+      "dhash": "d1518d8f21354c4d"
     },
     {
       "id": "red-book-4-1772394229",
