@@ -11,6 +11,7 @@ export default function InfoModal({ onClose }: Props) {
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
+  const [blurActive, setBlurActive] = useState(false);
 
   // randomise on mount, same as HatchFiller
   const { rotation, color } = useMemo(() => {
@@ -21,11 +22,19 @@ export default function InfoModal({ onClose }: Props) {
   }, []);
 
   useEffect(() => {
+    requestAnimationFrame(() => {
+      setVisible(true);
+      setBlurActive(true);
+    });
+  }, []);
+
+  useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
   }, []);
 
   const handleClose = useCallback(() => {
     setClosing(true);
+    setBlurActive(false);
     setTimeout(onClose, 300);
   }, [onClose]);
 
@@ -59,8 +68,9 @@ export default function InfoModal({ onClose }: Props) {
       <div
         className={`
           fixed inset-0 z-50 flex items-center justify-center overflow-hidden
-          transition-all duration-250 ease-out
-          ${active ? "bg-black/80 backdrop-blur-sm" : "bg-black/0 backdrop-blur-none"}
+          ${blurActive ? "backdrop-blur-sm" : ""}
+          transition-[background-color] duration-250 ease-out
+          ${active ? "bg-black/80" : "bg-black/0"}
         `}
         style={{
           /* extend behind iOS Safari bottom toolbar */
