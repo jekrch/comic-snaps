@@ -69,7 +69,7 @@ export default function InfoModal({ onClose }: Props) {
       <div
         className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
         style={{
-          minHeight: "150dvh",
+          minHeight: "200vh",
           paddingBottom: "0px",
         }}
         onClick={handleClose}
@@ -155,7 +155,7 @@ export default function InfoModal({ onClose }: Props) {
         {/* ── Modal card ── */}
         <div
           className={`
-            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px] -translate-y-5/6
+            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px] -translate-y-[50vh]
             text-center rounded-md
             border border-[var(--color-border,rgba(74,71,69,0.25))]
             bg-[var(--color-surface-raised)]
