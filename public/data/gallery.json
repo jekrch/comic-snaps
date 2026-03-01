@@ -87,9 +87,34 @@
       "artist": "Francis Portela",
       "image": "images/hyde-street/issue-10-1772390798.jpg",
       "notes": null,
-      "tags": ["horror"],
+      "tags": [
+        "horror"
+      ],
       "postedBy": "Jenny",
-      "addedAt": "2026-03-01T18:46:39.750Z"
+      "addedAt": "2026-03-01T18:46:39.750Z",
+      "width": 958,
+      "height": 935,
+      "dominantColors": [
+        [
+          47.2,
+          7.0,
+          -11.8
+        ],
+        [
+          28.0,
+          8.2,
+          -8.4
+        ],
+        [
+          68.0,
+          5.3,
+          -13.7
+        ]
+      ],
+      "colorfulness": 5.8,
+      "phash": "c7ddbc2a9109cd4c",
+      "ahash": "fffefa7c70300000",
+      "dhash": "b26862d0e0e565f4"
     },
     {
       "id": "space-riders-galaxy-of-brutality-1-1772313901",
