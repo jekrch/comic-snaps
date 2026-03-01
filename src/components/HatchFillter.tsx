@@ -1,99 +1,276 @@
-import { useId, useMemo } from "react";
+import { useId, useMemo, useRef, useState, useEffect } from "react";
+import { MessageCircleMore, Globe, MessageSquareQuote, Eye } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { createRoot } from "react-dom/client";
 
-const WORDS = ["SNAPS"];
+export const WORDS = ["SNAPS"];
+
+export const LUCIDE_ICONS: LucideIcon[] = [
+  MessageCircleMore,
+  MessageSquareQuote,
+  Globe, Eye
+];
+
 const ROTATIONS = [45, 135];
 const COLORS = ["#e97d62", "#7A8B2A"];
-type FillStyle = "hatch" | "dots";
-const FILL_STYLES: FillStyle[] = ["hatch", "dots"];
-type Corner = "tl" | "tr" | "bl" | "br";
-const CORNERS: Corner[] = ["tl", "tr", "bl", "br"];
+
+const STYLIZE_PLACEMENT = true;
+
+export type StampDef =
+  | { type: "word"; value: string }
+  | { type: "icon"; value: LucideIcon };
+
+/** Build the full pool of possible stamps for external sequencing. */
+export function buildStampPool(): StampDef[] {
+  const pool: StampDef[] = [];
+  for (const icon of LUCIDE_ICONS) {
+    pool.push({ type: "icon", value: icon });
+  }
+  for (const word of WORDS) {
+    pool.push({ type: "word", value: word });
+  }
+  return pool;
+}
+
+interface PlacementStyle {
+  scale: number;
+  offsetX: number;
+  offsetY: number;
+}
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export default function HatchFiller() {
+function randomBetween(min: number, max: number): number {
+  return min + Math.random() * (max - min);
+}
+
+function generatePlacement(): PlacementStyle {
+  if (!STYLIZE_PLACEMENT) {
+    return { scale: 1, offsetX: 0, offsetY: 0 };
+  }
+  return {
+    scale: randomBetween(1.1, 1.8),
+    offsetX: randomBetween(-30, 30),
+    offsetY: randomBetween(-25, 25),
+  };
+}
+
+/**
+ * Render a Lucide icon offscreen, extract the raw SVG children,
+ * and return them as an HTML string suitable for dangerouslySetInnerHTML
+ * inside an <svg> mask.
+ */
+function extractLucideSvgContent(IconComponent: LucideIcon): Promise<string> {
+  return new Promise((resolve) => {
+    const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.left = "-9999px";
+    container.style.top = "-9999px";
+    document.body.appendChild(container);
+
+    const cleanup = (root: ReturnType<typeof createRoot>) => {
+      root.unmount();
+      document.body.removeChild(container);
+    };
+
+    const tryExtract = () => {
+      const svg = container.querySelector("svg");
+      return svg ? svg.innerHTML : null;
+    };
+
+    const observer = new MutationObserver(() => {
+      const content = tryExtract();
+      if (content) {
+        observer.disconnect();
+        cleanup(root);
+        resolve(content);
+      }
+    });
+
+    observer.observe(container, { childList: true, subtree: true });
+
+    const root = createRoot(container);
+    root.render(
+      <IconComponent size={24} strokeWidth={2} color="black" fill="none" />
+    );
+
+    setTimeout(() => {
+      observer.disconnect();
+      const content = tryExtract();
+      cleanup(root);
+      resolve(content ?? "");
+    }, 500);
+  });
+}
+
+function useLucideExtract(IconComponent: LucideIcon | null): string | null {
+  const [svgContent, setSvgContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!IconComponent) {
+      setSvgContent(null);
+      return;
+    }
+    let cancelled = false;
+    extractLucideSvgContent(IconComponent).then((content) => {
+      if (!cancelled) setSvgContent(content);
+    });
+    return () => { cancelled = true; };
+  }, [IconComponent]);
+
+  return svgContent;
+}
+
+interface HatchFillerProps {
+  empty?: boolean;
+  /** When provided, the filler uses this stamp instead of picking randomly. */
+  assignedStamp?: StampDef | null;
+}
+
+export default function HatchFiller({
+  empty = false,
+  assignedStamp = null,
+}: HatchFillerProps) {
   const patternId = useId();
   const maskId = useId();
-  const gradientId = useId();
-  const compositePatternId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 900, height: 600 });
 
-  const { word, rotation, color, twist, fillStyle, corner } = useMemo(() => {
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const { width, height } = el.getBoundingClientRect();
+      if (width > 0 && height > 0) setSize({ width, height });
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const { stamp, rotation, color, twist, placement } = useMemo(() => {
+    if (empty) {
+      return {
+        stamp: null as StampDef | null,
+        rotation: pickRandom(ROTATIONS),
+        color: pickRandom(COLORS),
+        twist: "",
+        placement: { scale: 1, offsetX: 0, offsetY: 0 } as PlacementStyle,
+      };
+    }
+
     const angle = Math.random() * 6 - 3;
     const scale = 1.05 + Math.random() * 0.1;
+
+    // Use assigned stamp if provided, otherwise fall back to random
+    let stamp: StampDef;
+    if (assignedStamp) {
+      stamp = assignedStamp;
+    } else {
+      const useIcon = Math.random() > 0.3;
+      stamp = useIcon
+        ? { type: "icon", value: pickRandom(LUCIDE_ICONS) }
+        : { type: "word", value: pickRandom(WORDS) };
+    }
+
+    // Only icons get stylized placement; words stay centred
+    const placement = stamp.type === "icon"
+      ? generatePlacement()
+      : { scale: 1, offsetX: 0, offsetY: 0 };
+
     return {
-      word: pickRandom(WORDS),
+      stamp,
       rotation: pickRandom(ROTATIONS),
       color: pickRandom(COLORS),
       twist: `scale(${scale.toFixed(3)}) rotate(${angle.toFixed(2)}deg)`,
-      fillStyle: FILL_STYLES[0], //pickRandom(FILL_STYLES),
-      corner: pickRandom(CORNERS),
+      placement,
     };
-  }, []);
+  }, [empty, assignedStamp]);
 
-  const gradientCoords = {
-    tl: { x1: "0%", y1: "0%", x2: "100%", y2: "100%" },
-    tr: { x1: "100%", y1: "0%", x2: "0%", y2: "100%" },
-    bl: { x1: "0%", y1: "100%", x2: "100%", y2: "0%" },
-    br: { x1: "100%", y1: "100%", x2: "0%", y2: "0%" },
-  }[corner];
+  const iconSvgContent = useLucideExtract(
+    stamp?.type === "icon" ? stamp.value : null
+  );
 
-  const spacing = 6;
-  const dotRows: { cx: number; cy: number }[] = [];
-  for (let row = 0; row < Math.ceil(600 / spacing); row++) {
-    const offset = row % 2 === 0 ? 0 : spacing / 2;
-    for (let col = 0; col < Math.ceil(900 / spacing); col++) {
-      dotRows.push({
-        cx: col * spacing + offset,
-        cy: row * spacing,
-      });
-    }
-  }
+  const patternContent = (
+    <pattern
+      id={patternId}
+      width="8"
+      height="8"
+      patternUnits="userSpaceOnUse"
+      patternTransform={`rotate(${rotation})`}
+    >
+      <line
+        x1="0"
+        y1="0"
+        x2="0"
+        y2="8"
+        stroke={color}
+        strokeWidth="8"
+        strokeOpacity="0.68"
+      />
+    </pattern>
+  );
 
-  const patternContent =
-    fillStyle === "dots" ? (
-      <>
-        <pattern
-          id={patternId}
-          width="900"
-          height="600"
-          patternUnits="userSpaceOnUse"
-        >
-          {dotRows.map((d, i) => (
-            <circle key={i} cx={d.cx} cy={d.cy} r=".3" fill={color} />
-          ))}
-        </pattern>
-        <linearGradient id={gradientId} {...gradientCoords}>
-          <stop offset="0%" stopColor="white" stopOpacity="1" />
-          <stop offset="55%" stopColor="white" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="white" stopOpacity="0.08" />
-        </linearGradient>
-        <mask id={compositePatternId}>
-          <rect width="100%" height="100%" fill={`url(#${gradientId})`} />
-        </mask>
-      </>
-    ) : (
-      <pattern
-        id={patternId}
-        width="8"
-        height="8"
-        patternUnits="userSpaceOnUse"
-        patternTransform={`rotate(${rotation})`}
+  const baseIconSize = Math.min(size.width, size.height) * 0.7;
+  const iconSize = baseIconSize * placement.scale;
+  const half = iconSize / 2;
+
+  const cx = size.width / 2 + (placement.offsetX / 100) * size.width;
+  const cy = size.height / 2 + (placement.offsetY / 100) * size.height;
+
+  const fontSize = 100;
+
+  let maskContent: React.ReactNode = null;
+
+  if (!empty && stamp?.type === "word") {
+    maskContent = (
+      <text
+        className="hatch-text"
+        x="50%"
+        y="50%"
+        dominantBaseline="central"
+        textAnchor="middle"
+        fontFamily="'Space Mono', monospace"
+        fontWeight="900"
+        fontSize={fontSize}
+        letterSpacing="0em"
+        fill="black"
       >
-        <line
-          x1="0"
-          y1="0"
-          x2="0"
-          y2="8"
-          stroke={color}
-          strokeWidth="8"
-          strokeOpacity="0.68"
-        />
-      </pattern>
+        {stamp.value}
+      </text>
+    );
+  } else if (!empty && stamp?.type === "icon" && iconSvgContent) {
+    const patchedContent = iconSvgContent.replace(
+      /stroke="currentColor"/g,
+      'stroke="black"'
     );
 
+    maskContent = (
+      <g className="hatch-text">
+        <svg
+          x={cx}
+          y={cy}
+          width={iconSize}
+          height={iconSize}
+          viewBox="0 0 24 24"
+          overflow="visible"
+          style={{ transform: `translate(-${half}px, -${half}px)` }}
+          fill="none"
+          stroke="black"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          dangerouslySetInnerHTML={{ __html: patchedContent }}
+        />
+      </g>
+    );
+  }
+
   return (
-    <div className="w-full h-full rounded-sm overflow-hidden">
+    <div ref={containerRef} className="w-full h-full rounded-sm overflow-hidden">
       <style>{`
         .hatch-text {
           transform: ${twist};
@@ -115,20 +292,7 @@ export default function HatchFiller() {
           {patternContent}
           <mask id={maskId}>
             <rect width="100%" height="100%" fill="white" />
-            <text
-              className="hatch-text"
-              x="50%"
-              y="50%"
-              dominantBaseline="central"
-              textAnchor="middle"
-              fontFamily="'Space Mono', monospace"
-              fontWeight="900"
-              fontSize="120"
-              letterSpacing="0em"
-              fill="black"
-            >
-              {word}
-            </text>
+            {maskContent}
           </mask>
         </defs>
         <rect
@@ -136,23 +300,12 @@ export default function HatchFiller() {
           height="100%"
           fill="var(--color-surface-raised, #1a1a1a)"
         />
-        {fillStyle === "dots" ? (
-          <g mask={`url(#${maskId})`}>
-            <rect
-              width="100%"
-              height="100%"
-              fill={`url(#${patternId})`}
-              mask={`url(#${compositePatternId})`}
-            />
-          </g>
-        ) : (
-          <rect
-            width="100%"
-            height="100%"
-            fill={`url(#${patternId})`}
-            mask={`url(#${maskId})`}
-          />
-        )}
+        <rect
+          width="100%"
+          height="100%"
+          fill={`url(#${patternId})`}
+          mask={`url(#${maskId})`}
+        />
       </svg>
     </div>
   );
