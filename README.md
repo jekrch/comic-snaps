@@ -5,7 +5,6 @@ A gallery for collecting and studying comic book art with friends. Snap a panel,
 [snaps.jacobkrch.com](https://snaps.jacobkrch.com)
 
 ## How it works
-
 ```
 Telegram group → Cloudflare Worker → GitHub repo → GitHub Pages
 ```
@@ -13,13 +12,11 @@ Telegram group → Cloudflare Worker → GitHub repo → GitHub Pages
 Photos sent to the Telegram bot get parsed, committed to this repo, and served as a static gallery site. The site rebuilds automatically on each new panel.
 
 ## Caption format
-
 ```
 Title // Issue # // Year // Artist 
 ```
 
 Optional notes and tags can be appended:
-
 ```
 Saga // 1 // 2012 // Fiona Staples // incredible double-page spread // sci-fi, space opera
 ```
@@ -28,19 +25,26 @@ A freeform fallback (`Saga #1 2012 Fiona Staples`) also works for quick entries.
 
 ## Image metadata
 
-A GitHub Action (`compute-image-metadata.yml`) runs whenever `gallery.json` is updated. It scans for panels missing image dimensions or perceptual hashes and backfills them automatically. Each panel gets:
+A GitHub Action (`compute-image-metadata.yml`) runs whenever `gallery.json` is updated. It backfills missing metadata for each panel:
 
-- `width` / `height` — pixel dimensions, used for layout and aspect-ratio placeholders
-- `phash` — DCT-based perceptual hash (structural similarity)
-- `ahash` — average hash (brightness distribution)
-- `dhash` — difference hash (edge/gradient patterns)
+- `width` / `height` — pixel dimensions for layout and aspect-ratio placeholders
+- `phash` — DCT-based perceptual hash for structural similarity
+- `dominantColors` — three most prominent colors in CIELAB space via k-means clustering
+- `colorfulness` — RMS of chromatic channel variance, used to separate B&W art from color panels
+- CLIP embedding — a 512-dimensional vector from `openai/clip-vit-base-patch32`, stored in a separate `embeddings.json`
 
-Hashes are stored as hex strings in `gallery.json`. The action skips panels that already have all fields, so repeated runs are cheap no-ops. Its own commit includes `[skip ci]` to avoid re-triggering the workflow.
+The action skips panels that already have all fields. Its own commit includes `[skip ci]` to avoid re-triggering the workflow.
 
-These hashes will power a similarity browsing feature in the gallery using Hamming distance on the hash values.
+## Sorting
+
+The gallery supports several sort modes that explore different notions of visual ordering:
+
+- **Newest / Oldest** — chronological by date added
+- **pHash** — nearest-neighbor chain by Hamming distance on perceptual hashes. Groups panels with similar coarse luminance structure (roughly: "similar blurry thumbnails"). Good for spotting near-duplicates but insensitive to content or style.
+- **Color** — hue-angle walk through dominant colors, with chromatic panels separated from achromatic ones. Produces a visible spectrum sweep.
+- **Visual Chain** — nearest-neighbor chain by cosine distance on CLIP embeddings. Each panel is placed next to its closest match in a 512-dimensional feature space that encodes composition, subject matter, texture, and style holistically. More semantically meaningful than hash-based sorting, though it's a greedy path rather than a global clustering — adjacent panels will feel related, but similar panels elsewhere in the collection may not be nearby.
 
 ## Development
-
 ```bash
 bun install
 bun run dev

@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
-import { SortMode, sortPanels } from "./sorting.ts";
+import { SortMode, sortPanelsAsync } from "./sorting.ts";
 import type { Filters } from "./filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
@@ -17,22 +17,23 @@ export default function App() {
   const { initialFilters, initialSort, syncToURL } = useFilterParams();
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
 
   const handleFiltersChange = useCallback(
-  (next: Filters) => {
-    setFilters(next);
-    syncToURL(next, sortMode);
-  },
-  [sortMode, syncToURL]
-);
+    (next: Filters) => {
+      setFilters(next);
+      syncToURL(next, sortMode);
+    },
+    [sortMode, syncToURL]
+  );
 
-const handleSortChange = useCallback(
-  (next: SortMode) => {
-    setSortMode(next);
-    syncToURL(filters, next);
-  },
-  [filters, syncToURL]
-);
+  const handleSortChange = useCallback(
+    (next: SortMode) => {
+      setSortMode(next);
+      syncToURL(filters, next);
+    },
+    [filters, syncToURL]
+  );
 
   // fetch gallery data
   useEffect(() => {
@@ -85,13 +86,18 @@ const handleSortChange = useCallback(
     [panels, filters]
   );
 
-  const sortedPanels = useMemo(() => {
-    const result = sortPanels(filteredPanels, sortMode);
-    console.log(
-      `[sort] mode=${sortMode} first3=`,
-      result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
-    );
-    return result;
+  useEffect(() => {
+    let cancelled = false;
+    sortPanelsAsync(filteredPanels, sortMode).then((result) => {
+      if (!cancelled) {
+        setSortedPanels(result);
+        console.log(
+          `[sort] mode=${sortMode} first3=`,
+          result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
+        );
+      }
+    });
+    return () => { cancelled = true; };
   }, [filteredPanels, sortMode]);
 
   const showSpinner = status === "loading" || (status === "ready" && !imagesLoaded);

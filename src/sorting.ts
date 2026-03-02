@@ -13,8 +13,8 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
   { value: "oldest", label: "OLDEST" },
   { value: "phash", label: "PHASH" },
-  { value: "ahash", label: "AHASH" },
-  { value: "dhash", label: "DHASH" },
+  //{ value: "ahash", label: "AHASH" },
+  //{ value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
   { value: "embedding", label: "SIMILAR" },
 ];
