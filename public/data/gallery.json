@@ -14,7 +14,30 @@
         "greebling"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-02T00:45:05.322Z"
+      "addedAt": "2026-03-02T00:45:05.322Z",
+      "width": 1012,
+      "height": 1280,
+      "dominantColors": [
+        [
+          58.4,
+          11.5,
+          18.1
+        ],
+        [
+          75.1,
+          13.1,
+          24.0
+        ],
+        [
+          20.6,
+          10.3,
+          12.1
+        ]
+      ],
+      "colorfulness": 4.6,
+      "phash": "8b054af5f678bb02",
+      "ahash": "273f010f2f0f393d",
+      "dhash": "eeebdb5fde7b614d"
     },
     {
       "id": "absolute-martian-manhunter-8-1772397781",
