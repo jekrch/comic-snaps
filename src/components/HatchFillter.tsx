@@ -52,7 +52,7 @@ function generatePlacement(): PlacementStyle {
   }
   return {
     scale: randomBetween(1.1, 2.0),
-    offsetX: randomBetween(-10, 10),
+    offsetX: randomBetween(5, 200),
     offsetY: randomBetween(-12, 12),
   };
 }
@@ -294,8 +294,8 @@ export default function HatchFiller({
         transform={`translate(${cx - half}, ${cy - half})`}
       >
         <svg
-          x={0}
-          y={0}
+          x={randomBetween(-50, 130)}
+          y={randomBetween(-40, 40)}
           width={iconSize}
           height={iconSize}
           viewBox="0 0 24 24"
