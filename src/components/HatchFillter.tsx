@@ -132,6 +132,8 @@ interface StableStyle {
   color: string;
   twist: string;
   placement: PlacementStyle;
+  iconInnerX: number;
+  iconInnerY: number;
 }
 
 function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyle {
@@ -141,6 +143,8 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyl
       color: pickRandom(COLORS),
       twist: "",
       placement: { scale: 1, offsetX: 0, offsetY: 0 },
+      iconInnerX: 0,
+      iconInnerY: 0,
     };
   }
 
@@ -155,6 +159,8 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyl
       stamp.type === "icon"
         ? generatePlacement()
         : { scale: 1, offsetX: 0, offsetY: 0 },
+    iconInnerX: randomBetween(-50, 130),
+    iconInnerY: randomBetween(-40, 40),
   };
 }
 
@@ -216,7 +222,7 @@ export default function HatchFiller({
   if (styleRef.current === null) {
     styleRef.current = generateStableStyle(stamp, empty);
   }
-  const { rotation, color, twist, placement } = styleRef.current;
+  const { rotation, color, twist, placement, iconInnerX, iconInnerY } = styleRef.current;
 
   const iconSvgContent = useLucideExtract(
     stamp?.type === "icon" ? stamp.value : null
@@ -294,8 +300,8 @@ export default function HatchFiller({
         transform={`translate(${cx - half}, ${cy - half})`}
       >
         <svg
-          x={randomBetween(-50, 130)}
-          y={randomBetween(-40, 40)}
+          x={iconInnerX}
+          y={iconInnerY}
           width={iconSize}
           height={iconSize}
           viewBox="0 0 24 24"
