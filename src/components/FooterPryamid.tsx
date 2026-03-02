@@ -14,10 +14,10 @@ export default function FooterPyramid() {
   return (
     <div className="flex flex-col items-center gap-0 pt-8 pb-16">
       <p
-        className="text-white/80 font-black tracking-widest uppercase text-lg mb-4"
+        className="text-white/80 font-black tracking-widest uppercase text-md mb-4"
         style={{ fontFamily: "'Space Mono', monospace" }}
       >
-        Thanks for visiting
+        to be continued...
       </p>
 
       <div className="flex flex-col items-center" style={{ gap: `${CELL_GAP}px` }}>
