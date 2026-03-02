@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-12-1772412303",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 12,
+      "year": 1981,
+      "artist": "Dominique He",
+      "image": "images/heavy-metal/issue-12-1772412303.jpg",
+      "notes": null,
+      "tags": [
+        "sci-fi",
+        "greebling"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-02T00:45:05.322Z"
+    },
+    {
       "id": "absolute-martian-manhunter-8-1772397781",
       "title": "Absolute Martian Manhunter",
       "slug": "absolute-martian-manhunter",
@@ -32,7 +48,7 @@
         [
           57.8,
           40.3,
-          54.0
+          54
         ]
       ],
       "colorfulness": 14.7,
