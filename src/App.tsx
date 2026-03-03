@@ -1,15 +1,8 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
-import { SortMode, sortPanelsAsync, loadEmbeddings } from "./sorting.ts";
-import type { EmbeddingMap } from "./sorting.ts";
+import { SortMode, sortPanelsAsync } from "./sorting.ts";
 import type { Filters } from "./filtering.ts";
-import {
-  applyFilters,
-  applyTextSearchFilter,
-  hasActiveFilters,
-  EMPTY_FILTERS,
-} from "./filtering.ts";
-import { useTextSearch } from "./hooks/useTextSearch.ts";
+import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
@@ -26,35 +19,12 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
 
-  // --- Embeddings state (shared between sort and text search) ---
-  const [imageEmbeddings, setImageEmbeddings] = useState<EmbeddingMap | null>(null);
-
-  // Eagerly load embeddings once gallery data is ready.
-  useEffect(() => {
-    if (status !== "ready" || panels.length === 0) return;
-    loadEmbeddings().then((emb) => {
-      if (Object.keys(emb).length > 0) setImageEmbeddings(emb);
-    });
-  }, [status, panels]);
-
-  // --- Text search hook (driven by query prop, no imperative calls) ---
-  const {
-    resultIds: textSearchResultIds,
-    status: textSearchStatus,
-    loadProgress: textSearchProgress,
-  } = useTextSearch({
-    query: filters.searchQuery,
-    imageEmbeddings,
-    debounceMs: 1000,
-    threshold: 0.01,
-  });
-
   const handleFiltersChange = useCallback(
     (next: Filters) => {
       setFilters(next);
       syncToURL(next, sortMode);
     },
-    [sortMode, syncToURL],
+    [sortMode, syncToURL]
   );
 
   const handleSortChange = useCallback(
@@ -62,7 +32,7 @@ export default function App() {
       setSortMode(next);
       syncToURL(filters, next);
     },
-    [filters, syncToURL],
+    [filters, syncToURL]
   );
 
   // fetch gallery data
@@ -95,7 +65,7 @@ export default function App() {
           img.onload = () => resolve();
           img.onerror = () => resolve();
           img.src = `${import.meta.env.BASE_URL}${panel.image}`;
-        }),
+        })
     );
 
     Promise.all(promises).then(() => {
@@ -111,41 +81,24 @@ export default function App() {
     };
   }, [status, panels]);
 
-  // Apply facet filters.
   const filteredPanels = useMemo(
     () => applyFilters(panels, filters),
-    [panels, filters],
+    [panels, filters]
   );
 
-  // Is text search actively producing results?
-  const isTextSearchActive =
-    filters.searchQuery.trim().length > 0 && textSearchResultIds !== null;
-
-  // Sort (or apply text-search ordering).
   useEffect(() => {
     let cancelled = false;
-
-    if (isTextSearchActive) {
-      // Text search provides its own ordering by similarity score.
-      const result = applyTextSearchFilter(filteredPanels, textSearchResultIds);
-      if (!cancelled) setSortedPanels(result);
-      return () => { cancelled = true; };
-    }
-
-    // Normal sort path.
     sortPanelsAsync(filteredPanels, sortMode).then((result) => {
       if (!cancelled) {
         setSortedPanels(result);
         console.log(
           `[sort] mode=${sortMode} first3=`,
-          result
-            .slice(0, 3)
-            .map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt })),
+          result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
         );
       }
     });
     return () => { cancelled = true; };
-  }, [filteredPanels, sortMode, isTextSearchActive, textSearchResultIds]);
+  }, [filteredPanels, sortMode]);
 
   const showSpinner = status === "loading" || (status === "ready" && !imagesLoaded);
 
@@ -184,8 +137,6 @@ export default function App() {
               onSort={handleSortChange}
               filters={filters}
               onFiltersChange={handleFiltersChange}
-              textSearchStatus={textSearchStatus}
-              textSearchProgress={textSearchProgress}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
