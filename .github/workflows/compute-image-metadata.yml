@@ -23,18 +23,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-clip-vit-base-patch32
+          key: hf-siglip-base-patch16-224
 
       - name: Install dependencies
         run: |
           pip install Pillow imagehash scikit-learn scikit-image numpy
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install transformers
+          pip install transformers sentencepiece protobuf
 
       - name: Compute missing image metadata
         run: python scripts/compute-image-metadata.py
 
-      - name: Compute missing CLIP embeddings
+      - name: Compute missing SigLIP embeddings
         run: python scripts/compute-embeddings.py
 
       - name: Commit updated data

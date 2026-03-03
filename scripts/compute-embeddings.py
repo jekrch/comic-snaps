@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Compute CLIP image embeddings for gallery panels.
+Compute SigLIP image embeddings for gallery panels.
 
 Reads gallery.json to get the panel list, checks embeddings.json for
 already-computed embeddings, computes missing ones, and writes the
@@ -10,8 +10,13 @@ Embeddings are stored separately from gallery.json to keep the main
 data file lean. The frontend only loads embeddings.json when the user
 selects embedding-based sort.
 
-Each embedding is a unit-normalized 512-float vector from CLIP
-ViT-Base-Patch32, stored at 5 decimal places (~3.5KB per panel).
+Each embedding is a unit-normalized 768-float vector from SigLIP
+Base-Patch16-224, stored at 5 decimal places (~5.1KB per panel).
+
+SigLIP was chosen over CLIP because it shares the same dual-encoder
+architecture (image + text in a joint space) but trains with a sigmoid
+loss that produces better retrieval quality. This also sets up future
+in-browser text-to-image search using the same model's text encoder.
 """
 
 import json
@@ -21,40 +26,52 @@ from pathlib import Path
 import numpy as np
 import torch
 from PIL import Image
-from transformers import CLIPModel, CLIPProcessor
+from transformers import AutoModel, AutoProcessor
 
 GALLERY_PATH = Path("public/data/gallery.json")
 EMBEDDINGS_PATH = Path("public/data/embeddings.json")
 IMAGE_ROOT = Path("public")
 
-MODEL_NAME = "openai/clip-vit-base-patch32"
+MODEL_NAME = "google/siglip-base-patch16-224"
+EXPECTED_DIM = 768
 
 
 def load_existing_embeddings() -> dict[str, list[float]]:
-    """Load existing embeddings keyed by panel id."""
+    """Load existing embeddings keyed by panel id.
+
+    Returns an empty dict if the file doesn't exist or if the stored
+    embeddings have a different dimensionality (i.e. from a previous
+    model), triggering a full recompute.
+    """
     if not EMBEDDINGS_PATH.exists():
         return {}
     data = json.loads(EMBEDDINGS_PATH.read_text())
-    return data.get("embeddings", {})
+    embeddings = data.get("embeddings", {})
+
+    # Detect dimension mismatch from a model swap and invalidate
+    if embeddings:
+        sample = next(iter(embeddings.values()))
+        if len(sample) != EXPECTED_DIM:
+            print(
+                f"Dimension mismatch: stored={len(sample)}, "
+                f"expected={EXPECTED_DIM}. Recomputing all embeddings."
+            )
+            return {}
+
+    return embeddings
 
 
 def compute_embedding(
     image_path: Path,
-    model: CLIPModel,
-    processor: CLIPProcessor,
+    model: AutoModel,
+    processor: AutoProcessor,
 ) -> list[float]:
-    """Compute a unit-normalized CLIP embedding for a single image."""
+    """Compute a unit-normalized SigLIP embedding for a single image."""
     img = Image.open(image_path).convert("RGB")
     inputs = processor(images=img, return_tensors="pt")
     with torch.no_grad():
         outputs = model.get_image_features(**inputs)
-        # newer transformers may return a dataclass; unwrap if needed
-        if hasattr(outputs, "image_embeds"):
-            vec = outputs.image_embeds.squeeze().numpy()
-        elif hasattr(outputs, "pooler_output"):
-            vec = outputs.pooler_output.squeeze().numpy()
-        else:
-            vec = outputs.squeeze().numpy()
+        vec = outputs.squeeze().numpy()
     vec = vec / np.linalg.norm(vec)
     return [round(float(v), 5) for v in vec]
 
@@ -69,14 +86,14 @@ def main():
 
     existing = load_existing_embeddings()
 
-    # find panels that need embeddings
+    # Find panels that need embeddings
     to_compute = []
     for panel in panels:
         pid = panel["id"]
         if pid not in existing:
             to_compute.append(panel)
 
-    # also prune embeddings for panels that no longer exist
+    # Prune embeddings for panels that no longer exist
     current_ids = {p["id"] for p in panels}
     pruned = {k: v for k, v in existing.items() if k in current_ids}
     pruned_count = len(existing) - len(pruned)
@@ -85,18 +102,17 @@ def main():
 
     if not to_compute:
         if pruned_count > 0:
-            # still need to write the pruned version
             output = {"embeddings": pruned}
             EMBEDDINGS_PATH.write_text(json.dumps(output) + "\n")
-            print(f"No new embeddings needed. Wrote pruned file.")
+            print("No new embeddings needed. Wrote pruned file.")
         else:
             print("All panels already have embeddings.")
         sys.exit(0)
 
     print(f"Computing embeddings for {len(to_compute)} panel(s)...")
     print(f"Loading model: {MODEL_NAME}")
-    model = CLIPModel.from_pretrained(MODEL_NAME)
-    processor = CLIPProcessor.from_pretrained(MODEL_NAME)
+    model = AutoModel.from_pretrained(MODEL_NAME)
+    processor = AutoProcessor.from_pretrained(MODEL_NAME)
     model.eval()
 
     updated = dict(pruned)
