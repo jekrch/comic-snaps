@@ -2,12 +2,7 @@ import { useCallback, useMemo } from "react";
 import type { Filters } from "../filtering";
 import type { SortMode } from "../sorting";
 
-const FILTER_KEYS: (keyof Omit<Filters, "searchQuery">)[] = [
-  "decades",
-  "tags",
-  "artists",
-  "postedBy",
-];
+const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "postedBy"];
 const DEFAULT_SORT: SortMode = "newest";
 
 function parseFiltersFromURL(): { filters: Filters; sort: SortMode } {
@@ -18,7 +13,6 @@ function parseFiltersFromURL(): { filters: Filters; sort: SortMode } {
     tags: new Set(params.get("tags")?.split(",").filter(Boolean) ?? []),
     artists: new Set(params.get("artists")?.split(",").filter(Boolean) ?? []),
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
-    searchQuery: params.get("q") ?? "",
   };
 
   const sort = (params.get("sort") as SortMode) ?? DEFAULT_SORT;
@@ -34,10 +28,6 @@ function writeFiltersToURL(filters: Filters, sort: SortMode) {
     if (values.length > 0) {
       params.set(key, values.join(","));
     }
-  }
-
-  if (filters.searchQuery.trim()) {
-    params.set("q", filters.searchQuery.trim());
   }
 
   if (sort !== DEFAULT_SORT) {
@@ -56,13 +46,8 @@ export function useFilterParams() {
     (filters: Filters, sort: SortMode) => {
       writeFiltersToURL(filters, sort);
     },
-    [],
+    []
   );
 
-  return {
-    initialFilters: initial.filters,
-    initialSort: initial.sort,
-    syncToURL: setFilters,
-  };
+  return { initialFilters: initial.filters, initialSort: initial.sort, syncToURL: setFilters };
 }
-
