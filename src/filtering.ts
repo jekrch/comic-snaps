@@ -5,6 +5,8 @@ export interface Filters {
   tags: Set<string>;
   artists: Set<string>;
   postedBy: Set<string>;
+  /** Free-text visual search query (SigLIP text → image similarity). */
+  searchQuery: string;
 }
 
 export const EMPTY_FILTERS: Filters = {
@@ -12,14 +14,23 @@ export const EMPTY_FILTERS: Filters = {
   tags: new Set(),
   artists: new Set(),
   postedBy: new Set(),
+  searchQuery: "",
 };
 
 export function hasActiveFilters(filters: Filters): boolean {
-  return filters.decades.size > 0 || filters.tags.size > 0 || filters.artists.size > 0 || filters.postedBy.size > 0;
+  return (
+    filters.decades.size > 0 ||
+    filters.tags.size > 0 ||
+    filters.artists.size > 0 ||
+    filters.postedBy.size > 0 ||
+    filters.searchQuery.trim().length > 0
+  );
 }
 
 export function activeFilterCount(filters: Filters): number {
-  return filters.decades.size + filters.tags.size + filters.artists.size + filters.postedBy.size;
+  const facetCount =
+    filters.decades.size + filters.tags.size + filters.artists.size + filters.postedBy.size;
+  return facetCount + (filters.searchQuery.trim().length > 0 ? 1 : 0);
 }
 
 export function getDecade(year: number): string {
@@ -27,8 +38,22 @@ export function getDecade(year: number): string {
   return `${d}s`;
 }
 
+/**
+ * Apply facet filters (decades, tags, artists, postedBy).
+ *
+ * Text-search filtering is intentionally NOT applied here — it happens in
+ * the consuming component via `applyTextSearchFilter()` because it depends
+ * on async embedding state that lives outside the pure filter logic.
+ */
 export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
-  if (!hasActiveFilters(filters)) return panels;
+  if (
+    filters.decades.size === 0 &&
+    filters.tags.size === 0 &&
+    filters.artists.size === 0 &&
+    filters.postedBy.size === 0
+  ) {
+    return panels;
+  }
   return panels.filter((p) => {
     if (filters.decades.size > 0 && !filters.decades.has(getDecade(p.year))) return false;
     if (filters.artists.size > 0 && !filters.artists.has(p.artist)) return false;
@@ -39,6 +64,36 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
     }
     return true;
   });
+}
+
+/**
+ * Given text-search results (panel IDs that passed the similarity threshold),
+ * filter and re-order panels to match the similarity ranking.
+ *
+ * If `searchResultIds` is null or empty, returns `panels` unchanged.
+ * The returned array preserves the similarity-score ordering from
+ * `rankPanelsByTextQuery()`.
+ */
+export function applyTextSearchFilter(
+  panels: Panel[],
+  searchResultIds: string[] | null,
+): Panel[] {
+  if (!searchResultIds) return panels;
+  if (searchResultIds.length === 0) return [];
+
+  const idSet = new Set(searchResultIds);
+  const panelMap = new Map(panels.map((p) => [p.id, p]));
+  const ordered: Panel[] = [];
+
+  // Preserve similarity-score ordering
+  for (const id of searchResultIds) {
+    const panel = panelMap.get(id);
+    if (panel && idSet.has(id)) {
+      ordered.push(panel);
+    }
+  }
+
+  return ordered;
 }
 
 export function computeFacets(panels: Panel[], filters: Filters) {

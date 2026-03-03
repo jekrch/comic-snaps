@@ -2,6 +2,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import type { Panel } from "../types";
 import type { SortMode } from "../sorting";
 import type { Filters } from "../filtering";
+import type { TextSearchStatus } from "../hooks/useTextSearch";
 import PanelCard from "./PanelCard";
 import FilterControl from "./FilterControl";
 import SortControl from "./SortControl";
@@ -286,6 +287,8 @@ interface MasonryGridProps {
   onSort: (mode: SortMode) => void;
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
+  textSearchStatus?: TextSearchStatus;
+  textSearchProgress?: number;
 }
 
 export default function MasonryGrid({
@@ -295,6 +298,8 @@ export default function MasonryGrid({
   onSort,
   filters,
   onFiltersChange,
+  textSearchStatus,
+  textSearchProgress,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -385,6 +390,8 @@ export default function MasonryGrid({
             panels={allPanels}
             filters={filters}
             onFiltersChange={onFiltersChange}
+            textSearchStatus={textSearchStatus}
+            textSearchProgress={textSearchProgress}
           />
         </div>
 
