@@ -71,7 +71,14 @@ def compute_embedding(
     inputs = processor(images=img, return_tensors="pt")
     with torch.no_grad():
         outputs = model.get_image_features(**inputs)
-        vec = outputs.squeeze().numpy()
+        # get_image_features may return a plain tensor or a dataclass
+        # depending on the model class and transformers version
+        if hasattr(outputs, "pooler_output"):
+            vec = outputs.pooler_output.squeeze().numpy()
+        elif isinstance(outputs, torch.Tensor):
+            vec = outputs.squeeze().numpy()
+        else:
+            vec = outputs[0].squeeze().numpy()
     vec = vec / np.linalg.norm(vec)
     return [round(float(v), 5) for v in vec]
 
