@@ -1,21 +1,33 @@
 import { useState, useMemo, useCallback } from "react";
 import type { Panel } from "../types";
 import type { Filters } from "../filtering";
-import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../filtering";
+import {
+  hasActiveFilters,
+  activeFilterCount,
+  computeFacets,
+  EMPTY_FILTERS,
+} from "../filtering";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
-import { ChevronDown, XCircle } from "lucide-react";
+import { ChevronDown, XCircle, Search, Loader2 } from "lucide-react";
+import type { TextSearchStatus } from "../hooks/useTextSearch";
 
 interface FilterControlProps {
   panels: Panel[];
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
+  /** Status from the useTextSearch hook — drives the search input indicator. */
+  textSearchStatus?: TextSearchStatus;
+  /** Download progress (0–100) while the text encoder is loading. */
+  textSearchProgress?: number;
 }
 
 export default function FilterControl({
   panels,
   filters,
   onFiltersChange,
+  textSearchStatus = "idle",
+  textSearchProgress = 0,
 }: FilterControlProps) {
   const [open, setOpen] = useState(false);
   const active = hasActiveFilters(filters);
@@ -23,7 +35,7 @@ export default function FilterControl({
 
   const { decadeCounts, tagCounts, artistCounts, postedByCounts } = useMemo(
     () => computeFacets(panels, filters),
-    [panels, filters]
+    [panels, filters],
   );
 
   const decadeItems = useMemo(
@@ -31,7 +43,7 @@ export default function FilterControl({
       Array.from(decadeCounts.entries())
         .sort((a, b) => b[0].localeCompare(a[0]))
         .map(([label, c]) => ({ label, count: c })),
-    [decadeCounts]
+    [decadeCounts],
   );
 
   const postedByItems = useMemo(
@@ -39,7 +51,7 @@ export default function FilterControl({
       Array.from(postedByCounts.entries())
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
-    [postedByCounts]
+    [postedByCounts],
   );
 
   const tagItems = useMemo(
@@ -47,7 +59,7 @@ export default function FilterControl({
       Array.from(tagCounts.entries())
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
-    [tagCounts]
+    [tagCounts],
   );
 
   const artistItems = useMemo(
@@ -55,22 +67,66 @@ export default function FilterControl({
       Array.from(artistCounts.entries())
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
-    [artistCounts]
+    [artistCounts],
   );
 
   const toggleInSet = useCallback(
     (key: keyof Filters, value: string) => {
-      const next = new Set(filters[key]);
+      const prev = filters[key];
+      if (!(prev instanceof Set)) return; // guard for searchQuery
+      const next = new Set(prev);
       if (next.has(value)) next.delete(value);
       else next.add(value);
       onFiltersChange({ ...filters, [key]: next });
     },
-    [filters, onFiltersChange]
+    [filters, onFiltersChange],
   );
 
   const clearAll = useCallback(() => {
     onFiltersChange(EMPTY_FILTERS);
   }, [onFiltersChange]);
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onFiltersChange({ ...filters, searchQuery: e.target.value });
+    },
+    [filters, onFiltersChange],
+  );
+
+  const clearSearch = useCallback(() => {
+    onFiltersChange({ ...filters, searchQuery: "" });
+  }, [filters, onFiltersChange]);
+
+  const searchActive = filters.searchQuery.trim().length > 0;
+
+  /** Indicator icon/state for the search input's right side. */
+  const searchIndicator = (() => {
+    if (textSearchStatus === "loading") {
+      return (
+        <span className="flex items-center gap-1 text-ink-faint">
+          <Loader2 size={12} className="animate-spin text-accent" />
+          <span className="font-display text-[9px] tracking-wider uppercase">
+            {textSearchProgress}%
+          </span>
+        </span>
+      );
+    }
+    if (textSearchStatus === "searching") {
+      return <Loader2 size={12} className="animate-spin text-accent" />;
+    }
+    if (searchActive) {
+      return (
+        <button
+          onClick={clearSearch}
+          className="text-ink-faint hover:text-accent transition-colors cursor-pointer"
+          aria-label="Clear search"
+        >
+          <XCircle size={12} />
+        </button>
+      );
+    }
+    return null;
+  })();
 
   return (
     <div className="filter-control panel-item overflow-hidden rounded-sm select-none">
@@ -136,6 +192,52 @@ export default function FilterControl({
                 </button>
               </div>
             )}
+
+            {/* ─── SEARCH SECTION ─── */}
+            <div className="border-b border-ink-faint/10">
+              <div className="px-3 py-2">
+                <span className="font-display text-[10px] tracking-widest text-accent uppercase">
+                  SEARCH
+                </span>
+              </div>
+              <div className="px-3 pb-2.5">
+                <div
+                  className={`
+                    flex items-center gap-2
+                    bg-surface border rounded-sm px-2 py-1.5
+                    transition-colors duration-150
+                    ${searchActive ? "border-accent/40" : "border-ink-faint/20"}
+                  `}
+                >
+                  <Search size={12} className="text-ink-faint flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={filters.searchQuery}
+                    onChange={handleSearchChange}
+                    placeholder="describe..."
+                    className="
+                      flex-1 min-w-0
+                      bg-transparent outline-none border-none
+                      font-display text-[11px] tracking-wide
+                      text-ink placeholder:text-ink-faint/50
+                    "
+                    spellCheck={false}
+                    autoComplete="off"
+                  />
+                  {searchIndicator}
+                </div>
+                {textSearchStatus === "error" && (
+                  <p className="mt-1 font-display text-[9px] tracking-wide text-red-400/80">
+                    Text encoder failed to load. Try refreshing.
+                  </p>
+                )}
+                {textSearchStatus === "loading" && (
+                  <p className="mt-1 font-display text-[9px] tracking-wide text-ink-faint">
+                    Downloading visual search model (one-time)…
+                  </p>
+                )}
+              </div>
+            </div>
 
             <FacetSection
               title="DECADE"
