@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "id": "dark-spaces-wildfire-1-1772597937",
+      "title": "Dark Spaces: Wildfire",
+      "slug": "dark-spaces-wildfire",
+      "issue": 1,
+      "year": 2022,
+      "artist": "Hayden Sherman",
+      "image": "images/dark-spaces-wildfire/issue-1-1772597937.jpg",
+      "notes": null,
+      "tags": [
+        "contour hatching",
+        "sound effects"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-04T04:18:59.113Z"
+    },
+    {
       "id": "the-many-deaths-of-laila-starr-4-1772597713",
       "title": "The Many Deaths of Laila Starr",
       "slug": "the-many-deaths-of-laila-starr",
@@ -27,7 +43,7 @@
         ],
         [
           72.7,
-          11.0,
+          11,
           22.4
         ]
       ],
