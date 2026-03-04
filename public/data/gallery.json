@@ -14,7 +14,30 @@
         "sound effects"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-04T04:18:59.113Z"
+      "addedAt": "2026-03-04T04:18:59.113Z",
+      "width": 960,
+      "height": 1280,
+      "dominantColors": [
+        [
+          24.3,
+          19.6,
+          20.6
+        ],
+        [
+          62.0,
+          23.6,
+          43.6
+        ],
+        [
+          44.0,
+          36.2,
+          40.1
+        ]
+      ],
+      "colorfulness": 16.3,
+      "phash": "d871600f2eecf50b",
+      "ahash": "004cdedf3fbf1810",
+      "dhash": "ccd890b06872b0b0"
     },
     {
       "id": "the-many-deaths-of-laila-starr-4-1772597713",
