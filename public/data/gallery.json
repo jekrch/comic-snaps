@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "the-many-deaths-of-laila-starr-4-1772597713",
+      "title": "The Many Deaths of Laila Starr",
+      "slug": "the-many-deaths-of-laila-starr",
+      "issue": 4,
+      "year": 2021,
+      "artist": "Filipe Andrade",
+      "image": "images/the-many-deaths-of-laila-starr/issue-4-1772597713.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-04T04:15:14.895Z"
+    },
+    {
       "id": "heavy-metal-12-1772412303",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -27,7 +40,7 @@
         [
           75.1,
           13.1,
-          24.0
+          24
         ],
         [
           20.6,
