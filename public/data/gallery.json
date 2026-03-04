@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-04T04:45:28.915Z"
+      "addedAt": "2026-03-04T04:45:28.915Z",
+      "width": 960,
+      "height": 1280,
+      "dominantColors": [
+        [
+          18.5,
+          11.5,
+          -1.2
+        ],
+        [
+          51.7,
+          19.5,
+          -0.0
+        ],
+        [
+          43.9,
+          35.6,
+          38.2
+        ]
+      ],
+      "colorfulness": 23.8,
+      "phash": "c7b013c33ec9e45a",
+      "ahash": "0066fefff7fe7800",
+      "dhash": "e8e8840345c4e864"
     },
     {
       "id": "dark-spaces-wildfire-1-1772597937",
