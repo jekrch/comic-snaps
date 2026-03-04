@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "under-the-trees-where-nobody-sees-rite-of-spring-5-1772599998",
+      "title": "Under the Trees Where Nobody Sees: Rite of Spring",
+      "slug": "under-the-trees-where-nobody-sees-rite-of-spring",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Patrick Horvath",
+      "image": "images/under-the-trees-where-nobody-sees-rite-of-spring/issue-5-1772599998.jpg",
+      "notes": null,
+      "tags": [
+        "sound effects",
+        "watercolor",
+        "lettering"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-04T04:53:20.053Z"
+    },
+    {
       "id": "skinbreaker-6-1772599527",
       "title": "Skinbreaker",
       "slug": "skinbreaker",
@@ -23,7 +40,7 @@
         [
           51.7,
           19.5,
-          -0.0
+          0
         ],
         [
           43.9,
