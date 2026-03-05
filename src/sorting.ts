@@ -16,7 +16,7 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   //{ value: "ahash", label: "AHASH" },
   //{ value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
-  { value: "embedding", label: "SIMILAR" },
+  { value: "embedding", label: "CLIP EMBEDDING" },
 ];
 
 // --- Embedding cache (lazy-loaded) ---

@@ -9,6 +9,8 @@ import HatchFiller from "./HatchFillter";
 import { buildStampPool } from "./HatchFillter";
 import type { StampDef } from "./HatchFillter";
 import FooterPyramid from "./FooterPryamid";
+import { resolveNeighbors } from "../adjacency";
+import type { NeighborMap } from "../adjacency";
 
 const GAP = 4;
 const DEFAULT_ASPECT = 3 / 4;
@@ -37,9 +39,9 @@ function isWide(panel: Panel): boolean {
   return getAspect(panel) >= WIDE_THRESHOLD;
 }
 
-// ---------------------------------------------------------------------------
+
 // Absolutely-positioned layout items
-// ---------------------------------------------------------------------------
+
 
 interface PlacedPanel {
   kind: "panel";
@@ -58,13 +60,14 @@ interface PlacedFiller {
   h: number;
   col: number;
   assignedStamp: StampDef;
+  neighbors: NeighborMap;
 }
 
 type PlacedItem = PlacedPanel | PlacedFiller;
 
-// ---------------------------------------------------------------------------
+
 // Stamp identity helpers
-// ---------------------------------------------------------------------------
+
 
 function stampId(s: StampDef): string {
   if (s.type === "word") return `word:${s.value}`;
@@ -75,9 +78,9 @@ function stampId(s: StampDef): string {
   return `icon:${idx}`;
 }
 
-// ---------------------------------------------------------------------------
+
 // Shuffle utility (Fisher-Yates)
-// ---------------------------------------------------------------------------
+
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -88,9 +91,9 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// ---------------------------------------------------------------------------
+
 // Sequential stamp assigner with adjacency conflict avoidance
-// ---------------------------------------------------------------------------
+
 
 /**
  * Assigns stamps to fillers in the order they appear, cycling through
@@ -142,9 +145,18 @@ function assignStampsToFillers(fillers: PlacedFiller[]): void {
   }
 }
 
-// ---------------------------------------------------------------------------
+
+// Panel height helper (used by adjacency resolver)
+
+
+function getPanelHeight(panel: Panel, width: number): number {
+  const aspect = getAspect(panel);
+  return width / aspect;
+}
+
+
 // Layout algorithm — absolute positions for every item
-// ---------------------------------------------------------------------------
+
 
 function computeLayout(
   panels: Panel[],
@@ -157,8 +169,9 @@ function computeLayout(
   const heights = [...initialHeights];
   const items: PlacedItem[] = [];
 
-  // Placeholder stamp — will be replaced by assignStampsToFillers
+  // Placeholder stamp and empty neighbors — will be replaced later
   const placeholder: StampDef = { type: "word", value: "" };
+  const emptyNeighbors: NeighborMap = {};
 
   for (let idx = 0; idx < panels.length; idx++) {
     const panel = panels[idx];
@@ -191,6 +204,7 @@ function computeLayout(
           h: fillerH,
           col: col1,
           assignedStamp: placeholder,
+          neighbors: emptyNeighbors,
         });
       }
       if (heights[col2] < tallest) {
@@ -204,6 +218,7 @@ function computeLayout(
           h: fillerH,
           col: col2,
           assignedStamp: placeholder,
+          neighbors: emptyNeighbors,
         });
       }
 
@@ -263,6 +278,7 @@ function computeLayout(
           h: fillerH - GAP,
           col,
           assignedStamp: placeholder,
+          neighbors: emptyNeighbors,
         });
       }
     }
@@ -272,12 +288,45 @@ function computeLayout(
   const fillers = items.filter((i): i is PlacedFiller => i.kind === "filler");
   assignStampsToFillers(fillers);
 
+  // Resolve which panels border each filler
+  const neighborMap = resolveNeighbors(
+    items.map((item) => {
+      if (item.kind === "panel") {
+        return {
+          kind: "panel" as const,
+          panel: item.panel,
+          x: item.x,
+          y: item.y,
+          w: item.w,
+          h: getPanelHeight(item.panel, item.w),
+        };
+      }
+      return {
+        kind: "filler" as const,
+        key: item.key,
+        x: item.x,
+        y: item.y,
+        w: item.w,
+        h: item.h,
+      };
+    }),
+    getPanelHeight
+  );
+
+  // Attach resolved neighbors to each filler
+  for (const filler of fillers) {
+    const resolved = neighborMap.get(filler.key);
+    if (resolved) {
+      filler.neighbors = resolved;
+    }
+  }
+
   return { items, totalHeight };
 }
 
-// ---------------------------------------------------------------------------
+
 // Component
-// ---------------------------------------------------------------------------
+
 
 interface MasonryGridProps {
   panels: Panel[];
@@ -416,7 +465,10 @@ export default function MasonryGrid({
                   height: `${item.h}px`,
                 }}
               >
-                <HatchFiller assignedStamp={item.assignedStamp} />
+                <HatchFiller
+                  assignedStamp={item.assignedStamp}
+                  neighbors={item.neighbors}
+                />
               </div>
             );
           }

@@ -2,6 +2,8 @@ import { useId, useRef, useState, useEffect } from "react";
 import { MessageCircleMore, Globe, MessageSquareQuote, Eye } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
+import type { NeighborMap } from "../adjacency";
+import FillerLabels from "./FillerLabels";
 
 export const WORDS = ["SNAPS"];
 
@@ -123,9 +125,9 @@ function useLucideExtract(IconComponent: LucideIcon | null): string | null {
   return svgContent;
 }
 
-// ---------------------------------------------------------------------------
+
 // Stable style — generated once per component instance via useRef
-// ---------------------------------------------------------------------------
+
 
 interface StableStyle {
   rotation: number;
@@ -164,19 +166,22 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyl
   };
 }
 
-// ---------------------------------------------------------------------------
+
 // Component
-// ---------------------------------------------------------------------------
+
 
 interface HatchFillerProps {
   empty?: boolean;
   /** When provided, the filler uses this stamp instead of picking randomly. */
   assignedStamp?: StampDef | null;
+  /** Adjacent panel info for rendering artist labels. */
+  neighbors?: NeighborMap | null;
 }
 
 export default function HatchFiller({
   empty = false,
   assignedStamp = null,
+  neighbors = null,
 }: HatchFillerProps) {
   const patternId = useId();
   const maskId = useId();
@@ -318,15 +323,26 @@ export default function HatchFiller({
   }
 
   return (
-    <div ref={containerRef} className="w-full h-full rounded-sm overflow-hidden">
+    <div ref={containerRef} className="hatch-root relative w-full h-full rounded-sm overflow-hidden">
       <style>{`
         .hatch-text {
           transform: ${twist};
           transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
           transform-origin: center center;
         }
-        .hatch-container:hover .hatch-text {
+        .hatch-root:hover .hatch-text {
           transform: scale(1.2) rotate(0deg);
+        }
+        .filler-labels {
+          opacity: 0;
+          transform: scale(0.92);
+          transition: opacity 0.25s ease-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform-origin: center center;
+          pointer-events: none;
+        }
+        .hatch-root:hover .filler-labels {
+          opacity: 1;
+          transform: scale(1);
         }
       `}</style>
       <svg
@@ -355,6 +371,15 @@ export default function HatchFiller({
           mask={`url(#${maskId})`}
         />
       </svg>
+
+      {/* Artist labels pointing toward adjacent panels */}
+      {neighbors && (
+        <FillerLabels
+          neighbors={neighbors}
+          width={size.width}
+          height={size.height}
+        />
+      )}
     </div>
   );
 }
