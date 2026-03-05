@@ -430,8 +430,13 @@ export default function MasonryGrid({
                 width: `${item.w}px`,
               }}
             >
-              <PanelCard panel={item.panel} />
+              <PanelCard
+                panel={item.panel}
+                panels={panels}
+                panelIndex={panels.indexOf(item.panel)}
+              />
             </div>
+
           );
         })}
       </div>

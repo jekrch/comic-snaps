@@ -30,16 +30,24 @@ const HATCH_GRAD_COORDS: Record<string, { x1: string; y1: string; x2: string; y2
 
 interface Props {
   panel: Panel;
+  panels: Panel[];
+  panelIndex: number;
 }
 
-export default function PanelCard({ panel }: Props) {
+export default function PanelCard({ panel, panels, panelIndex }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(panelIndex);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const hatchPatternId = useId();
   const hatchFadeId = useId();
   const hatchMaskId = useId();
+
+  const openViewer = useCallback(() => {
+    setViewerIndex(panelIndex);
+    setViewerOpen(true);
+  }, [panelIndex]);
 
   const handlePointerUp = useCallback((e: React.PointerEvent) => {
     const now = Date.now();
@@ -64,11 +72,11 @@ export default function PanelCard({ panel }: Props) {
       Math.abs(e.clientY - prev.y) <= tolerance
     ) {
       ref.current = null;
-      setViewerOpen(true);
+      openViewer();
     } else {
       ref.current = { time: now, x: e.clientX, y: e.clientY };
     }
-  }, []);
+  }, [openViewer]);
 
   const isBlurred = panel.blur === "ew" || panel.blur === "nsfw";
   const hatchRotation = panel.blur === "ew" ? 45 : 135;
@@ -206,7 +214,7 @@ export default function PanelCard({ panel }: Props) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setViewerOpen(true);
+              openViewer();
             }}
             className="
               absolute top-2 right-2
@@ -250,7 +258,13 @@ export default function PanelCard({ panel }: Props) {
       </div>
 
       {viewerOpen && (
-        <PanelViewer panel={panel} onClose={() => setViewerOpen(false)} />
+        <PanelViewer
+          panel={panels[viewerIndex]}
+          panels={panels}
+          currentIndex={viewerIndex}
+          onClose={() => setViewerOpen(false)}
+          onNavigate={(idx) => setViewerIndex(idx)}
+        />
       )}
     </>
   );

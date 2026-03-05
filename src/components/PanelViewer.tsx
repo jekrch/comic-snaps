@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut } from "lucide-react";
+import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Panel } from "../types";
 
 interface Props {
   panel: Panel;
+  panels: Panel[];
+  currentIndex: number;
   onClose: () => void;
+  onNavigate: (index: number) => void;
 }
 
 interface Transform {
@@ -13,7 +16,7 @@ interface Transform {
   y: number;
 }
 
-export default function PanelViewer({ panel, onClose }: Props) {
+export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -25,6 +28,10 @@ export default function PanelViewer({ panel, onClose }: Props) {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const topBarRef = useRef<HTMLDivElement>(null);
+  const bottomBarRef = useRef<HTMLDivElement>(null);
+  const [bottomBarH, setBottomBarH] = useState(0);
+  const [topBarH, setTopBarH] = useState(0);
 
   // Gesture tracking refs — no re-renders during active gestures
   const gestureRef = useRef<{
@@ -47,6 +54,10 @@ export default function PanelViewer({ panel, onClose }: Props) {
 
   const MIN_SCALE = 1;
   const MAX_SCALE = 5;
+
+  // Navigation
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < panels.length - 1;
 
   // Double-tap detection for touch devices
   const lastTapRef = useRef<{ time: number; x: number; y: number }>({
@@ -104,6 +115,30 @@ export default function PanelViewer({ panel, onClose }: Props) {
     []
   );
 
+  // Reset zoom when navigating to a new panel
+  useEffect(() => {
+    transformRef.current = { scale: 1, x: 0, y: 0 };
+    setDisplayScale(1);
+    const img = imgRef.current;
+    if (img) {
+      img.style.transition = "none";
+      img.style.transform = "scale(1) translate(0px, 0px)";
+    }
+  }, [currentIndex]);
+
+  // Measure top/bottom bars so the image can be constrained to fit between them
+  useEffect(() => {
+    const measure = () => {
+      if (topBarRef.current) setTopBarH(topBarRef.current.offsetHeight);
+      if (bottomBarRef.current) setBottomBarH(bottomBarRef.current.offsetHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (topBarRef.current) ro.observe(topBarRef.current);
+    if (bottomBarRef.current) ro.observe(bottomBarRef.current);
+    return () => ro.disconnect();
+  }, [currentIndex]);
+
   // Animate in
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -115,14 +150,20 @@ export default function PanelViewer({ panel, onClose }: Props) {
     setTimeout(onClose, 250);
   }, [onClose]);
 
-  // Escape key
+  // Keyboard: Escape, ArrowLeft, ArrowRight
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleClose();
+      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) {
+        onNavigate(currentIndex - 1);
+      }
+      if (e.key === "ArrowRight" && hasNext && displayScale <= 1) {
+        onNavigate(currentIndex + 1);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handleClose]);
+  }, [handleClose, hasPrev, hasNext, currentIndex, onNavigate, displayScale]);
 
   // Lock body scroll and prevent overscroll/bounce on iOS
   useEffect(() => {
@@ -147,12 +188,27 @@ export default function PanelViewer({ panel, onClose }: Props) {
   }, []);
 
   // --- Wheel zoom (desktop) ---
+  // Normalize deltaY so discrete mouse wheels (which send large deltas like ±100/±120
+  // per notch) and trackpads/smooth-scroll mice (which send many small deltas per
+  // gesture) both produce a gentle, consistent zoom feel.
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
       e.preventDefault();
       const t = transformRef.current;
-      const delta = e.deltaY > 0 ? -0.15 : 0.15;
-      const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t.scale + delta));
+
+      // deltaMode: 0 = pixels, 1 = lines, 2 = pages
+      let dy = e.deltaY;
+      if (e.deltaMode === 1) dy *= 16; // lines → rough pixel equivalent
+      if (e.deltaMode === 2) dy *= 100;
+
+      // Clamp the normalized delta so one discrete notch (typically ±100-120px)
+      // and a trackpad micro-tick (±1-4px) both land in a usable range.
+      // Then convert to a small multiplier: ±0.03 per ~100px of delta.
+      const normalized = Math.max(-100, Math.min(100, dy));
+      const step = -(normalized / 100) * 0.05; // positive step = zoom in
+      const factor = 1 + step;
+
+      const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, t.scale * factor));
       const clamped = nextScale <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, nextScale);
       setTransform({ scale: nextScale, ...clamped });
     },
@@ -166,7 +222,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
       if (transformRef.current.scale > 1) {
         resetTransform();
       } else {
-        setTransform({ scale: 2.5, x: 0, y: 0 }, true);
+        setTransform({ scale: 1.8, x: 0, y: 0 }, true);
       }
     },
     [resetTransform, setTransform]
@@ -303,8 +359,52 @@ export default function PanelViewer({ panel, onClose }: Props) {
     [resetTransform, setTransform]
   );
 
+  // --- Swipe navigation (touch, when not zoomed) ---
+  const swipeRef = useRef<{ startX: number; startY: number; startTime: number } | null>(null);
+
+  const handleNavTouchStart = useCallback((e: React.TouchEvent) => {
+    if (displayScale > 1) return;
+    if (e.touches.length === 1) {
+      swipeRef.current = {
+        startX: e.touches[0].clientX,
+        startY: e.touches[0].clientY,
+        startTime: Date.now(),
+      };
+    }
+  }, [displayScale]);
+
+  const handleNavTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!swipeRef.current || displayScale > 1) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - swipeRef.current.startX;
+    const dy = touch.clientY - swipeRef.current.startY;
+    const dt = Date.now() - swipeRef.current.startTime;
+    swipeRef.current = null;
+
+    // Must be a horizontal swipe: fast enough, far enough, more horizontal than vertical
+    if (dt < 400 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx > 0 && hasPrev) {
+        onNavigate(currentIndex - 1);
+      } else if (dx < 0 && hasNext) {
+        onNavigate(currentIndex + 1);
+      }
+    }
+  }, [displayScale, hasPrev, hasNext, currentIndex, onNavigate]);
+
   const isZoomed = displayScale > 1;
   const hasTags = panel.tags?.length > 0;
+
+  // Padding between image and bars
+  const IMG_PADDING = 24;
+  const reservedH = topBarH + bottomBarH + IMG_PADDING * 2;
+  const imgMaxHeight = isZoomed
+    ? undefined
+    : `calc(100vh - ${reservedH}px)`;
+
+  // Compute fixed width for the nav counter based on max possible digit count
+  const totalDigits = String(panels.length).length;
+  // Each digit ≈ 0.6em at the counter's font size; " / " adds ~1.5em
+  const counterMinWidth = `${totalDigits * 2 * 0.6 + 1.5}em`;
 
   return (
     <div
@@ -318,12 +418,15 @@ export default function PanelViewer({ panel, onClose }: Props) {
       onClick={(e) => {
         if (e.target === containerRef.current) handleClose();
       }}
+      onTouchStart={handleNavTouchStart}
+      onTouchEnd={handleNavTouchEnd}
       role="dialog"
       aria-modal="true"
       aria-label={`${panel.title} #${panel.issue} — full view`}
     >
       {/* Top bar — always above image content via z-20 */}
       <div
+        ref={topBarRef}
         className={`
           absolute top-0 inset-x-0 z-20 flex items-start justify-between
           px-4 py-3 sm:px-6 sm:py-4
@@ -372,7 +475,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
               onClick={(e) => {
                 e.stopPropagation();
                 const t = transformRef.current;
-                const next = Math.min(MAX_SCALE, t.scale + 0.5);
+                const next = Math.min(MAX_SCALE, t.scale * 1.3);
                 const clamped = clampTranslate(t.x, t.y, next);
                 setTransform({ scale: next, ...clamped }, true);
               }}
@@ -388,7 +491,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
               onClick={(e) => {
                 e.stopPropagation();
                 const t = transformRef.current;
-                const next = Math.max(MIN_SCALE, t.scale - 0.5);
+                const next = Math.max(MIN_SCALE, t.scale / 1.3);
                 const clamped = next <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, next);
                 setTransform({ scale: next, ...clamped }, true);
               }}
@@ -441,7 +544,7 @@ export default function PanelViewer({ panel, onClose }: Props) {
           className="block w-auto h-auto object-contain rounded-sm"
           style={{
             maxWidth: "96vw",
-            maxHeight: "calc(100vh - 10rem)",
+            maxHeight: imgMaxHeight ?? "none",
             transform: `scale(${transformRef.current.scale}) translate(${transformRef.current.x / transformRef.current.scale}px, ${transformRef.current.y / transformRef.current.scale}px)`,
             willChange: "transform",
           }}
@@ -449,18 +552,19 @@ export default function PanelViewer({ panel, onClose }: Props) {
         />
       </div>
 
-      {/* Bottom bar — tags + hint */}
+      {/* Bottom bar */}
       <div
+        ref={bottomBarRef}
         className={`
-          absolute bottom-0 inset-x-0 z-20 pointer-events-none
+          absolute bottom-0 inset-x-0 z-20
           transition-all duration-250 ease-out
           ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
-        style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
-        {/* Tags — hidden when zoomed to keep the view clean */}
+        {/* Tags — hidden when zoomed */}
         {!isZoomed && hasTags && (
-          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0">
+          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-2">
             {panel.tags.map((tag) => (
               <span
                 key={tag}
@@ -472,13 +576,72 @@ export default function PanelViewer({ panel, onClose }: Props) {
           </div>
         )}
 
-        {/* Hint text */}
-        {!isZoomed && (
-          <div className="text-center">
+        {/* Navigation strip using chevrons */}
+        {!isZoomed && (hasPrev || hasNext) && (
+          <div className="mx-auto flex items-center justify-center gap-6 mb-0">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (hasPrev) onNavigate(currentIndex - 1);
+              }}
+              disabled={!hasPrev}
+              className={`
+                p-2 rounded-full transition-colors duration-150
+                ${hasPrev
+                  ? "text-white/50 hover:text-white/80 active:text-white"
+                  : "text-white/10 cursor-default"
+                }
+              `}
+              aria-label="Previous panel"
+            >
+              <ChevronLeft size={22} strokeWidth={1.5}/>
+            </button>
+
+            <span
+              className="text-[10px] text-white/20 tabular-nums tracking-wide select-none text-center inline-block"
+              style={{ minWidth: counterMinWidth }}
+            >
+              {currentIndex + 1} / {panels.length}
+            </span>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (hasNext) onNavigate(currentIndex + 1);
+              }}
+              disabled={!hasNext}
+              className={`
+                p-2 rounded-full transition-colors duration-150
+                ${hasNext
+                  ? "text-white/50 hover:text-white/80 active:text-white"
+                  : "text-white/10 cursor-default"
+                }
+              `}
+              aria-label="Next panel"
+            >
+              <ChevronRight size={22} strokeWidth={1.5} />
+            </button>
+          </div>
+        )}
+
+        {/* Hint text — only when no nav or when zoomed */}
+        {!isZoomed && !hasPrev && !hasNext && (
+          <div className="text-center mt-0">
             <span className="text-[11px] text-white/30 tracking-wide">
               {isTouchDevice
                 ? "pinch to zoom · double-tap to enlarge"
                 : "scroll to zoom · double-click to enlarge · esc to close"}
+            </span>
+          </div>
+        )}
+
+        {/* Condensed hint when nav is present */}
+        {!isZoomed && (hasPrev || hasNext) && (
+          <div className="text-center mt-0">
+            <span className="text-[11px] text-white/20 tracking-wide">
+              {isTouchDevice
+                ? "swipe to navigate · pinch to zoom"
+                : "← → to navigate · scroll to zoom · esc to close"}
             </span>
           </div>
         )}
