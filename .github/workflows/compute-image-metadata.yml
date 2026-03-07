@@ -25,6 +25,12 @@ jobs:
           path: ~/.cache/huggingface
           key: hf-siglip-base-patch16-224-dinov2-small
 
+      - name: Cache torchvision models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/torch/hub/checkpoints
+          key: torchvision-vgg16
+
       - name: Install dependencies
         run: |
           pip install Pillow imagehash scikit-learn scikit-image numpy
@@ -34,12 +40,12 @@ jobs:
       - name: Compute missing image metadata
         run: python scripts/compute-image-metadata.py
 
-      - name: Compute missing SigLIP embeddings
+      - name: Compute embeddings
         run: python scripts/compute-embeddings.py
 
       - name: Commit updated data
         run: |
-          git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json
+          git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json public/data/embeddings-gram.json
           git diff --cached --quiet && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

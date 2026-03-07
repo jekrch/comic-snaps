@@ -8,7 +8,8 @@ export type SortMode =
   | "dhash"
   | "color"
   | "embedding-siglip"
-  | "embedding-dino";
+  | "embedding-dino"
+  | "embedding-gram";
 
 export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
@@ -17,8 +18,9 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   //{ value: "ahash", label: "AHASH" },
   //{ value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
-  { value: "embedding-siglip", label: "SigLIP Model" },
-  { value: "embedding-dino", label: "DINO V2 Model" },
+  { value: "embedding-siglip", label: "SigLIP" },  // semantic / conceptual similarity
+  { value: "embedding-dino", label: "DINOv2" },     // structural / perceptual similarity
+  { value: "embedding-gram", label: "VGG-16 Gram" }, // line style / texture similarity
 ];
 
 // --- Embedding cache (lazy-loaded, per model) ---
@@ -39,11 +41,13 @@ interface EmbeddingCacheEntry {
 const EMBEDDING_SOURCES: Record<string, string> = {
   "embedding-siglip": "/data/embeddings.json",
   "embedding-dino": "/data/embeddings-dino.json",
+  "embedding-gram": "/data/embeddings-gram.json",
 };
 
 const embeddingCaches: Record<string, EmbeddingCacheEntry> = {
   "embedding-siglip": { data: null, promise: null },
   "embedding-dino": { data: null, promise: null },
+  "embedding-gram": { data: null, promise: null },
 };
 
 /**
@@ -52,7 +56,7 @@ const embeddingCaches: Record<string, EmbeddingCacheEntry> = {
  * when the user first selects that embedding-based sort.
  */
 export async function loadEmbeddings(
-  mode: "embedding-siglip" | "embedding-dino"
+  mode: "embedding-siglip" | "embedding-dino" | "embedding-gram"
 ): Promise<EmbeddingMap> {
   const cache = embeddingCaches[mode];
   if (cache.data) return cache.data;
@@ -236,8 +240,12 @@ function sortByEmbedding(panels: Panel[], embeddings: EmbeddingMap): Panel[] {
 /** Check whether a sort mode uses embeddings. */
 function isEmbeddingMode(
   mode: SortMode
-): mode is "embedding-siglip" | "embedding-dino" {
-  return mode === "embedding-siglip" || mode === "embedding-dino";
+): mode is "embedding-siglip" | "embedding-dino" | "embedding-gram" {
+  return (
+    mode === "embedding-siglip" ||
+    mode === "embedding-dino" ||
+    mode === "embedding-gram"
+  );
 }
 
 /**
@@ -314,6 +322,7 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
     // unsorted if called directly. use sortPanelsAsync instead.
     case "embedding-siglip":
     case "embedding-dino":
+    case "embedding-gram":
       return sorted;
 
     default:
