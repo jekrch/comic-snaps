@@ -54,10 +54,10 @@ class ModelSpec:
 MODELS: dict[str, ModelSpec] = {
     "siglip": ModelSpec(
         key="siglip",
-        hf_name="google/siglip-small-patch16-224",
-        dim=512,
+        hf_name="google/siglip-base-patch16-224",
+        dim=768,
         output_path=Path("public/data/embeddings.json"),
-        version="siglip-small-patch16-224-v1",
+        version="siglip-base-patch16-224-v1",
     ),
     "dino": ModelSpec(
         key="dino",
