@@ -91,10 +91,10 @@ export default function App() {
     sortPanelsAsync(filteredPanels, sortMode).then((result) => {
       if (!cancelled) {
         setSortedPanels(result);
-        console.log(
-          `[sort] mode=${sortMode} first3=`,
-          result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
-        );
+        // console.log(
+        //   `[sort] mode=${sortMode} first3=`,
+        //   result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
+        // );
       }
     });
     return () => { cancelled = true; };

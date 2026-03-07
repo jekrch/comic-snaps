@@ -14,7 +14,7 @@ export const LUCIDE_ICONS: LucideIcon[] = [
 ];
 
 const ROTATIONS = [45, 135];
-const COLORS = ["#e97d62", "#7A8B2A"];
+const COLORS = ["#7A8B2A", "#e97d62"];
 
 const STYLIZE_PLACEMENT = true;
 
@@ -25,11 +25,11 @@ export type StampDef =
 /** Build the full pool of possible stamps for external sequencing. */
 export function buildStampPool(): StampDef[] {
   const pool: StampDef[] = [];
-  for (const icon of LUCIDE_ICONS) {
-    pool.push({ type: "icon", value: icon });
-  }
   for (const word of WORDS) {
     pool.push({ type: "word", value: word });
+  }
+  for (const icon of LUCIDE_ICONS) {
+    pool.push({ type: "icon", value: icon });
   }
   return pool;
 }
@@ -40,24 +40,85 @@ interface PlacementStyle {
   offsetY: number;
 }
 
-function pickRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+
+// Deterministic style generation based on filler index
+
+
+/**
+ * A simple integer hash that maps an index to a spread-out but
+ * deterministic value, used to give each filler varied-looking
+ * placement without any randomness.
+ */
+function deterministicHash(index: number): number {
+  let h = index * 2654435761; // Knuth multiplicative hash
+  h = ((h >>> 16) ^ h) * 0x45d9f3b;
+  h = ((h >>> 16) ^ h) * 0x45d9f3b;
+  h = (h >>> 16) ^ h;
+  return Math.abs(h);
 }
 
-function randomBetween(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+/** Map an index deterministically into the [min, max) range. */
+function deterministicBetween(index: number, salt: number, min: number, max: number): number {
+  const h = deterministicHash(index * 7 + salt);
+  return min + (h % 10000) / 10000 * (max - min);
 }
 
-function generatePlacement(): PlacementStyle {
+function generateDeterministicPlacement(index: number): PlacementStyle {
   if (!STYLIZE_PLACEMENT) {
     return { scale: 1, offsetX: 0, offsetY: 0 };
   }
   return {
-    scale: randomBetween(1.1, 2.0),
-    offsetX: randomBetween(5, 200),
-    offsetY: randomBetween(-12, 12),
+    scale: deterministicBetween(index, 1, 1.1, 2.0),
+    offsetX: deterministicBetween(index, 2, 5, 200),
+    offsetY: deterministicBetween(index, 3, -12, 12),
   };
 }
+
+
+// Stable style — fully deterministic based on fillerIndex
+
+
+interface StableStyle {
+  rotation: number;
+  color: string;
+  twist: string;
+  placement: PlacementStyle;
+  iconInnerX: number;
+  iconInnerY: number;
+}
+
+function generateStableStyle(stamp: StampDef | null, empty: boolean, fillerIndex: number): StableStyle {
+  if (empty || !stamp) {
+    return {
+      rotation: ROTATIONS[fillerIndex % ROTATIONS.length],
+      color: COLORS[fillerIndex % COLORS.length],
+      twist: "",
+      placement: { scale: 1, offsetX: 0, offsetY: 0 },
+      iconInnerX: 0,
+      iconInnerY: 0,
+    };
+  }
+
+  // Deterministic twist angle and scale derived from the index
+  const angle = deterministicBetween(fillerIndex, 10, -3, 3);
+  const scale = 1.05 + deterministicBetween(fillerIndex, 11, 0, 0.1);
+
+  return {
+    rotation: ROTATIONS[fillerIndex % ROTATIONS.length],
+    color: COLORS[fillerIndex % COLORS.length],
+    twist: `scale(${scale.toFixed(3)}) rotate(${angle.toFixed(2)}deg)`,
+    placement:
+      stamp.type === "icon"
+        ? generateDeterministicPlacement(fillerIndex)
+        : { scale: 1, offsetX: 0, offsetY: 0 },
+    iconInnerX: deterministicBetween(fillerIndex, 20, -50, 130),
+    iconInnerY: deterministicBetween(fillerIndex, 21, -40, 40),
+  };
+}
+
+
+// Lucide SVG extraction (unchanged)
+
 
 /**
  * Render a Lucide icon offscreen, extract the raw SVG children,
@@ -72,15 +133,23 @@ function extractLucideSvgContent(IconComponent: LucideIcon): Promise<string> {
     container.style.top = "-9999px";
     document.body.appendChild(container);
 
+    let cleaned = false;
+
     const cleanup = (root: ReturnType<typeof createRoot>) => {
+      if (cleaned) return;
+      cleaned = true;
       root.unmount();
-      document.body.removeChild(container);
+      if (container.parentNode) {
+        container.parentNode.removeChild(container);
+      }
     };
 
     const tryExtract = () => {
       const svg = container.querySelector("svg");
       return svg ? svg.innerHTML : null;
     };
+
+    const root = createRoot(container);
 
     const observer = new MutationObserver(() => {
       const content = tryExtract();
@@ -93,7 +162,6 @@ function extractLucideSvgContent(IconComponent: LucideIcon): Promise<string> {
 
     observer.observe(container, { childList: true, subtree: true });
 
-    const root = createRoot(container);
     root.render(
       <IconComponent size={24} strokeWidth={2} color="black" fill="none" />
     );
@@ -126,47 +194,6 @@ function useLucideExtract(IconComponent: LucideIcon | null): string | null {
 }
 
 
-// Stable style — generated once per component instance via useRef
-
-
-interface StableStyle {
-  rotation: number;
-  color: string;
-  twist: string;
-  placement: PlacementStyle;
-  iconInnerX: number;
-  iconInnerY: number;
-}
-
-function generateStableStyle(stamp: StampDef | null, empty: boolean): StableStyle {
-  if (empty || !stamp) {
-    return {
-      rotation: pickRandom(ROTATIONS),
-      color: pickRandom(COLORS),
-      twist: "",
-      placement: { scale: 1, offsetX: 0, offsetY: 0 },
-      iconInnerX: 0,
-      iconInnerY: 0,
-    };
-  }
-
-  const angle = Math.random() * 6 - 3;
-  const scale = 1.05 + Math.random() * 0.1;
-
-  return {
-    rotation: pickRandom(ROTATIONS),
-    color: pickRandom(COLORS),
-    twist: `scale(${scale.toFixed(3)}) rotate(${angle.toFixed(2)}deg)`,
-    placement:
-      stamp.type === "icon"
-        ? generatePlacement()
-        : { scale: 1, offsetX: 0, offsetY: 0 },
-    iconInnerX: randomBetween(-50, 130),
-    iconInnerY: randomBetween(-40, 40),
-  };
-}
-
-
 // Component
 
 
@@ -174,6 +201,11 @@ interface HatchFillerProps {
   empty?: boolean;
   /** When provided, the filler uses this stamp instead of picking randomly. */
   assignedStamp?: StampDef | null;
+  /**
+   * Deterministic index used to cycle colors, rotations, and placement
+   * styles. Assigned by MasonryGrid in layout order.
+   */
+  fillerIndex?: number;
   /** Adjacent panel info for rendering artist labels. */
   neighbors?: NeighborMap | null;
 }
@@ -181,6 +213,7 @@ interface HatchFillerProps {
 export default function HatchFiller({
   empty = false,
   assignedStamp = null,
+  fillerIndex = 0,
   neighbors = null,
 }: HatchFillerProps) {
   const patternId = useId();
@@ -208,24 +241,23 @@ export default function HatchFiller({
     };
   }, []);
 
-  // Determine the stamp (assigned or random fallback), pinned on first render
+  // Determine the stamp — use the assigned stamp directly (set by MasonryGrid).
+  // Fall back to index-based pool lookup if no stamp was provided.
   const stampRef = useRef<StampDef | null>(null);
   if (stampRef.current === null && !empty) {
     if (assignedStamp) {
       stampRef.current = assignedStamp;
     } else {
-      const useIcon = Math.random() > 0.3;
-      stampRef.current = useIcon
-        ? { type: "icon", value: pickRandom(LUCIDE_ICONS) }
-        : { type: "word", value: pickRandom(WORDS) };
+      const pool = buildStampPool();
+      stampRef.current = pool[fillerIndex % pool.length];
     }
   }
   const stamp = stampRef.current;
 
-  // Pin all random visual properties (rotation, color, twist, placement) once
+  // Pin all visual properties once — fully deterministic from fillerIndex
   const styleRef = useRef<StableStyle | null>(null);
   if (styleRef.current === null) {
-    styleRef.current = generateStableStyle(stamp, empty);
+    styleRef.current = generateStableStyle(stamp, empty, fillerIndex);
   }
   const { rotation, color, twist, placement, iconInnerX, iconInnerY } = styleRef.current;
 

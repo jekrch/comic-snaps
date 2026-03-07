@@ -60,88 +60,29 @@ interface PlacedFiller {
   h: number;
   col: number;
   assignedStamp: StampDef;
+  /** Deterministic index into the cycling sequence. */
+  fillerIndex: number;
   neighbors: NeighborMap;
 }
 
 type PlacedItem = PlacedPanel | PlacedFiller;
 
 
-// Stamp identity helpers
-
-
-function stampId(s: StampDef): string {
-  if (s.type === "word") return `word:${s.value}`;
-  const pool = buildStampPool();
-  const idx = pool.findIndex(
-    (p) => p.type === "icon" && p.value === s.value
-  );
-  return `icon:${idx}`;
-}
-
-
-// Shuffle utility (Fisher-Yates)
-
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-
-// Sequential stamp assigner with adjacency conflict avoidance
+// Deterministic stamp assignment — cycles through the pool in order
 
 
 /**
- * Assigns stamps to fillers in the order they appear, cycling through
- * a shuffled pool. Before assigning, checks that the candidate doesn't
- * match any adjacent filler (same column predecessor, or side-by-side
- * neighbour at similar Y). If it conflicts, advances to the next in
- * the sequence. With a pool of 5 items this always resolves quickly.
+ * Assigns stamps to fillers by cycling sequentially through the fixed
+ * pool. No randomness — the first filler gets pool[0], the second
+ * gets pool[1], etc., wrapping around at the end.
  */
 function assignStampsToFillers(fillers: PlacedFiller[]): void {
-  const pool = shuffle(buildStampPool());
+  const pool = buildStampPool();
   const poolSize = pool.length;
-  let cursor = 0;
-
-  // Track the last stamp assigned per column for vertical adjacency
-  const lastInCol = new Map<number, string>();
 
   for (let i = 0; i < fillers.length; i++) {
-    const filler = fillers[i];
-
-    // Collect stamp IDs to avoid: same-column predecessor + side-by-side neighbours
-    const avoid = new Set<string>();
-
-    const prevInCol = lastInCol.get(filler.col);
-    if (prevInCol) avoid.add(prevInCol);
-
-    // Check already-assigned neighbours in adjacent columns at similar Y
-    for (let j = i - 1; j >= 0 && j >= i - 6; j--) {
-      const other = fillers[j];
-      if (
-        Math.abs(other.col - filler.col) === 1 &&
-        Math.abs(other.y - filler.y) < GAP + 1
-      ) {
-        avoid.add(stampId(other.assignedStamp));
-      }
-    }
-
-    // Walk the pool from cursor, pick first non-conflicting
-    let chosen = pool[cursor % poolSize];
-    let attempts = 0;
-    while (avoid.has(stampId(chosen)) && attempts < poolSize) {
-      cursor++;
-      attempts++;
-      chosen = pool[cursor % poolSize];
-    }
-
-    filler.assignedStamp = chosen;
-    lastInCol.set(filler.col, stampId(chosen));
-    cursor++;
+    fillers[i].assignedStamp = pool[i % poolSize];
+    fillers[i].fillerIndex = i;
   }
 }
 
@@ -204,6 +145,7 @@ function computeLayout(
           h: fillerH,
           col: col1,
           assignedStamp: placeholder,
+          fillerIndex: 0,
           neighbors: emptyNeighbors,
         });
       }
@@ -218,6 +160,7 @@ function computeLayout(
           h: fillerH,
           col: col2,
           assignedStamp: placeholder,
+          fillerIndex: 0,
           neighbors: emptyNeighbors,
         });
       }
@@ -278,13 +221,14 @@ function computeLayout(
           h: fillerH - GAP,
           col,
           assignedStamp: placeholder,
+          fillerIndex: 0,
           neighbors: emptyNeighbors,
         });
       }
     }
   }
 
-  // Assign stamps sequentially with adjacency avoidance
+  // Assign stamps deterministically in layout order
   const fillers = items.filter((i): i is PlacedFiller => i.kind === "filler");
   assignStampsToFillers(fillers);
 
@@ -353,10 +297,10 @@ export default function MasonryGrid({
   const [colCount, setColCount] = useState(getColumnCount);
   const [colWidth, setColWidth] = useState(0);
 
-  // Cache stamps by filler key so they persist across layout recalculations.
-  // This prevents fillers from randomising new stamps on every resize or
+  // Cache stamps + fillerIndex by filler key so they persist across layout
+  // recalculations. This prevents fillers from changing on every resize or
   // scroll-triggered re-layout on iOS.
-  const stampCacheRef = useRef<Map<string, StampDef>>(new Map());
+  const stampCacheRef = useRef<Map<string, { stamp: StampDef; fillerIndex: number }>>(new Map());
 
   const layout = useCallback(() => {
     if (!containerRef.current) return;
@@ -377,7 +321,7 @@ export default function MasonryGrid({
 
     const result = computeLayout(panels, cc, containerWidth, initialHeights);
 
-    // Stabilise filler stamps: reuse cached stamps for known keys,
+    // Stabilise filler stamps: reuse cached values for known keys,
     // cache any newly assigned ones.
     const fillers = result.items.filter(
       (i): i is PlacedFiller => i.kind === "filler"
@@ -385,9 +329,13 @@ export default function MasonryGrid({
     for (const f of fillers) {
       const cached = stampCacheRef.current.get(f.key);
       if (cached) {
-        f.assignedStamp = cached;
+        f.assignedStamp = cached.stamp;
+        f.fillerIndex = cached.fillerIndex;
       } else {
-        stampCacheRef.current.set(f.key, f.assignedStamp);
+        stampCacheRef.current.set(f.key, {
+          stamp: f.assignedStamp,
+          fillerIndex: f.fillerIndex,
+        });
       }
     }
 
@@ -467,6 +415,7 @@ export default function MasonryGrid({
               >
                 <HatchFiller
                   assignedStamp={item.assignedStamp}
+                  fillerIndex={item.fillerIndex}
                   neighbors={item.neighbors}
                 />
               </div>
