@@ -1,6 +1,21 @@
 {
   "panels": [
     {
+      "id": "space-riders-2-1772905823",
+      "title": "Space Riders",
+      "slug": "space-riders",
+      "issue": 2,
+      "year": 2015,
+      "artist": "Alexis Ziritt",
+      "image": "images/space-riders/issue-2-1772905823.jpg",
+      "notes": null,
+      "tags": [
+        "sci-fi"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-07T17:50:24.843Z"
+    },
+    {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring-5-1772599998",
       "title": "Under the Trees Where Nobody Sees: Rite of Spring",
       "slug": "under-the-trees-where-nobody-sees-rite-of-spring",
