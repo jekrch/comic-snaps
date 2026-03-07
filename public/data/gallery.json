@@ -41,42 +41,6 @@
       "dhash": "33978f25590d6d3b"
     },
     {
-      "id": "skinbreaker-6-1772599526",
-      "title": "Skinbreaker",
-      "slug": "skinbreaker",
-      "issue": 6,
-      "year": 2026,
-      "artist": "David Finch",
-      "image": "images/skinbreaker/issue-6-1772599526.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-03-04T03:47:28.815Z",
-      "width": 960,
-      "height": 982,
-      "dominantColors": [
-        [
-          54.9,
-          20.4,
-          0.3
-        ],
-        [
-          22.9,
-          13.5,
-          3.1
-        ],
-        [
-          43.3,
-          37.0,
-          37.9
-        ]
-      ],
-      "colorfulness": 23.5,
-      "phash": "d732473ec1748c8b",
-      "ahash": "00007ef2ffd1f478",
-      "dhash": "e82cc884812544c0"
-    },
-    {
       "id": "dark-spaces-wildfire-1-1772597937",
       "title": "Dark Spaces: Wildfire",
       "slug": "dark-spaces-wildfire",
