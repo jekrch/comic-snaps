@@ -42,15 +42,14 @@ from sklearn.decomposition import PCA
 from torchvision import models, transforms
 from transformers import AutoImageProcessor, AutoModel, AutoProcessor
 
-# ---------------------------------------------------------------------------
+
 # Paths
-# ---------------------------------------------------------------------------
 GALLERY_PATH = Path("public/data/gallery.json")
 IMAGE_ROOT = Path("public")
 
-# ---------------------------------------------------------------------------
+
 # Model registry
-# ---------------------------------------------------------------------------
+
 
 
 @dataclass(frozen=True)
@@ -90,9 +89,9 @@ MODELS: dict[str, ModelSpec] = {
     ),
 }
 
-# ---------------------------------------------------------------------------
+
 # I/O helpers
-# ---------------------------------------------------------------------------
+
 
 
 def load_existing(spec: ModelSpec) -> dict[str, list[float]]:
@@ -140,9 +139,9 @@ def save_embeddings(spec: ModelSpec, embeddings: dict[str, list[float]]) -> None
     spec.output_path.write_text(json.dumps(output) + "\n")
 
 
-# ---------------------------------------------------------------------------
+
 # Embedding computation – SigLIP
-# ---------------------------------------------------------------------------
+
 
 
 def compute_embedding_siglip(
@@ -161,9 +160,9 @@ def compute_embedding_siglip(
     return vec / np.linalg.norm(vec)
 
 
-# ---------------------------------------------------------------------------
+
 # Embedding computation – DINOv2
-# ---------------------------------------------------------------------------
+
 
 
 def compute_embedding_dino(
@@ -177,9 +176,9 @@ def compute_embedding_dino(
     return vec / np.linalg.norm(vec)
 
 
-# ---------------------------------------------------------------------------
+
 # Embedding computation – Gram matrices (VGG-16)
-# ---------------------------------------------------------------------------
+
 
 # Layers to extract Gram matrices from. These span shallow → mid depth:
 #   relu1_2 (64 channels)  – fine texture: hatching, stippling, line weight
@@ -258,9 +257,9 @@ def compute_gram_features(
     return torch.cat(grams).numpy()
 
 
-# ---------------------------------------------------------------------------
+
 # Dispatch table for standard (incremental) models
-# ---------------------------------------------------------------------------
+
 
 COMPUTE_FN = {
     "siglip": compute_embedding_siglip,
@@ -292,9 +291,9 @@ def embed_image(
     return [round(float(v), 5) for v in vec]
 
 
-# ---------------------------------------------------------------------------
+
 # Processing pipelines
-# ---------------------------------------------------------------------------
+
 
 
 def process_incremental(spec: ModelSpec, panels: list[dict]) -> None:
@@ -438,9 +437,9 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
     )
 
 
-# ---------------------------------------------------------------------------
+
 # Main
-# ---------------------------------------------------------------------------
+
 
 
 def process_model(spec: ModelSpec, panels: list[dict]) -> None:
