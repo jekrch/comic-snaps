@@ -13,7 +13,30 @@
         "paneling"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-07T21:28:45.404Z"
+      "addedAt": "2026-03-07T21:28:45.404Z",
+      "width": 1280,
+      "height": 644,
+      "dominantColors": [
+        [
+          16.3,
+          8.8,
+          6.2
+        ],
+        [
+          41.0,
+          9.5,
+          6.1
+        ],
+        [
+          80.7,
+          4.3,
+          8.8
+        ]
+      ],
+      "colorfulness": 8.7,
+      "phash": "8a46d4caf133bd23",
+      "ahash": "3c340001013d25ff",
+      "dhash": "6de94a4b4b6b4b49"
     },
     {
       "id": "space-riders-2-1772905823",
