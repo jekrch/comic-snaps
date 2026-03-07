@@ -1,6 +1,44 @@
 {
   "panels": [
     {
+      "id": "space-riders-2-1772905823",
+      "title": "Space Riders",
+      "slug": "space-riders",
+      "issue": 2,
+      "year": 2015,
+      "artist": "Alexis Ziritt",
+      "image": "images/space-riders/issue-2-1772905823.jpg",
+      "notes": null,
+      "tags": [
+        "sci-fi"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-07T17:50:24.843Z",
+      "width": 1120,
+      "height": 1280,
+      "dominantColors": [
+        [
+          23.6,
+          4.4,
+          -1.4
+        ],
+        [
+          55.1,
+          3.8,
+          8.2
+        ],
+        [
+          51.2,
+          49.3,
+          26.7
+        ]
+      ],
+      "colorfulness": 26.1,
+      "phash": "a883229d25be5e3e",
+      "ahash": "4f6d01f7989c8f01",
+      "dhash": "dbd92dae32383737"
+    },
+    {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring-5-1772599998",
       "title": "Under the Trees Where Nobody Sees: Rite of Spring",
       "slug": "under-the-trees-where-nobody-sees-rite-of-spring",
@@ -39,42 +77,6 @@
       "phash": "bf410d1d8d9e252b",
       "ahash": "1940e3ff8f879f89",
       "dhash": "33978f25590d6d3b"
-    },
-    {
-      "id": "skinbreaker-6-1772599526",
-      "title": "Skinbreaker",
-      "slug": "skinbreaker",
-      "issue": 6,
-      "year": 2026,
-      "artist": "David Finch",
-      "image": "images/skinbreaker/issue-6-1772599526.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-03-04T03:47:28.815Z",
-      "width": 960,
-      "height": 982,
-      "dominantColors": [
-        [
-          54.9,
-          20.4,
-          0.3
-        ],
-        [
-          22.9,
-          13.5,
-          3.1
-        ],
-        [
-          43.3,
-          37.0,
-          37.9
-        ]
-      ],
-      "colorfulness": 23.5,
-      "phash": "d732473ec1748c8b",
-      "ahash": "00007ef2ffd1f478",
-      "dhash": "e82cc884812544c0"
     },
     {
       "id": "dark-spaces-wildfire-1-1772597937",
