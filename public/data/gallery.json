@@ -1,6 +1,21 @@
 {
   "panels": [
     {
+      "id": "the-nice-house-by-the-sea-8-1772918924",
+      "title": "The Nice House by the Sea",
+      "slug": "the-nice-house-by-the-sea",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Alvaro Martinez Bueno",
+      "image": "images/the-nice-house-by-the-sea/issue-8-1772918924.jpg",
+      "notes": null,
+      "tags": [
+        "paneling"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-07T21:28:45.404Z"
+    },
+    {
       "id": "space-riders-2-1772905823",
       "title": "Space Riders",
       "slug": "space-riders",
