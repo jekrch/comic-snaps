@@ -7,7 +7,8 @@ export type SortMode =
   | "ahash"
   | "dhash"
   | "color"
-  | "embedding";
+  | "embedding-siglip"
+  | "embedding-dino";
 
 export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
@@ -16,40 +17,65 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   //{ value: "ahash", label: "AHASH" },
   //{ value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
-  { value: "embedding", label: "CLIP EMBEDDING" },
+  { value: "embedding-siglip", label: "SigLIP Model" },
+  { value: "embedding-dino", label: "DINO V2 Model" },
 ];
 
-// --- Embedding cache (lazy-loaded) ---
+// --- Embedding cache (lazy-loaded, per model) ---
 
 export type EmbeddingMap = Record<string, number[]>;
 
-let embeddingCache: EmbeddingMap | null = null;
-let embeddingLoadPromise: Promise<EmbeddingMap> | null = null;
+interface EmbeddingFile {
+  model_version: string;
+  dim: number;
+  embeddings: EmbeddingMap;
+}
+
+interface EmbeddingCacheEntry {
+  data: EmbeddingMap | null;
+  promise: Promise<EmbeddingMap> | null;
+}
+
+const EMBEDDING_SOURCES: Record<string, string> = {
+  "embedding-siglip": "/data/embeddings.json",
+  "embedding-dino": "/data/embeddings-dino.json",
+};
+
+const embeddingCaches: Record<string, EmbeddingCacheEntry> = {
+  "embedding-siglip": { data: null, promise: null },
+  "embedding-dino": { data: null, promise: null },
+};
 
 /**
- * Lazy-load embeddings.json. Returns the cached map on subsequent calls.
- * The file is only fetched when the user first selects embedding-based sort.
+ * Lazy-load an embedding file by sort mode key.
+ * Returns the cached map on subsequent calls. The file is only fetched
+ * when the user first selects that embedding-based sort.
  */
-export async function loadEmbeddings(): Promise<EmbeddingMap> {
-  if (embeddingCache) return embeddingCache;
-  if (embeddingLoadPromise) return embeddingLoadPromise;
+export async function loadEmbeddings(
+  mode: "embedding-siglip" | "embedding-dino"
+): Promise<EmbeddingMap> {
+  const cache = embeddingCaches[mode];
+  if (cache.data) return cache.data;
+  if (cache.promise) return cache.promise;
 
-  embeddingLoadPromise = fetch("/data/embeddings.json")
+  const url = EMBEDDING_SOURCES[mode];
+
+  cache.promise = fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error(`Failed to load embeddings: ${res.status}`);
       return res.json();
     })
-    .then((data: { embeddings: EmbeddingMap }) => {
-      embeddingCache = data.embeddings;
-      return embeddingCache;
+    .then((data: EmbeddingFile) => {
+      cache.data = data.embeddings;
+      return cache.data;
     })
     .catch((err) => {
-      console.error("Could not load embeddings:", err);
-      embeddingLoadPromise = null;
+      console.error(`Could not load embeddings from ${url}:`, err);
+      cache.promise = null;
       return {} as EmbeddingMap;
     });
 
-  return embeddingLoadPromise;
+  return cache.promise;
 }
 
 // colorfulness threshold for partitioning chromatic vs achromatic panels.
@@ -182,7 +208,7 @@ function nearestNeighborChain<T>(
 }
 
 /**
- * sort panels by CLIP embedding similarity using a nearest-neighbor chain.
+ * sort panels by embedding similarity using a nearest-neighbor chain.
  * panels without embeddings are appended at the end, oldest-first.
  */
 function sortByEmbedding(panels: Panel[], embeddings: EmbeddingMap): Panel[] {
@@ -207,8 +233,15 @@ function sortByEmbedding(panels: Panel[], embeddings: EmbeddingMap): Panel[] {
   return [...sorted, ...withoutEmb];
 }
 
+/** Check whether a sort mode uses embeddings. */
+function isEmbeddingMode(
+  mode: SortMode
+): mode is "embedding-siglip" | "embedding-dino" {
+  return mode === "embedding-siglip" || mode === "embedding-dino";
+}
+
 /**
- * synchronous sort for all modes except embedding.
+ * synchronous sort for all modes except embeddings.
  */
 export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
   const sorted = [...panels];
@@ -277,9 +310,10 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
       return [...chromatic, ...achromatic];
     }
 
-    // embedding sort is async — this synchronous fallback returns unsorted
-    // if called directly. use sortPanelsAsync for embedding mode.
-    case "embedding":
+    // embedding sorts are async — this synchronous fallback returns
+    // unsorted if called directly. use sortPanelsAsync instead.
+    case "embedding-siglip":
+    case "embedding-dino":
       return sorted;
 
     default:
@@ -288,8 +322,9 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
 }
 
 /**
- * async sort that handles embedding mode by lazy-loading the embeddings
- * file. for all other modes, delegates to the synchronous sortPanels.
+ * async sort that handles embedding modes by lazy-loading the appropriate
+ * embeddings file. for all other modes, delegates to the synchronous
+ * sortPanels.
  *
  * usage:
  *   const sorted = await sortPanelsAsync(panels, mode);
@@ -298,10 +333,10 @@ export async function sortPanelsAsync(
   panels: Panel[],
   mode: SortMode
 ): Promise<Panel[]> {
-  if (mode !== "embedding") {
+  if (!isEmbeddingMode(mode)) {
     return sortPanels(panels, mode);
   }
 
-  const embeddings = await loadEmbeddings();
+  const embeddings = await loadEmbeddings(mode);
   return sortByEmbedding([...panels], embeddings);
 }
