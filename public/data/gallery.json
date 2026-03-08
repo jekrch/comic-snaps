@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-08T23:23:20.184Z"
+      "addedAt": "2026-03-08T23:23:20.184Z",
+      "width": 1280,
+      "height": 1012,
+      "dominantColors": [
+        [
+          48.2,
+          13.5,
+          23.1
+        ],
+        [
+          70.2,
+          2.9,
+          30.0
+        ],
+        [
+          77.9,
+          3.5,
+          9.2
+        ]
+      ],
+      "colorfulness": 12.7,
+      "phash": "cabbb481b9789307",
+      "ahash": "fff930d0207070f0",
+      "dhash": "d96165b141c1e5e7"
     },
     {
       "id": "the-nice-house-by-the-sea-8-1772918924",
