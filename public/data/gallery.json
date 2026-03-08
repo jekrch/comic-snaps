@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-08T23:27:00.108Z"
+      "addedAt": "2026-03-08T23:27:00.108Z",
+      "width": 913,
+      "height": 944,
+      "dominantColors": [
+        [
+          15.5,
+          12.8,
+          -9.8
+        ],
+        [
+          45.6,
+          9.0,
+          -4.9
+        ],
+        [
+          78.9,
+          2.4,
+          -1.9
+        ]
+      ],
+      "colorfulness": 8.5,
+      "phash": "8bc5abba227c19a5",
+      "ahash": "bf7c380027dcc000",
+      "dhash": "7be0e274ed3812d9"
     },
     {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring-6-1773012198",
