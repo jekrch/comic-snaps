@@ -20,8 +20,13 @@ export default function InfoModal({ onClose }: Props) {
     return { rotation: pick(rotations), color: pick(colors) };
   }, []);
 
+  // useEffect(() => {
+  //   requestAnimationFrame(() => setVisible(true));
+  // }, []);
+
   useEffect(() => {
-    requestAnimationFrame(() => setVisible(true));
+    const id = setTimeout(() => setVisible(true), 20);
+    return () => clearTimeout(id);
   }, []);
 
   // Lock scroll with position:fixed (gives solid bg behind Safari toolbar)
