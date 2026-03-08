@@ -29,9 +29,19 @@ export interface ZoomPanState {
 /**
  * Manages zoom/pan transform state, wheel zoom, clamping, and double-click toggle.
  *
- * All transform updates are applied directly to the DOM via the imgRef to avoid
- * React re-renders during active gestures. `displayScale` is a React state mirror
- * used only for UI elements (zoom %, button disabled states).
+ * Uses transform-origin: 0 0 with translate() scale() to avoid an iOS Safari
+ * compositing bug where scale() from center clips to the element's original
+ * layout bounds. The centering offset is baked into the translate so the image
+ * appears to scale from center visually.
+ *
+ * Transform values in `transformRef` use screen-pixel coordinates:
+ *   x, y = pan offset in screen pixels (0,0 = centered)
+ *   scale = zoom factor (1 = unzoomed)
+ *
+ * The applied CSS is:
+ *   transform-origin: 0 0;
+ *   transform: translate(tx, ty) scale(S);
+ * where tx = -(baseW*(S-1))/2 + x, ty = -(baseH*(S-1))/2 + y
  */
 export function useZoomPan(
   imgWrapperRef: RefObject<HTMLDivElement | null>,
@@ -47,8 +57,20 @@ export function useZoomPan(
   const applyTransform = useCallback((t: Transform, animate = false) => {
     const img = imgRef.current;
     if (!img) return;
+
+    const { width: baseW, height: baseH } = baseDimsRef.current;
+
+    // Centering offset: with transform-origin 0 0, scale expands right/down.
+    // Shift left/up by half the growth to keep the image visually centered.
+    const cx = -(baseW * (t.scale - 1)) / 2;
+    const cy = -(baseH * (t.scale - 1)) / 2;
+
+    const tx = cx + t.x;
+    const ty = cy + t.y;
+
     img.style.transition = animate ? "transform 0.2s ease-out" : "none";
-    img.style.transform = `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
+    img.style.transformOrigin = "0 0";
+    img.style.transform = `translate(${tx}px, ${ty}px) scale(${t.scale})`;
   }, []);
 
   const setTransform = useCallback(
@@ -73,15 +95,11 @@ export function useZoomPan(
   /**
    * Clamp translation so the image edge cannot pan past the viewport edge.
    *
-   * The transform `scale(S) translate(x/S, y/S)` produces a screen-space
-   * displacement of (x, y) pixels. The image is centered in the viewport
-   * via flexbox, so:
-   *   - Scaled half-width  = (baseW * scale) / 2
-   *   - Viewport half-width = window.innerWidth / 2
-   *   - maxX = scaledHalfW - vpHalfW  (clamped to ≥ 0)
-   *
-   * This allows panning until the edge of the scaled image aligns with
-   * the edge of the viewport, giving full use of the screen when zoomed.
+   * x, y are screen-pixel pan offsets (0 = centered). The image is centered
+   * in the viewport via flexbox, so:
+   *   scaledHalf = (base * scale) / 2
+   *   vpHalf     = viewportSize / 2
+   *   maxPan     = max(0, scaledHalf - vpHalf)
    */
   const clampTranslate = useCallback(
     (x: number, y: number, scale: number): { x: number; y: number } => {
@@ -111,7 +129,8 @@ export function useZoomPan(
     const img = imgRef.current;
     if (img) {
       img.style.transition = "none";
-      img.style.transform = "scale(1) translate(0px, 0px)";
+      img.style.transformOrigin = "0 0";
+      img.style.transform = "translate(0px, 0px) scale(1)";
     }
     transformRef.current = { scale: 1, x: 0, y: 0 };
   }, [currentIndex]);
@@ -124,7 +143,8 @@ export function useZoomPan(
   useEffect(() => {
     const img = imgRef.current;
     if (img) {
-      img.style.transform = "scale(1) translate(0px, 0px)";
+      img.style.transformOrigin = "0 0";
+      img.style.transform = "translate(0px, 0px) scale(1)";
     }
   }, []);
 

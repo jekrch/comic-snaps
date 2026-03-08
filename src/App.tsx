@@ -107,7 +107,7 @@ export default function App() {
       {/* header */}
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-b border-ink-faint/30 pl-1!">
         <div className="content-container px-1 py-0 flex items-center justify-between">
-          <h1 className="font-display font-bold text-xl tracking-tight text-ink">
+          <h1 className="font-display font-bold text-xl tracking-tight text-ink ">
             COMIC SNAPS
           </h1>
           <button
