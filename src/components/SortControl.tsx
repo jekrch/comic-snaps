@@ -1,14 +1,15 @@
 import { useState } from "react";
 import type { SortMode } from "../sorting";
 import { SORT_OPTIONS } from "../sorting";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, HelpCircle } from "lucide-react";
 
 interface SortControlProps {
   activeSort: SortMode;
   onSort: (mode: SortMode) => void;
+  onInfoOpen?: () => void;
 }
 
-export default function SortControl({ activeSort, onSort }: SortControlProps) {
+export default function SortControl({ activeSort, onSort, onInfoOpen }: SortControlProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -73,6 +74,37 @@ export default function SortControl({ activeSort, onSort }: SortControlProps) {
                 </button>
               );
             })}
+
+            {/* Info link at the bottom of the sort list */}
+            {onInfoOpen && (
+              <>
+                <div
+                  className="mx-3 my-1"
+                  style={{
+                    height: "1px",
+                    background: "var(--color-border, rgba(74,71,69,0.25))",
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    onInfoOpen();
+                  }}
+                  className="
+                    w-full text-right px-3 py-2
+                    font-display text-[11px] tracking-wider uppercase
+                    transition-colors duration-100
+                    cursor-pointer
+                    text-ink-muted hover:text-ink
+                  "
+                >
+                  <span className="flex items-center justify-end gap-1.5">
+                    <HelpCircle size={11} className="opacity-60" />
+                    huh?
+                  </span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -279,6 +279,7 @@ interface MasonryGridProps {
   onSort: (mode: SortMode) => void;
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
+  onInfoOpen?: () => void;
 }
 
 export default function MasonryGrid({
@@ -288,6 +289,7 @@ export default function MasonryGrid({
   onSort,
   filters,
   onFiltersChange,
+  onInfoOpen
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -395,7 +397,7 @@ export default function MasonryGrid({
               width: colWidth > 0 ? `${colWidth}px` : undefined,
             }}
           >
-            <SortControl activeSort={sortMode} onSort={onSort} />
+            <SortControl activeSort={sortMode} onSort={onSort} onInfoOpen={onInfoOpen} />
           </div>
         )}
 

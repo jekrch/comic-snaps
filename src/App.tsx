@@ -5,6 +5,7 @@ import type { Filters } from "./filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
+import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { Menu } from "lucide-react";
 import { useFilterParams } from "./hooks/useFilterParams";
@@ -13,8 +14,8 @@ export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
-  const { initialFilters, initialSort, syncToURL } = useFilterParams();
+  const { initialFilters, initialSort, initialTab, syncToURL, syncTab } = useFilterParams();
+  const [showInfo, setShowInfo] = useState<InfoTab | null>(initialTab);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
@@ -34,6 +35,27 @@ export default function App() {
     },
     [filters, syncToURL]
   );
+
+  const handleOpenInfo = useCallback(
+    (tab: InfoTab = "about") => {
+      setShowInfo(tab);
+      syncTab(tab);
+    },
+    [syncTab]
+  );
+
+  const handleTabChange = useCallback(
+    (tab: InfoTab) => {
+      setShowInfo(tab);
+      syncTab(tab);
+    },
+    [syncTab]
+  );
+
+  const handleCloseInfo = useCallback(() => {
+    setShowInfo(null);
+    syncTab(null);
+  }, [syncTab]);
 
   // fetch gallery data
   useEffect(() => {
@@ -91,10 +113,6 @@ export default function App() {
     sortPanelsAsync(filteredPanels, sortMode).then((result) => {
       if (!cancelled) {
         setSortedPanels(result);
-        // console.log(
-        //   `[sort] mode=${sortMode} first3=`,
-        //   result.slice(0, 3).map((p) => ({ id: p.id, phash: p.phash, added: p.addedAt }))
-        // );
       }
     });
     return () => { cancelled = true; };
@@ -111,7 +129,7 @@ export default function App() {
             COMIC SNAPS
           </h1>
           <button
-            onClick={() => setShowInfo(true)}
+            onClick={() => handleOpenInfo("about")}
             className="text-ink/80 hover:text-ink transition-colors cursor-pointer p-3 -m-2 -mr-1"
             title="About"
           >
@@ -137,6 +155,7 @@ export default function App() {
               onSort={handleSortChange}
               filters={filters}
               onFiltersChange={handleFiltersChange}
+              onInfoOpen={() => handleOpenInfo("sorts")}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -155,7 +174,13 @@ export default function App() {
         )}
       </main>
 
-      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
+      {showInfo && (
+        <InfoModal
+          initialTab={showInfo}
+          onTabChange={handleTabChange}
+          onClose={handleCloseInfo}
+        />
+      )}
     </div>
   );
 }
