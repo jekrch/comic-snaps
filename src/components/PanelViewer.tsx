@@ -101,8 +101,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   // ── Layout calculations ──
 
   const hasTags = panel.tags?.length > 0;
-  const IMG_PADDING = 24;
-  const reservedH = topBarH + bottomBarH + IMG_PADDING * 2;
+  const IMG_PADDING = 44;
+  const reservedH = bottomBarH + IMG_PADDING * 2;
   const imgMaxHeight = `calc(100vh - ${reservedH}px)`;
 
   const totalDigits = String(panels.length).length;
@@ -163,19 +163,17 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.title}{" "}
               <span className="text-accent">#{panel.issue}</span>{" "}
-              <span className="text-white/40">({panel.year})</span>
+              <span className="text-white/40 text-xs">({panel.year})</span>
             </p>
             <p className="text-xs text-white/60 mt-0.5 leading-snug">
               {panel.artist}
-              <span className="text-white/25 mx-1.5">·</span>
-              <span className="text-white/35">
-                (posted by {panel.postedBy}:{` `}
-                {new Date(panel.addedAt).toLocaleDateString(undefined, {
+              <p className="text-[10px] text-white/30 mt-0.5 leading-snug">
+                {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
-                })})
-              </span>
+                })}
+              </p>
             </p>
           </div>
         </div>
@@ -312,7 +310,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       <div
         ref={bottomBarRef}
         className={`
-          absolute bottom-0 inset-x-0 z-20
+          absolute bottom-0 inset-x-0 z-20 pt-6
           transition-all duration-250 ease-out
           ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
@@ -347,8 +345,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                 px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
                 outline-none focus:outline-none focus-visible:outline-none
                 ${hasPrev
-                              ? "text-white/30 hover:text-white/60 active:text-white/80"
-                              : "text-white/10 cursor-default"}
+                  ? "text-white/30 hover:text-white/60 active:text-white/80"
+                  : "text-white/10 cursor-default"}
               `}
               aria-label="Previous panel"
             >
@@ -373,8 +371,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                   px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
                   outline-none focus:outline-none focus-visible:outline-none
                   ${hasNext
-                                ? "text-white/30 hover:text-white/60 active:text-white/80"
-                                : "text-white/10 cursor-default"}
+                  ? "text-white/30 hover:text-white/60 active:text-white/80"
+                  : "text-white/10 cursor-default"}
                 `}
               aria-label="Next panel"
             >
