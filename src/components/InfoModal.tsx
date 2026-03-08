@@ -545,16 +545,16 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
               <div className="px-10 text-center">
 
                 {/* <div className="w-12 h-0.5 bg-accent mx-auto mb-5 rounded-sm opacity-70" /> */}
-                <HatchDivider />
+                {/* <HatchDivider /> */}
 
                 {/* Title */}
                 <h2
                   className="tracking-tight text-[20px] text-ink/80"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  <span className="text-[#7A8B2A]/40 mr-3">*</span>
+                  {/* <span className="text-[#7A8B2A]/40 mr-3">*</span> */}
                   COMIC SNAPS
-                  <span className="text-[#7A8B2A]/40 ml-3">*</span>
+                  {/* <span className="text-[#7A8B2A]/40 ml-3">*</span> */}
                 </h2>
 
                 <HatchDivider />
