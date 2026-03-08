@@ -319,7 +319,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       >
         {/* Tags */}
         {!isZoomed && (
-          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="flex flex-wrap justify-center gap-1.5 px-4 -mb-1 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
             {hasTags &&
               panel.tags.map((tag) => (
                 <span

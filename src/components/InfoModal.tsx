@@ -37,7 +37,7 @@ function TabBar({
             onClick={() => onSelect(key)}
             className="flex-1 bg-transparent border-none cursor-pointer
                        py-3.5 px-5 text-[11px] tracking-[0.08em] uppercase
-                       text-left transition-colors duration-150"
+                       text-leftx transition-colors duration-150"
             style={{
               fontFamily: "var(--font-display)",
               color: active
@@ -198,94 +198,94 @@ const SORT_DESCRIPTIONS: {
   body: React.ReactNode;
   link?: { text: string; href: string };
 }[] = [
-  {
-    label: "NEWEST / OLDEST",
-    body: (
-      <p className="m-0">
-        We start with plain old chronological order by date added. Boring, like a good default should be.
-      </p>
-    ),
-  },
-  {
-    label: "PHASH",
-    body: (
-      <p className="m-0">
-        This stands for perceptual hash. It's basically a fingerprint of each panel's luminance
-        features. Adjacent panels share similar layouts and brightness patterns regardless of color
-        or content. This is good for identifying near-duplicate images, but honestly I don't find
-        the results with disparate images to be that interesting here.
-      </p>
-    ),
-    link: { text: "pHash.org", href: "https://www.phash.org/" },
-  },
-  {
-    label: "COLOR",
-    body: (
-      <>
+    {
+      label: "NEWEST / OLDEST",
+      body: (
         <p className="m-0">
-          This splits panels into color vs black-and-white using a colorfulness score derived from
-          the CIELAB color space: specifically the spread of the a* and b* channels, which represent
-          green-red and blue-yellow. Without that split, panels that read as black-and-white to our
-          eyes would still land somewhere on the hue spectrum and break up the intuitive flow (since even grayscale pixels can have faint chroma values).
+          We start with plain old chronological order by date added. Boring, like a good default should be.
         </p>
-        <p className="mt-2 mb-0">
-          I thought this was an interesting case of how 'colorfulness' can be more of a human,
-          perceptual judgment than an objective property of light. Within each group, panels are
-          sorted by the hue angle of their dominant color, producing a spectrum from reds
-          through oranges into yellows and beyond.
+      ),
+    },
+    {
+      label: "PHASH",
+      body: (
+        <p className="m-0">
+          This stands for perceptual hash. It's basically a fingerprint of each panel's luminance
+          features. Adjacent panels share similar layouts and brightness patterns regardless of color
+          or content. This is good for identifying near-duplicate images, but honestly I don't find
+          the results with disparate images to be that interesting here.
         </p>
-      </>
-    ),
-    link: {
-      text: "CIELAB color space",
-      href: "https://en.wikipedia.org/wiki/CIELAB_color_space",
+      ),
+      link: { text: "pHash.org", href: "https://www.phash.org/" },
     },
-  },
-  {
-    label: "SigLIP",
-    body: (
-      <p className="m-0">
-        OK things get more interesting here, where we're sorting by semantic similarity via a
-        vision-language model. SigLIP encodes holistic visual meaning: i.e. composition, subject
-        matter, mood, and style all blended into one vector. Adjacent panels will be alike in varied
-        respects: traffic noise, depictions of sadness, a hammer, etc. The axes of similarity vary
-        wildly, but it's fun to guess at the points of connection.
-      </p>
-    ),
-    link: {
-      text: "google/siglip-base-patch16-224",
-      href: "https://huggingface.co/google/siglip-base-patch16-224",
+    {
+      label: "COLOR",
+      body: (
+        <>
+          <p className="m-0">
+            This splits panels into color vs black-and-white using a colorfulness score derived from
+            the CIELAB color space: specifically the spread of the a* and b* channels, which represent
+            green-red and blue-yellow. Without that split, panels that read as black-and-white to our
+            eyes would still land somewhere on the hue spectrum and break up the intuitive flow (since even grayscale pixels can have faint chroma values).
+          </p>
+          <p className="mt-2 mb-0">
+            I thought this was an interesting case of how 'colorfulness' can be more of a human,
+            perceptual judgment than an objective property of light. Within each group, panels are
+            sorted by the hue angle of their dominant color, producing a spectrum from reds
+            through oranges into yellows and beyond.
+          </p>
+        </>
+      ),
+      link: {
+        text: "CIELAB color space",
+        href: "https://en.wikipedia.org/wiki/CIELAB_color_space",
+      },
     },
-  },
-  {
-    label: "DINOv2",
-    body: (
-      <p className="m-0">
-        This captures structural and perceptual similarity from a self-supervised vision model.
-        DINOv2 focuses on spatial layout, shapes, and visual texture without any language grounding.
-        It tends to group panels by composition and form rather than narrative content.
-      </p>
-    ),
-    link: {
-      text: "facebook/dinov2-base",
-      href: "https://huggingface.co/facebook/dinov2-base",
+    {
+      label: "SigLIP",
+      body: (
+        <p className="m-0">
+          OK things get more interesting here, where we're sorting by semantic similarity via a
+          vision-language model. SigLIP encodes holistic visual meaning: i.e. composition, subject
+          matter, mood, and style all blended into one vector. Adjacent panels will be alike in varied
+          respects: traffic noise, depictions of sadness, a hammer, etc. The axes of similarity vary
+          wildly, but it's fun to guess at the points of connection.
+        </p>
+      ),
+      link: {
+        text: "google/siglip-base-patch16-224",
+        href: "https://huggingface.co/google/siglip-base-patch16-224",
+      },
     },
-  },
-  {
-    label: "VGG-16 Gram",
-    body: (
-      <p className="m-0">
-        Here we focus on style and texture similarity from Gram-matrix features of a VGG-16
-        network. You might notice connections based on line quality, hatching patterns, and tonal
-        rendering. Panels by the same artist or in similar techniques will likely cluster together.
-      </p>
-    ),
-    link: {
-      text: "Gatys et al., A Neural Algorithm of Artistic Style",
-      href: "https://arxiv.org/abs/1508.06576",
+    {
+      label: "DINOv2",
+      body: (
+        <p className="m-0">
+          This captures structural and perceptual similarity from a self-supervised vision model.
+          DINOv2 focuses on spatial layout, shapes, and visual texture without any language grounding.
+          It tends to group panels by composition and form rather than narrative content.
+        </p>
+      ),
+      link: {
+        text: "facebook/dinov2-base",
+        href: "https://huggingface.co/facebook/dinov2-base",
+      },
     },
-  },
-];
+    {
+      label: "VGG-16 Gram",
+      body: (
+        <p className="m-0">
+          Here we focus on style and texture similarity from Gram-matrix features of a VGG-16
+          network. You might notice connections based on line quality, hatching patterns, and tonal
+          rendering. Panels by the same artist or in similar techniques will likely cluster together.
+        </p>
+      ),
+      link: {
+        text: "Gatys et al., A Neural Algorithm of Artistic Style",
+        href: "https://arxiv.org/abs/1508.06576",
+      },
+    },
+  ];
 
 // Modal
 
@@ -344,6 +344,71 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose]);
+
+  // Decorative hatch ornament — mirrors the backdrop's SVG hatch language
+
+  function HatchDivider() {
+    const id = useId();
+    const patId = `${id}-pat`;
+    const maskId = `${id}-mask`;
+    const gradId = `${id}-grad`;
+
+    const { angle, stroke } = useMemo(() => {
+      const angles = [45, -45, 135, -135];
+      const strokes = ["#e97d62"];
+      const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
+      return { angle: pick(angles), stroke: pick(strokes) };
+    }, []);
+
+    return (
+      <div
+        className="mx-auto my-5"
+        style={{ width: 220, height: 20, opacity: 0.45 }}
+        aria-hidden="true"
+      >
+        <svg
+          width="220"
+          height="20"
+          viewBox="0 0 220 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern
+              id={patId}
+              width="6"
+              height="6"
+              patternUnits="userSpaceOnUse"
+              patternTransform={`rotate(${angle})`}
+            >
+              <line
+                x1="0" y1="0" x2="0" y2="6"
+                stroke={stroke}
+                strokeWidth="2.5"
+              />
+            </pattern>
+
+            <linearGradient id={gradId} x1="0" y1="0.5" x2="1" y2="0.5">
+              <stop offset="0%" stopColor="white" stopOpacity="0" />
+              <stop offset="25%" stopColor="white" stopOpacity="1" />
+              <stop offset="75%" stopColor="white" stopOpacity="1" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+
+            <mask id={maskId}>
+              <rect width="220" height="20" fill={`url(#${gradId})`} />
+            </mask>
+          </defs>
+
+          <rect
+            width="220"
+            height="20"
+            fill={`url(#${patId})`}
+            mask={`url(#${maskId})`}
+          />
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -473,18 +538,26 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
           }} />
 
           {/* Tab content (fixed height — matches sorts tab) */}
-          <div style={{ height: "min(60vh, 420px)" }} className="relative">
+          <div style={{ height: "min(80vh, 620px)" }} className="relative">
 
             {/* About */}
-            <TabPanel active={activeTab === "about"} className="flex items-center justify-center">
+            <TabPanel active={activeTab === "about"} className="flex items-center pb-10 justify-center">
               <div className="px-10 text-center">
+
+                {/* <div className="w-12 h-0.5 bg-accent mx-auto mb-5 rounded-sm opacity-70" /> */}
+                <HatchDivider />
+
                 {/* Title */}
                 <h2
-                  className="tracking-tight text-[15px] text-ink"
+                  className="tracking-tight text-[20px] text-ink/80"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
+                  <span className="text-[#7A8B2A]/40 mr-3">*</span>
                   COMIC SNAPS
+                  <span className="text-[#7A8B2A]/40 ml-3">*</span>
                 </h2>
+
+                <HatchDivider />
 
                 {/* Description */}
                 <p
@@ -495,8 +568,9 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                 </p>
 
                 {/* Accent rule */}
-                <div className="w-12 h-0.5 bg-accent mx-auto mt-5 rounded-sm opacity-70" />
+                {/* <div className="w-12 h-0.5 bg-accent mx-auto mt-5 rounded-sm opacity-70" /> */}
 
+                <HatchDivider />
                 {/* Links */}
                 <div className="mt-8 flex flex-col items-center gap-2">
                   <a
@@ -532,7 +606,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                   style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
                 >
                   Each sort type reorders the gallery by a different axis of similarity.
-                  I use several neat models for this, which you can read about below. 
+                  I use several neat models for this, which you can read about below.
                   Their embeddings are precomputed at build time. So nothing runs in your sweaty browser.
                 </p>
 
