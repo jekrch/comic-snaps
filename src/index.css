@@ -9,8 +9,9 @@
   --color-surface-raised: #141414;
   --color-surface-hover: #1a1a1a;
   --color-ink: #e8e4df;
-  --color-ink-muted: #8a8580;
-  --color-ink-faint: #4a4745;
+  --color-ink-muted: #9e9892;
+  /* --color-ink-faint: #4a4745; */
+  --color-ink-faint: #686563;
   --color-accent: #e85d3a;
   --color-accent-dim: #c44d2f;
 }
@@ -20,6 +21,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color:  #686563;
+    color: #9e9892;
   }
 
   html {

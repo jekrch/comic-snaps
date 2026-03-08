@@ -300,7 +300,7 @@ export default function HatchFiller({
   const cx = Math.max(margin, Math.min(size.width - margin, rawCx));
   const cy = Math.max(margin, Math.min(size.height - margin, rawCy));
 
-  const fontSize = 100;
+  const fontSize = 80;
 
   let maskContent: React.ReactNode = null;
 

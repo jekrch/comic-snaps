@@ -73,21 +73,18 @@ export default function FilterControl({
   }, [onFiltersChange]);
 
   return (
-    <div className="filter-control panel-item overflow-hidden rounded-sm select-none">
+    <div className="filter-control panel-item overflow-hidden select-none">
       {/* header row */}
       <button
         onClick={() => setOpen((prev) => !prev)}
         className="
-          w-full flex items-center justify-between
-          bg-surface-raised hover:bg-surface-hover
-          border border-ink-faint/20
+          w-full flex items-center
           px-3 py-2.5
           transition-colors duration-150
           cursor-pointer
-          rounded-sm
         "
       >
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
           <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
             FILTER
           </span>
@@ -96,13 +93,13 @@ export default function FilterControl({
               {count}
             </span>
           )}
+          <ChevronDown
+            size={14}
+            className={`text-ink-faint transition-transform duration-200 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
         </span>
-        <ChevronDown
-          size={14}
-          className={`text-ink-faint transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
       </button>
 
       {/* expanded body */}
@@ -114,10 +111,10 @@ export default function FilterControl({
         }}
       >
         <div className="overflow-hidden">
-          <div className="border border-t-0 border-ink-faint/20 bg-surface-raised rounded-b-sm">
+          <div>
             {/* clear filters action at top of list */}
             {active && (
-              <div className="border-b border-ink-faint/10 px-3 py-2">
+              <div className="px-3 py-2">
                 <button
                   onClick={() => {
                     clearAll();

@@ -320,7 +320,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       >
         {/* Tags */}
         {!isZoomed && (
-          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-2 min-h-[18px] mx-auto w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0 min-h-[18px] mx-auto w-fit" style={{ pointerEvents: "auto" }}>
             {hasTags &&
               panel.tags.map((tag) => (
                 <span
@@ -350,11 +350,11 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               `}
               aria-label="Previous panel"
             >
-              <ChevronLeft size={22} strokeWidth={1.5} />
+              <ChevronLeft size={28} strokeWidth={2} className="cursor-pointer"/>
             </button>
 
             <span
-              className="text-[10px] text-white/20 tabular-nums tracking-wide select-none text-center inline-block"
+              className="text-[12px] text-white/60 tabular-nums tracking-wide select-none text-center inline-block"
               style={{ minWidth: counterMinWidth }}
             >
               {currentIndex + 1} / {panels.length}
@@ -374,7 +374,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               `}
               aria-label="Next panel"
             >
-              <ChevronRight size={22} strokeWidth={1.5} />
+              <ChevronRight size={28} strokeWidth={2} className="cursor-pointer"/>
             </button>
           </div>
         )}
@@ -392,7 +392,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="text-center mt-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
-            <span className="text-[11px] text-white/20 tracking-wide">
+            <span className="text-[11px] text-white/30 tracking-wide">
               {isTouchDevice
                 ? "swipe to navigate · pinch to zoom"
                 : "← → or drag to navigate · scroll to zoom · esc to close"}
