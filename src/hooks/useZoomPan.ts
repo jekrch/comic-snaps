@@ -53,10 +53,25 @@ export function useZoomPan(
     const wrapper = imgWrapperRef.current;
     if (!wrapper) return;
     wrapper.style.transition = animate ? "transform 0.2s ease-out" : "none";
-    wrapper.style.transform =
-      t.scale <= 1
-        ? "none"
-        : `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
+
+    if (t.scale <= 1) {
+      wrapper.style.transform = "none";
+      // Reset to unzoomed layout
+      wrapper.style.position = "";
+      wrapper.style.inset = "";
+      wrapper.style.zIndex = "";
+      wrapper.style.backgroundColor = "";
+      wrapper.style.cursor = "";
+    } else {
+      wrapper.style.transform =
+        `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
+      // Immediately expand to cover viewport and occlude bars
+      wrapper.style.position = "absolute";
+      wrapper.style.inset = "0";
+      wrapper.style.zIndex = "30";
+      wrapper.style.backgroundColor = "black";
+      wrapper.style.cursor = "grab";
+    }
   }, [imgWrapperRef]);
 
   const setTransform = useCallback(
@@ -110,6 +125,11 @@ export function useZoomPan(
     if (wrapper) {
       wrapper.style.transition = "none";
       wrapper.style.transform = "none";
+      wrapper.style.position = "";
+      wrapper.style.inset = "";
+      wrapper.style.zIndex = "";
+      wrapper.style.backgroundColor = "";
+      wrapper.style.cursor = "";
     }
     transformRef.current = { scale: 1, x: 0, y: 0 };
   }, [currentIndex, imgWrapperRef]);

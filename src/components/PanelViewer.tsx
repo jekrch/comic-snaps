@@ -268,12 +268,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {/* Current panel (center) */}
         <div
           ref={imgWrapperRef}
-          className={`
-            flex items-center justify-center select-none overflow-hidden
-            ${isZoomed
-              ? "absolute inset-0 z-30 cursor-grab"
-              : "relative cursor-default"}
-          `}
+          className="relative flex items-center justify-center select-none overflow-hidden cursor-default"
           style={{ touchAction: "none", pointerEvents: "auto" }}
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={handleDoubleClick}
