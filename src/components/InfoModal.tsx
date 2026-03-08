@@ -549,7 +549,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
 
                 {/* Title */}
                 <h2
-                  className="tracking-tight text-[20px] text-ink/80"
+                  className="tracking-tight text-[18px] text-ink/80"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {/* <span className="text-[#7A8B2A]/40 mr-3">*</span> */}
