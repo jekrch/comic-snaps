@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { X, Github, ChevronDown, ExternalLink } from "lucide-react";
 
-// Tab primitives───
+// Tab primitives
 
 export type InfoTab = "about" | "sorts";
 
@@ -347,54 +347,6 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
 
   return (
     <>
-      <style>{`
-        @keyframes hatchFadeIn {
-          from { opacity: 0; }
-          to   { opacity: 0.32; }
-        }
-        @keyframes hatchFadeOut {
-          from { opacity: 0.32; }
-          to   { opacity: 0; }
-        }
-        @keyframes hatchDrift {
-          0%, 100% { transform: rotate(-5deg) scale(1.15) translate(-4%, 3%); }
-          50%       { transform: rotate(-3.5deg) scale(1.18) translate(-3%, 2%); }
-        }
-        @keyframes scrimIn {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        @keyframes scrimOut {
-          from { opacity: 1; }
-          to   { opacity: 0; }
-        }
-        @keyframes modalEnter {
-          from { opacity: 0; transform: scale(0.95); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes modalExit {
-          from { opacity: 1; transform: scale(1); }
-          to   { opacity: 0; transform: scale(0.95); }
-        }
-        .info-modal-scroll::-webkit-scrollbar {
-          width: 4px;
-        }
-        .info-modal-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .info-modal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.12);
-          border-radius: 2px;
-        }
-        .info-modal-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.22);
-        }
-        .info-modal-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
-        }
-      `}</style>
-
       {/* Overlay container */}
       <div
         className="fixed z-50 flex items-center justify-center"
@@ -492,7 +444,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
 
         {/* Modal card */}
         <div
-          className="relative w-full max-w-[320px] mx-6 rounded-md
+          className="relative w-full max-w-[420px] mx-6 rounded-md
                      border border-[var(--color-border,rgba(74,71,69,0.25))]
                      bg-[var(--color-surface-raised)]"
           style={{
