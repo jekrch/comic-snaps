@@ -19,7 +19,7 @@ const DEFAULT_ASPECT = 3 / 4;
  * span two columns. 1.6 catches landscape double-spreads without
  * triggering on slightly-wider-than-square panels.
  */
-const WIDE_THRESHOLD = 1.2;
+const WIDE_THRESHOLD = 1.4;
 
 function getColumnCount() {
   if (typeof window === "undefined") return 3;
