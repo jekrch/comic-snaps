@@ -160,23 +160,23 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       >
         <div className="min-w-0 flex-1 px-2!" style={{ pointerEvents: "none" }}>
           <div style={{ pointerEvents: "auto", width: "fit-content" }}>
-          <p className="font-display text-sm text-white/90 leading-snug">
-            {panel.title}{" "}
-            <span className="text-accent">#{panel.issue}</span>{" "}
-            <span className="text-white/40">({panel.year})</span>
-          </p>
-          <p className="text-xs text-white/60 mt-0.5 leading-snug">
-            {panel.artist}
-            <span className="text-white/25 mx-1.5">·</span>
-            <span className="text-white/35">
-              (posted by {panel.postedBy}:{` `}
-              {new Date(panel.addedAt).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })})
-            </span>
-          </p>
+            <p className="font-display text-sm text-white/90 leading-snug">
+              {panel.title}{" "}
+              <span className="text-accent">#{panel.issue}</span>{" "}
+              <span className="text-white/40">({panel.year})</span>
+            </p>
+            <p className="text-xs text-white/60 mt-0.5 leading-snug">
+              {panel.artist}
+              <span className="text-white/25 mx-1.5">·</span>
+              <span className="text-white/35">
+                (posted by {panel.postedBy}:{` `}
+                {new Date(panel.addedAt).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })})
+              </span>
+            </p>
           </div>
         </div>
 
@@ -336,6 +336,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {/* Navigation strip */}
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="mx-auto flex items-center justify-center gap-6 mb-0 w-fit" style={{ pointerEvents: "auto" }}>
+            {/* Previous */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -343,23 +344,25 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               }}
               disabled={!hasPrev}
               className={`
-                p-2 rounded-full transition-colors duration-150
+                px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
+                outline-none focus:outline-none focus-visible:outline-none
                 ${hasPrev
-                  ? "text-white/50 hover:text-white/80 active:text-white"
-                  : "text-white/10 cursor-default"}
+                              ? "text-white/30 hover:text-white/60 active:text-white/80"
+                              : "text-white/10 cursor-default"}
               `}
               aria-label="Previous panel"
             >
-              <ChevronLeft size={28} strokeWidth={2} className="cursor-pointer"/>
+              <ChevronLeft size={28} strokeWidth={1.5} />
             </button>
 
             <span
-              className="text-[12px] text-white/60 tabular-nums tracking-wide select-none text-center inline-block"
+              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block"
               style={{ minWidth: counterMinWidth }}
             >
               {currentIndex + 1} / {panels.length}
             </span>
 
+            {/* Next */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -367,14 +370,15 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               }}
               disabled={!hasNext}
               className={`
-                p-2 rounded-full transition-colors duration-150
-                ${hasNext
-                  ? "text-white/50 hover:text-white/80 active:text-white"
-                  : "text-white/10 cursor-default"}
-              `}
+                  px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
+                  outline-none focus:outline-none focus-visible:outline-none
+                  ${hasNext
+                                ? "text-white/30 hover:text-white/60 active:text-white/80"
+                                : "text-white/10 cursor-default"}
+                `}
               aria-label="Next panel"
             >
-              <ChevronRight size={28} strokeWidth={2} className="cursor-pointer"/>
+              <ChevronRight size={28} strokeWidth={1.5} />
             </button>
           </div>
         )}

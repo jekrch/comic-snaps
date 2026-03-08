@@ -56,7 +56,6 @@ export function useZoomPan(
 
     if (t.scale <= 1) {
       wrapper.style.transform = "none";
-      // Reset to unzoomed layout
       wrapper.style.position = "";
       wrapper.style.inset = "";
       wrapper.style.zIndex = "";
@@ -65,13 +64,15 @@ export function useZoomPan(
     } else {
       wrapper.style.transform =
         `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
-      // Immediately expand to cover viewport and occlude bars
       wrapper.style.position = "absolute";
       wrapper.style.inset = "0";
       wrapper.style.zIndex = "30";
       wrapper.style.backgroundColor = "black";
       wrapper.style.cursor = "grab";
     }
+
+    // Keep React state in sync so isZoomed reflects reality
+    setDisplayScale(t.scale);
   }, [imgWrapperRef]);
 
   const setTransform = useCallback(
