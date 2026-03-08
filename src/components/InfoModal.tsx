@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { X, Github } from "lucide-react";
 
 interface Props {
@@ -46,7 +46,10 @@ export default function InfoModal({ onClose }: Props) {
     };
   }, []);
 
+  const mountedAt = useRef(Date.now());
+
   const handleClose = useCallback(() => {
+    if (Date.now() - mountedAt.current < 400) return; // ignore during enter
     setClosing(true);
     setTimeout(onClose, 300);
   }, [onClose]);
@@ -195,23 +198,23 @@ export default function InfoModal({ onClose }: Props) {
           <button
             onClick={handleClose}
             className="absolute top-4 right-4 bg-transparent border-none cursor-pointer
-                       text-[var(--color-ink-muted)] hover:text-[var(--color-ink-faint)]
+                       
                        transition-colors duration-150"
             title="Close"
           >
-            <X size={13} strokeWidth={1.5} />
+            <X size={16} strokeWidth={1.5} className="stroke-ink-muted hover:stroke-ink-faint" />
           </button>
 
           {/* Title */}
           <h2
-            className="tracking-tight text-[15px] text-[var(--color-ink)]"
+            className="tracking-tight text-[15px] text-ink"
             style={{ fontFamily: "var(--font-display)" }}
           >
             COMIC SNAPS
           </h2>
 
           {/* Accent rule */}
-          <div className="w-6 h-0.5 bg-[var(--color-accent)] mx-auto mt-5 rounded-sm opacity-70" />
+          <div className="w-12 h-0.5 bg-accent mx-auto mt-5 rounded-sm opacity-70" />
 
           {/* Links */}
           <div className="mt-8 flex flex-col items-center gap-2">
@@ -220,7 +223,7 @@ export default function InfoModal({ onClose }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-[7px] text-xs
-                         text-[var(--color-ink)] hover:text-[var(--color-ink-muted)]
+                         text-ink hover:text-[var(--color-ink-muted)]
                          no-underline transition-colors duration-150"
             >
               <Github size={15} />
