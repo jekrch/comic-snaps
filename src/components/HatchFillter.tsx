@@ -40,10 +40,6 @@ interface PlacementStyle {
   offsetY: number;
 }
 
-
-// Deterministic style generation based on filler index
-
-
 /**
  * A simple integer hash that maps an index to a spread-out but
  * deterministic value, used to give each filler varied-looking
@@ -74,10 +70,6 @@ function generateDeterministicPlacement(index: number): PlacementStyle {
   };
 }
 
-
-// Stable style — fully deterministic based on fillerIndex
-
-
 interface StableStyle {
   rotation: number;
   color: string;
@@ -99,7 +91,6 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean, fillerIndex
     };
   }
 
-  // Deterministic twist angle and scale derived from the index
   const angle = deterministicBetween(fillerIndex, 10, -3, 3);
   const scale = 1.05 + deterministicBetween(fillerIndex, 11, 0, 0.1);
 
@@ -115,10 +106,6 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean, fillerIndex
     iconInnerY: deterministicBetween(fillerIndex, 21, -40, 40),
   };
 }
-
-
-// Lucide SVG extraction (unchanged)
-
 
 /**
  * Render a Lucide icon offscreen, extract the raw SVG children,
@@ -193,10 +180,6 @@ function useLucideExtract(IconComponent: LucideIcon | null): string | null {
   return svgContent;
 }
 
-
-// Component
-
-
 interface HatchFillerProps {
   empty?: boolean;
   /** When provided, the filler uses this stamp instead of picking randomly. */
@@ -208,6 +191,8 @@ interface HatchFillerProps {
   fillerIndex?: number;
   /** Adjacent panel info for rendering artist labels. */
   neighbors?: NeighborMap | null;
+  /** Override the hatch color (bypasses the deterministic COLORS cycle). */
+  colorOverride?: string | null;
 }
 
 export default function HatchFiller({
@@ -215,6 +200,7 @@ export default function HatchFiller({
   assignedStamp = null,
   fillerIndex = 0,
   neighbors = null,
+  colorOverride = null,
 }: HatchFillerProps) {
   const patternId = useId();
   const maskId = useId();
@@ -229,7 +215,6 @@ export default function HatchFiller({
       if (width > 0 && height > 0) setSize({ width, height });
     };
     update();
-    // iOS Safari often needs extra passes after layout settles
     const t1 = setTimeout(update, 150);
     const t2 = setTimeout(update, 500);
     const ro = new ResizeObserver(update);
@@ -241,8 +226,6 @@ export default function HatchFiller({
     };
   }, []);
 
-  // Determine the stamp — use the assigned stamp directly (set by MasonryGrid).
-  // Fall back to index-based pool lookup if no stamp was provided.
   const stampRef = useRef<StampDef | null>(null);
   if (stampRef.current === null && !empty) {
     if (assignedStamp) {
@@ -254,12 +237,14 @@ export default function HatchFiller({
   }
   const stamp = stampRef.current;
 
-  // Pin all visual properties once — fully deterministic from fillerIndex
   const styleRef = useRef<StableStyle | null>(null);
   if (styleRef.current === null) {
     styleRef.current = generateStableStyle(stamp, empty, fillerIndex);
   }
   const { rotation, color, twist, placement, iconInnerX, iconInnerY } = styleRef.current;
+
+  // Allow external color override (e.g. FooterPyramid random colors)
+  const resolvedColor = colorOverride ?? color;
 
   const iconSvgContent = useLucideExtract(
     stamp?.type === "icon" ? stamp.value : null
@@ -278,7 +263,7 @@ export default function HatchFiller({
         y1="0"
         x2="0"
         y2="8"
-        stroke={color}
+        stroke={resolvedColor}
         strokeWidth="8"
         strokeOpacity="0.68"
       />
@@ -295,7 +280,6 @@ export default function HatchFiller({
   const rawCx = size.width / 2 + (placement.offsetX / 100) * size.width;
   const rawCy = size.height / 2 + (placement.offsetY / 100) * size.height;
 
-  // Clamp so the icon stays mostly within the container
   const margin = half * 0.3;
   const cx = Math.max(margin, Math.min(size.width - margin, rawCx));
   const cy = Math.max(margin, Math.min(size.height - margin, rawCy));
@@ -327,10 +311,6 @@ export default function HatchFiller({
       'stroke="black"'
     );
 
-    // Use SVG transform attribute instead of CSS transform for positioning.
-    // iOS Safari / WebKit mobile does not reliably apply CSS transforms
-    // (e.g. style={{ transform: translate(...) }}) on nested <svg> elements.
-    // Baking the offset into a <g transform="..."> is universally supported.
     maskContent = (
       <g
         className="hatch-text"
@@ -404,7 +384,6 @@ export default function HatchFiller({
         />
       </svg>
 
-      {/* Artist labels pointing toward adjacent panels */}
       {neighbors && (
         <FillerLabels
           neighbors={neighbors}
