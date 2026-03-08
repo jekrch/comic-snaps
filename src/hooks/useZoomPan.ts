@@ -70,13 +70,33 @@ export function useZoomPan(
     baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
   }, []);
 
+  /**
+   * Clamp translation so the image edge cannot pan past the viewport edge.
+   *
+   * The transform `scale(S) translate(x/S, y/S)` produces a screen-space
+   * displacement of (x, y) pixels. The image is centered in the viewport
+   * via flexbox, so:
+   *   - Scaled half-width  = (baseW * scale) / 2
+   *   - Viewport half-width = window.innerWidth / 2
+   *   - maxX = scaledHalfW - vpHalfW  (clamped to ≥ 0)
+   *
+   * This allows panning until the edge of the scaled image aligns with
+   * the edge of the viewport, giving full use of the screen when zoomed.
+   */
   const clampTranslate = useCallback(
     (x: number, y: number, scale: number): { x: number; y: number } => {
       if (scale <= 1) return { x: 0, y: 0 };
       const { width: baseW, height: baseH } = baseDimsRef.current;
       if (baseW === 0 || baseH === 0) return { x: 0, y: 0 };
-      const maxX = ((scale - 1) * baseW) / 2;
-      const maxY = ((scale - 1) * baseH) / 2;
+
+      const scaledHalfW = (baseW * scale) / 2;
+      const scaledHalfH = (baseH * scale) / 2;
+      const vpHalfW = window.innerWidth / 2;
+      const vpHalfH = window.innerHeight / 2;
+
+      const maxX = Math.max(0, scaledHalfW - vpHalfW);
+      const maxY = Math.max(0, scaledHalfH - vpHalfH);
+
       return {
         x: Math.max(-maxX, Math.min(maxX, x)),
         y: Math.max(-maxY, Math.min(maxY, y)),
