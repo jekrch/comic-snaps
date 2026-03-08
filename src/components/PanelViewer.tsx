@@ -56,7 +56,6 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     slideAnimating,
     swipeOffset,
     commitSlide,
-    setSlideActive,
   } = slide;
 
   const gestures = useGestureHandler(zoomPan, slide, hasPrev, hasNext);
