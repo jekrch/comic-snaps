@@ -289,8 +289,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             ref={imgRef}
             src={`${import.meta.env.BASE_URL}${panel.image}`}
             alt={`${panel.title} #${panel.issue}`}
-            className="block w-auto h-auto object-contain rounded-sm"
-            style={slideImgStyle}
+            className="block object-contain rounded-sm"
+            style={isZoomed ? { willChange: "transform" } : slideImgStyle}
             draggable={false}
             onLoad={measureBaseDims}
           />

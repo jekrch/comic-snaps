@@ -27,21 +27,15 @@ export interface ZoomPanState {
 }
 
 /**
- * Manages zoom/pan transform state, wheel zoom, clamping, and double-click toggle.
+ * Manages zoom/pan state for an image viewer.
  *
- * Uses transform-origin: 0 0 with translate() scale() to avoid an iOS Safari
- * compositing bug where scale() from center clips to the element's original
- * layout bounds. The centering offset is baked into the translate so the image
- * appears to scale from center visually.
+ * To work around iOS Safari clipping CSS-scaled content to the element's
+ * original layout bounds, this hook sets the image's actual width/height
+ * when zoomed and uses translate-only transforms for panning.
  *
- * Transform values in `transformRef` use screen-pixel coordinates:
- *   x, y = pan offset in screen pixels (0,0 = centered)
+ * Transform values in `transformRef`:
+ *   x, y  = pan offset in screen pixels (0,0 = centered)
  *   scale = zoom factor (1 = unzoomed)
- *
- * The applied CSS is:
- *   transform-origin: 0 0;
- *   transform: translate(tx, ty) scale(S);
- * where tx = -(baseW*(S-1))/2 + x, ty = -(baseH*(S-1))/2 + y
  */
 export function useZoomPan(
   imgWrapperRef: RefObject<HTMLDivElement | null>,
@@ -52,34 +46,55 @@ export function useZoomPan(
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0 });
   const baseDimsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
 
+  const isZoomed = displayScale > 1;
+
   // ── Core helpers ──
+
+  /** Ensure base dims are captured. Safe to call any time. */
+  const ensureBaseDims = useCallback(() => {
+    if (baseDimsRef.current.width > 0) return;
+    const img = imgRef.current;
+    if (!img) return;
+    baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
+  }, []);
 
   const applyTransform = useCallback((t: Transform, animate = false) => {
     const img = imgRef.current;
     if (!img) return;
 
     const { width: baseW, height: baseH } = baseDimsRef.current;
+    const transition = animate
+      ? "transform 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out"
+      : "none";
+    img.style.transition = transition;
 
-    // Centering offset: with transform-origin 0 0, scale expands right/down.
-    // Shift left/up by half the growth to keep the image visually centered.
-    const cx = -(baseW * (t.scale - 1)) / 2;
-    const cy = -(baseH * (t.scale - 1)) / 2;
-
-    const tx = cx + t.x;
-    const ty = cy + t.y;
-
-    img.style.transition = animate ? "transform 0.2s ease-out" : "none";
-    img.style.transformOrigin = "0 0";
-    img.style.transform = `translate(${tx}px, ${ty}px) scale(${t.scale})`;
+    if (t.scale <= 1) {
+      // Unzoomed: reset to natural sizing
+      img.style.width = "";
+      img.style.height = "";
+      img.style.maxWidth = "";
+      img.style.maxHeight = "";
+      img.style.transform = "translate(0px, 0px)";
+    } else if (baseW > 0 && baseH > 0) {
+      // Zoomed: set actual layout dimensions and use translate for panning
+      const w = baseW * t.scale;
+      const h = baseH * t.scale;
+      img.style.width = `${w}px`;
+      img.style.height = `${h}px`;
+      img.style.maxWidth = "none";
+      img.style.maxHeight = "none";
+      img.style.transform = `translate(${t.x}px, ${t.y}px)`;
+    }
   }, []);
 
   const setTransform = useCallback(
     (t: Transform, animate = false) => {
       transformRef.current = t;
+      ensureBaseDims();
       applyTransform(t, animate);
       setDisplayScale(t.scale);
     },
-    [applyTransform]
+    [applyTransform, ensureBaseDims]
   );
 
   const resetTransform = useCallback(() => {
@@ -89,18 +104,11 @@ export function useZoomPan(
   const measureBaseDims = useCallback(() => {
     const img = imgRef.current;
     if (!img) return;
-    baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
+    if (transformRef.current.scale <= 1) {
+      baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
+    }
   }, []);
 
-  /**
-   * Clamp translation so the image edge cannot pan past the viewport edge.
-   *
-   * x, y are screen-pixel pan offsets (0 = centered). The image is centered
-   * in the viewport via flexbox, so:
-   *   scaledHalf = (base * scale) / 2
-   *   vpHalf     = viewportSize / 2
-   *   maxPan     = max(0, scaledHalf - vpHalf)
-   */
   const clampTranslate = useCallback(
     (x: number, y: number, scale: number): { x: number; y: number } => {
       if (scale <= 1) return { x: 0, y: 0 };
@@ -123,14 +131,27 @@ export function useZoomPan(
     []
   );
 
+  // ── Re-apply transform after React re-render ──
+  //
+  // When isZoomed changes, React re-renders and overwrites the image's
+  // inline style prop, clobbering what applyTransform set. This layout
+  // effect re-applies the current transform synchronously before paint
+  // so there's no visible flicker or stutter.
+  useLayoutEffect(() => {
+    applyTransform(transformRef.current, false);
+  }, [isZoomed, applyTransform]);
+
   // ── Reset on navigation ──
 
   useLayoutEffect(() => {
     const img = imgRef.current;
     if (img) {
       img.style.transition = "none";
-      img.style.transformOrigin = "0 0";
-      img.style.transform = "translate(0px, 0px) scale(1)";
+      img.style.transform = "translate(0px, 0px)";
+      img.style.width = "";
+      img.style.height = "";
+      img.style.maxWidth = "";
+      img.style.maxHeight = "";
     }
     transformRef.current = { scale: 1, x: 0, y: 0 };
   }, [currentIndex]);
@@ -143,8 +164,7 @@ export function useZoomPan(
   useEffect(() => {
     const img = imgRef.current;
     if (img) {
-      img.style.transformOrigin = "0 0";
-      img.style.transform = "translate(0px, 0px) scale(1)";
+      img.style.transform = "translate(0px, 0px)";
     }
   }, []);
 
@@ -156,6 +176,7 @@ export function useZoomPan(
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
+      ensureBaseDims();
       const t = transformRef.current;
 
       let dy = e.deltaY;
@@ -173,26 +194,28 @@ export function useZoomPan(
 
     wrapper.addEventListener("wheel", handleWheel, { passive: false });
     return () => wrapper.removeEventListener("wheel", handleWheel);
-  }, [imgWrapperRef, setTransform, clampTranslate]);
+  }, [imgWrapperRef, setTransform, clampTranslate, ensureBaseDims]);
 
   // ── Double-click toggle ──
 
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      ensureBaseDims();
+
       if (transformRef.current.scale > 1) {
         resetTransform();
       } else {
         setTransform({ scale: 1.8, x: 0, y: 0 }, true);
       }
     },
-    [resetTransform, setTransform]
+    [resetTransform, setTransform, ensureBaseDims]
   );
 
   return {
     imgRef,
     displayScale,
-    isZoomed: displayScale > 1,
+    isZoomed,
     transformRef,
     baseDimsRef,
     resetTransform,
