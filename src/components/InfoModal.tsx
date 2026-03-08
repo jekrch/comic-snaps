@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { X, Github } from "lucide-react";
 
 interface Props {
@@ -6,27 +6,16 @@ interface Props {
 }
 
 export default function InfoModal({ onClose }: Props) {
-  const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
 
-  // randomise on mount, same as HatchFiller
   const { rotation, color } = useMemo(() => {
     const rotations = [45, 135];
     const colors = ["#e97d62", "#7A8B2A"];
     const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
     return { rotation: pick(rotations), color: pick(colors) };
-  }, []);
-
-  // useEffect(() => {
-  //   requestAnimationFrame(() => setVisible(true));
-  // }, []);
-
-  useEffect(() => {
-    const id = setTimeout(() => setVisible(true), 20);
-    return () => clearTimeout(id);
   }, []);
 
   // Lock scroll with position:fixed (gives solid bg behind Safari toolbar)
@@ -51,13 +40,11 @@ export default function InfoModal({ onClose }: Props) {
     };
   }, []);
 
-  const mountedAt = useRef(Date.now());
-
   const handleClose = useCallback(() => {
-    if (Date.now() - mountedAt.current < 400) return; // ignore during enter
+    if (closing) return;
     setClosing(true);
     setTimeout(onClose, 300);
-  }, [onClose]);
+  }, [onClose, closing]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -66,8 +53,6 @@ export default function InfoModal({ onClose }: Props) {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose]);
-
-  const active = visible && !closing;
 
   return (
     <>
@@ -83,6 +68,22 @@ export default function InfoModal({ onClose }: Props) {
         @keyframes hatchDrift {
           0%, 100% { transform: rotate(-5deg) scale(1.15) translate(-4%, 3%); }
           50%       { transform: rotate(-3.5deg) scale(1.18) translate(-3%, 2%); }
+        }
+        @keyframes scrimIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes scrimOut {
+          from { opacity: 1; }
+          to   { opacity: 0; }
+        }
+        @keyframes modalEnter {
+          from { opacity: 0; transform: scale(0.95); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes modalExit {
+          from { opacity: 1; transform: scale(1); }
+          to   { opacity: 0; transform: scale(0.95); }
         }
       `}</style>
 
@@ -114,13 +115,12 @@ export default function InfoModal({ onClose }: Props) {
       >
         {/* Faux-blur scrim */}
         <div
-          className={`
-            absolute inset-0
-            transition-opacity duration-250 ease-out
-            ${active ? "opacity-100" : "opacity-0"}
-          `}
+          className="absolute inset-0"
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.80)",
+            animation: closing
+              ? "scrimOut 280ms ease-out forwards"
+              : "scrimIn 250ms ease-out forwards",
           }}
           aria-hidden="true"
         />
@@ -134,9 +134,7 @@ export default function InfoModal({ onClose }: Props) {
             opacity: 0,
             animation: closing
               ? "hatchFadeOut 280ms ease-out forwards"
-              : visible
-                ? "hatchFadeIn 400ms ease-out forwards, hatchDrift 10s ease-in-out 400ms infinite"
-                : undefined,
+              : "hatchFadeIn 400ms ease-out forwards, hatchDrift 10s ease-in-out 400ms infinite",
             transform: "rotate(-5deg) scale(1.15) translate(-4%, 3%)",
           }}
         >
@@ -186,14 +184,15 @@ export default function InfoModal({ onClose }: Props) {
 
         {/* ── Modal card ── */}
         <div
-          className={`
-            relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
-            text-center rounded-md
-            border border-[var(--color-border,rgba(74,71,69,0.25))]
-            bg-[var(--color-surface-raised)]
-            transition-all duration-250 ease-out
-            ${active ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-          `}
+          className="relative w-full max-w-[280px] mx-6 px-10 pt-[58px] pb-[66px]
+                     text-center rounded-md
+                     border border-[var(--color-border,rgba(74,71,69,0.25))]
+                     bg-[var(--color-surface-raised)]"
+          style={{
+            animation: closing
+              ? "modalExit 250ms ease-out forwards"
+              : "modalEnter 250ms ease-out forwards",
+          }}
           onClick={(e) => e.stopPropagation()}
           onTouchEnd={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
@@ -203,7 +202,6 @@ export default function InfoModal({ onClose }: Props) {
           <button
             onClick={handleClose}
             className="absolute top-4 right-4 bg-transparent border-none cursor-pointer
-                       
                        transition-colors duration-150"
             title="Close"
           >
@@ -228,7 +226,7 @@ export default function InfoModal({ onClose }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-[7px] text-xs
-                         text-ink hover:text-[var(--color-ink-muted)]
+                         text-[var(--color-ink)] hover:text-[var(--color-ink-muted)]
                          no-underline transition-colors duration-150"
             >
               <Github size={15} />
