@@ -319,7 +319,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       >
         {/* Tags */}
         {!isZoomed && (
-          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0 min-h-[18px] mx-auto w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="flex flex-wrap justify-center gap-1.5 px-4 mb-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
             {hasTags &&
               panel.tags.map((tag) => (
                 <span
@@ -334,7 +334,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         {/* Navigation strip */}
         {!isZoomed && (hasPrev || hasNext) && (
-          <div className="mx-auto flex items-center justify-center gap-6 mb-0 w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="mx-auto flex items-center justify-center gap-6 w-fit" style={{ pointerEvents: "auto" }}>
             {/* Previous */}
             <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 

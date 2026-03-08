@@ -6,7 +6,7 @@ import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
-import { MessageCircleMore } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useFilterParams } from "./hooks/useFilterParams";
 
 export default function App() {
@@ -112,10 +112,10 @@ export default function App() {
           </h1>
           <button
             onClick={() => setShowInfo(true)}
-            className="text-ink/80 hover:text-ink transition-colors mr-2 cursor-pointer p-2 -m-2"
+            className="text-ink/80 hover:text-ink transition-colors cursor-pointer p-3 -m-2 -mr-1"
             title="About"
           >
-            <MessageCircleMore size={20} strokeWidth={1.3} />
+            <Menu size={20} strokeWidth={1.5} className="hover:stroke-white/80" />
           </button>
         </div>
       </header>
