@@ -75,8 +75,23 @@ export function useZoomPan(
       if (scale <= 1) return { x: 0, y: 0 };
       const { width: baseW, height: baseH } = baseDimsRef.current;
       if (baseW === 0 || baseH === 0) return { x: 0, y: 0 };
-      const maxX = ((scale - 1) * baseW) / 2;
-      const maxY = ((scale - 1) * baseH) / 2;
+
+      // The scaled image size
+      const scaledW = baseW * scale;
+      const scaledH = baseH * scale;
+
+      // Viewport dimensions
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+
+      // Maximum translation: allow panning until the image edge reaches
+      // the opposite viewport edge. When zoomed, the wrapper is the full
+      // viewport and the image is centered, so the max offset is half the
+      // difference between scaled size and viewport, but at minimum allow
+      // panning to the edge of the scaled image bounds.
+      const maxX = Math.max(0, (scaledW - vpW) / 2 + vpW * 0.05);
+      const maxY = Math.max(0, (scaledH - vpH) / 2 + vpH * 0.05);
+
       return {
         x: Math.max(-maxX, Math.min(maxX, x)),
         y: Math.max(-maxY, Math.min(maxY, y)),

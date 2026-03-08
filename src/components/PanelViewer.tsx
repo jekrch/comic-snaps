@@ -56,6 +56,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     slideAnimating,
     swipeOffset,
     commitSlide,
+    setSlideActive,
   } = slide;
 
   const gestures = useGestureHandler(zoomPan, slide, hasPrev, hasNext);
@@ -266,8 +267,10 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         <div
           ref={imgWrapperRef}
           className={`
-            relative flex items-center justify-center select-none
-            ${isZoomed ? "cursor-grab overflow-visible" : "cursor-default overflow-hidden"}
+            flex items-center justify-center select-none
+            ${isZoomed
+              ? "fixed inset-0 z-30 cursor-grab overflow-hidden"
+              : "relative cursor-default overflow-hidden"}
           `}
           style={{ touchAction: "none", pointerEvents: "auto" }}
           onClick={(e) => e.stopPropagation()}
