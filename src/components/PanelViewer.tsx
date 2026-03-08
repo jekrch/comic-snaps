@@ -34,7 +34,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   // ── Hooks ──
 
   useBodyScrollLock(containerRef);
-  const { topBarH, bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
+  const { bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
 
   const zoomPan = useZoomPan(imgWrapperRef, currentIndex);
   const {
