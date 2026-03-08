@@ -29,13 +29,14 @@ export interface ZoomPanState {
 /**
  * Manages zoom/pan state for an image viewer.
  *
- * To work around iOS Safari clipping CSS-scaled content to the element's
- * original layout bounds, this hook sets the image's actual width/height
- * when zoomed and uses translate-only transforms for panning.
+ * Applies scale + translate transforms to the **wrapper** element rather
+ * than the image itself. This avoids an iOS Safari compositing bug where
+ * CSS scale() on an element clips its painted output to the element's
+ * original layout bounds.
  *
- * Transform values in `transformRef`:
- *   x, y  = pan offset in screen pixels (0,0 = centered)
- *   scale = zoom factor (1 = unzoomed)
+ * When zoomed, the wrapper is positioned absolute inset-0 (full viewport),
+ * so its layout bounds already match the viewport and scaling it won't clip.
+ * The image stays at its natural constrained size, centered via flexbox.
  */
 export function useZoomPan(
   imgWrapperRef: RefObject<HTMLDivElement | null>,
@@ -46,55 +47,25 @@ export function useZoomPan(
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0 });
   const baseDimsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
 
-  const isZoomed = displayScale > 1;
-
   // ── Core helpers ──
 
-  /** Ensure base dims are captured. Safe to call any time. */
-  const ensureBaseDims = useCallback(() => {
-    if (baseDimsRef.current.width > 0) return;
-    const img = imgRef.current;
-    if (!img) return;
-    baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
-  }, []);
-
   const applyTransform = useCallback((t: Transform, animate = false) => {
-    const img = imgRef.current;
-    if (!img) return;
-
-    const { width: baseW, height: baseH } = baseDimsRef.current;
-    const transition = animate
-      ? "transform 0.2s ease-out, width 0.2s ease-out, height 0.2s ease-out"
-      : "none";
-    img.style.transition = transition;
-
-    if (t.scale <= 1) {
-      // Unzoomed: reset to natural sizing
-      img.style.width = "";
-      img.style.height = "";
-      img.style.maxWidth = "";
-      img.style.maxHeight = "";
-      img.style.transform = "translate(0px, 0px)";
-    } else if (baseW > 0 && baseH > 0) {
-      // Zoomed: set actual layout dimensions and use translate for panning
-      const w = baseW * t.scale;
-      const h = baseH * t.scale;
-      img.style.width = `${w}px`;
-      img.style.height = `${h}px`;
-      img.style.maxWidth = "none";
-      img.style.maxHeight = "none";
-      img.style.transform = `translate(${t.x}px, ${t.y}px)`;
-    }
-  }, []);
+    const wrapper = imgWrapperRef.current;
+    if (!wrapper) return;
+    wrapper.style.transition = animate ? "transform 0.2s ease-out" : "none";
+    wrapper.style.transform =
+      t.scale <= 1
+        ? "none"
+        : `scale(${t.scale}) translate(${t.x / t.scale}px, ${t.y / t.scale}px)`;
+  }, [imgWrapperRef]);
 
   const setTransform = useCallback(
     (t: Transform, animate = false) => {
       transformRef.current = t;
-      ensureBaseDims();
       applyTransform(t, animate);
       setDisplayScale(t.scale);
     },
-    [applyTransform, ensureBaseDims]
+    [applyTransform]
   );
 
   const resetTransform = useCallback(() => {
@@ -104,11 +75,12 @@ export function useZoomPan(
   const measureBaseDims = useCallback(() => {
     const img = imgRef.current;
     if (!img) return;
-    if (transformRef.current.scale <= 1) {
-      baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
-    }
+    baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
   }, []);
 
+  /**
+   * Clamp so the image edge can't pan past the viewport edge.
+   */
   const clampTranslate = useCallback(
     (x: number, y: number, scale: number): { x: number; y: number } => {
       if (scale <= 1) return { x: 0, y: 0 };
@@ -131,42 +103,20 @@ export function useZoomPan(
     []
   );
 
-  // ── Re-apply transform after React re-render ──
-  //
-  // When isZoomed changes, React re-renders and overwrites the image's
-  // inline style prop, clobbering what applyTransform set. This layout
-  // effect re-applies the current transform synchronously before paint
-  // so there's no visible flicker or stutter.
-  useLayoutEffect(() => {
-    applyTransform(transformRef.current, false);
-  }, [isZoomed, applyTransform]);
-
   // ── Reset on navigation ──
 
   useLayoutEffect(() => {
-    const img = imgRef.current;
-    if (img) {
-      img.style.transition = "none";
-      img.style.transform = "translate(0px, 0px)";
-      img.style.width = "";
-      img.style.height = "";
-      img.style.maxWidth = "";
-      img.style.maxHeight = "";
+    const wrapper = imgWrapperRef.current;
+    if (wrapper) {
+      wrapper.style.transition = "none";
+      wrapper.style.transform = "none";
     }
     transformRef.current = { scale: 1, x: 0, y: 0 };
-  }, [currentIndex]);
+  }, [currentIndex, imgWrapperRef]);
 
   useEffect(() => {
     setDisplayScale(1);
   }, [currentIndex]);
-
-  // Set initial transform on mount
-  useEffect(() => {
-    const img = imgRef.current;
-    if (img) {
-      img.style.transform = "translate(0px, 0px)";
-    }
-  }, []);
 
   // ── Wheel zoom (desktop) ──
 
@@ -176,7 +126,13 @@ export function useZoomPan(
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      ensureBaseDims();
+
+      // Ensure base dims
+      if (baseDimsRef.current.width === 0) {
+        const img = imgRef.current;
+        if (img) baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
+      }
+
       const t = transformRef.current;
 
       let dy = e.deltaY;
@@ -194,14 +150,19 @@ export function useZoomPan(
 
     wrapper.addEventListener("wheel", handleWheel, { passive: false });
     return () => wrapper.removeEventListener("wheel", handleWheel);
-  }, [imgWrapperRef, setTransform, clampTranslate, ensureBaseDims]);
+  }, [imgWrapperRef, setTransform, clampTranslate]);
 
   // ── Double-click toggle ──
 
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      ensureBaseDims();
+
+      // Ensure base dims
+      if (baseDimsRef.current.width === 0) {
+        const img = imgRef.current;
+        if (img) baseDimsRef.current = { width: img.offsetWidth, height: img.offsetHeight };
+      }
 
       if (transformRef.current.scale > 1) {
         resetTransform();
@@ -209,13 +170,13 @@ export function useZoomPan(
         setTransform({ scale: 1.8, x: 0, y: 0 }, true);
       }
     },
-    [resetTransform, setTransform, ensureBaseDims]
+    [resetTransform, setTransform]
   );
 
   return {
     imgRef,
     displayScale,
-    isZoomed,
+    isZoomed: displayScale > 1,
     transformRef,
     baseDimsRef,
     resetTransform,
