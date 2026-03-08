@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { X, Github, ChevronDown, ExternalLink } from "lucide-react";
 
-// Tab types
+// ── Tab primitives ──────────────────────────────────────────────────
 
 export type InfoTab = "about" | "sorts";
 
@@ -79,7 +79,7 @@ function TabPanel({
   );
 }
 
-// Collapsible sort description 
+// ── Collapsible sort description ────────────────────────────────────
 
 const COLLAPSED_HEIGHT = 66; // ~6 lines at 11px
 
@@ -143,7 +143,7 @@ function SortEntry({
         }}
       >
         <div
-          className="text-[11px] leading-relaxed m-0"
+          className="text-[11.5px] leading-relaxed m-0"
           style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
         >
           {body}
@@ -191,7 +191,7 @@ function SortEntry({
   );
 }
 
-// Sort descriptions ──
+// ── Sort descriptions ───────────────────────────────────────────────
 
 const SORT_DESCRIPTIONS: {
   label: string;
@@ -231,7 +231,7 @@ const SORT_DESCRIPTIONS: {
         <p className="mt-2 mb-0">
           I thought this was an interesting case of how 'colorfulness' can be more of a human,
           perceptual judgment than an objective property of light. Within each group, panels are
-          sorted by the hue angle of their dominant color, producing a spectrum walk from reds
+          sorted by the hue angle of their dominant color, producing a spectrum from reds
           through oranges into yellows and beyond.
         </p>
       </>
@@ -287,7 +287,7 @@ const SORT_DESCRIPTIONS: {
   },
 ];
 
-// Modal
+// ── Modal ───────────────────────────────────────────────────────────
 
 interface Props {
   onClose: () => void;
@@ -395,7 +395,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
         }
       `}</style>
 
-      {/* Overlay container */}
+      {/* ── Overlay container ── */}
       <div
         className="fixed z-50 flex items-center justify-center"
         style={{
@@ -433,7 +433,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
           aria-hidden="true"
         />
 
-        {/* Hatch-pattern backdrop */}
+        {/* ── Hatch-pattern backdrop ── */}
         <div
           className="absolute inset-0 select-none"
           aria-hidden="true"
@@ -490,7 +490,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
           </svg>
         </div>
 
-        {/* Modal card */}
+        {/* ── Modal card ── */}
         <div
           className="relative w-full max-w-[320px] mx-6 rounded-md
                      border border-[var(--color-border,rgba(74,71,69,0.25))]
@@ -520,7 +520,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
             onTabChange?.(tab);
           }} />
 
-          {/* Tab content (fixed height — matches sorts tab) */}
+          {/* ── Tab content (fixed height — matches sorts tab) ── */}
           <div style={{ height: "min(60vh, 420px)" }} className="relative">
 
             {/* About */}
@@ -576,7 +576,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
             <TabPanel active={activeTab === "sorts"} className="overflow-y-auto info-modal-scroll">
               <div className="px-6 pt-5 pb-6">
                 <p
-                  className="text-[11px] leading-relaxed mb-4"
+                  className="text-[11.5px] leading-relaxed mb-5"
                   style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
                 >
                   Each sort type reorders the gallery by a different axis of similarity.
@@ -584,7 +584,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                   Their embeddings are precomputed at build time. So nothing runs in your sweaty browser.
                 </p>
 
-                <div className="flex flex-col gap-3.5">
+                <div className="flex flex-col gap-5">
                   {SORT_DESCRIPTIONS.map(({ label, body, link }) => (
                     <SortEntry key={label} label={label} body={body} link={link} />
                   ))}

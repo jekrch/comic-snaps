@@ -15,10 +15,17 @@ export default function App() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const { initialFilters, initialSort, initialTab, syncToURL, syncTab } = useFilterParams();
-  const [showInfo, setShowInfo] = useState<InfoTab | null>(initialTab);
+  const [showInfo, setShowInfo] = useState<InfoTab | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
+
+  // Defer URL-driven modal open so the mount animation plays
+  useEffect(() => {
+    if (initialTab) {
+      requestAnimationFrame(() => setShowInfo(initialTab));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFiltersChange = useCallback(
     (next: Filters) => {
