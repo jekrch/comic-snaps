@@ -51,7 +51,6 @@ IMAGE_ROOT = Path("public")
 # Model registry
 
 
-
 @dataclass(frozen=True)
 class ModelSpec:
     """Everything needed to load a model and store its embeddings."""
