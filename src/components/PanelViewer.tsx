@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Panel } from "../types";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
 import { useGestureHandler } from "../hooks/useGestureHandler";
 import { useSlideNavigation } from "../hooks/useSlideNavigation";
+import NavButton from "./NavButton";
 
 interface Props {
   panel: Panel;
@@ -335,23 +336,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="mx-auto flex items-center justify-center gap-6 mb-0 w-fit" style={{ pointerEvents: "auto" }}>
             {/* Previous */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (hasPrev) commitSlide("prev");
-              }}
-              disabled={!hasPrev}
-              className={`
-                px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
-                outline-none focus:outline-none focus-visible:outline-none
-                ${hasPrev
-                  ? "text-white/30 hover:text-white/60 active:text-white/80"
-                  : "text-white/10 cursor-default"}
-              `}
-              aria-label="Previous panel"
-            >
-              <ChevronLeft size={28} strokeWidth={1.5} />
-            </button>
+            <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
             <span
               className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block"
@@ -361,23 +346,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </span>
 
             {/* Next */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (hasNext) commitSlide("next");
-              }}
-              disabled={!hasNext}
-              className={`
-                  px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
-                  outline-none focus:outline-none focus-visible:outline-none
-                  ${hasNext
-                  ? "text-white/30 hover:text-white/60 active:text-white/80"
-                  : "text-white/10 cursor-default"}
-                `}
-              aria-label="Next panel"
-            >
-              <ChevronRight size={28} strokeWidth={1.5} />
-            </button>
+            <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
           </div>
         )}
 
