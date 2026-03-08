@@ -129,6 +129,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       className={`
         fixed inset-0 z-50 flex items-center justify-center
         transition-all duration-250 ease-out
+        ${visible && !closing ? "bg-black/90" : "bg-black/0"}
       `}
       style={{ touchAction: "none" }}
       role="dialog"
@@ -139,7 +140,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       <div
         className={`
           absolute inset-0 z-0 transition-all duration-250 ease-out
-          ${visible && !closing ? "bg-black/90 backdrop-blur-sm" : "bg-black/0 backdrop-blur-0"}
+          ${visible && !closing ? "backdrop-blur-sm" : "backdrop-blur-0"}
         `}
         onClick={handleClose}
         aria-hidden="true"
@@ -268,12 +269,12 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         <div
           ref={imgWrapperRef}
           className={`
-            relative flex items-center justify-center select-none
+            flex items-center justify-center select-none overflow-hidden
             ${isZoomed
-              ? "cursor-grab"
-              : "cursor-default overflow-hidden"}
+              ? "absolute inset-0 z-30 cursor-grab"
+              : "relative cursor-default"}
           `}
-          style={{ touchAction: "none", pointerEvents: "auto", overflow: isZoomed ? "visible" : undefined }}
+          style={{ touchAction: "none", pointerEvents: "auto" }}
           onClick={(e) => e.stopPropagation()}
           onDoubleClick={handleDoubleClick}
           onPointerDown={gestures.handlePointerDown}
