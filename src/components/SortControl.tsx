@@ -87,7 +87,7 @@ export default function SortControl({ activeSort, onSort, onInfoOpen }: SortCont
                 />
                 <button
                   onClick={() => {
-                    setOpen(false);
+                    //setOpen(false);
                     onInfoOpen();
                   }}
                   className="
