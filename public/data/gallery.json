@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-liquid-1-1773021261",
+      "title": "Heavy Liquid",
+      "slug": "heavy-liquid",
+      "issue": 1,
+      "year": 1999,
+      "artist": "Paul Pope",
+      "image": "images/heavy-liquid/issue-1-1773021261.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-09T01:54:22.848Z"
+    },
+    {
       "id": "heavy-liquid-3-1773012418",
       "title": "Heavy Liquid",
       "slug": "heavy-liquid",
@@ -22,7 +35,7 @@
         ],
         [
           45.6,
-          9.0,
+          9,
           -4.9
         ],
         [
