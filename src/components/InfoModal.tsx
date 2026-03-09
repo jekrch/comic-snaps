@@ -37,7 +37,7 @@ function TabBar({
             onClick={() => onSelect(key)}
             className="flex-1 bg-transparent border-none cursor-pointer
                        py-3.5 px-5 text-[11px] tracking-[0.08em] uppercase
-                       text-leftx transition-colors duration-150"
+                       text-left transition-colors duration-150"
             style={{
               fontFamily: "var(--font-display)",
               color: active
@@ -509,7 +509,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
 
         {/* Modal card */}
         <div
-          className="relative w-full max-w-[420px] mx-6 rounded-md
+          className="relative w-full max-w-[520px] mx-6 rounded-md
                      border border-[var(--color-border,rgba(74,71,69,0.25))]
                      bg-[var(--color-surface-raised)]"
           style={{
