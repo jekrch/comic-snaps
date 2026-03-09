@@ -50,7 +50,6 @@ IMAGE_ROOT = Path("public")
 
 # Model registry
 
-
 @dataclass(frozen=True)
 class ModelSpec:
     """Everything needed to load a model and store its embeddings."""
@@ -90,8 +89,6 @@ MODELS: dict[str, ModelSpec] = {
 
 
 # I/O helpers
-
-
 
 def load_existing(spec: ModelSpec) -> dict[str, list[float]]:
     """Load cached embeddings, returning {} if stale or missing.
@@ -141,8 +138,6 @@ def save_embeddings(spec: ModelSpec, embeddings: dict[str, list[float]]) -> None
 
 # Embedding computation – SigLIP
 
-
-
 def compute_embedding_siglip(
     img: Image.Image, model, processor
 ) -> np.ndarray:
@@ -162,8 +157,6 @@ def compute_embedding_siglip(
 
 # Embedding computation – DINOv2
 
-
-
 def compute_embedding_dino(
     img: Image.Image, model, processor
 ) -> np.ndarray:
@@ -177,7 +170,6 @@ def compute_embedding_dino(
 
 
 # Embedding computation – Gram matrices (VGG-16)
-
 
 # Layers to extract Gram matrices from. These span shallow → mid depth:
 #   relu1_2 (64 channels)  – fine texture: hatching, stippling, line weight
@@ -259,7 +251,6 @@ def compute_gram_features(
 
 # Dispatch table for standard (incremental) models
 
-
 COMPUTE_FN = {
     "siglip": compute_embedding_siglip,
     "dino": compute_embedding_dino,
@@ -292,8 +283,6 @@ def embed_image(
 
 
 # Processing pipelines
-
-
 
 def process_incremental(spec: ModelSpec, panels: list[dict]) -> None:
     """Run the incremental-compute pipeline for SigLIP / DINO."""
