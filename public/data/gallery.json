@@ -1,6 +1,42 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1773106373",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Moebius",
+      "image": "images/heavy-metal/issue-5-1773106373.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T01:32:54.764Z",
+      "width": 1280,
+      "height": 901,
+      "dominantColors": [
+        [
+          63.7,
+          0.3,
+          17.8
+        ],
+        [
+          39.1,
+          -2.4,
+          13.4
+        ],
+        [
+          9.5,
+          5.0,
+          6.1
+        ]
+      ],
+      "colorfulness": 11.3,
+      "phash": "95d7f08e1c3083fc",
+      "ahash": "fefeee0e1e2e4000",
+      "dhash": "2c9cdefc36d494bc"
+    },
+    {
       "id": "heavy-metal-5-1773105715",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -11,7 +47,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-10T01:21:58.290Z"
+      "addedAt": "2026-03-10T01:21:58.290Z",
+      "width": 1136,
+      "height": 1280,
+      "dominantColors": [
+        [
+          45.4,
+          -13.6,
+          8.8
+        ],
+        [
+          70.2,
+          8.8,
+          15.3
+        ],
+        [
+          42.6,
+          30.1,
+          20.6
+        ]
+      ],
+      "colorfulness": 19.8,
+      "phash": "ff8d94d2d272850c",
+      "ahash": "ffff9bc8f0808000",
+      "dhash": "086a721961090d0d"
     },
     {
       "id": "faithless-ii-5-1773104441",
