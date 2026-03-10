@@ -34,11 +34,14 @@ jobs:
           path: ~/.cache/torch/hub/checkpoints
           key: torchvision-vgg16
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
       - name: Install dependencies
-        run: |
-          pip install Pillow imagehash scikit-learn scikit-image numpy
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install transformers sentencepiece protobuf
+        run: pip install -r scripts/requirements.txt
 
       - name: Compute missing image metadata
         run: python scripts/compute-image-metadata.py
