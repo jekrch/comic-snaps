@@ -1,5 +1,5 @@
 import { useId, useRef, useState, useEffect } from "react";
-import {  Globe, Eye, Bird } from "lucide-react";
+import { Globe, Eye, Bird } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import type { NeighborMap } from "../adjacency";
@@ -103,8 +103,8 @@ function generateStableStyle(stamp: StampDef | null, empty: boolean, fillerIndex
       stamp.type === "icon"
         ? generateDeterministicPlacement(fillerIndex)
         : { scale: 1, offsetX: 0, offsetY: 0 },
-    iconInnerX: deterministicBetween(fillerIndex, 20, -50, 130),
-    iconInnerY: deterministicBetween(fillerIndex, 21, -40, 40),
+    iconInnerX: deterministicBetween(fillerIndex, 5, -10, 10),
+    iconInnerY: deterministicBetween(fillerIndex, 5, -10, 40),
   };
 }
 
@@ -271,17 +271,28 @@ export default function HatchFiller({
     </pattern>
   );
 
+
+  const isSmall = Math.min(size.width, size.height) < 300;
+
   const baseIconSize = Math.min(size.width, size.height) * 0.7;
+  const effectiveScale = isSmall
+    ? Math.min(placement.scale, 1.3)   // cap scale on mobile
+    : placement.scale;
   const iconSize = Math.min(
-    baseIconSize * placement.scale,
+    baseIconSize * effectiveScale,
     Math.min(size.width, size.height) * 0.95
   );
+
+  // Tighten offset influence on small screens
+  const offsetDamping = isSmall ? 0.3 : 1.0;
+  const rawCx = size.width / 2 + (placement.offsetX / 100) * size.width * offsetDamping;
+  const rawCy = size.height / 2 + (placement.offsetY / 100) * size.height * offsetDamping;
+
+
   const half = iconSize / 2;
 
-  const rawCx = size.width / 2 + (placement.offsetX / 100) * size.width;
-  const rawCy = size.height / 2 + (placement.offsetY / 100) * size.height;
-
-  const margin = half * 0.3;
+  // More generous margin
+  const margin = half * (isSmall ? 0.7 : 0.3);
   const cx = Math.max(margin, Math.min(size.width - margin, rawCx));
   const cy = Math.max(margin, Math.min(size.height - margin, rawCy));
 
