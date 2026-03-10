@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "faithless-ii-5-1773104441",
+      "title": "Faithless II",
+      "slug": "faithless-ii",
+      "issue": 5,
+      "year": 2020,
+      "artist": "Maria Llovet",
+      "image": "images/faithless-ii/issue-5-1773104441.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T01:00:42.208Z"
+    },
+    {
       "id": "fatale-2-1773102971",
       "title": "Fatale",
       "slug": "fatale",
