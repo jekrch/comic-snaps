@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1773108178",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Richard Corben",
+      "image": "images/heavy-metal/issue-5-1773108178.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T02:02:59.550Z"
+    },
+    {
       "id": "heavy-metal-5-1773107506",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -16,7 +29,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          70.0,
+          70,
           11.5,
           27.9
         ],
@@ -26,7 +39,7 @@
           13.4
         ],
         [
-          51.0,
+          51,
           9.9,
           23.6
         ]
