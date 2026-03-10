@@ -1,5 +1,5 @@
 import { useId, useRef, useState, useEffect } from "react";
-import { MessageCircleMore, Globe, MessageSquareQuote, Eye } from "lucide-react";
+import {  Globe, Eye, Bird } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import type { NeighborMap } from "../adjacency";
@@ -8,8 +8,9 @@ import FillerLabels from "./FillerLabels";
 export const WORDS = ["SNAPS"];
 
 export const LUCIDE_ICONS: LucideIcon[] = [
-  MessageCircleMore,
-  MessageSquareQuote,
+  //MessageCircleMore,
+  //MessageSquareQuote,
+  Bird,
   Globe, Eye
 ];
 
