@@ -188,6 +188,11 @@ GRAM_TRANSFORM = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
+# Number of images to push through VGG in a single forward pass.
+# Tune based on available memory — 32 is conservative for CPU with
+# 224×224 inputs and only 15 conv layers.
+GRAM_BATCH_SIZE = 32
+
 
 class GramExtractor(nn.Module):
     """Extract Gram matrices from specified VGG-16 feature layers.
@@ -196,6 +201,11 @@ class GramExtractor(nn.Module):
         G = F @ F^T / (H * W)
     It captures which feature channels co-activate, encoding texture
     and style independent of spatial layout.
+
+    Supports batched input: given a tensor of shape (B, 3, H, W),
+    returns a list of tensors each of shape (B, C*(C+1)/2) — one
+    per layer, with upper-triangle Gram values for every image in
+    the batch.
     """
 
     def __init__(self, layer_indices: dict[str, int]):
@@ -212,22 +222,62 @@ class GramExtractor(nn.Module):
             )
             prev = idx + 1
 
+        # Pre-compute upper-triangle index pairs for each layer's
+        # channel count so they aren't rebuilt on every forward call.
+        channel_counts = [64, 128, 256]  # relu1_2, relu2_2, relu3_3
+        self._triu_indices = [
+            torch.triu_indices(c, c) for c in channel_counts
+        ]
+
     def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
-        """Return a list of upper-triangle Gram vectors, one per layer."""
+        """Return upper-triangle Gram vectors for a batch of images.
+
+        Parameters
+        ----------
+        x : Tensor of shape (B, 3, 224, 224)
+
+        Returns
+        -------
+        list[Tensor]
+            One tensor per layer, each of shape (B, C*(C+1)/2).
+        """
         grams = []
         h = x
-        for s in self.slices:
+        for i, s in enumerate(self.slices):
             h = s(h)
-            # h shape: (1, C, H, W)
-            _, c, height, width = h.shape
-            features = h.view(c, height * width)
-            gram = features @ features.T / (height * width)
-            # Upper triangle (incl. diagonal) avoids storing redundant
-            # symmetric entries — cuts storage roughly in half.
-            triu_idx = torch.triu_indices(c, c)
-            gram_upper = gram[triu_idx[0], triu_idx[1]]
+            # h shape: (B, C, H, W)
+            b, c, height, width = h.shape
+            features = h.view(b, c, height * width)           # (B, C, H*W)
+            gram = torch.bmm(features, features.transpose(1, 2))  # (B, C, C)
+            gram = gram / (height * width)
+
+            # Extract upper triangle for each image in the batch
+            triu = self._triu_indices[i]
+            gram_upper = gram[:, triu[0], triu[1]]             # (B, tri)
             grams.append(gram_upper)
         return grams
+
+
+def compute_gram_features_batch(
+    images: list[Image.Image], extractor: GramExtractor
+) -> np.ndarray:
+    """Compute raw (pre-PCA) Gram feature vectors for a batch of images.
+
+    Parameters
+    ----------
+    images : list[PIL.Image]
+        Already-converted to RGB.
+    extractor : GramExtractor
+
+    Returns
+    -------
+    np.ndarray of shape (len(images), 43232)
+        Concatenated upper-triangle Gram values from all layers.
+    """
+    batch = torch.stack([GRAM_TRANSFORM(img) for img in images])
+    with torch.no_grad():
+        grams = extractor(batch)                # list of (B, tri_i)
+    return torch.cat(grams, dim=1).numpy()       # (B, 43232)
 
 
 def compute_gram_features(
@@ -235,17 +285,10 @@ def compute_gram_features(
 ) -> np.ndarray:
     """Compute raw (pre-PCA) Gram feature vector for a single image.
 
-    Returns the concatenated upper-triangle Gram values from all layers.
-    The total dimensionality is:
-        C1*(C1+1)/2 + C2*(C2+1)/2 + C3*(C3+1)/2
-        = 64*65/2 + 128*129/2 + 256*257/2
-        = 2080 + 8256 + 32896
-        = 43232
+    Convenience wrapper around compute_gram_features_batch for the
+    single-image case.
     """
-    tensor = GRAM_TRANSFORM(img).unsqueeze(0)
-    with torch.no_grad():
-        grams = extractor(tensor)
-    return torch.cat(grams).numpy()
+    return compute_gram_features_batch([img], extractor)[0]
 
 
 
@@ -339,6 +382,11 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
     PCA is fit on the full corpus — adding a single image shifts the
     entire embedding space. If nothing has changed (same panels, same
     version), the existing file is kept as-is.
+
+    Images are processed in batches through VGG-16 to amortize the cost
+    of convolutional forward passes. The per-image Gram matrix
+    computation (F @ F^T) happens inside the batched forward call via
+    torch.bmm.
     """
     existing = load_existing(spec)
     current_ids = {p["id"] for p in panels}
@@ -354,9 +402,13 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
     extractor = GramExtractor(GRAM_LAYER_INDICES)
     extractor.eval()
 
-    # Phase 1: extract raw Gram features for every panel
+    # Phase 1: extract raw Gram features in batches
     raw_features: dict[str, np.ndarray] = {}
     error_count = 0
+
+    # Build a list of (panel_id, image) pairs, skipping load failures
+    batch_ids: list[str] = []
+    batch_imgs: list[Image.Image] = []
 
     for i, panel in enumerate(panels):
         image_path = IMAGE_ROOT / panel["image"]
@@ -366,14 +418,47 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
             continue
 
         try:
-            feat = compute_gram_features(
-                Image.open(image_path).convert("RGB"), extractor
-            )
-            raw_features[panel["id"]] = feat
-            print(f"  [{i + 1}/{len(panels)}] OK: {panel['image']}")
+            img = Image.open(image_path).convert("RGB")
+            batch_ids.append(panel["id"])
+            batch_imgs.append(img)
         except Exception as e:
-            print(f"  ERROR: {panel['image']} → {e}", file=sys.stderr)
+            print(f"  ERROR loading: {panel['image']} → {e}", file=sys.stderr)
             error_count += 1
+
+    # Process in chunks of GRAM_BATCH_SIZE
+    total = len(batch_imgs)
+    for start in range(0, total, GRAM_BATCH_SIZE):
+        end = min(start + GRAM_BATCH_SIZE, total)
+        chunk_ids = batch_ids[start:end]
+        chunk_imgs = batch_imgs[start:end]
+
+        try:
+            features = compute_gram_features_batch(chunk_imgs, extractor)
+            for j, pid in enumerate(chunk_ids):
+                raw_features[pid] = features[j]
+            print(
+                f"  [{end}/{total}] Batch OK "
+                f"({len(chunk_ids)} image(s))"
+            )
+        except Exception as e:
+            # Fall back to one-at-a-time so a single bad image
+            # doesn't take out the whole batch
+            print(
+                f"  Batch {start}–{end} failed ({e}), "
+                f"falling back to single-image mode",
+                file=sys.stderr,
+            )
+            for j, (pid, img) in enumerate(zip(chunk_ids, chunk_imgs)):
+                try:
+                    feat = compute_gram_features(img, extractor)
+                    raw_features[pid] = feat
+                    print(f"  [{start + j + 1}/{total}] OK (fallback)")
+                except Exception as e2:
+                    print(
+                        f"  ERROR: panel {pid} → {e2}",
+                        file=sys.stderr,
+                    )
+                    error_count += 1
 
     if len(raw_features) < 2:
         print(
