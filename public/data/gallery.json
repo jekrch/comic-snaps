@@ -9,9 +9,36 @@
       "artist": "Sean Phillips",
       "image": "images/fatale/issue-2-1773102972.jpg",
       "notes": null,
-      "tags": ["noir", "title card", "architecture"],
+      "tags": [
+        "noir",
+        "title card",
+        "architecture"
+      ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-10T00:36:12.631Z"
+      "addedAt": "2026-03-10T00:36:12.631Z",
+      "width": 1250,
+      "height": 1280,
+      "dominantColors": [
+        [
+          13.2,
+          2.7,
+          5.1
+        ],
+        [
+          43.4,
+          10.7,
+          15.1
+        ],
+        [
+          78.4,
+          2.4,
+          15.1
+        ]
+      ],
+      "colorfulness": 9.2,
+      "phash": "bbb6c61ad448ca4d",
+      "ahash": "ff0f0b0f0f09098f",
+      "dhash": "745e531111515313"
     },
     {
       "id": "heavy-liquid-1-1773021261",
