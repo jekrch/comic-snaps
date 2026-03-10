@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1773105715",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Floch",
+      "image": "images/heavy-metal/issue-5-1773105715.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T01:21:57.290Z"
+    },
+    {
       "id": "faithless-ii-5-1773104441",
       "title": "Faithless II",
       "slug": "faithless-ii",
@@ -23,7 +36,7 @@
         [
           60.2,
           13.2,
-          28.0
+          28
         ],
         [
           83.6,
@@ -31,7 +44,7 @@
           26.4
         ]
       ],
-      "colorfulness": 6.0,
+      "colorfulness": 6,
       "phash": "8ac08db4f3a39c6e",
       "ahash": "ff591800001f033f",
       "dhash": "f3b1f1d92936777b"
