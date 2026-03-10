@@ -1,6 +1,78 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1773108178",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Richard Corben",
+      "image": "images/heavy-metal/issue-5-1773108178.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T02:02:59.550Z",
+      "width": 1280,
+      "height": 1113,
+      "dominantColors": [
+        [
+          36.0,
+          1.5,
+          10.1
+        ],
+        [
+          17.6,
+          2.4,
+          7.4
+        ],
+        [
+          53.0,
+          1.8,
+          18.5
+        ]
+      ],
+      "colorfulness": 8.8,
+      "phash": "96ca1da44d9272dd",
+      "ahash": "363c6c3cf2e60e0e",
+      "dhash": "68e9c9a9248cacdc"
+    },
+    {
+      "id": "heavy-metal-5-1773107506",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Enki Bilal",
+      "image": "images/heavy-metal/issue-5-1773107506.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T01:51:47.250Z",
+      "width": 810,
+      "height": 1280,
+      "dominantColors": [
+        [
+          70,
+          11.5,
+          27.9
+        ],
+        [
+          29.3,
+          4.4,
+          13.4
+        ],
+        [
+          51,
+          9.9,
+          23.6
+        ]
+      ],
+      "colorfulness": 9.2,
+      "phash": "f895834bf8bc86e0",
+      "ahash": "ffffd7c3c0808040",
+      "dhash": "32ce96360f0d1b85"
+    },
+    {
       "id": "heavy-metal-5-1773106373",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -27,7 +99,7 @@
         ],
         [
           9.5,
-          5.0,
+          5,
           6.1
         ]
       ],
