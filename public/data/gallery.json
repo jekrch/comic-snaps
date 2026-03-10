@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "fatale-2-1773102971",
+      "title": "Fatale",
+      "slug": "fatale",
+      "issue": 2,
+      "year": 2012,
+      "artist": "Sean Phillips",
+      "image": "images/fatale/issue-2-1773102971.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T00:36:12.631Z"
+    },
+    {
       "id": "heavy-liquid-1-1773021261",
       "title": "Heavy Liquid",
       "slug": "heavy-liquid",
@@ -9,7 +22,11 @@
       "artist": "Paul Pope",
       "image": "images/heavy-liquid/issue-1-1773021261.jpg",
       "notes": null,
-      "tags": ["duotone", "flat-coloring", "bold brushwork"],
+      "tags": [
+        "duotone",
+        "flat-coloring",
+        "bold brushwork"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-09T01:54:22.848Z",
       "width": 960,
@@ -45,7 +62,11 @@
       "artist": "Paul Pope",
       "image": "images/heavy-liquid/issue-3-1773012419.jpg",
       "notes": null,
-      "tags": ["duotone", "flat-coloring", "bold brushwork"],
+      "tags": [
+        "duotone",
+        "flat-coloring",
+        "bold brushwork"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-08T23:27:00.108Z",
       "width": 913,
