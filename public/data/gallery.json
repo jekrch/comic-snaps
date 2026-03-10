@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1773106373",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Moebius",
+      "image": "images/heavy-metal/issue-5-1773106373.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-10T01:32:54.764Z"
+    },
+    {
       "id": "heavy-metal-5-1773105715",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
