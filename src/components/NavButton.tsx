@@ -16,7 +16,7 @@ function NavButton({ direction, enabled, onClick }: NavButtonProps) {
       }}
       disabled={!enabled}
       className={`
-        px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer
+        px-4 pt-2 -mb-1 rounded-full transition-colors duration-150 cursor-pointer
         outline-none focus:outline-none focus-visible:outline-none
       `}
       aria-label={direction === "prev" ? "Previous panel" : "Next panel"}

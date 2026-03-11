@@ -186,7 +186,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                 e.stopPropagation();
                 resetTransform();
               }}
-              className="viewer-btn text-[11px] tabular-nums"
+              className="viewer-btn text-[11px] tabular-nums font-mono"
               title="Reset zoom"
             >
               {Math.round(displayScale * 100)}%
@@ -334,12 +334,12 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         {/* Navigation strip */}
         {!isZoomed && (hasPrev || hasNext) && (
-          <div className="mx-auto flex items-center justify-center gap-6 w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="mx-auto flex items-center justify-center gap-6" style={{ pointerEvents: "auto" }}>
             {/* Previous */}
             <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
             <span
-              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block"
+              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-[11px] "
               style={{ minWidth: counterMinWidth }}
             >
               {currentIndex + 1} / {panels.length}
