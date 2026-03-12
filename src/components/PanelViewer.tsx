@@ -339,7 +339,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
             <span
-              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-[11px] "
+              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25"
               style={{ minWidth: counterMinWidth }}
             >
               {currentIndex + 1} / {panels.length}
