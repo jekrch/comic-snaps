@@ -14,11 +14,6 @@ import type { NeighborMap } from "../adjacency";
 
 const GAP = 4;
 const DEFAULT_ASPECT = 3 / 4;
-/**
- * Panels with aspect ratio at or above this are treated as "wide" and
- * span two columns. 1.6 catches landscape double-spreads without
- * triggering on slightly-wider-than-square panels.
- */
 const WIDE_THRESHOLD = 1.4;
 
 function getColumnCount() {
@@ -39,10 +34,6 @@ function isWide(panel: Panel): boolean {
   return getAspect(panel) >= WIDE_THRESHOLD;
 }
 
-
-// Absolutely-positioned layout items
-
-
 interface PlacedPanel {
   kind: "panel";
   panel: Panel;
@@ -60,44 +51,25 @@ interface PlacedFiller {
   h: number;
   col: number;
   assignedStamp: StampDef;
-  /** Deterministic index into the cycling sequence. */
   fillerIndex: number;
   neighbors: NeighborMap;
 }
 
 type PlacedItem = PlacedPanel | PlacedFiller;
 
-
-// Deterministic stamp assignment — cycles through the pool in order
-
-
-/**
- * Assigns stamps to fillers by cycling sequentially through the fixed
- * pool. No randomness — the first filler gets pool[0], the second
- * gets pool[1], etc., wrapping around at the end.
- */
 function assignStampsToFillers(fillers: PlacedFiller[]): void {
   const pool = buildStampPool();
   const poolSize = pool.length;
-
   for (let i = 0; i < fillers.length; i++) {
     fillers[i].assignedStamp = pool[i % poolSize];
     fillers[i].fillerIndex = i;
   }
 }
 
-
-// Panel height helper (used by adjacency resolver)
-
-
 function getPanelHeight(panel: Panel, width: number): number {
   const aspect = getAspect(panel);
   return width / aspect;
 }
-
-
-// Layout algorithm — absolute positions for every item
-
 
 function computeLayout(
   panels: Panel[],
@@ -110,7 +82,6 @@ function computeLayout(
   const heights = [...initialHeights];
   const items: PlacedItem[] = [];
 
-  // Placeholder stamp and empty neighbors — will be replaced later
   const placeholder: StampDef = { type: "word", value: "" };
   const emptyNeighbors: NeighborMap = {};
 
@@ -228,11 +199,9 @@ function computeLayout(
     }
   }
 
-  // Assign stamps deterministically in layout order
   const fillers = items.filter((i): i is PlacedFiller => i.kind === "filler");
   assignStampsToFillers(fillers);
 
-  // Resolve which panels border each filler
   const neighborMap = resolveNeighbors(
     items.map((item) => {
       if (item.kind === "panel") {
@@ -257,7 +226,6 @@ function computeLayout(
     getPanelHeight
   );
 
-  // Attach resolved neighbors to each filler
   for (const filler of fillers) {
     const resolved = neighborMap.get(filler.key);
     if (resolved) {
@@ -268,10 +236,6 @@ function computeLayout(
   return { items, totalHeight };
 }
 
-
-// Component
-
-
 interface MasonryGridProps {
   panels: Panel[];
   allPanels: Panel[];
@@ -280,6 +244,8 @@ interface MasonryGridProps {
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
   onInfoOpen?: () => void;
+  onLayoutReady?: () => void;
+  isFirstLoad?: boolean;
 }
 
 export default function MasonryGrid({
@@ -289,7 +255,9 @@ export default function MasonryGrid({
   onSort,
   filters,
   onFiltersChange,
-  onInfoOpen
+  onInfoOpen,
+  onLayoutReady,
+  isFirstLoad,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -299,9 +267,6 @@ export default function MasonryGrid({
   const [colCount, setColCount] = useState(getColumnCount);
   const [colWidth, setColWidth] = useState(0);
 
-  // Cache stamps + fillerIndex by filler key so they persist across layout
-  // recalculations. This prevents fillers from changing on every resize or
-  // scroll-triggered re-layout on iOS.
   const stampCacheRef = useRef<Map<string, { stamp: StampDef; fillerIndex: number }>>(new Map());
 
   const layout = useCallback(() => {
@@ -323,8 +288,6 @@ export default function MasonryGrid({
 
     const result = computeLayout(panels, cc, containerWidth, initialHeights);
 
-    // Stabilise filler stamps: reuse cached values for known keys,
-    // cache any newly assigned ones.
     const fillers = result.items.filter(
       (i): i is PlacedFiller => i.kind === "filler"
     );
@@ -345,8 +308,6 @@ export default function MasonryGrid({
     setTotalHeight(result.totalHeight);
   }, [panels]);
 
-  // Clear the stamp cache when the panel list changes (sort/filter)
-  // so that new layouts get fresh stamp assignments.
   const prevPanelIdsRef = useRef<string>("");
   useEffect(() => {
     const ids = panels.map((p) => p.id).join(",");
@@ -369,12 +330,71 @@ export default function MasonryGrid({
     return () => observer.disconnect();
   }, [layout]);
 
+  // After the first layout, wait for in-viewport images to load before
+  // signalling ready. Double-rAF ensures PanelCard children have rendered
+  // and their srcs are set (eager on first load via isFirstLoad prop).
+  const hasCalledLayoutReady = useRef(false);
+  useEffect(() => {
+    if (placed.length === 0 || hasCalledLayoutReady.current) return;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (hasCalledLayoutReady.current) return;
+
+        const allImgs = Array.from(
+          document.querySelectorAll<HTMLImageElement>(".panel-item img")
+        );
+
+        const visiblePending = allImgs.filter((img) => {
+          // Skip images with no real src
+          if (!img.src || img.src === window.location.href) return false;
+          const rect = img.getBoundingClientRect();
+          const inView =
+            rect.bottom > 0 &&
+            rect.top < window.innerHeight &&
+            rect.right > 0 &&
+            rect.left < window.innerWidth;
+          return inView && (!img.complete || img.naturalWidth === 0);
+        });
+
+        if (visiblePending.length === 0) {
+          hasCalledLayoutReady.current = true;
+          onLayoutReady?.();
+          return;
+        }
+
+        const timeout = setTimeout(() => {
+          if (!hasCalledLayoutReady.current) {
+            hasCalledLayoutReady.current = true;
+            onLayoutReady?.();
+          }
+        }, 5000);
+
+        let remaining = visiblePending.length;
+        const onSettle = () => {
+          remaining -= 1;
+          if (remaining <= 0) {
+            clearTimeout(timeout);
+            if (!hasCalledLayoutReady.current) {
+              hasCalledLayoutReady.current = true;
+              onLayoutReady?.();
+            }
+          }
+        };
+
+        visiblePending.forEach((img) => {
+          img.addEventListener("load", onSettle, { once: true });
+          img.addEventListener("error", onSettle, { once: true });
+        });
+      });
+    });
+  }, [placed, onLayoutReady]);
+
   const lastColX = (colCount - 1) * (colWidth + GAP);
 
   return (
     <>
       <div ref={containerRef} className="relative" style={{ height: `${totalHeight}px` }}>
-        {/* Filter control — positioned in column 0 */}
         <div
           ref={filterRef}
           className="absolute top-0 left-0"
@@ -387,7 +407,6 @@ export default function MasonryGrid({
           />
         </div>
 
-        {/* Sort control — positioned in last column */}
         {colCount > 1 && (
           <div
             ref={sortRef}
@@ -401,7 +420,6 @@ export default function MasonryGrid({
           </div>
         )}
 
-        {/* All placed items */}
         {placed.map((item) => {
           if (item.kind === "filler") {
             return (
@@ -437,9 +455,9 @@ export default function MasonryGrid({
                 panel={item.panel}
                 panels={panels}
                 panelIndex={panels.indexOf(item.panel)}
+                isFirstLoad={isFirstLoad}
               />
             </div>
-
           );
         })}
       </div>

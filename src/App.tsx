@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanelsAsync } from "./sorting.ts";
 import type { Filters } from "./filtering.ts";
@@ -13,6 +13,8 @@ import { useFilterParams } from "./hooks/useFilterParams";
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const { initialFilters, initialSort, initialTab, syncToURL, syncTab } = useFilterParams();
   const [showInfo, setShowInfo] = useState<InfoTab | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
@@ -88,6 +90,11 @@ export default function App() {
     return () => { cancelled = true; };
   }, [filteredPanels, sortMode]);
 
+  const handleLayoutReady = useCallback(() => {
+    setImagesLoaded(true);
+    setIsFirstLoad(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-surface">
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
@@ -106,11 +113,14 @@ export default function App() {
       </header>
 
       <main className="content-container px-1 pt-0 pb-12 sm:px-1 sm:pt-0">
-        {status === "loading" && <SpinnerState />}
+        {(status === "loading" || (status === "ready" && !imagesLoaded)) && <SpinnerState />}
         {status === "error" && <ErrorState />}
-        {status === "ready" && panels.length === 0 && <EmptyState />}
+        {status === "ready" && panels.length === 0 && imagesLoaded && <EmptyState />}
         {status === "ready" && panels.length > 0 && (
-          <div>
+          <div
+            className="transition-opacity duration-700 ease-out"
+            style={{ opacity: imagesLoaded ? 1 : 0 }}
+          >
             <MasonryGrid
               panels={sortedPanels}
               allPanels={panels}
@@ -119,6 +129,8 @@ export default function App() {
               filters={filters}
               onFiltersChange={handleFiltersChange}
               onInfoOpen={() => handleOpenInfo("sorts")}
+              onLayoutReady={handleLayoutReady}
+              isFirstLoad={isFirstLoad}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">

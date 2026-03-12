@@ -30,9 +30,10 @@ interface Props {
   panel: Panel;
   panels: Panel[];
   panelIndex: number;
+  isFirstLoad?: boolean;
 }
 
-export default function PanelCard({ panel, panels, panelIndex }: Props) {
+export default function PanelCard({ panel, panels, panelIndex, isFirstLoad }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(panelIndex);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
@@ -43,13 +44,16 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
   const hatchFadeId = useId();
   const hatchMaskId = useId();
 
-  // Lazy-load: only set the real src once the card is near the viewport.
   const realSrc = `${import.meta.env.BASE_URL}${panel.image}`;
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const observedSrcRef = useRef<string>("");
 
-  // Reset immediately when the target image changes
-  if (observedSrcRef.current !== realSrc && imgSrc !== null) {
+  // On first page load, set src eagerly so MasonryGrid can observe the
+  // load events and know when in-viewport images are ready. After that,
+  // new cards from filter/sort changes lazy-load via IntersectionObserver.
+  const [imgSrc, setImgSrc] = useState<string | null>(isFirstLoad ? realSrc : null);
+  const observedSrcRef = useRef<string>(isFirstLoad ? realSrc : "");
+
+  // Synchronous render-phase reset: if the panel changed, clear stale src.
+  if (observedSrcRef.current !== realSrc && imgSrc !== null && !isFirstLoad) {
     setImgSrc(null);
   }
 
@@ -57,6 +61,9 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
     const el = imgRef.current;
     if (!el) return;
     observedSrcRef.current = realSrc;
+
+    // If src is already set (first load), no observer needed.
+    if (imgSrc === realSrc) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -69,10 +76,8 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [realSrc]);
+  }, [realSrc]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Derive the aspect ratio from panel metadata so the placeholder holds
-  // the correct vertical space in the grid before the image loads.
   const aspectRatio =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
       ? `${panel.width} / ${panel.height}`
@@ -138,12 +143,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
         style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
-        {/*
-          The img always occupies the correct aspect-ratio slot.
-          src is empty until the IntersectionObserver fires.
-          width:100% + aspect-ratio ensures the grid placeholder is
-          identical in size to the loaded image.
-        */}
         <img
           ref={imgRef}
           src={imgSrc ?? ""}
@@ -164,7 +163,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
           }}
         />
 
-        {/* Fallback placeholder (hidden by default) */}
         <div
           className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
           style={{ aspectRatio: "3/4" }}
@@ -172,7 +170,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
           {panel.title} #{panel.issue}
         </div>
 
-        {/* Directional blur: backdrop-filter with gradient CSS mask */}
         {isDirectional && (
           <div
             className="absolute inset-0"
@@ -181,7 +178,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
           />
         )}
 
-        {/* Hatching + label overlay */}
         {isBlurred && (
           <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center">
             <svg
@@ -200,7 +196,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
                 >
                   <line x1="0" y1="0" x2="0" y2="9" stroke="white" strokeWidth="1.5" />
                 </pattern>
-
                 {isDirectional && panel.blurStart && (
                   <>
                     <linearGradient id={hatchFadeId} {...HATCH_GRAD_COORDS[panel.blurStart]}>
@@ -213,7 +208,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
                   </>
                 )}
               </defs>
-
               <rect
                 width="100%"
                 height="100%"
@@ -222,21 +216,19 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
               />
             </svg>
 
-            {isBlurred && (
-              <span className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
-                <span className="font-display text-xs text-white text-center px-3 py-1.5 leading-snug select-none bg-black/75">
-                  {BLUR_COPY[panel.blur!]}
-                </span>
+            <span className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
+              <span className="font-display text-xs text-white text-center px-3 py-1.5 leading-snug select-none bg-black/75">
+                {BLUR_COPY[panel.blur!]}
               </span>
-            )}
+            </span>
           </div>
         )}
 
-        {/* Hover overlay */}
         <div
           ref={overlayRef}
-          className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${isBlurred ? "z-[2]" : ""
-            }`}
+          className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${
+            isBlurred ? "z-[2]" : ""
+          }`}
         >
           <button
             onClick={(e) => {
