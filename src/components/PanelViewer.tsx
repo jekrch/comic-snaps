@@ -315,7 +315,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           transition-all duration-250 ease-out
           ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
-        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))", pointerEvents: "none" }}
+        style={{ paddingBottom: "max(0.3rem, env(safe-area-inset-bottom))", pointerEvents: "none" }}
       >
         {/* Tags */}
         {!isZoomed && (
