@@ -31,18 +31,29 @@ A GitHub Action (`compute-image-metadata.yml`) runs whenever `gallery.json` is u
 - `phash` — DCT-based perceptual hash for structural similarity
 - `dominantColors` — three most prominent colors in CIELAB space via k-means clustering
 - `colorfulness` — RMS of chromatic channel variance, used to separate B&W art from color panels
-- CLIP embedding — a 512-dimensional vector from `openai/clip-vit-base-patch32`, stored in a separate `embeddings.json`
 
-The action skips panels that already have all fields. Its own commit includes `[skip ci]` to avoid re-triggering the workflow.
+After metadata, the action computes embeddings via three models, each stored in its own file:
+
+- **SigLIP** (`embeddings.json`) — 768-dimensional vectors from `google/siglip-base-patch16-224`. Captures semantic and conceptual similarity.
+- **DINOv2** (`embeddings-dino.json`) — 384-dimensional vectors from `facebook/dinov2-small`. Captures structural and perceptual similarity.
+- **VGG-16 Gram** (`embeddings-gram.json`) — 256-dimensional vectors derived from Gram matrices at three convolutional layers of VGG-16 (relu1_2, relu2_2, relu3_3), reduced via PCA. Captures line style and texture similarity — hatching, stippling, inking approach — independent of composition or subject matter.
+
+SigLIP and DINOv2 support incremental updates (only new panels are embedded). Gram embeddings are always fully recomputed because PCA is fit on the full corpus. Each file carries a version tag; a version bump triggers a full recompute automatically.
+
+HuggingFace and torchvision model weights are cached across runs.
 
 ## Sorting
 
-The gallery supports several sort modes that explore different notions of visual ordering:
+The gallery supports several sort modes exploring different notions of visual ordering:
 
 - **Newest / Oldest** — chronological by date added
-- **pHash** — nearest-neighbor chain by Hamming distance on perceptual hashes. Groups panels with similar coarse luminance structure (roughly: "similar blurry thumbnails"). Good for spotting near-duplicates but insensitive to content or style.
+- **pHash** — nearest-neighbor chain by Hamming distance on perceptual hashes. Groups panels with similar coarse luminance structure. Good for spotting near-duplicates but insensitive to content or style.
 - **Color** — hue-angle walk through dominant colors, with chromatic panels separated from achromatic ones. Produces a visible spectrum sweep.
-- **Visual Chain** — nearest-neighbor chain by cosine distance on CLIP embeddings. Each panel is placed next to its closest match in a 512-dimensional feature space that encodes composition, subject matter, texture, and style holistically. More semantically meaningful than hash-based sorting, though it's a greedy path rather than a global clustering — adjacent panels will feel related, but similar panels elsewhere in the collection may not be nearby.
+- **SigLIP** — nearest-neighbor chain by cosine distance on SigLIP embeddings. Clusters by subject matter and conceptual content.
+- **DINOv2** — nearest-neighbor chain by cosine distance on DINOv2 embeddings. Clusters by visual structure and composition.
+- **VGG-16 Gram** — nearest-neighbor chain by cosine distance on Gram embeddings. Clusters by mark-making and rendering style, largely independent of what's depicted.
+
+All embedding sorts are lazy-loaded on first use. They produce greedy nearest-neighbor paths rather than global clusterings — adjacent panels will feel related, but similar panels elsewhere in the collection may not be nearby.
 
 ## Development
 ```bash
