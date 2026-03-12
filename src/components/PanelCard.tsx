@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useId, useMemo } from "react";
+import { useState, useRef, useCallback, useId, useMemo, useEffect } from "react";
 import type { Panel } from "../types";
 import PanelViewer from "./PanelViewer";
 import { Expand } from "lucide-react";
@@ -12,7 +12,6 @@ const BLUR_COPY = {
   nsfw: "for adult intellectuals only! open to view",
 } as const;
 
-/** Maps blurStart to CSS gradient direction (blur is full at named edge, fades opposite). */
 const BLUR_GRADIENT_DIR: Record<string, string> = {
   top: "to bottom",
   bottom: "to top",
@@ -20,7 +19,6 @@ const BLUR_GRADIENT_DIR: Record<string, string> = {
   right: "to left",
 };
 
-/** Maps blurStart to SVG linearGradient coordinates (1 = full hatch, 0 = clear). */
 const HATCH_GRAD_COORDS: Record<string, { x1: string; y1: string; x2: string; y2: string }> = {
   top: { x1: "0", y1: "0", x2: "0", y2: "1" },
   bottom: { x1: "0", y1: "1", x2: "0", y2: "0" },
@@ -40,50 +38,88 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const hatchPatternId = useId();
   const hatchFadeId = useId();
   const hatchMaskId = useId();
+
+  // Lazy-load: only set the real src once the card is near the viewport.
+  const realSrc = `${import.meta.env.BASE_URL}${panel.image}`;
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const observedSrcRef = useRef<string>("");
+
+  // Reset immediately when the target image changes
+  if (observedSrcRef.current !== realSrc && imgSrc !== null) {
+    setImgSrc(null);
+  }
+
+  useEffect(() => {
+    const el = imgRef.current;
+    if (!el) return;
+    observedSrcRef.current = realSrc;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && observedSrcRef.current === realSrc) {
+          setImgSrc(realSrc);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [realSrc]);
+
+  // Derive the aspect ratio from panel metadata so the placeholder holds
+  // the correct vertical space in the grid before the image loads.
+  const aspectRatio =
+    panel.width && panel.height && panel.width > 0 && panel.height > 0
+      ? `${panel.width} / ${panel.height}`
+      : "3 / 4";
 
   const openViewer = useCallback(() => {
     setViewerIndex(panelIndex);
     setViewerOpen(true);
   }, [panelIndex]);
 
-  const handlePointerUp = useCallback((e: React.PointerEvent) => {
-    const now = Date.now();
-    const isTouch = e.pointerType === "touch";
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      const now = Date.now();
+      const isTouch = e.pointerType === "touch";
 
-    if (isTouch && overlayRef.current) {
-      const opacity = window.getComputedStyle(overlayRef.current).opacity;
-      if (opacity === "0") {
-        lastTap.current = null;
-        return;
+      if (isTouch && overlayRef.current) {
+        const opacity = window.getComputedStyle(overlayRef.current).opacity;
+        if (opacity === "0") {
+          lastTap.current = null;
+          return;
+        }
       }
-    }
 
-    const ref = isTouch ? lastTap : lastClick;
-    const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
-    const prev = ref.current;
+      const ref = isTouch ? lastTap : lastClick;
+      const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
+      const prev = ref.current;
 
-    if (
-      prev &&
-      now - prev.time < DOUBLE_CLICK_DELAY &&
-      Math.abs(e.clientX - prev.x) <= tolerance &&
-      Math.abs(e.clientY - prev.y) <= tolerance
-    ) {
-      ref.current = null;
-      openViewer();
-    } else {
-      ref.current = { time: now, x: e.clientX, y: e.clientY };
-    }
-  }, [openViewer]);
+      if (
+        prev &&
+        now - prev.time < DOUBLE_CLICK_DELAY &&
+        Math.abs(e.clientX - prev.x) <= tolerance &&
+        Math.abs(e.clientY - prev.y) <= tolerance
+      ) {
+        ref.current = null;
+        openViewer();
+      } else {
+        ref.current = { time: now, x: e.clientX, y: e.clientY };
+      }
+    },
+    [openViewer]
+  );
 
   const isBlurred = panel.blur === "ew" || panel.blur === "nsfw";
   const hatchRotation = panel.blur === "ew" ? 45 : 135;
   const isDirectional =
     isBlurred && !!panel.blurStart && panel.blurStart !== "all";
 
-  /** For directional blur: backdrop-filter with a gradient CSS mask. */
   const blurMaskStyle = useMemo(() => {
     if (!isDirectional || !panel.blurStart) return undefined;
     const dir = BLUR_GRADIENT_DIR[panel.blurStart];
@@ -102,15 +138,23 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
         style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
+        {/*
+          The img always occupies the correct aspect-ratio slot.
+          src is empty until the IntersectionObserver fires.
+          width:100% + aspect-ratio ensures the grid placeholder is
+          identical in size to the loaded image.
+        */}
         <img
-          src={`${import.meta.env.BASE_URL}${panel.image}`}
+          ref={imgRef}
+          src={imgSrc ?? ""}
           alt={`${panel.title} #${panel.issue}`}
           className="block w-full"
-          style={
-            isBlurred && !isDirectional
+          style={{
+            aspectRatio,
+            ...(isBlurred && !isDirectional
               ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
-              : undefined
-          }
+              : {}),
+          }}
           onError={(e) => {
             const el = e.currentTarget;
             el.style.display = "none";
@@ -154,32 +198,17 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
                   patternUnits="userSpaceOnUse"
                   patternTransform={`rotate(${hatchRotation})`}
                 >
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="9"
-                    stroke="white"
-                    strokeWidth="1.5"
-                  />
+                  <line x1="0" y1="0" x2="0" y2="9" stroke="white" strokeWidth="1.5" />
                 </pattern>
 
-                {/* Gradient + mask so hatching fades with the blur */}
                 {isDirectional && panel.blurStart && (
                   <>
-                    <linearGradient
-                      id={hatchFadeId}
-                      {...HATCH_GRAD_COORDS[panel.blurStart]}
-                    >
+                    <linearGradient id={hatchFadeId} {...HATCH_GRAD_COORDS[panel.blurStart]}>
                       <stop offset="20%" stopColor="white" stopOpacity="1" />
                       <stop offset="85%" stopColor="white" stopOpacity="0" />
                     </linearGradient>
                     <mask id={hatchMaskId}>
-                      <rect
-                        width="100%"
-                        height="100%"
-                        fill={`url(#${hatchFadeId})`}
-                      />
+                      <rect width="100%" height="100%" fill={`url(#${hatchFadeId})`} />
                     </mask>
                   </>
                 )}
@@ -193,7 +222,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
               />
             </svg>
 
-            {/* Label */}
             {isBlurred && (
               <span className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
                 <span className="font-display text-xs text-white text-center px-3 py-1.5 leading-snug select-none bg-black/75">
@@ -210,7 +238,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
           className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${isBlurred ? "z-[2]" : ""
             }`}
         >
-          {/* Expand button — hover-only for all panels */}
           <button
             onClick={(e) => {
               e.stopPropagation();
