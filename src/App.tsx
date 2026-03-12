@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanelsAsync } from "./sorting.ts";
 import type { Filters } from "./filtering.ts";
