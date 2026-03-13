@@ -115,6 +115,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const showAdjacentSlides = slideActive || slideAnimating || swipeOffset !== 0;
   const showPrev = !!prevPanel && showAdjacentSlides;
   const showNext = !!nextPanel && showAdjacentSlides;
+  const adjacentOpacity = Math.min(1, Math.abs(swipeOffset) / (viewportWidth * 0.8));
 
   const slideImgStyle: React.CSSProperties = {
     maxWidth: "96vw",
@@ -252,14 +253,14 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {showPrev && prevPanel && (
           <div
             className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
-            style={{ transform: `translateX(-${viewportWidth}px)` }}
+            style={{ transform: `translateX(-${viewportWidth}px)`, opacity: adjacentOpacity }}
           >
             <img
               src={`${import.meta.env.BASE_URL}${prevPanel.image}`}
               alt={`${prevPanel.title} #${prevPanel.issue}`}
               className="block w-auto h-auto object-contain rounded-sm"
               style={slideImgStyle}
-              draggable={false}
+              draggable={false}          
             />
           </div>
         )}
@@ -294,7 +295,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {showNext && nextPanel && (
           <div
             className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
-            style={{ transform: `translateX(${viewportWidth}px)` }}
+            style={{ transform: `translateX(${viewportWidth}px)` , opacity: adjacentOpacity }}
           >
             <img
               src={`${import.meta.env.BASE_URL}${nextPanel.image}`}
@@ -339,7 +340,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
             <span
-              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25"
+              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25 font-mono"
               style={{ minWidth: counterMinWidth }}
             >
               {currentIndex + 1} / {panels.length}
