@@ -3,24 +3,24 @@ import type { Panel } from "./types";
 export type SortMode =
   | "newest"
   | "oldest"
-  | "phash"
   | "ahash"
   | "dhash"
   | "color"
   | "embedding-siglip"
   | "embedding-dino"
-  | "embedding-gram";
+  | "embedding-gram"
+  | "phash";
 
 export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "newest", label: "NEWEST" },
   { value: "oldest", label: "OLDEST" },
-  { value: "phash", label: "PHASH" },
   //{ value: "ahash", label: "AHASH" },
   //{ value: "dhash", label: "DHASH" },
   { value: "color", label: "COLOR" },
   { value: "embedding-siglip", label: "SigLIP" },  // semantic / conceptual similarity
   { value: "embedding-dino", label: "DINOv2" },     // structural / perceptual similarity
   { value: "embedding-gram", label: "VGG-16 Gram" }, // line style / texture similarity
+    { value: "phash", label: "PHASH" }, // experimental: best for near duplicates 
 ];
 
 // --- Embedding cache (lazy-loaded, per model) ---

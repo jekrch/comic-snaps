@@ -33,7 +33,7 @@ interface Props {
   isFirstLoad?: boolean;
 }
 
-export default function PanelCard({ panel, panels, panelIndex, isFirstLoad }: Props) {
+export default function PanelCard({ panel, panels, panelIndex }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(panelIndex);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
@@ -45,37 +45,54 @@ export default function PanelCard({ panel, panels, panelIndex, isFirstLoad }: Pr
   const hatchMaskId = useId();
 
   const realSrc = `${import.meta.env.BASE_URL}${panel.image}`;
-
-  // On first page load, set src eagerly so MasonryGrid can observe the
-  // load events and know when in-viewport images are ready. After that,
-  // new cards from filter/sort changes lazy-load via IntersectionObserver.
-  const [imgSrc, setImgSrc] = useState<string | null>(isFirstLoad ? realSrc : null);
-  const observedSrcRef = useRef<string>(isFirstLoad ? realSrc : "");
-
-  // Synchronous render-phase reset: if the panel changed, clear stale src.
-  if (observedSrcRef.current !== realSrc && imgSrc !== null && !isFirstLoad) {
-    setImgSrc(null);
-  }
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = imgRef.current;
+    const el = sentinelRef.current;
     if (!el) return;
-    observedSrcRef.current = realSrc;
 
-    // If src is already set (first load), no observer needed.
-    if (imgSrc === realSrc) return;
+    let active = true;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && observedSrcRef.current === realSrc) {
-          setImgSrc(realSrc);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "300px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    const check = () => {
+      if (!active) return;
+      const rect = el.getBoundingClientRect();
+      const margin = 400;
+      if (
+        rect.height > 0 &&
+        rect.bottom > -margin &&
+        rect.top < window.innerHeight + margin &&
+        rect.right > 0 &&
+        rect.left < window.innerWidth
+      ) {
+        setImgSrc(realSrc);
+        cleanup();
+      }
+    };
+
+    const onScroll = () => requestAnimationFrame(check);
+
+    const cleanup = () => {
+      active = false;
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("masonry-layout", onScroll);
+    };
+
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("masonry-layout", onScroll);
+
+    const t1 = requestAnimationFrame(check);
+    const t2 = setTimeout(check, 100);
+    const t3 = setTimeout(check, 300);
+
+    return () => {
+      cleanup();
+      cancelAnimationFrame(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, [realSrc]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const aspectRatio =
@@ -143,31 +160,34 @@ export default function PanelCard({ panel, panels, panelIndex, isFirstLoad }: Pr
         style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
-        <img
-          ref={imgRef}
-          src={imgSrc ?? ""}
-          alt={`${panel.title} #${panel.issue}`}
-          className="block w-full"
-          style={{
-            aspectRatio,
-            ...(isBlurred && !isDirectional
-              ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
-              : {}),
-          }}
-          onError={(e) => {
-            const el = e.currentTarget;
-            el.style.display = "none";
-            el.parentElement!.querySelector<HTMLDivElement>(
-              ".fallback"
-            )!.style.display = "flex";
-          }}
-        />
-
-        <div
-          className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
-          style={{ aspectRatio: "3/4" }}
-        >
-          {panel.title} #{panel.issue}
+        <div ref={sentinelRef} style={{ aspectRatio, width: "100%" }}>
+          {imgSrc && (
+            <img
+              ref={imgRef}
+              src={imgSrc}
+              alt={`${panel.title} #${panel.issue}`}
+              className="block w-full"
+              style={{
+                aspectRatio,
+                ...(isBlurred && !isDirectional
+                  ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
+                  : {}),
+              }}
+              onError={(e) => {
+                const el = e.currentTarget;
+                el.style.display = "none";
+                el.parentElement!.querySelector<HTMLDivElement>(
+                  ".fallback"
+                )!.style.display = "flex";
+              }}
+            />
+          )}
+          <div
+            className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
+            style={{ aspectRatio: "3/4" }}
+          >
+            {panel.title} #{panel.issue}
+          </div>
         </div>
 
         {isDirectional && (

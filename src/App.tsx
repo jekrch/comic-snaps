@@ -7,7 +7,7 @@ import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
-import { Menu } from "lucide-react";
+//import { Menu } from "lucide-react";
 import { useFilterParams } from "./hooks/useFilterParams";
 
 export default function App() {
@@ -100,14 +100,27 @@ export default function App() {
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
         <div className="content-container px-1 py-0 flex items-center justify-between">
           <h1 className="font-display font-bold text-xl tracking-tight text-ink">
-            COMIC SNAPS
+            C0MIC SNAPS 
           </h1>
           <button
             onClick={() => handleOpenInfo("about")}
-            className="text-ink/80 hover:text-ink transition-colors cursor-pointer p-3 -m-2 -mr-1"
+            className="stroke-ink/80 transition-colors cursor-pointer p-3 -m-2 -mr-1"
             title="About"
           >
-            <Menu size={20} strokeWidth={1.5} className="hover:stroke-white/80" />
+            {/* <Menu size={20} strokeWidth={1.5} className="hover:stroke-white/80" /> */}
+            <svg
+             className="hover:stroke-ink/80"  
+              width={20}
+              height={12}
+              viewBox="0 0 22 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+            >
+              <line x1="1" y1="3" x2="21" y2="3" />
+              <line x1="1" y1="13" x2="21" y2="13" />
+            </svg>
           </button>
         </div>
       </header>

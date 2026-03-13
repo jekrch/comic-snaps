@@ -257,7 +257,6 @@ export default function MasonryGrid({
   onFiltersChange,
   onInfoOpen,
   onLayoutReady,
-  isFirstLoad,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -306,6 +305,14 @@ export default function MasonryGrid({
 
     setPlaced(result.items);
     setTotalHeight(result.totalHeight);
+
+    setPlaced(result.items);
+    setTotalHeight(result.totalHeight);
+    
+    // Notify lazy-loading cards that positions have settled
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new CustomEvent("masonry-layout"));
+    });
   }, [panels]);
 
   const prevPanelIdsRef = useRef<string>("");
@@ -455,7 +462,7 @@ export default function MasonryGrid({
                 panel={item.panel}
                 panels={panels}
                 panelIndex={panels.indexOf(item.panel)}
-                isFirstLoad={isFirstLoad}
+                //isFirstLoad={isFirstLoad}
               />
             </div>
           );

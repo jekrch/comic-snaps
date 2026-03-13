@@ -81,7 +81,7 @@ function TabPanel({
 
 // Collapsible sort description
 
-const COLLAPSED_HEIGHT = 66; // ~6 lines at 11px
+const COLLAPSED_HEIGHT = 175; // ~6 lines at 11px
 
 function SortEntry({
   label,
@@ -107,7 +107,7 @@ function SortEntry({
     <div>
       <div className="flex items-baseline gap-2 mb-1">
         <h3
-          className="text-[11px] tracking-[0.06em] text-ink m-0 shrink-0"
+          className="text-[12px] tracking-[0.06em] text-ink m-0 shrink-0"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {label}
@@ -207,18 +207,6 @@ const SORT_DESCRIPTIONS: {
       ),
     },
     {
-      label: "PHASH",
-      body: (
-        <p className="m-0">
-          This stands for perceptual hash. It's basically a fingerprint of each panel's luminance
-          features. Adjacent panels share similar layouts and brightness patterns regardless of color
-          or content. This is good for identifying near-duplicate images, but honestly I don't find
-          the results with disparate images to be that interesting here.
-        </p>
-      ),
-      link: { text: "pHash.org", href: "https://www.phash.org/" },
-    },
-    {
       label: "COLOR",
       body: (
         <>
@@ -285,6 +273,18 @@ const SORT_DESCRIPTIONS: {
         href: "https://arxiv.org/abs/1508.06576",
       },
     },
+    {
+      label: "PHASH",
+      body: (
+        <p className="m-0">
+          This stands for perceptual hash. It's basically a fingerprint of each panel's luminance
+          features. Adjacent panels share similar layouts and brightness patterns regardless of color
+          or content. This is good for identifying near-duplicate images, but honestly I don't find
+          the results with disparate images to be that interesting here.
+        </p>
+      ),
+      link: { text: "pHash.org", href: "https://www.phash.org/" },
+    }
   ];
 
 // Modal
@@ -553,7 +553,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {/* <span className="text-[#7A8B2A]/40 mr-3">*</span> */}
-                  COMIC SNAPS
+                  C0MIC SNAPS
                   {/* <span className="text-[#7A8B2A]/40 ml-3">*</span> */}
                 </h2>
 
