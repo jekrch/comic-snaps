@@ -1,6 +1,23 @@
 {
   "panels": [
     {
+      "id": "love-rockets-1-1773521483",
+      "title": "Love & Rockets",
+      "slug": "love-rockets",
+      "issue": 1,
+      "year": 1982,
+      "artist": "Gilbert Hernandez",
+      "image": "images/love-rockets/issue-1-1773521483.jpg",
+      "notes": null,
+      "tags": [
+        "title card",
+        "hatching",
+        "spot blacks"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-14T20:51:25.148Z"
+    },
+    {
       "id": "heavy-metal-5-1773108178",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -16,7 +33,7 @@
       "height": 1113,
       "dominantColors": [
         [
-          36.0,
+          36,
           1.5,
           10.1
         ],
@@ -26,7 +43,7 @@
           7.4
         ],
         [
-          53.0,
+          53,
           1.8,
           18.5
         ]
