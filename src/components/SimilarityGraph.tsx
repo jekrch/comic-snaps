@@ -76,6 +76,12 @@ const METRICS: MetricOption[] = [
   },
 ];
 
+/* ── Tap / click detection thresholds (matches PanelCard) ── */
+
+const DOUBLE_CLICK_DELAY = 400;
+const MOUSE_TOLERANCE = 20;
+const TOUCH_TOLERANCE = 30;
+
 /* ── Compute nearest neighbors ── */
 
 interface Neighbor {
@@ -276,6 +282,24 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const nodeRef = useRef<HTMLDivElement>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
+  // Double-tap / double-click detection (mirrors PanelCard)
+  const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
+  const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
+  const touchOpenRef = useRef(false); // true when tooltip was opened via touch
+
+  // Close tooltip on outside tap (touch only)
+  useEffect(() => {
+    if (!showInfo || !touchOpenRef.current) return;
+    const handler = (e: PointerEvent) => {
+      if (nodeRef.current && !nodeRef.current.contains(e.target as HTMLElement)) {
+        setShowInfo(false);
+        touchOpenRef.current = false;
+      }
+    };
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, [showInfo]);
+
   const aspect =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
       ? panel.width / panel.height
@@ -306,22 +330,49 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   };
 
   const handlePointerLeave = () => {
+    // Don't auto-dismiss if tooltip was opened via touch — outside tap handles it
+    if (touchOpenRef.current) return;
     hideTimer.current = setTimeout(() => setShowInfo(false), 150);
   };
 
-  // Single tap (touch) toggles info
-  const lastTapRef = useRef(0);
-  const handleClick = (e: React.MouseEvent) => {
-    const now = Date.now();
-    if (now - lastTapRef.current < 400) return;
-    lastTapRef.current = now;
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      const now = Date.now();
+      const isTouch = e.pointerType === "touch";
+      const ref = isTouch ? lastTap : lastClick;
+      const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
+      const prev = ref.current;
 
-    if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
-      e.stopPropagation();
-      updateTooltipPos();
-      setShowInfo((prev) => !prev);
-    }
-  };
+      if (
+        prev &&
+        now - prev.time < DOUBLE_CLICK_DELAY &&
+        Math.abs(e.clientX - prev.x) <= tolerance &&
+        Math.abs(e.clientY - prev.y) <= tolerance
+      ) {
+        // Double-tap / double-click → recenter on this node
+        ref.current = null;
+        touchOpenRef.current = false;
+        setShowInfo(false);
+        if (!isAnchor) {
+          e.stopPropagation();
+          onDoubleClick(panel);
+        }
+      } else {
+        // First tap → toggle tooltip on touch; mouse hover handles it on desktop
+        ref.current = { time: now, x: e.clientX, y: e.clientY };
+        if (isTouch) {
+          e.stopPropagation();
+          updateTooltipPos();
+          setShowInfo((prev) => {
+            const next = !prev;
+            touchOpenRef.current = next;
+            return next;
+          });
+        }
+      }
+    },
+    [isAnchor, onDoubleClick, panel, updateTooltipPos]
+  );
 
   return (
     <>
@@ -336,13 +387,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         }}
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        onClick={handleClick}
-        onDoubleClick={(e) => {
-          if (!isAnchor) {
-            e.stopPropagation();
-            onDoubleClick(panel);
-          }
-        }}
+        onPointerUp={handlePointerUp}
       >
         <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
         <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
@@ -421,7 +466,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
                     marginTop: 3,
                   }}
                 >
-                  double-click to explore
+                  double-tap to explore
                 </p>
               )}
             </div>
