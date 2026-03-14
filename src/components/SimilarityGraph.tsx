@@ -80,6 +80,7 @@ const METRICS: MetricOption[] = [
 const DOUBLE_CLICK_DELAY = 400;
 const MOUSE_TOLERANCE = 20;
 const TOUCH_TOLERANCE = 30;
+const LONG_PRESS_DELAY = 300;
 
 /* ── Compute nearest neighbors ── */
 
@@ -280,9 +281,12 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const [tooltipBelow, setTooltipBelow] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const touchOpenRef = useRef(false);
 
-  // Tap detection refs
+  // Long-press timer ref
+  const longPressTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const longPressActive = useRef(false);
+
+  // Tap detection refs (for double-tap recenter)
   const lastTapTime = useRef<{ time: number; x: number; y: number } | null>(null);
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
@@ -318,10 +322,50 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
 
     const onTouchStart = (e: TouchEvent) => {
       const t = e.touches[0];
-      if (t) touchStartPos.current = { x: t.clientX, y: t.clientY };
+      if (!t) return;
+      touchStartPos.current = { x: t.clientX, y: t.clientY };
+
+      // Start long-press timer — show tooltip after delay
+      longPressActive.current = false;
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = setTimeout(() => {
+        longPressActive.current = true;
+        updateTooltipDirection();
+        setShowInfo(true);
+      }, LONG_PRESS_DELAY);
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      // If finger moves too far, cancel the long-press
+      const t = e.touches[0];
+      const start = touchStartPos.current;
+      if (
+        t &&
+        start &&
+        (Math.abs(t.clientX - start.x) > TOUCH_TOLERANCE ||
+          Math.abs(t.clientY - start.y) > TOUCH_TOLERANCE)
+      ) {
+        clearTimeout(longPressTimer.current);
+        // If tooltip was already showing from the long-press, hide it
+        if (longPressActive.current) {
+          longPressActive.current = false;
+          setShowInfo(false);
+        }
+      }
     };
 
     const onTouchEnd = (e: TouchEvent) => {
+      clearTimeout(longPressTimer.current);
+
+      // Always dismiss tooltip on finger release
+      if (longPressActive.current) {
+        longPressActive.current = false;
+        setShowInfo(false);
+        // Don't process as a tap — this was a long-press
+        touchStartPos.current = null;
+        return;
+      }
+
       const t = e.changedTouches[0];
       if (!t) return;
 
@@ -348,42 +392,45 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       ) {
         // Double-tap → recenter
         lastTapTime.current = null;
-        touchOpenRef.current = false;
-        setShowInfo(false);
         if (!isAnchor) {
           onDoubleClick(panel);
         }
       } else {
-        // Single tap → toggle tooltip
+        // Single tap — just record for potential double-tap, no tooltip toggle
         lastTapTime.current = { time: now, x: t.clientX, y: t.clientY };
-        updateTooltipDirection();
-        setShowInfo((prev) => {
-          const next = !prev;
-          touchOpenRef.current = next;
-          return next;
-        });
+      }
+    };
+
+    const onTouchCancel = () => {
+      clearTimeout(longPressTimer.current);
+      if (longPressActive.current) {
+        longPressActive.current = false;
+        setShowInfo(false);
       }
     };
 
     el.addEventListener("touchstart", onTouchStart, { capture: true, passive: true });
+    el.addEventListener("touchmove", onTouchMove, { capture: true, passive: true });
     el.addEventListener("touchend", onTouchEnd, { capture: true });
+    el.addEventListener("touchcancel", onTouchCancel, { capture: true });
 
     return () => {
+      clearTimeout(longPressTimer.current);
       el.removeEventListener("touchstart", onTouchStart, { capture: true } as EventListenerOptions);
+      el.removeEventListener("touchmove", onTouchMove, { capture: true } as EventListenerOptions);
       el.removeEventListener("touchend", onTouchEnd, { capture: true } as EventListenerOptions);
+      el.removeEventListener("touchcancel", onTouchCancel, { capture: true } as EventListenerOptions);
     };
   }, [isAnchor, onDoubleClick, panel, updateTooltipDirection]);
 
   // ── Desktop: hover show/hide ──
   const handlePointerEnter = () => {
-    if (touchOpenRef.current) return;
     clearTimeout(hideTimer.current);
     updateTooltipDirection();
     setShowInfo(true);
   };
 
   const handlePointerLeave = () => {
-    if (touchOpenRef.current) return;
     hideTimer.current = setTimeout(() => setShowInfo(false), 150);
   };
 
@@ -411,25 +458,6 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     },
     [isAnchor, onDoubleClick, panel]
   );
-
-  // ── Dismiss tooltip on outside touch ──
-  useEffect(() => {
-    if (!showInfo || !touchOpenRef.current) return;
-    const handler = (e: TouchEvent) => {
-      if (nodeRef.current && !nodeRef.current.contains(e.target as HTMLElement)) {
-        setShowInfo(false);
-        touchOpenRef.current = false;
-      }
-    };
-    // Small delay so the current tap cycle doesn't immediately dismiss
-    const timer = setTimeout(() => {
-      document.addEventListener("touchstart", handler, { passive: true });
-    }, 80);
-    return () => {
-      clearTimeout(timer);
-      document.removeEventListener("touchstart", handler);
-    };
-  }, [showInfo]);
 
   const tooltipContent = (
     <div
