@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "bleeding-hearts-2-1773522336",
+      "title": "Bleeding Hearts",
+      "slug": "bleeding-hearts",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Stipan Morian",
+      "image": "images/bleeding-hearts/issue-2-1773522336.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-14T21:05:37.889Z"
+    },
+    {
       "id": "love-rockets-1-1773521483",
       "title": "Love & Rockets",
       "slug": "love-rockets",
@@ -25,7 +38,7 @@
           16.5
         ],
         [
-          78.0,
+          78,
           5.2,
           16.9
         ],
