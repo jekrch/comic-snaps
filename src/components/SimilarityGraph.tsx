@@ -283,7 +283,8 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const touchOpenRef = useRef(false);
 
   // Tap detection refs
-  const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
+  const lastTapTime = useRef<{ time: number; x: number; y: number } | null>(null);
+  const touchStartPos = useRef<{ x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
 
   const aspect =
@@ -304,9 +305,74 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const updateTooltipDirection = useCallback(() => {
     if (!nodeRef.current) return;
     const rect = nodeRef.current.getBoundingClientRect();
-    // If the top of the node is in the upper third of the viewport, show below
     setTooltipBelow(rect.top < 100);
   }, []);
+
+  // ── Native touch listeners in capture phase ──
+  // ReactFlow intercepts touch events in its own handlers, so React synthetic
+  // onTouchEnd never fires reliably on nodes. Attaching native capture-phase
+  // listeners on the DOM node itself ensures we see every touch.
+  useEffect(() => {
+    const el = nodeRef.current;
+    if (!el) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) touchStartPos.current = { x: t.clientX, y: t.clientY };
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      const t = e.changedTouches[0];
+      if (!t) return;
+
+      // If the finger moved too far, this was a drag/pan, not a tap
+      const start = touchStartPos.current;
+      if (
+        !start ||
+        Math.abs(t.clientX - start.x) > TOUCH_TOLERANCE ||
+        Math.abs(t.clientY - start.y) > TOUCH_TOLERANCE
+      ) {
+        touchStartPos.current = null;
+        return;
+      }
+      touchStartPos.current = null;
+
+      const now = Date.now();
+      const prev = lastTapTime.current;
+
+      if (
+        prev &&
+        now - prev.time < DOUBLE_CLICK_DELAY &&
+        Math.abs(t.clientX - prev.x) <= TOUCH_TOLERANCE &&
+        Math.abs(t.clientY - prev.y) <= TOUCH_TOLERANCE
+      ) {
+        // Double-tap → recenter
+        lastTapTime.current = null;
+        touchOpenRef.current = false;
+        setShowInfo(false);
+        if (!isAnchor) {
+          onDoubleClick(panel);
+        }
+      } else {
+        // Single tap → toggle tooltip
+        lastTapTime.current = { time: now, x: t.clientX, y: t.clientY };
+        updateTooltipDirection();
+        setShowInfo((prev) => {
+          const next = !prev;
+          touchOpenRef.current = next;
+          return next;
+        });
+      }
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { capture: true, passive: true });
+    el.addEventListener("touchend", onTouchEnd, { capture: true });
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart, { capture: true } as EventListenerOptions);
+      el.removeEventListener("touchend", onTouchEnd, { capture: true } as EventListenerOptions);
+    };
+  }, [isAnchor, onDoubleClick, panel, updateTooltipDirection]);
 
   // ── Desktop: hover show/hide ──
   const handlePointerEnter = () => {
@@ -324,7 +390,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   // ── Desktop: mouse double-click to recenter ──
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
-      if (e.pointerType === "touch") return; // touch handled by onTouchEnd
+      if (e.pointerType === "touch") return;
       const now = Date.now();
       const prev = lastClick.current;
 
@@ -346,42 +412,6 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     [isAnchor, onDoubleClick, panel]
   );
 
-  // ── Touch: single-tap = toggle tooltip, double-tap = recenter ──
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      // Use changedTouches for the position of the ended touch
-      const touch = e.changedTouches[0];
-      if (!touch) return;
-      const now = Date.now();
-      const prev = lastTap.current;
-
-      if (
-        prev &&
-        now - prev.time < DOUBLE_CLICK_DELAY &&
-        Math.abs(touch.clientX - prev.x) <= TOUCH_TOLERANCE &&
-        Math.abs(touch.clientY - prev.y) <= TOUCH_TOLERANCE
-      ) {
-        // Double-tap → recenter
-        lastTap.current = null;
-        touchOpenRef.current = false;
-        setShowInfo(false);
-        if (!isAnchor) {
-          onDoubleClick(panel);
-        }
-      } else {
-        // Single tap → toggle tooltip
-        lastTap.current = { time: now, x: touch.clientX, y: touch.clientY };
-        updateTooltipDirection();
-        setShowInfo((prev) => {
-          const next = !prev;
-          touchOpenRef.current = next;
-          return next;
-        });
-      }
-    },
-    [isAnchor, onDoubleClick, panel, updateTooltipDirection]
-  );
-
   // ── Dismiss tooltip on outside touch ──
   useEffect(() => {
     if (!showInfo || !touchOpenRef.current) return;
@@ -391,10 +421,10 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         touchOpenRef.current = false;
       }
     };
-    // Use a small delay so the current tap's touchstart doesn't immediately dismiss
+    // Small delay so the current tap cycle doesn't immediately dismiss
     const timer = setTimeout(() => {
       document.addEventListener("touchstart", handler, { passive: true });
-    }, 50);
+    }, 80);
     return () => {
       clearTimeout(timer);
       document.removeEventListener("touchstart", handler);
@@ -437,13 +467,14 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
           borderRadius: 4,
           border: "1px solid rgba(255,255,255,0.1)",
           padding: "5px 8px",
-          whiteSpace: "nowrap",
-          maxWidth: 220,
+          whiteSpace: "normal",
+          maxWidth: 200,
+          minWidth: 90,
         }}
       >
         <p className="font-display leading-tight" style={{ fontSize: 11 }}>
           <span style={{ color: "rgba(255,255,255,0.9)" }}>{panel.title}</span>{" "}
-          <span className="text-accent">#{panel.issue}</span>
+          <span className="text-accent" style={{ whiteSpace: "nowrap" }}>#{panel.issue}</span>
         </p>
         <p
           style={{
@@ -484,7 +515,6 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onPointerUp={handlePointerUp}
-      onTouchEnd={handleTouchEnd}
     >
       <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
       <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
@@ -504,7 +534,6 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
           boxShadow: isAnchor
             ? "0 0 20px rgba(232,164,74,0.25)"
             : "0 2px 8px rgba(0,0,0,0.5)",
-          // Prevent iOS long-press image actions
           WebkitTouchCallout: "none",
         }}
       />
