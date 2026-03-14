@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-14T21:05:37.889Z"
+      "addedAt": "2026-03-14T21:05:37.889Z",
+      "width": 982,
+      "height": 1280,
+      "dominantColors": [
+        [
+          67.3,
+          8.3,
+          17.1
+        ],
+        [
+          41.4,
+          10.9,
+          13.5
+        ],
+        [
+          14.5,
+          6.8,
+          6.7
+        ]
+      ],
+      "colorfulness": 7.5,
+      "phash": "8adff54440f924ad",
+      "ahash": "f8fcbf1c15004303",
+      "dhash": "727879f9f5e5978f"
     },
     {
       "id": "love-rockets-1-1773521483",
