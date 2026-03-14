@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
 import {
   ReactFlow,
   Background,
@@ -278,27 +277,14 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const { panel, isAnchor, onDoubleClick } = data;
   const size = isAnchor ? ANCHOR_SIZE : NODE_SIZE;
   const [showInfo, setShowInfo] = useState(false);
+  const [tooltipBelow, setTooltipBelow] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
+  const touchOpenRef = useRef(false);
 
-  // Double-tap / double-click detection (mirrors PanelCard)
+  // Tap detection refs
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
-  const touchOpenRef = useRef(false); // true when tooltip was opened via touch
-
-  // Close tooltip on outside tap (touch only)
-  useEffect(() => {
-    if (!showInfo || !touchOpenRef.current) return;
-    const handler = (e: PointerEvent) => {
-      if (nodeRef.current && !nodeRef.current.contains(e.target as HTMLElement)) {
-        setShowInfo(false);
-        touchOpenRef.current = false;
-      }
-    };
-    document.addEventListener("pointerdown", handler);
-    return () => document.removeEventListener("pointerdown", handler);
-  }, [showInfo]);
 
   const aspect =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
@@ -314,177 +300,217 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     w = size * aspect;
   }
 
-  const updateTooltipPos = useCallback(() => {
+  // Decide whether tooltip should go above or below based on viewport position
+  const updateTooltipDirection = useCallback(() => {
     if (!nodeRef.current) return;
     const rect = nodeRef.current.getBoundingClientRect();
-    setTooltipPos({
-      x: rect.left + rect.width / 2,
-      y: rect.top,
-    });
+    // If the top of the node is in the upper third of the viewport, show below
+    setTooltipBelow(rect.top < 100);
   }, []);
 
+  // ── Desktop: hover show/hide ──
   const handlePointerEnter = () => {
+    if (touchOpenRef.current) return;
     clearTimeout(hideTimer.current);
-    updateTooltipPos();
+    updateTooltipDirection();
     setShowInfo(true);
   };
 
   const handlePointerLeave = () => {
-    // Don't auto-dismiss if tooltip was opened via touch — outside tap handles it
     if (touchOpenRef.current) return;
     hideTimer.current = setTimeout(() => setShowInfo(false), 150);
   };
 
+  // ── Desktop: mouse double-click to recenter ──
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
+      if (e.pointerType === "touch") return; // touch handled by onTouchEnd
       const now = Date.now();
-      const isTouch = e.pointerType === "touch";
-      const ref = isTouch ? lastTap : lastClick;
-      const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
-      const prev = ref.current;
+      const prev = lastClick.current;
 
       if (
         prev &&
         now - prev.time < DOUBLE_CLICK_DELAY &&
-        Math.abs(e.clientX - prev.x) <= tolerance &&
-        Math.abs(e.clientY - prev.y) <= tolerance
+        Math.abs(e.clientX - prev.x) <= MOUSE_TOLERANCE &&
+        Math.abs(e.clientY - prev.y) <= MOUSE_TOLERANCE
       ) {
-        // Double-tap / double-click → recenter on this node
-        ref.current = null;
-        touchOpenRef.current = false;
-        setShowInfo(false);
+        lastClick.current = null;
         if (!isAnchor) {
           e.stopPropagation();
           onDoubleClick(panel);
         }
       } else {
-        // First tap → toggle tooltip on touch; mouse hover handles it on desktop
-        ref.current = { time: now, x: e.clientX, y: e.clientY };
-        if (isTouch) {
-          e.stopPropagation();
-          updateTooltipPos();
-          setShowInfo((prev) => {
-            const next = !prev;
-            touchOpenRef.current = next;
-            return next;
-          });
-        }
+        lastClick.current = { time: now, x: e.clientX, y: e.clientY };
       }
     },
-    [isAnchor, onDoubleClick, panel, updateTooltipPos]
+    [isAnchor, onDoubleClick, panel]
+  );
+
+  // ── Touch: single-tap = toggle tooltip, double-tap = recenter ──
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      // Use changedTouches for the position of the ended touch
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+      const now = Date.now();
+      const prev = lastTap.current;
+
+      if (
+        prev &&
+        now - prev.time < DOUBLE_CLICK_DELAY &&
+        Math.abs(touch.clientX - prev.x) <= TOUCH_TOLERANCE &&
+        Math.abs(touch.clientY - prev.y) <= TOUCH_TOLERANCE
+      ) {
+        // Double-tap → recenter
+        lastTap.current = null;
+        touchOpenRef.current = false;
+        setShowInfo(false);
+        if (!isAnchor) {
+          onDoubleClick(panel);
+        }
+      } else {
+        // Single tap → toggle tooltip
+        lastTap.current = { time: now, x: touch.clientX, y: touch.clientY };
+        updateTooltipDirection();
+        setShowInfo((prev) => {
+          const next = !prev;
+          touchOpenRef.current = next;
+          return next;
+        });
+      }
+    },
+    [isAnchor, onDoubleClick, panel, updateTooltipDirection]
+  );
+
+  // ── Dismiss tooltip on outside touch ──
+  useEffect(() => {
+    if (!showInfo || !touchOpenRef.current) return;
+    const handler = (e: TouchEvent) => {
+      if (nodeRef.current && !nodeRef.current.contains(e.target as HTMLElement)) {
+        setShowInfo(false);
+        touchOpenRef.current = false;
+      }
+    };
+    // Use a small delay so the current tap's touchstart doesn't immediately dismiss
+    const timer = setTimeout(() => {
+      document.addEventListener("touchstart", handler, { passive: true });
+    }, 50);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [showInfo]);
+
+  const tooltipContent = (
+    <div
+      style={{
+        position: "absolute",
+        left: "50%",
+        ...(tooltipBelow
+          ? { top: "100%", marginTop: 8 }
+          : { bottom: "100%", marginBottom: 8 }),
+        transform: "translateX(-50%)",
+        zIndex: 10,
+        pointerEvents: "none",
+        display: "flex",
+        flexDirection: tooltipBelow ? "column" : "column-reverse",
+        alignItems: "center",
+      }}
+    >
+      {/* Arrow */}
+      <div
+        style={{
+          width: 0,
+          height: 0,
+          borderLeft: "5px solid transparent",
+          borderRight: "5px solid transparent",
+          ...(tooltipBelow
+            ? { borderBottom: "5px solid rgba(0,0,0,0.9)" }
+            : { borderTop: "5px solid rgba(0,0,0,0.9)" }),
+        }}
+      />
+      {/* Body */}
+      <div
+        style={{
+          background: "rgba(0,0,0,0.9)",
+          backdropFilter: "blur(8px)",
+          borderRadius: 4,
+          border: "1px solid rgba(255,255,255,0.1)",
+          padding: "5px 8px",
+          whiteSpace: "nowrap",
+          maxWidth: 220,
+        }}
+      >
+        <p className="font-display leading-tight" style={{ fontSize: 11 }}>
+          <span style={{ color: "rgba(255,255,255,0.9)" }}>{panel.title}</span>{" "}
+          <span className="text-accent">#{panel.issue}</span>
+        </p>
+        <p
+          style={{
+            fontSize: 9,
+            color: "rgba(255,255,255,0.45)",
+            marginTop: 1,
+            lineHeight: "1.3",
+          }}
+        >
+          {panel.artist} · {panel.year}
+        </p>
+        {!isAnchor && (
+          <p
+            style={{
+              fontSize: 8,
+              color: "rgba(255,255,255,0.25)",
+              marginTop: 3,
+            }}
+          >
+            double-tap to explore
+          </p>
+        )}
+      </div>
+    </div>
   );
 
   return (
-    <>
-      <div
-        ref={nodeRef}
-        className="similarity-node"
+    <div
+      ref={nodeRef}
+      className="similarity-node"
+      style={{
+        width: w,
+        height: h,
+        position: "relative",
+        overflow: "visible",
+        cursor: isAnchor ? "default" : "pointer",
+      }}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onPointerUp={handlePointerUp}
+      onTouchEnd={handleTouchEnd}
+    >
+      <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+      <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+
+      <img
+        src={`${import.meta.env.BASE_URL}${panel.image}`}
+        alt={`${panel.title} #${panel.issue}`}
+        draggable={false}
         style={{
-          width: w,
-          height: h,
-          position: "relative",
-          cursor: isAnchor ? "default" : "pointer",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          borderRadius: 3,
+          border: isAnchor
+            ? "2px solid var(--color-accent, #e8a44a)"
+            : "1px solid rgba(255,255,255,0.08)",
+          boxShadow: isAnchor
+            ? "0 0 20px rgba(232,164,74,0.25)"
+            : "0 2px 8px rgba(0,0,0,0.5)",
+          // Prevent iOS long-press image actions
+          WebkitTouchCallout: "none",
         }}
-        onPointerEnter={handlePointerEnter}
-        onPointerLeave={handlePointerLeave}
-        onPointerUp={handlePointerUp}
-      >
-        <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
-        <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+      />
 
-        <img
-          src={`${import.meta.env.BASE_URL}${panel.image}`}
-          alt={`${panel.title} #${panel.issue}`}
-          draggable={false}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: 3,
-            border: isAnchor
-              ? "2px solid var(--color-accent, #e8a44a)"
-              : "1px solid rgba(255,255,255,0.08)",
-            boxShadow: isAnchor
-              ? "0 0 20px rgba(232,164,74,0.25)"
-              : "0 2px 8px rgba(0,0,0,0.5)",
-          }}
-        />
-      </div>
-
-      {/* Tooltip — rendered via portal to sit above all nodes */}
-      {showInfo &&
-        tooltipPos &&
-        ReactDOM.createPortal(
-          <div
-            style={{
-              position: "fixed",
-              left: tooltipPos.x,
-              top: tooltipPos.y,
-              transform: "translate(-50%, -100%)",
-              marginTop: -8,
-              zIndex: 10000,
-              pointerEvents: "none",
-            }}
-            onPointerEnter={() => {
-              clearTimeout(hideTimer.current);
-            }}
-            onPointerLeave={handlePointerLeave}
-          >
-            <div
-              style={{
-                background: "rgba(0,0,0,0.9)",
-                backdropFilter: "blur(8px)",
-                borderRadius: 4,
-                border: "1px solid rgba(255,255,255,0.1)",
-                padding: "5px 8px",
-                whiteSpace: "nowrap",
-                maxWidth: 220,
-              }}
-            >
-              <p
-                className="font-display leading-tight"
-                style={{ fontSize: 11 }}
-              >
-                <span style={{ color: "rgba(255,255,255,0.9)" }}>{panel.title}</span>{" "}
-                <span className="text-accent">#{panel.issue}</span>
-              </p>
-              <p
-                style={{
-                  fontSize: 9,
-                  color: "rgba(255,255,255,0.45)",
-                  marginTop: 1,
-                  lineHeight: "1.3",
-                }}
-              >
-                {panel.artist} · {panel.year}
-              </p>
-              {!isAnchor && (
-                <p
-                  style={{
-                    fontSize: 8,
-                    color: "rgba(255,255,255,0.25)",
-                    marginTop: 3,
-                  }}
-                >
-                  double-tap to explore
-                </p>
-              )}
-            </div>
-            {/* Arrow */}
-            <div
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: "5px solid transparent",
-                borderRight: "5px solid transparent",
-                borderTop: "5px solid rgba(0,0,0,0.9)",
-                margin: "0 auto",
-              }}
-            />
-          </div>,
-          document.body
-        )}
-    </>
+      {showInfo && tooltipContent}
+    </div>
   );
 }
 
@@ -1014,6 +1040,9 @@ export default function SimilarityGraph({
         }
         .similarity-node {
           transition: filter 0.15s ease;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
         }
         .similarity-node:hover {
           filter: brightness(1.05);
