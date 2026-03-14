@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link as Search, X, ZoomIn, ZoomOut } from "lucide-react";
+import { Link as Search, X, ZoomIn, ZoomOut, GitGraph } from "lucide-react";
 import type { Panel } from "../types";
+import type { SortMode } from "../sorting";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
 import { useGestureHandler } from "../hooks/useGestureHandler";
 import { useSlideNavigation } from "../hooks/useSlideNavigation";
 import NavButton from "./NavButton";
+import SimilarityGraph from "./SimilarityGraph";
 
 interface Props {
   panel: Panel;
@@ -14,12 +16,14 @@ interface Props {
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  sortMode?: SortMode;
 }
 
-export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate }: Props) {
+export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate, sortMode = "newest" }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [graphOpen, setGraphOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imgWrapperRef = useRef<HTMLDivElement>(null);
@@ -91,13 +95,14 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (graphOpen) return; // let graph handle its own keys
       if (e.key === "Escape") handleClose();
       if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) commitSlide("prev");
       if (e.key === "ArrowRight" && hasNext && displayScale <= 1) commitSlide("next");
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handleClose, hasPrev, hasNext, displayScale, commitSlide]);
+  }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen]);
 
   // ── Layout calculations ──
 
@@ -353,33 +358,56 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         {/* Navigation strip */}
         {!isZoomed && (hasPrev || hasNext) && (
-          <div className="mx-auto flex items-center justify-center gap-6" style={{ pointerEvents: "auto" }}>
-            {/* Previous */}
-            <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
+          <div className="relative" style={{ pointerEvents: "auto" }}>
+            <div className="mx-auto flex items-center justify-center gap-6">
+              {/* Previous */}
+              <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
-            <span
-              className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25 font-mono"
-              style={{ minWidth: counterMinWidth }}
+              <span
+                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25 font-mono"
+                style={{ minWidth: counterMinWidth }}
+              >
+                {currentIndex + 1} / {panels.length}
+              </span>
+
+              {/* Next */}
+              <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
+            </div>
+
+            {/* Similarity graph button — absolutely positioned to the right */}
+            <button
+              onClick={() => setGraphOpen(true)}
+              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              style={{ right: 16 }}
+              title="Similarity graph"
             >
-              {currentIndex + 1} / {panels.length}
-            </span>
-
-            {/* Next */}
-            <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
+              <GitGraph size={15} strokeWidth={1.5} />
+            </button>
           </div>
         )}
 
-        {/* Hint text */}
+        {/* Single-panel case: still show graph button */}
         {!isZoomed && !hasPrev && !hasNext && (
-          <div className="text-center mt-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
-            <span className="text-[11px] text-white/30 tracking-wide">
-              {isTouchDevice
-                ? "pinch to zoom · double-tap to enlarge"
-                : "scroll to zoom · double-click to enlarge · esc to close"}
-            </span>
+          <div className="relative" style={{ pointerEvents: "auto" }}>
+            <div className="text-center mx-auto w-fit">
+              <span className="text-[11px] text-white/30 tracking-wide">
+                {isTouchDevice
+                  ? "pinch to zoom · double-tap to enlarge"
+                  : "scroll to zoom · double-click to enlarge · esc to close"}
+              </span>
+            </div>
+            <button
+              onClick={() => setGraphOpen(true)}
+              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              style={{ right: 16 }}
+              title="Similarity graph"
+            >
+              <GitGraph size={15} strokeWidth={1.5} />
+            </button>
           </div>
         )}
 
+        {/* Hint text (when nav present) */}
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="text-center mt-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
             <span className="text-[11px] text-white/30 tracking-wide">
@@ -390,6 +418,16 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           </div>
         )}
       </div>
+
+      {/* ── Similarity Graph overlay ── */}
+      {graphOpen && (
+        <SimilarityGraph
+          panel={panel}
+          allPanels={panels}
+          activeSortMode={sortMode}
+          onClose={() => setGraphOpen(false)}
+        />
+      )}
     </div>
   );
 }

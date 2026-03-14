@@ -99,7 +99,7 @@ function labDistance(a: number[], b: number[]): number {
  * hamming distance between two hex-encoded hash strings.
  * counts the number of differing bits across all hex digits.
  */
-function hammingDistanceHex(a: string, b: string): number {
+export function hammingDistanceHex(a: string, b: string): number {
   const len = Math.max(a.length, b.length);
   let dist = 0;
   for (let i = 0; i < len; i++) {
@@ -119,7 +119,7 @@ function hammingDistanceHex(a: string, b: string): number {
  * since vectors are pre-normalized, cosine similarity = dot product,
  * and distance = 1 - dot product. range: [0, 2].
  */
-function cosineDistance(a: number[], b: number[]): number {
+export function cosineDistance(a: number[], b: number[]): number {
   let dot = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];

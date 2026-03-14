@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useId, useMemo, useEffect } from "react";
 import type { Panel } from "../types";
+import type { SortMode } from "../sorting";
 import PanelViewer from "./PanelViewer";
 import { Expand } from "lucide-react";
 
@@ -31,9 +32,10 @@ interface Props {
   panels: Panel[];
   panelIndex: number;
   isFirstLoad?: boolean;
+  sortMode?: SortMode;
 }
 
-export default function PanelCard({ panel, panels, panelIndex }: Props) {
+export default function PanelCard({ panel, panels, panelIndex, sortMode }: Props) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(panelIndex);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
@@ -303,6 +305,7 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
           currentIndex={viewerIndex}
           onClose={() => setViewerOpen(false)}
           onNavigate={(idx) => setViewerIndex(idx)}
+          sortMode={sortMode}
         />
       )}
     </>

@@ -55,6 +55,10 @@ The gallery supports several sort modes exploring different notions of visual or
 
 All embedding sorts are lazy-loaded on first use. They produce greedy nearest-neighbor paths rather than global clusterings — adjacent panels will feel related, but similar panels elsewhere in the collection may not be nearby.
 
+## Similarity graph
+
+From the panel viewer, the graph button opens a force-directed similarity graph centered on the current panel. It computes the nearest neighbors using any of the available distance metrics (SigLIP, DINOv2, VGG-16 Gram, color palette, or pHash), then positions them with a spring simulation where edge length reflects distance. Edge thickness and opacity encode neighbor rank. Double-clicking a neighbor recenters the graph on that panel, allowing freeform exploration across the collection.
+
 ## Development
 ```bash
 bun install
