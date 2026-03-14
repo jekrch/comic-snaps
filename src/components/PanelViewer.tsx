@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut } from "lucide-react";
+import { Link as Search, X, ZoomIn, ZoomOut } from "lucide-react";
 import type { Panel } from "../types";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
@@ -169,18 +169,27 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </p>
             <p className="text-xs text-white/60 mt-0.5 leading-snug">
               {panel.artist}
-              <p className="text-[10px] text-white/30 mt-0.5 leading-snug">
-                {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
+              
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
+        <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
+          <div className="flex items-center gap-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const q = encodeURIComponent(
+                `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
+              );
+              window.open(`https://www.google.com/search?q=${q}`, "_blank", "noopener");
+            }}
+            className="viewer-btn"
+            title="Search on Google"
+          >
+            <Search size={16} strokeWidth={1.5} />
+          </button>
+
           {!isTouchDevice && isZoomed && (
             <button
               onClick={(e) => {
@@ -237,6 +246,15 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             <X size={16} strokeWidth={1.5} />
           </button>
         </div>
+        <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap mt-2">
+          {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
+        </div>
+        
       </div>
 
       {/* ── Slide track: three-slot carousel ── */}
@@ -260,7 +278,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               alt={`${prevPanel.title} #${prevPanel.issue}`}
               className="block w-auto h-auto object-contain rounded-sm"
               style={slideImgStyle}
-              draggable={false}          
+              draggable={false}
             />
           </div>
         )}
@@ -295,7 +313,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {showNext && nextPanel && (
           <div
             className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
-            style={{ transform: `translateX(${viewportWidth}px)` , opacity: adjacentOpacity }}
+            style={{ transform: `translateX(${viewportWidth}px)`, opacity: adjacentOpacity }}
           >
             <img
               src={`${import.meta.env.BASE_URL}${nextPanel.image}`}
