@@ -25,7 +25,7 @@ import { X, ChevronDown } from "lucide-react";
 
 /* ── Configuration ── */
 
-const NEIGHBOR_COUNTS = [6, 10, 16, 24] as const;
+const NEIGHBOR_COUNTS = [6, 10, 16] as const;
 const DEFAULT_COUNT = 6;
 
 type MetricKey =
@@ -442,6 +442,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         transform: "translateX(-50%)",
         zIndex: 10,
         pointerEvents: "none",
+        width: "max-content",
         display: "flex",
         flexDirection: tooltipBelow ? "column" : "column-reverse",
         alignItems: "center",
@@ -468,7 +469,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
           border: "1px solid rgba(255,255,255,0.1)",
           padding: "5px 8px",
           whiteSpace: "normal",
-          maxWidth: 200,
+          maxWidth: 150,
           minWidth: 90,
         }}
       >

@@ -91,6 +91,12 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     setTimeout(onClose, 250);
   }, [onClose]);
 
+  // ── Search URL (opens in same browser) ──
+
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
+    `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
+  )}`;
+
   // ── Keyboard navigation ──
 
   useEffect(() => {
@@ -181,20 +187,6 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
           <div className="flex items-center gap-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const q = encodeURIComponent(
-                `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
-              );
-              window.open(`https://www.google.com/search?q=${q}`, "_blank", "noopener");
-            }}
-            className="viewer-btn"
-            title="Search on Google"
-          >
-            <Search size={16} strokeWidth={1.5} />
-          </button>
-
           {!isTouchDevice && isZoomed && (
             <button
               onClick={(e) => {
@@ -356,11 +348,24 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           </div>
         )}
 
-        {/* Navigation strip */}
+        {/* Navigation strip with flanking buttons */}
         {!isZoomed && (hasPrev || hasNext) && (
-          <div className="relative" style={{ pointerEvents: "auto" }}>
-            <div className="mx-auto flex items-center justify-center gap-6">
-              {/* Previous */}
+          <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
+            {/* Search button — left of nav, max 10em from prev NavButton */}
+            <a
+              href={searchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              style={{ left: "max(16px, calc(50% - 10em - 68px))" }}
+              title="Search on Google"
+            >
+              <Search size={15} strokeWidth={1.5} />
+            </a>
+
+            {/* Center nav controls */}
+            <div className="flex items-center justify-center gap-6">
               <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
 
               <span
@@ -370,15 +375,14 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                 {currentIndex + 1} / {panels.length}
               </span>
 
-              {/* Next */}
               <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
             </div>
 
-            {/* Similarity graph button — absolutely positioned to the right */}
+            {/* Similarity graph button — right of nav, max 10em from next NavButton */}
             <button
               onClick={() => setGraphOpen(true)}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2"
-              style={{ right: 16 }}
+              className="viewer-btn absolute top-1/2 -translate-y-1/2 cursor-pointer"
+              style={{ right: "max(16px, calc(50% - 10em - 68px))" }}
               title="Similarity graph"
             >
               <GitGraph size={15} strokeWidth={1.5} />
@@ -386,9 +390,21 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           </div>
         )}
 
-        {/* Single-panel case: still show graph button */}
+        {/* Single-panel case: still show both flanking buttons */}
         {!isZoomed && !hasPrev && !hasNext && (
-          <div className="relative" style={{ pointerEvents: "auto" }}>
+          <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
+            <a
+              href={searchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              style={{ left: 16 }}
+              title="Search on Google"
+            >
+              <Search size={15} strokeWidth={1.5} />
+            </a>
+
             <div className="text-center mx-auto w-fit">
               <span className="text-[11px] text-white/30 tracking-wide">
                 {isTouchDevice
@@ -396,6 +412,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                   : "scroll to zoom · double-click to enlarge · esc to close"}
               </span>
             </div>
+
             <button
               onClick={() => setGraphOpen(true)}
               className="viewer-btn absolute top-1/2 -translate-y-1/2"
