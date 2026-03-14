@@ -286,6 +286,12 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const longPressTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const longPressActive = useRef(false);
 
+  // Mount guard: ignore touch events that arrive shortly after mount.
+  // When the anchor changes, a new node can land under a still-touching finger
+  // and immediately trigger a long-press or tooltip on a component that just appeared.
+  const mountTime = useRef(Date.now());
+  const MOUNT_GUARD_MS = 500;
+
   // Tap detection refs (for double-tap recenter)
   const lastTapTime = useRef<{ time: number; x: number; y: number } | null>(null);
   const touchStartPos = useRef<{ x: number; y: number } | null>(null);
@@ -324,6 +330,9 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       const t = e.touches[0];
       if (!t) return;
       touchStartPos.current = { x: t.clientX, y: t.clientY };
+
+      // Skip long-press if this node just mounted (ghost touch from graph reload)
+      if (Date.now() - mountTime.current < MOUNT_GUARD_MS) return;
 
       // Start long-press timer — show tooltip after delay
       longPressActive.current = false;
@@ -663,6 +672,25 @@ function DistanceEdge({
 
 const edgeTypes = { distance: DistanceEdge };
 
+/* ── Helper: fit view only when anchor changes ── */
+
+function FitOnAnchorChange({ anchorId }: { anchorId: string }) {
+  const { fitView } = useReactFlow();
+  const prevAnchorId = useRef(anchorId);
+  const initialFit = useRef(false);
+
+  useEffect(() => {
+    // Fit on first mount or when anchor changes
+    if (!initialFit.current || anchorId !== prevAnchorId.current) {
+      initialFit.current = true;
+      prevAnchorId.current = anchorId;
+      setTimeout(() => fitView({ padding: 0.25, duration: 400 }), 50);
+    }
+  }, [anchorId, fitView]);
+
+  return null;
+}
+
 /* ── Main component ── */
 
 interface SimilarityGraphProps {
@@ -885,19 +913,6 @@ export default function SimilarityGraph({
     setEdges,
   ]);
 
-  // ── Auto-fit on graph change ──
-  const FitOnChange = () => {
-    const { fitView } = useReactFlow();
-    const prevNodeCount = useRef(0);
-    useEffect(() => {
-      if (nodes.length > 0 && nodes.length !== prevNodeCount.current) {
-        prevNodeCount.current = nodes.length;
-        setTimeout(() => fitView({ padding: 0.25, duration: 400 }), 50);
-      }
-    }, [nodes, fitView]);
-    return null;
-  };
-
   const activeMetric = METRICS.find((m) => m.key === metric)!;
 
   return (
@@ -1073,7 +1088,7 @@ export default function SimilarityGraph({
                 gap: 2,
               }}
             />
-            <FitOnChange />
+            <FitOnAnchorChange anchorId={anchorPanel.id} />
           </ReactFlow>
         )}
       </div>
