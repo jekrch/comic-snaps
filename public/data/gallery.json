@@ -15,7 +15,30 @@
         "spot blacks"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-14T20:51:25.148Z"
+      "addedAt": "2026-03-14T20:51:25.148Z",
+      "width": 1280,
+      "height": 472,
+      "dominantColors": [
+        [
+          17.2,
+          5.7,
+          16.5
+        ],
+        [
+          78.0,
+          5.2,
+          16.9
+        ],
+        [
+          54.1,
+          4.5,
+          12.8
+        ]
+      ],
+      "colorfulness": 6.2,
+      "phash": "a5e09ed0c31f858f",
+      "ahash": "e7c3c3c343438383",
+      "dhash": "a98f968e8a96576b"
     },
     {
       "id": "heavy-metal-5-1773108178",
