@@ -13,7 +13,30 @@
         "spot blacks"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-15T03:14:40.695Z"
+      "addedAt": "2026-03-15T03:14:40.695Z",
+      "width": 970,
+      "height": 1280,
+      "dominantColors": [
+        [
+          86.8,
+          3.4,
+          8.7
+        ],
+        [
+          7.6,
+          2.2,
+          3.2
+        ],
+        [
+          52.9,
+          2.7,
+          6.5
+        ]
+      ],
+      "colorfulness": 3.3,
+      "phash": "ca6728ae928def90",
+      "ahash": "f0c0f8fcfcb9185c",
+      "dhash": "41111149c961b1b1"
     },
     {
       "id": "bleeding-hearts-2-1773522336",
