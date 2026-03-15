@@ -164,6 +164,7 @@ export default function App() {
       {showInfo && (
         <InfoModal
           initialTab={showInfo}
+          panels={panels} 
           onTabChange={handleTabChange}
           onClose={handleCloseInfo}
         />

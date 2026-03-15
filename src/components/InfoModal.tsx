@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { X, Github, ChevronDown, ExternalLink } from "lucide-react";
+import { X, Github, ChevronDown, ExternalLink, Info, GitGraph, Bird } from "lucide-react";
+import type { Panel } from "../types";
+import type { MetricKey } from "./graph/similarityConfig";
+import type { Neighbor } from "../utils/similarityUtils";
+import { computeNeighbors } from "../utils/similarityUtils";
+import { loadEmbeddings } from "../utils/sorting";
+import type { EmbeddingMap } from "../utils/sorting";
+import MetricExplainerModal from "./MetricExplainerModal";
 
 // Tab primitives
 
@@ -87,10 +94,14 @@ function SortEntry({
   label,
   body,
   link,
+  onExplainerOpen,
+  explainerLoading,
 }: {
   label: string;
   body: React.ReactNode;
   link?: { text: string; href: string };
+  onExplainerOpen?: () => void;
+  explainerLoading?: boolean;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -167,36 +178,55 @@ function SortEntry({
         )}
       </div>
 
-      {needsExpander && (
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="bg-transparent border-none cursor-pointer p-0 mt-1
-                     inline-flex items-center gap-1 text-[10px]
-                     transition-colors duration-150"
-          style={{ color: "var(--color-accent, #e97d62)", opacity: 0.75 }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.75")}
-        >
-          <ChevronDown
-            size={12}
-            style={{
-              transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
-              transition: "transform 200ms ease",
-            }}
-          />
-          {expanded ? "less" : "more"}
-        </button>
-      )}
+      <div className="flex items-center gap-3 mt-1">
+        {needsExpander && (
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            className="bg-transparent border-none cursor-pointer p-0
+                       inline-flex items-center gap-1 text-[10px]
+                       transition-colors duration-150"
+            style={{ color: "var(--color-accent, #e97d62)", opacity: 0.75 }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.75")}
+          >
+            <ChevronDown
+              size={12}
+              style={{
+                transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 200ms ease",
+              }}
+            />
+            {expanded ? "less" : "more"}
+          </button>
+        )}
+
+        {onExplainerOpen && (
+          <button
+            onClick={onExplainerOpen}
+            disabled={explainerLoading}
+            className="bg-transparent border-none cursor-pointer p-0
+                       inline-flex items-center gap-1 text-[10px]
+                       transition-colors duration-150 disabled:opacity-40 disabled:cursor-wait"
+            style={{ color: "var(--color-accent, #e97d62)", opacity: 0.75 }}
+            onMouseEnter={(e) => { if (!explainerLoading) e.currentTarget.style.opacity = "1"; }}
+            onMouseLeave={(e) => { if (!explainerLoading) e.currentTarget.style.opacity = "0.75"; }}
+          >
+            <Info size={10} className="shrink-0" />
+            {explainerLoading ? "loading…" : "how it works"}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
-// Sort descriptions
+// Sort descriptions — with optional metric key for explainer-eligible entries
 
 const SORT_DESCRIPTIONS: {
   label: string;
   body: React.ReactNode;
   link?: { text: string; href: string };
+  metricKey?: MetricKey;
 }[] = [
     {
       label: "NEWEST / OLDEST",
@@ -244,6 +274,7 @@ const SORT_DESCRIPTIONS: {
         text: "google/siglip-base-patch16-224",
         href: "https://huggingface.co/google/siglip-base-patch16-224",
       },
+      metricKey: "embedding-siglip",
     },
     {
       label: "DINOv2",
@@ -258,6 +289,7 @@ const SORT_DESCRIPTIONS: {
         text: "facebook/dinov2-base",
         href: "https://huggingface.co/facebook/dinov2-base",
       },
+      metricKey: "embedding-dino",
     },
     {
       label: "VGG-16 Gram",
@@ -272,6 +304,7 @@ const SORT_DESCRIPTIONS: {
         text: "Gatys et al., A Neural Algorithm of Artistic Style",
         href: "https://arxiv.org/abs/1508.06576",
       },
+      metricKey: "embedding-gram",
     },
     {
       label: "PHASH",
@@ -287,20 +320,72 @@ const SORT_DESCRIPTIONS: {
     }
   ];
 
+// Pick a good spread of sample panels: random anchor, then closest + furthest neighbors
+
+function pickSamplePanels(
+  panels: Panel[],
+  metric: MetricKey,
+  embeddings: EmbeddingMap
+): { anchor: Panel; neighbors: Neighbor[] } | null {
+  if (panels.length < 3) return null;
+
+  // Pick a random anchor from the first ~half to avoid edge cases
+  const anchorIdx = Math.floor(Math.random() * Math.min(panels.length, Math.max(panels.length / 2, 10)));
+  const anchor = panels[anchorIdx];
+
+  // Compute all neighbors to find the closest and furthest
+  const allNeighbors = computeNeighbors(anchor, panels, metric, panels.length, embeddings);
+  if (allNeighbors.length < 2) return null;
+
+  const closest = allNeighbors[0];
+  const furthest = allNeighbors[allNeighbors.length - 1];
+
+  return { anchor, neighbors: [closest, furthest] };
+}
+
 // Modal
 
 interface Props {
   onClose: () => void;
   initialTab?: InfoTab;
   onTabChange?: (tab: InfoTab) => void;
+  panels?: Panel[];
 }
 
-export default function InfoModal({ onClose, initialTab = "about", onTabChange }: Props) {
+export default function InfoModal({ onClose, initialTab = "about", onTabChange, panels }: Props) {
   const [closing, setClosing] = useState(false);
   const [activeTab, setActiveTab] = useState<InfoTab>(initialTab);
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
+
+  // Explainer modal state
+  const [explainerMetric, setExplainerMetric] = useState<MetricKey | null>(null);
+  const [explainerAnchor, setExplainerAnchor] = useState<Panel | null>(null);
+  const [explainerNeighbors, setExplainerNeighbors] = useState<Neighbor[]>([]);
+  const [explainerLoading, setExplainerLoading] = useState<MetricKey | null>(null);
+
+  const handleExplainerOpen = useCallback(async (metric: MetricKey) => {
+    if (!panels || panels.length < 3) return;
+
+    setExplainerLoading(metric);
+    try {
+      const embeddings = await loadEmbeddings(metric as any);
+      const sample = pickSamplePanels(panels, metric, embeddings);
+      if (!sample) {
+        setExplainerLoading(null);
+        return;
+      }
+
+      setExplainerAnchor(sample.anchor);
+      setExplainerNeighbors(sample.neighbors);
+      setExplainerMetric(metric);
+    } catch (err) {
+      console.error("Failed to load embeddings for explainer:", err);
+    } finally {
+      setExplainerLoading(null);
+    }
+  }, [panels]);
 
   const { rotation, color } = useMemo(() => {
     const rotations = [45, 135];
@@ -339,11 +424,12 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (explainerMetric) return; // let explainer handle its own Escape
       if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handleClose]);
+  }, [handleClose, explainerMetric]);
 
   // Decorative hatch ornament — mirrors the backdrop's SVG hatch language
 
@@ -543,18 +629,13 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
             {/* About */}
             <TabPanel active={activeTab === "about"} className="flex items-center pb-10 justify-center">
               <div className="px-10 text-center">
-
-                {/* <div className="w-12 h-0.5 bg-accent mx-auto mb-5 rounded-sm opacity-70" /> */}
-                {/* <HatchDivider /> */}
-
+                <Bird size={48} strokeWidth={1.5} className="mx-auto mb-4 stroke-accent/70x z-0 stroke-[#8d422f]"  />
                 {/* Title */}
                 <h2
                   className="tracking-tight text-[18px] text-ink/80"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  {/* <span className="text-[#7A8B2A]/40 mr-3">*</span> */}
                   C0MIC SNAPS
-                  {/* <span className="text-[#7A8B2A]/40 ml-3">*</span> */}
                 </h2>
 
                 <HatchDivider />
@@ -566,9 +647,6 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                 >
                   This is just a place to collect neat panels from comic books and explore different axes of visual and semantic similarity.
                 </p>
-
-                {/* Accent rule */}
-                {/* <div className="w-12 h-0.5 bg-accent mx-auto mt-5 rounded-sm opacity-70" /> */}
 
                 <HatchDivider />
                 {/* Links */}
@@ -611,9 +689,68 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
                 </p>
 
                 <div className="flex flex-col gap-6">
-                  {SORT_DESCRIPTIONS.map(({ label, body, link }) => (
-                    <SortEntry key={label} label={label} body={body} link={link} />
+                  {SORT_DESCRIPTIONS.map(({ label, body, link, metricKey }) => (
+                    <SortEntry
+                      key={label}
+                      label={label}
+                      body={body}
+                      link={link}
+                      onExplainerOpen={
+                        metricKey && panels && panels.length >= 3
+                          ? () => handleExplainerOpen(metricKey)
+                          : undefined
+                      }
+                      explainerLoading={
+                        metricKey ? explainerLoading === metricKey : false
+                      }
+                    />
                   ))}
+                </div>
+
+                {/* Similarity graph callout */}
+                <div
+                  className="mt-7 pt-5 border-t"
+                  style={{ borderColor: "var(--color-border, rgba(74,71,69,0.25))" }}
+                >
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <h3
+                      className="text-[12px] tracking-[0.06em] text-ink m-0 shrink-0"
+                      style={{ fontFamily: "var(--font-display)" }}
+                    >
+                      SIMILARITY GRAPH
+                    </h3>
+                  </div>
+                  <p
+                    className="text-[12px] leading-relaxed m-0"
+                    style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
+                  >
+                    There's also an interactive similarity graph that works a bit differently
+                    from the gallery sort. Instead of reordering the whole collection, it takes
+                    a single panel as an anchor and maps its nearest neighbors as a
+                    force-directed graph, with edge lengths proportional to distance. Double-clicking
+                    a neighbor makes it the new anchor.
+                  </p>
+                  <p
+                    className="text-[12px] leading-relaxed mt-2 mb-0"
+                    style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
+                  >
+                    Open any panel in the viewer and tap the{" "}
+                    <span
+                      className="inline-flex items-center justify-center align-middle
+                                 rounded-md mx-0.5"
+                      style={{
+                        width: 22,
+                        height: 22,
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        verticalAlign: "middle",
+                      }}
+                      aria-label="Similarity graph button"
+                    >
+                      <GitGraph size={12} strokeWidth={1.5} style={{ color: "rgba(255,255,255,0.6)" }} />
+                    </span>{" "}
+                    button in the bottom bar to open it.
+                  </p>
                 </div>
               </div>
             </TabPanel>
@@ -621,6 +758,20 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange }
           </div>
         </div>
       </div>
+
+      {/* Metric explainer modal (renders above InfoModal) */}
+      {explainerMetric && explainerAnchor && explainerNeighbors.length > 0 && (
+        <MetricExplainerModal
+          metric={explainerMetric}
+          anchorPanel={explainerAnchor}
+          neighbors={explainerNeighbors}
+          onClose={() => {
+            setExplainerMetric(null);
+            setExplainerAnchor(null);
+            setExplainerNeighbors([]);
+          }}
+        />
+      )}
     </>
   );
 }
