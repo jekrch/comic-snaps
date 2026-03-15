@@ -38,6 +38,13 @@
   }
 }
 
+button, 
+[type="button"], 
+[type="submit"], 
+[type="reset"] {
+  cursor: pointer;
+}
+
 .panel-item {
   break-inside: avoid;
 }

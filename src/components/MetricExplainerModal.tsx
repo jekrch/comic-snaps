@@ -60,7 +60,7 @@ const METRIC_INFO: Record<
 const EMBEDDING_DIM: Record<string, number> = {
   "embedding-siglip": 768,
   "embedding-dino": 768,
-  "embedding-gram": 512, // adjust if the Gram pipeline uses a different output dim
+  "embedding-gram": 512,
 };
 
 /* Helpers */
@@ -138,8 +138,6 @@ function AngleDiagram({
   closeDist: number;
   farDist: number;
 }) {
-  // Map cosine distance [0, 2] → angle [0°, 180°]
-  // cos(θ) = 1 - distance, so θ = acos(1 - distance)
   const closeAngle = Math.acos(Math.max(-1, Math.min(1, 1 - closeDist)));
   const farAngle = Math.acos(Math.max(-1, Math.min(1, 1 - farDist)));
 
@@ -147,10 +145,8 @@ function AngleDiagram({
   const cy = 110;
   const r = 80;
 
-  // Anchor arrow always points straight up
   const anchorAngle = -Math.PI / 2;
 
-  // Neighbors splay to the right of the anchor
   const closeRad = anchorAngle + closeAngle;
   const farRad = anchorAngle + farAngle;
 
@@ -163,7 +159,6 @@ function AngleDiagram({
     const ex = cx + r * Math.cos(angle);
     const ey = cy + r * Math.sin(angle);
 
-    // Arrowhead
     const headLen = 7;
     const headAngle = 0.4;
     const h1x = ex - headLen * Math.cos(angle - headAngle);
@@ -171,7 +166,6 @@ function AngleDiagram({
     const h2x = ex - headLen * Math.cos(angle + headAngle);
     const h2y = ey - headLen * Math.sin(angle + headAngle);
 
-    // Label position — offset outward from the arrow tip
     const labelR = r + 14;
     const lx = cx + labelR * Math.cos(angle);
     const ly = cy + labelR * Math.sin(angle);
@@ -201,7 +195,6 @@ function AngleDiagram({
     );
   };
 
-  // Arc showing the angle between anchor and a neighbor
   const arc = (
     fromRad: number,
     toRad: number,
@@ -237,19 +230,15 @@ function AngleDiagram({
         role="img"
         aria-label="Diagram showing embedding vectors as arrows from a common origin, with the angle between them representing distance"
       >
-        {/* Arcs */}
         {arc(anchorAngle, closeRad, 30, "var(--color-accent, #e97d62)")}
         {arc(anchorAngle, farRad, 45, "rgba(255,255,255,0.25)", true)}
 
-        {/* Origin dot */}
         <circle cx={cx} cy={cy} r="2.5" fill="rgba(255,255,255,0.3)" />
 
-        {/* Arrows */}
         {arrow(anchorAngle, "var(--color-ink, #e8e0d8)", "anchor", "left")}
         {arrow(closeRad, "var(--color-accent, #e97d62)", "closest", "right")}
         {arrow(farRad, "rgba(255,255,255,0.35)", "furthest", "right")}
 
-        {/* Angle label for closest */}
         <text
           x={cx + 34 * Math.cos(anchorAngle + closeAngle / 2)}
           y={cy + 34 * Math.sin(anchorAngle + closeAngle / 2)}
@@ -261,6 +250,311 @@ function AngleDiagram({
           opacity="0.8"
         >
           {(closeAngle * 180 / Math.PI).toFixed(1)}°
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+// CIELAB a*/b* plane diagram — with label collision avoidance 
+
+function CielabDiagram({
+  anchorLab,
+  closeLab,
+  farLab,
+  anchorLabel,
+  closeLabel,
+  farLabel,
+}: {
+  anchorLab: [number, number, number];
+  closeLab: [number, number, number];
+  farLab: [number, number, number];
+  anchorLabel: string;
+  closeLabel: string;
+  farLabel: string;
+}) {
+  const points = [anchorLab, closeLab, farLab];
+  const aVals = points.map((p) => p[1]);
+  const bVals = points.map((p) => p[2]);
+
+  const aMin = Math.min(...aVals);
+  const aMax = Math.max(...aVals);
+  const bMin = Math.min(...bVals);
+  const bMax = Math.max(...bVals);
+
+  const pad = Math.max((aMax - aMin) * 0.45, (bMax - bMin) * 0.45, 20);
+  const domainAMin = aMin - pad;
+  const domainAMax = aMax + pad;
+  const domainBMin = bMin - pad;
+  const domainBMax = bMax + pad;
+
+  const W = 220;
+  const H = 180;
+  const margin = { top: 18, right: 14, bottom: 26, left: 32 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+
+  const scaleA = (a: number) =>
+    margin.left + ((a - domainAMin) / (domainAMax - domainAMin)) * plotW;
+  const scaleB = (b: number) =>
+    margin.top + ((domainBMax - b) / (domainBMax - domainBMin)) * plotH;
+
+  function labToDisplayRgb(lab: [number, number, number]): string {
+    const [L, a, b] = lab;
+    let fy = (L + 16) / 116;
+    let fx = a / 500 + fy;
+    let fz = fy - b / 200;
+    const delta = 6 / 29;
+    const xn = 0.9505, yn = 1.0, zn = 1.089;
+    const invF = (t: number) =>
+      t > delta ? t * t * t : 3 * delta * delta * (t - 4 / 29);
+    const X = xn * invF(fx);
+    const Y = yn * invF(fy);
+    const Z = zn * invF(fz);
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z;
+    let g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z;
+    let bl = 0.0557 * X - 0.204 * Y + 1.057 * Z;
+    const gamma = (c: number) =>
+      c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+    const clamp = (c: number) =>
+      Math.max(0, Math.min(255, Math.round(gamma(c) * 255)));
+    return `rgb(${clamp(r)}, ${clamp(g)}, ${clamp(bl)})`;
+  }
+
+  const anchorXY = [scaleA(anchorLab[1]), scaleB(anchorLab[2])] as const;
+  const closeXY = [scaleA(closeLab[1]), scaleB(closeLab[2])] as const;
+  const farXY = [scaleA(farLab[1]), scaleB(farLab[2])] as const;
+
+  // --- Label placement with collision avoidance ---
+  const LABEL_W = 58;
+  const LABEL_H = 10;
+  const DOT_R = 8;
+
+  interface LabelPlacement {
+    x: number;
+    y: number;
+    anchor: "start" | "middle" | "end";
+  }
+
+  function getCandidates(px: number, py: number): LabelPlacement[] {
+    return [
+      { x: px + DOT_R, y: py + 3, anchor: "start" as const },
+      { x: px - DOT_R, y: py + 3, anchor: "end" as const },
+      { x: px + DOT_R, y: py - DOT_R, anchor: "start" as const },
+      { x: px - DOT_R, y: py - DOT_R, anchor: "end" as const },
+      { x: px + DOT_R, y: py + DOT_R + LABEL_H, anchor: "start" as const },
+      { x: px - DOT_R, y: py + DOT_R + LABEL_H, anchor: "end" as const },
+      { x: px, y: py - DOT_R - 2, anchor: "middle" as const },
+      { x: px, y: py + DOT_R + LABEL_H, anchor: "middle" as const },
+    ];
+  }
+
+  function labelBBox(placement: LabelPlacement) {
+    let x1: number, x2: number;
+    if (placement.anchor === "start") {
+      x1 = placement.x;
+      x2 = placement.x + LABEL_W;
+    } else if (placement.anchor === "end") {
+      x1 = placement.x - LABEL_W;
+      x2 = placement.x;
+    } else {
+      x1 = placement.x - LABEL_W / 2;
+      x2 = placement.x + LABEL_W / 2;
+    }
+    return { x1, y1: placement.y - LABEL_H, x2, y2: placement.y };
+  }
+
+  function bboxOverlap(
+    a: { x1: number; y1: number; x2: number; y2: number },
+    b: { x1: number; y1: number; x2: number; y2: number }
+  ): number {
+    const overlapX = Math.max(
+      0,
+      Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1)
+    );
+    const overlapY = Math.max(
+      0,
+      Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1)
+    );
+    return overlapX * overlapY;
+  }
+
+  function outOfBoundsPenalty(bbox: {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+  }): number {
+    let penalty = 0;
+    if (bbox.x1 < 2) penalty += (2 - bbox.x1) * 10;
+    if (bbox.x2 > W - 2) penalty += (bbox.x2 - (W - 2)) * 10;
+    if (bbox.y1 < 2) penalty += (2 - bbox.y1) * 10;
+    if (bbox.y2 > H - 2) penalty += (bbox.y2 - (H - 2)) * 10;
+    return penalty;
+  }
+
+  const placed: { x1: number; y1: number; x2: number; y2: number }[] = [];
+  const dotInfos = [
+    { xy: anchorXY, label: anchorLabel },
+    { xy: closeXY, label: closeLabel },
+    { xy: farXY, label: farLabel },
+  ];
+  const labelPlacements: LabelPlacement[] = [];
+
+  for (const dot of dotInfos) {
+    const candidates = getCandidates(dot.xy[0], dot.xy[1]);
+    let bestCandidate = candidates[0];
+    let bestCost = Infinity;
+
+    for (const candidate of candidates) {
+      const bbox = labelBBox(candidate);
+      let cost = outOfBoundsPenalty(bbox);
+      for (const existing of placed) {
+        cost += bboxOverlap(bbox, existing) * 5;
+      }
+      if (cost < bestCost) {
+        bestCost = cost;
+        bestCandidate = candidate;
+      }
+    }
+
+    placed.push(labelBBox(bestCandidate));
+    labelPlacements.push(bestCandidate);
+  }
+
+  const dotData = [
+    {
+      xy: anchorXY,
+      lab: anchorLab,
+      label: anchorLabel,
+      ring: "var(--color-ink, #e8e0d8)",
+      placement: labelPlacements[0],
+    },
+    {
+      xy: closeXY,
+      lab: closeLab,
+      label: closeLabel,
+      ring: "var(--color-accent, #e97d62)",
+      placement: labelPlacements[1],
+    },
+    {
+      xy: farXY,
+      lab: farLab,
+      label: farLabel,
+      ring: "rgba(255,255,255,0.35)",
+      placement: labelPlacements[2],
+    },
+  ];
+
+  return (
+    <div className="flex justify-center my-3">
+      <svg
+        width={W}
+        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="CIELAB a*b* plane showing anchor and neighbor colors with distance lines"
+      >
+        <rect
+          x={margin.left}
+          y={margin.top}
+          width={plotW}
+          height={plotH}
+          fill="rgba(0,0,0,0.25)"
+          rx="2"
+        />
+
+        {[-60, -30, 0, 30, 60].map((v) => {
+          if (v < domainAMin || v > domainAMax) return null;
+          const x = scaleA(v);
+          return (
+            <line
+              key={`ga${v}`}
+              x1={x} y1={margin.top} x2={x} y2={margin.top + plotH}
+              stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"
+            />
+          );
+        })}
+        {[-60, -30, 0, 30, 60].map((v) => {
+          if (v < domainBMin || v > domainBMax) return null;
+          const y = scaleB(v);
+          return (
+            <line
+              key={`gb${v}`}
+              x1={margin.left} y1={y} x2={margin.left + plotW} y2={y}
+              stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"
+            />
+          );
+        })}
+
+        <line
+          x1={anchorXY[0]} y1={anchorXY[1]}
+          x2={closeXY[0]} y2={closeXY[1]}
+          stroke="var(--color-accent, #e97d62)"
+          strokeWidth="1"
+          strokeDasharray="3,2"
+          opacity="0.6"
+        />
+
+        <line
+          x1={anchorXY[0]} y1={anchorXY[1]}
+          x2={farXY[0]} y2={farXY[1]}
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="1"
+          strokeDasharray="3,2"
+          opacity="0.5"
+        />
+
+        {dotData.map(({ xy, lab, label, ring, placement }, i) => (
+          <g key={i}>
+            <circle
+              cx={xy[0]}
+              cy={xy[1]}
+              r="6"
+              fill={labToDisplayRgb(lab as [number, number, number])}
+            />
+            <circle
+              cx={xy[0]}
+              cy={xy[1]}
+              r="6"
+              fill="none"
+              stroke={ring}
+              strokeWidth="1.5"
+            />
+            <text
+              x={placement.x}
+              y={placement.y}
+              textAnchor={placement.anchor}
+              fontSize="7"
+              fontFamily="var(--font-mono, monospace)"
+              fill={ring}
+            >
+              {label}
+            </text>
+          </g>
+        ))}
+
+        <text
+          x={margin.left + plotW / 2}
+          y={H - 4}
+          textAnchor="middle"
+          fontSize="8"
+          fontFamily="var(--font-mono, monospace)"
+          fill="rgba(255,255,255,0.25)"
+        >
+          a* (green → red)
+        </text>
+        <text
+          x={8}
+          y={margin.top + plotH / 2}
+          textAnchor="middle"
+          fontSize="8"
+          fontFamily="var(--font-mono, monospace)"
+          fill="rgba(255,255,255,0.25)"
+          transform={`rotate(-90, 8, ${margin.top + plotH / 2})`}
+        >
+          b* (blue → yellow)
         </text>
       </svg>
     </div>
@@ -290,7 +584,6 @@ function EmbeddingExplanation({
 
   return (
     <>
-      {/* Step 1: Embedding as a direction */}
       <Section number={1} title="Turn each image into a direction">
         <p className="m-0">
           A neural network looks at each panel and produces {dim} numbers.
@@ -321,7 +614,6 @@ function EmbeddingExplanation({
         </p>
       </Section>
 
-      {/* Step 2: Cosine similarity + angle diagram */}
       <Section number={2} title="Measure the angle between arrows">
         <p className="m-0">
           Two images that look similar to the model get arrows pointing nearly
@@ -353,7 +645,6 @@ function EmbeddingExplanation({
           called <Em>cosine similarity</Em>: it uses the cosine to turn an
           angle into a single similarity score.
           </p>
-     
 
         <AngleDiagram closeDist={closeDist} farDist={farDist} />
 
@@ -365,7 +656,6 @@ function EmbeddingExplanation({
         </p>
       </Section>
 
-      {/* Step 3: Distance + reading the result (merged from old 3 + 4) */}
       <Section number={3} title="From similarity to distance">
         <p className="m-0">
           A similarity score is convenient, but for sorting we want
@@ -391,6 +681,7 @@ furthest neighbor:  1 − ${fmt(farSim)}  =  ${fmt(farDist)}`}
           <DistanceBar
             closeDist={closeDist}
             farDist={farDist}
+            anchorLabel={truncate(anchorPanel.title, 18)}
             closeLabel={truncate(closest.panel.title, 18)}
             farLabel={truncate(furthest.panel.title, 18)}
           />
@@ -426,51 +717,165 @@ function ColorExplanation({
 
   return (
     <>
-      <Section number={1} title="Extract dominant colors">
+      <Section number={1} title="Why not just use RGB?">
         <p className="m-0">
-          Each panel's pixels are analyzed to find the most prominent colors,
-          expressed in <Em>CIELAB</Em>, a color space designed so that equal
-          numeric distances correspond to equal perceived differences. It has
-          three channels: <Mono>L*</Mono> (lightness), <Mono>a*</Mono>{" "}
-          (green↔red), and <Mono>b*</Mono> (blue↔yellow).
+          Computer screens mix red, green, and blue light to make colors, but
+          the human eye isn't equally sensitive to each channel. Two colors can
+          be far apart in RGB numbers yet look almost identical, or close in
+          RGB yet appear strikingly different. <Em>CIELAB</Em> is a color
+          space specifically designed so that equal numeric distances correspond
+          to equal <Em>perceived</Em> differences. If two colors are 10 units
+          apart in CIELAB, they look about as different as any other pair that's
+          10 units apart, no matter where they sit on the spectrum.
         </p>
+      </Section>
+
+      <Section number={2} title="The three CIELAB channels">
+        <p className="m-0">
+          CIELAB describes a color with three numbers:
+        </p>
+        <div
+          className="mt-2 mb-0 text-[10.5px] leading-[1.8]"
+          style={{
+            fontFamily: "var(--font-mono, monospace)",
+            color: "rgba(255,255,255,0.55)",
+          }}
+        >
+          <div>
+            <span style={{ color: "var(--color-accent, #e97d62)" }}>L*</span>{" "}
+            — lightness, from <span style={{ opacity: 0.7 }}>0</span> (pure
+            black) to <span style={{ opacity: 0.7 }}>100</span> (pure white)
+          </div>
+          <div>
+            <span style={{ color: "var(--color-accent, #e97d62)" }}>a*</span>{" "}
+            — the green‑red axis: negative values are green, positive are red
+          </div>
+          <div>
+            <span style={{ color: "var(--color-accent, #e97d62)" }}>b*</span>{" "}
+            — the blue‑yellow axis: negative values are blue, positive are yellow
+          </div>
+        </div>
+        <p className="mt-2 mb-0">
+          Together these form a 3D space. Any color lands at a specific point
+          inside it. Two panels' dominant colors become two points, and the
+          question becomes: how far apart are they?
+        </p>
+
         {anchorColor && closeColor && farColor && (
-          <CodeBlock>
-{`"${truncate(anchorPanel.title, 20)}"  →  L=${fmt(anchorColor[0], 1)}  a=${fmt(anchorColor[1], 1)}  b=${fmt(anchorColor[2], 1)}
-"${truncate(closest.panel.title, 20)}"  →  L=${fmt(closeColor[0], 1)}  a=${fmt(closeColor[1], 1)}  b=${fmt(closeColor[2], 1)}
-"${truncate(furthest.panel.title, 20)}"  →  L=${fmt(farColor[0], 1)}  a=${fmt(farColor[1], 1)}  b=${fmt(farColor[2], 1)}`}
-          </CodeBlock>
+          <>
+            <CodeBlock>
+{`"${truncate(anchorPanel.title, 20)}"  →  L*=${fmt(anchorColor[0], 1)}  a*=${fmt(anchorColor[1], 1)}  b*=${fmt(anchorColor[2], 1)}
+"${truncate(closest.panel.title, 20)}"  →  L*=${fmt(closeColor[0], 1)}  a*=${fmt(closeColor[1], 1)}  b*=${fmt(closeColor[2], 1)}
+"${truncate(furthest.panel.title, 20)}"  →  L*=${fmt(farColor[0], 1)}  a*=${fmt(farColor[1], 1)}  b*=${fmt(farColor[2], 1)}`}
+            </CodeBlock>
+
+            <CielabDiagram
+              anchorLab={anchorColor as [number, number, number]}
+              closeLab={closeColor as [number, number, number]}
+              farLab={farColor as [number, number, number]}
+              anchorLabel={truncate(anchorPanel.title, 14)}
+              closeLabel={truncate(closest.panel.title, 14)}
+              farLabel={truncate(furthest.panel.title, 14)}
+            />
+            <p
+              className="mt-1 mb-0 text-center text-[9.5px]"
+              style={{ color: "rgba(255,255,255,0.3)" }}
+            >
+              a*/b* plane (lightness L* is the third axis, not shown)
+            </p>
+          </>
         )}
       </Section>
 
-      <Section number={2} title="Measure the gap">
+      <Section number={3} title="Color vs. black-and-white">
         <p className="m-0">
-          The distance between two colors is the straight-line distance through
-          this 3D color space, the same idea as measuring distance on a map,
-          but with three axes instead of two.
+          Before sorting, panels are split into two groups: <Em>chromatic</Em>{" "}
+          (color) and <Em>achromatic</Em> (black-and-white). This matters
+          because even grayscale pixels can have faint chroma values in CIELAB —
+          a warm paper tint or a slight scanner cast is enough to give a
+          technically "gray" pixel a nonzero position on the a*/b* axes. Without
+          this split, black-and-white panels would land somewhere on the hue
+          spectrum and break up the flow of actual color panels.
+        </p>
+        <p className="mt-2 mb-0">
+          The split uses a <Em>colorfulness score</Em> derived from the spread
+          of the a* and b* channels across the image. Panels with very little
+          spread (below a threshold of about 5) are classified as achromatic.
+          This is an interesting case where "colorfulness" is more of a human,
+          perceptual judgment than a strict property of the light — a warm-toned
+          newsprint scan might technically contain color, but it reads as
+          black-and-white to the eye.
+        </p>
+        <p className="mt-2 mb-0">
+          This partition also applies to the similarity graph: a color panel
+          will only ever show other color panels as neighbors, and likewise for
+          black-and-white. Cross-group comparisons are excluded entirely.
+        </p>
+      </Section>
+
+      <Section number={4} title="Hue-angle sorting within each group">
+        <p className="m-0">
+          Within each group, panels are sorted by the <Em>hue angle</Em> of
+          their most dominant color. The hue angle is calculated
+          from the a* and b* channels using the arctangent function, which
+          returns an angle around the color wheel. Reds sit near 0°,
+          yellows around 90°, greens near 180°, and blues near 270°.
+        </p>
+        <CodeBlock>
+{`hue  =  atan2( b*, a* )
+
+       ← reds → oranges → yellows → greens → blues → purples →`}
+        </CodeBlock>
+        <p className="mt-2 mb-0">
+          Sorting by this angle produces a natural spectrum walk: reds flow
+          into oranges, then yellows, greens, and so on. Lightness is used as
+          a tiebreaker when two panels have a similar hue, so darker and lighter
+          variants of the same color stay near each other.
+        </p>
+      </Section>
+
+      <Section number={5} title="Measuring distance between neighbors">
+        <p className="m-0">
+          The similarity graph uses a different measure than the sort order: the
+          straight-line <Em>Euclidean distance</Em> through the full 3D CIELAB
+          space between two panels' dominant colors.
         </p>
         {anchorColor && closeColor && (
           <CodeBlock>
-{`distance  =  √( ΔL² + Δa² + Δb² )
+{`distance  =  √( ΔL*² + Δa*² + Δb*² )
 
-closest:   √( ${fmt((anchorColor[0] - closeColor[0]), 1)}² + ${fmt((anchorColor[1] - closeColor[1]), 1)}² + ${fmt((anchorColor[2] - closeColor[2]), 1)}² )  ≈  ${fmt(closest.distance, 2)}`}
+closest:   √( ${fmt(anchorColor[0] - closeColor[0], 1)}² + ${fmt(anchorColor[1] - closeColor[1], 1)}² + ${fmt(anchorColor[2] - closeColor[2], 1)}² )  ≈  ${fmt(closest.distance, 2)}`}
           </CodeBlock>
         )}
         <p className="mt-2 mb-0">
-          Secondary colors are also compared and blended in (75% weight on the
-          dominant color, 25% on the rest).
+          The dashed lines in the diagram above are this distance projected
+          onto the a*/b* plane. The real distance also includes the L*
+          (lightness) difference, which is why the numbers may not perfectly
+          match the 2D picture.
+        </p>
+        <p className="mt-2 mb-0">
+          The distance is computed across all palette entries, not just the
+          dominant color. Each entry is weighted by its <Em>perceptual
+          importance</Em>: a combination of chroma (how saturated the color is)
+          and lightness (peaking at mid-tones). Near-white and near-black
+          colors, the kind that come from page margins, gutters, and panel
+          borders, are heavily discounted so that the actual artwork colors
+          drive the result.
         </p>
       </Section>
 
-      <Section number={3} title="Reading the result">
+      <Section number={6} title="Reading the result">
         <p className="m-0">
           Smaller numbers mean the colors are more alike to the human eye.
-          A distance under ~10 is a very close match; above ~50 is quite different.
+          As a rough guide: a distance under ~10 is a very close match (most
+          people would call them "the same color"), 10–30 is noticeably
+          different, and above ~50 is quite far apart.
         </p>
         <div className="mt-3">
           <DistanceBar
             closeDist={closest.distance}
             farDist={furthest.distance}
+            anchorLabel={truncate(anchorPanel.title, 18)}
             closeLabel={truncate(closest.panel.title, 18)}
             farLabel={truncate(furthest.panel.title, 18)}
             maxVal={Math.max(furthest.distance * 1.2, 80)}
@@ -541,6 +946,7 @@ hash B:  1010 0010 1100 …
           <DistanceBar
             closeDist={closest.distance}
             farDist={furthest.distance}
+            anchorLabel={truncate(anchorPanel.title, 18)}
             closeLabel={truncate(closest.panel.title, 18)}
             farLabel={truncate(furthest.panel.title, 18)}
             maxVal={64}
@@ -636,6 +1042,7 @@ function Mono({ children }: { children: React.ReactNode }) {
 function DistanceBar({
   closeDist,
   farDist,
+  anchorLabel,
   closeLabel,
   farLabel,
   maxVal,
@@ -643,6 +1050,7 @@ function DistanceBar({
 }: {
   closeDist: number;
   farDist: number;
+  anchorLabel: string;
   closeLabel: string;
   farLabel: string;
   maxVal?: number;
@@ -652,73 +1060,171 @@ function DistanceBar({
   const closePct = Math.min((closeDist / max) * 100, 100);
   const farPct = Math.min((farDist / max) * 100, 100);
 
+  const fmtDist = (d: number) =>
+    d < 1 ? fmt(d) : d.toFixed(1);
+
+  const W = 320;
+  const CHAR_W = 5.4; // approximate width of a character at 9px mono
+  const MIN_GAP = 8;  // minimum horizontal gap between label edges
+
+  // Layout zones
+  const scaleY = 10;           // scale labels baseline
+  const barY = scaleY + 6;     // bar top
+  const barH = 6;
+  const barBot = barY + barH;
+  const leaderStartY = barBot + 2;
+
+  // Bar positions
+  const anchorX = 0;
+  const closeX = (closePct / 100) * W;
+  const farX = (farPct / 100) * W;
+
+  // Build label entries sorted by bar position
+  const rawLabels = [
+    { key: "anchor", barPosX: anchorX, text: anchorLabel, dist: null as number | null, color: "var(--color-ink, #e8e0d8)", opacity: 0.5, lineOpacity: 0.35 },
+    { key: "close", barPosX: closeX, text: closeLabel, dist: closeDist, color: "var(--color-accent, #e97d62)", opacity: 1, lineOpacity: 0.5 },
+    { key: "far", barPosX: farX, text: farLabel, dist: farDist, color: "rgba(255,255,255,0.3)", opacity: 1, lineOpacity: 0.3 },
+  ].sort((a, b) => a.barPosX - b.barPosX);
+
+  // Compute text widths and spread labels horizontally so they don't overlap.
+  // Each label is left-aligned at a computed textX. We start by placing each
+  // label at its bar position, then push rightward if it would collide with
+  // the previous label.
+  const labelWidths = rawLabels.map((l) => {
+    const distText = l.dist !== null ? ` (${fmtDist(l.dist)}${unit})` : "";
+    return (l.text.length + distText.length) * CHAR_W;
+  });
+
+  const textXs: number[] = [];
+  for (let i = 0; i < rawLabels.length; i++) {
+    const idealX = rawLabels[i].barPosX;
+    if (i === 0) {
+      textXs.push(Math.max(0, idealX));
+    } else {
+      const prevRight = textXs[i - 1] + labelWidths[i - 1];
+      textXs.push(Math.max(idealX, prevRight + MIN_GAP));
+    }
+  }
+
+  // Each label row is spaced 16px apart vertically
+  const rowH = 16;
+  const row0Y = leaderStartY + 14;
+  const totalH = row0Y + (rawLabels.length - 1) * rowH + 8;
+
+  // Unique gradient ID to avoid collisions when multiple bars render
+  const gradId = `distBarGrad-${anchorLabel.slice(0, 6).replace(/\W/g, "")}`;
+
   return (
     <div>
-      {/* Scale bar */}
-      <div
-        className="relative rounded-full overflow-hidden"
-        style={{
-          height: 6,
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.06)",
-        }}
+      <svg
+        width="100%"
+        viewBox={`0 0 ${W} ${totalH}`}
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ display: "block", overflow: "visible" }}
       >
-        {/* Gradient fill from 0 to furthest */}
-        <div
-          className="absolute inset-y-0 left-0 rounded-full"
-          style={{
-            width: `${farPct}%`,
-            background:
-              "linear-gradient(to right, rgba(232,164,74,0.5), rgba(232,164,74,0.08))",
-          }}
+        <defs>
+          <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(232,164,74,0.5)" />
+            <stop offset="100%" stopColor="rgba(232,164,74,0.08)" />
+          </linearGradient>
+        </defs>
+
+        {/* Scale labels — above the bar */}
+        <text
+          x="0"
+          y={scaleY}
+          fontSize="8"
+          fontFamily="var(--font-mono, monospace)"
+          fill="rgba(255,255,255,0.15)"
+        >
+          0 (identical)
+        </text>
+        <text
+          x={W}
+          y={scaleY}
+          textAnchor="end"
+          fontSize="8"
+          fontFamily="var(--font-mono, monospace)"
+          fill="rgba(255,255,255,0.15)"
+        >
+          {max < 2 ? "1" : max.toFixed(0)} (very different)
+        </text>
+
+        {/* Bar background */}
+        <rect
+          x="0" y={barY} width={W} height={barH} rx="3"
+          fill="rgba(255,255,255,0.04)"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1"
         />
+
+        {/* Filled portion up to furthest */}
+        <rect
+          x="0" y={barY} width={farX} height={barH} rx="3"
+          fill={`url(#${gradId})`}
+        />
+
         {/* Closest marker */}
-        <div
-          className="absolute top-0 bottom-0"
-          style={{
-            left: `${closePct}%`,
-            width: 2,
-            background: "var(--color-accent, #e97d62)",
-            borderRadius: 1,
-          }}
+        <rect
+          x={closeX - 1} y={barY} width="2" height={barH} rx="1"
+          fill="var(--color-accent, #e97d62)"
         />
+
         {/* Furthest marker */}
-        <div
-          className="absolute top-0 bottom-0"
-          style={{
-            left: `${farPct}%`,
-            width: 2,
-            background: "rgba(255,255,255,0.25)",
-            borderRadius: 1,
-          }}
+        <rect
+          x={farX - 1} y={barY} width="2" height={barH} rx="1"
+          fill="rgba(255,255,255,0.25)"
         />
-      </div>
 
-      {/* Labels */}
-      <div className="flex justify-between mt-1.5">
-        <div className="text-[9px]" style={{ color: "var(--color-accent, #e97d62)" }}>
-          ← {closeLabel}{" "}
-          <span style={{ opacity: 0.7 }}>
-            ({closeDist < 1 ? fmt(closeDist) : closeDist.toFixed(1)}{unit})
-          </span>
-        </div>
-        <div className="text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>
-          {farLabel}{" "}
-          <span style={{ opacity: 0.7 }}>
-            ({farDist < 1 ? fmt(farDist) : farDist.toFixed(1)}{unit})
-          </span>{" "}
-          →
-        </div>
-      </div>
+        {/* Leader lines + labels */}
+        {rawLabels.map((label, i) => {
+          const textX = textXs[i];
+          const textBaselineY = row0Y + i * rowH;
 
-      {/* Endpoints */}
-      <div
-        className="flex justify-between mt-0.5 text-[8px]"
-        style={{ color: "rgba(255,255,255,0.15)" }}
-      >
-        <span>0 (identical)</span>
-        <span>{max < 2 ? "1" : max.toFixed(0)} (very different)</span>
-      </div>
+          // Leader line: diagonal from bar position down to just before text
+          const lineTopX = label.barPosX;
+          const lineTopY = leaderStartY;
+          const lineBotX = textX - 2;
+          const lineBotY = textBaselineY - 9;
+
+          return (
+            <g key={label.key}>
+              {/* Diagonal leader line */}
+              <line
+                x1={lineTopX} y1={lineTopY}
+                x2={lineBotX} y2={lineBotY}
+                stroke={label.color}
+                strokeWidth="0.75"
+                opacity={label.lineOpacity}
+              />
+              {/* Small horizontal tick into the text */}
+              <line
+                x1={lineBotX} y1={lineBotY}
+                x2={lineBotX + 4} y2={lineBotY}
+                stroke={label.color}
+                strokeWidth="0.75"
+                opacity={label.lineOpacity}
+              />
+              {/* Label text */}
+              <text
+                x={textX}
+                y={textBaselineY}
+                fontSize="9"
+                fontFamily="var(--font-mono, monospace)"
+                fill={label.color}
+                opacity={label.opacity}
+              >
+                {label.text}
+                {label.dist !== null && (
+                  <tspan opacity="0.7">
+                    {" "}({fmtDist(label.dist)}{unit})
+                  </tspan>
+                )}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }
@@ -738,7 +1244,6 @@ export default function MetricExplainerModal({
   const [closing, setClosing] = useState(false);
   const info = METRIC_INFO[metric];
 
-  // Sort neighbors to find closest and furthest
   const sorted = useMemo(
     () => [...neighbors].sort((a, b) => a.distance - b.distance),
     [neighbors]
@@ -746,7 +1251,6 @@ export default function MetricExplainerModal({
   const closest = sorted[0] ?? null;
   const furthest = sorted[sorted.length - 1] ?? null;
 
-  // Lock body scroll
   useEffect(() => {
     const scrollY = window.scrollY;
     document.body.style.position = "fixed";
@@ -812,7 +1316,6 @@ export default function MetricExplainerModal({
       aria-modal="true"
       aria-label={`How ${info.name} similarity works`}
     >
-      {/* Scrim */}
       <div
         className="absolute inset-0"
         style={{
@@ -824,7 +1327,6 @@ export default function MetricExplainerModal({
         aria-hidden="true"
       />
 
-      {/* Card */}
       <div
         className="relative w-full max-w-[500px] mx-5 rounded-md
                    border border-[var(--color-border,rgba(74,71,69,0.25))]
@@ -842,7 +1344,6 @@ export default function MetricExplainerModal({
         onTouchStart={(e) => e.stopPropagation()}
         onTouchMove={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div
           className="shrink-0 px-5 pt-5 pb-3 border-b"
           style={{ borderColor: "var(--color-border, rgba(74,71,69,0.25))" }}
@@ -884,11 +1385,9 @@ export default function MetricExplainerModal({
           </div>
         </div>
 
-        {/* Scrollable body */}
         <div
           className="flex-1 overflow-y-auto px-5 pt-4 pb-6 info-modal-scroll"
         >
-          {/* One-liner intro */}
           <p
             className="text-[12px] leading-relaxed m-0 mb-1"
             style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
@@ -898,7 +1397,6 @@ export default function MetricExplainerModal({
 
           <HatchDivider />
 
-          {/* Metric-specific explanation */}
           {isEmbedding && (
             <EmbeddingExplanation
               metric={metric}

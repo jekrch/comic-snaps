@@ -85,7 +85,7 @@ export async function loadEmbeddings(
 // colorfulness threshold for partitioning chromatic vs achromatic panels.
 // based on RMS of std(a*) and std(b*) in CIELAB space. B&W scans with
 // paper tint typically score 2–8; muted color panels 10–15; vivid color 20+.
-const COLORFULNESS_THRESHOLD = 5;
+const COLORFULNESS_THRESHOLD = 6;
 
 /** euclidean distance between two CIELAB color vectors. */
 function labDistance(a: number[], b: number[]): number {
@@ -128,12 +128,43 @@ export function cosineDistance(a: number[], b: number[]): number {
 }
 
 /**
+ * Compute a perceptual importance weight for a CIELAB color.
+ *
+ * Near-white (high L*, low chroma) and near-black (low L*, low chroma)
+ * colors — typical of page margins, gutters, and panel borders — receive
+ * low weight so they don't dominate palette distance. Saturated, mid-tone
+ * colors that carry the most visual identity get the highest weight.
+ *
+ * The weight is the product of two factors:
+ *   - chroma factor: sqrt(a² + b²) / 50, clamped to [0.05, 1].
+ *     low-chroma neutrals (greys, whites, blacks) are heavily discounted.
+ *   - lightness factor: a smooth curve that peaks at L*=50 and tapers
+ *     toward 0 and 100. uses sin(L* / 100 * π) so L*=0 and L*=100 map
+ *     to 0, L*=50 maps to 1. a floor of 0.1 ensures extreme values
+ *     still contribute a small amount.
+ */
+function colorPerceptualWeight(L: number, a: number, b: number): number {
+  const chroma = Math.sqrt(a * a + b * b);
+  const chromaFactor = Math.min(1, Math.max(0.05, chroma / 50));
+
+  // sin curve: 0 at L=0 and L=100, peaks at L=50
+  const lightnessFactor = Math.max(0.1, Math.sin((L / 100) * Math.PI));
+
+  return chromaFactor * lightnessFactor;
+}
+
+/**
  * color distance between two panels' palettes.
  *
- * compares the most dominant color (index 0) with heavy weight, and
- * secondary colors with lighter weight. the chromatic/achromatic
- * separation is handled by the colorfulness partition, so no chroma
- * penalty is needed here.
+ * each palette entry is weighted by its perceptual importance: chroma
+ * and lightness determine how much a color matters. near-white and
+ * near-black entries (margins, gutters) are heavily discounted so that
+ * the "real" artwork colors drive similarity.
+ *
+ * the distance is computed as a weighted average of per-entry CIELAB
+ * distances, where each pair's contribution is the minimum weight of
+ * the two entries being compared. this ensures a shared low-importance
+ * color (e.g. two white margins) barely affects the total distance.
  */
 export function paletteDistance(
   a: [number, number, number][] | null,
@@ -141,19 +172,35 @@ export function paletteDistance(
 ): number {
   if (!a || !b || a.length === 0 || b.length === 0) return Infinity;
 
-  const primaryDist = labDistance(a[0], b[0]);
-
-  let secondaryDist = 0;
   const minLen = Math.min(a.length, b.length);
-  if (minLen > 1) {
-    for (let i = 1; i < minLen; i++) {
-      secondaryDist += labDistance(a[i], b[i]);
-    }
-    secondaryDist /= minLen - 1;
+
+  let weightedSum = 0;
+  let totalWeight = 0;
+
+  for (let i = 0; i < minLen; i++) {
+    const wA = colorPerceptualWeight(a[i][0], a[i][1], a[i][2]);
+    const wB = colorPerceptualWeight(b[i][0], b[i][1], b[i][2]);
+    // use the minimum: if either side is an unimportant neutral,
+    // this pair contributes little regardless of the other side
+    const pairWeight = Math.min(wA, wB);
+
+    const dist = labDistance(a[i], b[i]);
+    weightedSum += dist * pairWeight;
+    totalWeight += pairWeight;
   }
 
-  // 75% primary, 25% secondary
-  return primaryDist * 0.75 + secondaryDist * 0.25;
+  // fallback: if all weights are near-zero (both palettes are pure
+  // black/white), fall back to unweighted average so we still get
+  // a finite, comparable distance
+  if (totalWeight < 0.001) {
+    let sum = 0;
+    for (let i = 0; i < minLen; i++) {
+      sum += labDistance(a[i], b[i]);
+    }
+    return sum / minLen;
+  }
+
+  return weightedSum / totalWeight;
 }
 
 /**

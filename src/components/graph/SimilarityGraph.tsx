@@ -297,12 +297,25 @@ export default function SimilarityGraph({
       className="fixed inset-0 z-[60] flex flex-col"
       style={{ background: "rgba(0,0,0,0.95)" }}
     >
+      {/* Close — pinned top-right, always in place */}
+      <button
+        onClick={onClose}
+        className="viewer-btn absolute z-20"
+        style={{
+          top: "max(0.75rem, env(safe-area-inset-top))",
+          right: "1rem",
+        }}
+        title="Close similarity graph"
+      >
+        <X size={16} strokeWidth={1.5} />
+      </button>
+
       {/* Toolbar */}
       <div
-        className="relative z-10 flex items-center gap-3 px-4 py-3 shrink-0"
+        className="relative z-10 flex items-center gap-3 px-4 pr-12 py-3 shrink-0"
         style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)",
+          background: "rgba(0,0,0,0.85)",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
           paddingTop: "max(0.75rem, env(safe-area-inset-top))",
         }}
       >
@@ -388,22 +401,12 @@ export default function SimilarityGraph({
           ))}
         </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Hint */}
-        <span className="text-[10px] text-white/20 tracking-wide hidden sm:inline">
-          double-click node to recenter
-        </span>
-
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="viewer-btn ml-2"
-          title="Close similarity graph"
-        >
-          <X size={16} strokeWidth={1.5} />
-        </button>
+        {/* Blurb — reads with the count pills: [5] [10] [20] nearest panels by SigLIP */}
+        {!loading && currentNeighbors.length > 0 && (
+          <span className="text-[10px] text-white/40 tracking-wide">
+            nearest panels by {activeMetric.shortLabel}
+          </span>
+        )}
       </div>
 
       {/* Graph */}
@@ -461,18 +464,18 @@ export default function SimilarityGraph({
           </ReactFlow>
         )}
 
-        {/* "How it works" button — bottom-right of graph */}
+        {/* "How it works" — floats in graph space, below toolbar */}
         {!loading && currentNeighbors.length > 0 && (
           <button
             onClick={() => setShowExplainer(true)}
-            className="absolute z-10 flex items-center gap-1.5 px-3 py-2 rounded-md
+            className="absolute z-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md
                        bg-white/8 hover:bg-white/14 border border-white/10
                        hover:border-white/20 transition-all duration-200
-                       backdrop-blur-sm shadow-lg"
-            style={{ bottom: 16, right: 16 }}
+                       backdrop-blur-sm"
+            style={{ top: 2, left: 16 }}
           >
-            <Info size={14} strokeWidth={1.5} className="text-accent/80" />
-            <span className="font-display text-[11px] tracking-wider text-white/70 uppercase">
+            <Info size={13} strokeWidth={1.5} className="text-accent/80" />
+            <span className="font-display text-[10px] tracking-wider text-white/70 uppercase">
               How {activeMetric.shortLabel} works
             </span>
           </button>

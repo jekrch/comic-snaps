@@ -41,6 +41,11 @@ export function computeNeighbors(
       if (!aEmb || !bEmb) continue;
       dist = cosineDistance(aEmb, bEmb);
     } else if (metric === "color") {
+      const COLORFULNESS_THRESHOLD = 6;
+      const anchorIsChromatic = (anchor.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+      const candidateIsChromatic = (p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+      if (anchorIsChromatic !== candidateIsChromatic) continue;
+
       dist = paletteDistance(
         anchor.dominantColors ?? null,
         p.dominantColors ?? null
