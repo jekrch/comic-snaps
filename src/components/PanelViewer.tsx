@@ -357,7 +357,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
               style={{ left: "max(16px, calc(50% - 10em - 68px))" }}
               title="Search on Google"
             >
@@ -381,7 +381,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             {/* Similarity graph button — right of nav, max 10em from next NavButton */}
             <button
               onClick={() => setGraphOpen(true)}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2 cursor-pointer"
+              className="viewer-btn absolute top-1/2 -translate-y-1/2 cursor-pointer mt-1"
               style={{ right: "max(16px, calc(50% - 10em - 68px))" }}
               title="Similarity graph"
             >
@@ -398,7 +398,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
               style={{ left: 16 }}
               title="Search on Google"
             >
@@ -415,7 +415,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
             <button
               onClick={() => setGraphOpen(true)}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2"
+              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
               style={{ right: 16 }}
               title="Similarity graph"
             >

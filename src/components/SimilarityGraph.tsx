@@ -584,10 +584,44 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
 
 const nodeTypes = { panelNode: PanelNode };
 
+/* ── Geometry helpers: edge-of-box routing ── */
+
+/** Compute the rendered pixel dimensions for a panel node (mirrors PanelNode logic). */
+function getNodeDimensions(panel: Panel, isAnchor: boolean): { w: number; h: number } {
+  const size = isAnchor ? ANCHOR_SIZE : NODE_SIZE;
+  const aspect =
+    panel.width && panel.height && panel.width > 0 && panel.height > 0
+      ? panel.width / panel.height
+      : 3 / 4;
+  if (aspect >= 1) return { w: size, h: size / aspect };
+  return { w: size * aspect, h: size };
+}
+
+/**
+ * Given a rectangle (center cx,cy; half-widths hw,hh) and an external target
+ * point (px,py), return the point on the rectangle's perimeter closest to
+ * the line from the center toward (px,py).
+ */
+function nearestPointOnRect(
+  cx: number, cy: number, hw: number, hh: number,
+  px: number, py: number
+): { x: number; y: number } {
+  const dx = px - cx;
+  const dy = py - cy;
+  if (dx === 0 && dy === 0) return { x: cx + hw, y: cy };
+  // Scale factor to reach the box edge along the direction vector
+  const sx = hw / (Math.abs(dx) || 1e-9);
+  const sy = hh / (Math.abs(dy) || 1e-9);
+  const s = Math.min(sx, sy);
+  return { x: cx + dx * s, y: cy + dy * s };
+}
+
 /* ── Custom edge with distance label ── */
 
 function DistanceEdge({
   id,
+  source,
+  target,
   sourceX,
   sourceY,
   targetX,
@@ -595,6 +629,8 @@ function DistanceEdge({
   data,
 }: {
   id: string;
+  source: string;
+  target: string;
   sourceX: number;
   sourceY: number;
   targetX: number;
@@ -607,11 +643,39 @@ function DistanceEdge({
     totalNeighbors?: number;
   };
 }) {
-  const midX = (sourceX + targetX) / 2;
-  const midY = (sourceY + targetY) / 2;
+  const { getNodes } = useReactFlow<Node<PanelNodeData>>();
   const isAnchorEdge = data?.isAnchorEdge ?? false;
   const rank = data?.rank;
   const total = data?.totalNeighbors ?? 1;
+
+  // Look up both nodes to get their position + panel data for sizing
+  const allNodes = getNodes();
+  const sourceNode = allNodes.find((n) => n.id === source);
+  const targetNode = allNodes.find((n) => n.id === target);
+
+  let sx = sourceX, sy = sourceY, tx = targetX, ty = targetY;
+
+  if (sourceNode?.data?.panel && targetNode?.data?.panel) {
+    const sDim = getNodeDimensions(sourceNode.data.panel, sourceNode.data.isAnchor);
+    const tDim = getNodeDimensions(targetNode.data.panel, targetNode.data.isAnchor);
+
+    // Node positions in ReactFlow are top-left; compute centers
+    const sCx = sourceNode.position.x + sDim.w / 2;
+    const sCy = sourceNode.position.y + sDim.h / 2;
+    const tCx = targetNode.position.x + tDim.w / 2;
+    const tCy = targetNode.position.y + tDim.h / 2;
+
+    const sPerim = nearestPointOnRect(sCx, sCy, sDim.w / 2, sDim.h / 2, tCx, tCy);
+    const tPerim = nearestPointOnRect(tCx, tCy, tDim.w / 2, tDim.h / 2, sCx, sCy);
+
+    sx = sPerim.x;
+    sy = sPerim.y;
+    tx = tPerim.x;
+    ty = tPerim.y;
+  }
+
+  const midX = (sx + tx) / 2;
+  const midY = (sy + ty) / 2;
 
   // Anchor edges: thickness scales inversely with rank (closest = thickest)
   let strokeWidth = 1;
@@ -626,7 +690,7 @@ function DistanceEdge({
     <>
       <path
         id={id}
-        d={`M ${sourceX},${sourceY} L ${targetX},${targetY}`}
+        d={`M ${sx},${sy} L ${tx},${ty}`}
         stroke={
           isAnchorEdge
             ? `rgba(232,164,74,${strokeOpacity})`

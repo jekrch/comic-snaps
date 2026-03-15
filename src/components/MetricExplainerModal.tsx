@@ -33,19 +33,19 @@ const METRIC_INFO: Record<
     name: "SigLIP",
     family: "Vision-language embedding",
     oneLiner:
-      "SigLIP converts each image into a list of numbers that captures its meaning — what's depicted, the mood, the composition. Two images with similar meaning end up with similar lists.",
+      "SigLIP converts each image into a list of numbers that captures its meaning: what's depicted, the mood, the composition. Two images with similar meaning end up with similar lists.",
   },
   "embedding-dino": {
     name: "DINOv2",
     family: "Self-supervised vision embedding",
     oneLiner:
-      "DINOv2 converts each image into a list of numbers that captures its visual structure — shapes, spatial layout, and texture — without understanding what things \"are.\"",
+      "DINOv2 converts each image into a list of numbers that captures its visual structure: shapes, spatial layout, and texture, without understanding what things \"are.\"",
   },
   "embedding-gram": {
     name: "VGG-16 Gram Matrix",
     family: "Style / texture embedding",
     oneLiner:
-      "VGG-16 Gram matrices convert each image into a list of numbers that captures artistic style — line quality, hatching patterns, ink texture, and tonal rendering.",
+      "VGG-16 Gram matrices convert each image into a list of numbers that captures artistic style: line quality, hatching patterns, ink texture, and tonal rendering.",
   },
   color: {
     name: "Color Palette",
@@ -300,14 +300,14 @@ function EmbeddingExplanation({
       <Section number={1} title="Turn each image into a direction">
         <p className="m-0">
           A neural network looks at each panel and produces {dim} numbers.
-          These aren't just a list — they define an <Em>arrow</Em> pointing
-          from the origin through {dim}-dimensional space. Each arrow's
-          direction encodes what the model sees in that image
+          These aren't just a list; they define an <Em>arrow</Em> (or
+          vector) pointing from the origin through {dim}-dimensional space.
+          Each arrow's direction encodes what the model sees in that image
           {metric === "embedding-siglip"
-            ? " — subject, composition, mood, all compressed into orientation."
+            ? ": subject, composition, mood, all compressed into orientation."
             : metric === "embedding-dino"
-            ? " — shapes, spatial layout, texture, all compressed into orientation."
-            : " — line quality, hatching, ink texture, all compressed into orientation."}
+            ? ": shapes, spatial layout, texture, all compressed into orientation."
+            : ": line quality, hatching, ink texture, all compressed into orientation."}
         </p>
         <CodeBlock>
 {`"${truncate(anchorPanel.title, 20)}"  →  [0.0312, -0.1450, 0.0821, …, -0.0044]
@@ -316,19 +316,24 @@ function EmbeddingExplanation({
         ${dim} numbers each → a direction through ${dim}D space`}
         </CodeBlock>
         <p className="mt-2 mb-0">
-          Every arrow is scaled to the same length (a step called{" "}
-          <Em>normalization</Em>), so only the direction matters — not the
-          magnitude.
+          Before comparing, every arrow is scaled to the same length (a step
+          called <Em>normalization</Em>). This is important because the raw
+          magnitude of the vector is an artifact of how strongly the network's
+          neurons activated, not a meaningful measure of what is <Em>in</Em> the
+          image. An overexposed photo and a dim one might produce vectors of
+          different lengths that point the same way. Normalizing removes that
+          noise so only the direction, the part that encodes actual content,
+          is used for comparison.
         </p>
       </Section>
 
-      {/* Step 2: Dot product as angle measurement */}
+      {/* Step 2: Cosine similarity + angle diagram */}
       <Section number={2} title="Measure the angle between arrows">
         <p className="m-0">
           Two images that look similar to the model get arrows pointing nearly
           the same way. To measure how aligned two arrows are, we compute
-          their <Em>dot product</Em> — multiply matching numbers and add
-          everything up:
+          their <Em>dot product</Em>: multiply matching numbers and add
+          everything up.
         </p>
         <CodeBlock>
 {`similarity  =  a[1]×b[1]  +  a[2]×b[2]  +  …  +  a[${dim}]×b[${dim}]
@@ -341,21 +346,37 @@ function EmbeddingExplanation({
             ≈  ${fmt(closeSim)}      ← similarity score`}
         </CodeBlock>
         <p className="mt-2 mb-0">
-          Because the arrows are normalized to equal length, this dot product
-          equals the cosine of the angle between them. When two arrows point
-          in nearly the same direction the score is close
-          to <Mono>1.0</Mono>; when they point in unrelated directions, it
-          falls toward <Mono>0</Mono>.
+          Because the arrows are normalized, this dot product equals
+          the <Em>cosine</Em> of the angle between them. Cosine is a
+          function from trigonometry that takes an angle and returns a number
+          between −1 and 1. When two arrows point in the same direction
+          the angle is 0° and the cosine is <Mono>1.0</Mono>. 
+          </p>
+          <p className="mt-2">As the arrows
+          spread apart the angle grows and the cosine falls
+          toward <Mono>0</Mono> (perpendicular)
+          or <Mono>−1</Mono> (opposite). This is why the technique is
+          called <Em>cosine similarity</Em>: it uses the cosine to turn an
+          angle into a single similarity score.
+          </p>
+     
+
+        <AngleDiagram closeDist={closeDist} farDist={farDist} />
+
+        <p
+          className="mt-1 mb-0 text-center text-[9.5px]"
+          style={{ color: "rgba(255,255,255,0.3)" }}
+        >
+          2D projection; the real arrows live in {dim} dimensions
         </p>
       </Section>
 
-      {/* Step 3: Flip to distance */}
-      <Section number={3} title="Flip it into a distance">
+      {/* Step 3: Distance + reading the result (merged from old 3 + 4) */}
+      <Section number={3} title="From similarity to distance">
         <p className="m-0">
-          We want a <Em>distance</Em> where smaller = more similar, so we
-          subtract the similarity from 1. This gives us the angular
-          separation between the two arrows — small when they point nearly
-          the same way, large when they diverge:
+          A similarity score is convenient, but for sorting we want
+          a <Em>distance</Em> where smaller = more similar. The conversion is
+          simple: subtract the similarity from 1.
         </p>
         <CodeBlock>
 {`distance  =  1  −  similarity
@@ -364,21 +385,9 @@ closest neighbor:   1 − ${fmt(closeSim)}  =  ${fmt(closeDist)}
 furthest neighbor:  1 − ${fmt(farSim)}  =  ${fmt(farDist)}`}
         </CodeBlock>
 
-        <AngleDiagram closeDist={closeDist} farDist={farDist} />
-
-        <p
-          className="mt-1 mb-0 text-center text-[9.5px]"
-          style={{ color: "rgba(255,255,255,0.3)" }}
-        >
-          2D projection — the real arrows live in {dim} dimensions
-        </p>
-      </Section>
-
-      {/* Step 4: Reading the result */}
-      <Section number={4} title="Reading the result">
-        <p className="m-0">
-          A distance of <Mono>0</Mono> would mean two arrows point in exactly
-          the same direction — the images are identical
+        <p className="mt-2 mb-0">
+          A distance of <Mono>0</Mono> means two arrows point in exactly
+          the same direction; the images are identical
           to {info.name}. A distance of <Mono>1</Mono> means the arrows are
           perpendicular (nothing in common). In practice, most comic panels
           land somewhere in between.
@@ -426,7 +435,7 @@ function ColorExplanation({
       <Section number={1} title="Extract dominant colors">
         <p className="m-0">
           Each panel's pixels are analyzed to find the most prominent colors,
-          expressed in <Em>CIELAB</Em> — a color space designed so that equal
+          expressed in <Em>CIELAB</Em>, a color space designed so that equal
           numeric distances correspond to equal perceived differences. It has
           three channels: <Mono>L*</Mono> (lightness), <Mono>a*</Mono>{" "}
           (green↔red), and <Mono>b*</Mono> (blue↔yellow).
@@ -443,7 +452,7 @@ function ColorExplanation({
       <Section number={2} title="Measure the gap">
         <p className="m-0">
           The distance between two colors is the straight-line distance through
-          this 3D color space — the same idea as measuring distance on a map,
+          this 3D color space, the same idea as measuring distance on a map,
           but with three axes instead of two.
         </p>
         {anchorColor && closeColor && (
@@ -499,7 +508,7 @@ function PhashExplanation({
           The image is scaled way down (to about 32×32), converted to grayscale,
           and run through a frequency transform that captures the big-picture
           brightness patterns while ignoring fine detail. The result is a compact
-          hash — a short string of hex characters.
+          hash, a short string of hex characters.
         </p>
         <CodeBlock>
 {`"${truncate(anchorPanel.title, 20)}"  →  ${anchorHash.slice(0, 16)}…
@@ -531,7 +540,7 @@ hash B:  1010 0010 1100 …
         <p className="m-0">
           pHash is best at finding near-duplicates (distances under ~10). For
           very different images, the distances cluster together and don't tell
-          you much — which is why this mode is mostly useful for spotting close
+          you much, which is why this mode is mostly useful for spotting close
           matches.
         </p>
         <div className="mt-3">
