@@ -205,9 +205,16 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     w = size * aspect;
   }
 
+  // Track whether this component instance is still alive. Prevents stale
+  // requestAnimationFrame / setTimeout callbacks from setting state after unmount.
+  const alive = useRef(true);
+
   // Show / hide helpers that coordinate the fade animation ──
 
   const showTooltip = useCallback(() => {
+    if (!alive.current) return;
+    // Ignore show requests that arrive shortly after mount/recycle
+    if (Date.now() - mountTime.current < MOUNT_GUARD_MS) return;
     clearTimeout(hideTimer.current);
     clearTimeout(unmountTimer.current);
 
@@ -217,22 +224,44 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
 
     setMounted(true);
     // Allow a microtask so the DOM mounts at opacity 0 before we flip to 1
-    requestAnimationFrame(() => setWantShow(true));
+    requestAnimationFrame(() => {
+      if (alive.current) setWantShow(true);
+    });
   }, []);
 
   const hideTooltip = useCallback(() => {
+    if (!alive.current) return;
     setWantShow(false);
     clearTimeout(unmountTimer.current);
-    unmountTimer.current = setTimeout(() => setMounted(false), TOOLTIP_FADE_MS);
+    unmountTimer.current = setTimeout(() => {
+      if (alive.current) setMounted(false);
+    }, TOOLTIP_FADE_MS);
   }, []);
 
-  // Clean up timers on unmount
+  // Force-close tooltip and clear all timers on unmount — critical because the
+  // tooltip renders via a portal outside this component's DOM subtree.
   useEffect(() => {
+    alive.current = true;
     return () => {
+      alive.current = false;
       clearTimeout(hideTimer.current);
       clearTimeout(unmountTimer.current);
+      clearTimeout(longPressTimer.current);
     };
   }, []);
+
+  // If the panel identity changes (ReactFlow recycled this component with new
+  // data), immediately dismiss any open tooltip so it doesn't stick around
+  // showing stale info or floating over the wrong node.
+  useEffect(() => {
+    setWantShow(false);
+    setMounted(false);
+    clearTimeout(hideTimer.current);
+    clearTimeout(unmountTimer.current);
+    // Reset mount guard so recycled nodes don't immediately show tooltips
+    // from in-flight pointer events during graph transitions.
+    mountTime.current = Date.now();
+  }, [panel.image]);
 
   // Native touch listeners in capture phase ──
   // ReactFlow intercepts touch events in its own handlers, so React synthetic
