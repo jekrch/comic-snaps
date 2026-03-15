@@ -20,7 +20,7 @@ export const SORT_OPTIONS: { value: SortMode; label: string }[] = [
   { value: "embedding-siglip", label: "SigLIP" },  // semantic / conceptual similarity
   { value: "embedding-dino", label: "DINOv2" },     // structural / perceptual similarity
   { value: "embedding-gram", label: "VGG-16 Gram" }, // line style / texture similarity
-    { value: "phash", label: "PHASH" }, // experimental: best for near duplicates 
+  { value: "phash", label: "PHASH" }, // experimental: best for near duplicates 
 ];
 
 // --- Embedding cache (lazy-loaded, per model) ---
@@ -205,18 +205,34 @@ export function paletteDistance(
 
 /**
  * sort key for a panel's dominant color using hue-based ordering.
- * within each chromatic/achromatic partition, panels are sorted by the
- * hue angle (atan2(b*, a*)) of their most dominant CIELAB color, with
- * lightness as a tiebreaker. produces a natural spectrum walk.
+ *
+ * scans the panel's dominant colors and picks the first one with
+ * meaningful chroma (sqrt(a² + b²) >= threshold), skipping near-neutral
+ * whites, blacks, and greys that typically represent margins or gutters.
+ * if no chromatic color is found, falls back to lightness-only ordering
+ * at the end of the spectrum (these panels will cluster with the
+ * achromatic partition anyway).
  */
 function colorSortKey(panel: Panel): number {
   const colors = panel.dominantColors;
   if (!colors || colors.length === 0) return Infinity;
-  const [L, a, b] = colors[0];
-  // atan2 gives radians in [-π, π]; shift to [0, 2π] for sorting
-  const hue = Math.atan2(b, a);
-  const hueNorm = hue < 0 ? hue + 2 * Math.PI : hue;
-  return hueNorm * 1000 + L;
+
+  const CHROMA_THRESHOLD = 10;
+
+  for (const [L, a, b] of colors) {
+    const chroma = Math.sqrt(a * a + b * b);
+    if (chroma >= CHROMA_THRESHOLD) {
+      const hue = Math.atan2(b, a);
+      const hueNorm = hue < 0 ? hue + 2 * Math.PI : hue;
+      return hueNorm * 1000 + L;
+    }
+  }
+
+  // no chromatic color found — sort by lightness only, offset past
+  // the hue range (2π * 1000 ≈ 6283) so these sort after all
+  // chromatic panels
+  const [L] = colors[0];
+  return 2 * Math.PI * 1000 + L;
 }
 
 /**
