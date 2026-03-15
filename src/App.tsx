@@ -1,13 +1,12 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
-import { SortMode, sortPanelsAsync } from "./sorting.ts";
-import type { Filters } from "./filtering.ts";
-import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./filtering.ts";
+import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
+import type { Filters } from "./utils/filtering.ts";
+import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./utils/filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
-//import { Menu } from "lucide-react";
 import { useFilterParams } from "./hooks/useFilterParams";
 
 export default function App() {

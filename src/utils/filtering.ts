@@ -1,4 +1,4 @@
-import type { Panel } from "./types";
+import type { Panel } from "../types";
 
 export interface Filters {
   decades: Set<string>;
@@ -35,7 +35,7 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
     if (filters.postedBy.size > 0 && !filters.postedBy.has(p.postedBy)) return false;
     if (filters.tags.size > 0) {
       const panelTags = p.tags ?? [];
-      if (!panelTags.some((t) => filters.tags.has(t))) return false;
+      if (!panelTags.some((t:any) => filters.tags.has(t))) return false;
     }
     return true;
   });

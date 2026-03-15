@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { SortMode } from "../sorting";
-import { SORT_OPTIONS } from "../sorting";
+import type { SortMode } from "../utils/sorting";
+import { SORT_OPTIONS } from "../utils/sorting";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
 interface SortControlProps {

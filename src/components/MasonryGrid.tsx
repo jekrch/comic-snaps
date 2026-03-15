@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import type { Panel } from "../types";
-import type { SortMode } from "../sorting";
-import type { Filters } from "../filtering";
+import type { SortMode } from "../utils/sorting";
+import type { Filters } from "../utils/filtering";
 import PanelCard from "./PanelCard";
 import FilterControl from "./FilterControl";
 import SortControl from "./SortControl";

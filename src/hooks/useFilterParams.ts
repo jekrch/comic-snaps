@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
-import type { Filters } from "../filtering";
-import type { SortMode } from "../sorting";
+import type { Filters } from "../utils/filtering";
+import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
 
 const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "postedBy"];

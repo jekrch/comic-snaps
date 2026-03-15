@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import type { Panel } from "../types";
-import type { Filters } from "../filtering";
-import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../filtering";
+import type { Filters } from "../utils/filtering";
+import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
 import { ChevronDown, XCircle } from "lucide-react";

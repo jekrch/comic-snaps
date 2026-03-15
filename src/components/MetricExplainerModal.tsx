@@ -1,15 +1,9 @@
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import type { Panel } from "../types";
+import { MetricKey } from "./graph/similarityConfig";
 
-/* ── Types ── */
-
-type MetricKey =
-  | "embedding-siglip"
-  | "embedding-dino"
-  | "embedding-gram"
-  | "color"
-  | "phash";
+/* Types */
 
 interface NeighborInfo {
   panel: Panel;
@@ -23,7 +17,7 @@ interface Props {
   onClose: () => void;
 }
 
-/* ── Metric display metadata ── */
+/* Metric display metadata */
 
 const METRIC_INFO: Record<
   MetricKey,
@@ -61,7 +55,7 @@ const METRIC_INFO: Record<
   },
 };
 
-/* ── Embedding dimension by metric ── */
+/* Embedding dimension by metric */
 
 const EMBEDDING_DIM: Record<string, number> = {
   "embedding-siglip": 768,
@@ -69,13 +63,13 @@ const EMBEDDING_DIM: Record<string, number> = {
   "embedding-gram": 512, // adjust if the Gram pipeline uses a different output dim
 };
 
-/* ── Helpers ── */
+/* Helpers */
 
 function fmt(n: number, decimals = 4): string {
   return n.toFixed(decimals);
 }
 
-/* ── Hatch divider (matches InfoModal) ── */
+/* Hatch divider (matches InfoModal) */
 
 function HatchDivider() {
   const id = useId();
@@ -135,7 +129,7 @@ function HatchDivider() {
   );
 }
 
-/* ── Angle diagram: arrows from a shared origin ── */
+/* Angle diagram: arrows from a shared origin */
 
 function AngleDiagram({
   closeDist,
@@ -273,7 +267,7 @@ function AngleDiagram({
   );
 }
 
-/* ── Explanation sections by metric ── */
+/* Explanation sections by metric */
 
 function EmbeddingExplanation({
   metric,
@@ -558,7 +552,7 @@ hash B:  1010 0010 1100 …
   );
 }
 
-/* ── Tiny reusable pieces ── */
+/* Tiny reusable pieces */
 
 function Section({
   number,
@@ -733,7 +727,7 @@ function truncate(s: string, len: number): string {
   return s.length <= len ? s : s.slice(0, len - 1) + "…";
 }
 
-/* ── Modal ── */
+/* Modal */
 
 export default function MetricExplainerModal({
   metric,

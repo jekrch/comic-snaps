@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link as Search, X, ZoomIn, ZoomOut, GitGraph } from "lucide-react";
 import type { Panel } from "../types";
-import type { SortMode } from "../sorting";
+import type { SortMode } from "../utils/sorting";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
 import { useGestureHandler } from "../hooks/useGestureHandler";
 import { useSlideNavigation } from "../hooks/useSlideNavigation";
 import NavButton from "./NavButton";
-import SimilarityGraph from "./SimilarityGraph";
+import SimilarityGraph from "./graph/SimilarityGraph";
 
 interface Props {
   panel: Panel;
@@ -36,7 +36,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < panels.length - 1;
 
-  // ── Hooks ──
+  // Hooks ──
 
   useBodyScrollLock(containerRef);
   const { bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
@@ -65,13 +65,13 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   const gestures = useGestureHandler(zoomPan, slide, hasPrev, hasNext);
 
-  // ── Detect touch device ──
+  // Detect touch device ──
 
   useEffect(() => {
     setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  // ── Viewport width tracking ──
+  // Viewport width tracking ──
 
   useEffect(() => {
     const onResize = () => setViewportWidth(window.innerWidth);
@@ -79,7 +79,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // ── Animate in ──
+  // Animate in ──
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -91,13 +91,13 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     setTimeout(onClose, 250);
   }, [onClose]);
 
-  // ── Search URL (opens in same browser) ──
+  // Search URL (opens in same browser) ──
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
   )}`;
 
-  // ── Keyboard navigation ──
+  // Keyboard navigation ──
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -110,7 +110,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen]);
 
-  // ── Layout calculations ──
+  // Layout calculations ──
 
   const hasTags = panel.tags?.length > 0;
   const IMG_PADDING = 44;
@@ -134,7 +134,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     willChange: "transform",
   };
 
-  // ── Render ──
+  // Render ──
 
   return (
     <div
@@ -149,7 +149,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       aria-modal="true"
       aria-label={`${panel.title} #${panel.issue} — full view`}
     >
-      {/* ── Clickable backdrop: closes viewer when clicking open space ── */}
+      {/* Clickable backdrop: closes viewer when clicking open space */}
       <div
         className={`
           absolute inset-0 z-0 transition-all duration-250 ease-out
@@ -159,7 +159,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         aria-hidden="true"
       />
 
-      {/* ── Top bar ── */}
+      {/* Top bar */}
       <div
         ref={topBarRef}
         className={`
@@ -254,7 +254,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         
       </div>
 
-      {/* ── Slide track: three-slot carousel ── */}
+      {/* Slide track: three-slot carousel */}
       <div
         ref={slideTrackRef}
         className={`
@@ -323,7 +323,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         )}
       </div>
 
-      {/* ── Bottom bar ── */}
+      {/* Bottom bar */}
       <div
         ref={bottomBarRef}
         className={`
@@ -436,7 +436,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         )}
       </div>
 
-      {/* ── Similarity Graph overlay ── */}
+      {/* Similarity Graph overlay */}
       {graphOpen && (
         <SimilarityGraph
           panel={panel}

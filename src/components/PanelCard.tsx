@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useId, useMemo, useEffect } from "react";
 import type { Panel } from "../types";
-import type { SortMode } from "../sorting";
+import type { SortMode } from "../utils/sorting";
 import PanelViewer from "./PanelViewer";
 import { Expand } from "lucide-react";
 
