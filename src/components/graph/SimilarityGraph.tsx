@@ -300,7 +300,7 @@ export default function SimilarityGraph({
       {/* Close — pinned top-right, always in place */}
       <button
         onClick={onClose}
-        className="viewer-btn absolute z-20"
+        className="viewer-btn absolute z-20 sm:mr-2"
         style={{
           top: "max(0.75rem, env(safe-area-inset-top))",
           right: "1rem",
