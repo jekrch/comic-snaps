@@ -341,7 +341,7 @@ export default function SimilarityGraph({
               className="absolute top-full left-0 mt-1 py-1 rounded bg-neutral-900/95 border border-white/10 backdrop-blur-md shadow-xl"
               style={{ minWidth: 180, zIndex: 100 }}
             >
-              {METRICS.map((m:any) => {
+              {METRICS.filter((m:any) => !m.hide).map((m:any) => {
                 const active = m.key === metric;
                 return (
                   <button

@@ -27,6 +27,7 @@ export interface MetricOption {
   label: string;
   shortLabel: string;
   description: string;
+  hide?: boolean | undefined;
 }
 
 export const METRICS: MetricOption[] = [
@@ -53,11 +54,13 @@ export const METRICS: MetricOption[] = [
     label: "Color Palette",
     shortLabel: "Color",
     description: "CIELAB dominant color",
+    hide: true
   },
   {
     key: "phash",
     label: "pHash",
     shortLabel: "pHash",
     description: "Perceptual hash (near-dupes)",
+    hide: true
   },
 ];
