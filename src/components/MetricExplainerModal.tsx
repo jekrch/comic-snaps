@@ -1106,6 +1106,30 @@ function DistanceBar({
     }
   }
 
+  // Determine if each label overflows the viewBox. If so, right-align it
+  // so its right edge sits at W, and flip the leader line to attach to
+  // the right end of the text.
+  const labelAnchors: ("left" | "right")[] = textXs.map((x, i) => {
+    return x + labelWidths[i] > W ? "right" : "left";
+  });
+
+  // For right-anchored labels, recompute textX as the right edge position.
+  // We also need to re-run collision avoidance backwards: ensure a
+  // right-anchored label doesn't overlap the one before it.
+  for (let i = textXs.length - 1; i >= 0; i--) {
+    if (labelAnchors[i] === "right") {
+      const rightEdge = i < textXs.length - 1 && labelAnchors[i + 1] === "right"
+        ? (textXs[i + 1] - labelWidths[i + 1]) - MIN_GAP
+        : W;
+      textXs[i] = rightEdge - labelWidths[i];
+      // If pushing left caused it to fit normally, keep it left-anchored
+      if (textXs[i] >= rawLabels[i].barPosX) {
+        labelAnchors[i] = "left";
+        textXs[i] = rawLabels[i].barPosX;
+      }
+    }
+  }
+
   // Each label row is spaced 16px apart vertically
   const rowH = 16;
   const row0Y = leaderStartY + 14;
@@ -1178,18 +1202,21 @@ function DistanceBar({
 
         {/* Leader lines + labels */}
         {rawLabels.map((label, i) => {
-          const textX = textXs[i];
+          const anchor = labelAnchors[i];
+          const leftX = textXs[i];
+          const rightX = leftX + labelWidths[i];
           const textBaselineY = row0Y + i * rowH;
 
-          // Leader line: diagonal from bar position down to just before text
+          // Single straight leader line from bar position to the near
+          // edge of the text.
           const lineTopX = label.barPosX;
           const lineTopY = leaderStartY;
-          const lineBotX = textX - 2;
           const lineBotY = textBaselineY - 9;
+          const lineBotX = anchor === "right" ? rightX + 2 : leftX - 2;
 
           return (
             <g key={label.key}>
-              {/* Diagonal leader line */}
+              {/* Straight leader line */}
               <line
                 x1={lineTopX} y1={lineTopY}
                 x2={lineBotX} y2={lineBotY}
@@ -1197,18 +1224,11 @@ function DistanceBar({
                 strokeWidth="0.75"
                 opacity={label.lineOpacity}
               />
-              {/* Small horizontal tick into the text */}
-              <line
-                x1={lineBotX} y1={lineBotY}
-                x2={lineBotX + 4} y2={lineBotY}
-                stroke={label.color}
-                strokeWidth="0.75"
-                opacity={label.lineOpacity}
-              />
               {/* Label text */}
               <text
-                x={textX}
+                x={anchor === "right" ? rightX : leftX}
                 y={textBaselineY}
+                textAnchor={anchor === "right" ? "end" : "start"}
                 fontSize="9"
                 fontFamily="var(--font-mono, monospace)"
                 fill={label.color}
