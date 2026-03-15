@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import type { Panel } from "../../types";
 import {
@@ -12,6 +13,12 @@ import {
 
 /* Mount guard: ignore touch events that arrive shortly after mount */
 const MOUNT_GUARD_MS = 500;
+
+/* Tooltip animation timing */
+const TOOLTIP_FADE_MS = 250;
+
+/* Minimum distance from viewport edge */
+const VIEWPORT_PADDING = 12;
 
 /* Node data interface */
 
@@ -37,14 +44,137 @@ export function getNodeDimensions(
   return { w: size * aspect, h: size };
 }
 
+/* Tooltip placement logic — computes viewport-absolute position for portal */
+
+/** Estimated tooltip dimensions — these match the CSS constraints below. */
+const TOOLTIP_EST_WIDTH = 150;
+const TOOLTIP_EST_HEIGHT = 60; // approximate; actual varies with text
+const TOOLTIP_GAP = 8; // margin between node edge and tooltip
+
+type TooltipSide = "above" | "below" | "left" | "right";
+
+interface TooltipPlacement {
+  side: TooltipSide;
+  /** Viewport-absolute x coordinate for the tooltip (left edge) */
+  x: number;
+  /** Viewport-absolute y coordinate for the tooltip (top edge) */
+  y: number;
+}
+
+/**
+ * Pick the tooltip side that keeps the tooltip most on-screen, then compute
+ * viewport-absolute x/y for the tooltip container.
+ *
+ * The tooltip is rendered via a portal into document.body with position:fixed,
+ * so all coordinates are in viewport space.
+ */
+function computePlacement(nodeEl: HTMLElement): TooltipPlacement {
+  const rect = nodeEl.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // For each candidate side, compute how many pixels of the tooltip would
+  // actually be visible within the viewport.
+
+  const candidates: { side: TooltipSide; visible: number }[] = [];
+
+  // Above: tooltip bottom edge sits at rect.top - gap
+  {
+    const tipBottom = rect.top - TOOLTIP_GAP;
+    const tipTop = tipBottom - TOOLTIP_EST_HEIGHT;
+    const visTop = Math.max(tipTop, 0);
+    const visBottom = Math.min(tipBottom, vh);
+    candidates.push({ side: "above", visible: Math.max(0, visBottom - visTop) });
+  }
+
+  // Below: tooltip top edge sits at rect.bottom + gap
+  {
+    const tipTop = rect.bottom + TOOLTIP_GAP;
+    const tipBottom = tipTop + TOOLTIP_EST_HEIGHT;
+    const visTop = Math.max(tipTop, 0);
+    const visBottom = Math.min(tipBottom, vh);
+    candidates.push({ side: "below", visible: Math.max(0, visBottom - visTop) });
+  }
+
+  // Left: tooltip right edge sits at rect.left - gap
+  {
+    const tipRight = rect.left - TOOLTIP_GAP;
+    const tipLeft = tipRight - TOOLTIP_EST_WIDTH;
+    const visLeft = Math.max(tipLeft, 0);
+    const visRight = Math.min(tipRight, vw);
+    candidates.push({ side: "left", visible: Math.max(0, visRight - visLeft) });
+  }
+
+  // Right: tooltip left edge sits at rect.right + gap
+  {
+    const tipLeft = rect.right + TOOLTIP_GAP;
+    const tipRight = tipLeft + TOOLTIP_EST_WIDTH;
+    const visLeft = Math.max(tipLeft, 0);
+    const visRight = Math.min(tipRight, vw);
+    candidates.push({ side: "right", visible: Math.max(0, visRight - visLeft) });
+  }
+
+  // Prefer above > below > right > left as tiebreaker order
+  const preferenceOrder: TooltipSide[] = ["above", "below", "right", "left"];
+  candidates.sort((a, b) => {
+    const diff = b.visible - a.visible;
+    if (Math.abs(diff) > 1) return diff;
+    return preferenceOrder.indexOf(a.side) - preferenceOrder.indexOf(b.side);
+  });
+
+  const side = candidates[0].side;
+
+  // Compute viewport-absolute x, y for the tooltip container.
+  // The tooltip is positioned so its "anchor edge" is adjacent to the node,
+  // and it's centred on the cross-axis, then clamped to stay on-screen.
+
+  let x: number;
+  let y: number;
+
+  if (side === "above" || side === "below") {
+    // Centre horizontally on node, clamp to viewport
+    x = rect.left + rect.width / 2 - TOOLTIP_EST_WIDTH / 2;
+    x = Math.max(VIEWPORT_PADDING, Math.min(x, vw - VIEWPORT_PADDING - TOOLTIP_EST_WIDTH));
+
+    if (side === "above") {
+      y = rect.top - TOOLTIP_GAP - TOOLTIP_EST_HEIGHT;
+    } else {
+      y = rect.bottom + TOOLTIP_GAP;
+    }
+  } else {
+    // Centre vertically on node, clamp to viewport
+    y = rect.top + rect.height / 2 - TOOLTIP_EST_HEIGHT / 2;
+    y = Math.max(VIEWPORT_PADDING, Math.min(y, vh - VIEWPORT_PADDING - TOOLTIP_EST_HEIGHT));
+
+    if (side === "left") {
+      x = rect.left - TOOLTIP_GAP - TOOLTIP_EST_WIDTH;
+    } else {
+      x = rect.right + TOOLTIP_GAP;
+    }
+  }
+
+  return { side, x, y };
+}
+
 /* Component */
 
 function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   const { panel, isAnchor, onDoubleClick } = data;
   const size = isAnchor ? ANCHOR_SIZE : NODE_SIZE;
-  const [showInfo, setShowInfo] = useState(false);
-  const [tooltipBelow, setTooltipBelow] = useState(false);
+
+  // Tooltip visibility: `wantShow` is the intent, `mounted` keeps the DOM
+  // alive long enough for the fade-out transition to play.
+  const [wantShow, setWantShow] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const [placement, setPlacement] = useState<TooltipPlacement>({
+    side: "above",
+    x: 0,
+    y: 0,
+  });
+
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const unmountTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const nodeRef = useRef<HTMLDivElement>(null);
 
   // Long-press timer ref
@@ -75,11 +205,33 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     w = size * aspect;
   }
 
-  // Decide whether tooltip should go above or below based on viewport position
-  const updateTooltipDirection = useCallback(() => {
-    if (!nodeRef.current) return;
-    const rect = nodeRef.current.getBoundingClientRect();
-    setTooltipBelow(rect.top < 100);
+  // Show / hide helpers that coordinate the fade animation ──
+
+  const showTooltip = useCallback(() => {
+    clearTimeout(hideTimer.current);
+    clearTimeout(unmountTimer.current);
+
+    if (nodeRef.current) {
+      setPlacement(computePlacement(nodeRef.current));
+    }
+
+    setMounted(true);
+    // Allow a microtask so the DOM mounts at opacity 0 before we flip to 1
+    requestAnimationFrame(() => setWantShow(true));
+  }, []);
+
+  const hideTooltip = useCallback(() => {
+    setWantShow(false);
+    clearTimeout(unmountTimer.current);
+    unmountTimer.current = setTimeout(() => setMounted(false), TOOLTIP_FADE_MS);
+  }, []);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(hideTimer.current);
+      clearTimeout(unmountTimer.current);
+    };
   }, []);
 
   // Native touch listeners in capture phase ──
@@ -103,8 +255,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = setTimeout(() => {
         longPressActive.current = true;
-        updateTooltipDirection();
-        setShowInfo(true);
+        showTooltip();
       }, LONG_PRESS_DELAY);
     };
 
@@ -121,7 +272,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         clearTimeout(longPressTimer.current);
         if (longPressActive.current) {
           longPressActive.current = false;
-          setShowInfo(false);
+          hideTooltip();
         }
       }
     };
@@ -132,7 +283,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       // Always dismiss tooltip on finger release
       if (longPressActive.current) {
         longPressActive.current = false;
-        setShowInfo(false);
+        hideTooltip();
         touchStartPos.current = null;
         return;
       }
@@ -175,7 +326,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       clearTimeout(longPressTimer.current);
       if (longPressActive.current) {
         longPressActive.current = false;
-        setShowInfo(false);
+        hideTooltip();
       }
     };
 
@@ -205,17 +356,16 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         capture: true,
       } as EventListenerOptions);
     };
-  }, [isAnchor, onDoubleClick, panel, updateTooltipDirection]);
+  }, [isAnchor, onDoubleClick, panel, showTooltip, hideTooltip]);
 
   // Desktop: hover show/hide ──
   const handlePointerEnter = () => {
     clearTimeout(hideTimer.current);
-    updateTooltipDirection();
-    setShowInfo(true);
+    showTooltip();
   };
 
   const handlePointerLeave = () => {
-    hideTimer.current = setTimeout(() => setShowInfo(false), 150);
+    hideTimer.current = setTimeout(() => hideTooltip(), 150);
   };
 
   // Desktop: mouse double-click to recenter ──
@@ -243,78 +393,140 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     [isAnchor, onDoubleClick, panel]
   );
 
-  const tooltipContent = (
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        ...(tooltipBelow
-          ? { top: "100%", marginTop: 8 }
-          : { bottom: "100%", marginBottom: 8 }),
-        transform: "translateX(-50%)",
-        zIndex: 10,
-        pointerEvents: "none",
-        width: "max-content",
-        display: "flex",
-        flexDirection: tooltipBelow ? "column" : "column-reverse",
-        alignItems: "center",
-      }}
-    >
-      {/* Arrow */}
-      <div
-        style={{
-          width: 0,
-          height: 0,
+  const { side, x: tipX, y: tipY } = placement;
+
+  // Arrow styles per side
+  const arrowStyle = (() => {
+    const base: React.CSSProperties = { width: 0, height: 0, flexShrink: 0 };
+    const color = "rgba(0,0,0,0.9)";
+    switch (side) {
+      case "above":
+        return {
+          ...base,
           borderLeft: "5px solid transparent",
           borderRight: "5px solid transparent",
-          ...(tooltipBelow
-            ? { borderBottom: "5px solid rgba(0,0,0,0.9)" }
-            : { borderTop: "5px solid rgba(0,0,0,0.9)" }),
-        }}
-      />
-      {/* Body */}
+          borderTop: `5px solid ${color}`,
+        };
+      case "below":
+        return {
+          ...base,
+          borderLeft: "5px solid transparent",
+          borderRight: "5px solid transparent",
+          borderBottom: `5px solid ${color}`,
+        };
+      case "left":
+        return {
+          ...base,
+          borderTop: "5px solid transparent",
+          borderBottom: "5px solid transparent",
+          borderLeft: `5px solid ${color}`,
+        };
+      case "right":
+        return {
+          ...base,
+          borderTop: "5px solid transparent",
+          borderBottom: "5px solid transparent",
+          borderRight: `5px solid ${color}`,
+        };
+    }
+  })();
+
+  const isHorizontal = side === "left" || side === "right";
+
+  // Compute arrow position: for above/below it's centred horizontally on the
+  // node (clamped within the tooltip body); for left/right centred vertically.
+  const arrowOffset = (() => {
+    if (!nodeRef.current) return "50%";
+    const rect = nodeRef.current.getBoundingClientRect();
+    if (side === "above" || side === "below") {
+      const nodeCenterX = rect.left + rect.width / 2;
+      const offset = nodeCenterX - tipX;
+      return `${Math.max(8, Math.min(offset, TOOLTIP_EST_WIDTH - 8))}px`;
+    } else {
+      const nodeCenterY = rect.top + rect.height / 2;
+      const offset = nodeCenterY - tipY;
+      return `${Math.max(8, Math.min(offset, TOOLTIP_EST_HEIGHT - 8))}px`;
+    }
+  })();
+
+  const tooltipPortal =
+    mounted &&
+    createPortal(
       <div
         style={{
-          background: "rgba(0,0,0,0.9)",
-          backdropFilter: "blur(8px)",
-          borderRadius: 4,
-          border: "1px solid rgba(255,255,255,0.1)",
-          padding: "5px 8px",
-          whiteSpace: "normal",
-          maxWidth: 150,
-          minWidth: 90,
+          position: "fixed",
+          left: tipX,
+          top: tipY,
+          zIndex: 10000,
+          pointerEvents: "none",
+          display: "flex",
+          flexDirection: isHorizontal
+            ? side === "left"
+              ? "row"
+              : "row-reverse"
+            : side === "above"
+              ? "column"
+              : "column-reverse",
+          alignItems: "flex-start",
+          opacity: wantShow ? 1 : 0,
+          transition: `opacity ${TOOLTIP_FADE_MS}ms ease`,
         }}
       >
-        <p className="font-display leading-tight" style={{ fontSize: 11 }}>
-          <span style={{ color: "rgba(255,255,255,0.9)" }}>{panel.title}</span>{" "}
-          <span className="text-accent" style={{ whiteSpace: "nowrap" }}>
-            #{panel.issue}
-          </span>
-        </p>
-        <p
+        {/* Body */}
+        <div
           style={{
-            fontSize: 9,
-            color: "rgba(255,255,255,0.45)",
-            marginTop: 1,
-            lineHeight: "1.3",
+            background: "rgba(0,0,0,0.9)",
+            backdropFilter: "blur(8px)",
+            borderRadius: 4,
+            border: "1px solid rgba(255,255,255,0.1)",
+            padding: "5px 8px",
+            whiteSpace: "normal",
+            maxWidth: 150,
+            minWidth: 90,
           }}
         >
-          {panel.artist} · {panel.year}
-        </p>
-        {!isAnchor && (
+          <p className="font-display leading-tight" style={{ fontSize: 11 }}>
+            <span style={{ color: "rgba(255,255,255,0.9)" }}>
+              {panel.title}
+            </span>{" "}
+            <span className="text-accent" style={{ whiteSpace: "nowrap" }}>
+              #{panel.issue}
+            </span>
+          </p>
           <p
             style={{
-              fontSize: 8,
-              color: "rgba(255,255,255,0.25)",
-              marginTop: 3,
+              fontSize: 9,
+              color: "rgba(255,255,255,0.45)",
+              marginTop: 1,
+              lineHeight: "1.3",
             }}
           >
-            double-tap to explore
+            {panel.artist} · {panel.year}
           </p>
-        )}
-      </div>
-    </div>
-  );
+          {!isAnchor && (
+            <p
+              style={{
+                fontSize: 8,
+                color: "rgba(255,255,255,0.25)",
+                marginTop: 3,
+              }}
+            >
+              double-tap to explore
+            </p>
+          )}
+        </div>
+        {/* Arrow — positioned to point at the node centre */}
+        <div
+          style={{
+            ...arrowStyle,
+            ...(isHorizontal
+              ? { marginTop: arrowOffset }
+              : { marginLeft: arrowOffset }),
+          }}
+        />
+      </div>,
+      document.body
+    );
 
   return (
     <div
@@ -357,7 +569,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         }}
       />
 
-      {showInfo && tooltipContent}
+      {tooltipPortal}
     </div>
   );
 }
