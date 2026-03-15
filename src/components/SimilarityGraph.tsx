@@ -21,7 +21,8 @@ import {
   cosineDistance,
   hammingDistanceHex,
 } from "../sorting";
-import { X, ChevronDown } from "lucide-react";
+import { X, ChevronDown, Info } from "lucide-react";
+import MetricExplainerModal from "./MetricExplainerModal";
 
 /* ── Configuration ── */
 
@@ -84,7 +85,7 @@ const LONG_PRESS_DELAY = 300;
 
 /* ── Compute nearest neighbors ── */
 
-interface Neighbor {
+export interface Neighbor {
   panel: Panel;
   distance: number;
 }
@@ -723,13 +724,17 @@ export default function SimilarityGraph({
     return "embedding-siglip";
   });
 
-  const [neighborCount, setNeighborCount] = useState(DEFAULT_COUNT);
   const [showEdgeLabels, setShowEdgeLabels] = useState(true);
+  const [neighborCount, setNeighborCount] = useState(DEFAULT_COUNT);
   //const [showCrossEdges, setShowCrossEdges] = useState(false);
   const [showCrossEdges, ] = useState(false);
   const [metricDropdownOpen, setMetricDropdownOpen] = useState(false);
+  const [showExplainer, setShowExplainer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [embeddings, setEmbeddings] = useState<EmbeddingMap | null>(null);
+
+  // Track current neighbors for the explainer modal
+  const [currentNeighbors, setCurrentNeighbors] = useState<Neighbor[]>([]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<PanelNodeData>>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -791,6 +796,9 @@ export default function SimilarityGraph({
       neighborCount,
       embeddings
     );
+
+    // Store neighbors for the explainer modal
+    setCurrentNeighbors(neighbors);
 
     if (neighbors.length === 0) {
       setNodes([]);
@@ -981,9 +989,20 @@ export default function SimilarityGraph({
           )}
         </div>
 
+        {/* Toggle: edge labels */}
+        <button
+          onClick={() => setShowEdgeLabels((p) => !p)}
+          className={`px-2.5 py-1.5 rounded text-[10px] uppercase tracking-wider font-display transition-colors ${
+            showEdgeLabels
+              ? "bg-white/10 text-white/70"
+              : "text-white/25 hover:text-white/50 hover:bg-white/5"
+          }`}
+        >
+          Dist
+        </button>
+
         {/* Neighbor count */}
         <div className="flex items-center gap-1">
-          <span className="text-[10px] text-white/30 uppercase tracking-wider mr-1">n=</span>
           {NEIGHBOR_COUNTS.map((n) => (
             <button
               key={n}
@@ -999,29 +1018,19 @@ export default function SimilarityGraph({
           ))}
         </div>
 
-        {/* Toggle: edge labels */}
+        {/* Info button — opens metric explainer */}
         <button
-          onClick={() => setShowEdgeLabels((p) => !p)}
-          className={`px-2.5 py-1.5 rounded text-[10px] uppercase tracking-wider font-display transition-colors ${
-            showEdgeLabels
-              ? "bg-white/10 text-white/70"
-              : "text-white/25 hover:text-white/50 hover:bg-white/5"
-          }`}
+          onClick={() => setShowExplainer(true)}
+          className="flex items-center justify-center w-7 h-7 rounded
+                     bg-white/5 hover:bg-white/10 transition-colors"
+          title={`How ${activeMetric.label} distance works`}
+          disabled={loading || currentNeighbors.length === 0}
+          style={{
+            opacity: loading || currentNeighbors.length === 0 ? 0.3 : 1,
+          }}
         >
-          Dist
+          <Info size={13} strokeWidth={1.5} className="text-white/50" />
         </button>
-
-        {/* Toggle: cross edges */}
-        {/* <button
-          onClick={() => setShowCrossEdges((p) => !p)}
-          className={`px-2.5 py-1.5 rounded text-[10px] uppercase tracking-wider font-display transition-colors ${
-            showCrossEdges
-              ? "bg-white/10 text-white/70"
-              : "text-white/25 hover:text-white/50 hover:bg-white/5"
-          }`}
-        >
-          Cross-edges
-        </button> */}
 
         {/* Spacer */}
         <div className="flex-1" />
@@ -1092,6 +1101,16 @@ export default function SimilarityGraph({
           </ReactFlow>
         )}
       </div>
+
+      {/* Metric explainer modal */}
+      {showExplainer && currentNeighbors.length > 0 && (
+        <MetricExplainerModal
+          metric={metric}
+          anchorPanel={anchorPanel}
+          neighbors={currentNeighbors}
+          onClose={() => setShowExplainer(false)}
+        />
+      )}
 
       {/* CSS overrides for React Flow controls to match dark theme */}
       <style>{`
