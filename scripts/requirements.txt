@@ -9,6 +9,6 @@ protobuf
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch
 torchvision
-paddlepaddle
+paddlepaddle==3.2.2
 paddleocr
 sentence-transformers
