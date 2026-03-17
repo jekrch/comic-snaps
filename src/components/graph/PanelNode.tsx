@@ -14,6 +14,18 @@ import {
 /* Mount guard: ignore touch events that arrive shortly after mount */
 const MOUNT_GUARD_MS = 500;
 
+/* Global recenter guard: after any double-tap recenter, suppress all
+   touch-initiated tooltips across every PanelNode instance for this window.
+   This catches synthetic touchstart events that iOS Safari delivers to
+   recycled nodes that land under the finger after a graph rebuild. */
+const RECENTER_SUPPRESS_MS = 800;
+let lastRecenterTime = 0;
+
+/** Call this from any node right before triggering a recenter. */
+export function markRecenter() {
+  lastRecenterTime = Date.now();
+}
+
 /* Tooltip animation timing */
 const TOOLTIP_FADE_MS = 250;
 
@@ -221,6 +233,8 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     if (!alive.current) return;
     // Ignore show requests that arrive shortly after mount/recycle
     if (Date.now() - mountTime.current < MOUNT_GUARD_MS) return;
+    // Ignore show requests that arrive shortly after any recenter
+    if (Date.now() - lastRecenterTime < RECENTER_SUPPRESS_MS) return;
     clearTimeout(hideTimer.current);
     clearTimeout(unmountTimer.current);
 
@@ -289,6 +303,8 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
 
       // Skip long-press if this node just mounted (ghost touch from graph reload)
       if (Date.now() - mountTime.current < MOUNT_GUARD_MS) return;
+      // Skip long-press if a recenter just happened (synthetic touch from iOS)
+      if (Date.now() - lastRecenterTime < RECENTER_SUPPRESS_MS) return;
 
       // Start long-press timer — show tooltip after delay.
       // Capture the current generation so that if the panel recycles before
@@ -298,6 +314,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = setTimeout(() => {
         if (generation.current !== gen) return;
+        if (Date.now() - lastRecenterTime < RECENTER_SUPPRESS_MS) return;
         longPressActive.current = true;
         showTooltip();
       }, LONG_PRESS_DELAY);
@@ -359,6 +376,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         // Double-tap → recenter
         lastTapTime.current = null;
         hideTooltip();
+        markRecenter();
         if (!isAnchor) {
           onDoubleClick(panel);
         }
@@ -430,6 +448,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
         Math.abs(e.clientY - prev.y) <= MOUSE_TOLERANCE
       ) {
         lastClick.current = null;
+        markRecenter();
         if (!isAnchor) {
           e.stopPropagation();
           onDoubleClick(panel);
