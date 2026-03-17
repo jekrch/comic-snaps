@@ -36,7 +36,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < panels.length - 1;
 
-  // Hooks ──
+  // Hooks
 
   useBodyScrollLock(containerRef);
   const { bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
@@ -65,13 +65,13 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   const gestures = useGestureHandler(zoomPan, slide, hasPrev, hasNext);
 
-  // Detect touch device ──
+  // Detect touch device
 
   useEffect(() => {
     setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  // Viewport width tracking ──
+  // Viewport width tracking
 
   useEffect(() => {
     const onResize = () => setViewportWidth(window.innerWidth);
@@ -79,7 +79,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Animate in ──
+  // Animate in 
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -91,13 +91,13 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     setTimeout(onClose, 250);
   }, [onClose]);
 
-  // Search URL (opens in same browser) ──
+  // Search URL (opens in same browser)
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
   )}`;
 
-  // Keyboard navigation ──
+  // Keyboard navigation
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -134,7 +134,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     willChange: "transform",
   };
 
-  // Render ──
+  // Render
 
   return (
     <div

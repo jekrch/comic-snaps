@@ -6,7 +6,7 @@ import type { Neighbor } from "../utils/similarityUtils";
 import { computeNeighbors } from "../utils/similarityUtils";
 import { loadEmbeddings } from "../utils/sorting";
 import type { EmbeddingMap } from "../utils/sorting";
-import MetricExplainerModal from "./MetricExplainerModal";
+import MetricExplainerModal from "./explainer/MetricExplainerModal";
 
 // Tab primitives
 

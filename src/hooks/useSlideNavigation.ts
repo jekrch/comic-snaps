@@ -140,7 +140,7 @@ export function useSlideNavigation(
         [hasPrev, hasNext, commitSlide, snapBack]
     );
 
-    // DOM resets on navigation (pre-paint) ──
+    // DOM resets on navigation (pre-paint)
 
     useLayoutEffect(() => {
         const track = slideTrackRef.current;

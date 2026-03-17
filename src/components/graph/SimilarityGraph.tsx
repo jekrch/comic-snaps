@@ -1,5 +1,3 @@
-/* SimilarityGraph: main component */
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
@@ -34,7 +32,7 @@ import {
 } from "../../utils/similarityUtils.ts";
 import { nodeTypes, type PanelNodeData } from "./PanelNode.tsx";
 import { edgeTypes } from "./DistanceEdge.tsx";
-import MetricExplainerModal from "../MetricExplainerModal";
+import MetricExplainerModal from "../explainer/MetricExplainerModal";
 
 /* Helper: fit view only when anchor changes */
 
@@ -69,7 +67,7 @@ export default function SimilarityGraph({
   activeSortMode,
   onClose,
 }: SimilarityGraphProps) {
-  // State ──
+  // State
   const [anchorPanel, setAnchorPanel] = useState<Panel>(panel);
 
   const [metric, setMetric] = useState<MetricKey>(() => {
@@ -117,7 +115,7 @@ export default function SimilarityGraph({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Load embeddings when metric changes ──
+  // Load embeddings when metric changes 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -143,7 +141,7 @@ export default function SimilarityGraph({
     };
   }, [metric]);
 
-  // Compute graph when inputs change ──
+  // Compute graph when inputs change 
   const handleDoubleClick = useCallback((p: Panel) => {
     setAnchorPanel(p);
   }, []);

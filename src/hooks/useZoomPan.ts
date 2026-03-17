@@ -47,7 +47,7 @@ export function useZoomPan(
   const transformRef = useRef<Transform>({ scale: 1, x: 0, y: 0 });
   const baseDimsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
 
-  // Core helpers ──
+  // Core helpers
 
   const applyTransform = useCallback((t: Transform, animate = false) => {
     const wrapper = imgWrapperRef.current;
@@ -119,7 +119,7 @@ export function useZoomPan(
     []
   );
 
-  // Reset on navigation ──
+  // Reset on navigation 
 
   useLayoutEffect(() => {
     const wrapper = imgWrapperRef.current;
@@ -139,7 +139,7 @@ export function useZoomPan(
     setDisplayScale(1);
   }, [currentIndex]);
 
-  // Wheel zoom (desktop) ──
+  // Wheel zoom (desktop) 
 
   useEffect(() => {
     const wrapper = imgWrapperRef.current;
@@ -173,7 +173,7 @@ export function useZoomPan(
     return () => wrapper.removeEventListener("wheel", handleWheel);
   }, [imgWrapperRef, setTransform, clampTranslate]);
 
-  // Double-click toggle ──
+  // Double-click toggle
 
   const handleDoubleClick = useCallback(
     (e: React.MouseEvent) => {

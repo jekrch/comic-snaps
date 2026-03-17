@@ -73,7 +73,7 @@ export function useGestureHandler(
     y: 0,
   });
 
-  // Shared slide start helper ──
+  // Shared slide start helper
 
   const beginSlide = useCallback(
     (x: number, y: number) => {
@@ -132,7 +132,7 @@ export function useGestureHandler(
     [resolveSlide, setSlideActive, swipeOffsetRef]
   );
 
-  // Pointer (mouse) handlers ──
+  // Pointer (mouse) handlers 
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -180,7 +180,7 @@ export function useGestureHandler(
     [endSlide]
   );
 
-  // Touch handlers ──
+  // Touch handlers
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {

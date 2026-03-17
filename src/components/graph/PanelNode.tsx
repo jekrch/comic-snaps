@@ -209,7 +209,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   // requestAnimationFrame / setTimeout callbacks from setting state after unmount.
   const alive = useRef(true);
 
-  // Show / hide helpers that coordinate the fade animation ──
+  // Show / hide helpers that coordinate the fade animation 
 
   const showTooltip = useCallback(() => {
     if (!alive.current) return;
@@ -258,12 +258,15 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     setMounted(false);
     clearTimeout(hideTimer.current);
     clearTimeout(unmountTimer.current);
-    // Reset mount guard so recycled nodes don't immediately show tooltips
-    // from in-flight pointer events during graph transitions.
+    clearTimeout(longPressTimer.current);
+    longPressActive.current = false;
+    lastTapTime.current = null;
+    touchStartPos.current = null;
+    lastClick.current = null;
     mountTime.current = Date.now();
   }, [panel.image]);
 
-  // Native touch listeners in capture phase ──
+  // Native touch listeners in capture phase 
   // ReactFlow intercepts touch events in its own handlers, so React synthetic
   // onTouchEnd never fires reliably on nodes. Attaching native capture-phase
   // listeners on the DOM node itself ensures we see every touch.
@@ -343,11 +346,15 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       ) {
         // Double-tap → recenter
         lastTapTime.current = null;
+        hideTooltip();
         if (!isAnchor) {
           onDoubleClick(panel);
         }
       } else {
-        lastTapTime.current = { time: now, x: t.clientX, y: t.clientY };
+        // Only record tap time if past mount guard
+        if (Date.now() - mountTime.current > MOUNT_GUARD_MS) {
+          lastTapTime.current = { time: now, x: t.clientX, y: t.clientY };
+        }
       }
     };
 
@@ -387,7 +394,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     };
   }, [isAnchor, onDoubleClick, panel, showTooltip, hideTooltip]);
 
-  // Desktop: hover show/hide ──
+  // Desktop: hover show/hide 
   const handlePointerEnter = () => {
     clearTimeout(hideTimer.current);
     showTooltip();
@@ -397,7 +404,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     hideTimer.current = setTimeout(() => hideTooltip(), 150);
   };
 
-  // Desktop: mouse double-click to recenter ──
+  // Desktop: mouse double-click to recenter 
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
       if (e.pointerType === "touch") return;
