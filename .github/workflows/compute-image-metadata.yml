@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-siglip-so400m-patch14-384-dinov2-small
+          key: hf-siglip-base-patch16-224-dinov2-small
 
       - name: Cache torchvision models
         uses: actions/cache@v4

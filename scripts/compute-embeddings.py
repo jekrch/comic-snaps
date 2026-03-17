@@ -8,7 +8,7 @@ automatically.
 
 Models
 ------
-siglip  – google/siglip-so400m-patch14-384 (semantic / conceptual similarity)
+siglip  – google/siglip-base-patch16-224 (semantic / conceptual similarity)
 dino    – facebook/dinov2-small (structural / perceptual similarity)
 gram    – VGG-16 Gram matrices (line style / texture similarity)
 
@@ -65,10 +65,10 @@ class ModelSpec:
 MODELS: dict[str, ModelSpec] = {
     "siglip": ModelSpec(
         key="siglip",
-        hf_name="google/siglip-so400m-patch14-384",
+        hf_name="google/siglip-base-patch16-224",
         dim=768,
         output_path=Path("public/data/embeddings.json"),
-        version="siglip-so400m-patch14-384-v1",
+        version="siglip-base-patch16-224-v1",
     ),
     "dino": ModelSpec(
         key="dino",
