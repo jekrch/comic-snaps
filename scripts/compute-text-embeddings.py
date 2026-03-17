@@ -4,13 +4,12 @@ Compute text-based embeddings for gallery panels.
 
 Pipeline
 --------
-1. PaddleOCR extracts visible text from each panel image (dialogue,
-   captions, sound effects, narrative boxes).
-2. The extracted text is saved to a ``text`` field on each panel
-   object in gallery.json.
-3. Panels with detected text are embedded using
-   BAAI/bge-small-en-v1.5 (384-dim) and written to
-   embeddings-text.json.
+1. PaddleOCR (v3.x / PP-OCRv5) detects and recognises visible text in
+   each panel image — dialogue, captions, sound effects, narrative boxes.
+2. The extracted text is saved to a ``text`` field on each panel object
+   in gallery.json.
+3. Panels with detected text are embedded using BAAI/bge-small-en-v1.5
+   (384-dim) and written to embeddings-text.json.
 4. Panels with no detected text are omitted from the embeddings file.
 
 Incremental by default: panels that already have a ``text`` field in
@@ -24,11 +23,15 @@ Usage
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+
+# Skip the slow model-source connectivity check on init.
+os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
+
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -48,7 +51,7 @@ EMBEDDING_DIM = 384
 
 # ---------------------------------------------------------------------------
 # OCR confidence threshold — text detections below this score are
-# discarded. PaddleOCR returns per-line confidence; 0.5 is lenient
+# discarded.  PaddleOCR returns per-line confidence; 0.5 is lenient
 # enough to keep stylised SFX while filtering random noise.
 # ---------------------------------------------------------------------------
 
@@ -118,46 +121,71 @@ def save_embeddings(embeddings: dict[str, list[float]]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# OCR
+# OCR  (PaddleOCR v3.x / PaddleX)
 # ---------------------------------------------------------------------------
 
 def init_ocr():
-    """Initialise PaddleOCR (English, no angle classifier)."""
+    """Initialise PaddleOCR.
+
+    PaddleOCR v3.x (wrapping PaddleX) changed the API surface:
+      - ``use_angle_cls`` → ``use_textline_orientation``
+      - ``show_log`` removed entirely
+      - ``.ocr()`` deprecated in favour of ``.predict()``
+      - Results are ``OCRResult`` objects (dict-like) with keys:
+            rec_texts   – list[str]    recognised text per line
+            rec_scores  – list[float]  confidence per line
+            dt_polys    – list[array]  detection polygons
+    """
     from paddleocr import PaddleOCR
 
     return PaddleOCR(
-        use_angle_cls=False,
         lang="en",
-        show_log=False,
+        use_textline_orientation=False,
     )
 
 
 def extract_text(ocr, image_path: Path) -> str:
     """Run PaddleOCR on a single image and return concatenated text.
 
-    Lines are sorted top-to-bottom by the y-coordinate of their first
-    bounding-box point, approximating natural reading order. Lines
-    below ``OCR_CONFIDENCE_THRESHOLD`` are dropped.
+    Lines are sorted top-to-bottom by the y-coordinate of their
+    detection polygon's top edge, approximating natural reading order.
+    Lines below ``OCR_CONFIDENCE_THRESHOLD`` are dropped.
     """
-    result = ocr.ocr(str(image_path), cls=False)
+    results = ocr.predict(str(image_path))
 
-    if not result or not result[0]:
+    if not results:
         return ""
 
-    # result[0] is a list of (bbox, (text, confidence)) tuples
+    # predict() returns a list of OCRResult (one per page/image).
+    # For a single image there is exactly one result.
+    result = results[0]
+
+    # OCRResult is dict-like with keys: rec_texts, rec_scores, dt_polys.
+    rec_texts = result["rec_texts"]
+    rec_scores = result["rec_scores"]
+    dt_polys = result["dt_polys"]
+
+    if not rec_texts:
+        return ""
+
+    # Pair up (y_coord, text) for sorting, filtering by confidence.
     lines: list[tuple[float, str]] = []
-    for entry in result[0]:
-        bbox, (text, confidence) = entry
-        if confidence < OCR_CONFIDENCE_THRESHOLD:
+    for text, score, poly in zip(rec_texts, rec_scores, dt_polys):
+        if float(score) < OCR_CONFIDENCE_THRESHOLD:
             continue
-        # Use the top-left y coordinate for vertical ordering
-        y = bbox[0][1]
-        lines.append((y, text.strip()))
+        text = text.strip() if isinstance(text, str) else str(text).strip()
+        if not text:
+            continue
+        # poly is typically [[x1,y1],[x2,y2],[x3,y3],[x4,y4]].
+        # Use the minimum y value (top edge) for vertical ordering.
+        try:
+            y = float(min(pt[1] for pt in poly))
+        except (TypeError, IndexError):
+            y = 0.0
+        lines.append((y, text))
 
-    # Sort by vertical position
     lines.sort(key=lambda t: t[0])
-
-    return " ".join(text for _, text in lines if text)
+    return " ".join(text for _, text in lines)
 
 
 # ---------------------------------------------------------------------------
@@ -208,21 +236,14 @@ def main():
             needs_ocr.append(p)
         elif "text" not in p:
             needs_ocr.append(p)
-        elif p["id"] not in existing_embeddings and p.get("text"):
-            # Has text but missing embedding (e.g. embedding file was
-            # deleted but gallery.json still has the text field)
-            needs_ocr.append(p)
 
-    # Also figure out which panels have text but are missing an
-    # embedding (OCR already done in a prior run).
+    # Panels that already have OCR text but are missing an embedding
+    # (e.g. embedding file was deleted but gallery.json still has text).
     needs_embedding_only: list[dict] = []
     if not force and version_valid:
         for p in panels:
-            if (
-                p["id"] not in existing_embeddings
-                and p.get("text")
-                and p not in needs_ocr
-            ):
+            pid = p["id"]
+            if pid not in existing_embeddings and p.get("text") and p not in needs_ocr:
                 needs_embedding_only.append(p)
 
     # Prune stale entries from embeddings
@@ -286,18 +307,22 @@ def main():
     # Phase 2: Sentence embedding
     # -----------------------------------------------------------------------
 
-    # Collect all panels that have text and need an embedding
+    # Collect all panels that have text and need an embedding.
+    ocr_ids = {p["id"] for p in needs_ocr}
     to_embed: list[dict] = []
     for p in panels:
-        if p["id"] in pruned and p["id"] not in {
-            pp["id"] for pp in needs_ocr
-        }:
+        pid = p["id"]
+        if pid in pruned and pid not in ocr_ids:
             continue  # already have a valid embedding
         if p.get("text"):
             to_embed.append(p)
 
+    # Also include panels from needs_embedding_only
+    for p in needs_embedding_only:
+        if p not in to_embed:
+            to_embed.append(p)
+
     if not to_embed:
-        # Still save if we pruned
         if pruned_count or gallery_modified:
             save_embeddings(pruned)
             print("[text] No panels with text to embed. Wrote file.")
