@@ -32,6 +32,12 @@ import numpy as np
 # Skip the slow model-source connectivity check on init.
 os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 
+# Disable oneDNN (MKL-DNN) backend — the default oneDNN path crashes on
+# GitHub Actions runners with "ConvertPirAttribute2RuntimeAttribute not
+# support [pir::ArrayAttribute<pir::DoubleAttribute>]".  Plain CPU is
+# slightly slower but works everywhere.
+os.environ["FLAGS_use_mkldnn"] = "0"
+
 
 # ---------------------------------------------------------------------------
 # Paths
