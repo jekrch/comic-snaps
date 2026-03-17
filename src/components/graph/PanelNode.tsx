@@ -184,6 +184,12 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   // Mount guard
   const mountTime = useRef(Date.now());
 
+  // Generation counter — incremented on every panel recycle. Long-press
+  // callbacks capture the generation at creation time and bail if it no
+  // longer matches, preventing stale timers from showing tooltips on
+  // recycled nodes.
+  const generation = useRef(0);
+
   // Tap detection refs (for double-tap recenter)
   const lastTapTime = useRef<{ time: number; x: number; y: number } | null>(
     null
@@ -209,7 +215,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   // requestAnimationFrame / setTimeout callbacks from setting state after unmount.
   const alive = useRef(true);
 
-  // Show / hide helpers that coordinate the fade animation 
+  // Show / hide helpers that coordinate the fade animation ──
 
   const showTooltip = useCallback(() => {
     if (!alive.current) return;
@@ -222,10 +228,11 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       setPlacement(computePlacement(nodeRef.current));
     }
 
+    const gen = generation.current;
     setMounted(true);
     // Allow a microtask so the DOM mounts at opacity 0 before we flip to 1
     requestAnimationFrame(() => {
-      if (alive.current) setWantShow(true);
+      if (alive.current && generation.current === gen) setWantShow(true);
     });
   }, []);
 
@@ -254,6 +261,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
   // data), immediately dismiss any open tooltip so it doesn't stick around
   // showing stale info or floating over the wrong node.
   useEffect(() => {
+    generation.current += 1;
     setWantShow(false);
     setMounted(false);
     clearTimeout(hideTimer.current);
@@ -266,7 +274,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     mountTime.current = Date.now();
   }, [panel.image]);
 
-  // Native touch listeners in capture phase 
+  // Native touch listeners in capture phase ──
   // ReactFlow intercepts touch events in its own handlers, so React synthetic
   // onTouchEnd never fires reliably on nodes. Attaching native capture-phase
   // listeners on the DOM node itself ensures we see every touch.
@@ -282,10 +290,14 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
       // Skip long-press if this node just mounted (ghost touch from graph reload)
       if (Date.now() - mountTime.current < MOUNT_GUARD_MS) return;
 
-      // Start long-press timer — show tooltip after delay
+      // Start long-press timer — show tooltip after delay.
+      // Capture the current generation so that if the panel recycles before
+      // the timer fires, the callback becomes a no-op.
+      const gen = generation.current;
       longPressActive.current = false;
       clearTimeout(longPressTimer.current);
       longPressTimer.current = setTimeout(() => {
+        if (generation.current !== gen) return;
         longPressActive.current = true;
         showTooltip();
       }, LONG_PRESS_DELAY);
@@ -394,7 +406,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     };
   }, [isAnchor, onDoubleClick, panel, showTooltip, hideTooltip]);
 
-  // Desktop: hover show/hide 
+  // Desktop: hover show/hide ──
   const handlePointerEnter = () => {
     clearTimeout(hideTimer.current);
     showTooltip();
@@ -404,7 +416,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
     hideTimer.current = setTimeout(() => hideTooltip(), 150);
   };
 
-  // Desktop: mouse double-click to recenter 
+  // Desktop: mouse double-click to recenter ──
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
       if (e.pointerType === "touch") return;
