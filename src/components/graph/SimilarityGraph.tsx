@@ -516,15 +516,9 @@ export default function SimilarityGraph({
           -webkit-user-select: none;
           user-select: none;
         }
-        .similarity-node:hover {
-          filter: brightness(1.05);
-        }
         .similarity-node .panel-overlay {
           opacity: 0;
           transition: opacity 0.15s ease;
-        }
-        .similarity-node:hover .panel-overlay {
-          opacity: 1;
         }
         @keyframes spin {
           to { transform: rotate(360deg); }
