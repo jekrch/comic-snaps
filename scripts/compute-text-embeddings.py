@@ -6,11 +6,14 @@ Pipeline
 --------
 1. PaddleOCR (v3.x / PP-OCRv5) detects and recognises visible text in
    each panel image — dialogue, captions, sound effects, narrative boxes.
-2. The extracted text is saved to a ``text`` field on each panel object
+2. The extracted text is cleaned via post-processing (common OCR
+   corrections for comic-book lettering, deduplication, short-token
+   filtering).
+3. The cleaned text is saved to a ``text`` field on each panel object
    in gallery.json.
-3. Panels with detected text are embedded using BAAI/bge-small-en-v1.5
+4. Panels with detected text are embedded using BAAI/bge-small-en-v1.5
    (384-dim) and written to embeddings-text.json.
-4. Panels with no detected text are omitted from the embeddings file.
+5. Panels with no detected text are omitted from the embeddings file.
 
 Incremental by default: panels that already have a ``text`` field in
 gallery.json AND an entry in embeddings-text.json are skipped.
@@ -24,6 +27,7 @@ Usage
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -52,16 +56,127 @@ IMAGE_ROOT = Path("public")
 # changes to trigger a full recompute automatically.
 # ---------------------------------------------------------------------------
 
-VERSION = "paddleocr-bge-small-en-v1.5-v1"
+VERSION = "paddleocr-bge-small-en-v1.5-v2"
 EMBEDDING_DIM = 384
 
 # ---------------------------------------------------------------------------
 # OCR confidence threshold — text detections below this score are
-# discarded.  PaddleOCR returns per-line confidence; 0.5 is lenient
+# discarded.  PaddleOCR returns per-line confidence; 0.40 is lenient
 # enough to keep stylised SFX while filtering random noise.
 # ---------------------------------------------------------------------------
 
-OCR_CONFIDENCE_THRESHOLD = 0.5
+OCR_CONFIDENCE_THRESHOLD = 0.40
+
+# ---------------------------------------------------------------------------
+# Post-processing: common OCR misreads in comic-book lettering
+# ---------------------------------------------------------------------------
+
+# Character-level substitutions applied to each recognised line.
+# Comic lettering is almost always ALL-CAPS, so the dominant errors
+# involve confusing visually similar glyphs.
+CHAR_FIXES: dict[str, str] = {
+    "\u2018": "'",   # curly single quotes → straight
+    "\u2019": "'",
+    "\u201c": '"',   # curly double quotes → straight
+    "\u201d": '"',
+    "\u2014": "--",  # em-dash
+    "\u2013": "-",   # en-dash
+    "|": "I",        # pipe misread as letter I
+    "}{": "H",       # braces misread as H (rare but consistent)
+}
+
+# Whole-word corrections (case-insensitive match, replaced with the
+# value as-is).  Add entries here as recurring mis-recognitions are
+# spotted in the gallery.
+WORD_FIXES: dict[str, str] = {
+    "l'M":   "I'M",
+    "l'LL":  "I'LL",
+    "l'VE":  "I'VE",
+    "l'D":   "I'D",
+    "lT":    "IT",
+    "lS":    "IS",
+    "lN":    "IN",
+    "lF":    "IF",
+    "TH1S":  "THIS",
+    "TH1NK": "THINK",
+    "W1TH":  "WITH",
+    "0F":    "OF",
+    "0N":    "ON",
+    "0UT":   "OUT",
+    "0NE":   "ONE",
+    "0NLY":  "ONLY",
+    "Y0U":   "YOU",
+    "G0":    "GO",
+    "N0":    "NO",
+    "N0T":   "NOT",
+    "D0":    "DO",
+    "S0":    "SO",
+    "T0":    "TO",
+    "WH0":   "WHO",
+}
+
+# Build a compiled regex for whole-word replacement (case-insensitive).
+_WORD_FIX_PATTERN = re.compile(
+    r"\b(" + "|".join(re.escape(k) for k in WORD_FIXES) + r")\b",
+    re.IGNORECASE,
+)
+
+# Minimum length for a kept token (after stripping punctuation).
+# Single stray characters are almost always OCR noise.
+MIN_TOKEN_LENGTH = 2
+
+
+def postprocess_line(line: str) -> str:
+    """Clean a single OCR-recognised line of comic text."""
+    # 1. Character-level fixes.
+    for old, new in CHAR_FIXES.items():
+        line = line.replace(old, new)
+
+    # 2. Whole-word fixes.
+    line = _WORD_FIX_PATTERN.sub(lambda m: WORD_FIXES.get(m.group(0).upper(), m.group(0)), line)
+
+    # 3. Collapse runs of whitespace.
+    line = re.sub(r"\s+", " ", line).strip()
+
+    return line
+
+
+def postprocess_text(raw_text: str) -> str:
+    """Clean the full concatenated OCR output for a panel.
+
+    Steps
+    -----
+    1. Apply per-line corrections.
+    2. Remove duplicate lines (same text detected twice in overlapping
+       regions is common with PaddleOCR).
+    3. Drop tokens shorter than MIN_TOKEN_LENGTH to filter stray noise
+       characters.
+    """
+    lines = raw_text.split(" ")
+    cleaned: list[str] = []
+    seen: set[str] = set()
+
+    for line in lines:
+        line = postprocess_line(line)
+        if not line:
+            continue
+        key = line.upper()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(line)
+
+    text = " ".join(cleaned)
+
+    # Drop isolated short tokens (likely noise) while preserving
+    # punctuation-attached words like "I" in "I'M".
+    tokens = text.split()
+    tokens = [
+        t for t in tokens
+        if len(re.sub(r"[^A-Za-z0-9]", "", t)) >= MIN_TOKEN_LENGTH
+        or re.sub(r"[^A-Za-z0-9]", "", t).upper() == "I"
+    ]
+    return " ".join(tokens)
 
 
 # ---------------------------------------------------------------------------
@@ -131,7 +246,7 @@ def save_embeddings(embeddings: dict[str, list[float]]) -> None:
 # ---------------------------------------------------------------------------
 
 def init_ocr():
-    """Initialise PaddleOCR.
+    """Initialise PaddleOCR with parameters tuned for comic-book lettering.
 
     PaddleOCR v3.x (wrapping PaddleX) changed the API surface:
       - ``use_angle_cls`` → ``use_textline_orientation``
@@ -141,21 +256,43 @@ def init_ocr():
             rec_texts   – list[str]    recognised text per line
             rec_scores  – list[float]  confidence per line
             dt_polys    – list[array]  detection polygons
+
+    Tuning notes for comic panels
+    -----------------------------
+    det_db_thresh : float (default 0.3)
+        Binarisation threshold for the DB text detector.  Lowered to 0.2
+        to pick up faint or coloured lettering on busy art backgrounds.
+
+    det_db_box_thresh : float (default 0.6)
+        Minimum score for a detected text *box* to be kept.  Lowered to
+        0.45 so that stylised SFX and small caption text survive
+        filtering.
+
+    det_db_unclip_ratio : float (default 1.5)
+        How much to expand detected text polygons.  Raised to 2.0
+        because comic lettering — especially hand-drawn — often has
+        strokes that extend beyond the tight detection box, causing
+        clipped characters at recognition time.
     """
     from paddleocr import PaddleOCR
 
     return PaddleOCR(
         lang="en",
         use_textline_orientation=False,
+        det_db_thresh=0.2,
+        det_db_box_thresh=0.45,
+        det_db_unclip_ratio=2.0,
     )
 
 
 def extract_text(ocr, image_path: Path) -> str:
-    """Run PaddleOCR on a single image and return concatenated text.
+    """Run PaddleOCR on a single image and return cleaned, concatenated text.
 
     Lines are sorted top-to-bottom by the y-coordinate of their
     detection polygon's top edge, approximating natural reading order.
-    Lines below ``OCR_CONFIDENCE_THRESHOLD`` are dropped.
+    Lines below ``OCR_CONFIDENCE_THRESHOLD`` are dropped.  The result
+    is then passed through ``postprocess_text`` for comic-specific
+    corrections.
     """
     results = ocr.predict(str(image_path))
 
@@ -191,7 +328,9 @@ def extract_text(ocr, image_path: Path) -> str:
         lines.append((y, text))
 
     lines.sort(key=lambda t: t[0])
-    return " ".join(text for _, text in lines)
+    raw = " ".join(text for _, text in lines)
+
+    return postprocess_text(raw)
 
 
 # ---------------------------------------------------------------------------
