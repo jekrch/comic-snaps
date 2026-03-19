@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "100-2-1773890854",
+      "title": "100%",
+      "slug": "100",
+      "issue": 2,
+      "year": 2002,
+      "artist": "Paul Pope",
+      "image": "images/100/issue-2-1773890854.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-19T03:27:35.779Z"
+    },
+    {
       "id": "criminal-the-special-edition-0-1773888551",
       "title": "Criminal: The Special Edition",
       "slug": "criminal-the-special-edition",
