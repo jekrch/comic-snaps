@@ -57,12 +57,12 @@ jobs:
       - name: Compute embeddings
         run: python scripts/compute-embeddings.py
 
-      - name: Compute text embeddings
-        run: python scripts/compute-text-embeddings.py
+      # - name: Compute text embeddings
+      #   run: python scripts/compute-text-embeddings.py
 
       - name: Commit updated data
         run: |
-          git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json public/data/embeddings-gram.json public/data/embeddings-text.json
+          git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json public/data/embeddings-gram.json
           git diff --cached --quiet && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
