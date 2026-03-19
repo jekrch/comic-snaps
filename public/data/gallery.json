@@ -1,6 +1,21 @@
 {
   "panels": [
     {
+      "id": "fatale-4-1773887276",
+      "title": "Fatale",
+      "slug": "fatale",
+      "issue": 4,
+      "year": 2012,
+      "artist": "Sean Phillips",
+      "image": "images/fatale/issue-4-1773887276.jpg",
+      "notes": null,
+      "tags": [
+        "noir"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-19T02:27:57.411Z"
+    },
+    {
       "id": "love-rockets-1-1773544479",
       "title": "Love & Rockets",
       "slug": "love-rockets",
