@@ -13,7 +13,30 @@
         "noir"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-19T02:27:57.411Z"
+      "addedAt": "2026-03-19T02:27:57.411Z",
+      "width": 1280,
+      "height": 644,
+      "dominantColors": [
+        [
+          37.2,
+          16.6,
+          20.6
+        ],
+        [
+          64.6,
+          13.7,
+          20.4
+        ],
+        [
+          12.9,
+          11.4,
+          11.1
+        ]
+      ],
+      "colorfulness": 7.7,
+      "phash": "9c96be751823a78c",
+      "ahash": "9f9e7e7e1a020113",
+      "dhash": "3c34a4f0b2caa276"
     },
     {
       "id": "love-rockets-1-1773544479",
