@@ -1,6 +1,21 @@
 {
   "panels": [
     {
+      "id": "100-3-1774130564",
+      "title": "100%",
+      "slug": "100",
+      "issue": 3,
+      "year": 2002,
+      "artist": "Paul Pope",
+      "image": "images/100/issue-3-1774130564.jpg",
+      "notes": null,
+      "tags": [
+        "bold brushwork"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-21T22:02:46.292Z"
+    },
+    {
       "id": "geiger-22-1774128278",
       "title": "Geiger",
       "slug": "geiger",
@@ -22,7 +37,7 @@
         ],
         [
           58.5,
-          -8.0,
+          -8,
           -25.8
         ],
         [
