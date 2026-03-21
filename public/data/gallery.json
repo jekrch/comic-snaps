@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "geiger-22-1774128278",
+      "title": "Geiger",
+      "slug": "geiger",
+      "issue": 22,
+      "year": 2026,
+      "artist": "Gary Frank",
+      "image": "images/geiger/issue-22-1774128278.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-21T21:24:39.371Z"
+    },
+    {
       "id": "infernal-hulk-5-1774124257",
       "title": "Infernal Hulk",
       "slug": "infernal-hulk",
@@ -16,8 +29,8 @@
       "height": 1280,
       "dominantColors": [
         [
-          51.0,
-          41.0,
+          51,
+          41,
           16.8
         ],
         [
