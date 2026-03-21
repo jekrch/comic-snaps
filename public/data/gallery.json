@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "battle-beast-8-1774121456",
+      "title": "Battle Beast",
+      "slug": "battle-beast",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Ryan Ottley",
+      "image": "images/battle-beast/issue-8-1774121456.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-21T19:30:57.227Z"
+    },
+    {
       "id": "100-2-1773890854",
       "title": "100%",
       "slug": "100",
@@ -23,7 +36,7 @@
         [
           46.9,
           4.6,
-          7.0
+          7
         ],
         [
           13.2,
