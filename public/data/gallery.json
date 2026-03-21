@@ -13,7 +13,30 @@
         "bold brushwork"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-21T22:02:46.292Z"
+      "addedAt": "2026-03-21T22:02:46.292Z",
+      "width": 1200,
+      "height": 1280,
+      "dominantColors": [
+        [
+          41.9,
+          2.6,
+          -4.2
+        ],
+        [
+          8.7,
+          1.1,
+          -1.3
+        ],
+        [
+          78.0,
+          -0.1,
+          -7.2
+        ]
+      ],
+      "colorfulness": 3.1,
+      "phash": "e095fed0da785648",
+      "ahash": "feff5a78706041b1",
+      "dhash": "188e92d0c3c78367"
     },
     {
       "id": "geiger-22-1774128278",
