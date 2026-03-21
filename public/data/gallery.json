@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-21T21:24:39.371Z"
+      "addedAt": "2026-03-21T21:24:39.371Z",
+      "width": 1218,
+      "height": 1280,
+      "dominantColors": [
+        [
+          13.3,
+          7.2,
+          4.8
+        ],
+        [
+          58.5,
+          -8.0,
+          -25.8
+        ],
+        [
+          35.3,
+          7.6,
+          -27.6
+        ]
+      ],
+      "colorfulness": 20.5,
+      "phash": "c87d1c86a5e0b4f6",
+      "ahash": "1988c8e8fcfdfd1b",
+      "dhash": "335313d3d5d595f5"
     },
     {
       "id": "infernal-hulk-5-1774124257",
