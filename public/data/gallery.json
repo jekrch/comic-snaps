@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "infernal-hulk-5-1774124257",
+      "title": "Infernal Hulk",
+      "slug": "infernal-hulk",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Kev Walker",
+      "image": "images/infernal-hulk/issue-5-1774124257.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-21T20:17:38.933Z"
+    },
+    {
       "id": "battle-beast-8-1774121456",
       "title": "Battle Beast",
       "slug": "battle-beast",
@@ -22,16 +35,16 @@
         ],
         [
           55.3,
-          8.0,
+          8,
           -29.6
         ],
         [
           34.5,
           11.1,
-          -25.0
+          -25
         ]
       ],
-      "colorfulness": 8.0,
+      "colorfulness": 8,
       "phash": "b657c429c96d3b81",
       "ahash": "f4f68600ef8703ff",
       "dhash": "c40c0c249c1fe7fc"
