@@ -110,7 +110,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     return () => window.removeEventListener("keydown", handler);
   }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen]);
 
-  // Layout calculations ──
+  // Layout calculations
 
   const hasTags = panel.tags?.length > 0;
   const IMG_PADDING = 44;

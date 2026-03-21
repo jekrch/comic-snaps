@@ -168,6 +168,7 @@ export default function PanelCard({ panel, panels, panelIndex, sortMode }: Props
               ref={imgRef}
               src={imgSrc}
               alt={`${panel.title} #${panel.issue}`}
+              decoding="sync"
               className="block w-full"
               style={{
                 aspectRatio,

@@ -61,7 +61,7 @@ export const EMBEDDING_DIM: Record<string, number> = {
   "embedding-gram": 512,
 };
 
-// Helpers ──────
+// Helpers
 
 export function fmt(n: number, decimals = 4): string {
   return n.toFixed(decimals);
