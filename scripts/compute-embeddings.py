@@ -12,13 +12,15 @@ siglip  – google/siglip-base-patch16-224 (semantic / conceptual similarity)
 dino    – facebook/dinov2-small (structural / perceptual similarity)
 gram    – VGG-16 Gram matrices (line style / texture similarity)
 
-The gram model extracts Gram matrices from three VGG-16 convolutional
+The gram model extracts Gram matrices from four VGG-16 convolutional
 layers spanning shallow-to-mid depth, capturing texture at multiple
-scales: fine hatching and stippling from early layers, broader stylistic
-patterns from deeper ones. The raw Gram features are high-dimensional,
-so PCA reduces them to a compact embedding. Because PCA is fit on the
-full corpus each run, gram embeddings are always fully recomputed (not
-incremental). Bumping the version string will also trigger a recompute.
+scales: fine hatching and stippling from early layers, broader inking
+style from deeper ones. Each layer's Gram vector is independently
+unit-normalized before concatenation so that no single layer dominates.
+The raw Gram features are high-dimensional, so PCA reduces them to a
+compact embedding. Because PCA is fit on the full corpus each run, gram
+embeddings are always fully recomputed (not incremental). Bumping the
+version string will also trigger a recompute.
 
 Usage
 -----
@@ -75,14 +77,14 @@ MODELS: dict[str, ModelSpec] = {
         hf_name="facebook/dinov2-small",
         dim=384,
         output_path=Path("public/data/embeddings-dino.json"),
-        version="dinov2-small-v1",
+        version="dinov2-small-cls-patch-v1",
     ),
     "gram": ModelSpec(
         key="gram",
         hf_name="vgg16",
         dim=256,
         output_path=Path("public/data/embeddings-gram.json"),
-        version="vgg16-gram-3layer-pca256-v1",
+        version="vgg16-gram-4layer-normed-pca256-v1",
         incremental=False,  # PCA must be fit on the full corpus
     ),
 }
@@ -160,11 +162,19 @@ def compute_embedding_siglip(
 def compute_embedding_dino(
     img: Image.Image, model, processor
 ) -> np.ndarray:
-    """DINOv2: use the CLS token from last_hidden_state → unit-normalize."""
+    """DINOv2: average CLS token and mean patch tokens → unit-normalize.
+
+    The CLS token captures a global summary while patch tokens retain
+    spatial/structural detail. Averaging both gives a richer
+    representation than CLS alone, especially for layout and
+    composition similarity.
+    """
     inputs = processor(images=img, return_tensors="pt")
     with torch.no_grad():
         outputs = model(**inputs)
-        vec = outputs.last_hidden_state[:, 0].squeeze().numpy()
+        cls = outputs.last_hidden_state[:, 0]          # (1, dim)
+        patch_mean = outputs.last_hidden_state[:, 1:].mean(dim=1)  # (1, dim)
+        vec = ((cls + patch_mean) / 2).squeeze().numpy()
     return vec / np.linalg.norm(vec)
 
 
@@ -175,11 +185,20 @@ def compute_embedding_dino(
 #   relu1_2 (64 channels)  – fine texture: hatching, stippling, line weight
 #   relu2_2 (128 channels) – medium patterns: crosshatching, dot screens
 #   relu3_3 (256 channels) – broader style: inking approach, tonal treatment
+#   relu4_3 (512 channels) – high-level inking: brush vs nib, line confidence
+#
+# relu5_3 is intentionally excluded — it captures spatial/compositional
+# structure (page layout) rather than inking style.
 GRAM_LAYER_INDICES = {
     "relu1_2": 3,   # features[3]  = ReLU after conv1_2
     "relu2_2": 8,   # features[8]  = ReLU after conv2_2
     "relu3_3": 15,  # features[15] = ReLU after conv3_3
+    "relu4_3": 22,  # features[22] = ReLU after conv4_3
 }
+
+# Channel counts for each extracted layer, used to pre-compute
+# upper-triangle indices.
+GRAM_CHANNEL_COUNTS = [64, 128, 256, 512]
 
 # Standard ImageNet normalization for VGG
 GRAM_TRANSFORM = transforms.Compose([
@@ -190,7 +209,7 @@ GRAM_TRANSFORM = transforms.Compose([
 
 # Number of images to push through VGG in a single forward pass.
 # Tune based on available memory — 32 is conservative for CPU with
-# 224×224 inputs and only 15 conv layers.
+# 224×224 inputs and only the first 22 conv layers.
 GRAM_BATCH_SIZE = 32
 
 
@@ -202,10 +221,15 @@ class GramExtractor(nn.Module):
     It captures which feature channels co-activate, encoding texture
     and style independent of spatial layout.
 
+    Each layer's upper-triangle Gram vector is independently
+    unit-normalized before being returned, so that no single layer
+    (especially deeper ones with many more channels) dominates the
+    concatenated representation.
+
     Supports batched input: given a tensor of shape (B, 3, H, W),
     returns a list of tensors each of shape (B, C*(C+1)/2) — one
-    per layer, with upper-triangle Gram values for every image in
-    the batch.
+    per layer, with normalized upper-triangle Gram values for every
+    image in the batch.
     """
 
     def __init__(self, layer_indices: dict[str, int]):
@@ -224,13 +248,12 @@ class GramExtractor(nn.Module):
 
         # Pre-compute upper-triangle index pairs for each layer's
         # channel count so they aren't rebuilt on every forward call.
-        channel_counts = [64, 128, 256]  # relu1_2, relu2_2, relu3_3
         self._triu_indices = [
-            torch.triu_indices(c, c) for c in channel_counts
+            torch.triu_indices(c, c) for c in GRAM_CHANNEL_COUNTS
         ]
 
     def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
-        """Return upper-triangle Gram vectors for a batch of images.
+        """Return per-layer-normalized upper-triangle Gram vectors.
 
         Parameters
         ----------
@@ -239,7 +262,9 @@ class GramExtractor(nn.Module):
         Returns
         -------
         list[Tensor]
-            One tensor per layer, each of shape (B, C*(C+1)/2).
+            One tensor per layer, each of shape (B, C*(C+1)/2),
+            unit-normalized per image so all layers contribute
+            equally to the concatenated vector.
         """
         grams = []
         h = x
@@ -254,6 +279,12 @@ class GramExtractor(nn.Module):
             # Extract upper triangle for each image in the batch
             triu = self._triu_indices[i]
             gram_upper = gram[:, triu[0], triu[1]]             # (B, tri)
+
+            # Unit-normalize each layer independently so deeper layers
+            # (with many more features) don't dominate the concat
+            norm = gram_upper.norm(dim=1, keepdim=True).clamp(min=1e-8)
+            gram_upper = gram_upper / norm
+
             grams.append(gram_upper)
         return grams
 
@@ -271,13 +302,13 @@ def compute_gram_features_batch(
 
     Returns
     -------
-    np.ndarray of shape (len(images), 43232)
-        Concatenated upper-triangle Gram values from all layers.
+    np.ndarray of shape (len(images), total_features)
+        Concatenated per-layer-normalized upper-triangle Gram values.
     """
     batch = torch.stack([GRAM_TRANSFORM(img) for img in images])
     with torch.no_grad():
         grams = extractor(batch)                # list of (B, tri_i)
-    return torch.cat(grams, dim=1).numpy()       # (B, 43232)
+    return torch.cat(grams, dim=1).numpy()       # (B, total_features)
 
 
 def compute_gram_features(

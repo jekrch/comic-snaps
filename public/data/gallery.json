@@ -83,6 +83,8 @@
       "artist": "Kev Walker",
       "image": "images/infernal-hulk/issue-5-1774124257.jpg",
       "notes": null,
+      "blur": "ew",
+      "blurStart": "bottom",
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-03-21T20:17:38.933Z",
