@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "the-maxx-1-1774215636",
+      "title": "The Maxx",
+      "slug": "the-maxx",
+      "issue": 1,
+      "year": 1993,
+      "artist": "Sam Keith",
+      "image": "images/the-maxx/issue-1-1774215636.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-22T21:40:37.831Z"
+    },
+    {
       "id": "omaha-vol-2-4-1774215021",
       "title": "Omaha: Vol 2",
       "slug": "omaha-vol-2",
