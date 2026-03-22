@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "omaha-vol-2-4-1774215021",
+      "title": "Omaha: Vol 2",
+      "slug": "omaha-vol-2",
+      "issue": 4,
+      "year": 1995,
+      "artist": "Reed Waller",
+      "image": "images/omaha-vol-2/issue-4-1774215021.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-22T21:30:22.254Z"
+    },
+    {
       "id": "100-3-1774130564",
       "title": "100%",
       "slug": "100",
@@ -28,7 +41,7 @@
           -1.3
         ],
         [
-          78.0,
+          78,
           -0.1,
           -7.2
         ]
