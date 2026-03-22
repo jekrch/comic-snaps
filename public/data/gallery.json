@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-22T22:08:51.672Z"
+      "addedAt": "2026-03-22T22:08:51.672Z",
+      "width": 1278,
+      "height": 1280,
+      "dominantColors": [
+        [
+          13.1,
+          0.2,
+          2.4
+        ],
+        [
+          38.6,
+          1.6,
+          3.9
+        ],
+        [
+          65.2,
+          2.3,
+          5.8
+        ]
+      ],
+      "colorfulness": 2.2,
+      "phash": "8dce5ce16a4e4167",
+      "ahash": "383e3f3f1f1a1a0c",
+      "dhash": "e3e2e0e1f3d2f6f4"
     },
     {
       "id": "the-maxx-5-1774216970",
