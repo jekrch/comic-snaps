@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "omaha-vol-2-4-1774217330",
+      "title": "Omaha: Vol 2",
+      "slug": "omaha-vol-2",
+      "issue": 4,
+      "year": 1995,
+      "artist": "Reed Waller",
+      "image": "images/omaha-vol-2/issue-4-1774217330.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-22T22:08:51.672Z"
+    },
+    {
       "id": "the-maxx-5-1774216970",
       "title": "The Maxx",
       "slug": "the-maxx",
@@ -17,7 +30,7 @@
       "dominantColors": [
         [
           58.9,
-          22.0,
+          22,
           15.9
         ],
         [
