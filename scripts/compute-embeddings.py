@@ -82,9 +82,9 @@ MODELS: dict[str, ModelSpec] = {
     "gram": ModelSpec(
         key="gram",
         hf_name="vgg16",
-        dim=256,
+        dim=30,
         output_path=Path("public/data/embeddings-gram.json"),
-        version="vgg16-gram-4layer-normed-pca256-v1",
+        version="vgg16-gram-4layer-normed-pca30-v1",
         incremental=False,  # PCA must be fit on the full corpus
     ),
 }
