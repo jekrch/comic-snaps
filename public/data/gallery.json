@@ -9,7 +9,7 @@
       "artist": "Reed Waller",
       "image": "images/omaha-vol-2/issue-4-1774217330.jpg",
       "notes": null,
-      "tags": [],
+      "tags": ["hatching"],
       "postedBy": "Jacob",
       "addedAt": "2026-03-22T22:08:51.672Z",
       "width": 1278,
@@ -45,7 +45,7 @@
       "artist": "Sam Keith",
       "image": "images/the-maxx/issue-5-1774216970.jpg",
       "notes": null,
-      "tags": [],
+      "tags": ["two-page spread"],
       "postedBy": "Jacob",
       "addedAt": "2026-03-22T22:02:51.695Z",
       "width": 1280,
@@ -154,7 +154,7 @@
       "image": "images/100/issue-3-1774130564.jpg",
       "notes": null,
       "tags": [
-        "bold brushwork"
+        "bold brushwork", "sound effects"
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-21T22:02:46.292Z",
@@ -229,7 +229,7 @@
       "notes": null,
       "blur": "ew",
       "blurStart": "bottom",
-      "tags": [],
+      "tags": ["sound effects"],
       "postedBy": "Jacob",
       "addedAt": "2026-03-21T20:17:38.934Z",
       "width": 1042,
