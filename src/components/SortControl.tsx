@@ -1,13 +1,17 @@
 import { useState } from "react";
 import type { SortMode } from "../utils/sorting";
 import { SORT_OPTIONS } from "../utils/sorting";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { ChevronDown, HelpCircle, GitGraph } from "lucide-react";
 
 interface SortControlProps {
   activeSort: SortMode;
   onSort: (mode: SortMode) => void;
   onInfoOpen?: () => void;
 }
+
+// Embedding-based sort modes
+const EMBEDDING_MODES = new Set<SortMode>(["embedding-dino", "embedding-gram", "embedding-siglip"]);
+
 
 export default function SortControl({ activeSort, onSort, onInfoOpen }: SortControlProps) {
   const [open, setOpen] = useState(false);
@@ -70,6 +74,9 @@ export default function SortControl({ activeSort, onSort, onInfoOpen }: SortCont
                       <span className="inline-block w-1 h-1 rounded-full bg-accent flex-shrink-0" />
                     )}
                     {opt.label}
+                    {EMBEDDING_MODES.has(opt.value) && (
+                      <GitGraph size={10} className="opacity-40 flex-shrink-0" />
+                    )}
                   </span>
                 </button>
               );
