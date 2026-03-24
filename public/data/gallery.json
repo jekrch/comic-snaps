@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "criminal-the-special-edition-0-1774321106",
+      "title": "Criminal: The Special Edition",
+      "slug": "criminal-the-special-edition",
+      "issue": 0,
+      "year": 2015,
+      "artist": "Sean Phillips",
+      "image": "images/criminal-the-special-edition/issue-0-1774321106.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-24T02:58:28.326Z"
+    },
+    {
       "id": "omaha-vol-2-4-1774217330",
       "title": "Omaha: Vol 2",
       "slug": "omaha-vol-2",
@@ -9,7 +22,9 @@
       "artist": "Reed Waller",
       "image": "images/omaha-vol-2/issue-4-1774217330.jpg",
       "notes": null,
-      "tags": ["hatching"],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-22T22:08:51.672Z",
       "width": 1278,
@@ -45,7 +60,9 @@
       "artist": "Sam Keith",
       "image": "images/the-maxx/issue-5-1774216970.jpg",
       "notes": null,
-      "tags": ["two-page spread"],
+      "tags": [
+        "two-page spread"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-22T22:02:51.695Z",
       "width": 1280,
@@ -154,7 +171,8 @@
       "image": "images/100/issue-3-1774130564.jpg",
       "notes": null,
       "tags": [
-        "bold brushwork", "sound effects"
+        "bold brushwork",
+        "sound effects"
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-21T22:02:46.292Z",
@@ -229,7 +247,9 @@
       "notes": null,
       "blur": "ew",
       "blurStart": "bottom",
-      "tags": ["sound effects"],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-21T20:17:38.934Z",
       "width": 1042,
