@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-24T02:58:28.326Z"
+      "addedAt": "2026-03-24T02:58:28.326Z",
+      "width": 1018,
+      "height": 1280,
+      "dominantColors": [
+        [
+          34.5,
+          15.0,
+          22.7
+        ],
+        [
+          8.8,
+          9.2,
+          8.8
+        ],
+        [
+          65.1,
+          16.1,
+          28.6
+        ]
+      ],
+      "colorfulness": 12.0,
+      "phash": "d5f060606f436add",
+      "ahash": "e0fefebe9e000200",
+      "dhash": "8c9c285870b4fa78"
     },
     {
       "id": "omaha-vol-2-4-1774217330",
