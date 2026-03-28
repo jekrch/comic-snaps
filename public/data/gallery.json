@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-28T19:39:07.957Z"
+      "addedAt": "2026-03-28T19:39:07.957Z",
+      "width": 1083,
+      "height": 1280,
+      "dominantColors": [
+        [
+          68.0,
+          10.1,
+          12.0
+        ],
+        [
+          56.0,
+          53.9,
+          6.4
+        ],
+        [
+          32.6,
+          5.1,
+          -2.8
+        ]
+      ],
+      "colorfulness": 29.2,
+      "phash": "fc95a93c8972047e",
+      "ahash": "dbdfe4ef9c81c1c1",
+      "dhash": "16360c8d28250fa7"
     },
     {
       "id": "criminal-the-special-edition-0-1774321106",
