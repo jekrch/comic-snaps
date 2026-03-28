@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "just-brutal-2-1774726746",
+      "title": "Just Brutal",
+      "slug": "just-brutal",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Brahm Revel",
+      "image": "images/just-brutal/issue-2-1774726746.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-28T19:39:07.957Z"
+    },
+    {
       "id": "criminal-the-special-edition-0-1774321106",
       "title": "Criminal: The Special Edition",
       "slug": "criminal-the-special-edition",
@@ -17,7 +30,7 @@
       "dominantColors": [
         [
           34.5,
-          15.0,
+          15,
           22.7
         ],
         [
@@ -31,7 +44,7 @@
           28.6
         ]
       ],
-      "colorfulness": 12.0,
+      "colorfulness": 12,
       "phash": "d5f060606f436add",
       "ahash": "e0fefebe9e000200",
       "dhash": "8c9c285870b4fa78"
