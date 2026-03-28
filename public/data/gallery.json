@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-28T20:42:45.086Z"
+      "addedAt": "2026-03-28T20:42:45.086Z",
+      "width": 1192,
+      "height": 1280,
+      "dominantColors": [
+        [
+          78.2,
+          7.4,
+          4.3
+        ],
+        [
+          51.6,
+          8.1,
+          6.0
+        ],
+        [
+          9.9,
+          6.4,
+          3.5
+        ]
+      ],
+      "colorfulness": 7.0,
+      "phash": "d0a912d5355e5759",
+      "ahash": "6cfff8bcdafcfc1c",
+      "dhash": "c8933121b2ac203c"
     },
     {
       "id": "just-brutal-2-1774726746",
