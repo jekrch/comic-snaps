@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-29T17:48:29.384Z"
+      "addedAt": "2026-03-29T17:48:29.384Z",
+      "width": 1259,
+      "height": 1280,
+      "dominantColors": [
+        [
+          49.0,
+          11.8,
+          33.6
+        ],
+        [
+          24.3,
+          10.0,
+          17.7
+        ],
+        [
+          58.1,
+          32.8,
+          59.6
+        ]
+      ],
+      "colorfulness": 21.1,
+      "phash": "b51f477543f038b0",
+      "ahash": "021b0f07070fff6f",
+      "dhash": "6a6abbdb5e968eca"
     },
     {
       "id": "phantom-of-the-opera-2-1774805541",
