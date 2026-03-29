@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-29T00:03:29.460Z"
+      "addedAt": "2026-03-29T00:03:29.460Z",
+      "width": 1043,
+      "height": 1280,
+      "dominantColors": [
+        [
+          66.5,
+          3.8,
+          6.1
+        ],
+        [
+          24.0,
+          2.5,
+          -1.3
+        ],
+        [
+          53.1,
+          31.2,
+          39.8
+        ]
+      ],
+      "colorfulness": 22.9,
+      "phash": "9cf54e16d4c3d168",
+      "ahash": "fe9feb7f061d0111",
+      "dhash": "ec7496d4b4f9f3b7"
     },
     {
       "id": "minor-arcana-15-1774730563",
