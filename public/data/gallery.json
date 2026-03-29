@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "absolute-martian-manhunter-10-1774742607",
+      "title": "Absolute Martian Manhunter",
+      "slug": "absolute-martian-manhunter",
+      "issue": 10,
+      "year": 2026,
+      "artist": "Javier Rodriguez",
+      "image": "images/absolute-martian-manhunter/issue-10-1774742607.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-29T00:03:29.460Z"
+    },
+    {
       "id": "minor-arcana-15-1774730563",
       "title": "Minor Arcana",
       "slug": "minor-arcana",
@@ -23,7 +36,7 @@
         [
           51.6,
           8.1,
-          6.0
+          6
         ],
         [
           9.9,
@@ -31,7 +44,7 @@
           3.5
         ]
       ],
-      "colorfulness": 7.0,
+      "colorfulness": 7,
       "phash": "d0a912d5355e5759",
       "ahash": "6cfff8bcdafcfc1c",
       "dhash": "c8933121b2ac203c"
