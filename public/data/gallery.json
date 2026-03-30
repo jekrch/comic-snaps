@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "absolute-martian-manhunter-10-1774845604",
+      "title": "Absolute Martian Manhunter",
+      "slug": "absolute-martian-manhunter",
+      "issue": 10,
+      "year": 2026,
+      "artist": "Javier Rodriguez",
+      "image": "images/absolute-martian-manhunter/issue-10-1774845604.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-03-30T04:40:05.484Z"
+    },
+    {
       "id": "absolute-wonder-woman-18-1774826972",
       "title": "Absolute Wonder Woman",
       "slug": "absolute-wonder-woman",
@@ -33,7 +46,7 @@
           56.5
         ]
       ],
-      "colorfulness": 21.0,
+      "colorfulness": 21,
       "phash": "b4ae31985ae2874f",
       "ahash": "1f8723849c7f4703",
       "dhash": "7d2f472530f69cae"
