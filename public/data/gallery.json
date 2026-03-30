@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-03-30T04:40:05.484Z"
+      "addedAt": "2026-03-30T04:40:05.484Z",
+      "width": 1280,
+      "height": 818,
+      "dominantColors": [
+        [
+          77.2,
+          -0.0,
+          19.3
+        ],
+        [
+          24.8,
+          0.6,
+          -6.8
+        ],
+        [
+          37.9,
+          44.6,
+          32.8
+        ]
+      ],
+      "colorfulness": 31.5,
+      "phash": "93e3d73cf8c8184c",
+      "ahash": "ffee24ff83000024",
+      "dhash": "984cc9c936b6c44c"
     },
     {
       "id": "absolute-wonder-woman-18-1774826972",
