@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "jacked-1-1775010067",
+      "title": "Jacked",
+      "slug": "jacked",
+      "issue": 1,
+      "year": 2016,
+      "artist": "John Higgins",
+      "image": "images/jacked/issue-1-1775010067.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-01T02:21:08.452Z"
+    },
+    {
       "id": "absolute-martian-manhunter-10-1774845604",
       "title": "Absolute Martian Manhunter",
       "slug": "absolute-martian-manhunter",
@@ -17,7 +30,7 @@
       "dominantColors": [
         [
           77.2,
-          -0.0,
+          0,
           19.3
         ],
         [
