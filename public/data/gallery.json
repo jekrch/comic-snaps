@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-01T02:21:08.452Z"
+      "addedAt": "2026-04-01T02:21:08.452Z",
+      "width": 960,
+      "height": 1280,
+      "dominantColors": [
+        [
+          45.4,
+          50.2,
+          38.3
+        ],
+        [
+          28.9,
+          22.1,
+          16.6
+        ],
+        [
+          57.7,
+          9.1,
+          28.4
+        ]
+      ],
+      "colorfulness": 25.4,
+      "phash": "bac0603cc3a95afe",
+      "ahash": "6b67cf6fa7830384",
+      "dhash": "9b9c99cb2d35570d"
     },
     {
       "id": "absolute-martian-manhunter-10-1774845604",
