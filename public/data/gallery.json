@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "fatale-9-1775180803",
+      "title": "Fatale",
+      "slug": "fatale",
+      "issue": 9,
+      "year": 2012,
+      "artist": "Sean Phillips",
+      "image": "images/fatale/issue-9-1775180803.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-03T01:46:44.711Z"
+    },
+    {
       "id": "jacked-1-1775010067",
       "title": "Jacked",
       "slug": "jacked",
