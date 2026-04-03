@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-03T01:46:44.711Z"
+      "addedAt": "2026-04-03T01:46:44.711Z",
+      "width": 1046,
+      "height": 1280,
+      "dominantColors": [
+        [
+          74.5,
+          13.6,
+          26.2
+        ],
+        [
+          43.6,
+          10.1,
+          20.0
+        ],
+        [
+          11.1,
+          8.7,
+          8.5
+        ]
+      ],
+      "colorfulness": 9.2,
+      "phash": "d2d285a9b93a47c6",
+      "ahash": "ff7c0484800009ff",
+      "dhash": "50ec6c2939d6fbe0"
     },
     {
       "id": "jacked-1-1775010067",
