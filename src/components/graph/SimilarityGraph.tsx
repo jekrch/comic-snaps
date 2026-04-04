@@ -13,7 +13,7 @@ import "@xyflow/react/dist/style.css";
 import { X, ChevronDown, Info } from "lucide-react";
 
 import type { Panel } from "../../types";
-import type { SortMode, EmbeddingMap } from "../../utils/sorting";
+import type { EmbeddingMap } from "../../utils/sorting";
 import { loadEmbeddings } from "../../utils/sorting";
 
 import {
@@ -33,6 +33,7 @@ import {
 import { nodeTypes, type PanelNodeData } from "./PanelNode.tsx";
 import { edgeTypes } from "./DistanceEdge.tsx";
 import MetricExplainerModal from "../explainer/MetricExplainerModal";
+import { useFilterParams } from "../../hooks/useFilterParams.ts";
 
 /* Helper: fit view only when anchor changes */
 
@@ -57,18 +58,18 @@ function FitOnAnchorChange({ anchorId }: { anchorId: string }) {
 interface SimilarityGraphProps {
   panel: Panel;
   allPanels: Panel[];
-  activeSortMode: SortMode;
   onClose: () => void;
 }
 
 export default function SimilarityGraph({
   panel,
   allPanels,
-  activeSortMode,
   onClose,
 }: SimilarityGraphProps) {
   // State
   const [anchorPanel, setAnchorPanel] = useState<Panel>(panel);
+
+  const { initialSort } = useFilterParams();
 
   const [metric, setMetric] = useState<MetricKey>(() => {
     const embeddingModes: MetricKey[] = [
@@ -76,11 +77,9 @@ export default function SimilarityGraph({
       "embedding-dino",
       "embedding-gram",
     ];
-    if (embeddingModes.includes(activeSortMode as MetricKey)) {
-      return activeSortMode as MetricKey;
+    if (embeddingModes.includes(initialSort as MetricKey)) {
+      return initialSort as MetricKey;
     }
-    if (activeSortMode === "color") return "color";
-    if (activeSortMode === "phash") return "phash";
     return "embedding-siglip";
   });
 
@@ -91,7 +90,6 @@ export default function SimilarityGraph({
   const [showExplainer, setShowExplainer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [embeddings, setEmbeddings] = useState<EmbeddingMap | null>(null);
-
   const [currentNeighbors, setCurrentNeighbors] = useState<Neighbor[]>([]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<PanelNodeData>>(

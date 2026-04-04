@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link as Search, X, ZoomIn, ZoomOut, GitGraph } from "lucide-react";
 import type { Panel } from "../types";
-import type { SortMode } from "../utils/sorting";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
@@ -16,10 +15,9 @@ interface Props {
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
-  sortMode?: SortMode;
 }
 
-export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate, sortMode = "newest" }: Props) {
+export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -441,7 +439,6 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         <SimilarityGraph
           panel={panel}
           allPanels={panels}
-          activeSortMode={sortMode}
           onClose={() => setGraphOpen(false)}
         />
       )}
