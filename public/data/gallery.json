@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "stray-bullets-23-1775346555",
+      "title": "Stray Bullets",
+      "slug": "stray-bullets",
+      "issue": 23,
+      "year": 2002,
+      "artist": "David Lapham",
+      "image": "images/stray-bullets/issue-23-1775346555.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-04T23:49:16.220Z"
+    },
+    {
       "id": "stray-bullets-1-1775345900",
       "title": "Stray Bullets",
       "slug": "stray-bullets",
