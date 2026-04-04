@@ -177,6 +177,67 @@ button,
   will-change: transform;
 }
 
+/* Intro: bird descends from above in front of title, hops across to final spot */
+@keyframes bird-hop-intro {
+  0% {
+    transform: translateX(-7rem) translateY(-4rem) rotate(0deg);
+    opacity: 0;
+  }
+  /* Appear while falling */
+  4% {
+    transform: translateX(-7rem) translateY(-2.5rem) rotate(0deg);
+    opacity: 1;
+  }
+  /* Land in front of title */
+  12% {
+    transform: translateX(-7rem) translateY(1.25rem) rotate(5deg);
+  }
+  /* Squish on landing */
+  15% {
+    transform: translateX(-7rem) translateY(1.5rem) rotate(7deg);
+  }
+  /* Recover */
+  19% {
+    transform: translateX(-7rem) translateY(1.25rem) rotate(3deg);
+  }
+  /* Hop 1 — up */
+  28% {
+    transform: translateX(-6.5rem) translateY(-0.2rem) rotate(-2deg);
+  }
+  /* Hop 1 — land */
+  37% {
+    transform: translateX(-6rem) translateY(1.25rem) rotate(6deg);
+  }
+  /* Hop 2 — up, moving right */
+  47% {
+    transform: translateX(-4rem) translateY(-0.4rem) rotate(0deg);
+  }
+  /* Hop 2 — land */
+  56% {
+    transform: translateX(-3rem) translateY(1.25rem) rotate(8deg);
+  }
+  /* Hop 3 — bigger leap right */
+  67% {
+    transform: translateX(-1.2rem) translateY(-0.6rem) rotate(14deg);
+  }
+  /* Hop 3 — land near final */
+  77% {
+    transform: translateX(0) translateY(1.4rem) rotate(31deg);
+  }
+  /* Settle */
+  88% {
+    transform: translateX(0) translateY(1.1rem) rotate(27deg);
+  }
+  100% {
+    transform: translateY(1.25rem) rotate(29deg);
+  }
+}
+
+.bird-hop-intro {
+  animation: bird-hop-intro 2.4s ease-in-out forwards;
+}
+
+
 @keyframes peck {
   0%, 100% {
     transform: translateY(1.25rem) rotate(29deg);
@@ -184,10 +245,6 @@ button,
   50% {
     transform: translateY(1.25rem) rotate(38deg);
   }
-}
-
-.bird-peck-intro {
-  animation: peck 0.45s ease-in-out 2;
 }
 
 .bird-peck-scroll {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
@@ -8,7 +8,7 @@ import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
-import { Bird } from "lucide-react";
+import BirdIcon from "./components/BirdIcon";
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
@@ -20,43 +20,6 @@ export default function App() {
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
-  const birdRef = useRef<SVGSVGElement>(null);
-
-  useEffect(() => {
-    const el = birdRef.current;
-    if (!el) return;
-
-    // Intro peck
-    const introTimer = setTimeout(() => {
-      el.classList.add("bird-peck-intro");
-      el.addEventListener("animationend", () => el.classList.remove("bird-peck-intro"), { once: true });
-    }, 400);
-
-    // Scroll-triggered pecking — no React state, just DOM classes
-    let scrollTimer: ReturnType<typeof setTimeout> | null = null;
-    let lastScrollY = window.scrollY;
-
-    const onScroll = () => {
-      if (Math.abs(window.scrollY - lastScrollY) < 10) return;
-      lastScrollY = window.scrollY;
-
-      if (!el.classList.contains("bird-peck-scroll")) {
-        el.classList.add("bird-peck-scroll");
-      }
-
-      if (scrollTimer) clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        el.classList.remove("bird-peck-scroll");
-      }, 400);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      clearTimeout(introTimer);
-      window.removeEventListener("scroll", onScroll);
-      if (scrollTimer) clearTimeout(scrollTimer);
-    };
-  }, []);
 
   useEffect(() => {
     if (initialTab) {
@@ -137,26 +100,13 @@ export default function App() {
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
         <div className="content-container px-1 py-0 flex items-center justify-between">
           <div className="flex items-center">
-            <h1 className="font-display font-bold text-xl tracking-tight text-ink">
+            <h1
+              className="font-display font-bold text-xl tracking-tight text-ink cursor-pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
               C0MIC SNAPS
             </h1>
-            <div className="h-7 overflow-hidden flex items-end" style={{
-              maskImage: `repeating-linear-gradient(to bottom,
-                black 0px, black 2px, transparent 4px, transparent 3px),
-                linear-gradient(to bottom, black 40%, transparent 90%)`,
-              WebkitMaskImage: `repeating-linear-gradient(to bottom,
-                black 0px, black 2px, transparent 2px, transparent 3px),
-                linear-gradient(to bottom, black 40%, transparent 90%)`,
-              maskComposite: 'intersect',
-              WebkitMaskComposite: 'source-in',
-            }}>
-              <Bird
-                ref={birdRef}
-                size={70}
-                strokeWidth={1.5}
-                className="ml-6 sm:ml-[4vw] stroke-[#8d422f] bird-base"
-              />
-            </div>
+            <BirdIcon />
           </div>
           <button
             onClick={() => handleOpenInfo("about")}
