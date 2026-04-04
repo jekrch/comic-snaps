@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "100-5-1775339463",
+      "title": "100%",
+      "slug": "100",
+      "issue": 5,
+      "year": 2003,
+      "artist": "Paul Pope",
+      "image": "images/100/issue-5-1775339463.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-04T21:51:04.790Z"
+    },
+    {
       "id": "harrow-county-25-1775334726",
       "title": "Harrow County",
       "slug": "harrow-county",
@@ -22,7 +35,7 @@
         ],
         [
           39.4,
-          -3.0,
+          -3,
           27.2
         ],
         [
