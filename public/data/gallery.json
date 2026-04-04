@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-04T21:51:04.790Z"
+      "addedAt": "2026-04-04T21:51:04.790Z",
+      "width": 1093,
+      "height": 1280,
+      "dominantColors": [
+        [
+          79.2,
+          4.4,
+          3.4
+        ],
+        [
+          52.2,
+          4.0,
+          4.4
+        ],
+        [
+          12.2,
+          1.5,
+          2.7
+        ]
+      ],
+      "colorfulness": 6.5,
+      "phash": "b3f258ef9807205e",
+      "ahash": "ffe7e63f9f27130f",
+      "dhash": "4f8a8ccd394d67b0"
     },
     {
       "id": "harrow-county-25-1775334726",
