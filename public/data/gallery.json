@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "100-5-1775331302",
+      "title": "100%",
+      "slug": "100",
+      "issue": 5,
+      "year": 2003,
+      "artist": "Paul Pope",
+      "image": "images/100/issue-5-1775331302.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-04T19:35:04.039Z"
+    },
+    {
       "id": "fatale-9-1775180803",
       "title": "Fatale",
       "slug": "fatale",
@@ -23,7 +36,7 @@
         [
           43.6,
           10.1,
-          20.0
+          20
         ],
         [
           11.1,
