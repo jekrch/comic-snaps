@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-04T19:35:04.039Z"
+      "addedAt": "2026-04-04T19:35:04.039Z",
+      "width": 1024,
+      "height": 1280,
+      "dominantColors": [
+        [
+          80.2,
+          7.6,
+          13.3
+        ],
+        [
+          49.3,
+          8.6,
+          9.5
+        ],
+        [
+          13.5,
+          7.7,
+          5.6
+        ]
+      ],
+      "colorfulness": 5.3,
+      "phash": "b661209f07cadcce",
+      "ahash": "7483f0b5be9e3706",
+      "dhash": "c94e17656c3c75ac"
     },
     {
       "id": "fatale-9-1775180803",
