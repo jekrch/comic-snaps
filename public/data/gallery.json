@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "stray-bullets-1-1775345900",
+      "title": "Stray Bullets",
+      "slug": "stray-bullets",
+      "issue": 1,
+      "year": 1995,
+      "artist": "David Lapham",
+      "image": "images/stray-bullets/issue-1-1775345900.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-04T23:38:22.017Z"
+    },
+    {
       "id": "100-5-1775339463",
       "title": "100%",
       "slug": "100",
@@ -22,7 +35,7 @@
         ],
         [
           52.2,
-          4.0,
+          4,
           4.4
         ],
         [
