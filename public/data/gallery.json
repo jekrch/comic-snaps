@@ -11,7 +11,30 @@
       "notes": "screentone",
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-05T07:14:29.102Z"
+      "addedAt": "2026-04-05T07:14:29.102Z",
+      "width": 1263,
+      "height": 1280,
+      "dominantColors": [
+        [
+          77.7,
+          3.2,
+          9.1
+        ],
+        [
+          51.2,
+          3.6,
+          8.9
+        ],
+        [
+          13.4,
+          2.5,
+          5.9
+        ]
+      ],
+      "colorfulness": 5.0,
+      "phash": "da4ade90957b61a4",
+      "ahash": "f8f8e0e87ef8fcfc",
+      "dhash": "9989c9999090b9b0"
     },
     {
       "id": "harrow-county-25-1775364760",
