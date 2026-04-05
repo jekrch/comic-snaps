@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-05T07:59:31.865Z"
+      "addedAt": "2026-04-05T07:59:31.865Z",
+      "width": 1280,
+      "height": 1157,
+      "dominantColors": [
+        [
+          39.1,
+          13.2,
+          12.7
+        ],
+        [
+          19.0,
+          14.3,
+          11.9
+        ],
+        [
+          75.1,
+          5.3,
+          25.7
+        ]
+      ],
+      "colorfulness": 9.5,
+      "phash": "cf5cc1713dca38c1",
+      "ahash": "f870351512817170",
+      "dhash": "c2e4e5256635c5ca"
     },
     {
       "id": "tales-of-ordinary-madness-2-1775373267",
