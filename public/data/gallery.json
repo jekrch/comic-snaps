@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "infernal-hulk-5-1775376466",
+      "title": "Infernal Hulk",
+      "slug": "infernal-hulk",
+      "issue": 5,
+      "year": 2026,
+      "artist": "kev Walker",
+      "image": "images/infernal-hulk/issue-5-1775376466.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-05T08:07:48.528Z"
+    },
+    {
       "id": "heavy-metal-5-1775375970",
       "title": "Heavy Metal",
       "slug": "heavy-metal",
@@ -21,7 +34,7 @@
           12.7
         ],
         [
-          19.0,
+          19,
           14.3,
           11.9
         ],
