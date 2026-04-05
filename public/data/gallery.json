@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-05T08:07:48.528Z"
+      "addedAt": "2026-04-05T08:07:48.528Z",
+      "width": 1084,
+      "height": 1280,
+      "dominantColors": [
+        [
+          65.0,
+          -6.8,
+          -7.0
+        ],
+        [
+          26.5,
+          6.1,
+          -4.0
+        ],
+        [
+          45.0,
+          22.1,
+          -22.2
+        ]
+      ],
+      "colorfulness": 18.1,
+      "phash": "e4f0be762a62926c",
+      "ahash": "c7fffe7171300101",
+      "dhash": "2d2a80c3c7c5e73f"
     },
     {
       "id": "heavy-metal-5-1775375970",
