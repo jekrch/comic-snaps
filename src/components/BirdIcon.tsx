@@ -6,6 +6,7 @@ export default function BirdIcon() {
   const birdMaskedRef = useRef<SVGSVGElement>(null);
   const [introComplete, setIntroComplete] = useState(false);
   const introCompleteRef = useRef(false);
+  const [atTop, setAtTop] = useState(true);
 
   const triggerPeck = useCallback(() => {
     if (!introCompleteRef.current) return;
@@ -44,6 +45,7 @@ export default function BirdIcon() {
     let lastScrollY = window.scrollY;
 
     const onScroll = () => {
+      setAtTop(window.scrollY <= 0);
       if (!introCompleteRef.current) return;
       if (Math.abs(window.scrollY - lastScrollY) < 10) return;
       lastScrollY = window.scrollY;
@@ -60,9 +62,9 @@ export default function BirdIcon() {
 
   return (
     <div className="relative cursor-pointer" onMouseEnter={triggerPeck} onClick={triggerPeck}>
-      {/* Unmasked bird — visible during intro, fades out */}
+      {/* Unmasked bird — visible during intro and when scrolled to top */}
       <div
-        className={`h-7 flex items-end overflow-visible transition-opacity duration-700 ease-in ${introComplete ? 'opacity-0' : 'opacity-100'}`}
+        className={`h-7 flex items-end overflow-visible transition-opacity duration-300 ease-in ${introComplete && !atTop ? 'opacity-0' : 'opacity-100'}`}
       >
         <Bird
           ref={birdRef}
@@ -71,7 +73,7 @@ export default function BirdIcon() {
           className="ml-6 stroke-[#8d422f] bird-base"
         />
       </div>
-      {/* Masked bird — fades in after intro */}
+      {/* Masked bird — fades in after intro, always visible once intro is done */}
       <div
         className={`h-7 flex items-end overflow-hidden absolute inset-0 transition-opacity duration-700 ease-in ${introComplete ? 'opacity-100' : 'opacity-0'}`}
         style={{
