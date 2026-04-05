@@ -23,6 +23,14 @@ Saga // 1 // 2012 // Fiona Staples // incredible double-page spread // sci-fi, s
 
 A freeform fallback (`Saga #1 2012 Fiona Staples`) also works for quick entries.
 
+## Telegram commands
+
+Each panel is assigned a numeric ID on creation. The bot responds to:
+
+- `/delete {id}` — remove a panel and its image from the gallery
+- `/update {id} {field} {value}` — edit a field (`title`, `issue`, `year`, `artist`, `notes`, `tags`)
+- `/help` — show usage instructions
+
 ## Image metadata
 
 A GitHub Action (`compute-image-metadata.yml`) runs whenever `gallery.json` is updated. It backfills missing metadata for each panel:

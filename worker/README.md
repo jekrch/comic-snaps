@@ -15,7 +15,13 @@ When a photo is sent to the Telegram group with a structured caption, the Worker
 3. Downloads the photo via the Telegram Bot API
 4. Commits the image to `public/images/{series-slug}/` via the GitHub Contents API
 5. Appends an entry to `public/data/gallery.json` with the metadata and contributor info
-6. Replies in Telegram with a confirmation
+6. Replies in Telegram with a confirmation including the panel's numeric ID
+
+The bot also handles text commands:
+
+- `/delete {id}` — removes the panel entry from `gallery.json` and deletes the image file from the repo
+- `/update {id} {field} {value}` — updates a single field on a panel (`title`, `issue`, `year`, `artist`, `notes`, `tags`)
+- `/help` — replies with usage instructions and examples
 
 ## Caption format
 
