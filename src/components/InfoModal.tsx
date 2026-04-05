@@ -645,7 +645,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                   className="mt-4 text-[12px] leading-relaxed"
                   style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
                 >
-                  This is just a place to collect neat panels from comic books and explore different axes of visual and semantic similarity.
+                  This is just a place for myself and friends to collect panels that we like from comic books and explore the capabilities of different types of neural network based image processing. 
                 </p>
 
                 <HatchDivider />
@@ -685,7 +685,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                 >
                   Each sort type reorders the gallery by a different axis of similarity.
                   I use several neat models for this, which you can read about below.
-                  Their embeddings are precomputed at build time, so nothing runs in your sweaty browser.
+                  Their embeddings are all computed in advance (at build time), so nothing has to run in your sweaty browser.
                 </p>
 
                 <div className="flex flex-col gap-6">

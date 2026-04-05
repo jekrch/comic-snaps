@@ -245,6 +245,7 @@ interface MasonryGridProps {
   onFiltersChange: (filters: Filters) => void;
   onInfoOpen?: () => void;
   onLayoutReady?: () => void;
+  onPanelPositions?: (positions: { panel: Panel; y: number; h: number }[]) => void;
   isFirstLoad?: boolean;
 }
 
@@ -257,6 +258,7 @@ export default function MasonryGrid({
   onFiltersChange,
   onInfoOpen,
   onLayoutReady,
+  onPanelPositions,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -398,6 +400,14 @@ export default function MasonryGrid({
   }, [placed, onLayoutReady]);
 
   const lastColX = (colCount - 1) * (colWidth + GAP);
+
+  useEffect(() => {
+    if (!onPanelPositions || placed.length === 0) return;
+    const positions = placed
+      .filter((item): item is PlacedPanel => item.kind === "panel")
+      .map((item) => ({ panel: item.panel, y: item.y, h: getPanelHeight(item.panel, item.w) }));
+    onPanelPositions(positions);
+  }, [placed, onPanelPositions]);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./utils/filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
+import BackgroundEchoes from "./components/BackgroundEchoes";
 import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
@@ -20,6 +21,7 @@ export default function App() {
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
+  const [panelPositions, setPanelPositions] = useState<{ panel: Panel; y: number; h: number }[]>([]);
 
   useEffect(() => {
     if (initialTab) {
@@ -96,7 +98,8 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen bg-surface relative">
+      <BackgroundEchoes panelPositions={panelPositions} />
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
         <div className="content-container px-1 py-0 flex items-center justify-between">
           <div className="flex items-center">
@@ -149,6 +152,7 @@ export default function App() {
               onFiltersChange={handleFiltersChange}
               onInfoOpen={() => handleOpenInfo("sorts")}
               onLayoutReady={handleLayoutReady}
+              onPanelPositions={setPanelPositions}
               isFirstLoad={isFirstLoad}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
