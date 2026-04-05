@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "tales-of-ordinary-madness-2-1775373267",
+      "title": "Tales of Ordinary Madness",
+      "slug": "tales-of-ordinary-madness",
+      "issue": 2,
+      "year": 1992,
+      "artist": "",
+      "image": "images/tales-of-ordinary-madness/issue-2-1775373267.jpg",
+      "notes": "screentone",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-05T07:14:29.102Z"
+    },
+    {
       "id": "harrow-county-25-1775364760",
       "title": "Harrow County",
       "slug": "harrow-county",
@@ -18,11 +31,11 @@
         [
           65.6,
           1.9,
-          2.0
+          2
         ],
         [
           32.8,
-          15.0,
+          15,
           22.7
         ],
         [
