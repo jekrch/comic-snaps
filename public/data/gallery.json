@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "harrow-county-25-1775364760",
+      "title": "Harrow County",
+      "slug": "harrow-county",
+      "issue": 25,
+      "year": 2017,
+      "artist": "Tyler Crook",
+      "image": "images/harrow-county/issue-25-1775364760.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-05T04:52:41.393Z"
+    },
+    {
       "id": "stray-bullets-23-1775346554",
       "title": "Stray Bullets",
       "slug": "stray-bullets",
@@ -17,7 +30,7 @@
       "dominantColors": [
         [
           84.1,
-          4.0,
+          4,
           5.7
         ],
         [
