@@ -1,0 +1,333 @@
+{
+  "series": [
+    {
+      "id": "100",
+      "name": "100%",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "absolute-martian-manhunter",
+      "name": "Absolute Martian Manhunter",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "absolute-wonder-woman",
+      "name": "Absolute Wonder Woman",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "assorted-crisis-events",
+      "name": "Assorted Crisis Events",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "battle-beast",
+      "name": "Battle Beast",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "bleeding-hearts",
+      "name": "Bleeding Hearts",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "buzz",
+      "name": "Buzz",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "concrete-fragile-creature",
+      "name": "Concrete: Fragile Creature",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "concrete-killer-smile",
+      "name": "Concrete: Killer Smile",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "creatures-of-the-id",
+      "name": "Creatures of the Id",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "criminal-the-special-edition",
+      "name": "Criminal: The Special Edition",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "dark-spaces-wildfire",
+      "name": "Dark Spaces: Wildfire",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "eerie",
+      "name": "Eerie",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "eightball",
+      "name": "Eightball",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "faithless-ii",
+      "name": "Faithless II",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "fatale",
+      "name": "Fatale",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "frank",
+      "name": "Frank",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "geiger",
+      "name": "Geiger",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "harrow-county",
+      "name": "Harrow County",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "heavy-liquid",
+      "name": "Heavy Liquid",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "heavy-metal",
+      "name": "Heavy Metal",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "hyde-street",
+      "name": "Hyde Street",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "infernal-hulk",
+      "name": "Infernal Hulk",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "jacked",
+      "name": "Jacked",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "just-brutal",
+      "name": "Just Brutal",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "lady-killer",
+      "name": "Lady Killer",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "love-rockets",
+      "name": "Love & Rockets",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "madman-adventures-mini-comic",
+      "name": "Madman Adventures Mini-Comic",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "minor-arcana",
+      "name": "Minor Arcana",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "omaha-vol-2",
+      "name": "Omaha: Vol 2",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "phantom-of-the-opera",
+      "name": "Phantom of the Opera",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "red-book",
+      "name": "Red Book",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "space-riders",
+      "name": "Space Riders",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "space-riders-galaxy-of-brutality",
+      "name": "Space Riders: Galaxy of Brutality",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "stray-bullets",
+      "name": "Stray Bullets",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "stray-bullets-sunshine-roses",
+      "name": "Stray Bullets: Sunshine & Roses",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "tales-of-ordinary-madness",
+      "name": "Tales of Ordinary Madness",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "the-invisible-man",
+      "name": "The Invisible Man",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "the-many-deaths-of-laila-starr",
+      "name": "The Many Deaths of Laila Starr",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "the-maxx",
+      "name": "The Maxx",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "the-nice-house-by-the-sea",
+      "name": "The Nice House by the Sea",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "the-peoples-comics",
+      "name": "The Peoples Comics",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "thumpn-guts",
+      "name": "Thumpn Guts",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "under-the-trees-where-nobody-sees-rite-of-spring",
+      "name": "Under the Trees Where Nobody Sees: Rite of Spring",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "weird-magazine",
+      "name": "Weird Magazine",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "xyz",
+      "name": "XYZ",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "zap",
+      "name": "Zap",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    }
+  ]
+}

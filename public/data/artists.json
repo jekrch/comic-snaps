@@ -1,0 +1,280 @@
+{
+  "artists": [
+    {
+      "id": "alexis-ziritt",
+      "name": "Alexis Ziritt",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "alvaro-martinez-bueno",
+      "name": "Alvaro Martinez Bueno",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "brahm-revel",
+      "name": "Brahm Revel",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "dani",
+      "name": "Dani",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "daniel-clowes",
+      "name": "Daniel Clowes",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "david-lapham",
+      "name": "David Lapham",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "dominique-he",
+      "name": "Dominique He",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "don-maitz",
+      "name": "Don Maitz",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "enki-bilal",
+      "name": "Enki Bilal",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "eric-zawadzki",
+      "name": "Eric Zawadzki",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "filipe-andrade",
+      "name": "Filipe Andrade",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "floch",
+      "name": "Floch",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "francis-portela",
+      "name": "Francis Portela",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "gary-frank",
+      "name": "Gary Frank",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "gilbert-hernandez",
+      "name": "Gilbert Hernandez",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "hayden-sherman",
+      "name": "Hayden Sherman",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "javier-rodriguez",
+      "name": "Javier Rodriguez",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "jeff-jones",
+      "name": "Jeff Jones",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "jeff-lemire",
+      "name": "Jeff Lemire",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "jim-woodring",
+      "name": "Jim Woodring",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "joelle-jones",
+      "name": "Joelle Jones",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "john-higgins",
+      "name": "John Higgins",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "jose-martin-sauri",
+      "name": "Jose Martin Sauri",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "kev-walker",
+      "name": "Kev Walker",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "kevin-eastman",
+      "name": "Kevin Eastman",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "liberatore",
+      "name": "Liberatore",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "maria-llovet",
+      "name": "Maria Llovet",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "martin-simmonds",
+      "name": "Martin Simmonds",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "michael-allred",
+      "name": "Michael Allred",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "michael-avon-oeming",
+      "name": "Michael Avon Oeming",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "moebius",
+      "name": "Moebius",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "patrick-horvath",
+      "name": "Patrick Horvath",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "paul-chadwick",
+      "name": "Paul Chadwick",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "paul-kirchner",
+      "name": "Paul Kirchner",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "paul-pope",
+      "name": "Paul Pope",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "peter-bagge",
+      "name": "Peter Bagge",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "reed-waller",
+      "name": "Reed Waller",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "richard-corben",
+      "name": "Richard Corben",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "rick-griffin",
+      "name": "Rick Griffin",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "robert-crumb",
+      "name": "Robert Crumb",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "ryan-ottley",
+      "name": "Ryan Ottley",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "sam-keith",
+      "name": "Sam Keith",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "sean-phillips",
+      "name": "Sean Phillips",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "stipan-morian",
+      "name": "Stipan Morian",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "tyler-crook",
+      "name": "Tyler Crook",
+      "description": "",
+      "references": []
+    },
+    {
+      "id": "victor-moscoso",
+      "name": "Victor Moscoso",
+      "description": "",
+      "references": []
+    }
+  ]
+}
