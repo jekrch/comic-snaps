@@ -1,3 +1,23 @@
+export interface Reference {
+  name: string;
+  url: string;
+}
+
+export interface Artist {
+  id: string;
+  name: string;
+  description: string;
+  references: Reference[];
+}
+
+export interface Series {
+  id: string;
+  name: string;
+  parentSeries: string | null;
+  description: string;
+  references: Reference[];
+}
+
 export interface Panel {
   id: string;
   title: string;

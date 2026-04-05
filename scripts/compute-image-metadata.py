@@ -28,6 +28,8 @@ from skimage import color as skcolor
 import imagehash
 
 GALLERY_PATH = Path("public/data/gallery.json")
+ARTISTS_PATH = Path("public/data/artists.json")
+SERIES_PATH = Path("public/data/series.json")
 IMAGE_ROOT = Path("public")
 
 HASH_FUNCTIONS = {
@@ -107,6 +109,62 @@ def compute_metadata(image_path: Path) -> dict:
     return result
 
 
+def slugify(name: str) -> str:
+    """Convert a name to a URL-friendly slug."""
+    import re
+    slug = name.lower().strip()
+    slug = re.sub(r"[^a-z0-9]+", "-", slug)
+    return slug.strip("-")
+
+
+def seed_artists(panels: list) -> None:
+    """Create artists.json with distinct artist names from the gallery."""
+    if ARTISTS_PATH.exists():
+        return
+
+    seen = set()
+    artists = []
+    for panel in panels:
+        name = panel.get("artist", "")
+        if name and name not in seen:
+            seen.add(name)
+            artists.append({
+                "id": slugify(name),
+                "name": name,
+                "description": "",
+                "references": [],
+            })
+
+    artists.sort(key=lambda a: a["name"])
+    ARTISTS_PATH.write_text(json.dumps({"artists": artists}, indent=2) + "\n")
+    print(f"Seeded {ARTISTS_PATH} with {len(artists)} artist(s).")
+
+
+def seed_series(panels: list) -> None:
+    """Create series.json with distinct series names from the gallery."""
+    if SERIES_PATH.exists():
+        return
+
+    seen = set()
+    series_list = []
+    for panel in panels:
+        title = panel.get("title", "")
+        slug = panel.get("slug", "")
+        if title and slug and slug not in seen:
+            seen.add(slug)
+            series_list.append({
+                "id": slug,
+                "name": title,
+                "parentSeries": None,
+                "description": "",
+                "references": [],
+            })
+
+    series_list.sort(key=lambda s: s["name"])
+    SERIES_PATH.write_text(json.dumps({"series": series_list}, indent=2) + "\n")
+    print(f"Seeded {SERIES_PATH} with {len(series_list)} series.")
+
+
 def main():
     if not GALLERY_PATH.exists():
         print(f"gallery.json not found at {GALLERY_PATH}", file=sys.stderr)
@@ -114,6 +172,10 @@ def main():
 
     gallery = json.loads(GALLERY_PATH.read_text())
     panels = gallery.get("panels", [])
+
+    # Seed artists.json and series.json if they don't exist
+    seed_artists(panels)
+    seed_series(panels)
 
     updated_count = 0
     error_count = 0
