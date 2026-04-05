@@ -11,7 +11,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-05T04:52:41.393Z"
+      "addedAt": "2026-04-05T04:52:41.393Z",
+      "width": 1280,
+      "height": 405,
+      "dominantColors": [
+        [
+          65.6,
+          1.9,
+          2.0
+        ],
+        [
+          32.8,
+          15.0,
+          22.7
+        ],
+        [
+          59.5,
+          8.8,
+          35.7
+        ]
+      ],
+      "colorfulness": 15.8,
+      "phash": "bbec6027cc3be424",
+      "ahash": "ffffdf1f0f070001",
+      "dhash": "afab1555555555d5"
     },
     {
       "id": "stray-bullets-23-1775346554",
