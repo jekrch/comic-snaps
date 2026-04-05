@@ -1,43 +1,6 @@
 {
   "panels": [
     {
-      "seq": 79,
-      "id": "fatale-14-1775424106",
-      "title": "Fatale",
-      "slug": "fatale",
-      "issue": 13,
-      "year": 2013,
-      "artist": "Sean Phillips",
-      "image": "images/fatale/issue-14-1775424106.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-04-05T21:21:48.472Z",
-      "width": 1280,
-      "height": 1090,
-      "dominantColors": [
-        [
-          20,
-          1.2,
-          -3.7
-        ],
-        [
-          47.5,
-          0,
-          -5.4
-        ],
-        [
-          76.8,
-          -9.2,
-          -1.8
-        ]
-      ],
-      "colorfulness": 9.2,
-      "phash": "88c8451e9f32af3d",
-      "ahash": "3878737f1d180043",
-      "dhash": "f2b197993125a486"
-    },
-    {
       "seq": 78,
       "id": "infernal-hulk-5-1775376466",
       "title": "Infernal Hulk",
