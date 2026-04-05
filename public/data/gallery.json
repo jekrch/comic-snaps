@@ -1,6 +1,19 @@
 {
   "panels": [
     {
+      "id": "heavy-metal-5-1775375970",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 5,
+      "year": 1982,
+      "artist": "Enki Bilal",
+      "image": "images/heavy-metal/issue-5-1775375970.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-05T07:59:31.865Z"
+    },
+    {
       "id": "tales-of-ordinary-madness-2-1775373267",
       "title": "Tales of Ordinary Madness",
       "slug": "tales-of-ordinary-madness",
@@ -9,7 +22,9 @@
       "artist": "Michael Allred",
       "image": "images/tales-of-ordinary-madness/issue-2-1775373267.jpg",
       "notes": "",
-      "tags": ["screentone"],
+      "tags": [
+        "screentone"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-05T07:14:29.102Z",
       "width": 1263,
@@ -31,7 +46,7 @@
           5.9
         ]
       ],
-      "colorfulness": 5.0,
+      "colorfulness": 5,
       "phash": "da4ade90957b61a4",
       "ahash": "f8f8e0e87ef8fcfc",
       "dhash": "9989c9999090b9b0"
