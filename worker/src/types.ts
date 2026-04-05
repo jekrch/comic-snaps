@@ -31,6 +31,7 @@ export interface TelegramMessage {
   chat: TelegramChat;
   photo?: TelegramPhotoSize[];
   caption?: string;
+  text?: string;
   media_group_id?: string;
 }
 
@@ -59,6 +60,7 @@ export interface PanelMetadata {
 }
 
 export interface PanelEntry extends PanelMetadata {
+  seq: number;
   id: string;
   slug: string;
   image: string;
