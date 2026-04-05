@@ -61,6 +61,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -m "Update image metadata and embeddings"
+          git pull --rebase
           git push
 
       - name: Trigger deploy
