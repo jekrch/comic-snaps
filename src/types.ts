@@ -7,6 +7,7 @@ export interface Artist {
   id: string;
   name: string;
   description: string;
+  imageUrl?: string | null;
   references: Reference[];
 }
 
@@ -15,6 +16,7 @@ export interface Series {
   name: string;
   parentSeries: string | null;
   description: string;
+  imageUrl?: string | null;
   references: Reference[];
 }
 

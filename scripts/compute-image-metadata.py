@@ -132,6 +132,7 @@ def seed_artists(panels: list) -> None:
                 "id": slugify(name),
                 "name": name,
                 "description": "",
+                "imageUrl": None,
                 "references": [],
             })
 
@@ -157,6 +158,7 @@ def seed_series(panels: list) -> None:
                 "name": title,
                 "parentSeries": None,
                 "description": "",
+                "imageUrl": None,
                 "references": [],
             })
 

@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link as Search, X, ZoomIn, ZoomOut, GitGraph } from "lucide-react";
+import { X, ZoomIn, ZoomOut, GitGraph, Info } from "lucide-react";
 import type { Panel } from "../types";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
 import { useGestureHandler } from "../hooks/useGestureHandler";
 import { useSlideNavigation } from "../hooks/useSlideNavigation";
+import { useMetadata } from "../hooks/useMetadata";
 import NavButton from "./NavButton";
 import SimilarityGraph from "./graph/SimilarityGraph";
+import InfoDrawer from "./InfoDrawer";
 
 interface Props {
   panel: Panel;
@@ -22,6 +24,9 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const [closing, setClosing] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [graphOpen, setGraphOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const { artist, series, parentSeries, hasContent } = useMetadata(panel.artist, panel.slug);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imgWrapperRef = useRef<HTMLDivElement>(null);
@@ -77,7 +82,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Animate in 
+  // Animate in
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
@@ -89,24 +94,32 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     setTimeout(onClose, 250);
   }, [onClose]);
 
-  // Search URL (opens in same browser)
+  // Search URL
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
   )}`;
 
+  // Close drawer on panel change
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [currentIndex]);
+
   // Keyboard navigation
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (graphOpen) return; // let graph handle its own keys
-      if (e.key === "Escape") handleClose();
-      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) commitSlide("prev");
-      if (e.key === "ArrowRight" && hasNext && displayScale <= 1) commitSlide("next");
+      if (graphOpen) return;
+      if (e.key === "Escape") {
+        if (drawerOpen) { setDrawerOpen(false); return; }
+        handleClose();
+      }
+      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1 && !drawerOpen) commitSlide("prev");
+      if (e.key === "ArrowRight" && hasNext && displayScale <= 1 && !drawerOpen) commitSlide("next");
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen]);
+  }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen, drawerOpen]);
 
   // Layout calculations
 
@@ -153,7 +166,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           absolute inset-0 z-0 transition-all duration-250 ease-out
           ${visible && !closing ? "backdrop-blur-sm" : "backdrop-blur-0"}
         `}
-        onClick={handleClose}
+        onClick={drawerOpen ? () => setDrawerOpen(false) : handleClose}
         aria-hidden="true"
       />
 
@@ -178,13 +191,14 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </p>
             <p className="text-xs text-white/60 mt-0.5 leading-snug">
               {panel.artist}
-              
+
             </p>
           </div>
         </div>
 
         <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
           <div className="flex items-center gap-1">
+
           {!isTouchDevice && isZoomed && (
             <button
               onClick={(e) => {
@@ -249,7 +263,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           })}
         </p>
         </div>
-        
+
       </div>
 
       {/* Slide track: three-slot carousel */}
@@ -349,18 +363,20 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {/* Navigation strip with flanking buttons */}
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
-            {/* Search button — left of nav, max 10em from prev NavButton */}
-            <a
-              href={searchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
-              style={{ left: "max(16px, calc(50% - 10em - 68px))" }}
-              title="Search on Google"
-            >
-              <Search size={15} strokeWidth={1.5} />
-            </a>
+            {/* Info button — left of nav */}
+            {hasContent && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDrawerOpen((d) => !d);
+                }}
+                className={`viewer-btn absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/25! text-white!" : ""}`}
+                style={{ left: "max(16px, calc(50% - 10em - 68px))" }}
+                title="Show details"
+              >
+                <Info size={15} strokeWidth={1.5} />
+              </button>
+            )}
 
             {/* Center nav controls */}
             <div className="flex items-center justify-center gap-6">
@@ -376,7 +392,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
             </div>
 
-            {/* Similarity graph button — right of nav, max 10em from next NavButton */}
+            {/* Similarity graph button — right of nav */}
             <button
               onClick={() => setGraphOpen(true)}
               className="viewer-btn absolute top-1/2 -translate-y-1/2 cursor-pointer mt-1"
@@ -391,17 +407,19 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {/* Single-panel case: still show both flanking buttons */}
         {!isZoomed && !hasPrev && !hasNext && (
           <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
-            <a
-              href={searchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
-              style={{ left: 16 }}
-              title="Search on Google"
-            >
-              <Search size={15} strokeWidth={1.5} />
-            </a>
+            {hasContent && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDrawerOpen((d) => !d);
+                }}
+                className={`viewer-btn absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/25! text-white!" : ""}`}
+                style={{ left: 16 }}
+                title="Show details"
+              >
+                <Info size={15} strokeWidth={1.5} />
+              </button>
+            )}
 
             <div className="text-center mx-auto w-fit">
               <span className="text-[11px] text-white/30 tracking-wide">
@@ -433,6 +451,17 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
           </div>
         )}
       </div>
+
+      {/* Info panel — z-15: above image (z-10), below controls (z-20) */}
+      <InfoDrawer
+        open={drawerOpen && !closing}
+        onClose={() => setDrawerOpen(false)}
+        panel={panel}
+        artist={artist}
+        series={series}
+        parentSeries={parentSeries}
+        searchUrl={searchUrl}
+      />
 
       {/* Similarity Graph overlay */}
       {graphOpen && (
