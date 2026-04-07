@@ -117,6 +117,7 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
           relative w-full h-full overflow-y-auto info-modal-scroll
           pointer-events-auto
         `}
+        style={{ touchAction: "pan-y", WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
