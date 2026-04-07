@@ -96,7 +96,10 @@
       "name": "Eightball",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Eightball_(comics)"
+      }]
     },
     {
       "id": "faithless-ii",
@@ -123,7 +126,10 @@
       "name": "Frank",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Frank_(comics)"
+      }]
     },
     {
       "id": "geiger",
@@ -137,14 +143,20 @@
       "name": "Harrow County",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Harrow_County"
+      }]
     },
     {
       "id": "heavy-liquid",
       "name": "Heavy Liquid",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Heavy_Liquid_(comic_book)"
+      }]
     },
     {
       "id": "heavy-metal",
@@ -192,13 +204,16 @@
       "name": "Lady Killer",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Lady_Killer_(comic_book)"
+      }]
     },
     {
       "id": "love-rockets",
       "name": "Love & Rockets",
       "parentSeries": null,
-      "description": "Love and Rockets is a comic book series by the Hernandez brothers: Gilbert, Jaime, and Mario. It was one of the first comic books in the alternative comics movement of the 1980s.",
+      "description": "",
       "references": [
         {
           "name": "Wikipedia",
@@ -234,9 +249,19 @@
       "references": []
     },
     {
+      "id": "Omaha",
+      "name": "omaha",
+      "parentSeries": null,
+      "description": "",
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/%22Omaha%22_the_Cat_Dancer"
+      }]
+    },
+    {
       "id": "omaha-vol-2",
       "name": "Omaha: Vol 2",
-      "parentSeries": null,
+      "parentSeries": "omaha",
       "description": "",
       "references": []
     },
@@ -314,21 +339,30 @@
       "name": "The Maxx",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/The_Maxx"
+      }]
     },
     {
       "id": "the-nice-house-by-the-sea",
       "name": "The Nice House by the Sea",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/The_Nice_House"
+      }]
     },
     {
       "id": "the-peoples-comics",
       "name": "The Peoples Comics",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
+      }]
     },
     {
       "id": "thumpn-guts",
@@ -363,7 +397,10 @@
       "name": "Zap",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Zap_Comix"
+      }]
     }
   ]
 }

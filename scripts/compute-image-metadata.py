@@ -122,21 +122,30 @@ def fetch_wikipedia_intro(url: str) -> str | None:
     """
     Fetch the introductory section of a Wikipedia article as plain text.
 
-    Uses the Wikipedia REST API to get the extract, removes bracketed
-    reference markers like [1][2], and converts newlines to \\r\\n.
+    Uses the MediaWiki API to get the full intro section (everything before
+    the first heading), removes bracketed reference markers like [1][2],
+    and converts newlines to \\r\\n.
     """
     title = get_wikipedia_title(url)
     if not title:
         return None
 
-    api_url = (
-        f"https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
-    )
+    api_url = "https://en.wikipedia.org/w/api.php"
+    params = {
+        "action": "query",
+        "titles": title.replace("_", " "),
+        "prop": "extracts",
+        "exintro": True,
+        "explaintext": True,
+        "format": "json",
+    }
     try:
-        resp = requests.get(api_url, headers={"User-Agent": "comic-snaps/1.0"}, timeout=10)
+        resp = requests.get(api_url, params=params, headers={"User-Agent": "comic-snaps/1.0"}, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-        text = data.get("extract", "")
+        pages = data.get("query", {}).get("pages", {})
+        page = next(iter(pages.values()), {})
+        text = page.get("extract", "")
         if not text:
             return None
         # Remove reference markers like [1], [2], [note 1], etc.
