@@ -136,7 +136,10 @@
       "id": "jim-woodring",
       "name": "Jim Woodring",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jim_Woodring"
+      }]
     },
     {
       "id": "joelle-jones",
@@ -170,8 +173,12 @@
     {
       "id": "kevin-eastman",
       "name": "Kevin Eastman",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Kevin_Eastman.jpg/500px-Kevin_Eastman.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Kevin_Eastman"
+      }]
     },
     {
       "id": "liberatore",
