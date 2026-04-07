@@ -95,11 +95,13 @@
       "id": "eightball",
       "name": "Eightball",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Eightball is a comic book by Daniel Clowes and published by Fantagraphics. It ran from 1989 to 2004. Eightball has been among the best-selling series in alternative comics. The series, and Clowes, were recognized with multiple industry awards, including four Eisner Awards, 14 Harvey Awards, and five Ignatz Awards.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Eightball_(comics)"
-      }]
+        }
+      ]
     },
     {
       "id": "faithless-ii",
@@ -125,11 +127,13 @@
       "id": "frank",
       "name": "Frank",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Frank is a cartoon character created by American cartoonist Jim Woodring. Frank is a bipedal, bucktoothed animal of uncertain species whom Woodring described as a \"generic anthropomorph\". The stories and supporting characters appear in a world called the Unifactor.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Frank_(comics)"
-      }]
+        }
+      ]
     },
     {
       "id": "geiger",
@@ -142,21 +146,25 @@
       "id": "harrow-county",
       "name": "Harrow County",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Harrow County is an American comic book series that ran from 2015 to 2018. It was created by writer Cullen Bunn and artist Tyler Crook, and published by Dark Horse Comics.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Harrow_County"
-      }]
+        }
+      ]
     },
     {
       "id": "heavy-liquid",
       "name": "Heavy Liquid",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Heavy Liquid is a five-issue limited series written by Paul Pope which has science fiction and cyberpunk elements.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Heavy_Liquid_(comic_book)"
-      }]
+        }
+      ]
     },
     {
       "id": "heavy-metal",
@@ -203,17 +211,19 @@
       "id": "lady-killer",
       "name": "Lady Killer",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Lady Killer is a 2015-2016 comic book series written by Jo\u00eblle Jones and Jamie S. Rich, illustrated by Jo\u00eblle Jones and colored by Laura Allred. The comic is a thriller taking place in the 1960s, and tells the story of Josie Schuller, a perfect housewife who leads a secret life as killer-for-hire in her spare time.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Lady_Killer_(comic_book)"
-      }]
+        }
+      ]
     },
     {
       "id": "love-rockets",
       "name": "Love & Rockets",
       "parentSeries": null,
-      "description": "",
+      "description": "Love and Rockets (often abbreviated L&R) is a comic book series by the Hernandez brothers: Gilbert, Jaime, and Mario. It was one of the first comic books in the alternative comics movement of the 1980s.\r\nThe Hernandez brothers produce stories in the series independently of each other. Gilbert and Jaime produce the majority of the material, and tend to focus on particular casts of characters and settings. Those of Gilbert usually focus on a cast of characters in the fictional Central American village of Palomar; the stories often feature magic realist elements. The Locas stories of Jaime center on a social group in Los Angeles, particularly the Latina friends and sometime-lovers Maggie and Hopey.",
       "references": [
         {
           "name": "Wikipedia",
@@ -253,10 +263,12 @@
       "name": "omaha",
       "parentSeries": null,
       "description": "",
-      "references": [{
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/%22Omaha%22_the_Cat_Dancer"
-      }]
+        }
+      ]
     },
     {
       "id": "omaha-vol-2",
@@ -338,31 +350,37 @@
       "id": "the-maxx",
       "name": "The Maxx",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "The Maxx is an American comic book series created by Sam Kieth in 1993 and originally published monthly until 1998 by Image Comics for 35 issues, before being collected in trade paperback by DC Comics' Wildstorm imprint. The first appearance of the titular character was in Darker Image #1 by Image Comics in March 1993. The comic book, starring an eponymous purple-clad hero, spawned a 13-episode animated series on MTV that originally aired April\u2013June 1995. Starting in November 2013 and ending in September 2016, the original series has been republished by IDW as The Maxx: Maxximized with new colors and improved scans of the original artwork by Sam Kieth and Jim Sinclair. In 2018, the Maxx featured in a five-issue crossover series with Batman, published by IDW.\r\nThe series follows the adventures of the titular hero in two worlds: the real world and an alternate reality referred to as the Outback. In the real world, Maxx is a vagrant, a \"homeless man living in a box\", while in the Outback, he is the powerful protector of the Leopard Queen, who exists in the real world as Julie Winters, a freelance social worker who often bails Maxx out of jail. While Maxx is aware of the Outback, Julie is not, though it is integral to both of their stories.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/The_Maxx"
-      }]
+        }
+      ]
     },
     {
       "id": "the-nice-house-by-the-sea",
       "name": "The Nice House by the Sea",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "The Nice House on the Lake and The Nice House by the Sea are two post-apocalyptic horror comic book limited series created by writer James Tynion IV and artist \u00c1lvaro Mart\u00ednez Bueno, and published by DC Comics through their Black Label imprint and since 2024, their Vertigo imprint. \r\nThe Nice House on the Lake debuted on June 1, 2021, and concluded on December 27, 2022. This first series focuses on the mysterious Walter, who invites ten of his friends to an idyllic house in the countryside, only for them to witness the end of the world and be told they are not allowed to leave. The series received critical acclaim, winning four Eisner Awards including the 2022 award for Best New Series.\r\nA second \"cycle\" in the same setting, The Nice House by the Sea, began on July 24, 2024. This series follows a different household consisting of exemplary humans selected by Max, another member of Walter's species. In October 2024, DC relaunched their Vertigo imprint and began publishing some Black Label titles, including The Nice House by the Sea, as Vertigo titles.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/The_Nice_House"
-      }]
+        }
+      ]
     },
     {
       "id": "the-peoples-comics",
       "name": "The Peoples Comics",
       "parentSeries": null,
       "description": "",
-      "references": [{
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
-      }]
+        }
+      ]
     },
     {
       "id": "thumpn-guts",
@@ -396,11 +414,13 @@
       "id": "zap",
       "name": "Zap",
       "parentSeries": null,
-      "description": "",
-      "references": [{
+      "description": "Zap Comix is an underground comix series which was originally part of the counterculture of the late 1960s. While a few small-circulation self-published satirical comic books had been printed prior to this, Zap became the model for the \"comix\" movement that snowballed after its release. The title itself published 17 issues over a period of 46 years.\r\nPremiering in early 1968 as a showcase for the work of Robert Crumb, Zap was unlike any comic book that had been seen before. While working on Zap #1, Crumb saw a Family Dog poster drawn by Rick Griffin which resembled a psychedelic version of a Sunday funnies page. Its surreal, other-worldly imagery inspired him to think about comics in a new way, as seen in the art style of Zap #1's Abstract Expressionist Ultra Super Modernistic Comics. When Crumb started planning the next issue, he got in touch with Griffin, asking him to contribute to Zap #2. Griffin agreed and suggested bringing fellow poster artist Victor Moscoso on board. S. Clay Wilson, Gilbert Shelton, Robert Williams, and \"Spain\" Rodriguez were also contributors to Zap.\r\nWhile the origin of the spelling \"comix\" is a subject of some dispute, it was popularized by its appearance in the title of the first issues of Zap. Design critic Steven Heller claims that the term \"comix\" (\"co-mix\") refers to the traditional comic book style of Zap, and its mixture of dirty jokes and storylines.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Zap_Comix"
-      }]
+        }
+      ]
     }
   ]
 }
