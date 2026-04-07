@@ -153,7 +153,7 @@ def fetch_wikipedia_intro(url: str) -> str | None:
         # Normalize whitespace that may result from removed refs
         text = re.sub(r"  +", " ", text).strip()
         # Convert newlines to \r\n
-        text = text.replace("\n", "\r\n")
+        text = text.replace("\n", "\r\n\r\n")
         return text
     except Exception as e:
         print(f"  WARN: Wikipedia fetch failed for {url}: {e}", file=sys.stderr)

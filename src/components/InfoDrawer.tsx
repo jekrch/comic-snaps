@@ -17,9 +17,13 @@ interface Props {
   series: Series | null;
   parentSeries: Series | null;
   searchUrl: string;
+  topOffset?: number;
+  bottomOffset?: number;
+  closing?: boolean;
+  slideDir?: "left" | "right" | null;
 }
 
-export default function InfoDrawer({ open, onClose, panel, artist, series, parentSeries, searchUrl }: Props) {
+export default function InfoDrawer({ open, onClose, panel, artist, series, parentSeries, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -31,10 +35,19 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
       });
     } else {
       setVisible(false);
-      const timer = setTimeout(() => setMounted(false), 300);
+      const timer = setTimeout(() => setMounted(false), 400);
       return () => clearTimeout(timer);
     }
   }, [open]);
+
+  // When the parent viewer is closing, immediately hide and unmount fast
+  useEffect(() => {
+    if (closing) {
+      setVisible(false);
+      const timer = setTimeout(() => setMounted(false), 250);
+      return () => clearTimeout(timer);
+    }
+  }, [closing]);
 
   if (!mounted) return null;
 
@@ -44,26 +57,78 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
 
   return (
     <div
-      className={`
-        fixed inset-0 z-15 flex items-center
-        pointer-events-auto
-      `}
+      className="fixed inset-0 z-15 pointer-events-auto"
+      style={{
+        top: topOffset,
+        bottom: bottomOffset,
+        ...(slideDir
+          ? {
+              transform: !visible ? `translateX(${slideDir === "left" ? "-100%" : "100%"})` : "translateX(0)",
+              transition: "transform 0.28s cubic-bezier(0.2, 0, 0, 1)",
+            }
+          : {
+              opacity: closing ? 0 : undefined,
+              transition: closing ? "opacity 0.2s ease-out" : undefined,
+            }),
+      }}
       onClick={onClose}
     >
+      {/* Hatch overlay — animated diagonal lines */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `repeating-linear-gradient(
+            45deg,
+            rgba(0,0,0,0.85) 0px,
+            rgba(0,0,0,0.85) 2px,
+            transparent 2px,
+            transparent 6px
+          )`,
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.35s ease-out",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `repeating-linear-gradient(
+            -45deg,
+            rgba(0,0,0,0.85) 0px,
+            rgba(0,0,0,0.85) 2px,
+            transparent 2px,
+            transparent 6px
+          )`,
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.3s ease-out 0.05s",
+        }}
+      />
+      {/* Solid background that fades in behind the hatch */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundColor: "rgba(0,0,0,0.85)",
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.4s ease-out 0.15s",
+        }}
+      />
+
       <div
         className={`
-          w-full max-h-[70vh] overflow-y-auto info-modal-scroll
-          pb-16
-          bg-black/85 backdrop-blur-md
-          transition-all duration-300 ease-out
+          relative w-full h-full overflow-y-auto info-modal-scroll
           pointer-events-auto
-          ${visible ? "opacity-100" : "opacity-0"}
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full">
+        <div
+          className="px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(8px)",
+            transition: "opacity 0.3s ease-out 0.2s, transform 0.3s ease-out 0.2s",
+          }}
+        >
           {/* Series info — fall back to parentSeries for description & references */}
-          <div className="relative overflow-hidden rounded">
+          <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
             {seriesImageUrl && (
               <div className="absolute inset-0 pointer-events-none">
                 <img
@@ -111,7 +176,7 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
           <div className="border-t border-white/8" />
 
           {/* Artist info */}
-          <div className="relative overflow-hidden rounded">
+          <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
             {artist?.imageUrl && (
               <div className="absolute inset-0 pointer-events-none">
                 <img

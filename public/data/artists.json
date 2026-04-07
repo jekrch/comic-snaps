@@ -27,8 +27,12 @@
     {
       "id": "daniel-clowes",
       "name": "Daniel Clowes",
+      "imageUrl": "https://www.fulgenciopimentel.com/wp-content/uploads/2022/06/daniel_clowes-768x768.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Daniel_Clowes"
+      }]
     },
     {
       "id": "david-lapham",
@@ -51,14 +55,22 @@
     {
       "id": "don-maitz",
       "name": "Don Maitz",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/Don_Maitz.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Don_Maitz"
+      }]
     },
     {
       "id": "enki-bilal",
       "name": "Enki Bilal",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg/500px-Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Enki_Bilal"
+      }]
     },
     {
       "id": "eric-zawadzki",
@@ -200,20 +212,32 @@
     {
       "id": "moebius",
       "name": "Moebius",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Moebius_Lodz_2008.jpg/500px-Moebius_Lodz_2008.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jean_Giraud"
+      }]
     },
     {
       "id": "patrick-horvath",
       "name": "Patrick Horvath",
+      "imageUrl": "https://static.wikia.nocookie.net/p__/images/d/dd/Season_four_patrick.png/revision/latest/thumbnail/width/360/height/360?cb=20140407042243&path-prefix=protagonist",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Patrick_Horvath"
+      }]
     },
     {
       "id": "paul-chadwick",
       "name": "Paul Chadwick",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Paul_Chadwick_in_2006.jpg/500px-Paul_Chadwick_in_2006.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Paul_Chadwick"
+      }]
     },
     {
       "id": "paul-kirchner",
@@ -225,7 +249,11 @@
       "id": "paul-pope",
       "name": "Paul Pope",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Paul_Pope_2010.jpg/500px-Paul_Pope_2010.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Paul_Pope"
+      }]
     },
     {
       "id": "peter-bagge",
@@ -291,7 +319,10 @@
       "id": "tyler-crook",
       "name": "Tyler Crook",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
+      }]
     },
     {
       "id": "victor-moscoso",

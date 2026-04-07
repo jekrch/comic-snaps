@@ -25,6 +25,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [graphOpen, setGraphOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
 
   const { artist, series, parentSeries, hasContent } = useMetadata(panel.artist, panel.slug);
 
@@ -42,7 +43,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   // Hooks
 
   useBodyScrollLock(containerRef);
-  const { bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
+  const { topBarH, bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
 
   const zoomPan = useZoomPan(imgWrapperRef, currentIndex);
   const {
@@ -100,9 +101,20 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
   )}`;
 
+  // Navigate with drawer slide-out — close immediately so drawer slides with the image
+  const handleNavigate = useCallback((dir: "prev" | "next") => {
+    if (drawerOpen) {
+      setDrawerSlideDir(dir === "next" ? "left" : "right");
+      setDrawerOpen(false);
+    }
+    commitSlide(dir);
+  }, [drawerOpen, commitSlide]);
+
   // Close drawer on panel change
   useEffect(() => {
     setDrawerOpen(false);
+    const timer = setTimeout(() => setDrawerSlideDir(null), 450);
+    return () => clearTimeout(timer);
   }, [currentIndex]);
 
   // Keyboard navigation
@@ -114,8 +126,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         if (drawerOpen) { setDrawerOpen(false); return; }
         handleClose();
       }
-      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1 && !drawerOpen) commitSlide("prev");
-      if (e.key === "ArrowRight" && hasNext && displayScale <= 1 && !drawerOpen) commitSlide("next");
+      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) handleNavigate("prev");
+      if (e.key === "ArrowRight" && hasNext && displayScale <= 1) handleNavigate("next");
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -380,7 +392,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
             {/* Center nav controls */}
             <div className="flex items-center justify-center gap-6">
-              <NavButton direction="prev" enabled={hasPrev} onClick={() => commitSlide("prev")} />
+              <NavButton direction="prev" enabled={hasPrev} onClick={() => handleNavigate("prev")} />
 
               <span
                 className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25 font-mono"
@@ -389,7 +401,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                 {currentIndex + 1} / {panels.length}
               </span>
 
-              <NavButton direction="next" enabled={hasNext} onClick={() => commitSlide("next")} />
+              <NavButton direction="next" enabled={hasNext} onClick={() => handleNavigate("next")} />
             </div>
 
             {/* Similarity graph button — right of nav */}
@@ -454,13 +466,17 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
       {/* Info panel — z-15: above image (z-10), below controls (z-20) */}
       <InfoDrawer
-        open={drawerOpen && !closing}
+        open={drawerOpen}
+        closing={closing}
         onClose={() => setDrawerOpen(false)}
         panel={panel}
         artist={artist}
         series={series}
         parentSeries={parentSeries}
         searchUrl={searchUrl}
+        topOffset={topBarH}
+        bottomOffset={Math.max(0, bottomBarH - 24)}
+        slideDir={drawerSlideDir}
       />
 
       {/* Similarity Graph overlay */}
