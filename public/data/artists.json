@@ -135,13 +135,18 @@
     {
       "id": "jeff-lemire",
       "name": "Jeff Lemire",
+      "imageUrl":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Lemire_-_Lucca_2017.jpg/500px-Jeff_Lemire_-_Lucca_2017.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jeff_Lemire"
+      }]
     },
     {
       "id": "jim-woodring",
       "name": "Jim Woodring",
       "description": "",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/71/JimWoodringDrawing.jpg",
       "references": [{
         "name": "Wikipedia",
         "url": "https://en.wikipedia.org/wiki/Jim_Woodring"
