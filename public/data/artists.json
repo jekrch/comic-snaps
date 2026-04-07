@@ -28,11 +28,13 @@
       "id": "daniel-clowes",
       "name": "Daniel Clowes",
       "imageUrl": "https://www.fulgenciopimentel.com/wp-content/uploads/2022/06/daniel_clowes-768x768.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
+      "description": "Daniel Gillespie Clowes (; born April 14, 1961) is an American cartoonist, graphic novelist, illustrator, and screenwriter. Most of Clowes's work first appeared in Eightball, a solo anthology comic book series. An Eightball issue typically contained several short pieces and a chapter of a longer narrative that was later collected and published as a graphic novel, such as Like a Velvet Glove Cast in Iron (1993), Ghost World (1997), David Boring (2000) and Patience (2016). Clowes's illustrations have appeared in The New Yorker, Newsweek, Vogue, The Village Voice, and elsewhere. With filmmaker Terry Zwigoff, Clowes adapted Ghost World into a 2001 film and another Eightball story into the 2006 film, Art School Confidential. Clowes's comics, graphic novels, and films have received numerous awards, including a Pen Award for Outstanding Work in Graphic Literature, over a dozen Harvey and Eisner Awards, and an Academy Award nomination.",
+      "references": [
+        {
+          "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Daniel_Clowes"
-      }]
+        }
+      ]
     },
     {
       "id": "david-lapham",
@@ -56,21 +58,25 @@
       "id": "don-maitz",
       "name": "Don Maitz",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/94/Don_Maitz.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
+      "description": "Don Maitz (born June 10, 1953) is an American science fiction, fantasy, and commercial artist. He has twice won the Hugo Award for Best Professional Artist, science fiction's highest honor for an artist, out of 21 nominations. His peers in the Association of Science Fiction and Fantasy Artists have honored him ten times with a Chesley Award for outstanding achievement, and he has received a Silver Medal of Excellence from the Society of Illustrators. Additionally he won the 1980 Artist World Fantasy Award and was a Guest of Honor at the 1996 World Horror Convention.\r\n\r\nA native of Plainville, Connecticut, he is a 1975 graduate of the Paier School of Art. His art has adorned the covers of books by Isaac Asimov, Ray Bradbury, C. J. Cherryh, Stephen King, Gene Wolfe, Michael Moorcock, and Raymond E. Feist, among others.",
+      "references": [
+        {
+          "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Don_Maitz"
-      }]
+        }
+      ]
     },
     {
       "id": "enki-bilal",
       "name": "Enki Bilal",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg/500px-Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
+      "description": "Enki Bilal (born Enes Bilal; born 7 October 1951) is a French comic book creator and film director.",
+      "references": [
+        {
+          "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Enki_Bilal"
-      }]
+        }
+      ]
     },
     {
       "id": "eric-zawadzki",
@@ -213,31 +219,37 @@
       "id": "moebius",
       "name": "Moebius",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Moebius_Lodz_2008.jpg/500px-Moebius_Lodz_2008.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Jean_Giraud"
-      }]
+      "description": "Jean Henri Gaston Giraud (French: [\u0292i\u0281o]; 8 May 1938 \u2013 10 March 2012) was a French artist, cartoonist, and writer who worked in the Franco-Belgian bandes dessin\u00e9es (BD) tradition. Giraud garnered worldwide acclaim predominantly under the pseudonym M\u0153bius (; French: [m\u00f8bjys]) for his fantasy/science-fiction work, and to a slightly lesser extent as Gir (French: [\u0292i\u0281]), which he used for his Western-themed work. Esteemed by Federico Fellini, Stan Lee, and Hayao Miyazaki, among others, he has been described as the most influential bande dessin\u00e9e artist after Herg\u00e9.\r\n\r\nHis most famous body of work as Gir concerns the Blueberry series, created with writer Jean-Michel Charlier, featuring one of the first antiheroes in Western comics. As M\u0153bius, he achieved worldwide renown with science-fiction and fantasy comics drawn in a highly imaginative, surreal, almost abstract style. These works include Arzach and the Airtight Garage of Jerry Cornelius. He also collaborated with avant garde filmmaker Alejandro Jodorowsky for an unproduced adaptation of Dune and the comic-book series The Incal.\r\n\r\nM\u0153bius also contributed storyboards and concept designs to several science-fiction and fantasy films, such as Alien, Tron, The Fifth Element, and The Abyss. Blueberry was adapted for the screen in 2004 by French director Jan Kounen.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Jean_Giraud"
+        }
+      ]
     },
     {
       "id": "patrick-horvath",
       "name": "Patrick Horvath",
       "imageUrl": "https://static.wikia.nocookie.net/p__/images/d/dd/Season_four_patrick.png/revision/latest/thumbnail/width/360/height/360?cb=20140407042243&path-prefix=protagonist",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Patrick_Horvath"
-      }]
+      "description": "Patrick Horvath is an American film producer, writer, director, and the author and illustrator of the IDW horror graphic novel Beneath the Trees Where Nobody Sees and its sequel, Beneath the Trees Where Nobody Sees: Rite of Spring.\r\n\r\nHorvarth's films include Entrance, The Pact 2, and Southbound.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Patrick_Horvath"
+        }
+      ]
     },
     {
       "id": "paul-chadwick",
       "name": "Paul Chadwick",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Paul_Chadwick_in_2006.jpg/500px-Paul_Chadwick_in_2006.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Paul_Chadwick"
-      }]
+      "description": "Paul Chadwick (born 1957) is an American comic book creator best known for his series Concrete, about a normal man trapped in a stone body.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Paul_Chadwick"
+        }
+      ]
     },
     {
       "id": "paul-kirchner",
@@ -248,12 +260,14 @@
     {
       "id": "paul-pope",
       "name": "Paul Pope",
-      "description": "",
+      "description": "Paul Pope (born September 25, 1970) is an American alternative cartoonist. Pope's work combines the precision and romance of European comics artists with the energy and page design of the manga tradition. Pope's two protagonist types are the silent, lanky outsider male of The One Trick Rip-Off, Escapo, and Heavy Liquid; or the resourceful, aggressive, humorous young teenage girls of THB. He has self-published some of his work, most notably THB, through his own Horse Press, with other work for such publishers as DC Comics/Vertigo and First Second Books.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Paul_Pope_2010.jpg/500px-Paul_Pope_2010.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Paul_Pope"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Paul_Pope"
+        }
+      ]
     },
     {
       "id": "peter-bagge",
@@ -318,11 +332,13 @@
     {
       "id": "tyler-crook",
       "name": "Tyler Crook",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
-      }]
+      "description": "Tyler Crook is an American comics cartoonist. He broke into comics in 2011 with Petrograd, written by Philip Gelatt and published by Oni Press, and in 2012 he won the Russ Manning Most Promising Newcomer Award. He is best known for his work on Mike Mignola and John Arcudi's B.P.R.D.: Hell on Earth, Harrow County, which he co-created with Cullen Bunn, and his solo comic book series The Lonesome Hunters.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
+        }
+      ]
     },
     {
       "id": "victor-moscoso",
