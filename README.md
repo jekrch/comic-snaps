@@ -50,6 +50,10 @@ SigLIP and DINOv2 support incremental updates (only new panels are embedded). Gr
 
 HuggingFace and torchvision model weights are cached across runs.
 
+## Wiki integration
+
+The metadata script also maintains `artists.json` and `series.json`, seeded from distinct artist names and series titles in the gallery. When an entry includes a Wikipedia reference but has no description, the script fetches the introductory section of the linked article via the MediaWiki API and fills it in automatically.
+
 ## Sorting
 
 The gallery supports several sort modes exploring different notions of visual ordering:
