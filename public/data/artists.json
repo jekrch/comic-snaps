@@ -3,8 +3,8 @@
     {
       "id": "alexis-ziritt",
       "name": "Alexis Ziritt",
-      "description":   "",
-              "references": []
+      "description": "",
+      "references": []
     },
     {
       "id": "alvaro-martinez-bueno",
@@ -35,10 +35,12 @@
       "name": "David Lapham",
       "description": "David Lapham (born 1970) is an American comic book writer, artist, and cartoonist, best known for his work on the independent comic book Stray Bullets.",
       "imageUrl": "https://s3.amazonaws.com/comicgeeks/people/avatars/660.jpg?t=1763083552",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/David_Lapham"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/David_Lapham"
+        }
+      ]
     },
     {
       "id": "dominique-he",
@@ -145,11 +147,13 @@
     {
       "id": "kev-walker",
       "name": "Kev Walker",
-      "description": "",
-      "references": [{
+      "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",
+      "references": [
+        {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Kev_Walker"
-      }]
+        }
+      ]
     },
     {
       "id": "kevin-eastman",
@@ -180,10 +184,12 @@
       "name": "Michael Allred",
       "description": "Michael Dalton \"Mike\" Allred (born 1962) is an American comic book artist and writer. He is most well known for his independent comics creation Madman and for co-creating and drawing the comic book series iZombie. His work often draws upon pop art, as well as commercial and comic art of the 1950s and 1960s.",
       "imageUrl": "https://static.tvtropes.org/pmwiki/pub/images/mike_allred_1.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Mike_Allred"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Mike_Allred"
+        }
+      ]
     },
     {
       "id": "michael-avon-oeming",
@@ -268,10 +274,12 @@
       "name": "Sean Phillips",
       "imageUrl": "https://cdn.imagecomics.com/assets/i/creators/454879/sean-phillips_5ccece50fe_4c8d099e819a7146712525ccb2eb9e7c.jpg",
       "description": "Sean Phillips (born 27 January 1965) is a British comic book artist, best known for his collaborations with Ed Brubaker on comics including Sleeper, Incognito, the Criminal series of comics, Fatale, The Fade Out, and Kill or Be Killed. He has also worked on the DC Comics' series Wild C.A.T.s and Hellblazer.",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Sean_Phillips"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Sean_Phillips"
+        }
+      ]
     },
     {
       "id": "stipan-morian",
@@ -289,7 +297,6 @@
       "id": "victor-moscoso",
       "name": "Victor Moscoso",
       "description": "",
-  "description": "",
       "references": []
     },
     {

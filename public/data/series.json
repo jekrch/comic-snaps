@@ -111,10 +111,12 @@
       "parentSeries": null,
       "imageUrl": "https://images.squarespace-cdn.com/content/58c6f8b33a041115fb6baf1d/1503468407912-83K4BPO0VWUXDUKQ6IHL/fatale_021_cvr.jpg?content-type=image%2Fjpeg",
       "description": "Fatale is a supernatural noir comic book created by Ed Brubaker and Sean Phillips. It was published by Image Comics between January 2012 and July 2014. The series was initially announced as a 12-issue limited series, but was later extended to 24 issues.",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Fatale_(Image_Comics)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Fatale_(Image_Comics)"
+        }
+      ]
     },
     {
       "id": "frank",
@@ -149,11 +151,13 @@
       "name": "Heavy Metal",
       "parentSeries": null,
       "imageUrl": "https://i.pinimg.com/originals/1c/56/4a/1c564a0dc55a005e87a82cae010fed75.jpg",
-      "description": "Heavy Metal is an American science fantasy comics magazine, first published in 1977. The magazine is known primarily for its blend of dark fantasy, science fiction, erotica, and steampunk comics. Following a brief hiatus in 2023, it relaunched in 2024 with new owners and a new editorial team consisting of Dave Kelly, Frank Forte, and Chris Thompson.\n\nUnlike the traditional American comic books of that time bound by the restrictive Comics Code Authority, the magazine-format Heavy Metal featured explicit nudity, sexual situations, and graphic violence. The magazine started out primarily as a licensed translation of the French science-fantasy magazine Métal hurlant, marking for many Americans their first introduction to the work of European cartoonists like Enki Bilal, Philippe Caza, Guido Crepax, Philippe Druillet, Jean-Claude Forest, Jean Giraud (a.k.a. Moebius), Chantal Montellier, and Milo Manara.",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Heavy_Metal_(magazine)"
-      }]
+      "description": "Heavy Metal is an American science fantasy comics magazine, first published in 1977. The magazine is known primarily for its blend of dark fantasy, science fiction, erotica, and steampunk comics. Following a brief hiatus in 2023, it relaunched in 2024 with new owners and a new editorial team consisting of Dave Kelly, Frank Forte, and Chris Thompson.\n\nUnlike the traditional American comic books of that time bound by the restrictive Comics Code Authority, the magazine-format Heavy Metal featured explicit nudity, sexual situations, and graphic violence. The magazine started out primarily as a licensed translation of the French science-fantasy magazine M\u00e9tal hurlant, marking for many Americans their first introduction to the work of European cartoonists like Enki Bilal, Philippe Caza, Guido Crepax, Philippe Druillet, Jean-Claude Forest, Jean Giraud (a.k.a. Moebius), Chantal Montellier, and Milo Manara.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Heavy_Metal_(magazine)"
+        }
+      ]
     },
     {
       "id": "hyde-street",
@@ -194,11 +198,13 @@
       "id": "love-rockets",
       "name": "Love & Rockets",
       "parentSeries": null,
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Love_and_Rockets_(comics)"
-      }]
+      "description": "Love and Rockets is a comic book series by the Hernandez brothers: Gilbert, Jaime, and Mario. It was one of the first comic books in the alternative comics movement of the 1980s.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Love_and_Rockets_(comics)"
+        }
+      ]
     },
     {
       "id": "madman",
@@ -206,10 +212,12 @@
       "parentSeries": null,
       "imageUrl": "https://monstrousindustry.wordpress.com/wp-content/uploads/2013/03/mmac1-page-1-cropped.jpg",
       "description": "Madman is a creator-owned fictional superhero that appears in comic books by creator Mike Allred and which has been published by a number of publishers over the years. The character first appeared in Creatures of the Id #1 (Oct. 1990). His name, Frank Einstein, is a combination of Frank Sinatra and Albert Einstein, and is also a reference to Frankenstein.",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
+        }
+      ]
     },
     {
       "id": "madman-adventures-mini-comic",
@@ -266,10 +274,12 @@
       "parentSeries": null,
       "imageUrl": "https://static.wikia.nocookie.net/stray-bullets/images/7/7e/StrayBullets_02.jpg",
       "description": "Stray Bullets is an independent American comic book series published in black and white (with color covers) by El Capitan Books and Image Comics. It is written and drawn by David Lapham.\n\nThe story deals with the often criminal and sometimes tragic misadventures of a large cast of characters and takes place from the mid-1970s through the mid-1990s. Published on an irregular basis since 1995, the comic has had close to 100 issues and is a long-time critically acclaimed series.",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Stray_Bullets_(comics)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Stray_Bullets_(comics)"
+        }
+      ]
     },
     {
       "id": "stray-bullets-sunshine-roses",
