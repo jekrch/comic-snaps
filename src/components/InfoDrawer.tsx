@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { BookOpen, Youtube, Search, ExternalLink } from "lucide-react";
 import type { Panel, Artist, Series, Reference } from "../types";
 
@@ -55,9 +56,9 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-15 pointer-events-auto"
+      className="fixed inset-0 z-50 pointer-events-auto"
       style={{
         top: topOffset,
         bottom: bottomOffset,
@@ -117,7 +118,6 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
           relative w-full h-full overflow-y-auto info-modal-scroll
           pointer-events-auto
         `}
-        style={{ touchAction: "pan-y", WebkitOverflowScrolling: "touch", overscrollBehavior: "contain" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div
@@ -247,6 +247,7 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
