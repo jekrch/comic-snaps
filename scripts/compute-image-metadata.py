@@ -18,10 +18,13 @@ slightly nonzero. Richly colored panels typically score 15+.
 """
 
 import json
+import re
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
+import requests
 from PIL import Image
 from sklearn.cluster import KMeans
 from skimage import color as skcolor
@@ -109,6 +112,92 @@ def compute_metadata(image_path: Path) -> dict:
     return result
 
 
+def get_wikipedia_title(url: str) -> str | None:
+    """Extract the article title from a Wikipedia URL."""
+    m = re.match(r"https?://en\.wikipedia\.org/wiki/(.+)", url)
+    return m.group(1) if m else None
+
+
+def fetch_wikipedia_intro(url: str) -> str | None:
+    """
+    Fetch the introductory section of a Wikipedia article as plain text.
+
+    Uses the Wikipedia REST API to get the extract, removes bracketed
+    reference markers like [1][2], and converts newlines to \\r\\n.
+    """
+    title = get_wikipedia_title(url)
+    if not title:
+        return None
+
+    api_url = (
+        f"https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
+    )
+    try:
+        resp = requests.get(api_url, headers={"User-Agent": "comic-snaps/1.0"}, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        text = data.get("extract", "")
+        if not text:
+            return None
+        # Remove reference markers like [1], [2], [note 1], etc.
+        text = re.sub(r"\[[\w\s]*\d+\]", "", text)
+        # Normalize whitespace that may result from removed refs
+        text = re.sub(r"  +", " ", text).strip()
+        # Convert newlines to \r\n
+        text = text.replace("\n", "\r\n")
+        return text
+    except Exception as e:
+        print(f"  WARN: Wikipedia fetch failed for {url}: {e}", file=sys.stderr)
+        return None
+
+
+def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
+    """
+    For entries in the given JSON file that have a Wikipedia reference
+    but no description, fetch the intro from Wikipedia and fill it in.
+
+    Returns the number of entries updated.
+    """
+    if not path.exists():
+        return 0
+
+    data = json.loads(path.read_text())
+    entries = data.get(key, [])
+    updated = 0
+
+    for entry in entries:
+        desc = entry.get("description", "")
+        if desc and desc.strip():
+            continue
+
+        wiki_url = None
+        for ref in entry.get("references", []):
+            if ref.get("name", "").lower() == "wikipedia":
+                wiki_url = ref.get("url")
+                break
+
+        if not wiki_url:
+            continue
+
+        print(f"  Fetching Wikipedia intro for {entry.get('name', entry.get('id'))}...")
+        intro = fetch_wikipedia_intro(wiki_url)
+        if intro:
+            entry["description"] = intro
+            updated += 1
+            print(f"    OK: {intro[:80]}...")
+        else:
+            print(f"    SKIP: no intro text found")
+
+        # Be polite to Wikipedia
+        time.sleep(0.5)
+
+    if updated:
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        print(f"  Updated {updated} description(s) in {path}.")
+
+    return updated
+
+
 def slugify(name: str) -> str:
     """Convert a name to a URL-friendly slug."""
     import re
@@ -178,6 +267,16 @@ def main():
     # Seed artists.json and series.json if they don't exist
     seed_artists(panels)
     seed_series(panels)
+
+    # Backfill descriptions from Wikipedia where available
+    print("Backfilling Wikipedia descriptions...")
+    wiki_updated = 0
+    wiki_updated += backfill_wikipedia_descriptions(ARTISTS_PATH, "artists")
+    wiki_updated += backfill_wikipedia_descriptions(SERIES_PATH, "series")
+    if wiki_updated:
+        print(f"Backfilled {wiki_updated} Wikipedia description(s) total.")
+    else:
+        print("No Wikipedia descriptions needed backfilling.")
 
     updated_count = 0
     error_count = 0

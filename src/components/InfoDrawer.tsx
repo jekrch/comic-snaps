@@ -53,6 +53,7 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
       <div
         className={`
           w-full max-h-[70vh] overflow-y-auto info-modal-scroll
+          pb-16
           bg-black/85 backdrop-blur-md
           transition-all duration-300 ease-out
           pointer-events-auto
@@ -60,7 +61,7 @@ export default function InfoDrawer({ open, onClose, panel, artist, series, paren
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg mx-auto w-full">
+        <div className="px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full">
           {/* Series info — fall back to parentSeries for description & references */}
           <div className="relative overflow-hidden rounded">
             {seriesImageUrl && (

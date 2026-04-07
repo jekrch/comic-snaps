@@ -195,7 +195,10 @@
       "name": "Love & Rockets",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Love_and_Rockets_(comics)"
+      }]
     },
     {
       "id": "madman",
