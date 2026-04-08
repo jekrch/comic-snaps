@@ -6,20 +6,24 @@
       "parentSeries": null,
       "imageUrl": "https://i.thriftbooks.com/api/imagehandler/m/1E0D143DDC668C018555159872E28F789B01BB6B.jpeg",
       "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/100%25_(comics)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/100%25_(comics)"
+        }
+      ]
     },
     {
       "id": "absolute-martian-manhunter",
       "name": "Absolute Martian Manhunter",
       "parentSeries": null,
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Absolute_Martian_Manhunter"
-      }]
+      "description": "Absolute Martian Manhunter is an abstract superhero psychological horror comic book maxiseries published by DC Comics, based on its character Martian Manhunter. The series is written by Deniz Camp and illustrated by Javier Rodr\u00edguez, and was released on March 26, 2025 as part of DC's Absolute Universe (AU) imprint. It is the fifth series from the imprint released in order, and is second in the second batch of Absolute titles, following Absolute Flash and continuing with Absolute Green Lantern.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Absolute_Martian_Manhunter"
+        }
+      ]
     },
     {
       "id": "absolute-wonder-woman",
@@ -62,11 +66,13 @@
       "name": "Concrete",
       "parentSeries": null,
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a9/Complete_concrete_chadwick_cover.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Concrete_(comics)"
-      }]
+      "description": "Concrete is a comic book series created and written by Paul Chadwick and published by Dark Horse Comics.\r\n\r\nThe character's first appearance is Dark Horse Presents #1 (July 1986). The eponymous central character is a normal man whose brain was transplanted into a large, stone body by aliens, and who lives an extraordinary life on Earth following his escape.\r\n\r\nThe Concrete series focuses on realism. Apart from the aliens (which appear only in original series issue #3, in Concrete's recounting of his origin) and Concrete's own high-tech, artificial, stone body (which includes a host of attendant abilities), there are no supernatural or science fiction elements to any stories.\r\n\r\nThe hero tries to use his body for noble endeavors, such as helping out on a family farm. Later, Concrete climbs Mount Everest, becomes involved with a group of hardline environmental militants, and reluctantly agrees to become the spokesperson of a campaign to voluntarily reduce the Earth's population.\r\n\r\nConcrete's sexuality is addressed in the series. An artist at heart, he collects paintings of female nudes. He is embarrassed at his lack of sexual organs; this is often the subject of hurtful jokes thrown his way.\r\n\r\nReal-world physics apply to Concrete. Examples include Concrete breaking objects by sitting on them, or Concrete being shot forward from a braking car, due to the momentum of his large body. He is constantly breaking telephones and doorknobs, and must hire an assistant, Larry Munro, because his hands are too clumsy to handle a pen.\r\n\r\nThe series makes frequent use of thought balloons, showing characters' interior thoughts and feelings.\r\n\r\nIn addition to the comic, Paul Chadwick has drawn Concrete in many paintings. Most show the character wandering in nature, perhaps looking at a flower or some other natural curiosity.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Concrete_(comics)"
+        }
+      ]
     },
     {
       "id": "concrete-fragile-creature",
@@ -94,11 +100,13 @@
       "name": "Criminal",
       "parentSeries": null,
       "imageUrl": "https://imagecomics.com/files/releases/1025IM0248-hires.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Criminal_(comics)"
-      }]
+      "description": "Criminal is an American creator-owned comic book series written by Ed Brubaker and illustrated by Sean Phillips. It was originally published by Marvel Comics' Icon imprint and later by Image Comics. The series is a meditation on the clich\u00e9s of the crime genre while remaining realistic and believable.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Criminal_(comics)"
+        }
+      ]
     },
     {
       "id": "criminal-the-special-edition",
@@ -119,11 +127,13 @@
       "name": "Eerie",
       "parentSeries": null,
       "imageUrl": "https://i0.wp.com/50yearoldcomics.com/wp-content/uploads/2021/10/eerie40.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Eerie_(magazine)"
-      }]
+      "description": "Eerie is an American magazine of horror comics introduced in 1966 by Warren Publishing. Like Mad, it was a black-and-white magazine intended for newsstand distribution and did not submit its stories to the comic book industry's voluntary Comics Code Authority. Each issue's stories were introduced by the host character, Cousin Eerie. Its sister publications were Creepy and Vampirella.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Eerie_(magazine)"
+        }
+      ]
     },
     {
       "id": "eightball",

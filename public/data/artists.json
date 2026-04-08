@@ -5,16 +5,18 @@
       "name": "Alexis Ziritt",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/536bb26fe4b0b68ea1c248ff/1423337639184-W9XF60A3ON627CT9TQYP/image-asset.jpeg",
       "description": "Venezuelan-born artist, Alexis Ziritt, has been living in the USA for the past 2 decades and his work has garnered attention from every corner of the industry. His comics, Space Riders (Black Mask), Tarantula (Adhouse), and Night Hunters (Floating World), have amassed a dedicated following and his work has been published in Complex Magazine, Heavy Metal, Dark Horse Comics, Image Comics, and many others.",
-      "references": [{
-        "name": "Website",
-        "url": "https://www.aziritt.com/"
-      }]
+      "references": [
+        {
+          "name": "Website",
+          "url": "https://www.aziritt.com/"
+        }
+      ]
     },
     {
       "id": "alvaro-martinez-bueno",
       "name": "Alvaro Martinez Bueno",
       "imageUrl": "https://cdn.prod.website-files.com/6501d53746370d07299ed666/68f8ff4196e7151a814b38f5_Alvaro-Martinez-Bueno.jpg",
-      "description": "Álvaro Martínez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
+      "description": "\u00c1lvaro Mart\u00ednez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
       "references": []
     },
     {
@@ -26,12 +28,14 @@
     {
       "id": "dani",
       "name": "Dani",
-      "description": "",
+      "description": "Danielle \"Dani\" Moonstar (also known as Psyche, Mirage, and Moonstar) is a character appearing in American comic books published by Marvel Comics. She first appeared in the graphic novel The New Mutants (Sept. 1982), created by writer Chris Claremont and artist Bob McLeod. The character is usually depicted as associated with the New Mutants, but has also served as a member of the Valkyries of Asgard.\r\n\r\nA mutant, Mirage originally possessed the psionic/psychic ability to telepathically create illusions of her opponents' fears or wishes. She later developed a wide range of psionic and energy manipulation powers, and gained magical abilities after a series of adventures in Asgard. She was a member of the New Mutants and, after a long absence, its reincarnation as X-Force. She was also a member of the Fearless Defenders and the X-Men. She was depowered after the \"Decimation\" storyline, but later regained her mutant powers after being infected with and then cured of Warlock's transmode virus.\r\n\r\nBlu Hunt portrayed Danielle Moonstar in the 2020 film The New Mutants.",
       "imageUrl": "https://s3.amazonaws.com/comicgeeks/people/avatars/17914.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Danielle_Moonstar"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Danielle_Moonstar"
+        }
+      ]
     },
     {
       "id": "daniel-clowes",
@@ -92,10 +96,12 @@
       "name": "Eric Zawadzki",
       "description": "Eric Zawadzki is a professional comic book artist most well known for co-creating the hit Image comic, Assorted Crisis Events. Prior to that he worked on the House of El trilogy for DC comics and Heart Attack for Skybound, the latter of which was turned into a TV show for Fuji TV in Japan in 2025. He has also received critical acclaim for his work on The Dregs and Eternal from Black Mask Studios. Zawadzki lives in Calgary with his wife and two hairless cats.",
       "imageUrl": "https://www.ericxyz.com/wp-content/uploads/2020/04/profilephoto.jpg",
-      "references": [{
-        "name": "Website",
-        "url": "https://www.ericxyz.com/"
-      }]
+      "references": [
+        {
+          "name": "Website",
+          "url": "https://www.ericxyz.com/"
+        }
+      ]
     },
     {
       "id": "filipe-andrade",
@@ -108,10 +114,12 @@
       "name": "Floch",
       "description": "",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Floch.jpg/500px-Floch.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Floc%27h"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Floc%27h"
+        }
+      ]
     },
     {
       "id": "francis-portela",
@@ -122,41 +130,49 @@
     {
       "id": "gary-frank",
       "name": "Gary Frank",
-      "description": "",
+      "description": "Gary Frank (born 1969) is a British comics artist, notable for pencilling on Midnight Nation and Supreme Power, both written by J. Michael Straczynski. He has also worked with author Peter David on The Incredible Hulk and Supergirl. He had a creator-owned series, Kin, which he wrote himself, published by Top Cow Productions in 2000.\r\n\r\nWriter Geoff Johns, who collaborated with Frank on Doomsday Clock, has opined that Frank's rendition of Superman is the best of his generation and that the only other artist in the same league with Frank in this regard is Curt Swan.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/88/Gary_Frank.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Gary_Frank_(artist)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Gary_Frank_(artist)"
+        }
+      ]
     },
     {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
-      "description": "",
+      "description": "Gilberto Hern\u00e1ndez (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [\u02c8beto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
       "imageUrl": "https://guernicamag.com/wp-content/uploads/2015/08/GilbertHernandez_portrait.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Gilbert_Hernandez"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Gilbert_Hernandez"
+        }
+      ]
     },
     {
       "id": "hayden-sherman",
       "name": "Hayden Sherman",
       "description": "",
-      "references": [{
-        "name": "Website",
-        "url": "www.haydenshermanart.com"
-      }]
+      "references": [
+        {
+          "name": "Website",
+          "url": "www.haydenshermanart.com"
+        }
+      ]
     },
     {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
       "description": "",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg/500px-Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Javier_Rodr%C3%ADguez_(artist)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Javier_Rodr%C3%ADguez_(artist)"
+        }
+      ]
     },
     {
       "id": "jeff-jones",
@@ -167,51 +183,61 @@
     {
       "id": "jeff-lemire",
       "name": "Jeff Lemire",
-      "imageUrl":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Lemire_-_Lucca_2017.jpg/500px-Jeff_Lemire_-_Lucca_2017.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Jeff_Lemire"
-      }]
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Lemire_-_Lucca_2017.jpg/500px-Jeff_Lemire_-_Lucca_2017.jpg",
+      "description": "Jeff Lemire (; born March 21, 1976) is a Canadian comic book writer, artist, cartoonist, and television producer. He is the author of critically acclaimed titles including the Essex County Trilogy, Sweet Tooth, and The Nobody. His written work includes All-New Hawkeye, Extraordinary X-Men, Moon Knight and Old Man Logan for Marvel; Superboy, Animal Man, Justice League Dark, Green Arrow and Absolute Flash for DC; Black Hammer and Mazebook for Dark Horse; Descender and Gideon Falls for Image Comics; and Bloodshot Reborn for Valiant.\r\n\r\nIn 2021, Sweet Tooth was adapted as a Netflix television series through Susan and Robert Downey Jr.'s production company Team Downey, with Lemire serving as an on-set consultant.\r\n\r\nLemire has also collaborated with musicians such as Eddie Vedder on his Matter of Time animated video and Gord Downie on Secret Path, a multimedia storytelling project.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Jeff_Lemire"
+        }
+      ]
     },
     {
       "id": "jim-woodring",
       "name": "Jim Woodring",
-      "description": "",
+      "description": "James William Woodring (born October 11, 1952) is an American cartoonist, fine artist, writer and toy designer. He is best known for the dream-based comics he published in his magazine Jim, and as the creator of the anthropomorphic cartoon character Frank, who has appeared in a number of short comics and graphic novels.\r\n\r\nSince he was a child, Woodring has experienced hallucinatory \"apparitions\", which have inspired much of his surreal work. He keeps an \"autojournal\" of his dreams, some of which have formed the basis of some of his comics. His most famous creation is fictional\u2014the pantomime comics set in the universe he calls the Unifactor, usually featuring Frank. These stories incorporate a highly personal symbolism largely inspired by Woodring's belief in Vedanta from Hindu philosophy. He also does a large amount of surrealist painting, and has been the writer on a number of comics from licensed franchises published by Dark Horse and others.\r\n\r\nWoodring identified Bimbo's Initiation as \"one of the things that laid the foundation for my life's philosophy.\"\r\n\r\nWoodring has won or been nominated for a number of awards. He placed twice on The Comics Journal's list of the 100 best comics of the century, with the Frank stories ranked #55, and The Book of Jim ranked #71.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/71/JimWoodringDrawing.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Jim_Woodring"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Jim_Woodring"
+        }
+      ]
     },
     {
       "id": "joelle-jones",
       "name": "Joelle Jones",
       "description": "",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Joelle_Jones_by_Gage_Skidmore.jpg/500px-Joelle_Jones_by_Gage_Skidmore.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Jo%C3%ABlle_Jones"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Jo%C3%ABlle_Jones"
+        }
+      ]
     },
     {
       "id": "john-higgins",
       "name": "John Higgins",
-      "description": "",
+      "description": "John Higgins (born 1949) is an English comic book artist and writer. He did significant work for 2000 AD, and he has frequently worked with writer Alan Moore, most notably as colourist for Watchmen.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/John_Higgins.jpg/500px-John_Higgins.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/John_Higgins_(comics)"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/John_Higgins_(comics)"
+        }
+      ]
     },
     {
       "id": "jose-martin-sauri",
       "name": "Jose Martin Sauri",
       "description": "",
-      "references": [{
-        "name": "Comiclopedia",
-        "url": "https://www.lambiek.net/artists/m/martin-sauri_jm.htm"
-      }]
+      "references": [
+        {
+          "name": "Comiclopedia",
+          "url": "https://www.lambiek.net/artists/m/martin-sauri_jm.htm"
+        }
+      ]
     },
     {
       "id": "kev-walker",
@@ -228,21 +254,25 @@
       "id": "kevin-eastman",
       "name": "Kevin Eastman",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Kevin_Eastman.jpg/500px-Kevin_Eastman.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Kevin_Eastman"
-      }]
+      "description": "Kevin Brooks Eastman (born May 30, 1962) is an American comic book writer and artist best known for co-creating the Teenage Mutant Ninja Turtles with Peter Laird. Eastman was also formerly the editor and publisher of the magazine Heavy Metal.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Kevin_Eastman"
+        }
+      ]
     },
     {
       "id": "liberatore",
       "name": "Liberatore",
-      "description": "",
+      "description": "Gaetano Liberatore (born 12 April 1953), better known as Tanino Liberatore, is an Italian comics author and illustrator. His best known fictional character is RanXerox.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Tanino_Liberatore_-_Lucca_Comics_%26_Games_2015.JPG/500px-Tanino_Liberatore_-_Lucca_Comics_%26_Games_2015.JPG",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Tanino_Liberatore"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Tanino_Liberatore"
+        }
+      ]
     },
     {
       "id": "maria-llovet",
@@ -271,12 +301,14 @@
     {
       "id": "michael-avon-oeming",
       "name": "Michael Avon Oeming",
-      "description": "",
+      "description": "Michael Avon Oeming is an American comic book creator, both as an artist and writer.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Oeming08.jpg/500px-Oeming08.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Michael_Avon_Oeming"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Michael_Avon_Oeming"
+        }
+      ]
     },
     {
       "id": "moebius",
@@ -317,12 +349,14 @@
     {
       "id": "paul-kirchner",
       "name": "Paul Kirchner",
-      "description": "",
+      "description": "Paul Kirchner (born January 29, 1952) is an American writer and illustrator who has worked in diverse areas, from comic strips and toy design to advertising and editorial art.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/FIBD2023PaulKirchner.jpg/500px-FIBD2023PaulKirchner.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Paul_Kirchner"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Paul_Kirchner"
+        }
+      ]
     },
     {
       "id": "paul-pope",
@@ -339,12 +373,14 @@
     {
       "id": "peter-bagge",
       "name": "Peter Bagge",
-      "description": "",
+      "description": "Peter Bagge (pronounced , as in bag; born December 11, 1957) is an American cartoonist whose best-known work includes the comics Neat Stuff and Hate. His stories often use black humor and exaggerated cartooning to dramatize the reduced expectations of middle-class American youth. He won two Harvey Awards in 1991, one for best cartoonist and one for his work on Hate. In recent decades Bagge has done more fact-based comics, everything from biographies to history to comics journalism. Publishers of Bagge's articles, illustrations, and comics include suck.com, MAD Magazine, toonlet, Discover, and the Weekly World News, with the comic strip Adventures of Batboy. He has expressed his libertarian views in features for Reason.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/4.16.16PeterBaggeByLuigiNovi1.jpg/500px-4.16.16PeterBaggeByLuigiNovi1.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Peter_Bagge"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Peter_Bagge"
+        }
+      ]
     },
     {
       "id": "reed-waller",
@@ -355,52 +391,62 @@
     {
       "id": "richard-corben",
       "name": "Richard Corben",
-      "description": "",
+      "description": "Richard Corben (November 1, 1940 \u2013 December 2, 2020) was an American illustrator and comic book artist best known for his comics featured in Heavy Metal magazine, especially the Den series which was featured in the magazine's first film adaptation in 1981. He was the winner of the 2009 Spectrum Grand Master Award and the 2018 Grand Prix at Angoul\u00eame. In 2012 he was elected to the Will Eisner Award Hall of Fame.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d4/Richard_corben_at_his_studio.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Richard_Corben"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Richard_Corben"
+        }
+      ]
     },
     {
       "id": "rick-griffin",
       "name": "Rick Griffin",
-      "description": "",
+      "description": "Richard Alden Griffin (June 18, 1944 \u2013 August 18, 1991) was an American artist and one of the leading designers of psychedelic posters in the 1960s. He was a key figure in the underground comix movement as a founding member of the Zap Comix collective. Griffin was closely identified with the Grateful Dead, designing some of their best-known posters and album covers including Aoxomoxoa. His work within the surfing subculture included both film posters and his comic strip, Murphy.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/92/Rickgriffinfamilydog.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Rick_Griffin"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Rick_Griffin"
+        }
+      ]
     },
     {
       "id": "robert-crumb",
       "name": "Robert Crumb",
-      "description": "",
+      "description": "Robert Dennis Crumb (; born August 30, 1943) is an American artist who often signs his work R. Crumb. His work displays a nostalgia for American folk culture of the late 19th and early 20th centuries, and satire of contemporary American culture.\r\n\r\nCrumb contributed to many of the seminal works of the underground comix movement in the 1960s, including being a founder of the first successful underground comix publication, Zap Comix, contributing to all 16 issues. He was additionally contributing to the East Village Other and many other publications, including a variety of one-off and anthology comics. During this time, inspired by psychedelics and cartoons from the 1920s and 1930s, he introduced a wide variety of characters that became extremely popular, including countercultural icons Fritz the Cat and Mr. Natural, and the images from his Keep On Truckin' strip. Sexual themes abounded in all these projects, often shading into scatological and pornographic comics. In the mid-1970s, he contributed to the Arcade anthology; following the decline of the underground, he moved towards biographical and autobiographical subjects while refining his drawing style, a heavily crosshatched pen-and-ink style inspired by late 19th- and early 20th-century cartooning. Much of his work appeared in a magazine he founded, Weirdo (1981\u20131993), which was one of the most prominent publications of the alternative comics era. As his career progressed, his comic work became more autobiographical.\r\n\r\nIn 1991 Crumb was inducted into the comic book industry's Will Eisner Comic Book Hall of Fame, and in 1994 the Terry Zwigoff film Crumb explored his artistic career and personal life. He was married to cartoonist Aline Kominsky-Crumb, with whom he frequently collaborated. Their daughter, Sophie Crumb, has also followed a cartooning career.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG/500px-Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
+        }
+      ]
     },
     {
       "id": "ryan-ottley",
       "name": "Ryan Ottley",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/ROTTLEYbioPic.jpg/500px-ROTTLEYbioPic.jpg",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Ryan_Ottley"
-      }]
+      "description": "Ryan Ottley (born 1975) is an American comic book artist and writer, best known for work on Image Comics' Invincible and Battle Beast and Marvel Comics' Amazing Spider-Man and Hulk.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Ryan_Ottley"
+        }
+      ]
     },
     {
       "id": "sam-keith",
       "name": "Sam Keith",
-      "description": "",
+      "description": "Samuel Coleman Kieth (January 11, 1963 \u2013 March 15, 2026) was an American comics artist and writer, best known as the creator of The Maxx and Zero Girl and co- creator of The Sandman.",
       "imageUrl": "https://static01.nyt.com/images/2026/03/30/multimedia/24Keith--04-tkjv-print1/24Keith--04-tkjv-superJumbo.jpg?quality=75&auto=webp",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Sam_Kieth"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Sam_Kieth"
+        }
+      ]
     },
     {
       "id": "sean-phillips",
@@ -435,21 +481,25 @@
       "id": "tyler-crook",
       "name": "Tyler Crook",
       "imageUrl": "https://static.wikia.nocookie.net/sixth-gun/images/8/88/Tyler_Crook_profile_picture.jpg/revision/latest/scale-to-width-down/180?cb=20180802132944",
-      "description": "",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
-      }]
+      "description": "Tyler Crook is an American comics cartoonist. He broke into comics in 2011 with Petrograd, written by Philip Gelatt and published by Oni Press, and in 2012 he won the Russ Manning Most Promising Newcomer Award. He is best known for his work on Mike Mignola and John Arcudi's B.P.R.D.: Hell on Earth, Harrow County, which he co-created with Cullen Bunn, and his solo comic book series The Lonesome Hunters.",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
+        }
+      ]
     },
     {
       "id": "victor-moscoso",
       "name": "Victor Moscoso",
-      "description": "",
+      "description": "Victor Moscoso (born July 28, 1936) is a Spanish\u2013American artist best known for producing psychedelic rock posters, advertisements, and underground comix in San Francisco during the 1960s and 1970s. He was the first of the rock poster artists of the 1960s era with formal academic training and experience. He was the first of the rock poster artists to use photographic collage in many of his posters.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/57/Victor_Moscoso%2C_psychedelic_poster_and_comix_artist.jpg",
-      "references": [{
-        "name": "Wikipedia",
-        "url": "https://en.wikipedia.org/wiki/Victor_Moscoso"
-      }]
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Victor_Moscoso"
+        }
+      ]
     }
   ]
 }
