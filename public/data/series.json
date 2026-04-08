@@ -4,20 +4,28 @@
       "id": "100",
       "name": "100%",
       "parentSeries": null,
+      "imageUrl": "https://i.thriftbooks.com/api/imagehandler/m/1E0D143DDC668C018555159872E28F789B01BB6B.jpeg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/100%25_(comics)"
+      }]
     },
     {
       "id": "absolute-martian-manhunter",
       "name": "Absolute Martian Manhunter",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Absolute_Martian_Manhunter"
+      }]
     },
     {
       "id": "absolute-wonder-woman",
       "name": "Absolute Wonder Woman",
       "parentSeries": null,
+      "imageUrl": "https://s3.amazonaws.com/comicgeeks/comics/covers/large-7595139.jpg",
       "description": "",
       "references": []
     },
@@ -50,16 +58,27 @@
       "references": []
     },
     {
+      "id": "concrete",
+      "name": "Concrete",
+      "parentSeries": null,
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a9/Complete_concrete_chadwick_cover.jpg",
+      "description": "",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Concrete_(comics)"
+      }]
+    },
+    {
       "id": "concrete-fragile-creature",
       "name": "Concrete: Fragile Creature",
-      "parentSeries": null,
+      "parentSeries": "concrete",
       "description": "",
       "references": []
     },
     {
       "id": "concrete-killer-smile",
       "name": "Concrete: Killer Smile",
-      "parentSeries": null,
+      "parentSeries": "concrete",
       "description": "",
       "references": []
     },
@@ -71,9 +90,20 @@
       "references": []
     },
     {
+      "id": "criminal",
+      "name": "Criminal",
+      "parentSeries": null,
+      "imageUrl": "https://imagecomics.com/files/releases/1025IM0248-hires.jpg",
+      "description": "",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Criminal_(comics)"
+      }]
+    },
+    {
       "id": "criminal-the-special-edition",
       "name": "Criminal: The Special Edition",
-      "parentSeries": null,
+      "parentSeries": "criminal",
       "description": "",
       "references": []
     },
@@ -88,8 +118,12 @@
       "id": "eerie",
       "name": "Eerie",
       "parentSeries": null,
+      "imageUrl": "https://i0.wp.com/50yearoldcomics.com/wp-content/uploads/2021/10/eerie40.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Eerie_(magazine)"
+      }]
     },
     {
       "id": "eightball",
@@ -259,8 +293,8 @@
       "references": []
     },
     {
-      "id": "Omaha",
-      "name": "omaha",
+      "id": "omaha",
+      "name": "Omaha",
       "parentSeries": null,
       "description": "\"Omaha\" the Cat Dancer is an erotic comic strip and later comic book created by artist Reed Waller and writer Kate Worley. Set in fictional Mipple City, Minnesota (derived from \"MPLS\", the old postal abbreviation for Minneapolis) in a universe populated by anthropomorphic animal characters, the strip is a soap opera focusing on Omaha, a feline exotic dancer, and her lover, Chuck, the son of a business tycoon.\r\n\r\nThe strip debuted in the funny animal magazine Vootie, and it was subsequently published in a number of underground comix in the late 1970s and early 1980s. \"Omaha\" the Cat Dancer became the subject of the eponymous comic book series published from 1984 to 1993 by Kitchen Sink Press; it was relaunched by Fantagraphics Books through 1995. The final chapters of the strip's storyline were published in Sizzle magazine, beginning in 2006.\r\n\r\n\"Omaha\" the Cat Dancer was the first of several comic books published in the early 1980s which integrated explicit sex into their storylines, rather than using sex for shock value. The comic was the subject of a number of obscenity controversies, and it was nominated for multiple Eisner Awards in 1989 and 1991.",
       "references": [
@@ -329,6 +363,7 @@
       "id": "tales-of-ordinary-madness",
       "name": "Tales of Ordinary Madness",
       "parentSeries": null,
+      "imageUrl": "https://images.darkhorse.com/covers/400/t/toom1.jpg",
       "description": "",
       "references": []
     },
@@ -350,6 +385,7 @@
       "id": "the-maxx",
       "name": "The Maxx",
       "parentSeries": null,
+      "imageUrl": "https://storage.googleapis.com/hipcomic/p/117b925d165d1427617fe60dd176a23c-800.jpg",
       "description": "The Maxx is an American comic book series created by Sam Kieth in 1993 and originally published monthly until 1998 by Image Comics for 35 issues, before being collected in trade paperback by DC Comics' Wildstorm imprint. The first appearance of the titular character was in Darker Image #1 by Image Comics in March 1993. The comic book, starring an eponymous purple-clad hero, spawned a 13-episode animated series on MTV that originally aired April\u2013June 1995. Starting in November 2013 and ending in September 2016, the original series has been republished by IDW as The Maxx: Maxximized with new colors and improved scans of the original artwork by Sam Kieth and Jim Sinclair. In 2018, the Maxx featured in a five-issue crossover series with Batman, published by IDW.\r\n\r\nThe series follows the adventures of the titular hero in two worlds: the real world and an alternate reality referred to as the Outback. In the real world, Maxx is a vagrant, a \"homeless man living in a box\", while in the Outback, he is the powerful protector of the Leopard Queen, who exists in the real world as Julie Winters, a freelance social worker who often bails Maxx out of jail. While Maxx is aware of the Outback, Julie is not, though it is integral to both of their stories.",
       "references": [
         {

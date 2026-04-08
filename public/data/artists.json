@@ -3,13 +3,18 @@
     {
       "id": "alexis-ziritt",
       "name": "Alexis Ziritt",
-      "description": "",
-      "references": []
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/536bb26fe4b0b68ea1c248ff/1423337639184-W9XF60A3ON627CT9TQYP/image-asset.jpeg",
+      "description": "Venezuelan-born artist, Alexis Ziritt, has been living in the USA for the past 2 decades and his work has garnered attention from every corner of the industry. His comics, Space Riders (Black Mask), Tarantula (Adhouse), and Night Hunters (Floating World), have amassed a dedicated following and his work has been published in Complex Magazine, Heavy Metal, Dark Horse Comics, Image Comics, and many others.",
+      "references": [{
+        "name": "Website",
+        "url": "https://www.aziritt.com/"
+      }]
     },
     {
       "id": "alvaro-martinez-bueno",
       "name": "Alvaro Martinez Bueno",
-      "description": "",
+      "imageUrl": "https://cdn.prod.website-files.com/6501d53746370d07299ed666/68f8ff4196e7151a814b38f5_Alvaro-Martinez-Bueno.jpg",
+      "description": "Álvaro Martínez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
       "references": []
     },
     {
@@ -22,7 +27,11 @@
       "id": "dani",
       "name": "Dani",
       "description": "",
-      "references": []
+      "imageUrl": "https://s3.amazonaws.com/comicgeeks/people/avatars/17914.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Danielle_Moonstar"
+      }]
     },
     {
       "id": "daniel-clowes",
@@ -81,8 +90,12 @@
     {
       "id": "eric-zawadzki",
       "name": "Eric Zawadzki",
-      "description": "",
-      "references": []
+      "description": "Eric Zawadzki is a professional comic book artist most well known for co-creating the hit Image comic, Assorted Crisis Events. Prior to that he worked on the House of El trilogy for DC comics and Heart Attack for Skybound, the latter of which was turned into a TV show for Fuji TV in Japan in 2025. He has also received critical acclaim for his work on The Dregs and Eternal from Black Mask Studios. Zawadzki lives in Calgary with his wife and two hairless cats.",
+      "imageUrl": "https://www.ericxyz.com/wp-content/uploads/2020/04/profilephoto.jpg",
+      "references": [{
+        "name": "Website",
+        "url": "https://www.ericxyz.com/"
+      }]
     },
     {
       "id": "filipe-andrade",
@@ -94,7 +107,11 @@
       "id": "floch",
       "name": "Floch",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Floch.jpg/500px-Floch.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Floc%27h"
+      }]
     },
     {
       "id": "francis-portela",
@@ -106,25 +123,40 @@
       "id": "gary-frank",
       "name": "Gary Frank",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/88/Gary_Frank.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Gary_Frank_(artist)"
+      }]
     },
     {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
       "description": "",
-      "references": []
+      "imageUrl": "https://guernicamag.com/wp-content/uploads/2015/08/GilbertHernandez_portrait.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Gilbert_Hernandez"
+      }]
     },
     {
       "id": "hayden-sherman",
       "name": "Hayden Sherman",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Website",
+        "url": "www.haydenshermanart.com"
+      }]
     },
     {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg/500px-Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Javier_Rodr%C3%ADguez_(artist)"
+      }]
     },
     {
       "id": "jeff-jones",
@@ -156,19 +188,30 @@
       "id": "joelle-jones",
       "name": "Joelle Jones",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Joelle_Jones_by_Gage_Skidmore.jpg/500px-Joelle_Jones_by_Gage_Skidmore.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Jo%C3%ABlle_Jones"
+      }]
     },
     {
       "id": "john-higgins",
       "name": "John Higgins",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/John_Higgins.jpg/500px-John_Higgins.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/John_Higgins_(comics)"
+      }]
     },
     {
       "id": "jose-martin-sauri",
       "name": "Jose Martin Sauri",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Comiclopedia",
+        "url": "https://www.lambiek.net/artists/m/martin-sauri_jm.htm"
+      }]
     },
     {
       "id": "kev-walker",
@@ -195,7 +238,11 @@
       "id": "liberatore",
       "name": "Liberatore",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Tanino_Liberatore_-_Lucca_Comics_%26_Games_2015.JPG/500px-Tanino_Liberatore_-_Lucca_Comics_%26_Games_2015.JPG",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Tanino_Liberatore"
+      }]
     },
     {
       "id": "maria-llovet",
@@ -225,7 +272,11 @@
       "id": "michael-avon-oeming",
       "name": "Michael Avon Oeming",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Oeming08.jpg/500px-Oeming08.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Michael_Avon_Oeming"
+      }]
     },
     {
       "id": "moebius",
@@ -267,7 +318,11 @@
       "id": "paul-kirchner",
       "name": "Paul Kirchner",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/FIBD2023PaulKirchner.jpg/500px-FIBD2023PaulKirchner.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Paul_Kirchner"
+      }]
     },
     {
       "id": "paul-pope",
@@ -285,7 +340,11 @@
       "id": "peter-bagge",
       "name": "Peter Bagge",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/4.16.16PeterBaggeByLuigiNovi1.jpg/500px-4.16.16PeterBaggeByLuigiNovi1.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Peter_Bagge"
+      }]
     },
     {
       "id": "reed-waller",
@@ -297,31 +356,51 @@
       "id": "richard-corben",
       "name": "Richard Corben",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d4/Richard_corben_at_his_studio.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Richard_Corben"
+      }]
     },
     {
       "id": "rick-griffin",
       "name": "Rick Griffin",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/92/Rickgriffinfamilydog.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Rick_Griffin"
+      }]
     },
     {
       "id": "robert-crumb",
       "name": "Robert Crumb",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG/500px-Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
+      }]
     },
     {
       "id": "ryan-ottley",
       "name": "Ryan Ottley",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/ROTTLEYbioPic.jpg/500px-ROTTLEYbioPic.jpg",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Ryan_Ottley"
+      }]
     },
     {
       "id": "sam-keith",
       "name": "Sam Keith",
       "description": "",
-      "references": []
+      "imageUrl": "https://static01.nyt.com/images/2026/03/30/multimedia/24Keith--04-tkjv-print1/24Keith--04-tkjv-superJumbo.jpg?quality=75&auto=webp",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sam_Kieth"
+      }]
     },
     {
       "id": "sean-phillips",
@@ -353,22 +432,24 @@
       ]
     },
     {
-      "id": "victor-moscoso",
-      "name": "Victor Moscoso",
-      "description": "",
-      "references": []
-    },
-    {
       "id": "tyler-crook",
       "name": "Tyler Crook",
+      "imageUrl": "https://static.wikia.nocookie.net/sixth-gun/images/8/88/Tyler_Crook_profile_picture.jpg/revision/latest/scale-to-width-down/180?cb=20180802132944",
       "description": "",
-      "references": []
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
+      }]
     },
     {
       "id": "victor-moscoso",
       "name": "Victor Moscoso",
       "description": "",
-      "references": []
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/57/Victor_Moscoso%2C_psychedelic_poster_and_comix_artist.jpg",
+      "references": [{
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Victor_Moscoso"
+      }]
     }
   ]
 }
