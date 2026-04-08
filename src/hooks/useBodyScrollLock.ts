@@ -12,9 +12,14 @@ export function useBodyScrollLock(containerRef: RefObject<HTMLDivElement | null>
     document.body.style.touchAction = "none";
 
     const preventScroll = (e: TouchEvent) => {
-      if (containerRef.current?.contains(e.target as Node)) {
-        e.preventDefault();
-      }
+      const target = e.target as Node;
+      if (!containerRef.current?.contains(target)) return;
+
+      // Allow scrolling inside scrollable regions (e.g. info drawer)
+      const scrollable = (target as Element).closest?.(".info-modal-scroll");
+      if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) return;
+
+      e.preventDefault();
     };
     document.addEventListener("touchmove", preventScroll, { passive: false });
 
