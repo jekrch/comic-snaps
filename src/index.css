@@ -62,7 +62,8 @@ button,
 
 /* Subtle image scale on hover */
 .panel-item img {
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
 }
 
 .panel-item:hover img {
