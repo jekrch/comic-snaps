@@ -211,7 +211,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
           <div className="flex items-center gap-1">
 
-          {!isTouchDevice && isZoomed && (
+          {!isTouchDevice && !drawerOpen && isZoomed && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -224,7 +224,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </button>
           )}
 
-          {!isTouchDevice && (
+          {!isTouchDevice && !drawerOpen && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -240,7 +240,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </button>
           )}
 
-          {!isTouchDevice && (
+          {!isTouchDevice && !drawerOpen && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -278,11 +278,18 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
       </div>
 
-      {/* Slide track: three-slot carousel */}
+      {/* Slide track wrapper: shifts image up when drawer is open */}
+      <div
+        className="relative z-10 w-full h-full"
+        style={{
+          transform: drawerOpen ? "translateY(-100vh)" : "translateY(0)",
+          transition: "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
+        }}
+      >
       <div
         ref={slideTrackRef}
         className={`
-          relative z-10 flex items-center justify-center w-full h-full
+          relative flex items-center justify-center w-full h-full
           transition-opacity duration-250 ease-out
           ${visible && !closing ? "opacity-100" : "opacity-0"}
         `}
@@ -345,6 +352,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             />
           </div>
         )}
+      </div>
       </div>
 
       {/* Bottom bar */}
@@ -468,7 +476,6 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       <InfoDrawer
         open={drawerOpen}
         closing={closing}
-        onClose={() => setDrawerOpen(false)}
         panel={panel}
         artist={artist}
         series={series}
