@@ -26,6 +26,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const [graphOpen, setGraphOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
+  const [graphSlideDir, setGraphSlideDir] = useState<"left" | "right" | null>(null);
 
   const { artist, series, parentSeries, hasContent } = useMetadata(panel.artist, panel.slug);
 
@@ -106,17 +107,26 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   // Navigate with drawer slide-out — close immediately so drawer slides with the image
   const handleNavigate = useCallback((dir: "prev" | "next") => {
+    const slideOut = dir === "next" ? "left" : "right";
     if (drawerOpen) {
-      setDrawerSlideDir(dir === "next" ? "left" : "right");
+      setDrawerSlideDir(slideOut);
       setDrawerOpen(false);
     }
+    if (graphOpen) {
+      setGraphSlideDir(slideOut);
+      setGraphOpen(false);
+    }
     commitSlide(dir);
-  }, [drawerOpen, commitSlide]);
+  }, [drawerOpen, graphOpen, commitSlide]);
 
-  // Close drawer on panel change
+  // Close drawer/graph on panel change
   useEffect(() => {
     setDrawerOpen(false);
-    const timer = setTimeout(() => setDrawerSlideDir(null), 450);
+    setGraphOpen(false);
+    const timer = setTimeout(() => {
+      setDrawerSlideDir(null);
+      setGraphSlideDir(null);
+    }, 450);
     return () => clearTimeout(timer);
   }, [currentIndex]);
 
@@ -519,6 +529,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         topOffset={topBarH}
         bottomOffset={bottomBarH}
         toolbarContainer={graphToolbarEl}
+        slideDir={graphSlideDir}
       />
     </div>
   );

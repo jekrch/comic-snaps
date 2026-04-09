@@ -267,7 +267,7 @@ button,
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-11px);
+    transform: translateY(-9px);
   }
   68% {
     transform: translateY(0);
@@ -275,7 +275,7 @@ button,
 }
 
 .bird-hop-quick {
-  animation: bird-hop-quick 0.7s ease-in-out 1s both;
+  animation: bird-hop-quick 0.9s ease-in-out 0.3s both;
 }
 
 .info-modal-scroll::-webkit-scrollbar {
