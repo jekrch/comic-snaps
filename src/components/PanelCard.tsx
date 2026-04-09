@@ -57,11 +57,15 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
     const check = () => {
       if (!active) return;
       const rect = el.getBoundingClientRect();
-      const margin = 400;
+      // Asymmetric lookahead: small buffer above, large buffer below the
+      // viewport so images start fetching well before the user scrolls to
+      // them. Scales with viewport height so it adapts to mobile/desktop.
+      const marginAbove = 400;
+      const marginBelow = Math.max(1200, window.innerHeight * 1.5);
       if (
         rect.height > 0 &&
-        rect.bottom > -margin &&
-        rect.top < window.innerHeight + margin &&
+        rect.bottom > -marginAbove &&
+        rect.top < window.innerHeight + marginBelow &&
         rect.right > 0 &&
         rect.left < window.innerWidth
       ) {
