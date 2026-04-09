@@ -395,53 +395,48 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
             {/* Info button — left of nav */}
-            {hasContent && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDrawerOpen((d) => {
-                    if (!d) setGraphOpen(false);
-                    return !d;
-                  });
-                }}
-                className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
-                style={{ left: "max(16px, calc(50% - 10em - 88px))" }}
-                title="Show details"
-              >
-                <Info size={13} strokeWidth={1.5} />
-                <span>Details</span>
-              </button>
-            )}
+            {/* Center nav controls with flanking icon buttons */}
+            <div className="flex items-center justify-center gap-3">
+              {hasContent && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDrawerOpen((d) => {
+                      if (!d) setGraphOpen(false);
+                      return !d;
+                    });
+                  }}
+                  className={`viewer-btn mr-2 ${drawerOpen ? "bg-accent/20! text-white!" : ""}`}
+                  title="Show details"
+                >
+                  <Info size={16} strokeWidth={1.5} />
+                </button>
+              )}
 
-            {/* Center nav controls */}
-            <div className="flex items-center justify-center gap-6">
               <NavButton direction="prev" enabled={hasPrev} onClick={() => handleNavigate("prev")} />
 
               <span
-                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-2 font-mono"
+                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block font-mono"
                 style={{ minWidth: counterMinWidth }}
               >
                 {currentIndex + 1} / {panels.length}
               </span>
 
               <NavButton direction="next" enabled={hasNext} onClick={() => handleNavigate("next")} />
-            </div>
 
-            {/* Similarity graph button — right of nav */}
-            <button
-              onClick={() => {
-                setGraphOpen((g) => {
-                  if (!g) setDrawerOpen(false);
-                  return !g;
-                });
-              }}
-              className={`viewer-pill absolute top-1/2 -translate-y-1/2 cursor-pointer mt-1 ${graphOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
-              style={{ right: "max(16px, calc(50% - 10em - 88px))" }}
-              title="Similarity graph"
-            >
-              <GitGraph size={13} strokeWidth={1.5} />
-              <span>Graph</span>
-            </button>
+              <button
+                onClick={() => {
+                  setGraphOpen((g) => {
+                    if (!g) setDrawerOpen(false);
+                    return !g;
+                  });
+                }}
+                className={`viewer-btn ml-2 ${graphOpen ? "bg-accent/20! text-white!" : ""}`}
+                title="Similarity graph"
+              >
+                <GitGraph size={16} strokeWidth={1.5} />
+              </button>
+            </div>
           </div>
         )}
 
@@ -458,7 +453,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
         {/* Single-panel case: still show both flanking buttons */}
         {!isZoomed && !hasPrev && !hasNext && (
-          <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
+          <div className="flex items-center justify-center gap-5" style={{ pointerEvents: "auto" }}>
             {hasContent && (
               <button
                 onClick={(e) => {
@@ -468,12 +463,10 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                     return !d;
                   });
                 }}
-                className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
-                style={{ left: 16 }}
+                className={`viewer-btn ${drawerOpen ? "bg-accent/20! text-white!" : ""}`}
                 title="Show details"
               >
-                <Info size={13} strokeWidth={1.5} />
-                <span>Details</span>
+                <Info size={16} strokeWidth={1.5} />
               </button>
             )}
 
@@ -492,15 +485,14 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
                   return !g;
                 });
               }}
-              className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${graphOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
-              style={{ right: 16 }}
+              className={`viewer-btn ${graphOpen ? "bg-accent/20! text-white!" : ""}`}
               title="Similarity graph"
             >
-              <GitGraph size={13} strokeWidth={1.5} />
-              <span>Graph</span>
+              <GitGraph size={16} strokeWidth={1.5} />
             </button>
           </div>
         )}
+
 
       </div>
 

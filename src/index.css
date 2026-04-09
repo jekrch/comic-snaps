@@ -256,6 +256,28 @@ button,
   animation: peck 0.4s ease-in-out 1;
 }
 
+@keyframes bird-hop-quick {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  14% {
+    transform: translateY(-9px);
+  }
+  30% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-11px);
+  }
+  68% {
+    transform: translateY(0);
+  }
+}
+
+.bird-hop-quick {
+  animation: bird-hop-quick 0.7s ease-in-out 1s both;
+}
+
 .info-modal-scroll::-webkit-scrollbar {
   width: 4px;
 }

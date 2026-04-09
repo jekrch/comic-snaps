@@ -629,7 +629,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
             {/* About */}
             <TabPanel active={activeTab === "about"} className="flex items-center pb-10 justify-center">
               <div className="px-10 text-center">
-                <Bird size={48} strokeWidth={1.5} className="mx-auto mb-4 stroke-accent/70x z-0 stroke-[#8d422f]"  />
+                <Bird size={48} strokeWidth={1.5} className="mx-auto mb-4 stroke-accent/70x z-0 stroke-[#8d422f] bird-hop-quick"  />
                 {/* Title */}
                 <h2
                   className="tracking-tight text-[18px] text-ink/80"
