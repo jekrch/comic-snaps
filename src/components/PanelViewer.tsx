@@ -34,6 +34,9 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
   const topBarRef = useRef<HTMLDivElement>(null);
   const bottomBarRef = useRef<HTMLDivElement>(null);
 
+  // Portal target for graph toolbar controls (rendered inside top bar)
+  const [graphToolbarEl, setGraphToolbarEl] = useState<HTMLElement | null>(null);
+
   const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
 
   // Navigation flags
@@ -121,11 +124,12 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (graphOpen) return;
       if (e.key === "Escape") {
+        if (graphOpen) { setGraphOpen(false); return; }
         if (drawerOpen) { setDrawerOpen(false); return; }
         handleClose();
       }
+      if (graphOpen) return;
       if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) handleNavigate("prev");
       if (e.key === "ArrowRight" && hasNext && displayScale <= 1) handleNavigate("next");
     };
@@ -135,7 +139,6 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
   // Layout calculations
 
-  const hasTags = panel.tags?.length > 0;
   const IMG_PADDING = 44;
   const reservedH = bottomBarH + IMG_PADDING * 2;
   const imgMaxHeight = `calc(100vh - ${reservedH}px)`;
@@ -156,6 +159,13 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     maxHeight: imgMaxHeight,
     willChange: "transform",
   };
+
+  // Image slide direction: down for graph, up for drawer
+  const slideTrackTransform = drawerOpen
+    ? "translateY(-100vh)"
+    : graphOpen
+      ? "translateY(100vh)"
+      : "translateY(0)";
 
   // Render
 
@@ -194,7 +204,11 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         `}
         style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))", pointerEvents: "none" }}
       >
-        <div className="min-w-0 flex-1 px-2!" style={{ pointerEvents: "none" }}>
+        {/* Left side: normal title OR graph controls portal target */}
+        <div
+          className="min-w-0 flex-1 px-2!"
+          style={{ pointerEvents: "none", display: graphOpen ? "none" : undefined }}
+        >
           <div style={{ pointerEvents: "auto", width: "fit-content" }}>
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.title}{" "}
@@ -203,15 +217,25 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </p>
             <p className="text-xs text-white/60 mt-0.5 leading-snug">
               {panel.artist}
-
             </p>
           </div>
         </div>
 
+        {/* Graph toolbar portal target — visible when graph is open */}
+        <div
+          ref={setGraphToolbarEl}
+          className="min-w-0 flex-1 flex items-center"
+          style={{
+            pointerEvents: graphOpen ? "auto" : "none",
+            display: graphOpen ? "flex" : "none",
+          }}
+        />
+
+        {/* Right side: zoom controls + close */}
         <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
           <div className="flex items-center gap-1">
 
-          {!isTouchDevice && !drawerOpen && isZoomed && (
+          {!graphOpen && !isTouchDevice && !drawerOpen && isZoomed && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -224,7 +248,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </button>
           )}
 
-          {!isTouchDevice && !drawerOpen && (
+          {!graphOpen && !isTouchDevice && !drawerOpen && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -240,7 +264,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </button>
           )}
 
-          {!isTouchDevice && !drawerOpen && (
+          {!graphOpen && !isTouchDevice && !drawerOpen && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -261,28 +285,30 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               e.stopPropagation();
               handleClose();
             }}
-            className={`viewer-btn ${!isTouchDevice ? "ml-1" : ""}`}
+            className={`viewer-btn ${!isTouchDevice && !graphOpen ? "ml-1" : ""}`}
             title="Close (Esc)"
           >
             <X size={16} strokeWidth={1.5} />
           </button>
         </div>
-        <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap mt-2">
-          {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
+        {!graphOpen && (
+          <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap mt-2">
+            {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        )}
         </div>
 
       </div>
 
-      {/* Slide track wrapper: shifts image up when drawer is open */}
+      {/* Slide track wrapper: shifts image up for drawer, down for graph */}
       <div
         className="relative z-10 w-full h-full"
         style={{
-          transform: drawerOpen ? "translateY(-100vh)" : "translateY(0)",
+          transform: slideTrackTransform,
           transition: "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
         }}
       >
@@ -359,27 +385,12 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
       <div
         ref={bottomBarRef}
         className={`
-          absolute bottom-0 inset-x-0 z-20 pt-6
+          absolute bottom-0 inset-x-0 z-20 pt-4
           transition-all duration-250 ease-out
           ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
         style={{ paddingBottom: "max(0.3rem, env(safe-area-inset-bottom))", pointerEvents: "none" }}
       >
-        {/* Tags */}
-        {!isZoomed && (
-          <div className="flex flex-wrap justify-center gap-1.5 px-4 -mb-1 mx-auto w-fit min-h-4" style={{ pointerEvents: "auto" }}>
-            {hasTags &&
-              panel.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10px] leading-none px-1.5 py-[3.9px] rounded-sm bg-white/8 text-white/35"
-                >
-                  {tag}
-                </span>
-              ))}
-          </div>
-        )}
-
         {/* Navigation strip with flanking buttons */}
         {!isZoomed && (hasPrev || hasNext) && (
           <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
@@ -388,13 +399,17 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setDrawerOpen((d) => !d);
+                  setDrawerOpen((d) => {
+                    if (!d) setGraphOpen(false);
+                    return !d;
+                  });
                 }}
-                className={`viewer-btn absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/25! text-white!" : ""}`}
-                style={{ left: "max(16px, calc(50% - 10em - 68px))" }}
+                className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
+                style={{ left: "max(16px, calc(50% - 10em - 88px))" }}
                 title="Show details"
               >
-                <Info size={15} strokeWidth={1.5} />
+                <Info size={13} strokeWidth={1.5} />
+                <span>Details</span>
               </button>
             )}
 
@@ -403,7 +418,7 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               <NavButton direction="prev" enabled={hasPrev} onClick={() => handleNavigate("prev")} />
 
               <span
-                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-3.25 font-mono"
+                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block mt-2 font-mono"
                 style={{ minWidth: counterMinWidth }}
               >
                 {currentIndex + 1} / {panels.length}
@@ -414,13 +429,30 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
 
             {/* Similarity graph button — right of nav */}
             <button
-              onClick={() => setGraphOpen(true)}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2 cursor-pointer mt-1"
-              style={{ right: "max(16px, calc(50% - 10em - 68px))" }}
+              onClick={() => {
+                setGraphOpen((g) => {
+                  if (!g) setDrawerOpen(false);
+                  return !g;
+                });
+              }}
+              className={`viewer-pill absolute top-1/2 -translate-y-1/2 cursor-pointer mt-1 ${graphOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
+              style={{ right: "max(16px, calc(50% - 10em - 88px))" }}
               title="Similarity graph"
             >
-              <GitGraph size={15} strokeWidth={1.5} />
+              <GitGraph size={13} strokeWidth={1.5} />
+              <span>Graph</span>
             </button>
+          </div>
+        )}
+
+        {/* Hint text (when nav present) */}
+        {!isZoomed && (hasPrev || hasNext) && (
+          <div className="text-center mt-0 mb-1 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
+            <span className="text-[11px] text-white/30 tracking-wide">
+              {isTouchDevice
+                ? "swipe to navigate · pinch to zoom"
+                : "← → or drag to navigate · scroll to zoom · esc to close"}
+            </span>
           </div>
         )}
 
@@ -431,13 +463,17 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setDrawerOpen((d) => !d);
+                  setDrawerOpen((d) => {
+                    if (!d) setGraphOpen(false);
+                    return !d;
+                  });
                 }}
-                className={`viewer-btn absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/25! text-white!" : ""}`}
+                className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${drawerOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
                 style={{ left: 16 }}
                 title="Show details"
               >
-                <Info size={15} strokeWidth={1.5} />
+                <Info size={13} strokeWidth={1.5} />
+                <span>Details</span>
               </button>
             )}
 
@@ -450,26 +486,22 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
             </div>
 
             <button
-              onClick={() => setGraphOpen(true)}
-              className="viewer-btn absolute top-1/2 -translate-y-1/2 mt-1"
+              onClick={() => {
+                setGraphOpen((g) => {
+                  if (!g) setDrawerOpen(false);
+                  return !g;
+                });
+              }}
+              className={`viewer-pill absolute top-1/2 -translate-y-1/2 mt-1 ${graphOpen ? "bg-accent/20! border-accent/30! text-white!" : ""}`}
               style={{ right: 16 }}
               title="Similarity graph"
             >
-              <GitGraph size={15} strokeWidth={1.5} />
+              <GitGraph size={13} strokeWidth={1.5} />
+              <span>Graph</span>
             </button>
           </div>
         )}
 
-        {/* Hint text (when nav present) */}
-        {!isZoomed && (hasPrev || hasNext) && (
-          <div className="text-center mt-0 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
-            <span className="text-[11px] text-white/30 tracking-wide">
-              {isTouchDevice
-                ? "swipe to navigate · pinch to zoom"
-                : "← → or drag to navigate · scroll to zoom · esc to close"}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Info panel — z-15: above image (z-10), below controls (z-20) */}
@@ -482,18 +514,20 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         parentSeries={parentSeries}
         searchUrl={searchUrl}
         topOffset={topBarH}
-        bottomOffset={Math.max(0, bottomBarH - 24)}
+        bottomOffset={bottomBarH}
         slideDir={drawerSlideDir}
       />
 
-      {/* Similarity Graph overlay */}
-      {graphOpen && (
-        <SimilarityGraph
-          panel={panel}
-          allPanels={panels}
-          onClose={() => setGraphOpen(false)}
-        />
-      )}
+      {/* Similarity Graph — z-15: slides down from top, mirrors InfoDrawer */}
+      <SimilarityGraph
+        panel={panel}
+        allPanels={panels}
+        open={graphOpen}
+        closing={closing}
+        topOffset={topBarH}
+        bottomOffset={bottomBarH}
+        toolbarContainer={graphToolbarEl}
+      />
     </div>
   );
 }

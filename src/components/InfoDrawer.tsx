@@ -167,6 +167,26 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
           </>
         )}
 
+        {/* Tags */}
+        {panel.tags?.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1.5">Tags</p>
+              <div className="flex flex-wrap gap-1.5">
+                {panel.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[10px] leading-none px-1.5 py-[3.9px] rounded-sm bg-white/8 text-white/35"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Google search link */}
         <div className="border-t border-white/8" />
         <div>

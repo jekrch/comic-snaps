@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   ReactFlow,
   Background,
@@ -10,7 +11,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { X, ChevronDown, Info } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 
 import type { Panel } from "../../types";
 import type { EmbeddingMap } from "../../utils/sorting";
@@ -58,13 +59,21 @@ function FitOnAnchorChange({ anchorId }: { anchorId: string }) {
 interface SimilarityGraphProps {
   panel: Panel;
   allPanels: Panel[];
-  onClose: () => void;
+  open: boolean;
+  topOffset?: number;
+  bottomOffset?: number;
+  closing?: boolean;
+  toolbarContainer: HTMLElement | null;
 }
 
 export default function SimilarityGraph({
   panel,
   allPanels,
-  onClose,
+  open,
+  topOffset = 0,
+  bottomOffset = 0,
+  closing = false,
+  toolbarContainer,
 }: SimilarityGraphProps) {
   // State
   const [anchorPanel, setAnchorPanel] = useState<Panel>(panel);
@@ -113,8 +122,14 @@ export default function SimilarityGraph({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Load embeddings when metric changes 
+  // Sync anchor when the parent panel changes (e.g. navigation)
   useEffect(() => {
+    setAnchorPanel(panel);
+  }, [panel]);
+
+  // Load embeddings when metric changes (only when open)
+  useEffect(() => {
+    if (!open) return;
     let cancelled = false;
     setLoading(true);
 
@@ -137,9 +152,9 @@ export default function SimilarityGraph({
     return () => {
       cancelled = true;
     };
-  }, [metric]);
+  }, [metric, open]);
 
-  // Compute graph when inputs change 
+  // Compute graph when inputs change
   const handleDoubleClick = useCallback((p: Panel) => {
     setAnchorPanel(p);
   }, []);
@@ -288,205 +303,193 @@ export default function SimilarityGraph({
 
   const activeMetric = METRICS.find((m:any) => m.key === metric)!;
 
-  return (
-    <div
-      className="fixed inset-0 z-[60] flex flex-col"
-      style={{ background: "rgba(0,0,0,0.95)" }}
-    >
-      {/* Close — pinned top-right, always in place */}
-      <button
-        onClick={onClose}
-        className="viewer-btn absolute z-20 sm:mr-2"
-        style={{
-          top: "max(0.75rem, env(safe-area-inset-top))",
-          right: "1rem",
-        }}
-        title="Close similarity graph"
-      >
-        <X size={16} strokeWidth={1.5} />
-      </button>
+  const show = open && !closing;
 
-      {/* Toolbar */}
-      <div
-        className="relative z-10 flex items-center gap-3 px-4 pr-12 py-3 shrink-0"
-        style={{
-          background: "rgba(0,0,0,0.85)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          paddingTop: "max(0.75rem, env(safe-area-inset-top))",
-        }}
-      >
-        {/* Metric selector */}
-        <div ref={dropdownRef} className="relative">
-          <button
-            onClick={() => setMetricDropdownOpen((p) => !p)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/10 transition-colors"
+  // Toolbar — rendered via portal into the top bar
+  const toolbar = toolbarContainer && createPortal(
+    <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
+      {/* Metric selector */}
+      <div ref={dropdownRef} className="relative">
+        <button
+          onClick={() => setMetricDropdownOpen((p) => !p)}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/10 transition-colors"
+        >
+          <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
+            {activeMetric.shortLabel}
+          </span>
+          <ChevronDown
+            size={12}
+            className={`text-white/40 transition-transform duration-200 ${
+              metricDropdownOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {metricDropdownOpen && (
+          <div
+            className="absolute top-full left-0 mt-1 py-1 rounded bg-neutral-900/95 border border-white/10 backdrop-blur-md shadow-xl"
+            style={{ minWidth: 180, zIndex: 100 }}
           >
-            <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
-              {activeMetric.shortLabel}
-            </span>
-            <ChevronDown
-              size={12}
-              className={`text-white/40 transition-transform duration-200 ${
-                metricDropdownOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+            {METRICS.filter((m:any) => !m.hide).map((m:any) => {
+              const active = m.key === metric;
+              return (
+                <button
+                  key={m.key}
+                  onClick={() => {
+                    setMetric(m.key);
+                    setMetricDropdownOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-2 flex flex-col transition-colors ${
+                    active
+                      ? "text-accent"
+                      : "text-white/60 hover:text-white/90 hover:bg-white/5"
+                  }`}
+                >
+                  <span className="font-display text-[11px] tracking-wider uppercase flex items-center gap-2">
+                    {active && (
+                      <span className="inline-block w-1 h-1 rounded-full bg-accent shrink-0" />
+                    )}
+                    {m.label}
+                  </span>
+                  <span className="text-[10px] text-white/30 mt-0.5 ml-3">
+                    {m.description}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
-          {metricDropdownOpen && (
-            <div
-              className="absolute top-full left-0 mt-1 py-1 rounded bg-neutral-900/95 border border-white/10 backdrop-blur-md shadow-xl"
-              style={{ minWidth: 180, zIndex: 100 }}
-            >
-              {METRICS.filter((m:any) => !m.hide).map((m:any) => {
-                const active = m.key === metric;
-                return (
-                  <button
-                    key={m.key}
-                    onClick={() => {
-                      setMetric(m.key);
-                      setMetricDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 flex flex-col transition-colors ${
-                      active
-                        ? "text-accent"
-                        : "text-white/60 hover:text-white/90 hover:bg-white/5"
-                    }`}
-                  >
-                    <span className="font-display text-[11px] tracking-wider uppercase flex items-center gap-2">
-                      {active && (
-                        <span className="inline-block w-1 h-1 rounded-full bg-accent flex-shrink-0" />
-                      )}
-                      {m.label}
-                    </span>
-                    <span className="text-[10px] text-white/30 mt-0.5 ml-3">
-                      {m.description}
-                    </span>
-                  </button>
-                );
-              })}
+      {/* Neighbor count */}
+      <div className="flex items-center gap-1">
+        {NEIGHBOR_COUNTS.map((n: any) => (
+          <button
+            key={n}
+            onClick={() => setNeighborCount(n)}
+            className={`px-2 py-1 rounded text-[11px] font-mono transition-colors ${
+              n === neighborCount
+                ? "bg-white/12 text-white/90"
+                : "text-white/35 hover:text-white/60 hover:bg-white/5"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+
+      {/* Blurb */}
+      {!loading && currentNeighbors.length > 0 && (
+        <span className="text-[10px] text-white/40 tracking-wide hidden sm:inline">
+          nearest panels by {activeMetric.shortLabel}
+        </span>
+      )}
+    </div>,
+    toolbarContainer,
+  );
+
+  return (
+    <>
+      {toolbar}
+
+      {/* Graph body — same z-layer as InfoDrawer, slides down from top */}
+      <div
+        className="absolute inset-x-0 z-15 flex flex-col"
+        style={{
+          top: topOffset,
+          bottom: bottomOffset,
+          transform: show ? "translateY(0)" : "translateY(-100vh)",
+          opacity: closing ? 0 : 1,
+          transition: closing
+            ? "opacity 0.25s ease-out"
+            : "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
+          pointerEvents: show ? "auto" : "none",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Graph */}
+        <div className="flex-1 relative">
+          {loading ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div
+                  className="w-6 h-6 border-2 border-white/20 border-t-accent rounded-full"
+                  style={{ animation: "spin 0.8s linear infinite" }}
+                />
+                <span className="text-[11px] text-white/30 font-display uppercase tracking-wider">
+                  Loading embeddings…
+                </span>
+              </div>
             </div>
+          ) : nodes.length === 0 ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[12px] text-white/25 font-display uppercase tracking-wider">
+                No neighbors found for this metric
+              </span>
+            </div>
+          ) : (
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={onNodesChange}
+              onEdgesChange={onEdgesChange}
+              nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
+              fitView
+              fitViewOptions={{ padding: 0.25 }}
+              minZoom={0.1}
+              maxZoom={3}
+              proOptions={{ hideAttribution: true }}
+              style={{ background: "transparent" }}
+              defaultEdgeOptions={{ animated: false }}
+            >
+              <Background
+                color="rgba(255,255,255,0.03)"
+                gap={40}
+                size={1}
+              />
+              <Controls
+                showInteractive={false}
+                style={{
+                  bottom: 16,
+                  left: 16,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+              />
+              <FitOnAnchorChange anchorId={anchorPanel.id} />
+            </ReactFlow>
+          )}
+
+          {/* "How it works" — floats in graph space */}
+          {!loading && currentNeighbors.length > 0 && (
+            <button
+              onClick={() => setShowExplainer(true)}
+              className="absolute z-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md
+                         bg-white/8 hover:bg-white/14 border border-white/10
+                         hover:border-white/20 transition-all duration-200
+                         backdrop-blur-sm"
+              style={{ top: 2, left: 16 }}
+            >
+              <Info size={13} strokeWidth={1.5} className="text-accent/80" />
+              <span className="font-display text-[10px] tracking-wider text-white/70 uppercase">
+                How {activeMetric.shortLabel} works
+              </span>
+            </button>
           )}
         </div>
 
-        {/* Toggle: edge labels */}
-        {/* <button
-          onClick={() => setShowEdgeLabels((p) => !p)}
-          className={`px-2.5 py-1.5 rounded text-[10px] uppercase tracking-wider font-display transition-colors ${
-            showEdgeLabels
-              ? "bg-white/10 text-white/70"
-              : "text-white/25 hover:text-white/50 hover:bg-white/5"
-          }`}
-        >
-          Dist
-        </button> */}
-
-        {/* Neighbor count */}
-        <div className="flex items-center gap-1">
-          {NEIGHBOR_COUNTS.map((n: any) => (
-            <button
-              key={n}
-              onClick={() => setNeighborCount(n)}
-              className={`px-2 py-1 rounded text-[11px] font-mono transition-colors ${
-                n === neighborCount
-                  ? "bg-white/12 text-white/90"
-                  : "text-white/35 hover:text-white/60 hover:bg-white/5"
-              }`}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-
-        {/* Blurb — reads with the count pills: [5] [10] [20] nearest panels by SigLIP */}
-        {!loading && currentNeighbors.length > 0 && (
-          <span className="text-[10px] text-white/40 tracking-wide">
-            nearest panels by {activeMetric.shortLabel}
-          </span>
+        {/* Metric explainer modal */}
+        {showExplainer && currentNeighbors.length > 0 && (
+          <MetricExplainerModal
+            metric={metric}
+            anchorPanel={anchorPanel}
+            neighbors={currentNeighbors}
+            onClose={() => setShowExplainer(false)}
+          />
         )}
       </div>
-
-      {/* Graph */}
-      <div className="flex-1 relative">
-        {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <div
-                className="w-6 h-6 border-2 border-white/20 border-t-accent rounded-full"
-                style={{ animation: "spin 0.8s linear infinite" }}
-              />
-              <span className="text-[11px] text-white/30 font-display uppercase tracking-wider">
-                Loading embeddings…
-              </span>
-            </div>
-          </div>
-        ) : nodes.length === 0 ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[12px] text-white/25 font-display uppercase tracking-wider">
-              No neighbors found for this metric
-            </span>
-          </div>
-        ) : (
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            fitView
-            fitViewOptions={{ padding: 0.25 }}
-            minZoom={0.1}
-            maxZoom={3}
-            proOptions={{ hideAttribution: true }}
-            style={{ background: "transparent" }}
-            defaultEdgeOptions={{ animated: false }}
-          >
-            <Background
-              color="rgba(255,255,255,0.03)"
-              gap={40}
-              size={1}
-            />
-            <Controls
-              showInteractive={false}
-              style={{
-                bottom: 16,
-                left: 16,
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            />
-            <FitOnAnchorChange anchorId={anchorPanel.id} />
-          </ReactFlow>
-        )}
-
-        {/* "How it works" — floats in graph space, below toolbar */}
-        {!loading && currentNeighbors.length > 0 && (
-          <button
-            onClick={() => setShowExplainer(true)}
-            className="absolute z-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md
-                       bg-white/8 hover:bg-white/14 border border-white/10
-                       hover:border-white/20 transition-all duration-200
-                       backdrop-blur-sm"
-            style={{ top: 2, left: 16 }}
-          >
-            <Info size={13} strokeWidth={1.5} className="text-accent/80" />
-            <span className="font-display text-[10px] tracking-wider text-white/70 uppercase">
-              How {activeMetric.shortLabel} works
-            </span>
-          </button>
-        )}
-      </div>
-
-      {/* Metric explainer modal */}
-      {showExplainer && currentNeighbors.length > 0 && (
-        <MetricExplainerModal
-          metric={metric}
-          anchorPanel={anchorPanel}
-          neighbors={currentNeighbors}
-          onClose={() => setShowExplainer(false)}
-        />
-      )}
 
       {/* CSS overrides for React Flow controls to match dark theme */}
       <style>{`
@@ -520,6 +523,6 @@ export default function SimilarityGraph({
           to { transform: rotate(360deg); }
         }
       `}</style>
-    </div>
+    </>
   );
 }
