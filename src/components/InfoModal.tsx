@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { X, Github, ChevronDown, ExternalLink, Info, GitGraph, Bird } from "lucide-react";
 import type { Panel } from "../types";
 import type { MetricKey } from "./graph/similarityConfig";
@@ -394,8 +394,11 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
     return { rotation: pick(rotations), color: pick(colors) };
   }, []);
 
-  // Lock scroll with position:fixed (gives solid bg behind Safari toolbar)
-  useEffect(() => {
+  // Lock scroll with position:fixed (gives solid bg behind Safari toolbar).
+  // useLayoutEffect so the body reflow happens before the first paint —
+  // otherwise on iOS Safari the post-paint reflow drops the first frames of
+  // the entrance animations and the modal "just appears".
+  useLayoutEffect(() => {
     const scrollY = window.scrollY;
     document.body.style.position = "fixed";
     document.body.style.top = `-${scrollY}px`;
