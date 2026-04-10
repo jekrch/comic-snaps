@@ -52,52 +52,41 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
     const el = sentinelRef.current;
     if (!el) return;
 
-    let active = true;
+    // Asymmetric lookahead: small buffer above, large buffer below the
+    // viewport so images start fetching well before the user scrolls to
+    // them. Scales with viewport height so it adapts to mobile/desktop.
+    const marginAbove = 400;
+    const marginBelow = Math.max(1200, Math.round(window.innerHeight * 1.5));
 
-    const check = () => {
-      if (!active) return;
-      const rect = el.getBoundingClientRect();
-      // Asymmetric lookahead: small buffer above, large buffer below the
-      // viewport so images start fetching well before the user scrolls to
-      // them. Scales with viewport height so it adapts to mobile/desktop.
-      const marginAbove = 400;
-      const marginBelow = Math.max(1200, window.innerHeight * 1.5);
-      if (
-        rect.height > 0 &&
-        rect.bottom > -marginAbove &&
-        rect.top < window.innerHeight + marginBelow &&
-        rect.right > 0 &&
-        rect.left < window.innerWidth
-      ) {
-        setImgSrc(realSrc);
-        cleanup();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setImgSrc(realSrc);
+            observer.disconnect();
+            break;
+          }
+        }
+      },
+      {
+        rootMargin: `${marginAbove}px 0px ${marginBelow}px 0px`,
       }
+    );
+
+    observer.observe(el);
+
+    // Masonry layout changes position without scroll/resize; re-check then.
+    const recheck = () => {
+      observer.unobserve(el);
+      observer.observe(el);
     };
-
-    const onScroll = () => requestAnimationFrame(check);
-
-    const cleanup = () => {
-      active = false;
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("masonry-layout", onScroll);
-    };
-
-    window.addEventListener("scroll", onScroll, true);
-    window.addEventListener("resize", onScroll);
-    window.addEventListener("masonry-layout", onScroll);
-
-    const t1 = requestAnimationFrame(check);
-    const t2 = setTimeout(check, 100);
-    const t3 = setTimeout(check, 300);
+    window.addEventListener("masonry-layout", recheck);
 
     return () => {
-      cleanup();
-      cancelAnimationFrame(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
+      observer.disconnect();
+      window.removeEventListener("masonry-layout", recheck);
     };
-  }, [realSrc]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [realSrc]);
 
   const aspectRatio =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
@@ -170,7 +159,8 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
               ref={imgRef}
               src={imgSrc}
               alt={`${panel.title} #${panel.issue}`}
-              decoding="sync"
+              decoding="async"
+              loading="eager"
               className="block w-full"
               style={{
                 aspectRatio,
