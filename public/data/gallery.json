@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 79,
+      "id": "bleeding-hearts-3-1775931996",
+      "title": "Bleeding Hearts",
+      "slug": "bleeding-hearts",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Stipan Morian",
+      "image": "images/bleeding-hearts/issue-3-1775931996.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-11T18:26:38.425Z"
+    },
+    {
       "seq": 78,
       "id": "infernal-hulk-5-1775376466",
       "title": "Infernal Hulk",
