@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 80,
+      "id": "the-nice-house-by-the-sea-9-1775938587",
+      "title": "The Nice House by the Sea",
+      "slug": "the-nice-house-by-the-sea",
+      "issue": 9,
+      "year": 2026,
+      "artist": "Alvaro Martinez Bueno",
+      "image": "images/the-nice-house-by-the-sea/issue-9-1775938587.jpg",
+      "notes": "cover",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-11T20:16:28.743Z"
+    },
+    {
       "seq": 79,
       "id": "bleeding-hearts-3-1775931996",
       "title": "Bleeding Hearts",
@@ -18,16 +32,16 @@
       "dominantColors": [
         [
           51.6,
-          -1.0,
-          9.0
+          -1,
+          9
         ],
         [
           78.3,
-          3.0,
+          3,
           -2.8
         ],
         [
-          24.0,
+          24,
           2.1,
           10.9
         ]
