@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 83,
+      "id": "rip-off-comix-3-1776032078",
+      "title": "Rip Off Comix",
+      "slug": "rip-off-comix",
+      "issue": 3,
+      "year": 1978,
+      "artist": "Gilbert Shelton",
+      "image": "images/rip-off-comix/issue-3-1776032078.jpg",
+      "notes": "lettering",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-12T22:14:40.933Z"
+    },
+    {
       "seq": 82,
       "id": "artistic-comics-0-1776031531",
       "title": "Artistic Comics",
@@ -27,7 +41,7 @@
           1.9
         ],
         [
-          34.0,
+          34,
           0.4,
           0.9
         ]
