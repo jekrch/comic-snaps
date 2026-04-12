@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 81,
+      "id": "the-nice-house-by-the-sea-9-1775981688",
+      "title": "The Nice House by the Sea",
+      "slug": "the-nice-house-by-the-sea",
+      "issue": 9,
+      "year": 2026,
+      "artist": "Alvaro Martinez Bueno",
+      "image": "images/the-nice-house-by-the-sea/issue-9-1775981688.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-12T08:14:50.079Z"
+    },
+    {
       "seq": 80,
       "id": "the-nice-house-by-the-sea-9-1775938587",
       "title": "The Nice House by the Sea",
