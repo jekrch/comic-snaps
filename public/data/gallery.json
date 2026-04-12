@@ -38,43 +38,6 @@
       "dhash": "131b171736b3e2b2"
     },
     {
-      "seq": 82,
-      "id": "artistic-comics-0-1776031531",
-      "title": "Artistic Comics",
-      "slug": "artistic-comics",
-      "issue": 0,
-      "year": 1973,
-      "artist": "Robert Crumb",
-      "image": "images/artistic-comics/issue-0-1776031531.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-04-12T22:05:33.563Z",
-      "width": 1280,
-      "height": 1150,
-      "dominantColors": [
-        [
-          84.1,
-          0.7,
-          2.6
-        ],
-        [
-          64.2,
-          0.9,
-          1.9
-        ],
-        [
-          34,
-          0.4,
-          0.9
-        ]
-      ],
-      "colorfulness": 2.7,
-      "phash": "a1fcd887f370830d",
-      "ahash": "ffdfc3c32f270307",
-      "dhash": "2c96969ec9cd97cf"
-    },
-    {
       "seq": 81,
       "id": "the-nice-house-by-the-sea-9-1775981688",
       "title": "The Nice House by the Sea",
