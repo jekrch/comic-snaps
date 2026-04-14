@@ -46,6 +46,8 @@ jobs:
           key: torchvision-vgg16
 
       - name: Compute missing image metadata
+        env:
+          COMIC_VINE_API_KEY: ${{ secrets.COMIC_VINE_API_KEY }}
         run: python scripts/compute-image-metadata.py
 
       - name: Compute embeddings

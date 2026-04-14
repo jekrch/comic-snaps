@@ -17,7 +17,9 @@ because the chromatic channels have almost no *variance* even if their mean is
 slightly nonzero. Richly colored panels typically score 15+.
 """
 
+import html
 import json
+import os
 import re
 import sys
 import time
@@ -160,6 +162,159 @@ def fetch_wikipedia_intro(url: str) -> str | None:
         return None
 
 
+COMIC_VINE_BASE = "https://comicvine.gamespot.com/api"
+COMIC_VINE_HEADERS = {"User-Agent": "comic-snaps/1.0 (https://github.com/jekrch/comic-snaps)"}
+
+
+def strip_html(raw: str) -> str:
+    """Strip HTML tags and decode entities from a Comic Vine description."""
+    text = re.sub(r"<[^>]+>", "", raw)
+    text = html.unescape(text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text).strip()
+    return text.replace("\n", "\r\n\r\n")
+
+
+def comic_vine_search(resource: str, name: str, api_key: str) -> list:
+    """
+    Search a Comic Vine resource (e.g. 'people', 'volumes') by name.
+
+    Returns the raw results list, or [] on any failure.
+    """
+    params = {
+        "api_key": api_key,
+        "format": "json",
+        "filter": f"name:{name}",
+        "limit": 20,
+    }
+    try:
+        resp = requests.get(
+            f"{COMIC_VINE_BASE}/{resource}/",
+            params=params,
+            headers=COMIC_VINE_HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("status_code") != 1:
+            print(f"    WARN: Comic Vine {resource} error: {data.get('error')}", file=sys.stderr)
+            return []
+        return data.get("results", []) or []
+    except Exception as e:
+        print(f"    WARN: Comic Vine {resource} fetch failed for {name!r}: {e}", file=sys.stderr)
+        return []
+
+
+def pick_exact_match(results: list, name: str, tiebreak_key: str | None = None) -> dict | None:
+    """
+    Pick the result whose name matches `name` case-insensitively.
+
+    If multiple exact matches exist and `tiebreak_key` is provided, pick the
+    one with the highest numeric value for that key (e.g. count_of_issues).
+    Returns None if no exact match.
+    """
+    norm = name.strip().lower()
+    exact = [r for r in results if (r.get("name") or "").strip().lower() == norm]
+    if not exact:
+        return None
+    if len(exact) == 1 or not tiebreak_key:
+        return exact[0]
+    return max(exact, key=lambda r: int(r.get(tiebreak_key) or 0))
+
+
+def ensure_comicvine_reference(entry: dict, site_url: str) -> None:
+    """Add a Comic Vine reference to `entry` if one isn't already present."""
+    refs = entry.setdefault("references", [])
+    for ref in refs:
+        if (ref.get("name") or "").strip().lower() == "comic vine":
+            return
+    refs.append({"name": "Comic Vine", "url": site_url})
+
+
+def extract_comicvine_image(match: dict) -> str | None:
+    """Return the best available image URL from a Comic Vine result's `image` object."""
+    image = match.get("image") or {}
+    for field in ("super_url", "original_url", "screen_large_url", "screen_url", "medium_url"):
+        url = image.get(field)
+        if url:
+            return url
+    return None
+
+
+def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | None) -> int:
+    """
+    For entries in `path` missing a description or imageUrl, search Comic Vine
+    and fill in whichever fields are missing. Adds a Comic Vine reference
+    whenever any field is populated from Comic Vine.
+
+    `resource` is the Comic Vine endpoint ('people' or 'volumes').
+    """
+    api_key = os.environ.get("COMIC_VINE_API_KEY")
+    if not api_key:
+        print(f"  SKIP Comic Vine backfill for {path} (COMIC_VINE_API_KEY not set).")
+        return 0
+    if not path.exists():
+        return 0
+
+    data = json.loads(path.read_text())
+    entries = data.get(key, [])
+    updated = 0
+
+    for entry in entries:
+        desc = entry.get("description", "")
+        has_desc = bool(desc and desc.strip())
+        has_image = bool(entry.get("imageUrl"))
+        if has_desc and has_image:
+            continue
+
+        name = entry.get("name")
+        if not name:
+            continue
+
+        print(f"  Searching Comic Vine ({resource}) for {name}...")
+        results = comic_vine_search(resource, name, api_key)
+        time.sleep(1.0)  # be polite — Comic Vine rate-limits per resource
+
+        match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
+        if not match:
+            print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+            continue
+
+        site_url = match.get("site_detail_url")
+        if not site_url:
+            print(f"    SKIP: match has no site_detail_url")
+            continue
+
+        changed = False
+
+        if not has_desc:
+            raw_desc = match.get("description") or match.get("deck") or ""
+            clean = strip_html(raw_desc) if raw_desc else ""
+            if clean:
+                entry["description"] = clean
+                changed = True
+                print(f"    desc: {clean[:80]}...")
+
+        if not has_image:
+            img_url = extract_comicvine_image(match)
+            if img_url:
+                entry["imageUrl"] = img_url
+                changed = True
+                print(f"    image: {img_url}")
+
+        if changed:
+            ensure_comicvine_reference(entry, site_url)
+            updated += 1
+        else:
+            print(f"    SKIP: match found but no usable fields")
+
+    if updated:
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        print(f"  Updated {updated} entr(ies) in {path} from Comic Vine.")
+
+    return updated
+
+
 def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
     """
     For entries in the given JSON file that have a Wikipedia reference
@@ -286,6 +441,16 @@ def main():
         print(f"Backfilled {wiki_updated} Wikipedia description(s) total.")
     else:
         print("No Wikipedia descriptions needed backfilling.")
+
+    # Backfill remaining descriptions from Comic Vine
+    print("Backfilling Comic Vine descriptions...")
+    cv_updated = 0
+    cv_updated += backfill_comicvine(ARTISTS_PATH, "artists", "people", tiebreak_key=None)
+    cv_updated += backfill_comicvine(SERIES_PATH, "series", "volumes", tiebreak_key="count_of_issues")
+    if cv_updated:
+        print(f"Backfilled {cv_updated} Comic Vine description(s) total.")
+    else:
+        print("No Comic Vine descriptions needed backfilling.")
 
     updated_count = 0
     error_count = 0
