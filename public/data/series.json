@@ -5,11 +5,15 @@
       "name": "100%",
       "parentSeries": null,
       "imageUrl": "https://i.thriftbooks.com/api/imagehandler/m/1E0D143DDC668C018555159872E28F789B01BB6B.jpeg",
-      "description": "",
+      "description": "A five issue miniseries by Paul Pope set in a futuristic world of 2038.Collected Editions100%100% (Remastered)",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/100%25_(comics)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/100/4050-19316/"
         }
       ]
     },
@@ -22,8 +26,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Absolute_Martian_Manhunter"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/absolute-martian-manhunter/4050-162966/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9668380-wwww.jpg"
     },
     {
       "id": "absolute-wonder-woman",
@@ -38,7 +47,13 @@
       "name": "Assorted Crisis Events",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/assorted-crisis-events/4050-162682/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9655759-cover.jpg"
     },
     {
       "id": "battle-beast",
@@ -52,14 +67,26 @@
       "name": "Bleeding Hearts",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bleeding-hearts/4050-170540/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg"
     },
     {
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Buzz was a weekly anthology title launched by DC Thomson in 1973. Predominately a humour title, the cover stars were the trio of friends Hop, Skip and Jock, with other strips in the first issue including Big Bad Moggy (a malevolent cat who constantly tried to catch two unnamed birds), Big Fat Flo (the misadventures of a massively overweight girl), Billy the Kidder (a schoolboy whose propensity for telling tall tales constantly lands him in trouble), Calamity Kate (a tomboy whose clumsiness inevitably causes disaster all around her), Cookie (escapades of a nutty chef), Fred the Flop (the attempted crimes of an incompetent crook), Gus the Galoot (an incompetent cowboy), Harum-Scarem (the ongoing conflict between a thieving hare and the farmer's dog Scarem), Jimmy Jinx and What He Thinks (each week young Jimmy's good and bad sides, personified in Jimmy's mind as an angelic and devilish version of himself, argue and try to influence Jimmy to their way of thinking), Monty Moneybags (an amiable millionaire), Nero and Zero (Caesar's two nitwit bodyguards), Nobby (young and somewhat mischievous lad, who looks a lot like The Beezer's Ginger except for being blond haired), Olly's Occy (young Olly has an octopus for a friend), Skookum School (a standard gang of misbehaving schoolchildren in constant battle with their teacher), Tich and Snitch (an anthropomorphic mouse and elephant living together), The Twitz of the Ritz (the staff of the Ritz Hotel and their escapades), Wig and Wam (two warring Native Americans, one good and one bad), and Willie the Wizard (an incompetent young wizard in medieval times). Notable later additions to the comic included Spookum School (a spin-off from Skookum School, featuring four ghosts and their teacher haunting Skookum School at night), The Buzzies and the Fuzzies (two egg-shaped races, one smooth and one hairy, who constantly fight one another), Freeze! (an adventure strip where drilling for oil releases prehistoric bubbles of gas which freeze anything they make contact with), Sammy's Scribbles (the pictorial diary of a would-be artist), Sleep Ed (a boy who can and does fall asleep virtually anywhere) and Top Tec (a humorous detective).Buzz was cancelled after 103 issues and merged with Topper, with six Buzz strips - Big Fat Flo, Fred the Flop, Jimmy Jinx, Nobby, Sammy's Scribbles and Sleepy Ed - surviving the amalgamation. Spookum School and Snookum School both transferred to the new comic Cracker, which launched a couple of weeks after Buzz came to an end.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/buzz/4050-51440/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2544837-buzz1.jpg"
     },
     {
       "id": "concrete",
@@ -79,21 +106,39 @@
       "name": "Concrete: Fragile Creature",
       "parentSeries": "concrete",
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/concrete-fragile-creature/4050-22369/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/462/469591-concretefragilecreature1.jpg"
     },
     {
       "id": "concrete-killer-smile",
       "name": "Concrete: Killer Smile",
       "parentSeries": "concrete",
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/concrete-killer-smile/4050-5106/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/35185-5106-39306-1-concrete-killer-smi.jpg"
     },
     {
       "id": "creatures-of-the-id",
       "name": "Creatures of the Id",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "The comic that starred the first appearance of Mike Allred's Madman.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/creatures-of-the-id/4050-18313/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/978/100394-18313-107226-1-creatures-of-the-id.jpg"
     },
     {
       "id": "criminal",
@@ -119,8 +164,14 @@
       "id": "dark-spaces-wildfire",
       "name": "Dark Spaces: Wildfire",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Five-issue mini-series.Collected in Dark Spaces: Wildfire.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dark-spaces-wildfire/4050-144118/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11143/111431054/8584954-darkspaces-wildfire01%28of05%29-000.jpg"
     },
     {
       "id": "eerie",
@@ -144,15 +195,26 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Eightball_(comics)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/eightball/4050-7153/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/43700-7153-51089-1-eightball.jpg"
     },
     {
       "id": "faithless-ii",
       "name": "Faithless II",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Six issue mini-series.Collected in Faithless II.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/faithless-ii/4050-127811/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7417959-01a-main.jpg"
     },
     {
       "id": "fatale",
@@ -184,7 +246,13 @@
       "name": "Geiger",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/geiger/4050-157520/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9320236-cover.jpg"
     },
     {
       "id": "harrow-county",
@@ -195,8 +263,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Harrow_County"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harrow-county/4050-81991/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4559059-5248350691-26606.jpg"
     },
     {
       "id": "heavy-liquid",
@@ -207,8 +280,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Heavy_Liquid_(comic_book)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/heavy-liquid/4050-19317/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10162/217436-19317-115960-1-heavy-liquid.jpg"
     },
     {
       "id": "heavy-metal",
@@ -228,28 +306,52 @@
       "name": "Hyde Street",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/hyde-street/4050-160218/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9498349-cover.jpg"
     },
     {
       "id": "infernal-hulk",
       "name": "Infernal Hulk",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Note: Volume named per indicia.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/infernal-hulk/4050-168725/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9923000-cover.jpg"
     },
     {
       "id": "jacked",
       "name": "Jacked",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Six issue mini-series.Collected in Jacked.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jacked/4050-86238/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4923786-01.jpg"
     },
     {
       "id": "just-brutal",
       "name": "Just Brutal",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/just-brutal/4050-170547/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985196-cover.jpg"
     },
     {
       "id": "lady-killer",
@@ -260,8 +362,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Lady_Killer_(comic_book)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lady-killer/4050-79261/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4313687-01.jpg"
     },
     {
       "id": "love-rockets",
@@ -299,8 +406,14 @@
       "id": "minor-arcana",
       "name": "Minor Arcana",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Ongoing series.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/minor-arcana/4050-159637/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9466557-6820814136-B0CW1.jpg"
     },
     {
       "id": "omaha",
@@ -311,8 +424,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/\"Omaha\"_the_Cat_Dancer"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/omaha/4050-42338/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2002973-1.jpg"
     },
     {
       "id": "omaha-vol-2",
@@ -333,21 +451,39 @@
       "name": "Red Book",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/red-book/4050-167510/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9887543-cover.jpg"
     },
     {
       "id": "space-riders",
       "name": "Space Riders",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Four issue mini-series.Collected in Space Riders: Vengeful Universe.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/space-riders/4050-81111/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4774946-01.jpg"
     },
     {
       "id": "space-riders-galaxy-of-brutality",
       "name": "Space Riders: Galaxy of Brutality",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Four issue mini-series.Collected in Space Riders: Galaxy of Brutality.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/space-riders-galaxy-of-brutality/4050-100380/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/5773001-01.jpg"
     },
     {
       "id": "stray-bullets",
@@ -366,8 +502,14 @@
       "id": "stray-bullets-sunshine-roses",
       "name": "Stray Bullets: Sunshine & Roses",
       "parentSeries": "stray-bullets",
-      "description": "",
-      "references": []
+      "description": "Third volume of Stray Bullets. Continues from Stray Bullets: The Killers.Collected EditionsStray Bullets: Sunshine & Roses Part 1 - Kretchmeyer (#1-8)Stray Bullets: Sunshine & Roses Part 2 - Change of Plans (#9-16)Stray Bullets: Sunshine & Roses Part 3 - The Queen of Palm Court (#17-24)Stray Bullets: Sunshine & Roses Part 4 - The Salad Days (#25-32)Note: Volume named per the indicia which uses the ampersand.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/stray-bullets-sunshine-and-roses/4050-79879/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4370533-sbsr01solicitcvr.jpg"
     },
     {
       "id": "tales-of-ordinary-madness",
@@ -381,15 +523,27 @@
       "id": "the-invisible-man",
       "name": "The Invisible Man",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Adaptation of the H.G. Wells' novel.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-invisible-man/4050-58217/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2903793-inviman.jpg"
     },
     {
       "id": "the-many-deaths-of-laila-starr",
       "name": "The Many Deaths of Laila Starr",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Five issue mini-series.Collected in The Many Deaths of Laila Starr.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-many-deaths-of-laila-starr/4050-135563/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7928449-01a.jpg"
     },
     {
       "id": "the-maxx",
@@ -413,8 +567,13 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/The_Nice_House"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-nice-house-by-the-sea/4050-159011/"
         }
-      ]
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9421875-wwww.jpg"
     },
     {
       "id": "the-peoples-comics",
