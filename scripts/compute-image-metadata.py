@@ -359,6 +359,7 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
     updated = 0
 
     for entry in entries:
+
         has_desc = is_meaningful_description(entry.get("description") or "")
         has_image = bool(entry.get("imageUrl"))
         has_all_supplemental = all(entry.get(k) not in (None, "", [], {}) for k in supplemental_keys)

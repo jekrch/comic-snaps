@@ -54,6 +54,10 @@ HuggingFace and torchvision model weights are cached across runs.
 
 The metadata script also maintains `artists.json` and `series.json`, seeded from distinct artist names and series titles in the gallery. When an entry includes a Wikipedia reference but has no description, the script fetches the introductory section of the linked article via the MediaWiki API and fills it in automatically.
 
+## Comic Vine integration
+
+For entries still missing details after the Wikipedia pass, the script falls back to the [Comic Vine API](https://comicvine.gamespot.com/api/). Artists are looked up against `/people/` and series against `/volumes/` (tie-breaking by `count_of_issues`), and whichever fields are still empty get filled in — description, image, birth/death years for artists, publisher and start year for series. HTML descriptions are converted to plain text and trimmed before boilerplate sections like "List of issues". A Comic Vine reference is added to the entry whenever any field is populated from it, and requests are rate-limited to roughly one per second. Requires a `COMIC_VINE_API_KEY` environment variable; the backfill is skipped when unset.
+
 ## Sorting
 
 The gallery supports several sort modes exploring different notions of visual ordering:
