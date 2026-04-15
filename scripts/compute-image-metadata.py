@@ -166,13 +166,53 @@ COMIC_VINE_BASE = "https://comicvine.gamespot.com/api"
 COMIC_VINE_HEADERS = {"User-Agent": "comic-snaps/1.0 (https://github.com/jekrch/comic-snaps)"}
 
 
+MIN_DESCRIPTION_CHARS = 40
+MIN_DESCRIPTION_WORDS = 5
+
+
 def strip_html(raw: str) -> str:
-    """Strip HTML tags and decode entities from a Comic Vine description."""
-    text = re.sub(r"<[^>]+>", "", raw)
+    """
+    Convert a Comic Vine HTML description to plain text with \\r\\n\\r\\n paragraph
+    separators, preserving paragraph breaks and list items while discarding images
+    and trailing "List of issues"-style sections.
+    """
+    text = raw
+    # Drop figures/images entirely — they carry no textual content
+    text = re.sub(r"<figure[^>]*>.*?</figure>", "", text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r"<img[^>]*/?>", "", text, flags=re.IGNORECASE)
+    # Comic Vine descriptions often end with headings like "List of issues" or
+    # "Collected editions" — truncate at the first heading to keep the intro only.
+    text = re.split(r"<h[1-6][^>]*>", text, maxsplit=1, flags=re.IGNORECASE)[0]
+    # Preserve structural breaks before stripping remaining tags
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"</p\s*>", "\n\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"</li\s*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<li[^>]*>", "- ", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text)
+    # Collapse whitespace and rebuild paragraphs
     text = re.sub(r"[ \t]+", " ", text)
-    text = re.sub(r"\n{3,}", "\n\n", text).strip()
-    return text.replace("\n", "\r\n\r\n")
+    paragraphs = [re.sub(r"\s*\n\s*", " ", p).strip() for p in re.split(r"\n\s*\n", text)]
+    paragraphs = [p for p in paragraphs if p]
+    return "\r\n\r\n".join(paragraphs)
+
+
+def is_meaningful_description(text: str) -> bool:
+    """Reject descriptions that are too short to be useful (e.g. "Artist.")."""
+    stripped = text.strip()
+    if len(stripped) < MIN_DESCRIPTION_CHARS:
+        return False
+    if len(stripped.split()) < MIN_DESCRIPTION_WORDS:
+        return False
+    return True
+
+
+def extract_year(raw: str | None) -> int | None:
+    """Extract a 4-digit year from a free-form date string like 'Dec 1, 1957'."""
+    if not raw:
+        return None
+    m = re.search(r"\b(1[89]\d{2}|20\d{2})\b", raw)
+    return int(m.group(1)) if m else None
 
 
 def comic_vine_search(resource: str, name: str, api_key: str) -> list:
@@ -241,11 +281,57 @@ def extract_comicvine_image(match: dict) -> str | None:
     return None
 
 
+def _set_if_missing(entry: dict, field: str, value) -> bool:
+    """Set `entry[field] = value` only if missing/empty. Returns True if changed."""
+    if value in (None, "", [], {}):
+        return False
+    existing = entry.get(field)
+    if existing not in (None, "", [], {}):
+        return False
+    entry[field] = value
+    return True
+
+
+def extract_artist_fields(match: dict) -> dict:
+    """Pull supplemental fields from a Comic Vine `/people/` result."""
+    aliases_raw = (match.get("aliases") or "").strip()
+    aliases = [a.strip() for a in aliases_raw.splitlines() if a.strip()] if aliases_raw else []
+    return {
+        "birthYear": extract_year(match.get("birth")),
+        "deathYear": extract_year(match.get("death")),
+        "country": (match.get("country") or "").strip() or None,
+        "aliases": aliases or None,
+    }
+
+
+def extract_series_fields(match: dict) -> dict:
+    """Pull supplemental fields from a Comic Vine `/volumes/` result."""
+    aliases_raw = (match.get("aliases") or "").strip()
+    aliases = [a.strip() for a in aliases_raw.splitlines() if a.strip()] if aliases_raw else []
+    publisher = (match.get("publisher") or {}).get("name")
+    start_year = match.get("start_year")
+    try:
+        start_year = int(start_year) if start_year else None
+    except (TypeError, ValueError):
+        start_year = None
+    issue_count = match.get("count_of_issues")
+    try:
+        issue_count = int(issue_count) if issue_count else None
+    except (TypeError, ValueError):
+        issue_count = None
+    return {
+        "startYear": start_year,
+        "publisher": publisher,
+        "issueCount": issue_count,
+        "aliases": aliases or None,
+    }
+
+
 def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | None) -> int:
     """
-    For entries in `path` missing a description or imageUrl, search Comic Vine
-    and fill in whichever fields are missing. Adds a Comic Vine reference
-    whenever any field is populated from Comic Vine.
+    For entries in `path` missing a description, imageUrl, or supplemental
+    fields, search Comic Vine and fill in whichever fields are missing. Adds
+    a Comic Vine reference whenever any field is populated from Comic Vine.
 
     `resource` is the Comic Vine endpoint ('people' or 'volumes').
     """
@@ -256,15 +342,19 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
     if not path.exists():
         return 0
 
+    extract_supplemental = extract_artist_fields if resource == "people" else extract_series_fields
+    supplemental_keys = ("birthYear", "deathYear", "country", "aliases") if resource == "people" \
+        else ("startYear", "publisher", "issueCount", "aliases")
+
     data = json.loads(path.read_text())
     entries = data.get(key, [])
     updated = 0
 
     for entry in entries:
-        desc = entry.get("description", "")
-        has_desc = bool(desc and desc.strip())
+        has_desc = is_meaningful_description(entry.get("description") or "")
         has_image = bool(entry.get("imageUrl"))
-        if has_desc and has_image:
+        has_all_supplemental = all(entry.get(k) not in (None, "", [], {}) for k in supplemental_keys)
+        if has_desc and has_image and has_all_supplemental:
             continue
 
         name = entry.get("name")
@@ -290,10 +380,12 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
         if not has_desc:
             raw_desc = match.get("description") or match.get("deck") or ""
             clean = strip_html(raw_desc) if raw_desc else ""
-            if clean:
+            if is_meaningful_description(clean):
                 entry["description"] = clean
                 changed = True
                 print(f"    desc: {clean[:80]}...")
+            elif clean:
+                print(f"    skip desc: too short ({len(clean)} chars)")
 
         if not has_image:
             img_url = extract_comicvine_image(match)
@@ -302,11 +394,16 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
                 changed = True
                 print(f"    image: {img_url}")
 
+        for field, value in extract_supplemental(match).items():
+            if _set_if_missing(entry, field, value):
+                changed = True
+                print(f"    {field}: {value}")
+
         if changed:
             ensure_comicvine_reference(entry, site_url)
             updated += 1
         else:
-            print(f"    SKIP: match found but no usable fields")
+            print(f"    SKIP: match found but no new fields")
 
     if updated:
         path.write_text(json.dumps(data, indent=2) + "\n")
@@ -345,10 +442,12 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
 
         print(f"  Fetching Wikipedia intro for {entry.get('name', entry.get('id'))}...")
         intro = fetch_wikipedia_intro(wiki_url)
-        if intro:
+        if intro and is_meaningful_description(intro):
             entry["description"] = intro
             updated += 1
             print(f"    OK: {intro[:80]}...")
+        elif intro:
+            print(f"    SKIP: intro too short ({len(intro)} chars)")
         else:
             print(f"    SKIP: no intro text found")
 

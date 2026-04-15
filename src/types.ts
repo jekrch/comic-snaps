@@ -9,6 +9,10 @@ export interface Artist {
   description: string;
   imageUrl?: string | null;
   references: Reference[];
+  birthYear?: number | null;
+  deathYear?: number | null;
+  country?: string | null;
+  aliases?: string[] | null;
 }
 
 export interface Series {
@@ -18,6 +22,10 @@ export interface Series {
   description: string;
   imageUrl?: string | null;
   references: Reference[];
+  startYear?: number | null;
+  publisher?: string | null;
+  issueCount?: number | null;
+  aliases?: string[] | null;
 }
 
 export interface Panel {

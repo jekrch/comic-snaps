@@ -25,6 +25,26 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
   const seriesDesc = series?.description || parentSeries?.description || "";
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
+  const effectiveSeries = series ?? parentSeries ?? null;
+
+  const seriesMetaParts: string[] = [];
+  if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
+  if (effectiveSeries?.publisher) seriesMetaParts.push(effectiveSeries.publisher);
+  if (effectiveSeries?.issueCount) {
+    seriesMetaParts.push(`${effectiveSeries.issueCount} issue${effectiveSeries.issueCount === 1 ? "" : "s"}`);
+  }
+  const seriesMeta = seriesMetaParts.join(" · ");
+
+  const artistYears =
+    artist?.birthYear && artist?.deathYear
+      ? `${artist.birthYear}–${artist.deathYear}`
+      : artist?.birthYear
+        ? `b. ${artist.birthYear}`
+        : null;
+  const artistMetaParts: string[] = [];
+  if (artistYears) artistMetaParts.push(artistYears);
+  if (artist?.country) artistMetaParts.push(artist.country);
+  const artistMeta = artistMetaParts.join(" · ");
 
   const show = open && !closing;
 
@@ -86,6 +106,9 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.title}
             </p>
+            {seriesMeta && (
+              <p className="text-[10px] text-white/40 mt-0.5">{seriesMeta}</p>
+            )}
             {seriesDesc && (
               <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{seriesDesc}</p>
             )}
@@ -134,6 +157,9 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.artist}
             </p>
+            {artistMeta && (
+              <p className="text-[10px] text-white/40 mt-0.5">{artistMeta}</p>
+            )}
             {artist?.description && (
               <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{artist.description}</p>
             )}

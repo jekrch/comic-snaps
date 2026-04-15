@@ -112,7 +112,7 @@
     {
       "id": "filipe-andrade",
       "name": "Filipe Andrade",
-      "description": "Artist",
+      "description": "",
       "references": [
         {
           "name": "Comic Vine",
@@ -170,9 +170,21 @@
       ]
     },
     {
+      "id": "gilbert-shelton",
+      "name": "Gilbert Shelton",
+      "description": "",
+      "imageUrl": "",
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Gilbert_Shelton"
+        }
+      ]
+    },
+    {
       "id": "hayden-sherman",
       "name": "Hayden Sherman",
-      "description": "Artist.",
+      "description": "",
       "references": [
         {
           "name": "Website",
@@ -260,7 +272,7 @@
     {
       "id": "jose-martin-sauri",
       "name": "Jose Martin Sauri",
-      "description": "Artist",
+      "description": "",
       "references": [
         {
           "name": "Comiclopedia",
@@ -311,7 +323,7 @@
     {
       "id": "maria-llovet",
       "name": "Maria Llovet",
-      "description": "Artist.",
+      "description": "",
       "references": [
         {
           "name": "Comic Vine",
@@ -431,7 +443,7 @@
     {
       "id": "reed-waller",
       "name": "Reed Waller",
-      "description": "Artist",
+      "description": "",
       "references": [
         {
           "name": "Comic Vine",
