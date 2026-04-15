@@ -359,6 +359,9 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
     updated = 0
 
     for entry in entries:
+        if any((ref.get("name") or "").strip().lower() == "comic vine"
+               for ref in entry.get("references", [])):
+            continue
 
         has_desc = is_meaningful_description(entry.get("description") or "")
         has_image = bool(entry.get("imageUrl"))
