@@ -207,10 +207,18 @@ def is_meaningful_description(text: str) -> bool:
     return True
 
 
-def extract_year(raw: str | None) -> int | None:
-    """Extract a 4-digit year from a free-form date string like 'Dec 1, 1957'."""
+def extract_year(raw) -> int | None:
+    """
+    Extract a 4-digit year from a Comic Vine birth/death field. The field may
+    be a string ('Dec 1, 1957'), a dict ({'date': '1957-02-01 00:00:00', ...}),
+    or None.
+    """
     if not raw:
         return None
+    if isinstance(raw, dict):
+        raw = raw.get("date") or raw.get("year") or ""
+    if not isinstance(raw, str):
+        raw = str(raw)
     m = re.search(r"\b(1[89]\d{2}|20\d{2})\b", raw)
     return int(m.group(1)) if m else None
 
