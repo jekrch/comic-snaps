@@ -21,7 +21,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -44,7 +45,8 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "issueCount": 10
     },
@@ -64,7 +66,8 @@
       "publisher": "DC Comics",
       "issueCount": 18,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -83,7 +86,8 @@
       "publisher": "Image",
       "issueCount": 8,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -93,7 +97,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -112,7 +117,8 @@
       "publisher": "DC Comics",
       "issueCount": 3,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -131,7 +137,8 @@
       "publisher": "D.C. Thomson & Co.",
       "issueCount": 103,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -155,7 +162,8 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -179,7 +187,8 @@
       "issueCount": 4,
       "sources": [
         "comicvine",
-        "gcd"
+        "gcd",
+        "metron"
       ]
     },
     {
@@ -198,7 +207,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -217,7 +227,8 @@
       "publisher": "Caliber Comics",
       "issueCount": 1,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -241,7 +252,8 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -251,7 +263,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -270,7 +283,8 @@
       "publisher": "IDW Publishing",
       "issueCount": 5,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -294,7 +308,8 @@
       "issueCount": 139,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -318,7 +333,8 @@
       "issueCount": 23,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -337,7 +353,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 6,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -361,7 +378,8 @@
       "issueCount": 24,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -377,7 +395,8 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -396,7 +415,8 @@
       "publisher": "Image",
       "issueCount": 22,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -420,7 +440,8 @@
       "issueCount": 32,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -444,7 +465,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -466,7 +488,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "gcd"
+        "gcd",
+        "metron"
       ],
       "startYear": 2013,
       "publisher": "https://www.comics.org/api/publisher/8368/?format=json"
@@ -487,7 +510,8 @@
       "publisher": "Image",
       "issueCount": 11,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -511,7 +535,8 @@
       "issueCount": 5,
       "sources": [
         "comicvine",
-        "gcd"
+        "gcd",
+        "metron"
       ]
     },
     {
@@ -530,7 +555,8 @@
       "publisher": "DC Comics",
       "issueCount": 6,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -549,7 +575,8 @@
       "publisher": "Ignition Press",
       "issueCount": 2,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -573,7 +600,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -594,7 +622,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "gcd"
+        "gcd",
+        "metron"
       ],
       "startYear": 1987,
       "publisher": "https://www.comics.org/api/publisher/543/?format=json"
@@ -620,7 +649,8 @@
       "issueCount": 3,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -630,7 +660,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -649,7 +680,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 15,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -673,7 +705,8 @@
       "issueCount": 9,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -683,7 +716,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -693,7 +727,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -712,7 +747,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -731,7 +767,8 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -750,7 +787,8 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -774,7 +812,8 @@
       "issueCount": 41,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -796,7 +835,8 @@
         "Stray Bullets: Sunshine and Roses"
       ],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -815,7 +855,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -834,7 +875,8 @@
       "publisher": "Universal",
       "issueCount": 1,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -853,7 +895,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 5,
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -877,7 +920,8 @@
       "issueCount": 35,
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -900,7 +944,8 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "issueCount": 9
     },
@@ -917,7 +962,8 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -927,7 +973,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -937,7 +984,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -947,7 +995,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -957,7 +1006,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -973,7 +1023,8 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     }
   ]
