@@ -24,6 +24,7 @@ import re
 import sys
 import time
 from pathlib import Path
+from urllib.parse import quote
 
 import numpy as np
 import requests
@@ -165,6 +166,18 @@ def fetch_wikipedia_intro(url: str) -> str | None:
 COMIC_VINE_BASE = "https://comicvine.gamespot.com/api"
 COMIC_VINE_HEADERS = {"User-Agent": "comic-snaps/1.0 (https://github.com/jekrch/comic-snaps)"}
 
+METRON_BASE = "https://metron.cloud/api"
+GCD_BASE = "https://www.comics.org/api"
+API_HEADERS = {"User-Agent": "comic-snaps/1.0 (https://github.com/jekrch/comic-snaps)"}
+
+# Source identifiers for tracking which sources have processed an entry
+SOURCE_WIKIPEDIA = "wikipedia"
+SOURCE_COMICVINE = "comicvine"
+SOURCE_METRON = "metron"
+SOURCE_GCD = "gcd"
+
+MAX_COVER_IMAGES = 4
+
 
 MIN_DESCRIPTION_CHARS = 40
 MIN_DESCRIPTION_WORDS = 5
@@ -272,11 +285,7 @@ def pick_exact_match(results: list, name: str, tiebreak_key: str | None = None) 
 
 def ensure_comicvine_reference(entry: dict, site_url: str) -> None:
     """Add a Comic Vine reference to `entry` if one isn't already present."""
-    refs = entry.setdefault("references", [])
-    for ref in refs:
-        if (ref.get("name") or "").strip().lower() == "comic vine":
-            return
-    refs.append({"name": "Comic Vine", "url": site_url})
+    ensure_reference(entry, "Comic Vine", site_url)
 
 
 def extract_comicvine_image(match: dict) -> str | None:
@@ -298,6 +307,27 @@ def _set_if_missing(entry: dict, field: str, value) -> bool:
         return False
     entry[field] = value
     return True
+
+
+def has_source(entry: dict, source_id: str) -> bool:
+    """Check if an entry has already been processed by the given source."""
+    return source_id in entry.get("sources", [])
+
+
+def mark_source(entry: dict, source_id: str) -> None:
+    """Record that a source has processed this entry (even if nothing was found)."""
+    sources = entry.setdefault("sources", [])
+    if source_id not in sources:
+        sources.append(source_id)
+
+
+def ensure_reference(entry: dict, name: str, url: str) -> None:
+    """Add a reference to `entry` if one with the same name isn't already present."""
+    refs = entry.setdefault("references", [])
+    for ref in refs:
+        if (ref.get("name") or "").strip().lower() == name.strip().lower():
+            return
+    refs.append({"name": name, "url": url})
 
 
 def extract_artist_fields(match: dict) -> dict:
@@ -359,14 +389,7 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
     updated = 0
 
     for entry in entries:
-        if any((ref.get("name") or "").strip().lower() == "comic vine"
-               for ref in entry.get("references", [])):
-            continue
-
-        has_desc = is_meaningful_description(entry.get("description") or "")
-        has_image = bool(entry.get("imageUrl"))
-        has_all_supplemental = all(entry.get(k) not in (None, "", [], {}) for k in supplemental_keys)
-        if has_desc and has_image and has_all_supplemental:
+        if has_source(entry, SOURCE_COMICVINE):
             continue
 
         name = entry.get("name")
@@ -380,16 +403,20 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
         match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
         if not match:
             print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+            mark_source(entry, SOURCE_COMICVINE)
+            updated += 1
             continue
 
         site_url = match.get("site_detail_url")
         if not site_url:
             print(f"    SKIP: match has no site_detail_url")
+            mark_source(entry, SOURCE_COMICVINE)
+            updated += 1
             continue
 
         changed = False
 
-        if not has_desc:
+        if not is_meaningful_description(entry.get("description") or ""):
             raw_desc = match.get("description") or match.get("deck") or ""
             clean = strip_html(raw_desc) if raw_desc else ""
             if is_meaningful_description(clean):
@@ -399,7 +426,7 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
             elif clean:
                 print(f"    skip desc: too short ({len(clean)} chars)")
 
-        if not has_image:
+        if not entry.get("imageUrl"):
             img_url = extract_comicvine_image(match)
             if img_url:
                 entry["imageUrl"] = img_url
@@ -413,13 +440,15 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
 
         if changed:
             ensure_comicvine_reference(entry, site_url)
-            updated += 1
-        else:
+
+        mark_source(entry, SOURCE_COMICVINE)
+        updated += 1
+        if not changed:
             print(f"    SKIP: match found but no new fields")
 
     if updated:
         path.write_text(json.dumps(data, indent=2) + "\n")
-        print(f"  Updated {updated} entr(ies) in {path} from Comic Vine.")
+        print(f"  Processed {updated} entr(ies) in {path} via Comic Vine.")
 
     return updated
 
@@ -439,8 +468,7 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
     updated = 0
 
     for entry in entries:
-        desc = entry.get("description", "")
-        if desc and desc.strip():
+        if has_source(entry, SOURCE_WIKIPEDIA):
             continue
 
         wiki_url = None
@@ -452,30 +480,532 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
         if not wiki_url:
             continue
 
+        desc = entry.get("description", "")
+        if desc and desc.strip():
+            mark_source(entry, SOURCE_WIKIPEDIA)
+            updated += 1
+            continue
+
         print(f"  Fetching Wikipedia intro for {entry.get('name', entry.get('id'))}...")
         intro = fetch_wikipedia_intro(wiki_url)
         if intro and is_meaningful_description(intro):
             entry["description"] = intro
-            updated += 1
             print(f"    OK: {intro[:80]}...")
         elif intro:
             print(f"    SKIP: intro too short ({len(intro)} chars)")
         else:
             print(f"    SKIP: no intro text found")
 
+        mark_source(entry, SOURCE_WIKIPEDIA)
+        updated += 1
+
         # Be polite to Wikipedia
         time.sleep(0.5)
 
     if updated:
         path.write_text(json.dumps(data, indent=2) + "\n")
-        print(f"  Updated {updated} description(s) in {path}.")
+        print(f"  Updated {updated} entr(ies) in {path} from Wikipedia.")
+
+    return updated
+
+
+def metron_get(endpoint: str, params: dict, username: str, password: str) -> dict | None:
+    """Make an authenticated GET request to the Metron API."""
+    try:
+        resp = requests.get(
+            f"{METRON_BASE}/{endpoint}",
+            params=params,
+            auth=(username, password),
+            headers=API_HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        print(f"    WARN: Metron request failed ({endpoint}): {e}", file=sys.stderr)
+        return None
+
+
+def metron_search(resource: str, name: str, username: str, password: str) -> list:
+    """Search Metron for a resource by name. Returns the results list."""
+    data = metron_get(f"{resource}/", {"name": name}, username, password)
+    if not data:
+        return []
+    return data.get("results", []) or []
+
+
+def extract_metron_artist_fields(match: dict) -> dict:
+    """Pull supplemental fields from a Metron creator result."""
+    aliases_raw = match.get("alias") or []
+    aliases = [a.strip() for a in aliases_raw if isinstance(a, str) and a.strip()] if aliases_raw else []
+    return {
+        "birthYear": extract_year(match.get("birth")),
+        "deathYear": extract_year(match.get("death")),
+        "aliases": aliases or None,
+    }
+
+
+def extract_metron_series_fields(match: dict) -> dict:
+    """Pull supplemental fields from a Metron series result."""
+    publisher = None
+    pub_obj = match.get("publisher")
+    if isinstance(pub_obj, dict):
+        publisher = pub_obj.get("name")
+    elif isinstance(pub_obj, str):
+        publisher = pub_obj
+
+    start_year = match.get("year_began")
+    try:
+        start_year = int(start_year) if start_year else None
+    except (TypeError, ValueError):
+        start_year = None
+
+    issue_count = match.get("issue_count")
+    try:
+        issue_count = int(issue_count) if issue_count else None
+    except (TypeError, ValueError):
+        issue_count = None
+
+    return {
+        "startYear": start_year,
+        "publisher": publisher,
+        "issueCount": issue_count,
+    }
+
+
+def metron_resource_url(resource: str, match: dict) -> str | None:
+    """Build the metron.cloud web URL for a matched resource."""
+    mid = match.get("id")
+    if not mid:
+        return None
+    kind = "series" if resource == "series" else "creator"
+    return f"https://metron.cloud/{kind}/{mid}/"
+
+
+def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | None) -> int:
+    """
+    For entries missing data, search Metron and fill in whichever fields are
+    missing. Adds a Metron reference whenever any field is populated.
+
+    `resource` is the Metron endpoint ('creator' or 'series').
+    """
+    username = os.environ.get("METRON_USERNAME")
+    password = os.environ.get("METRON_PASSWORD")
+    if not username or not password:
+        print(f"  SKIP Metron backfill for {path} (METRON_USERNAME/METRON_PASSWORD not set).")
+        return 0
+    if not path.exists():
+        return 0
+
+    extract_supplemental = extract_metron_artist_fields if resource == "creator" else extract_metron_series_fields
+
+    data = json.loads(path.read_text())
+    entries = data.get(key, [])
+    updated = 0
+
+    for entry in entries:
+        if has_source(entry, SOURCE_METRON):
+            continue
+
+        name = entry.get("name")
+        if not name:
+            continue
+
+        print(f"  Searching Metron ({resource}) for {name}...")
+        results = metron_search(resource, name, username, password)
+        time.sleep(3.0)  # 20 requests/min limit
+
+        match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
+        if not match:
+            print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+            mark_source(entry, SOURCE_METRON)
+            updated += 1
+            continue
+
+        ref_url = metron_resource_url(resource, match)
+        changed = False
+
+        if not is_meaningful_description(entry.get("description") or ""):
+            raw_desc = match.get("desc") or ""
+            clean = strip_html(raw_desc) if raw_desc else ""
+            if is_meaningful_description(clean):
+                entry["description"] = clean
+                changed = True
+                print(f"    desc: {clean[:80]}...")
+
+        if not entry.get("imageUrl"):
+            img_url = match.get("image")
+            if img_url:
+                entry["imageUrl"] = img_url
+                changed = True
+                print(f"    image: {img_url}")
+
+        for field, value in extract_supplemental(match).items():
+            if _set_if_missing(entry, field, value):
+                changed = True
+                print(f"    {field}: {value}")
+
+        if changed and ref_url:
+            ensure_reference(entry, "Metron", ref_url)
+
+        mark_source(entry, SOURCE_METRON)
+        updated += 1
+        if not changed:
+            print(f"    SKIP: match found but no new fields")
+
+    if updated:
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        print(f"  Processed {updated} entr(ies) in {path} via Metron.")
+
+    return updated
+
+
+# ---------------------------------------------------------------------------
+# GCD (Grand Comics Database) backfill — series only
+# ---------------------------------------------------------------------------
+
+def gcd_search_series(name: str) -> list:
+    """Search the Grand Comics Database for series by name."""
+    try:
+        resp = requests.get(
+            f"{GCD_BASE}/series/name/{quote(name, safe='')}/",
+            params={"format": "json"},
+            headers=API_HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        # GCD returns paginated results with a 'results' key
+        if isinstance(data, dict):
+            return data.get("results", []) or []
+        if isinstance(data, list):
+            return data
+        return []
+    except Exception as e:
+        print(f"    WARN: GCD series search failed for {name!r}: {e}", file=sys.stderr)
+        return []
+
+
+def gcd_fetch_json(url: str) -> dict | None:
+    """Fetch a GCD API URL and return the parsed JSON."""
+    sep = "&" if "?" in url else "?"
+    full = f"{url}{sep}format=json" if "format=" not in url else url
+    try:
+        resp = requests.get(full, headers=API_HEADERS, timeout=15)
+        resp.raise_for_status()
+        return resp.json()
+    except Exception as e:
+        print(f"    WARN: GCD fetch failed ({url}): {e}", file=sys.stderr)
+        return None
+
+
+def pick_gcd_series_match(results: list, name: str, start_year: int | None) -> dict | None:
+    """
+    Pick the best GCD series match. Prefers exact name match; uses start_year
+    to disambiguate when multiple series share the same name.
+    """
+    norm = name.strip().lower()
+    exact = [r for r in results if (r.get("name") or "").strip().lower() == norm]
+    if not exact:
+        return None
+    if len(exact) == 1:
+        return exact[0]
+    if start_year:
+        for r in exact:
+            if r.get("year_began") == start_year:
+                return r
+    # Fall back to the one with the most issues (active_issues length or any count field)
+    return exact[0]
+
+
+def gcd_series_web_url(match: dict) -> str | None:
+    """Build a comics.org web URL from a GCD series match."""
+    api_url = match.get("api_url") or ""
+    # api_url looks like https://www.comics.org/api/series/12345/
+    m = re.search(r"/series/(\d+)", api_url)
+    if m:
+        return f"https://www.comics.org/series/{m.group(1)}/"
+    return None
+
+
+def extract_gcd_series_fields(match: dict) -> dict:
+    """Pull supplemental fields from a GCD series result."""
+    start_year = match.get("year_began")
+    try:
+        start_year = int(start_year) if start_year else None
+    except (TypeError, ValueError):
+        start_year = None
+
+    publisher = None
+    pub = match.get("publisher")
+    if isinstance(pub, str) and pub:
+        publisher = pub
+    elif isinstance(pub, dict):
+        publisher = pub.get("name")
+
+    return {
+        "startYear": start_year,
+        "publisher": publisher,
+    }
+
+
+def backfill_gcd(path: Path, key: str) -> int:
+    """
+    For series entries missing data, search the Grand Comics Database and
+    fill in whichever fields are missing. GCD has no creator/people endpoint
+    so this is series-only.
+    """
+    if not path.exists():
+        return 0
+
+    data = json.loads(path.read_text())
+    entries = data.get(key, [])
+    updated = 0
+
+    for entry in entries:
+        if has_source(entry, SOURCE_GCD):
+            continue
+
+        name = entry.get("name")
+        if not name:
+            continue
+
+        print(f"  Searching GCD for {name}...")
+        results = gcd_search_series(name)
+        time.sleep(1.0)
+
+        match = pick_gcd_series_match(results, name, entry.get("startYear"))
+        if not match:
+            print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+            mark_source(entry, SOURCE_GCD)
+            updated += 1
+            continue
+
+        changed = False
+
+        # GCD series notes can serve as a description
+        if not is_meaningful_description(entry.get("description") or ""):
+            notes = match.get("notes") or ""
+            clean = strip_html(notes) if notes else ""
+            if is_meaningful_description(clean):
+                entry["description"] = clean
+                changed = True
+                print(f"    desc: {clean[:80]}...")
+
+        for field, value in extract_gcd_series_fields(match).items():
+            if _set_if_missing(entry, field, value):
+                changed = True
+                print(f"    {field}: {value}")
+
+        web_url = gcd_series_web_url(match)
+        if changed and web_url:
+            ensure_reference(entry, "Grand Comics Database", web_url)
+
+        # Store the GCD API URL for later use (cover image fetching)
+        if not entry.get("_gcd_api_url"):
+            entry["_gcd_api_url"] = match.get("api_url")
+
+        mark_source(entry, SOURCE_GCD)
+        updated += 1
+        if not changed:
+            print(f"    SKIP: match found but no new fields")
+
+    if updated:
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        print(f"  Processed {updated} entr(ies) in {path} via GCD.")
+
+    return updated
+
+
+# ---------------------------------------------------------------------------
+# Cover image fetching (Metron + GCD)
+# ---------------------------------------------------------------------------
+
+def get_gallery_issues_for_series(panels: list, series_slug: str) -> list[int]:
+    """Return sorted list of issue numbers from the gallery for a given series."""
+    issues = set()
+    for panel in panels:
+        if panel.get("slug") == series_slug:
+            issue = panel.get("issue")
+            if isinstance(issue, (int, float)):
+                issues.add(int(issue))
+    return sorted(issues)
+
+
+def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
+                        username: str, password: str) -> list[str]:
+    """
+    Fetch cover image URLs from Metron for a series. Prioritizes issues
+    that appear in the gallery, then fills remaining slots.
+    """
+    # Find the Metron series ID from the reference URL
+    metron_id = None
+    for ref in series_entry.get("references", []):
+        if (ref.get("name") or "").strip().lower() == "metron":
+            m = re.search(r"/series/(\d+)", ref.get("url", ""))
+            if m:
+                metron_id = m.group(1)
+                break
+    if not metron_id:
+        return []
+
+    # Fetch issues for this series (first page, up to 28 results)
+    data = metron_get(f"issue/", {"series_id": metron_id}, username, password)
+    time.sleep(3.0)
+    if not data:
+        return []
+
+    issues = data.get("results", []) or []
+
+    # Separate gallery issues from others
+    gallery_covers = []
+    other_covers = []
+    for issue in issues:
+        img = issue.get("image")
+        if not img:
+            continue
+        issue_num = issue.get("number")
+        try:
+            issue_num = int(issue_num) if issue_num else None
+        except (TypeError, ValueError):
+            issue_num = None
+
+        if issue_num and issue_num in gallery_issues:
+            gallery_covers.append(img)
+        else:
+            other_covers.append(img)
+
+    covers = gallery_covers[:MAX_COVER_IMAGES]
+    remaining = MAX_COVER_IMAGES - len(covers)
+    if remaining > 0:
+        covers.extend(other_covers[:remaining])
+
+    return covers
+
+
+def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int]) -> list[str]:
+    """
+    Fetch cover image URLs from GCD for a series. Prioritizes issues
+    that appear in the gallery, then fills remaining slots.
+    """
+    api_url = series_entry.get("_gcd_api_url")
+    if not api_url:
+        return []
+
+    series_data = gcd_fetch_json(api_url)
+    time.sleep(1.0)
+    if not series_data:
+        return []
+
+    # active_issues is a list of issue API URLs
+    issue_urls = series_data.get("active_issues") or []
+    if not issue_urls:
+        return []
+
+    # Fetch a limited sample of issues to find covers
+    gallery_covers = []
+    other_covers = []
+    fetched = 0
+    max_fetches = min(len(issue_urls), 15)  # cap to avoid excessive requests
+
+    for issue_url in issue_urls[:max_fetches]:
+        issue_data = gcd_fetch_json(issue_url)
+        time.sleep(1.0)
+        fetched += 1
+        if not issue_data:
+            continue
+
+        cover_url = issue_data.get("cover")
+        if not cover_url:
+            continue
+
+        issue_num = issue_data.get("number")
+        try:
+            issue_num = int(issue_num) if issue_num else None
+        except (TypeError, ValueError):
+            issue_num = None
+
+        if issue_num and issue_num in gallery_issues:
+            gallery_covers.append(cover_url)
+        else:
+            other_covers.append(cover_url)
+
+        # Stop early if we have enough
+        if len(gallery_covers) + len(other_covers) >= MAX_COVER_IMAGES:
+            break
+
+    covers = gallery_covers[:MAX_COVER_IMAGES]
+    remaining = MAX_COVER_IMAGES - len(covers)
+    if remaining > 0:
+        covers.extend(other_covers[:remaining])
+
+    return covers
+
+
+def backfill_cover_images(path: Path, panels: list) -> int:
+    """
+    For series entries missing coverImages, fetch up to 4 cover image URLs
+    from Metron and/or GCD. Prioritizes covers for issues that appear in
+    the gallery.
+    """
+    if not path.exists():
+        return 0
+
+    username = os.environ.get("METRON_USERNAME")
+    password = os.environ.get("METRON_PASSWORD")
+    has_metron = bool(username and password)
+
+    data = json.loads(path.read_text())
+    entries = data.get("series", [])
+    updated = 0
+
+    for entry in entries:
+        existing = entry.get("coverImages") or []
+        if len(existing) >= MAX_COVER_IMAGES:
+            continue
+
+        series_slug = entry.get("id")
+        if not series_slug:
+            continue
+
+        gallery_issues = get_gallery_issues_for_series(panels, series_slug)
+        covers = list(existing)
+
+        # Try Metron first
+        if has_metron and len(covers) < MAX_COVER_IMAGES:
+            metron_covers = fetch_metron_covers(entry, gallery_issues, username, password)
+            for url in metron_covers:
+                if url not in covers and len(covers) < MAX_COVER_IMAGES:
+                    covers.append(url)
+
+        # Supplement with GCD
+        if len(covers) < MAX_COVER_IMAGES:
+            gcd_covers = fetch_gcd_covers(entry, gallery_issues)
+            for url in gcd_covers:
+                if url not in covers and len(covers) < MAX_COVER_IMAGES:
+                    covers.append(url)
+
+        if covers and covers != existing:
+            entry["coverImages"] = covers
+            updated += 1
+            print(f"  {entry.get('name')}: {len(covers)} cover(s)")
+
+    # Clean up temporary _gcd_api_url fields
+    has_temp_fields = any("_gcd_api_url" in e for e in entries)
+    for entry in entries:
+        entry.pop("_gcd_api_url", None)
+
+    if updated or has_temp_fields:
+        data["series"] = entries
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        if updated:
+            print(f"  Fetched covers for {updated} series.")
 
     return updated
 
 
 def slugify(name: str) -> str:
     """Convert a name to a URL-friendly slug."""
-    import re
     slug = name.lower().strip()
     slug = re.sub(r"[^a-z0-9]+", "-", slug)
     return slug.strip("-")
@@ -554,14 +1084,40 @@ def main():
         print("No Wikipedia descriptions needed backfilling.")
 
     # Backfill remaining descriptions from Comic Vine
-    print("Backfilling Comic Vine descriptions...")
+    print("Backfilling Comic Vine data...")
     cv_updated = 0
     cv_updated += backfill_comicvine(ARTISTS_PATH, "artists", "people", tiebreak_key=None)
     cv_updated += backfill_comicvine(SERIES_PATH, "series", "volumes", tiebreak_key="count_of_issues")
     if cv_updated:
-        print(f"Backfilled {cv_updated} Comic Vine description(s) total.")
+        print(f"Processed {cv_updated} entr(ies) via Comic Vine.")
     else:
-        print("No Comic Vine descriptions needed backfilling.")
+        print("No Comic Vine entries needed processing.")
+
+    # Backfill from Metron
+    print("Backfilling Metron data...")
+    mt_updated = 0
+    mt_updated += backfill_metron(ARTISTS_PATH, "artists", "creator", tiebreak_key=None)
+    mt_updated += backfill_metron(SERIES_PATH, "series", "series", tiebreak_key=None)
+    if mt_updated:
+        print(f"Processed {mt_updated} entr(ies) via Metron.")
+    else:
+        print("No Metron entries needed processing.")
+
+    # Backfill from Grand Comics Database (series only)
+    print("Backfilling GCD data...")
+    gcd_updated = backfill_gcd(SERIES_PATH, "series")
+    if gcd_updated:
+        print(f"Processed {gcd_updated} series via GCD.")
+    else:
+        print("No GCD entries needed processing.")
+
+    # Fetch cover images for series from Metron and GCD
+    print("Fetching cover images...")
+    covers_updated = backfill_cover_images(SERIES_PATH, panels)
+    if covers_updated:
+        print(f"Fetched covers for {covers_updated} series.")
+    else:
+        print("No cover images needed fetching.")
 
     updated_count = 0
     error_count = 0
