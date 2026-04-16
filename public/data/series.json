@@ -18,7 +18,12 @@
       ],
       "startYear": 2002,
       "publisher": "DC Comics",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "absolute-martian-manhunter",
@@ -37,7 +42,13 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9668380-wwww.jpg",
       "startYear": 2025,
-      "publisher": "DC Comics"
+      "publisher": "DC Comics",
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ],
+      "issueCount": 10
     },
     {
       "id": "absolute-wonder-woman",
@@ -52,7 +63,12 @@
         }
       ],
       "startYear": 2024,
-      "publisher": "DC Comics"
+      "publisher": "DC Comics",
+      "issueCount": 18,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "assorted-crisis-events",
@@ -67,14 +83,23 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9655759-cover.jpg",
       "startYear": 2025,
-      "publisher": "Image"
+      "publisher": "Image",
+      "issueCount": 8,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "battle-beast",
       "name": "Battle Beast",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "bleeding-hearts",
@@ -89,7 +114,12 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg",
       "startYear": 2026,
-      "publisher": "DC Comics"
+      "publisher": "DC Comics",
+      "issueCount": 3,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "buzz",
@@ -105,7 +135,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2544837-buzz1.jpg",
       "startYear": 1973,
       "publisher": "D.C. Thomson & Co.",
-      "issueCount": 103
+      "issueCount": 103,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "concrete",
@@ -125,23 +159,36 @@
       ],
       "startYear": 1987,
       "publisher": "Dark Horse Comics",
-      "issueCount": 10
+      "issueCount": 10,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "concrete-fragile-creature",
       "name": "Concrete: Fragile Creature",
       "parentSeries": "concrete",
-      "description": "",
+      "description": "Concrete performs stunts and special effects for a movie.",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/concrete-fragile-creature/4050-22369/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/4284/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/462/469591-concretefragilecreature1.jpg",
       "startYear": 1992,
       "publisher": "Dark Horse Comics",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "concrete-killer-smile",
@@ -157,7 +204,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/35185-5106-39306-1-concrete-killer-smi.jpg",
       "startYear": 1993,
       "publisher": "Dark Horse Comics",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "creatures-of-the-id",
@@ -173,7 +224,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/978/100394-18313-107226-1-creatures-of-the-id.jpg",
       "startYear": 1990,
       "publisher": "Caliber Comics",
-      "issueCount": 1
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "criminal",
@@ -193,14 +248,23 @@
       ],
       "startYear": 2006,
       "publisher": "Marvel",
-      "issueCount": 10
+      "issueCount": 10,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "criminal-the-special-edition",
       "name": "Criminal: The Special Edition",
       "parentSeries": "criminal",
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "dark-spaces-wildfire",
@@ -216,7 +280,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11143/111431054/8584954-darkspaces-wildfire01%28of05%29-000.jpg",
       "startYear": 2022,
       "publisher": "IDW Publishing",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "eerie",
@@ -236,7 +304,12 @@
       ],
       "startYear": 1966,
       "publisher": "Warren",
-      "issueCount": 139
+      "issueCount": 139,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "eightball",
@@ -256,7 +329,12 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/43700-7153-51089-1-eightball.jpg",
       "startYear": 1989,
       "publisher": "Fantagraphics",
-      "issueCount": 23
+      "issueCount": 23,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "faithless-ii",
@@ -272,7 +350,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7417959-01a-main.jpg",
       "startYear": 2020,
       "publisher": "Boom! Studios",
-      "issueCount": 6
+      "issueCount": 6,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "fatale",
@@ -292,7 +374,12 @@
       ],
       "startYear": 2012,
       "publisher": "Image",
-      "issueCount": 24
+      "issueCount": 24,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "frank",
@@ -304,6 +391,11 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Frank_(comics)"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
       ]
     },
     {
@@ -319,7 +411,12 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9320236-cover.jpg",
       "startYear": 2024,
-      "publisher": "Image"
+      "publisher": "Image",
+      "issueCount": 22,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "harrow-county",
@@ -339,7 +436,12 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4559059-5248350691-26606.jpg",
       "startYear": 2015,
       "publisher": "Dark Horse Comics",
-      "issueCount": 32
+      "issueCount": 32,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "heavy-liquid",
@@ -359,7 +461,12 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10162/217436-19317-115960-1-heavy-liquid.jpg",
       "startYear": 1999,
       "publisher": "DC Comics",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "heavy-metal",
@@ -371,8 +478,19 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Heavy_Metal_(magazine)"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/183920/"
         }
-      ]
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ],
+      "startYear": 2013,
+      "publisher": "https://www.comics.org/api/publisher/8368/?format=json"
     },
     {
       "id": "hyde-street",
@@ -388,23 +506,35 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9498349-cover.jpg",
       "startYear": 2024,
       "publisher": "Image",
-      "issueCount": 11
+      "issueCount": 11,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "infernal-hulk",
       "name": "Infernal Hulk",
       "parentSeries": null,
-      "description": "",
+      "description": "Cover title 'The Infernal Hulk', indicia title 'Infernal Hulk'.",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/infernal-hulk/4050-168725/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/229882/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9923000-cover.jpg",
       "startYear": 2026,
       "publisher": "Marvel",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "jacked",
@@ -420,7 +550,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4923786-01.jpg",
       "startYear": 2015,
       "publisher": "DC Comics",
-      "issueCount": 6
+      "issueCount": 6,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "just-brutal",
@@ -436,7 +570,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985196-cover.jpg",
       "startYear": 2026,
       "publisher": "Ignition Press",
-      "issueCount": 2
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "lady-killer",
@@ -456,7 +594,12 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4313687-01.jpg",
       "startYear": 2015,
       "publisher": "Dark Horse Comics",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "love-rockets",
@@ -467,8 +610,19 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Love_and_Rockets_(comics)"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/85892/"
         }
-      ]
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ],
+      "startYear": 1987,
+      "publisher": "https://www.comics.org/api/publisher/543/?format=json"
     },
     {
       "id": "madman",
@@ -488,14 +642,23 @@
       ],
       "startYear": 1992,
       "publisher": "Tundra",
-      "issueCount": 3
+      "issueCount": 3,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "madman-adventures-mini-comic",
       "name": "Madman Adventures Mini-Comic",
       "parentSeries": "madman",
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "minor-arcana",
@@ -510,7 +673,12 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9466557-6820814136-B0CW1.jpg",
       "startYear": 2024,
-      "publisher": "Boom! Studios"
+      "publisher": "Boom! Studios",
+      "issueCount": 15,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "omaha",
@@ -530,21 +698,34 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2002973-1.jpg",
       "startYear": 1990,
       "publisher": "Kitchen Sink Press",
-      "issueCount": 9
+      "issueCount": 9,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "omaha-vol-2",
       "name": "Omaha: Vol 2",
       "parentSeries": "omaha",
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "phantom-of-the-opera",
       "name": "Phantom of the Opera",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "red-book",
@@ -560,7 +741,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9887543-cover.jpg",
       "startYear": 2025,
       "publisher": "Dark Horse Comics",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "space-riders",
@@ -576,7 +761,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4774946-01.jpg",
       "startYear": 2015,
       "publisher": "Black Mask Studios",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "space-riders-galaxy-of-brutality",
@@ -592,7 +781,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/5773001-01.jpg",
       "startYear": 2017,
       "publisher": "Black Mask Studios",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "stray-bullets",
@@ -612,7 +805,12 @@
       ],
       "startYear": 1995,
       "publisher": "Image",
-      "issueCount": 41
+      "issueCount": 41,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "stray-bullets-sunshine-roses",
@@ -631,6 +829,10 @@
       "issueCount": 42,
       "aliases": [
         "Stray Bullets: Sunshine and Roses"
+      ],
+      "sources": [
+        "comicvine",
+        "gcd"
       ]
     },
     {
@@ -647,7 +849,11 @@
       ],
       "startYear": 1992,
       "publisher": "Dark Horse Comics",
-      "issueCount": 4
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "the-invisible-man",
@@ -662,7 +868,12 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2903793-inviman.jpg",
       "startYear": 2010,
-      "publisher": "Universal"
+      "publisher": "Universal",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "the-many-deaths-of-laila-starr",
@@ -678,7 +889,11 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7928449-01a.jpg",
       "startYear": 2021,
       "publisher": "Boom! Studios",
-      "issueCount": 5
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "the-maxx",
@@ -698,7 +913,12 @@
       ],
       "startYear": 1993,
       "publisher": "Image",
-      "issueCount": 35
+      "issueCount": 35,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "the-nice-house-by-the-sea",
@@ -717,7 +937,13 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9421875-wwww.jpg",
       "startYear": 2024,
-      "publisher": "DC Comics"
+      "publisher": "DC Comics",
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
+      ],
+      "issueCount": 9
     },
     {
       "id": "the-peoples-comics",
@@ -729,6 +955,11 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
       ]
     },
     {
@@ -736,28 +967,44 @@
       "name": "Thumpn Guts",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring",
       "name": "Under the Trees Where Nobody Sees: Rite of Spring",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "weird-magazine",
       "name": "Weird Magazine",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "xyz",
       "name": "XYZ",
       "parentSeries": null,
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine",
+        "gcd"
+      ]
     },
     {
       "id": "zap",
@@ -769,6 +1016,11 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Zap_Comix"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "gcd"
       ]
     }
   ]

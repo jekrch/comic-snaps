@@ -19,6 +19,9 @@
       "aliases": [
         "Alexis Zirrit",
         "Alexis Zirritt"
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -26,7 +29,10 @@
       "name": "Alvaro Martinez Bueno",
       "imageUrl": "https://cdn.prod.website-files.com/6501d53746370d07299ed666/68f8ff4196e7151a814b38f5_Alvaro-Martinez-Bueno.jpg",
       "description": "\u00c1lvaro Mart\u00ednez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "brahm-revel",
@@ -39,7 +45,10 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1812/1882326-brahm1.jpg",
-      "country": "USA"
+      "country": "USA",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "dani",
@@ -51,6 +60,9 @@
           "name": "Website",
           "url": "https://www.danistrips.com"
         }
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -69,7 +81,11 @@
         }
       ],
       "birthYear": 1961,
-      "country": "United States"
+      "country": "United States",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "david-lapham",
@@ -86,13 +102,20 @@
           "url": "https://comicvine.gamespot.com/david-lapham/4040-10517/"
         }
       ],
-      "country": "U.S.A."
+      "country": "U.S.A.",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "dominique-he",
       "name": "Dominique He",
       "description": "",
-      "references": []
+      "references": [],
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "don-maitz",
@@ -109,7 +132,11 @@
           "url": "https://comicvine.gamespot.com/don-maitz/4040-34602/"
         }
       ],
-      "country": "USA"
+      "country": "USA",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "enki-bilal",
@@ -131,6 +158,10 @@
       "aliases": [
         "Enes Bilalovi\u0107",
         "\u30a8\u30f3\u30ad\u30fb\u30d3\u30e9\u30eb"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -151,6 +182,9 @@
       "country": "Canada",
       "aliases": [
         "Eric Zawadski"
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -164,7 +198,10 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/2753626-filipe_andrade.jpg",
-      "country": "Portugal"
+      "country": "Portugal",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "floch",
@@ -176,6 +213,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Floc%27h"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -189,7 +230,10 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9980361-francis_portela.jpg",
-      "country": "Spain"
+      "country": "Spain",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "gary-frank",
@@ -207,7 +251,11 @@
         }
       ],
       "birthYear": 1969,
-      "country": "England, United Kingdom"
+      "country": "England, United Kingdom",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "gilbert-hernandez",
@@ -228,6 +276,10 @@
       "country": "United States",
       "aliases": [
         "Beto"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -246,7 +298,11 @@
         }
       ],
       "birthYear": 1940,
-      "country": "United States"
+      "country": "United States",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "hayden-sherman",
@@ -262,12 +318,15 @@
           "url": "https://comicvine.gamespot.com/hayden-sherman/4040-92544/"
         }
       ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8189816-sherman.jpg"
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8189816-sherman.jpg",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
-      "description": "Javier Rodríguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",
+      "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg/500px-Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg",
       "references": [
         {
@@ -279,7 +338,11 @@
           "url": "https://comicvine.gamespot.com/javier-rodriguez/4040-5628/"
         }
       ],
-      "country": "Spain"
+      "country": "Spain",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "jeff-jones",
@@ -299,6 +362,9 @@
         "Jeffrey Catherine Jones",
         "Jeffrey Durwood Jones",
         "Steve Stern"
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -317,7 +383,11 @@
         }
       ],
       "birthYear": 1976,
-      "country": "Canada"
+      "country": "Canada",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "jim-woodring",
@@ -335,7 +405,11 @@
         }
       ],
       "birthYear": 1952,
-      "country": "U.S.A"
+      "country": "U.S.A",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "joelle-jones",
@@ -347,6 +421,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Jo%C3%ABlle_Jones"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -365,7 +443,11 @@
         }
       ],
       "birthYear": 1947,
-      "country": "United Kingdom"
+      "country": "United Kingdom",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "jose-martin-sauri",
@@ -384,6 +466,9 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "aliases": [
         "Robert Martin"
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -395,6 +480,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Kev_Walker"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -413,7 +502,11 @@
         }
       ],
       "birthYear": 1962,
-      "country": "United States"
+      "country": "United States",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "liberatore",
@@ -425,6 +518,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Tanino_Liberatore"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -438,7 +535,10 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8058255-4499185697-Featu.jpg",
-      "country": "Spain"
+      "country": "Spain",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "martin-simmonds",
@@ -450,7 +550,10 @@
           "url": "https://comicvine.gamespot.com/martin-simmonds/4040-67755/"
         }
       ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883441-martin_simmonds.jpg"
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883441-martin_simmonds.jpg",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "michael-allred",
@@ -462,6 +565,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Mike_Allred"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -482,6 +589,10 @@
       "country": "United States",
       "aliases": [
         "Mike Oeming"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -494,6 +605,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Jean_Giraud"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -506,6 +621,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Patrick_Horvath"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -518,6 +637,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Paul_Chadwick"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -536,7 +659,11 @@
         }
       ],
       "birthYear": 1952,
-      "country": "United States"
+      "country": "United States",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "paul-pope",
@@ -557,6 +684,10 @@
       "country": "United States",
       "aliases": [
         "\u30dd\u30fc\u30eb\u30fb\u30dd\u30fc\u30d7"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -575,7 +706,11 @@
         }
       ],
       "birthYear": 1957,
-      "country": "U.S.A."
+      "country": "U.S.A.",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "reed-waller",
@@ -589,7 +724,10 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83113/1628922-xreedpic2_300px2.png",
       "birthYear": 1949,
-      "country": "USA"
+      "country": "USA",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "richard-corben",
@@ -611,6 +749,10 @@
       "country": "U.S.A.",
       "aliases": [
         "Gore"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -633,6 +775,10 @@
       "country": "USA",
       "aliases": [
         "Richard Alden Griffin"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -656,6 +802,10 @@
         "R Crumb",
         "R. Crumb",
         "Robert Dennis Crumb"
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -674,7 +824,11 @@
         }
       ],
       "birthYear": 2010,
-      "country": "United States"
+      "country": "United States",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "sam-keith",
@@ -686,6 +840,10 @@
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Sam_Kieth"
         }
+      ],
+      "sources": [
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -704,7 +862,11 @@
         }
       ],
       "birthYear": 1965,
-      "country": "United Kingdom"
+      "country": "United Kingdom",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "stipan-morian",
@@ -717,7 +879,10 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9808830-stipan_morian.jpg",
-      "country": "Croatia"
+      "country": "Croatia",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "tyler-crook",
@@ -734,7 +899,11 @@
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7381938-1979407890-2014-.jpg",
-      "country": "U.S."
+      "country": "U.S.",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "tyler-crook",
@@ -751,7 +920,11 @@
           "url": "https://comicvine.gamespot.com/tyler-crook/4040-61923/"
         }
       ],
-      "country": "U.S."
+      "country": "U.S.",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     },
     {
       "id": "victor-moscoso",
@@ -768,7 +941,11 @@
           "url": "https://comicvine.gamespot.com/victor-moscoso/4040-60079/"
         }
       ],
-      "country": "Spain"
+      "country": "Spain",
+      "sources": [
+        "wikipedia",
+        "comicvine"
+      ]
     }
   ]
 }
