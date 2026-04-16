@@ -47,6 +47,7 @@ jobs:
 
       - name: Compute missing image metadata
         env:
+          PYTHONUNBUFFERED: "1"
           COMIC_VINE_API_KEY: ${{ secrets.COMIC_VINE_API_KEY }}
           METRON_USERNAME: ${{ secrets.METRON_USERNAME }}
           METRON_PASSWORD: ${{ secrets.METRON_PASSWORD }}

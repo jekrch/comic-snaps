@@ -37,6 +37,7 @@ import imagehash
 GALLERY_PATH = Path("public/data/gallery.json")
 ARTISTS_PATH = Path("public/data/artists.json")
 SERIES_PATH = Path("public/data/series.json")
+DISAMBIGUATION_PATH = Path("public/data/disambiguation.json")
 IMAGE_ROOT = Path("public")
 
 HASH_FUNCTIONS = {
@@ -331,6 +332,54 @@ def ensure_reference(entry: dict, name: str, url: str) -> None:
     refs.append({"name": name, "url": url})
 
 
+# ---------------------------------------------------------------------------
+# Disambiguation — manual overrides for ambiguous search results
+# ---------------------------------------------------------------------------
+
+def load_disambiguation() -> dict:
+    """Load the disambiguation file. Returns the parsed dict or empty structure."""
+    if DISAMBIGUATION_PATH.exists():
+        return json.loads(DISAMBIGUATION_PATH.read_text())
+    return {}
+
+
+def save_disambiguation(data: dict) -> None:
+    """Write the disambiguation file back to disk."""
+    DISAMBIGUATION_PATH.write_text(json.dumps(data, indent=2) + "\n")
+
+
+def get_disambiguation_id(data: dict, source: str, resource: str, name: str) -> int | None:
+    """
+    Look up a manually-assigned ID for (source, resource, name).
+    Returns the ID if resolved, None otherwise.
+    """
+    key = f"{source}:{resource}"
+    entry = data.get(key, {}).get(name)
+    if isinstance(entry, dict) and entry.get("id"):
+        return entry["id"]
+    return None
+
+
+def record_disambiguation_candidates(
+    data: dict, source: str, resource: str, name: str, candidates: list
+) -> None:
+    """
+    Record unresolved candidates so the user can pick the right one later.
+    Only writes if there isn't already an entry for this name.
+    """
+    key = f"{source}:{resource}"
+    section = data.setdefault(key, {})
+    if name in section:
+        return  # don't overwrite existing entry (may already be resolved)
+    section[name] = {
+        "id": None,
+        "candidates": [
+            {"id": c.get("id"), "name": c.get("name")}
+            for c in candidates[:10]  # cap at 10 to keep file manageable
+        ],
+    }
+
+
 def extract_artist_fields(match: dict) -> dict:
     """Pull supplemental fields from a Comic Vine `/people/` result."""
     aliases_raw = (match.get("aliases") or "").strip()
@@ -589,6 +638,11 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
     missing. Adds a Metron reference whenever any field is populated.
 
     `resource` is the Metron endpoint ('creator' or 'series').
+
+    If a disambiguation entry with a resolved ID exists for a name, the entry
+    is fetched directly by ID instead of searched by name.  Entries that were
+    previously marked as processed but now have a resolved disambiguation ID
+    are re-processed.
     """
     username = os.environ.get("METRON_USERNAME")
     password = os.environ.get("METRON_PASSWORD")
@@ -604,24 +658,54 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
     entries = data.get(key, [])
     updated = 0
 
-    for entry in entries:
-        if has_source(entry, SOURCE_METRON):
-            continue
+    disambig = load_disambiguation()
+    disambig_changed = False
 
+    for entry in entries:
         name = entry.get("name")
         if not name:
             continue
 
-        print(f"  Searching Metron ({resource}) for {name}...")
-        results = metron_search(resource, name, username, password)
-        time.sleep(3.0)  # 20 requests/min limit
+        # Check for a manually-resolved disambiguation ID
+        resolved_id = get_disambiguation_id(disambig, SOURCE_METRON, resource, name)
 
-        match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
-        if not match:
-            print(f"    SKIP: no exact match ({len(results)} candidate(s))")
-            mark_source(entry, SOURCE_METRON)
-            updated += 1
+        # Skip already-processed entries unless disambiguation provides a new ID
+        if has_source(entry, SOURCE_METRON) and not resolved_id:
             continue
+
+        match = None
+
+        if resolved_id:
+            print(f"  Fetching Metron ({resource}) ID {resolved_id} for {name}...")
+            match = metron_get(f"{resource}/{resolved_id}/", {}, username, password)
+            time.sleep(3.0)  # 20 requests/min limit
+            if match:
+                # Clear the disambiguation entry now that it's been used
+                dkey = f"{SOURCE_METRON}:{resource}"
+                disambig.get(dkey, {}).pop(name, None)
+                disambig_changed = True
+            else:
+                print(f"    WARN: disambiguation ID {resolved_id} returned no result")
+        else:
+            print(f"  Searching Metron ({resource}) for {name}...")
+            results = metron_search(resource, name, username, password)
+            time.sleep(3.0)  # 20 requests/min limit
+
+            match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
+            if not match and results:
+                print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+                record_disambiguation_candidates(
+                    disambig, SOURCE_METRON, resource, name, results
+                )
+                disambig_changed = True
+                mark_source(entry, SOURCE_METRON)
+                updated += 1
+                continue
+            elif not match:
+                print(f"    SKIP: no exact match (0 candidate(s))")
+                mark_source(entry, SOURCE_METRON)
+                updated += 1
+                continue
 
         ref_url = metron_resource_url(resource, match)
         changed = False
@@ -657,6 +741,9 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
     if updated:
         path.write_text(json.dumps(data, indent=2) + "\n")
         print(f"  Processed {updated} entr(ies) in {path} via Metron.")
+
+    if disambig_changed:
+        save_disambiguation(disambig)
 
     return updated
 
@@ -785,6 +872,10 @@ def backfill_gcd(path: Path, key: str) -> int:
     For series entries missing data, search the Grand Comics Database and
     fill in whichever fields are missing. GCD has no creator/people endpoint
     so this is series-only.
+
+    If a disambiguation entry with a resolved ID exists for a name, the entry
+    is fetched directly by ID. Entries previously marked as processed are
+    re-processed when a disambiguation ID becomes available.
     """
     if not path.exists():
         return 0
@@ -793,28 +884,53 @@ def backfill_gcd(path: Path, key: str) -> int:
     entries = data.get(key, [])
     updated = 0
 
-    for entry in entries:
-        if has_source(entry, SOURCE_GCD):
-            continue
+    disambig = load_disambiguation()
+    disambig_changed = False
 
+    for entry in entries:
         name = entry.get("name")
         if not name:
             continue
 
-        print(f"  Searching GCD for {name}...")
-        results = gcd_search_series(name)
-        time.sleep(GCD_BASE_SLEEP)
+        resolved_id = get_disambiguation_id(disambig, SOURCE_GCD, "series", name)
 
-        if results is None:
-            print(f"    SKIP: request failed, will retry next run")
+        if has_source(entry, SOURCE_GCD) and not resolved_id:
             continue
 
-        match = pick_gcd_series_match(results, name, entry.get("startYear"))
-        if not match:
-            print(f"    SKIP: no exact match ({len(results)} candidate(s))")
-            mark_source(entry, SOURCE_GCD)
-            updated += 1
-            continue
+        match = None
+
+        if resolved_id:
+            print(f"  Fetching GCD series ID {resolved_id} for {name}...")
+            match = gcd_fetch_json(f"{GCD_BASE}/series/{resolved_id}/")
+            time.sleep(GCD_BASE_SLEEP)
+            if match:
+                dkey = f"{SOURCE_GCD}:series"
+                disambig.get(dkey, {}).pop(name, None)
+                disambig_changed = True
+            else:
+                print(f"    WARN: disambiguation ID {resolved_id} returned no result")
+        else:
+            print(f"  Searching GCD for {name}...")
+            results = gcd_search_series(name)
+            time.sleep(GCD_BASE_SLEEP)
+
+            if results is None:
+                print(f"    SKIP: request failed, will retry next run")
+                continue
+
+            match = pick_gcd_series_match(results, name, entry.get("startYear"))
+            if not match:
+                if results:
+                    print(f"    SKIP: no exact match ({len(results)} candidate(s))")
+                    record_disambiguation_candidates(
+                        disambig, SOURCE_GCD, "series", name, results
+                    )
+                    disambig_changed = True
+                else:
+                    print(f"    SKIP: no exact match (0 candidate(s))")
+                mark_source(entry, SOURCE_GCD)
+                updated += 1
+                continue
 
         changed = False
 
@@ -848,6 +964,9 @@ def backfill_gcd(path: Path, key: str) -> int:
     if updated:
         path.write_text(json.dumps(data, indent=2) + "\n")
         print(f"  Processed {updated} entr(ies) in {path} via GCD.")
+
+    if disambig_changed:
+        save_disambiguation(disambig)
 
     return updated
 
