@@ -48,7 +48,9 @@ jobs:
       - name: Compute missing image metadata
         env:
           COMIC_VINE_API_KEY: ${{ secrets.COMIC_VINE_API_KEY }}
-        run: python scripts/compute-image-metadata.py
+          METRON_USERNAME: ${{ secrets.METRON_USERNAME }}
+          METRON_PASSWORD: ${{ secrets.METRON_PASSWORD }}
+        run: python scripts/compute-image-metadata.py --skip-gcd
 
       - name: Compute embeddings
         run: python scripts/compute-embeddings.py

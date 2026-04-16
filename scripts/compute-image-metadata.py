@@ -17,6 +17,7 @@ because the chromatic channels have almost no *variance* even if their mean is
 slightly nonzero. Richly colored panels typically score 15+.
 """
 
+import argparse
 import html
 import json
 import os
@@ -1096,6 +1097,16 @@ def seed_series(panels: list) -> None:
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Compute image metadata and backfill series/artist data from external sources."
+    )
+    parser.add_argument(
+        "--skip-gcd", action="store_true",
+        help="Skip Grand Comics Database backfill and GCD cover image fetching. "
+             "Useful in CI where GCD's strict rate limits cause 429 errors.",
+    )
+    args = parser.parse_args()
+
     if not GALLERY_PATH.exists():
         print(f"gallery.json not found at {GALLERY_PATH}", file=sys.stderr)
         sys.exit(1)
@@ -1138,12 +1149,15 @@ def main():
         print("No Metron entries needed processing.")
 
     # Backfill from Grand Comics Database (series only)
-    print("Backfilling GCD data...")
-    gcd_updated = backfill_gcd(SERIES_PATH, "series")
-    if gcd_updated:
-        print(f"Processed {gcd_updated} series via GCD.")
+    if args.skip_gcd:
+        print("Skipping GCD backfill (--skip-gcd).")
     else:
-        print("No GCD entries needed processing.")
+        print("Backfilling GCD data...")
+        gcd_updated = backfill_gcd(SERIES_PATH, "series")
+        if gcd_updated:
+            print(f"Processed {gcd_updated} series via GCD.")
+        else:
+            print("No GCD entries needed processing.")
 
     # Fetch cover images for series from Metron and GCD
     print("Fetching cover images...")
