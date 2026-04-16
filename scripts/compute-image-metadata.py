@@ -664,16 +664,45 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
 # GCD (Grand Comics Database) backfill — series only
 # ---------------------------------------------------------------------------
 
-def gcd_search_series(name: str) -> list:
-    """Search the Grand Comics Database for series by name."""
+GCD_MAX_RETRIES = 4
+GCD_BASE_SLEEP = 5.0  # seconds between GCD requests
+
+
+def _gcd_request(url: str, params: dict | None = None) -> requests.Response | None:
+    """
+    Make a GCD API request with retry + exponential backoff on 429s.
+    Returns the Response on success, or None after exhausting retries.
+    """
+    for attempt in range(GCD_MAX_RETRIES):
+        try:
+            resp = requests.get(url, params=params, headers=API_HEADERS, timeout=15)
+            if resp.status_code == 429:
+                wait = GCD_BASE_SLEEP * (2 ** attempt)
+                print(f"    rate-limited by GCD, waiting {wait:.0f}s…", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            resp.raise_for_status()
+            return resp
+        except requests.exceptions.HTTPError:
+            # non-429 HTTP error — already raised, don't retry
+            raise
+        except Exception as e:
+            print(f"    WARN: GCD request failed ({url}): {e}", file=sys.stderr)
+            return None
+    print(f"    WARN: GCD request still 429 after {GCD_MAX_RETRIES} retries ({url})", file=sys.stderr)
+    return None
+
+
+def gcd_search_series(name: str) -> list | None:
+    """Search the Grand Comics Database for series by name.
+    Returns a list of results, or None if the request failed entirely."""
     try:
-        resp = requests.get(
+        resp = _gcd_request(
             f"{GCD_BASE}/series/name/{quote(name, safe='')}/",
             params={"format": "json"},
-            headers=API_HEADERS,
-            timeout=15,
         )
-        resp.raise_for_status()
+        if not resp:
+            return None
         data = resp.json()
         # GCD returns paginated results with a 'results' key
         if isinstance(data, dict):
@@ -683,7 +712,7 @@ def gcd_search_series(name: str) -> list:
         return []
     except Exception as e:
         print(f"    WARN: GCD series search failed for {name!r}: {e}", file=sys.stderr)
-        return []
+        return None
 
 
 def gcd_fetch_json(url: str) -> dict | None:
@@ -691,8 +720,9 @@ def gcd_fetch_json(url: str) -> dict | None:
     sep = "&" if "?" in url else "?"
     full = f"{url}{sep}format=json" if "format=" not in url else url
     try:
-        resp = requests.get(full, headers=API_HEADERS, timeout=15)
-        resp.raise_for_status()
+        resp = _gcd_request(full)
+        if not resp:
+            return None
         return resp.json()
     except Exception as e:
         print(f"    WARN: GCD fetch failed ({url}): {e}", file=sys.stderr)
@@ -772,7 +802,11 @@ def backfill_gcd(path: Path, key: str) -> int:
 
         print(f"  Searching GCD for {name}...")
         results = gcd_search_series(name)
-        time.sleep(1.0)
+        time.sleep(GCD_BASE_SLEEP)
+
+        if results is None:
+            print(f"    SKIP: request failed, will retry next run")
+            continue
 
         match = pick_gcd_series_match(results, name, entry.get("startYear"))
         if not match:
@@ -893,7 +927,7 @@ def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int]) -> list[str]
         return []
 
     series_data = gcd_fetch_json(api_url)
-    time.sleep(1.0)
+    time.sleep(GCD_BASE_SLEEP)
     if not series_data:
         return []
 
@@ -910,7 +944,7 @@ def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int]) -> list[str]
 
     for issue_url in issue_urls[:max_fetches]:
         issue_data = gcd_fetch_json(issue_url)
-        time.sleep(1.0)
+        time.sleep(GCD_BASE_SLEEP)
         fetched += 1
         if not issue_data:
             continue
