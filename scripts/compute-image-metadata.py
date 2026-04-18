@@ -123,7 +123,7 @@ def get_wikipedia_title(url: str) -> str | None:
     return m.group(1) if m else None
 
 
-def fetch_wikipedia_intro(url: str) -> str | None:
+def fetch_wikipedia_intro(url: str, health: IntegrationHealth | None = None) -> str | None:
     """
     Fetch the introductory section of a Wikipedia article as plain text.
 
@@ -160,6 +160,16 @@ def fetch_wikipedia_intro(url: str) -> str | None:
         # Convert newlines to \r\n
         text = text.replace("\n", "\r\n\r\n")
         return text
+    except requests.exceptions.Timeout:
+        if health:
+            health.mark_throttled("request timed out")
+        print(f"  WARN: Wikipedia fetch timed out for {url}", file=sys.stderr)
+        return None
+    except requests.exceptions.HTTPError as e:
+        if health and e.response is not None and e.response.status_code == 429:
+            health.mark_throttled("rate limited (429)")
+        print(f"  WARN: Wikipedia fetch failed for {url}: {e}", file=sys.stderr)
+        return None
     except Exception as e:
         print(f"  WARN: Wikipedia fetch failed for {url}: {e}", file=sys.stderr)
         return None
@@ -183,6 +193,28 @@ MAX_COVER_IMAGES = 4
 
 MIN_DESCRIPTION_CHARS = 40
 MIN_DESCRIPTION_WORDS = 5
+
+
+class IntegrationHealth:
+    """Per-integration bail-out tracker.
+
+    Once an integration hits a timeout or rate-limit, `mark_throttled` flips
+    `should_bail` so the outer loop can stop after the current entry instead
+    of burning through every remaining entry's retry/backoff cycle.
+    """
+
+    def __init__(self, name: str):
+        self.name = name
+        self.should_bail = False
+
+    def mark_throttled(self, reason: str) -> None:
+        if self.should_bail:
+            return
+        print(
+            f"    {self.name}: {reason} — skipping remaining entries after this one",
+            file=sys.stderr,
+        )
+        self.should_bail = True
 
 
 def strip_html(raw: str) -> str:
@@ -238,7 +270,8 @@ def extract_year(raw) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def comic_vine_search(resource: str, name: str, api_key: str) -> list:
+def comic_vine_search(resource: str, name: str, api_key: str,
+                      health: IntegrationHealth | None = None) -> list:
     """
     Search a Comic Vine resource (e.g. 'people', 'volumes') by name.
 
@@ -260,9 +293,22 @@ def comic_vine_search(resource: str, name: str, api_key: str) -> list:
         resp.raise_for_status()
         data = resp.json()
         if data.get("status_code") != 1:
-            print(f"    WARN: Comic Vine {resource} error: {data.get('error')}", file=sys.stderr)
+            error = str(data.get("error") or "")
+            if health and ("rate" in error.lower() or "limit" in error.lower()):
+                health.mark_throttled(f"API error: {error}")
+            print(f"    WARN: Comic Vine {resource} error: {error}", file=sys.stderr)
             return []
         return data.get("results", []) or []
+    except requests.exceptions.Timeout:
+        if health:
+            health.mark_throttled("request timed out")
+        print(f"    WARN: Comic Vine {resource} fetch timed out for {name!r}", file=sys.stderr)
+        return []
+    except requests.exceptions.HTTPError as e:
+        if health and e.response is not None and e.response.status_code == 429:
+            health.mark_throttled("rate limited (429)")
+        print(f"    WARN: Comic Vine {resource} fetch failed for {name!r}: {e}", file=sys.stderr)
+        return []
     except Exception as e:
         print(f"    WARN: Comic Vine {resource} fetch failed for {name!r}: {e}", file=sys.stderr)
         return []
@@ -438,7 +484,11 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
     entries = data.get(key, [])
     updated = 0
 
+    health = IntegrationHealth("Comic Vine")
+
     for entry in entries:
+        if health.should_bail:
+            break
         if has_source(entry, SOURCE_COMICVINE):
             continue
 
@@ -447,7 +497,7 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
             continue
 
         print(f"  Searching Comic Vine ({resource}) for {name}...")
-        results = comic_vine_search(resource, name, api_key)
+        results = comic_vine_search(resource, name, api_key, health=health)
         time.sleep(1.0)  # be polite — Comic Vine rate-limits per resource
 
         match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
@@ -517,7 +567,11 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
     entries = data.get(key, [])
     updated = 0
 
+    health = IntegrationHealth("Wikipedia")
+
     for entry in entries:
+        if health.should_bail:
+            break
         if has_source(entry, SOURCE_WIKIPEDIA):
             continue
 
@@ -537,7 +591,7 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
             continue
 
         print(f"  Fetching Wikipedia intro for {entry.get('name', entry.get('id'))}...")
-        intro = fetch_wikipedia_intro(wiki_url)
+        intro = fetch_wikipedia_intro(wiki_url, health=health)
         if intro and is_meaningful_description(intro):
             entry["description"] = intro
             print(f"    OK: {intro[:80]}...")
@@ -559,7 +613,8 @@ def backfill_wikipedia_descriptions(path: Path, key: str) -> int:
     return updated
 
 
-def metron_get(endpoint: str, params: dict, username: str, password: str) -> dict | None:
+def metron_get(endpoint: str, params: dict, username: str, password: str,
+               health: IntegrationHealth | None = None) -> dict | None:
     """Make an authenticated GET request to the Metron API."""
     try:
         resp = requests.get(
@@ -571,14 +626,25 @@ def metron_get(endpoint: str, params: dict, username: str, password: str) -> dic
         )
         resp.raise_for_status()
         return resp.json()
+    except requests.exceptions.Timeout:
+        if health:
+            health.mark_throttled("request timed out")
+        print(f"    WARN: Metron request timed out ({endpoint})", file=sys.stderr)
+        return None
+    except requests.exceptions.HTTPError as e:
+        if health and e.response is not None and e.response.status_code == 429:
+            health.mark_throttled("rate limited (429)")
+        print(f"    WARN: Metron request failed ({endpoint}): {e}", file=sys.stderr)
+        return None
     except Exception as e:
         print(f"    WARN: Metron request failed ({endpoint}): {e}", file=sys.stderr)
         return None
 
 
-def metron_search(resource: str, name: str, username: str, password: str) -> list:
+def metron_search(resource: str, name: str, username: str, password: str,
+                  health: IntegrationHealth | None = None) -> list:
     """Search Metron for a resource by name. Returns the results list."""
-    data = metron_get(f"{resource}/", {"name": name}, username, password)
+    data = metron_get(f"{resource}/", {"name": name}, username, password, health=health)
     if not data:
         return []
     return data.get("results", []) or []
@@ -661,7 +727,11 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
     disambig = load_disambiguation()
     disambig_changed = False
 
+    health = IntegrationHealth("Metron")
+
     for entry in entries:
+        if health.should_bail:
+            break
         name = entry.get("name")
         if not name:
             continue
@@ -677,7 +747,7 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
 
         if resolved_id:
             print(f"  Fetching Metron ({resource}) ID {resolved_id} for {name}...")
-            match = metron_get(f"{resource}/{resolved_id}/", {}, username, password)
+            match = metron_get(f"{resource}/{resolved_id}/", {}, username, password, health=health)
             time.sleep(3.0)  # 20 requests/min limit
             if match:
                 # Clear the disambiguation entry now that it's been used
@@ -688,7 +758,7 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
                 print(f"    WARN: disambiguation ID {resolved_id} returned no result")
         else:
             print(f"  Searching Metron ({resource}) for {name}...")
-            results = metron_search(resource, name, username, password)
+            results = metron_search(resource, name, username, password, health=health)
             time.sleep(3.0)  # 20 requests/min limit
 
             match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
@@ -756,7 +826,8 @@ GCD_MAX_RETRIES = 4
 GCD_BASE_SLEEP = 5.0  # seconds between GCD requests
 
 
-def _gcd_request(url: str, params: dict | None = None) -> requests.Response | None:
+def _gcd_request(url: str, params: dict | None = None,
+                 health: IntegrationHealth | None = None) -> requests.Response | None:
     """
     Make a GCD API request with retry + exponential backoff on 429s.
     Returns the Response on success, or None after exhausting retries.
@@ -765,12 +836,19 @@ def _gcd_request(url: str, params: dict | None = None) -> requests.Response | No
         try:
             resp = requests.get(url, params=params, headers=API_HEADERS, timeout=15)
             if resp.status_code == 429:
+                if health:
+                    health.mark_throttled("rate limited (429)")
                 wait = GCD_BASE_SLEEP * (2 ** attempt)
                 print(f"    rate-limited by GCD, waiting {wait:.0f}s…", file=sys.stderr)
                 time.sleep(wait)
                 continue
             resp.raise_for_status()
             return resp
+        except requests.exceptions.Timeout:
+            if health:
+                health.mark_throttled("request timed out")
+            print(f"    WARN: GCD request timed out ({url})", file=sys.stderr)
+            return None
         except requests.exceptions.HTTPError:
             # non-429 HTTP error — already raised, don't retry
             raise
@@ -781,13 +859,14 @@ def _gcd_request(url: str, params: dict | None = None) -> requests.Response | No
     return None
 
 
-def gcd_search_series(name: str) -> list | None:
+def gcd_search_series(name: str, health: IntegrationHealth | None = None) -> list | None:
     """Search the Grand Comics Database for series by name.
     Returns a list of results, or None if the request failed entirely."""
     try:
         resp = _gcd_request(
             f"{GCD_BASE}/series/name/{quote(name, safe='')}/",
             params={"format": "json"},
+            health=health,
         )
         if not resp:
             return None
@@ -803,12 +882,12 @@ def gcd_search_series(name: str) -> list | None:
         return None
 
 
-def gcd_fetch_json(url: str) -> dict | None:
+def gcd_fetch_json(url: str, health: IntegrationHealth | None = None) -> dict | None:
     """Fetch a GCD API URL and return the parsed JSON."""
     sep = "&" if "?" in url else "?"
     full = f"{url}{sep}format=json" if "format=" not in url else url
     try:
-        resp = _gcd_request(full)
+        resp = _gcd_request(full, health=health)
         if not resp:
             return None
         return resp.json()
@@ -887,7 +966,13 @@ def backfill_gcd(path: Path, key: str) -> int:
     disambig = load_disambiguation()
     disambig_changed = False
 
+    gcd_supplemental_keys = ("startYear", "publisher")
+
+    health = IntegrationHealth("GCD")
+
     for entry in entries:
+        if health.should_bail:
+            break
         name = entry.get("name")
         if not name:
             continue
@@ -897,11 +982,22 @@ def backfill_gcd(path: Path, key: str) -> int:
         if has_source(entry, SOURCE_GCD) and not resolved_id:
             continue
 
+        # Skip entries that already have all fields GCD could provide —
+        # cover image fetching handles its own GCD lookups separately.
+        has_desc = is_meaningful_description(entry.get("description") or "")
+        has_all_supplemental = all(
+            entry.get(k) not in (None, "", [], {}) for k in gcd_supplemental_keys
+        )
+        if has_desc and has_all_supplemental:
+            mark_source(entry, SOURCE_GCD)
+            updated += 1
+            continue
+
         match = None
 
         if resolved_id:
             print(f"  Fetching GCD series ID {resolved_id} for {name}...")
-            match = gcd_fetch_json(f"{GCD_BASE}/series/{resolved_id}/")
+            match = gcd_fetch_json(f"{GCD_BASE}/series/{resolved_id}/", health=health)
             time.sleep(GCD_BASE_SLEEP)
             if match:
                 dkey = f"{SOURCE_GCD}:series"
@@ -911,7 +1007,7 @@ def backfill_gcd(path: Path, key: str) -> int:
                 print(f"    WARN: disambiguation ID {resolved_id} returned no result")
         else:
             print(f"  Searching GCD for {name}...")
-            results = gcd_search_series(name)
+            results = gcd_search_series(name, health=health)
             time.sleep(GCD_BASE_SLEEP)
 
             if results is None:
@@ -949,7 +1045,7 @@ def backfill_gcd(path: Path, key: str) -> int:
                 print(f"    {field}: {value}")
 
         web_url = gcd_series_web_url(match)
-        if changed and web_url:
+        if web_url:
             ensure_reference(entry, "Grand Comics Database", web_url)
 
         # Store the GCD API URL for later use (cover image fetching)
@@ -987,7 +1083,8 @@ def get_gallery_issues_for_series(panels: list, series_slug: str) -> list[int]:
 
 
 def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
-                        username: str, password: str) -> list[str]:
+                        username: str, password: str,
+                        health: IntegrationHealth | None = None) -> list[str]:
     """
     Fetch cover image URLs from Metron for a series. Prioritizes issues
     that appear in the gallery, then fills remaining slots.
@@ -1004,7 +1101,7 @@ def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
         return []
 
     # Fetch issues for this series (first page, up to 28 results)
-    data = metron_get(f"issue/", {"series_id": metron_id}, username, password)
+    data = metron_get(f"issue/", {"series_id": metron_id}, username, password, health=health)
     time.sleep(3.0)
     if not data:
         return []
@@ -1037,16 +1134,42 @@ def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
     return covers
 
 
-def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int]) -> list[str]:
+def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int],
+                     health: IntegrationHealth | None = None) -> list[str]:
     """
     Fetch cover image URLs from GCD for a series. Prioritizes issues
     that appear in the gallery, then fills remaining slots.
     """
     api_url = series_entry.get("_gcd_api_url")
     if not api_url:
+        # Reconstruct the API URL from the stored GCD reference
+        for ref in series_entry.get("references", []):
+            if (ref.get("name") or "").strip().lower() == "grand comics database":
+                m = re.search(r"/series/(\d+)", ref.get("url", ""))
+                if m:
+                    api_url = f"{GCD_BASE}/series/{m.group(1)}/"
+                    break
+    if not api_url:
+        # No stored reference — search GCD by name
+        name = series_entry.get("name")
+        if not name:
+            return []
+        results = gcd_search_series(name, health=health)
+        time.sleep(GCD_BASE_SLEEP)
+        if not results:
+            return []
+        match = pick_gcd_series_match(results, name, series_entry.get("startYear"))
+        if not match:
+            return []
+        api_url = match.get("api_url")
+        # Store the reference for future runs
+        web_url = gcd_series_web_url(match)
+        if web_url:
+            ensure_reference(series_entry, "Grand Comics Database", web_url)
+    if not api_url:
         return []
 
-    series_data = gcd_fetch_json(api_url)
+    series_data = gcd_fetch_json(api_url, health=health)
     time.sleep(GCD_BASE_SLEEP)
     if not series_data:
         return []
@@ -1063,7 +1186,7 @@ def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int]) -> list[str]
     max_fetches = min(len(issue_urls), 15)  # cap to avoid excessive requests
 
     for issue_url in issue_urls[:max_fetches]:
-        issue_data = gcd_fetch_json(issue_url)
+        issue_data = gcd_fetch_json(issue_url, health=health)
         time.sleep(GCD_BASE_SLEEP)
         fetched += 1
         if not issue_data:
@@ -1113,6 +1236,9 @@ def backfill_cover_images(path: Path, panels: list) -> int:
     entries = data.get("series", [])
     updated = 0
 
+    metron_health = IntegrationHealth("Metron")
+    gcd_health = IntegrationHealth("GCD")
+
     for entry in entries:
         existing = entry.get("coverImages") or []
         if len(existing) >= MAX_COVER_IMAGES:
@@ -1122,19 +1248,25 @@ def backfill_cover_images(path: Path, panels: list) -> int:
         if not series_slug:
             continue
 
+        # Both integrations are bailed — nothing more we can do
+        if metron_health.should_bail and gcd_health.should_bail:
+            break
+
         gallery_issues = get_gallery_issues_for_series(panels, series_slug)
         covers = list(existing)
 
         # Try Metron first
-        if has_metron and len(covers) < MAX_COVER_IMAGES:
-            metron_covers = fetch_metron_covers(entry, gallery_issues, username, password)
+        if has_metron and not metron_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+            metron_covers = fetch_metron_covers(
+                entry, gallery_issues, username, password, health=metron_health
+            )
             for url in metron_covers:
                 if url not in covers and len(covers) < MAX_COVER_IMAGES:
                     covers.append(url)
 
         # Supplement with GCD
-        if len(covers) < MAX_COVER_IMAGES:
-            gcd_covers = fetch_gcd_covers(entry, gallery_issues)
+        if not gcd_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+            gcd_covers = fetch_gcd_covers(entry, gallery_issues, health=gcd_health)
             for url in gcd_covers:
                 if url not in covers and len(covers) < MAX_COVER_IMAGES:
                     covers.append(url)
