@@ -25,14 +25,7 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/270/w400/270853.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/270/w400/270854.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/270/w400/270852.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/270/w400/270855.jpg"
       ]
     },
     {
@@ -59,16 +52,9 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ],
-      "issueCount": 10,
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/1758/w400/1758493.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1763/w400/1763938.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1763/w400/1763933.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1763/w400/1763936.jpg"
-      ]
+      "issueCount": 10
     },
     {
       "id": "absolute-wonder-woman",
@@ -90,14 +76,7 @@
       "publisher": "DC Comics",
       "issueCount": 18,
       "sources": [
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/1723/w400/1723833.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1730/w400/1730648.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1776/w400/1776428.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1776/w400/1776427.jpg"
       ]
     },
     {
@@ -120,14 +99,7 @@
       "publisher": "Image",
       "issueCount": 8,
       "sources": [
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/1756/w400/1756929.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1762/w400/1762285.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1784/w400/1784836.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1784/w400/1784828.jpg"
       ]
     },
     {
@@ -137,7 +109,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -161,7 +132,6 @@
       "publisher": "DC Comics",
       "issueCount": 3,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -185,14 +155,7 @@
       "publisher": "D.C. Thomson & Co.",
       "issueCount": 103,
       "sources": [
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/1018/w400/1018023.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1043/w400/1043170.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/979/w400/979634.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/979/w400/979626.jpg"
       ]
     },
     {
@@ -220,14 +183,7 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35734.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35735.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35736.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35737.jpg"
       ]
     },
     {
@@ -250,15 +206,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "gcd",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35749.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35750.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35751.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35752.jpg"
       ]
     },
     {
@@ -281,12 +230,7 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "metron"
-      ],
-      "coverImages": [
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35753.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/35/w400/35754.jpg"
       ]
     },
     {
@@ -305,7 +249,6 @@
       "publisher": "Caliber Comics",
       "issueCount": 1,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -330,7 +273,6 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -341,7 +283,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -361,7 +302,6 @@
       "publisher": "IDW Publishing",
       "issueCount": 5,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -386,7 +326,6 @@
       "issueCount": 139,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -411,7 +350,6 @@
       "issueCount": 23,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -431,7 +369,6 @@
       "publisher": "Boom! Studios",
       "issueCount": 6,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -456,7 +393,6 @@
       "issueCount": 24,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -473,7 +409,6 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -493,7 +428,6 @@
       "publisher": "Image",
       "issueCount": 22,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -518,7 +452,6 @@
       "issueCount": 32,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -543,7 +476,6 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -565,7 +497,6 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine",
         "gcd",
         "metron"
       ],
@@ -588,7 +519,6 @@
       "publisher": "Image",
       "issueCount": 11,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -612,7 +542,6 @@
       "publisher": "Marvel",
       "issueCount": 5,
       "sources": [
-        "comicvine",
         "gcd",
         "metron"
       ]
@@ -633,7 +562,6 @@
       "publisher": "DC Comics",
       "issueCount": 6,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -653,7 +581,6 @@
       "publisher": "Ignition Press",
       "issueCount": 2,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -678,7 +605,6 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -699,7 +625,6 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine",
         "gcd",
         "metron"
       ],
@@ -727,7 +652,6 @@
       "issueCount": 3,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -738,7 +662,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -758,7 +681,6 @@
       "publisher": "Boom! Studios",
       "issueCount": 15,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -783,7 +705,6 @@
       "issueCount": 9,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -794,7 +715,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -805,7 +725,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -825,7 +744,6 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -845,7 +763,6 @@
       "publisher": "Rip Off Press",
       "issueCount": 31,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -865,7 +782,6 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -885,7 +801,6 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -910,7 +825,6 @@
       "issueCount": 41,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -933,7 +847,6 @@
         "Stray Bullets: Sunshine and Roses"
       ],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -953,7 +866,6 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -973,7 +885,6 @@
       "publisher": "Universal",
       "issueCount": 1,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -993,7 +904,6 @@
       "publisher": "Boom! Studios",
       "issueCount": 5,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1018,7 +928,6 @@
       "issueCount": 35,
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -1042,7 +951,6 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ],
       "issueCount": 9
@@ -1060,7 +968,6 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     },
@@ -1080,7 +987,6 @@
       "publisher": "Dynamite Entertainment",
       "issueCount": 13,
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1091,7 +997,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1102,7 +1007,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1113,7 +1017,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1124,7 +1027,6 @@
       "description": "",
       "references": [],
       "sources": [
-        "comicvine",
         "metron"
       ]
     },
@@ -1141,7 +1043,6 @@
       ],
       "sources": [
         "wikipedia",
-        "comicvine",
         "metron"
       ]
     }

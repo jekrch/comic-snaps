@@ -1060,10 +1060,6 @@ def backfill_gcd(path: Path, key: str) -> int:
         if web_url:
             ensure_reference(entry, "Grand Comics Database", web_url)
 
-        # Store the GCD API URL for later use (cover image fetching)
-        if not entry.get("_gcd_api_url"):
-            entry["_gcd_api_url"] = match.get("api_url")
-
         mark_source(entry, SOURCE_GCD)
         updated += 1
         if not changed:
@@ -1146,90 +1142,86 @@ def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
     return covers
 
 
-def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int],
-                     health: IntegrationHealth | None = None) -> list[str]:
+COMIC_VINE_VOLUME_ID_RE = re.compile(r"/4050-(\d+)")
+
+
+def extract_comicvine_volume_id(series_entry: dict) -> str | None:
+    """Pull the Comic Vine volume ID from the stored reference URL."""
+    for ref in series_entry.get("references", []):
+        if (ref.get("name") or "").strip().lower() == "comic vine":
+            m = COMIC_VINE_VOLUME_ID_RE.search(ref.get("url") or "")
+            if m:
+                return m.group(1)
+    return None
+
+
+def fetch_comicvine_covers(series_entry: dict, gallery_issues: list[int],
+                           api_key: str,
+                           health: IntegrationHealth | None = None) -> list[str]:
     """
-    Fetch cover image URLs from GCD for a series. Prioritizes issues
-    that appear in the gallery, then fills remaining slots.
+    Fetch cover image URLs from Comic Vine for a series, prioritizing
+    issues that appear in the gallery. Returns at most MAX_COVER_IMAGES URLs.
     """
-    api_url = series_entry.get("_gcd_api_url")
-    if not api_url:
-        # Reconstruct the API URL from the stored GCD reference
-        for ref in series_entry.get("references", []):
-            if (ref.get("name") or "").strip().lower() == "grand comics database":
-                m = re.search(r"/series/(\d+)", ref.get("url", ""))
-                if m:
-                    api_url = f"{GCD_BASE}/series/{m.group(1)}/"
-                    break
-    if not api_url:
-        # No stored reference — search GCD by name
-        name = series_entry.get("name")
-        if not name:
-            return []
-        results = gcd_search_series(name, health=health)
-        time.sleep(GCD_BASE_SLEEP)
-        if not results:
-            return []
-        match = pick_gcd_series_match(results, name, series_entry.get("startYear"))
-        if not match:
-            return []
-        api_url = match.get("api_url")
-        # Store the reference for future runs
-        web_url = gcd_series_web_url(match)
-        if web_url:
-            ensure_reference(series_entry, "Grand Comics Database", web_url)
-    if not api_url:
+    volume_id = extract_comicvine_volume_id(series_entry)
+    if not volume_id:
         return []
 
-    series_data = gcd_fetch_json(api_url, health=health)
-    time.sleep(GCD_BASE_SLEEP)
-    if not series_data:
+    params = {
+        "api_key": api_key,
+        "format": "json",
+        "filter": f"volume:{volume_id}",
+        "field_list": "image,issue_number",
+        "limit": 100,
+    }
+    try:
+        resp = requests.get(
+            f"{COMIC_VINE_BASE}/issues/",
+            params=params,
+            headers=COMIC_VINE_HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.exceptions.Timeout:
+        if health:
+            health.mark_throttled("request timed out")
+        print(f"    WARN: Comic Vine issues fetch timed out for volume {volume_id}", file=sys.stderr)
         return []
-
-    # active_issues is a list of issue API URLs
-    issue_urls = series_data.get("active_issues") or []
-    if not issue_urls:
+    except requests.exceptions.HTTPError as e:
+        if health and e.response is not None and e.response.status_code == 429:
+            health.mark_throttled("rate limited (429)")
+        print(f"    WARN: Comic Vine issues fetch failed for volume {volume_id}: {e}", file=sys.stderr)
         return []
+    except Exception as e:
+        print(f"    WARN: Comic Vine issues fetch failed for volume {volume_id}: {e}", file=sys.stderr)
+        return []
+    finally:
+        time.sleep(1.0)
 
-    # Fetch a limited sample of issues to find covers
-    gallery_covers = []
-    other_covers = []
-    fetched = 0
-    max_fetches = min(len(issue_urls), 15)  # cap to avoid excessive requests
+    if data.get("status_code") != 1:
+        return []
+    issues = data.get("results", []) or []
 
-    for issue_url in issue_urls[:max_fetches]:
-        if health and health.should_bail:
-            break
-        issue_data = gcd_fetch_json(issue_url, health=health)
-        time.sleep(GCD_BASE_SLEEP)
-        fetched += 1
-        if not issue_data:
+    gallery_covers: list[str] = []
+    other_covers: list[str] = []
+    for issue in issues:
+        img_url = extract_comicvine_image(issue)
+        if not img_url:
             continue
-
-        cover_url = issue_data.get("cover")
-        if not cover_url:
-            continue
-
-        issue_num = issue_data.get("number")
+        issue_num = issue.get("issue_number")
         try:
             issue_num = int(issue_num) if issue_num else None
         except (TypeError, ValueError):
             issue_num = None
-
         if issue_num and issue_num in gallery_issues:
-            gallery_covers.append(cover_url)
+            gallery_covers.append(img_url)
         else:
-            other_covers.append(cover_url)
-
-        # Stop early if we have enough
-        if len(gallery_covers) + len(other_covers) >= MAX_COVER_IMAGES:
-            break
+            other_covers.append(img_url)
 
     covers = gallery_covers[:MAX_COVER_IMAGES]
     remaining = MAX_COVER_IMAGES - len(covers)
     if remaining > 0:
         covers.extend(other_covers[:remaining])
-
     return covers
 
 
@@ -1244,13 +1236,14 @@ def backfill_cover_images(path: Path, panels: list) -> int:
 
     username = os.environ.get("METRON_USERNAME")
     password = os.environ.get("METRON_PASSWORD")
+    cv_api_key = os.environ.get("COMIC_VINE_API_KEY")
 
     data = json.loads(path.read_text())
     entries = data.get("series", [])
     updated = 0
 
     metron_health = IntegrationHealth("Metron")
-    gcd_health = IntegrationHealth("GCD")
+    comicvine_health = IntegrationHealth("Comic Vine")
 
     for entry in entries:
         existing = entry.get("coverImages") or []
@@ -1262,7 +1255,7 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             continue
 
         # Both integrations are bailed — nothing more we can do
-        if metron_health.should_bail and gcd_health.should_bail:
+        if metron_health.should_bail and comicvine_health.should_bail:
             break
 
         gallery_issues = get_gallery_issues_for_series(panels, series_slug)
@@ -1287,10 +1280,13 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             for url in metron_covers:
                 try_add(url)
 
-        # Supplement with GCD
-        if not gcd_health.should_bail and len(covers) < MAX_COVER_IMAGES:
-            gcd_covers = fetch_gcd_covers(entry, gallery_issues, health=gcd_health)
-            for url in gcd_covers:
+        # Supplement with Comic Vine. GCD covers are skipped — files1.comics.org
+        # blocks automated downloads (captcha-gated in the browser).
+        if cv_api_key and not comicvine_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+            cv_covers = fetch_comicvine_covers(
+                entry, gallery_issues, cv_api_key, health=comicvine_health
+            )
+            for url in cv_covers:
                 try_add(url)
 
         if covers and covers != existing:
@@ -1298,16 +1294,10 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             updated += 1
             print(f"  {entry.get('name')}: {len(covers)} cover(s)")
 
-    # Clean up temporary _gcd_api_url fields
-    has_temp_fields = any("_gcd_api_url" in e for e in entries)
-    for entry in entries:
-        entry.pop("_gcd_api_url", None)
-
-    if updated or has_temp_fields:
+    if updated:
         data["series"] = entries
         path.write_text(json.dumps(data, indent=2) + "\n")
-        if updated:
-            print(f"  Fetched covers for {updated} series.")
+        print(f"  Fetched covers for {updated} series.")
 
     return updated
 
