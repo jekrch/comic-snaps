@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 85,
+      "id": "battle-beast-8-1776632642",
+      "title": "Battle Beast",
+      "slug": "battle-beast",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Ryan Ottley",
+      "image": "images/battle-beast/issue-8-1776632642.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-19T21:04:04.714Z"
+    },
+    {
       "seq": 84,
       "id": "the-twilight-zone-6-1776620277",
       "title": "The Twilight Zone",
@@ -32,7 +46,7 @@
           -2.2
         ]
       ],
-      "colorfulness": 2.0,
+      "colorfulness": 2,
       "phash": "89ce98d86a5097cf",
       "ahash": "f87b3f00f17f4f4f",
       "dhash": "7177468da3ba9a9b"
