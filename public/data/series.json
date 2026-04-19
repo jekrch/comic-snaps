@@ -25,7 +25,14 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/100/4e180f72efcf.jpg",
+        "data/covers/100/009dabda60c4.jpg",
+        "data/covers/100/54545cebd5f6.jpg",
+        "data/covers/100/cf0b7fba1be7.jpg"
       ]
     },
     {
@@ -52,9 +59,16 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
       ],
-      "issueCount": 10
+      "issueCount": 10,
+      "coverImages": [
+        "data/covers/absolute-martian-manhunter/d33403b67fc4.jpg",
+        "data/covers/absolute-martian-manhunter/ed8761a2e738.jpg",
+        "data/covers/absolute-martian-manhunter/b0215185e204.jpg",
+        "data/covers/absolute-martian-manhunter/5284527ec366.jpg"
+      ]
     },
     {
       "id": "absolute-wonder-woman",
@@ -76,7 +90,14 @@
       "publisher": "DC Comics",
       "issueCount": 18,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/absolute-wonder-woman/877b6081a60a.jpg",
+        "data/covers/absolute-wonder-woman/0825c91ca081.jpg",
+        "data/covers/absolute-wonder-woman/c7b5bd3206fc.jpg",
+        "data/covers/absolute-wonder-woman/6d5f246da5f0.jpg"
       ]
     },
     {
@@ -99,7 +120,14 @@
       "publisher": "Image",
       "issueCount": 8,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/assorted-crisis-events/35bd6340062b.jpg",
+        "data/covers/assorted-crisis-events/fa6996348205.jpg",
+        "data/covers/assorted-crisis-events/33e1d38f7c66.jpg",
+        "data/covers/assorted-crisis-events/58e0c92474f0.jpg"
       ]
     },
     {
@@ -109,7 +137,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -132,7 +161,13 @@
       "publisher": "DC Comics",
       "issueCount": 3,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/bleeding-hearts/818d07f62939.jpg",
+        "data/covers/bleeding-hearts/b58296d4429c.jpg",
+        "data/covers/bleeding-hearts/fc5e77194c09.jpg"
       ]
     },
     {
@@ -155,7 +190,14 @@
       "publisher": "D.C. Thomson & Co.",
       "issueCount": 103,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/buzz/04f3e710dabf.jpg",
+        "data/covers/buzz/4915456e70e6.jpg",
+        "data/covers/buzz/5518dd54f833.jpg",
+        "data/covers/buzz/feb295a2ea50.jpg"
       ]
     },
     {
@@ -183,7 +225,14 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/concrete/2d8093191346.jpg",
+        "data/covers/concrete/7d58f351b610.jpg",
+        "data/covers/concrete/4ad2787a6e68.jpg",
+        "data/covers/concrete/757b608168ba.jpg"
       ]
     },
     {
@@ -207,7 +256,14 @@
       "issueCount": 4,
       "sources": [
         "gcd",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/concrete-fragile-creature/141739334243.jpg",
+        "data/covers/concrete-fragile-creature/a5ab5f9ebae4.jpg",
+        "data/covers/concrete-fragile-creature/af9239d2c01f.jpg",
+        "data/covers/concrete-fragile-creature/ece93ab30e99.jpg"
       ]
     },
     {
@@ -230,7 +286,14 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/concrete-killer-smile/18e5fed62bd5.jpg",
+        "data/covers/concrete-killer-smile/c74dfb78d193.jpg",
+        "data/covers/concrete-killer-smile/44472a83aafd.jpg",
+        "data/covers/concrete-killer-smile/149739187325.jpg"
       ]
     },
     {
@@ -249,7 +312,11 @@
       "publisher": "Caliber Comics",
       "issueCount": 1,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/creatures-of-the-id/6effce31f74b.jpg"
       ]
     },
     {
@@ -273,7 +340,14 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/criminal/4d7bb0d910d5.jpg",
+        "data/covers/criminal/341527c85997.jpg",
+        "data/covers/criminal/2106b9f811e5.jpg",
+        "data/covers/criminal/0cf4c69ed272.jpg"
       ]
     },
     {
@@ -283,7 +357,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -302,7 +377,14 @@
       "publisher": "IDW Publishing",
       "issueCount": 5,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/dark-spaces-wildfire/2470a88dd312.jpg",
+        "data/covers/dark-spaces-wildfire/8396309af0d3.jpg",
+        "data/covers/dark-spaces-wildfire/a31e60106dec.jpg",
+        "data/covers/dark-spaces-wildfire/5807efc97b4b.jpg"
       ]
     },
     {
@@ -326,7 +408,14 @@
       "issueCount": 139,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/eerie/b08160d7342e.jpg",
+        "data/covers/eerie/b0323d8fb941.jpg",
+        "data/covers/eerie/b4beae02c7d7.jpg",
+        "data/covers/eerie/05be9d4635ed.jpg"
       ]
     },
     {
@@ -350,7 +439,14 @@
       "issueCount": 23,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/eightball/fa66112f64b8.jpg",
+        "data/covers/eightball/8201e943bf42.jpg",
+        "data/covers/eightball/e043674abe49.jpg",
+        "data/covers/eightball/20175a2d6ea4.jpg"
       ]
     },
     {
@@ -369,7 +465,14 @@
       "publisher": "Boom! Studios",
       "issueCount": 6,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/faithless-ii/f1dc71112baa.jpg",
+        "data/covers/faithless-ii/acc99927fd79.jpg",
+        "data/covers/faithless-ii/9a016166e0a1.jpg",
+        "data/covers/faithless-ii/41575a2d59a1.jpg"
       ]
     },
     {
@@ -393,7 +496,14 @@
       "issueCount": 24,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/fatale/5ff6b1522173.jpg",
+        "data/covers/fatale/4ea5212ee0f8.jpg",
+        "data/covers/fatale/7c7ef6084230.jpg",
+        "data/covers/fatale/6c767f62e6f9.png"
       ]
     },
     {
@@ -409,7 +519,8 @@
       ],
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -428,7 +539,14 @@
       "publisher": "Image",
       "issueCount": 22,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/geiger/9a1ad1a734ee.jpg",
+        "data/covers/geiger/b86a0f8155b0.jpg",
+        "data/covers/geiger/7b811477f79a.jpg",
+        "data/covers/geiger/a99a2b2daad0.jpg"
       ]
     },
     {
@@ -452,7 +570,14 @@
       "issueCount": 32,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/harrow-county/61415c41c9cc.jpg",
+        "data/covers/harrow-county/2349b6ab4a5a.jpg",
+        "data/covers/harrow-county/615140aa53c3.jpg",
+        "data/covers/harrow-county/25ae69a1bc44.jpg"
       ]
     },
     {
@@ -476,7 +601,14 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/heavy-liquid/4cd6f7f77bbd.jpg",
+        "data/covers/heavy-liquid/a77250415528.jpg",
+        "data/covers/heavy-liquid/81958a70c939.jpg",
+        "data/covers/heavy-liquid/18496563a4d7.jpg"
       ]
     },
     {
@@ -498,7 +630,8 @@
       "sources": [
         "wikipedia",
         "gcd",
-        "metron"
+        "metron",
+        "comicvine"
       ],
       "startYear": 2013,
       "publisher": "https://www.comics.org/api/publisher/8368/?format=json"
@@ -519,7 +652,14 @@
       "publisher": "Image",
       "issueCount": 11,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/hyde-street/89c63d4a23bc.jpg",
+        "data/covers/hyde-street/23440c5754b4.jpg",
+        "data/covers/hyde-street/850b1d5a4fa2.jpg",
+        "data/covers/hyde-street/bf3ae593e8ee.jpg"
       ]
     },
     {
@@ -543,7 +683,14 @@
       "issueCount": 5,
       "sources": [
         "gcd",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/infernal-hulk/9c245f46aff5.jpg",
+        "data/covers/infernal-hulk/6229354e57b5.jpg",
+        "data/covers/infernal-hulk/8da36eab8911.jpg",
+        "data/covers/infernal-hulk/953d7b55255e.jpg"
       ]
     },
     {
@@ -562,7 +709,14 @@
       "publisher": "DC Comics",
       "issueCount": 6,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/jacked/093ab60c231f.jpg",
+        "data/covers/jacked/c45e5f9e8e17.jpg",
+        "data/covers/jacked/6507f541d1ce.jpg",
+        "data/covers/jacked/91d94b2932a6.jpg"
       ]
     },
     {
@@ -581,7 +735,12 @@
       "publisher": "Ignition Press",
       "issueCount": 2,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/just-brutal/90aafc119c17.jpg",
+        "data/covers/just-brutal/abfb661b87c6.jpg"
       ]
     },
     {
@@ -605,7 +764,14 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/lady-killer/4a5f056ebad2.jpg",
+        "data/covers/lady-killer/5852d0b7b0ff.jpg",
+        "data/covers/lady-killer/84a6023878f8.jpg",
+        "data/covers/lady-killer/67cabac15c96.jpg"
       ]
     },
     {
@@ -626,7 +792,8 @@
       "sources": [
         "wikipedia",
         "gcd",
-        "metron"
+        "metron",
+        "comicvine"
       ],
       "startYear": 1987,
       "publisher": "https://www.comics.org/api/publisher/543/?format=json"
@@ -652,7 +819,13 @@
       "issueCount": 3,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/madman/87423f0773a3.jpg",
+        "data/covers/madman/beb595e44314.jpg",
+        "data/covers/madman/bc2700309b62.jpg"
       ]
     },
     {
@@ -662,7 +835,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -681,7 +855,14 @@
       "publisher": "Boom! Studios",
       "issueCount": 15,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/minor-arcana/2dd673872256.jpg",
+        "data/covers/minor-arcana/adca0951a1fe.jpg",
+        "data/covers/minor-arcana/8dd4cfc11dc8.jpg",
+        "data/covers/minor-arcana/4e2504b30a23.jpg"
       ]
     },
     {
@@ -705,7 +886,14 @@
       "issueCount": 9,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/omaha/66d9645cb3d5.jpg",
+        "data/covers/omaha/0c200dc24ac4.jpg",
+        "data/covers/omaha/8dd0ccb91e17.jpg",
+        "data/covers/omaha/28d683aef460.jpg"
       ]
     },
     {
@@ -715,7 +903,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -725,7 +914,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -744,7 +934,14 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/red-book/ee4a01b39e8a.jpg",
+        "data/covers/red-book/53639da51d2e.jpg",
+        "data/covers/red-book/1ba227a1f876.jpg",
+        "data/covers/red-book/46183bdf2d4d.jpg"
       ]
     },
     {
@@ -763,7 +960,14 @@
       "publisher": "Rip Off Press",
       "issueCount": 31,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/rip-off-comix/9bbcb0dbcf4b.jpg",
+        "data/covers/rip-off-comix/69d01d52b9a8.jpg",
+        "data/covers/rip-off-comix/f18ff83f60e3.jpg",
+        "data/covers/rip-off-comix/6f87af50aab0.jpg"
       ]
     },
     {
@@ -782,7 +986,14 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/space-riders/92e5b4f9149e.jpg",
+        "data/covers/space-riders/106d3a8677c5.jpg",
+        "data/covers/space-riders/078e9ca6f8a5.jpg",
+        "data/covers/space-riders/c0f58299fcba.jpg"
       ]
     },
     {
@@ -801,7 +1012,14 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/space-riders-galaxy-of-brutality/54c26b99f161.jpg",
+        "data/covers/space-riders-galaxy-of-brutality/e71dd10a7bf7.jpg",
+        "data/covers/space-riders-galaxy-of-brutality/44d0208369d0.jpg",
+        "data/covers/space-riders-galaxy-of-brutality/e3c6845fcb7c.jpg"
       ]
     },
     {
@@ -825,7 +1043,14 @@
       "issueCount": 41,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/stray-bullets/ef2de413f2db.jpg",
+        "data/covers/stray-bullets/6a2eefa2278e.jpg",
+        "data/covers/stray-bullets/a8089b3ec295.jpg",
+        "data/covers/stray-bullets/fa89101a638c.jpg"
       ]
     },
     {
@@ -847,7 +1072,14 @@
         "Stray Bullets: Sunshine and Roses"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/stray-bullets-sunshine-roses/27bd2ac10e40.jpg",
+        "data/covers/stray-bullets-sunshine-roses/ace2b594fb60.jpg",
+        "data/covers/stray-bullets-sunshine-roses/3a92bf2a3578.jpg",
+        "data/covers/stray-bullets-sunshine-roses/b0cda23183da.jpg"
       ]
     },
     {
@@ -866,7 +1098,14 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/tales-of-ordinary-madness/3496e8c00528.jpg",
+        "data/covers/tales-of-ordinary-madness/4ee18a51d3cb.jpg",
+        "data/covers/tales-of-ordinary-madness/10c153bfd1e6.jpg",
+        "data/covers/tales-of-ordinary-madness/d78477bebb91.jpg"
       ]
     },
     {
@@ -885,7 +1124,11 @@
       "publisher": "Universal",
       "issueCount": 1,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/the-invisible-man/43ca4afa4727.jpg"
       ]
     },
     {
@@ -904,7 +1147,14 @@
       "publisher": "Boom! Studios",
       "issueCount": 5,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/the-many-deaths-of-laila-starr/112e931bd3b2.jpg",
+        "data/covers/the-many-deaths-of-laila-starr/05357bbe432a.jpg",
+        "data/covers/the-many-deaths-of-laila-starr/d622a705b613.jpg",
+        "data/covers/the-many-deaths-of-laila-starr/fd95b1853a63.jpg"
       ]
     },
     {
@@ -928,7 +1178,14 @@
       "issueCount": 35,
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/the-maxx/c65b46d30e25.jpg",
+        "data/covers/the-maxx/b9981332127c.jpg",
+        "data/covers/the-maxx/761605b57857.jpg",
+        "data/covers/the-maxx/bfb5f4826983.jpg"
       ]
     },
     {
@@ -951,9 +1208,16 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
       ],
-      "issueCount": 9
+      "issueCount": 9,
+      "coverImages": [
+        "data/covers/the-nice-house-by-the-sea/6e3f6922cec0.jpg",
+        "data/covers/the-nice-house-by-the-sea/470e1758fdfd.jpg",
+        "data/covers/the-nice-house-by-the-sea/33ecda2ba801.jpg",
+        "data/covers/the-nice-house-by-the-sea/008ca5409881.jpg"
+      ]
     },
     {
       "id": "the-peoples-comics",
@@ -968,7 +1232,8 @@
       ],
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -987,7 +1252,14 @@
       "publisher": "Dynamite Entertainment",
       "issueCount": 13,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "coverImages": [
+        "data/covers/the-twilight-zone/1eab066d8514.jpg",
+        "data/covers/the-twilight-zone/56739f773dc3.jpg",
+        "data/covers/the-twilight-zone/839cdd409238.jpg",
+        "data/covers/the-twilight-zone/75a02785de0c.jpg"
       ]
     },
     {
@@ -997,7 +1269,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -1007,7 +1280,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -1017,7 +1291,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -1027,7 +1302,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -1043,7 +1319,8 @@
       ],
       "sources": [
         "wikipedia",
-        "metron"
+        "metron",
+        "comicvine"
       ]
     }
   ]
