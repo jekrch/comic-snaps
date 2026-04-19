@@ -1267,6 +1267,17 @@ def backfill_cover_images(path: Path, panels: list) -> int:
 
         gallery_issues = get_gallery_issues_for_series(panels, series_slug)
         covers = list(existing)
+        seen_urls: set[str] = set()
+
+        def try_add(url: str) -> None:
+            # Download the URL inline; only record the cover if the file
+            # actually landed on disk, so we never persist a broken hotlink.
+            if url in seen_urls or len(covers) >= MAX_COVER_IMAGES:
+                return
+            seen_urls.add(url)
+            local = localize_cover_url(url, series_slug)
+            if local and local not in covers:
+                covers.append(local)
 
         # Try Metron first
         if username and password and not metron_health.should_bail and len(covers) < MAX_COVER_IMAGES:
@@ -1274,15 +1285,13 @@ def backfill_cover_images(path: Path, panels: list) -> int:
                 entry, gallery_issues, username, password, health=metron_health
             )
             for url in metron_covers:
-                if url not in covers and len(covers) < MAX_COVER_IMAGES:
-                    covers.append(url)
+                try_add(url)
 
         # Supplement with GCD
         if not gcd_health.should_bail and len(covers) < MAX_COVER_IMAGES:
             gcd_covers = fetch_gcd_covers(entry, gallery_issues, health=gcd_health)
             for url in gcd_covers:
-                if url not in covers and len(covers) < MAX_COVER_IMAGES:
-                    covers.append(url)
+                try_add(url)
 
         if covers and covers != existing:
             entry["coverImages"] = covers
@@ -1312,6 +1321,12 @@ def _cover_extension(url: str) -> str:
     return ".jpg"
 
 
+def _cover_filename(url: str) -> str:
+    import hashlib
+    digest = hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
+    return f"{digest}{_cover_extension(url)}"
+
+
 def _download_cover(url: str, dest: Path) -> bool:
     try:
         resp = requests.get(url, headers={"User-Agent": COVER_DOWNLOAD_UA}, timeout=20)
@@ -1327,11 +1342,30 @@ def _download_cover(url: str, dest: Path) -> bool:
     return True
 
 
+def localize_cover_url(url: str, series_slug: str) -> str | None:
+    """Download a remote cover URL into public/data/covers/<slug>/<hash><ext>
+    and return its relative web path. Returns the input unchanged if it's
+    already a local path, or None if the download fails — so callers can
+    drop broken URLs instead of persisting them.
+    """
+    if not url.startswith("http"):
+        return url
+    filename = _cover_filename(url)
+    dest = COVERS_DIR / series_slug / filename
+    rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{filename}"
+    if dest.exists() and dest.stat().st_size > 0:
+        return rel
+    if _download_cover(url, dest):
+        time.sleep(0.15)
+        return rel
+    return None
+
+
 def localize_cover_images(path: Path) -> int:
-    """For each series with remote coverImages URLs, download the images to
-    public/data/covers/<series-id>/<n><ext> and rewrite the array to point at
-    those relative web paths. Remote URLs are retained on download failure so
-    subsequent runs can retry.
+    """Rewrite coverImages in series.json so every entry is a locally-served
+    relative path. URLs that fail to download are dropped rather than kept,
+    so the UI never renders a broken hotlink — the next run can re-discover
+    them via backfill_cover_images.
     """
     if not path.exists():
         return 0
@@ -1348,33 +1382,22 @@ def localize_cover_images(path: Path) -> int:
             continue
 
         new_covers: list[str] = []
-        changed = False
-        for i, url in enumerate(covers):
-            if not url.startswith("http"):
-                new_covers.append(url)
+        for url in covers:
+            local = localize_cover_url(url, series_slug)
+            if local is None:
                 continue
+            if local not in new_covers:
+                new_covers.append(local)
 
-            ext = _cover_extension(url)
-            dest = COVERS_DIR / series_slug / f"{i}{ext}"
-            if dest.exists() and dest.stat().st_size > 0:
-                rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{i}{ext}"
-                new_covers.append(rel)
-                changed = True
-                continue
-
-            if _download_cover(url, dest):
-                rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{i}{ext}"
-                new_covers.append(rel)
-                changed = True
-                time.sleep(0.15)
+        if new_covers != covers:
+            if new_covers:
+                entry["coverImages"] = new_covers
             else:
-                new_covers.append(url)
-
-        if changed and new_covers != covers:
-            entry["coverImages"] = new_covers
+                entry.pop("coverImages", None)
             updated += 1
-            local_count = sum(1 for c in new_covers if not c.startswith("http"))
-            print(f"  {entry.get('name')}: {local_count}/{len(new_covers)} local")
+            dropped = len(covers) - len(new_covers)
+            suffix = f" (dropped {dropped})" if dropped else ""
+            print(f"  {entry.get('name')}: {len(new_covers)} local{suffix}")
 
     if updated:
         data["series"] = entries
@@ -1485,6 +1508,16 @@ def main():
     seed_artists(panels)
     seed_series(panels)
 
+    # Localize any previously-fetched remote cover URLs first, so a later
+    # rate-limit/timeout in this run doesn't leave the UI with broken
+    # hotlinked images.
+    print("Localizing existing cover images...")
+    covers_prelocalized = localize_cover_images(SERIES_PATH)
+    if covers_prelocalized:
+        print(f"Localized covers for {covers_prelocalized} series.")
+    else:
+        print("No existing cover images needed localizing.")
+
     # Backfill descriptions from Wikipedia where available
     print("Backfilling Wikipedia descriptions...")
     wiki_updated = 0
@@ -1534,8 +1567,8 @@ def main():
     else:
         print("No cover images needed fetching.")
 
-    # Download remote covers locally so the UI can serve them without hotlinking
-    print("Localizing cover images...")
+    # Localize any newly-fetched remote covers from this run
+    print("Localizing newly-fetched cover images...")
     covers_localized = localize_cover_images(SERIES_PATH)
     if covers_localized:
         print(f"Localized covers for {covers_localized} series.")
