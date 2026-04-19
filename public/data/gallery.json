@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 84,
+      "id": "the-twilight-zone-6-1776620277",
+      "title": "The Twilight Zone",
+      "slug": "the-twilight-zone",
+      "issue": 6,
+      "year": 2026,
+      "artist": "Nicole Goux",
+      "image": "images/the-twilight-zone/issue-6-1776620277.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-19T17:37:58.888Z"
+    },
+    {
       "seq": 83,
       "id": "rip-off-comix-3-1776032078",
       "title": "Rip Off Comix",
