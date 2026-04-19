@@ -836,11 +836,14 @@ def _gcd_request(url: str, params: dict | None = None,
     Returns the Response on success, or None after exhausting retries.
     """
     for attempt in range(GCD_MAX_RETRIES):
+        if health and health.should_bail:
+            return None
         try:
             resp = requests.get(url, params=params, headers=API_HEADERS, timeout=15)
             if resp.status_code == 429:
                 if health:
                     health.mark_throttled("rate limited (429)")
+                    return None
                 wait = GCD_BASE_SLEEP * (2 ** attempt)
                 print(f"    rate-limited by GCD, waiting {wait:.0f}s…", file=sys.stderr)
                 time.sleep(wait)
@@ -1192,6 +1195,8 @@ def fetch_gcd_covers(series_entry: dict, gallery_issues: list[int],
     max_fetches = min(len(issue_urls), 15)  # cap to avoid excessive requests
 
     for issue_url in issue_urls[:max_fetches]:
+        if health and health.should_bail:
+            break
         issue_data = gcd_fetch_json(issue_url, health=health)
         time.sleep(GCD_BASE_SLEEP)
         fetched += 1
