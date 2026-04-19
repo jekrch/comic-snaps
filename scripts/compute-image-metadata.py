@@ -39,6 +39,9 @@ ARTISTS_PATH = Path("public/data/artists.json")
 SERIES_PATH = Path("public/data/series.json")
 DISAMBIGUATION_PATH = Path("public/data/disambiguation.json")
 IMAGE_ROOT = Path("public")
+COVERS_DIR = Path("public/data/covers")
+COVERS_WEB_PREFIX = "data/covers"
+COVER_DOWNLOAD_UA = "comic-snaps/1.0 (+https://github.com/jekrch/comic-snaps)"
 
 HASH_FUNCTIONS = {
     "phash": imagehash.phash, # DCT-based, good structural similarity
@@ -1300,6 +1303,86 @@ def backfill_cover_images(path: Path, panels: list) -> int:
     return updated
 
 
+def _cover_extension(url: str) -> str:
+    clean = url.split("?")[0].split("#")[0]
+    _, ext = os.path.splitext(clean.rsplit("/", 1)[-1])
+    ext = ext.lower()
+    if ext in (".jpg", ".jpeg", ".png", ".webp", ".gif"):
+        return ".jpg" if ext == ".jpeg" else ext
+    return ".jpg"
+
+
+def _download_cover(url: str, dest: Path) -> bool:
+    try:
+        resp = requests.get(url, headers={"User-Agent": COVER_DOWNLOAD_UA}, timeout=20)
+        resp.raise_for_status()
+    except Exception as e:
+        print(f"    WARN: download failed for {url}: {e}", file=sys.stderr)
+        return False
+    if not resp.content:
+        print(f"    WARN: empty response for {url}", file=sys.stderr)
+        return False
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(resp.content)
+    return True
+
+
+def localize_cover_images(path: Path) -> int:
+    """For each series with remote coverImages URLs, download the images to
+    public/data/covers/<series-id>/<n><ext> and rewrite the array to point at
+    those relative web paths. Remote URLs are retained on download failure so
+    subsequent runs can retry.
+    """
+    if not path.exists():
+        return 0
+    data = json.loads(path.read_text())
+    entries = data.get("series", [])
+    updated = 0
+
+    for entry in entries:
+        covers = entry.get("coverImages") or []
+        if not covers:
+            continue
+        series_slug = entry.get("id")
+        if not series_slug:
+            continue
+
+        new_covers: list[str] = []
+        changed = False
+        for i, url in enumerate(covers):
+            if not url.startswith("http"):
+                new_covers.append(url)
+                continue
+
+            ext = _cover_extension(url)
+            dest = COVERS_DIR / series_slug / f"{i}{ext}"
+            if dest.exists() and dest.stat().st_size > 0:
+                rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{i}{ext}"
+                new_covers.append(rel)
+                changed = True
+                continue
+
+            if _download_cover(url, dest):
+                rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{i}{ext}"
+                new_covers.append(rel)
+                changed = True
+                time.sleep(0.15)
+            else:
+                new_covers.append(url)
+
+        if changed and new_covers != covers:
+            entry["coverImages"] = new_covers
+            updated += 1
+            local_count = sum(1 for c in new_covers if not c.startswith("http"))
+            print(f"  {entry.get('name')}: {local_count}/{len(new_covers)} local")
+
+    if updated:
+        data["series"] = entries
+        path.write_text(json.dumps(data, indent=2) + "\n")
+
+    return updated
+
+
 def slugify(name: str) -> str:
     """Convert a name to a URL-friendly slug."""
     slug = name.lower().strip()
@@ -1450,6 +1533,14 @@ def main():
         print(f"Fetched covers for {covers_updated} series.")
     else:
         print("No cover images needed fetching.")
+
+    # Download remote covers locally so the UI can serve them without hotlinking
+    print("Localizing cover images...")
+    covers_localized = localize_cover_images(SERIES_PATH)
+    if covers_localized:
+        print(f"Localized covers for {covers_localized} series.")
+    else:
+        print("No cover images needed localizing.")
 
     updated_count = 0
     error_count = 0

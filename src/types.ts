@@ -26,6 +26,7 @@ export interface Series {
   publisher?: string | null;
   issueCount?: number | null;
   aliases?: string[] | null;
+  coverImages?: string[] | null;
 }
 
 export interface Panel {

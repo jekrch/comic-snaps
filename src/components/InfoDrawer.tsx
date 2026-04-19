@@ -1,4 +1,5 @@
-import { BookOpen, Youtube, Search, ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BookOpen, Youtube, Search, ExternalLink, ChevronDown } from "lucide-react";
 import type { Panel, Artist, Series, Reference } from "../types";
 
 function refIcon(ref: Reference) {
@@ -26,6 +27,16 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
   const effectiveSeries = series ?? parentSeries ?? null;
+  const coverImages = effectiveSeries?.coverImages ?? [];
+  const hasCovers = coverImages.length > 0;
+  const teaserCount = Math.min(4, coverImages.length);
+  const teaserCovers = coverImages.slice(0, teaserCount);
+  const hiddenCount = Math.max(0, coverImages.length - teaserCount);
+  const resolveCover = (url: string) =>
+    url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
+
+  const [coversExpanded, setCoversExpanded] = useState(false);
+  useEffect(() => { setCoversExpanded(false); }, [panel.id]);
 
   const seriesMetaParts: string[] = [];
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
@@ -130,6 +141,100 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
             )}
           </div>
         </div>
+
+        {/* Covers */}
+        {hasCovers && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <button
+                type="button"
+                aria-expanded={coversExpanded}
+                onClick={() => setCoversExpanded((e) => !e)}
+                className="group flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors"
+              >
+                <span>Covers</span>
+                <span className="text-white/20 normal-case tracking-normal">· {coverImages.length}</span>
+                <ChevronDown
+                  size={11}
+                  className="transition-transform duration-300 ease-out"
+                  style={{ transform: coversExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
+                />
+              </button>
+
+              {/* Teaser strip (collapsed) */}
+              <div
+                className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+                style={{
+                  gridTemplateRows: coversExpanded ? "0fr" : "1fr",
+                  opacity: coversExpanded ? 0 : 1,
+                }}
+                aria-hidden={coversExpanded}
+              >
+                <div className="overflow-hidden">
+                  <div className="flex gap-1.5">
+                    {teaserCovers.map((url, i) => {
+                      const showOverlay = hiddenCount > 0 && i === teaserCount - 1;
+                      return (
+                        <button
+                          key={url}
+                          type="button"
+                          tabIndex={coversExpanded ? -1 : 0}
+                          onClick={() => setCoversExpanded(true)}
+                          className="relative block w-11 h-16.5 rounded-sm overflow-hidden bg-white/5 shrink-0 ring-1 ring-inset ring-white/5 hover:ring-white/20 transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5"
+                        >
+                          <img
+                            src={resolveCover(url)}
+                            alt=""
+                            loading="lazy"
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                          {showOverlay && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white/85 text-[10px] font-display">
+                              +{hiddenCount}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Full grid (expanded) */}
+              <div
+                className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+                style={{
+                  gridTemplateRows: coversExpanded ? "1fr" : "0fr",
+                  opacity: coversExpanded ? 1 : 0,
+                }}
+                aria-hidden={!coversExpanded}
+              >
+                <div className="overflow-hidden">
+                  <div className="grid grid-cols-4 gap-2 pt-0.5">
+                    {coverImages.map((url) => (
+                      <a
+                        key={url}
+                        href={resolveCover(url)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        tabIndex={coversExpanded ? 0 : -1}
+                        className="relative block aspect-2/3 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5"
+                      >
+                        <img
+                          src={resolveCover(url)}
+                          alt=""
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+                        />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Divider */}
         <div className="border-t border-white/8" />
