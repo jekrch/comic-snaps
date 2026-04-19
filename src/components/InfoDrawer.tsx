@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, Reference } from "../types";
 
@@ -33,29 +33,296 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
     url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
 
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
-  useEffect(() => { setSelectedCoverIdx(null); }, [panel.id]);
+  const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const thumbRectRef = useRef<DOMRect | null>(null);
+  const thumbRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+  const expandedRef = useRef<HTMLDivElement | null>(null);
+  const slideTrackRef = useRef<HTMLDivElement | null>(null);
+  const coverContainerRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const swipeOffsetRef = useRef(0);
+  const commitLockRef = useRef(false);
+  const dragRef = useRef({
+    active: false,
+    startX: 0,
+    startY: 0,
+    startTime: 0,
+    locked: false,
+    rejected: false,
+  });
+
+  const len = coverImages.length;
+  const prevCoverIdx = selectedCoverIdx === null || len < 2 ? -1 : (selectedCoverIdx - 1 + len) % len;
+  const nextCoverIdx = selectedCoverIdx === null || len < 2 ? -1 : (selectedCoverIdx + 1) % len;
+
+  useEffect(() => {
+    setSelectedCoverIdx(null);
+    setAnimPhase("idle");
+    thumbRectRef.current = null;
+  }, [panel.id]);
+
+  const openCover = useCallback((idx: number) => {
+    if (animPhase !== "idle") return;
+    const btn = thumbRefs.current.get(idx);
+    thumbRectRef.current = btn ? btn.getBoundingClientRect() : null;
+    const container = coverContainerRef.current;
+    if (container) {
+      container.style.height = `${container.offsetHeight}px`;
+      container.style.overflow = "hidden";
+    }
+    setSelectedCoverIdx(idx);
+    setAnimPhase("opening");
+  }, [animPhase]);
+
+  const closeCover = useCallback(() => {
+    if (animPhase !== "open") return;
+    const el = expandedRef.current;
+    const container = coverContainerRef.current;
+    const grid = gridRef.current;
+    const currentIdx = selectedCoverIdx;
+    if (el === null || currentIdx === null) {
+      setSelectedCoverIdx(null);
+      thumbRectRef.current = null;
+      setAnimPhase("idle");
+      return;
+    }
+    const targetBtn = thumbRefs.current.get(currentIdx);
+    const targetRect = targetBtn?.getBoundingClientRect() ?? thumbRectRef.current;
+    const dest = el.getBoundingClientRect();
+    if (!targetRect || dest.width === 0 || dest.height === 0) {
+      setSelectedCoverIdx(null);
+      thumbRectRef.current = null;
+      setAnimPhase("idle");
+      return;
+    }
+    const dx = targetRect.left - dest.left;
+    const dy = targetRect.top - dest.top;
+    const sx = targetRect.width / dest.width;
+    const sy = targetRect.height / dest.height;
+
+    const gridTargetHeight = grid?.offsetHeight ?? dest.height;
+    if (container) {
+      container.style.height = `${dest.height}px`;
+      container.style.overflow = "hidden";
+      container.style.transition = "height 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+    }
+
+    el.style.transformOrigin = "top left";
+    el.style.willChange = "transform, opacity";
+    el.style.transition = "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out";
+    el.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+    el.style.opacity = "0";
+
+    requestAnimationFrame(() => {
+      if (container) container.style.height = `${gridTargetHeight}px`;
+    });
+
+    setAnimPhase("closing");
+    setTimeout(() => {
+      if (container) {
+        container.style.height = "";
+        container.style.overflow = "";
+        container.style.transition = "";
+      }
+      setSelectedCoverIdx(null);
+      thumbRectRef.current = null;
+      setAnimPhase("idle");
+    }, 320);
+  }, [animPhase, selectedCoverIdx]);
+
+  useLayoutEffect(() => {
+    if (animPhase !== "opening") return;
+    const el = expandedRef.current;
+    const rect = thumbRectRef.current;
+    const container = coverContainerRef.current;
+    const clearContainer = () => {
+      if (container) {
+        container.style.height = "";
+        container.style.overflow = "";
+        container.style.transition = "";
+      }
+    };
+    if (!el || !rect) {
+      clearContainer();
+      setAnimPhase("open");
+      return;
+    }
+    const dest = el.getBoundingClientRect();
+    if (dest.width === 0 || dest.height === 0) {
+      clearContainer();
+      setAnimPhase("open");
+      return;
+    }
+    const dx = rect.left - dest.left;
+    const dy = rect.top - dest.top;
+    const sx = rect.width / dest.width;
+    const sy = rect.height / dest.height;
+
+    el.style.transformOrigin = "top left";
+    el.style.willChange = "transform, opacity";
+    el.style.transition = "none";
+    el.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+    el.style.opacity = "0.4";
+    void el.getBoundingClientRect();
+
+    const raf = requestAnimationFrame(() => {
+      el.style.transition = "transform 0.35s cubic-bezier(0.2, 0, 0, 1), opacity 0.25s ease-out";
+      el.style.transform = "";
+      el.style.opacity = "1";
+      if (container) {
+        container.style.transition = "height 0.35s cubic-bezier(0.2, 0, 0, 1)";
+        container.style.height = `${dest.height}px`;
+      }
+    });
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      el.style.transition = "";
+      el.style.transform = "";
+      el.style.opacity = "";
+      el.style.transformOrigin = "";
+      el.style.willChange = "";
+      clearContainer();
+      setAnimPhase("open");
+    };
+    const onEnd = (e: TransitionEvent) => {
+      if (e.propertyName !== "transform") return;
+      finish();
+    };
+    el.addEventListener("transitionend", onEnd);
+    const timeout = setTimeout(finish, 500);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timeout);
+      el.removeEventListener("transitionend", onEnd);
+    };
+  }, [animPhase]);
+
+  useLayoutEffect(() => {
+    if (selectedCoverIdx === null) return;
+    const track = slideTrackRef.current;
+    if (track) {
+      track.style.transition = "none";
+      track.style.transform = "translateX(0px)";
+      void track.getBoundingClientRect();
+    }
+    swipeOffsetRef.current = 0;
+    setSwipeOffset(0);
+    commitLockRef.current = false;
+  }, [selectedCoverIdx]);
+
+  const commitSlide = useCallback((dir: "prev" | "next") => {
+    if (commitLockRef.current) return;
+    const track = slideTrackRef.current;
+    if (!track || selectedCoverIdx === null || len < 2) return;
+    commitLockRef.current = true;
+
+    const width = track.parentElement?.getBoundingClientRect().width ?? window.innerWidth;
+    const targetOffset = dir === "prev" ? width : -width;
+
+    track.style.transition = "transform 0.28s cubic-bezier(0.2, 0, 0, 1)";
+    track.style.transform = `translateX(${targetOffset}px)`;
+    swipeOffsetRef.current = targetOffset;
+    setSwipeOffset(targetOffset);
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      track.removeEventListener("transitionend", onEnd);
+      setSelectedCoverIdx((i) => {
+        if (i === null) return null;
+        return dir === "prev"
+          ? (i - 1 + len) % len
+          : (i + 1) % len;
+      });
+    };
+    const onEnd = () => finish();
+    track.addEventListener("transitionend", onEnd, { once: true });
+    setTimeout(finish, 400);
+  }, [selectedCoverIdx, len]);
+
+  const snapBack = useCallback(() => {
+    const track = slideTrackRef.current;
+    if (!track) return;
+    track.style.transition = "transform 0.28s cubic-bezier(0.2, 0, 0, 1)";
+    track.style.transform = "translateX(0px)";
+    swipeOffsetRef.current = 0;
+    setSwipeOffset(0);
+  }, []);
+
+  const beginDrag = useCallback((x: number, y: number) => {
+    if (animPhase !== "open" || len < 2 || commitLockRef.current) return;
+    dragRef.current = {
+      active: true, startX: x, startY: y, startTime: Date.now(),
+      locked: false, rejected: false,
+    };
+  }, [animPhase, len]);
+
+  const moveDrag = useCallback((x: number, y: number, lockThreshold: number, angleBias: number): boolean => {
+    const d = dragRef.current;
+    if (!d.active || d.rejected) return false;
+    const dx = x - d.startX;
+    const dy = y - d.startY;
+    if (!d.locked) {
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      if (absDx < lockThreshold && absDy < lockThreshold) return false;
+      if (absDy > absDx * angleBias) { d.rejected = true; return false; }
+      d.locked = true;
+    }
+    const track = slideTrackRef.current;
+    if (track) {
+      track.style.transition = "none";
+      track.style.transform = `translateX(${dx}px)`;
+    }
+    swipeOffsetRef.current = dx;
+    setSwipeOffset(dx);
+    return true;
+  }, []);
+
+  const endDrag = useCallback(() => {
+    const d = dragRef.current;
+    if (d.active && d.locked && !d.rejected) {
+      const offset = swipeOffsetRef.current;
+      const dt = Date.now() - d.startTime;
+      const velocity = Math.abs(offset) / Math.max(dt, 1);
+      const width = slideTrackRef.current?.parentElement?.getBoundingClientRect().width ?? window.innerWidth;
+      const threshold = width * 0.25;
+      const velocityThreshold = 0.4;
+
+      if (offset > 0 && (offset > threshold || velocity > velocityThreshold)) {
+        commitSlide("prev");
+      } else if (offset < 0 && (Math.abs(offset) > threshold || velocity > velocityThreshold)) {
+        commitSlide("next");
+      } else {
+        snapBack();
+      }
+    }
+    dragRef.current.active = false;
+  }, [commitSlide, snapBack]);
 
   useEffect(() => {
     if (selectedCoverIdx === null) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.stopImmediatePropagation();
-        setSelectedCoverIdx(null);
-      } else if (e.key === "ArrowLeft") {
+        closeCover();
+      } else if (e.key === "ArrowLeft" && len > 1) {
         e.stopImmediatePropagation();
-        setSelectedCoverIdx((i) =>
-          i === null ? null : (i - 1 + coverImages.length) % coverImages.length
-        );
-      } else if (e.key === "ArrowRight") {
+        commitSlide("prev");
+      } else if (e.key === "ArrowRight" && len > 1) {
         e.stopImmediatePropagation();
-        setSelectedCoverIdx((i) =>
-          i === null ? null : (i + 1) % coverImages.length
-        );
+        commitSlide("next");
       }
     };
     window.addEventListener("keydown", handler, true);
     return () => window.removeEventListener("keydown", handler, true);
-  }, [selectedCoverIdx, coverImages.length]);
+  }, [selectedCoverIdx, len, closeCover, commitSlide]);
 
   const seriesMetaParts: string[] = [];
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
@@ -177,66 +444,33 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
                 )}
               </div>
 
-              {selectedCoverIdx !== null ? (
-                <div className="space-y-2">
-                  <div className="relative rounded-sm overflow-hidden bg-black/40">
-                    <img
-                      src={resolveCover(coverImages[selectedCoverIdx])}
-                      alt=""
-                      className="block w-full max-h-[70vh] object-contain"
-                    />
-                    {coverImages.length > 1 && (
-                      <>
-                        <button
-                          type="button"
-                          aria-label="Previous cover"
-                          onClick={() =>
-                            setSelectedCoverIdx((i) =>
-                              i === null ? null : (i - 1 + coverImages.length) % coverImages.length
-                            )
-                          }
-                          className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors"
-                        >
-                          <ChevronLeft size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Next cover"
-                          onClick={() =>
-                            setSelectedCoverIdx((i) =>
-                              i === null ? null : (i + 1) % coverImages.length
-                            )
-                          }
-                          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors"
-                        >
-                          <ChevronRight size={16} />
-                        </button>
-                      </>
-                    )}
-                    <button
-                      type="button"
-                      aria-label="Close cover"
-                      onClick={() => setSelectedCoverIdx(null)}
-                      className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCoverIdx(null)}
-                    className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors"
-                  >
-                    ← Back to covers
-                  </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-4 gap-2 pt-0.5">
+              <div ref={coverContainerRef} className="relative">
+                <div
+                  ref={gridRef}
+                  className="grid grid-cols-4 gap-2 pt-0.5"
+                  style={
+                    selectedCoverIdx !== null
+                      ? {
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          pointerEvents: "none",
+                          opacity: animPhase === "closing" ? 1 : 0,
+                          transition: "opacity 0.25s ease-out",
+                        }
+                      : undefined
+                  }
+                >
                   {coverImages.map((url, i) => (
                     <button
                       key={url}
+                      ref={(el) => {
+                        if (el) thumbRefs.current.set(i, el);
+                        else thumbRefs.current.delete(i);
+                      }}
                       type="button"
-                      onClick={() => setSelectedCoverIdx(i)}
+                      onClick={() => openCover(i)}
                       className="relative block aspect-2/3 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
                     >
                       <img
@@ -248,7 +482,118 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
                     </button>
                   ))}
                 </div>
-              )}
+
+                {selectedCoverIdx !== null && (
+                  <div ref={expandedRef} className="space-y-2">
+                    <div
+                      className="relative rounded-sm overflow-hidden bg-black/40"
+                      style={{ touchAction: "pan-y" }}
+                      onPointerDown={(e) => {
+                        if (e.pointerType === "touch") return;
+                        beginDrag(e.clientX, e.clientY);
+                      }}
+                      onPointerMove={(e) => {
+                        if (e.pointerType === "touch") return;
+                        moveDrag(e.clientX, e.clientY, 4, 1);
+                      }}
+                      onPointerUp={(e) => {
+                        if (e.pointerType !== "touch") endDrag();
+                      }}
+                      onPointerCancel={(e) => {
+                        if (e.pointerType !== "touch") endDrag();
+                      }}
+                      onTouchStart={(e) => {
+                        if (e.touches.length !== 1) return;
+                        beginDrag(e.touches[0].clientX, e.touches[0].clientY);
+                      }}
+                      onTouchMove={(e) => {
+                        if (e.touches.length !== 1) return;
+                        const moved = moveDrag(e.touches[0].clientX, e.touches[0].clientY, 6, 0.8);
+                        if (moved && e.cancelable) e.preventDefault();
+                      }}
+                      onTouchEnd={endDrag}
+                      onTouchCancel={endDrag}
+                    >
+                      <div
+                        ref={slideTrackRef}
+                        className="relative"
+                        style={{
+                          transform: `translateX(${swipeOffset}px)`,
+                          willChange: "transform",
+                        }}
+                      >
+                        <img
+                          src={resolveCover(coverImages[selectedCoverIdx])}
+                          alt=""
+                          className="block w-full max-h-[70vh] object-contain select-none"
+                          draggable={false}
+                        />
+                        {prevCoverIdx >= 0 && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                            style={{ transform: "translateX(-100%)" }}
+                          >
+                            <img
+                              src={resolveCover(coverImages[prevCoverIdx])}
+                              alt=""
+                              className="block w-full h-full object-contain select-none"
+                              draggable={false}
+                            />
+                          </div>
+                        )}
+                        {nextCoverIdx >= 0 && (
+                          <div
+                            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                            style={{ transform: "translateX(100%)" }}
+                          >
+                            <img
+                              src={resolveCover(coverImages[nextCoverIdx])}
+                              alt=""
+                              className="block w-full h-full object-contain select-none"
+                              draggable={false}
+                            />
+                          </div>
+                        )}
+                      </div>
+                      {len > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            aria-label="Previous cover"
+                            onClick={(e) => { e.stopPropagation(); commitSlide("prev"); }}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors z-10"
+                          >
+                            <ChevronLeft size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="Next cover"
+                            onClick={(e) => { e.stopPropagation(); commitSlide("next"); }}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors z-10"
+                          >
+                            <ChevronRight size={16} />
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        aria-label="Close cover"
+                        onClick={(e) => { e.stopPropagation(); closeCover(); }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 hover:bg-black/70 text-white/80 hover:text-white transition-colors z-10"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={closeCover}
+                      className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors"
+                    >
+                      ← Back to covers
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}
