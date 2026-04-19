@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-04-19T21:04:04.714Z"
+      "addedAt": "2026-04-19T21:04:04.714Z",
+      "width": 1082,
+      "height": 1280,
+      "dominantColors": [
+        [
+          62.0,
+          -3.6,
+          11.5
+        ],
+        [
+          24.5,
+          -0.7,
+          3.4
+        ],
+        [
+          70.7,
+          1.5,
+          -15.3
+        ]
+      ],
+      "colorfulness": 13.2,
+      "phash": "84e67cfc20226cfb",
+      "ahash": "f2ff7f7ffe960400",
+      "dhash": "e6ecd4cdd86428a8"
     },
     {
       "seq": 84,
