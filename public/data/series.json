@@ -125,7 +125,9 @@
       ],
       "coverImages": [
         "https://files1.comics.org//img/gcd/covers_by_id/1756/w400/1756929.jpg",
-        "https://files1.comics.org//img/gcd/covers_by_id/1762/w400/1762285.jpg"
+        "https://files1.comics.org//img/gcd/covers_by_id/1762/w400/1762285.jpg",
+        "https://files1.comics.org//img/gcd/covers_by_id/1784/w400/1784836.jpg",
+        "https://files1.comics.org//img/gcd/covers_by_id/1784/w400/1784828.jpg"
       ]
     },
     {
@@ -148,6 +150,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/bleeding-hearts/4050-170540/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/233344/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg",
@@ -168,6 +174,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/buzz/4050-51440/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/56331/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2544837-buzz1.jpg",
@@ -177,6 +187,12 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "coverImages": [
+        "https://files1.comics.org//img/gcd/covers_by_id/1018/w400/1018023.jpg",
+        "https://files1.comics.org//img/gcd/covers_by_id/1043/w400/1043170.jpg",
+        "https://files1.comics.org//img/gcd/covers_by_id/979/w400/979634.jpg",
+        "https://files1.comics.org//img/gcd/covers_by_id/979/w400/979626.jpg"
       ]
     },
     {
@@ -193,6 +209,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/concrete/4050-3919/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/3502/"
         }
       ],
       "startYear": 1987,
@@ -790,6 +810,26 @@
       ]
     },
     {
+      "id": "rip-off-comix",
+      "name": "Rip Off Comix",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/27783/990632-ripoff_1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rip-off-comix/4050-28555/"
+        }
+      ],
+      "startYear": 1977,
+      "publisher": "Rip Off Press",
+      "issueCount": 31,
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "space-riders",
       "name": "Space Riders",
       "parentSeries": null,
@@ -1000,6 +1040,26 @@
       ],
       "sources": [
         "wikipedia",
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "the-twilight-zone",
+      "name": "The Twilight Zone",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/3541572-01.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-twilight-zone/4050-70526/"
+        }
+      ],
+      "startYear": 2013,
+      "publisher": "Dynamite Entertainment",
+      "issueCount": 13,
+      "sources": [
         "comicvine",
         "metron"
       ]
