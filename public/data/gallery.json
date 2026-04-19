@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 86,
+      "id": "ice-cream-man-45-1776633700",
+      "title": "Ice Cream Man",
+      "slug": "ice-cream-man",
+      "issue": 45,
+      "year": 2026,
+      "artist": "Martin Morazzo",
+      "image": "images/ice-cream-man/issue-45-1776633700.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-19T21:21:42.053Z"
+    },
+    {
       "seq": 85,
       "id": "battle-beast-8-1776632642",
       "title": "Battle Beast",
@@ -17,7 +31,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          62.0,
+          62,
           -3.6,
           11.5
         ],
