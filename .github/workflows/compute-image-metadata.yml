@@ -62,6 +62,7 @@ jobs:
       - name: Commit updated data
         run: |
           git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json public/data/embeddings-gram.json public/data/artists.json public/data/series.json
+          [ -f public/data/disambiguation.json ] && git add public/data/disambiguation.json
           git diff --cached --quiet && exit 0
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
