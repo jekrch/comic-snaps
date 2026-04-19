@@ -569,6 +569,23 @@
       ]
     },
     {
+      "id": "martin-morazzo",
+      "name": "Martin Morazzo",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6922356-6302760724-mart%25.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/martin-morazzo/4040-66410/"
+        }
+      ],
+      "country": "Argentina",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "martin-simmonds",
       "name": "Martin Simmonds",
       "description": "",

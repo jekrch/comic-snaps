@@ -1,0 +1,32 @@
+{
+  "metron:creator": {
+    "Martin Morazzo": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 3954,
+          "name": "Mart\u00edn Morazzo"
+        }
+      ]
+    }
+  },
+  "metron:series": {
+    "Ice Cream Man": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 4527,
+          "name": null
+        },
+        {
+          "id": 7139,
+          "name": null
+        },
+        {
+          "id": 12541,
+          "name": null
+        }
+      ]
+    }
+  }
+}

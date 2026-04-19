@@ -663,6 +663,32 @@
       ]
     },
     {
+      "id": "ice-cream-man",
+      "name": "Ice Cream Man",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6233336-01a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ice-cream-man/4050-107948/"
+        }
+      ],
+      "startYear": 2018,
+      "publisher": "Image",
+      "issueCount": 45,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/ice-cream-man/e6edd28c478d.jpg",
+        "data/covers/ice-cream-man/cc9e0fab4aa6.jpg",
+        "data/covers/ice-cream-man/5a206185e3ac.jpg",
+        "data/covers/ice-cream-man/c609f62a4b70.jpg"
+      ]
+    },
+    {
       "id": "infernal-hulk",
       "name": "Infernal Hulk",
       "parentSeries": null,
