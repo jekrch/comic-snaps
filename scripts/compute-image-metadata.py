@@ -54,6 +54,28 @@ METADATA_FIELDS = (
 )
 
 
+class IntegrationHealth:
+    """Per-integration bail-out tracker.
+
+    Once an integration hits a timeout or rate-limit, `mark_throttled` flips
+    `should_bail` so the outer loop can stop after the current entry instead
+    of burning through every remaining entry's retry/backoff cycle.
+    """
+
+    def __init__(self, name: str):
+        self.name = name
+        self.should_bail = False
+
+    def mark_throttled(self, reason: str) -> None:
+        if self.should_bail:
+            return
+        print(
+            f"    {self.name}: {reason} — skipping remaining entries after this one",
+            file=sys.stderr,
+        )
+        self.should_bail = True
+
+
 def needs_update(panel: dict) -> bool:
     """Return True if any metadata field is missing or null."""
     return any(panel.get(field) is None for field in METADATA_FIELDS)
@@ -193,28 +215,6 @@ MAX_COVER_IMAGES = 4
 
 MIN_DESCRIPTION_CHARS = 40
 MIN_DESCRIPTION_WORDS = 5
-
-
-class IntegrationHealth:
-    """Per-integration bail-out tracker.
-
-    Once an integration hits a timeout or rate-limit, `mark_throttled` flips
-    `should_bail` so the outer loop can stop after the current entry instead
-    of burning through every remaining entry's retry/backoff cycle.
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-        self.should_bail = False
-
-    def mark_throttled(self, reason: str) -> None:
-        if self.should_bail:
-            return
-        print(
-            f"    {self.name}: {reason} — skipping remaining entries after this one",
-            file=sys.stderr,
-        )
-        self.should_bail = True
 
 
 def strip_html(raw: str) -> str:
@@ -756,6 +756,9 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
                 disambig_changed = True
             else:
                 print(f"    WARN: disambiguation ID {resolved_id} returned no result")
+                mark_source(entry, SOURCE_METRON)
+                updated += 1
+                continue
         else:
             print(f"  Searching Metron ({resource}) for {name}...")
             results = metron_search(resource, name, username, password, health=health)
@@ -1005,6 +1008,9 @@ def backfill_gcd(path: Path, key: str) -> int:
                 disambig_changed = True
             else:
                 print(f"    WARN: disambiguation ID {resolved_id} returned no result")
+                mark_source(entry, SOURCE_GCD)
+                updated += 1
+                continue
         else:
             print(f"  Searching GCD for {name}...")
             results = gcd_search_series(name, health=health)
@@ -1230,7 +1236,6 @@ def backfill_cover_images(path: Path, panels: list) -> int:
 
     username = os.environ.get("METRON_USERNAME")
     password = os.environ.get("METRON_PASSWORD")
-    has_metron = bool(username and password)
 
     data = json.loads(path.read_text())
     entries = data.get("series", [])
@@ -1256,7 +1261,7 @@ def backfill_cover_images(path: Path, panels: list) -> int:
         covers = list(existing)
 
         # Try Metron first
-        if has_metron and not metron_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+        if username and password and not metron_health.should_bail and len(covers) < MAX_COVER_IMAGES:
             metron_covers = fetch_metron_covers(
                 entry, gallery_issues, username, password, health=metron_health
             )
