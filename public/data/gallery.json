@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 87,
+      "id": "ice-cream-man-45-1776654817",
+      "title": "Ice Cream Man",
+      "slug": "ice-cream-man",
+      "issue": 45,
+      "year": 2026,
+      "artist": "Martin Morazzo",
+      "image": "images/ice-cream-man/issue-45-1776654817.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-20T03:13:38.467Z"
+    },
+    {
       "seq": 86,
       "id": "ice-cream-man-45-1776633700",
       "title": "Ice Cream Man",
@@ -32,7 +46,7 @@
           -8.7
         ]
       ],
-      "colorfulness": 10.0,
+      "colorfulness": 10,
       "phash": "abdc8479366263e1",
       "ahash": "dbffe9ad29010133",
       "dhash": "32324b495b4b4b4e"
