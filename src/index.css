@@ -275,7 +275,7 @@ button,
 }
 
 .bird-hop-quick {
-  animation: bird-hop-quick 0.9s ease-in-out 0.3s both;
+  animation: bird-hop-quick 0.9s ease-in-out 1s both;
 }
 
 .info-modal-scroll::-webkit-scrollbar {

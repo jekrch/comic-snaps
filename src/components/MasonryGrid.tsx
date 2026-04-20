@@ -246,6 +246,7 @@ interface MasonryGridProps {
   onInfoOpen?: () => void;
   onLayoutReady?: () => void;
   onPanelPositions?: (positions: { panel: Panel; y: number; h: number }[]) => void;
+  onOpenPanel: (panel: Panel) => void;
   isFirstLoad?: boolean;
 }
 
@@ -259,6 +260,7 @@ export default function MasonryGrid({
   onInfoOpen,
   onLayoutReady,
   onPanelPositions,
+  onOpenPanel,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -470,8 +472,7 @@ export default function MasonryGrid({
             >
               <PanelCard
                 panel={item.panel}
-                panels={panels}
-                panelIndex={panels.indexOf(item.panel)}
+                onOpen={onOpenPanel}
                 //isFirstLoad={isFirstLoad}
               />
             </div>

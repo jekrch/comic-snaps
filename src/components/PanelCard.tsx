@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useId, useMemo, useEffect } from "react";
 import type { Panel } from "../types";
-import PanelViewer from "./PanelViewer";
 import { Expand } from "lucide-react";
 
 const DOUBLE_CLICK_DELAY = 400;
@@ -28,14 +27,11 @@ const HATCH_GRAD_COORDS: Record<string, { x1: string; y1: string; x2: string; y2
 
 interface Props {
   panel: Panel;
-  panels: Panel[];
-  panelIndex: number;
+  onOpen: (panel: Panel) => void;
   isFirstLoad?: boolean;
 }
 
-export default function PanelCard({ panel, panels, panelIndex }: Props) {
-  const [viewerOpen, setViewerOpen] = useState(false);
-  const [viewerIndex, setViewerIndex] = useState(panelIndex);
+export default function PanelCard({ panel, onOpen }: Props) {
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -94,9 +90,8 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
       : "3 / 4";
 
   const openViewer = useCallback(() => {
-    setViewerIndex(panelIndex);
-    setViewerOpen(true);
-  }, [panelIndex]);
+    onOpen(panel);
+  }, [onOpen, panel]);
 
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
@@ -291,15 +286,6 @@ export default function PanelCard({ panel, panels, panelIndex }: Props) {
         </div>
       </div>
 
-      {viewerOpen && (
-        <PanelViewer
-          panel={panels[viewerIndex]}
-          panels={panels}
-          currentIndex={viewerIndex}
-          onClose={() => setViewerOpen(false)}
-          onNavigate={(idx) => setViewerIndex(idx)}
-        />
-      )}
     </>
   );
 }

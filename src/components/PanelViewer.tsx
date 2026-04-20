@@ -14,12 +14,14 @@ import InfoDrawer from "./InfoDrawer";
 interface Props {
   panel: Panel;
   panels: Panel[];
+  allPanels: Panel[];
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  onSelectPanel: (panel: Panel) => void;
 }
 
-export default function PanelViewer({ panel, panels, currentIndex, onClose, onNavigate }: Props) {
+export default function PanelViewer({ panel, panels, allPanels, currentIndex, onClose, onNavigate, onSelectPanel }: Props) {
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -129,6 +131,25 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
     }, 450);
     return () => clearTimeout(timer);
   }, [currentIndex]);
+
+  // Sync current panel id to URL so the viewer is linkable
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("panel", panel.id);
+    const qs = params.toString();
+    const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+
+    return () => {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get("panel") === panel.id) {
+        p.delete("panel");
+        const q = p.toString();
+        const u = q ? `${window.location.pathname}?${q}` : window.location.pathname;
+        window.history.replaceState(null, "", u);
+      }
+    };
+  }, [panel.id]);
 
   // Keyboard navigation
 
@@ -511,6 +532,8 @@ export default function PanelViewer({ panel, panels, currentIndex, onClose, onNa
         open={drawerOpen}
         closing={closing}
         panel={panel}
+        allPanels={allPanels}
+        onSelectPanel={onSelectPanel}
         artist={artist}
         series={series}
         parentSeries={parentSeries}

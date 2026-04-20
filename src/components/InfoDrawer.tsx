@@ -12,6 +12,8 @@ function refIcon(ref: Reference) {
 interface Props {
   open: boolean;
   panel: Panel;
+  allPanels: Panel[];
+  onSelectPanel: (panel: Panel) => void;
   artist: Artist | null;
   series: Series | null;
   parentSeries: Series | null;
@@ -22,7 +24,9 @@ interface Props {
   slideDir?: "left" | "right" | null;
 }
 
-export default function InfoDrawer({ open, panel, artist, series, parentSeries, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
+  const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
+  const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   const seriesDesc = series?.description || parentSeries?.description || "";
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
@@ -598,6 +602,41 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
           </>
         )}
 
+        {/* More in this series */}
+        {seriesPanels.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30">
+                <span>More in this series</span>
+                <span className="text-white/20 normal-case tracking-normal">· {seriesPanels.length}</span>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+                {seriesPanels.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onSelectPanel(p)}
+                    className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
+                    style={{ aspectRatio: `${p.width} / ${p.height}` }}
+                    title={`${p.title} #${p.issue}`}
+                  >
+                    <img
+                      src={`${import.meta.env.BASE_URL}${p.image}`}
+                      alt=""
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <span className="absolute bottom-0 inset-x-0 px-1.5 py-0.5 text-[9px] text-white/80 bg-gradient-to-t from-black/80 to-transparent leading-tight">
+                      #{p.issue}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Divider */}
         <div className="border-t border-white/8" />
 
@@ -648,6 +687,41 @@ export default function InfoDrawer({ open, panel, artist, series, parentSeries, 
             )}
           </div>
         </div>
+
+        {/* More by this artist */}
+        {artistPanels.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30">
+                <span>More by this artist</span>
+                <span className="text-white/20 normal-case tracking-normal">· {artistPanels.length}</span>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+                {artistPanels.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onSelectPanel(p)}
+                    className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
+                    style={{ aspectRatio: `${p.width} / ${p.height}` }}
+                    title={`${p.title} #${p.issue}`}
+                  >
+                    <img
+                      src={`${import.meta.env.BASE_URL}${p.image}`}
+                      alt=""
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <span className="absolute bottom-0 inset-x-0 px-1.5 py-0.5 text-[9px] text-white/80 bg-gradient-to-t from-black/80 to-transparent leading-tight">
+                      {p.title} #{p.issue}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Notes */}
         {panel.notes && (

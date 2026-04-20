@@ -10,6 +10,7 @@ import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
 import BirdIcon from "./components/BirdIcon";
+import PanelViewer from "./components/PanelViewer";
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
@@ -22,6 +23,10 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
   const [panelPositions, setPanelPositions] = useState<{ panel: Panel; y: number; h: number }[]>([]);
+  const [openPanelId, setOpenPanelId] = useState<string | null>(
+    () => new URLSearchParams(window.location.search).get("panel")
+  );
+  const [viewerScope, setViewerScope] = useState<"filtered" | "all">("filtered");
 
   useEffect(() => {
     if (initialTab) {
@@ -97,6 +102,40 @@ export default function App() {
     setIsFirstLoad(false);
   }, []);
 
+  const handleOpenPanel = useCallback((panel: Panel) => {
+    setViewerScope("filtered");
+    setOpenPanelId(panel.id);
+  }, []);
+
+  const handleCloseViewer = useCallback(() => {
+    setOpenPanelId(null);
+    setViewerScope("filtered");
+  }, []);
+
+  const handleSelectPanel = useCallback(
+    (panel: Panel) => {
+      const inFiltered = sortedPanels.some((p) => p.id === panel.id);
+      setViewerScope(inFiltered ? "filtered" : "all");
+      setOpenPanelId(panel.id);
+    },
+    [sortedPanels]
+  );
+
+  const viewerPanels = viewerScope === "all" ? panels : sortedPanels;
+
+  const handleNavigateViewer = useCallback(
+    (idx: number) => {
+      const target = viewerPanels[idx];
+      if (target) setOpenPanelId(target.id);
+    },
+    [viewerPanels]
+  );
+
+  const openIndex = useMemo(() => {
+    if (!openPanelId) return -1;
+    return viewerPanels.findIndex((p) => p.id === openPanelId);
+  }, [openPanelId, viewerPanels]);
+
   return (
     <div className="min-h-screen bg-surface relative">
       <BackgroundEchoes panelPositions={panelPositions} />
@@ -153,6 +192,7 @@ export default function App() {
               onInfoOpen={() => handleOpenInfo("sorts")}
               onLayoutReady={handleLayoutReady}
               onPanelPositions={setPanelPositions}
+              onOpenPanel={handleOpenPanel}
               isFirstLoad={isFirstLoad}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
@@ -175,9 +215,21 @@ export default function App() {
       {showInfo && (
         <InfoModal
           initialTab={showInfo}
-          panels={panels} 
+          panels={panels}
           onTabChange={handleTabChange}
           onClose={handleCloseInfo}
+        />
+      )}
+
+      {openIndex >= 0 && (
+        <PanelViewer
+          panel={viewerPanels[openIndex]}
+          panels={viewerPanels}
+          allPanels={panels}
+          currentIndex={openIndex}
+          onClose={handleCloseViewer}
+          onNavigate={handleNavigateViewer}
+          onSelectPanel={handleSelectPanel}
         />
       )}
     </div>
