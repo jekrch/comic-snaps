@@ -144,8 +144,11 @@ export default function PanelCard({ panel, onOpen }: Props) {
   return (
     <>
       <div
-        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
-        style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
+        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm"
+        style={{
+          contentVisibility: "auto",
+          containIntrinsicSize: "auto 300px",
+        }}
         onPointerUp={handlePointerUp}
       >
         <div ref={sentinelRef} style={{ aspectRatio, width: "100%" }}>
