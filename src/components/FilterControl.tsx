@@ -21,7 +21,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, postedByCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, postedByCounts, seriesCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -56,6 +56,14 @@ export default function FilterControl({
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [artistCounts]
+  );
+
+  const seriesItems = useMemo(
+    () =>
+      Array.from(seriesCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [seriesCounts]
   );
 
   const toggleInSet = useCallback(
@@ -140,6 +148,12 @@ export default function FilterControl({
               selected={filters.decades}
               onToggle={(v) => toggleInSet("decades", v)}
               renderLabel={(label) => <DecadeLabel decade={label} />}
+            />
+            <FacetSection
+              title="SERIES"
+              items={seriesItems}
+              selected={filters.series}
+              onToggle={(v) => toggleInSet("series", v)}
             />
             <FacetSection
               title="TAGS"

@@ -3,7 +3,7 @@ import type { Filters } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
 
-const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "postedBy"];
+const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "postedBy", "series"];
 const DEFAULT_SORT: SortMode = "newest";
 const VALID_TABS: InfoTab[] = ["about", "sorts"];
 
@@ -15,6 +15,7 @@ function parseFiltersFromURL(): { filters: Filters; sort: SortMode; tab: InfoTab
     tags: new Set(params.get("tags")?.split(",").filter(Boolean) ?? []),
     artists: new Set(params.get("artists")?.split(",").filter(Boolean) ?? []),
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
+    series: new Set(params.get("series")?.split(",").filter(Boolean) ?? []),
   };
 
   const sort = (params.get("sort") as SortMode) ?? DEFAULT_SORT;
