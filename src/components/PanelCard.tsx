@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useId, useMemo, useEffect } from "react";
+import { useRef, useCallback, useId, useMemo } from "react";
 import type { Panel } from "../types";
 import { Expand } from "lucide-react";
 
@@ -40,49 +40,7 @@ export default function PanelCard({ panel, onOpen }: Props) {
   const hatchFadeId = useId();
   const hatchMaskId = useId();
 
-  const realSrc = `${import.meta.env.BASE_URL}${panel.image}`;
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-
-    // Asymmetric lookahead: small buffer above, large buffer below the
-    // viewport so images start fetching well before the user scrolls to
-    // them. Scales with viewport height so it adapts to mobile/desktop.
-    const marginAbove = 400;
-    const marginBelow = Math.max(1200, Math.round(window.innerHeight * 1.5));
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setImgSrc(realSrc);
-            observer.disconnect();
-            break;
-          }
-        }
-      },
-      {
-        rootMargin: `${marginAbove}px 0px ${marginBelow}px 0px`,
-      }
-    );
-
-    observer.observe(el);
-
-    // Masonry layout changes position without scroll/resize; re-check then.
-    const recheck = () => {
-      observer.unobserve(el);
-      observer.observe(el);
-    };
-    window.addEventListener("masonry-layout", recheck);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("masonry-layout", recheck);
-    };
-  }, [realSrc]);
+  const imgSrc = `${import.meta.env.BASE_URL}${panel.image}`;
 
   const aspectRatio =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
@@ -144,37 +102,32 @@ export default function PanelCard({ panel, onOpen }: Props) {
   return (
     <>
       <div
-        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm"
-        style={{
-          contentVisibility: "auto",
-          containIntrinsicSize: "auto 300px",
-        }}
+        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
+        style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
-        <div ref={sentinelRef} style={{ aspectRatio, width: "100%" }}>
-          {imgSrc && (
-            <img
-              ref={imgRef}
-              src={imgSrc}
-              alt={`${panel.title} #${panel.issue}`}
-              decoding="async"
-              loading="eager"
-              className="block w-full"
-              style={{
-                aspectRatio,
-                ...(isBlurred && !isDirectional
-                  ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
-                  : {}),
-              }}
-              onError={(e) => {
-                const el = e.currentTarget;
-                el.style.display = "none";
-                el.parentElement!.querySelector<HTMLDivElement>(
-                  ".fallback"
-                )!.style.display = "flex";
-              }}
-            />
-          )}
+        <div style={{ aspectRatio, width: "100%" }}>
+          <img
+            ref={imgRef}
+            src={imgSrc}
+            alt={`${panel.title} #${panel.issue}`}
+            decoding="async"
+            loading="lazy"
+            className="block w-full"
+            style={{
+              aspectRatio,
+              ...(isBlurred && !isDirectional
+                ? { filter: "blur(8px) saturate(0.6)", transform: "scale(1.05)" }
+                : {}),
+            }}
+            onError={(e) => {
+              const el = e.currentTarget;
+              el.style.display = "none";
+              el.parentElement!.querySelector<HTMLDivElement>(
+                ".fallback"
+              )!.style.display = "flex";
+            }}
+          />
           <div
             className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
             style={{ aspectRatio: "3/4" }}
