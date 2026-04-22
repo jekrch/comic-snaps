@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 89,
+      "id": "frank-4-1776898571",
+      "title": "Frank",
+      "slug": "frank",
+      "issue": 4,
+      "year": 1998,
+      "artist": "Jim Woodring",
+      "image": "images/frank/issue-4-1776898571.jpg",
+      "notes": null,
+      "tags": [
+        "hatching"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-22T22:56:13.374Z"
+    },
+    {
       "seq": 88,
       "id": "fatale-17-1776701288",
       "title": "Fatale",
@@ -17,7 +33,7 @@
       "height": 1118,
       "dominantColors": [
         [
-          75.0,
+          75,
           -4.8,
           2.3
         ],
