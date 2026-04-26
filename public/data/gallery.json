@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 91,
+      "id": "phantom-of-the-opera-3-1777232387",
+      "title": "Phantom of the Opera",
+      "slug": "phantom-of-the-opera",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Martin Simmonds",
+      "image": "images/phantom-of-the-opera/issue-3-1777232387.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-26T19:39:49.781Z"
+    },
+    {
       "seq": 90,
       "id": "the-beauty-5-1777178136",
       "title": "The Beauty",
@@ -23,7 +37,7 @@
         ],
         [
           73.1,
-          2.0,
+          2,
           -0.3
         ],
         [
