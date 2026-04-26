@@ -1135,6 +1135,32 @@
       ]
     },
     {
+      "id": "the-beauty",
+      "name": "The Beauty",
+      "parentSeries": null,
+      "description": "Ongoing series. \u2013 Winner of Top Cow's Pilot Season 2011.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4738217-01a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-beauty/4050-83799/"
+        }
+      ],
+      "startYear": 2015,
+      "publisher": "Image",
+      "issueCount": 29,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/the-beauty/3bf17925094a.jpg",
+        "data/covers/the-beauty/9b1064014e84.jpg",
+        "data/covers/the-beauty/93b6c28c013e.jpg",
+        "data/covers/the-beauty/6db11315cb1d.jpg"
+      ]
+    },
+    {
       "id": "the-invisible-man",
       "name": "The Invisible Man",
       "parentSeries": null,

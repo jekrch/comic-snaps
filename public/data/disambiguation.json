@@ -27,6 +27,23 @@
           "name": null
         }
       ]
+    },
+    "The Beauty": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 7402,
+          "name": null
+        },
+        {
+          "id": 8972,
+          "name": null
+        },
+        {
+          "id": 7328,
+          "name": null
+        }
+      ]
     }
   }
 }
