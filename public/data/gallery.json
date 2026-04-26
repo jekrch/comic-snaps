@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 90,
+      "id": "the-beauty-5-1777178136",
+      "title": "The Beauty",
+      "slug": "the-beauty",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Anand RK",
+      "image": "images/the-beauty/issue-5-1777178136.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-04-26T04:35:38.406Z"
+    },
+    {
       "seq": 89,
       "id": "frank-4-1776898571",
       "title": "Frank",
