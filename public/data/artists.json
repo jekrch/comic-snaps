@@ -552,6 +552,22 @@
       ]
     },
     {
+      "id": "junko-hosizawa",
+      "name": "Junko Hosizawa",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/junko-hosizawa/4040-1772/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kev-walker",
       "name": "Kev Walker",
       "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",
