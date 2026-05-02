@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 95,
+      "id": "the-oddballs-odyssey-1-1777747083",
+      "title": "The Oddballs Odyssey",
+      "slug": "the-oddballs-odyssey",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Tony Millionaire",
+      "image": "images/the-oddballs-odyssey/issue-1-1777747083.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jenny",
+      "addedAt": "2026-05-02T18:38:05.058Z"
+    },
+    {
       "seq": 94,
       "id": "skinbreaker-8-1777747025",
       "title": "Skinbreaker",
