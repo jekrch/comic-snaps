@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 93,
+      "id": "action-comics-1-1777705520",
+      "title": "Action Comics",
+      "slug": "action-comics",
+      "issue": 1,
+      "year": 1938,
+      "artist": "Joseph Shuster",
+      "image": "images/action-comics/issue-1-1777705520.jpg",
+      "notes": null,
+      "tags": [
+        "facsimile"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-02T07:05:21.911Z"
+    },
+    {
       "seq": 92,
       "id": "phantom-of-the-opera-3-1777233060",
       "title": "Phantom of the Opera",
@@ -23,13 +39,13 @@
         ],
         [
           73.5,
-          0.0,
+          0,
           13.4
         ],
         [
           30.3,
-          2.0,
-          20.0
+          2,
+          20
         ]
       ],
       "colorfulness": 23.6,
