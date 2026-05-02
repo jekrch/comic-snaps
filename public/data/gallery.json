@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 96,
+      "id": "red-roots-1-1777758703",
+      "title": "Red Roots",
+      "slug": "red-roots",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Lorenzo De Felici",
+      "image": "images/red-roots/issue-1-1777758703.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-02T21:51:45.774Z"
+    },
+    {
       "seq": 95,
       "id": "the-oddballs-odyssey-1-1777747083",
       "title": "The Oddballs Odyssey",
@@ -59,7 +73,7 @@
           15.7
         ],
         [
-          69.0,
+          69,
           10.9,
           41.1
         ],
@@ -69,7 +83,7 @@
           16.5
         ]
       ],
-      "colorfulness": 16.0,
+      "colorfulness": 16,
       "phash": "93864a50f28ee7d6",
       "ahash": "3e0c3f3fae0e0c0c",
       "dhash": "78f868f8ac9878d8"
