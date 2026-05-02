@@ -1023,6 +1023,32 @@
       ]
     },
     {
+      "id": "skinbreaker",
+      "name": "Skinbreaker",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9876058-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/skinbreaker/4050-167194/"
+        }
+      ],
+      "startYear": 2025,
+      "publisher": "Image",
+      "issueCount": 8,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/skinbreaker/ded290fe2ea0.jpg",
+        "data/covers/skinbreaker/30efecff2672.jpg",
+        "data/covers/skinbreaker/a2ffeb70a2af.jpg",
+        "data/covers/skinbreaker/0bfd93306f78.jpg"
+      ]
+    },
+    {
       "id": "space-riders",
       "name": "Space Riders",
       "parentSeries": null,
