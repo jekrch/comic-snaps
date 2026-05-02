@@ -576,6 +576,32 @@
       ]
     },
     {
+      "id": "harley-quinn-x-elvira",
+      "name": "Harley Quinn X Elvira",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9887511-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harley-quinn-x-elvira/4050-167500/"
+        }
+      ],
+      "startYear": 2025,
+      "publisher": "Dynamite Entertainment",
+      "issueCount": 6,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/harley-quinn-x-elvira/cc4bd5b88f3e.jpg",
+        "data/covers/harley-quinn-x-elvira/8c3bafe7b89d.jpg",
+        "data/covers/harley-quinn-x-elvira/93d9a7284900.jpg",
+        "data/covers/harley-quinn-x-elvira/4b4040d059c8.jpg"
+      ]
+    },
+    {
       "id": "harrow-county",
       "name": "Harrow County",
       "parentSeries": null,
