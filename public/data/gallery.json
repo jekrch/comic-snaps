@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 94,
+      "id": "skinbreaker-8-1777747025",
+      "title": "Skinbreaker",
+      "slug": "skinbreaker",
+      "issue": 8,
+      "year": 2026,
+      "artist": "David Finch",
+      "image": "images/skinbreaker/issue-8-1777747025.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jenny",
+      "addedAt": "2026-05-02T18:37:07.008Z"
+    },
+    {
       "seq": 93,
       "id": "action-comics-1-1777705520",
       "title": "Action Comics",
@@ -26,7 +40,7 @@
         [
           34.5,
           16.5,
-          18.0
+          18
         ],
         [
           40.7,
