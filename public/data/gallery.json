@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 99,
+      "id": "street-poet-ray-1-1777759782",
+      "title": "Street Poet Ray",
+      "slug": "street-poet-ray",
+      "issue": 1,
+      "year": 1989,
+      "artist": "Junko Hosizawa",
+      "image": "images/street-poet-ray/issue-1-1777759782.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-02T22:09:44.088Z"
+    },
+    {
       "seq": 98,
       "id": "harley-quinn-x-elvira-6-1777759241",
       "title": "Harley Quinn X Elvira",
@@ -17,7 +31,7 @@
       "height": 474,
       "dominantColors": [
         [
-          48.0,
+          48,
           45.8,
           39.6
         ],
