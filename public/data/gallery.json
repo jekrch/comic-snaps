@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 98,
+      "id": "harley-quinn-x-elvira-6-1777759241",
+      "title": "Harley Quinn X Elvira",
+      "slug": "harley-quinn-x-elvira",
+      "issue": 6,
+      "year": 2026,
+      "artist": "Juan Samu",
+      "image": "images/harley-quinn-x-elvira/issue-6-1777759241.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-02T22:00:42.821Z"
+    },
+    {
       "seq": 97,
       "id": "the-oddballs-odyssey-1-1777758868",
       "title": "The Oddballs Odyssey",
@@ -18,7 +32,7 @@
       "dominantColors": [
         [
           36.6,
-          4.0,
+          4,
           -0.4
         ],
         [
