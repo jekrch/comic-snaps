@@ -1324,6 +1324,18 @@
       ]
     },
     {
+      "id": "the-oddballs-odyssey",
+      "name": "The Oddballs Odyssey",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "the-peoples-comics",
       "name": "The Peoples Comics",
       "parentSeries": null,

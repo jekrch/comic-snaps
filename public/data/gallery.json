@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jenny",
-      "addedAt": "2026-05-02T18:37:05.058Z"
+      "addedAt": "2026-05-02T18:37:05.058Z",
+      "width": 1279,
+      "height": 1069,
+      "dominantColors": [
+        [
+          50.6,
+          32.3,
+          25.6
+        ],
+        [
+          65.2,
+          14.9,
+          10.6
+        ],
+        [
+          17.7,
+          10.9,
+          5.7
+        ]
+      ],
+      "colorfulness": 14.2,
+      "phash": "e38cb4e23b788715",
+      "ahash": "ffff7e6064644004",
+      "dhash": "2daeccc9cccccccc"
     },
     {
       "seq": 94,
