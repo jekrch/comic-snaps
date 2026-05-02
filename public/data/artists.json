@@ -592,6 +592,22 @@
       ]
     },
     {
+      "id": "lorenzo-de-felici",
+      "name": "Lorenzo De Felici",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58790/8600160-lorenzodefelici01.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lorenzo-de-felici/4040-78734/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "maria-llovet",
       "name": "Maria Llovet",
       "description": "",
