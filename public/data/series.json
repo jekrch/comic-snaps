@@ -101,6 +101,32 @@
       ]
     },
     {
+      "id": "action-comics",
+      "name": "Action Comics",
+      "parentSeries": null,
+      "description": "Continued in Action Comics Volume 2.\r\n\r\nIn the early days of comics books, it was not the convention to name comics after specific characters. Rather comics bore generic names such as this one. Although this series featured Superman throughout, it thus bore this name, one which it has become famous for (and the name was kept after the launch of The New 52.) It was the fourth DC Comics title, and the first new one produced after Detective Comics spread beyond the one title (this was after it purchased More Fun Comics and New Adventure Comics.) Originally an anthology series that featured several co-starring characters. As the page size of the series was reduced so to with the co-starring features. When Action Comics was reduced to 32 pages; it only contained one co-starring feature all the way up to the late Bronze Age. With the start of the Modern Age, Action Comics temporarily became a Superman team-up feature until issue #599.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/2/80536-18005-105403-1-action-comics.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/action-comics/4050-18005/"
+        }
+      ],
+      "startYear": 1938,
+      "publisher": "DC Comics",
+      "issueCount": 864,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/action-comics/0e1e2037f253.jpg",
+        "data/covers/action-comics/a7063f1c758e.jpg",
+        "data/covers/action-comics/aea32a1e5f8c.jpg",
+        "data/covers/action-comics/22a49474eae6.jpg"
+      ]
+    },
+    {
       "id": "assorted-crisis-events",
       "name": "Assorted Crisis Events",
       "parentSeries": null,

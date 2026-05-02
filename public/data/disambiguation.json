@@ -44,6 +44,51 @@
           "name": null
         }
       ]
+    },
+    "Action Comics": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 2491,
+          "name": null
+        },
+        {
+          "id": 756,
+          "name": null
+        },
+        {
+          "id": 64,
+          "name": null
+        },
+        {
+          "id": 2359,
+          "name": null
+        },
+        {
+          "id": 3370,
+          "name": null
+        },
+        {
+          "id": 6324,
+          "name": null
+        },
+        {
+          "id": 8690,
+          "name": null
+        },
+        {
+          "id": 757,
+          "name": null
+        },
+        {
+          "id": 758,
+          "name": null
+        },
+        {
+          "id": 5391,
+          "name": null
+        }
+      ]
     }
   }
 }
