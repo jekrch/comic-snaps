@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 100,
+      "id": "red-roots-1-1777795249",
+      "title": "Red Roots",
+      "slug": "red-roots",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Lorenzo De Felici",
+      "image": "images/red-roots/issue-1-1777795249.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-03T08:00:51.240Z"
+    },
+    {
       "seq": 99,
       "id": "street-poet-ray-1-1777759782",
       "title": "Street Poet Ray",
@@ -19,7 +33,7 @@
         [
           79.5,
           6.5,
-          -3.0
+          -3
         ],
         [
           63.9,
