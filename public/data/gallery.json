@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 101,
+      "id": "hank-howard-pizza-detective-1-1778351662",
+      "title": "Hank Howard Pizza Detective",
+      "slug": "hank-howard-pizza-detective",
+      "issue": 1,
+      "year": 2026,
+      "artist": "David Lapham",
+      "image": "images/hank-howard-pizza-detective/issue-1-1778351662.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-09T18:34:23.757Z"
+    },
+    {
       "seq": 100,
       "id": "red-roots-1-1777795249",
       "title": "Red Roots",
