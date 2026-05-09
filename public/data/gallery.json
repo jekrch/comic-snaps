@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 102,
+      "id": "the-muppets-noir-1-1778351809",
+      "title": "The Muppets Noir",
+      "slug": "the-muppets-noir",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Declan Shalvey",
+      "image": "images/the-muppets-noir/issue-1-1778351809.jpg",
+      "notes": null,
+      "tags": [
+        "cover"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-09T18:36:51.020Z"
+    },
+    {
       "seq": 101,
       "id": "hank-howard-pizza-detective-1-1778351662",
       "title": "Hank Howard Pizza Detective",
@@ -28,7 +44,7 @@
         ],
         [
           42.4,
-          6.0,
+          6,
           4.8
         ]
       ],
