@@ -14,7 +14,30 @@
         "cover"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-09T18:36:51.020Z"
+      "addedAt": "2026-05-09T18:36:51.020Z",
+      "width": 960,
+      "height": 1280,
+      "dominantColors": [
+        [
+          62.5,
+          8.1,
+          3.0
+        ],
+        [
+          21.9,
+          4.7,
+          3.4
+        ],
+        [
+          66.7,
+          -12.9,
+          44.1
+        ]
+      ],
+      "colorfulness": 14.4,
+      "phash": "f05c783073a6a73a",
+      "ahash": "8098b872ce4767ef",
+      "dhash": "323063c4989c8cca"
     },
     {
       "seq": 101,
