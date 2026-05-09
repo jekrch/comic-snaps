@@ -576,6 +576,18 @@
       ]
     },
     {
+      "id": "hank-howard-pizza-detective",
+      "name": "Hank Howard Pizza Detective",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "harley-quinn-x-elvira",
       "name": "Harley Quinn X Elvira",
       "parentSeries": null,
