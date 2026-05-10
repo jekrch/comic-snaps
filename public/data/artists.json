@@ -1010,6 +1010,24 @@
       ]
     },
     {
+      "id": "roger-langridge",
+      "name": "Roger Langridge",
+      "description": "He is the creator of \"The Muppet Show: The Comic Book\" for which he received a Eisner Award nomination. He is most currently working on the series Snarked.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/114183/6224299-roger_langridge.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/roger-langridge/4040-25789/"
+        }
+      ],
+      "birthYear": 1967,
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ryan-ottley",
       "name": "Ryan Ottley",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/ROTTLEYbioPic.jpg/500px-ROTTLEYbioPic.jpg",
