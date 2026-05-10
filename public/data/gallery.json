@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 103,
+      "id": "the-muppets-noir-3-1778430453",
+      "title": "The Muppets Noir",
+      "slug": "the-muppets-noir",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Roger Langridge",
+      "image": "images/the-muppets-noir/issue-3-1778430453.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jenny",
+      "addedAt": "2026-05-10T16:27:34.837Z"
+    },
+    {
       "seq": 102,
       "id": "the-muppets-noir-1-1778351809",
       "title": "The Muppets Noir",
@@ -21,7 +35,7 @@
         [
           62.5,
           8.1,
-          3.0
+          3
         ],
         [
           21.9,
