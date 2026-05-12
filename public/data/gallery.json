@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 107,
+      "id": "seamonsters-and-superheroes-1-1778626837",
+      "title": "Seamonsters and Superheroes",
+      "slug": "seamonsters-and-superheroes",
+      "issue": 1,
+      "year": 2003,
+      "artist": "Scott Mills",
+      "image": "images/seamonsters-and-superheroes/issue-1-1778626837.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-12T23:00:39.968Z"
+    },
+    {
       "seq": 106,
       "id": "heavy-metal-325-1778560803",
       "title": "Heavy Metal",
