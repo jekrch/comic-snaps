@@ -409,6 +409,23 @@
       ]
     },
     {
+      "id": "ilias-kyriazis",
+      "name": "Ilias Kyriazis",
+      "description": "Artist and colorist on Galaxy Quest: Global Warning!",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58487/4721942-15%2C04%2C22%20lifo.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ilias-kyriazis/4040-55850/"
+        }
+      ],
+      "country": "Greece",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
       "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",
