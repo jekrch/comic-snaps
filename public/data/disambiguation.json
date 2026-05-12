@@ -8,6 +8,15 @@
           "name": "Mart\u00edn Morazzo"
         }
       ]
+    },
+    "Carlos Gomez": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 1247,
+          "name": "Carlos G\u00f3mez"
+        }
+      ]
     }
   },
   "metron:series": {

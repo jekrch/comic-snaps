@@ -87,6 +87,17 @@
       ]
     },
     {
+      "id": "carlos-gomez",
+      "name": "Carlos Gomez",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "dani",
       "name": "Dani",
       "description": "",
