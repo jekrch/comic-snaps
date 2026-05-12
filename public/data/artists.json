@@ -1096,6 +1096,22 @@
       ]
     },
     {
+      "id": "scott-mills",
+      "name": "Scott Mills",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/scott-mills/4040-70411/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "sean-phillips",
       "name": "Sean Phillips",
       "imageUrl": "https://cdn.imagecomics.com/assets/i/creators/454879/sean-phillips_5ccece50fe_4c8d099e819a7146712525ccb2eb9e7c.jpg",

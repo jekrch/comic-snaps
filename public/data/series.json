@@ -193,7 +193,8 @@
       "coverImages": [
         "data/covers/bleeding-hearts/818d07f62939.jpg",
         "data/covers/bleeding-hearts/b58296d4429c.jpg",
-        "data/covers/bleeding-hearts/fc5e77194c09.jpg"
+        "data/covers/bleeding-hearts/fc5e77194c09.jpg",
+        "data/covers/bleeding-hearts/e0156860ba7a.jpg"
       ]
     },
     {
@@ -1081,6 +1082,32 @@
         "data/covers/rip-off-comix/69d01d52b9a8.jpg",
         "data/covers/rip-off-comix/f18ff83f60e3.jpg",
         "data/covers/rip-off-comix/6f87af50aab0.jpg"
+      ]
+    },
+    {
+      "id": "seamonsters-and-superheroes",
+      "name": "Seamonsters and Superheroes",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/124613/3121880-seamonsters%20%26%20superheroes%20v2003%20001%20%282003%29%20pagecover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/seamonsters-and-superheroes/4050-63987/"
+        }
+      ],
+      "startYear": 2003,
+      "publisher": "SLG Publishing",
+      "issueCount": 8,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/seamonsters-and-superheroes/7d48151f49b8.jpg",
+        "data/covers/seamonsters-and-superheroes/89038dbba50e.jpg",
+        "data/covers/seamonsters-and-superheroes/3f00114ebed4.jpg",
+        "data/covers/seamonsters-and-superheroes/e52834500d33.jpg"
       ]
     },
     {
