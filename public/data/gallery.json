@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 105,
+      "id": "heavy-metal-325-1778560687",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 325,
+      "year": 2026,
+      "artist": "Carlos Gomez",
+      "image": "images/heavy-metal/issue-325-1778560687.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-12T04:38:09.261Z"
+    },
+    {
       "seq": 104,
       "id": "heavy-metal-325-1778560544",
       "title": "Heavy Metal",
