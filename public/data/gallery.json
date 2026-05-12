@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 106,
+      "id": "heavy-metal-325-1778560803",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 325,
+      "year": 2026,
+      "artist": "Paul Kirchner",
+      "image": "images/heavy-metal/issue-325-1778560803.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-12T04:40:05.185Z"
+    },
+    {
       "seq": 105,
       "id": "heavy-metal-325-1778560687",
       "title": "Heavy Metal",
