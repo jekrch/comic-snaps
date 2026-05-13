@@ -1,6 +1,24 @@
 {
   "panels": [
     {
+      "seq": 114,
+      "id": "nut-5-1778712250",
+      "title": "Nut",
+      "slug": "nut",
+      "issue": 5,
+      "year": 2025,
+      "artist": "Brandon John",
+      "image": "images/nut/issue-5-1778712250.jpg",
+      "notes": null,
+      "tags": [
+        "oddmart",
+        "Minneapolis",
+        "swell"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T22:44:12.665Z"
+    },
+    {
       "seq": 113,
       "id": "pacific-presents-3-1778708406",
       "title": "Pacific Presents",
@@ -22,7 +40,7 @@
           -1.9
         ],
         [
-          57.0,
+          57,
           2.8,
           -1.2
         ],
