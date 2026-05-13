@@ -159,6 +159,19 @@
           "name": null
         }
       ]
+    },
+    "Silver Surfer Annual": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 2060,
+          "name": null
+        },
+        {
+          "id": 9302,
+          "name": null
+        }
+      ]
     }
   }
 }

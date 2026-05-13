@@ -1138,6 +1138,32 @@
       ]
     },
     {
+      "id": "silver-surfer-annual",
+      "name": "Silver Surfer Annual",
+      "parentSeries": null,
+      "description": "Starting in 1988, the Silver Surfer Annual accompanied Silver Surfer Vol. 3. It lasted for 7 issues from 1988 till 1994, although the main series lasted until 1998. Annuals were not published for 1995-1996. In 1997 the annuals were titled with a unique indica;\r\n\r\n- Silver Surfer '97 - Silver Surfer / Thor '98",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/117763/2680142-annual_silver_surfer__1___page_1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/silver-surfer-annual/4050-4069/"
+        }
+      ],
+      "startYear": 1988,
+      "publisher": "Marvel",
+      "issueCount": 7,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/silver-surfer-annual/7d251d39364c.jpg",
+        "data/covers/silver-surfer-annual/d85472981f67.jpg",
+        "data/covers/silver-surfer-annual/203f6b15b6d7.jpg",
+        "data/covers/silver-surfer-annual/27de62154b64.jpg"
+      ]
+    },
+    {
       "id": "skinbreaker",
       "name": "Skinbreaker",
       "parentSeries": null,
