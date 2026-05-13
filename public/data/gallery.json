@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 113,
+      "id": "pacific-presents-3-1778708406",
+      "title": "Pacific Presents",
+      "slug": "pacific-presents",
+      "issue": 3,
+      "year": 1984,
+      "artist": "Tim Conrad",
+      "image": "images/pacific-presents/issue-3-1778708406.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T21:40:08.672Z"
+    },
+    {
       "seq": 112,
       "id": "buzzard-1-1778705027",
       "title": "Buzzard",
@@ -23,7 +37,7 @@
         ],
         [
           30.6,
-          2.0,
+          2,
           -5.5
         ],
         [
