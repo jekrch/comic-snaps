@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 109,
+      "id": "silver-surfer-annual-4-1778689238",
+      "title": "Silver Surfer Annual",
+      "slug": "silver-surfer-annual",
+      "issue": 4,
+      "year": 1991,
+      "artist": "Steve Carr",
+      "image": "images/silver-surfer-annual/issue-4-1778689238.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T16:20:40.320Z"
+    },
+    {
       "seq": 108,
       "id": "panic-4-1778688553",
       "title": "Panic",
@@ -64,7 +78,7 @@
           -2.1
         ],
         [
-          62.0,
+          62,
           8.1,
           -4.4
         ]
