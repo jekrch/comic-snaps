@@ -437,6 +437,25 @@
       ]
     },
     {
+      "id": "jack-davis",
+      "name": "Jack Davis",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/391767-21111-jack-davis.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jack-davis/4040-3914/"
+        }
+      ],
+      "birthYear": 1924,
+      "deathYear": 2016,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
       "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",

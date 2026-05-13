@@ -134,6 +134,31 @@
           "name": null
         }
       ]
+    },
+    "Panic": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 13198,
+          "name": null
+        },
+        {
+          "id": 4763,
+          "name": null
+        },
+        {
+          "id": 8447,
+          "name": null
+        },
+        {
+          "id": 4762,
+          "name": null
+        },
+        {
+          "id": 6754,
+          "name": null
+        }
+      ]
     }
   }
 }
