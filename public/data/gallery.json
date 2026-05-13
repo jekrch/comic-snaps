@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-13T16:41:41.676Z"
+      "addedAt": "2026-05-13T16:41:41.676Z",
+      "width": 1280,
+      "height": 697,
+      "dominantColors": [
+        [
+          24.5,
+          4.7,
+          -8.9
+        ],
+        [
+          75.9,
+          -3.3,
+          -13.1
+        ],
+        [
+          51.6,
+          -16.9,
+          36.1
+        ]
+      ],
+      "colorfulness": 20.6,
+      "phash": "92ece9e1ac539e44",
+      "ahash": "ffff1c0e020c2828",
+      "dhash": "65a5e9fcf4d8c9d2"
     },
     {
       "seq": 110,
@@ -26,7 +49,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-13T16:22:22.814Z"
+      "addedAt": "2026-05-13T16:22:22.814Z",
+      "width": 935,
+      "height": 1280,
+      "dominantColors": [
+        [
+          59.4,
+          3.4,
+          6.2
+        ],
+        [
+          80.2,
+          6.4,
+          12.7
+        ],
+        [
+          26.7,
+          1.8,
+          3.7
+        ]
+      ],
+      "colorfulness": 10.0,
+      "phash": "8b8717cab426d9a5",
+      "ahash": "3f3f3f17f9f80003",
+      "dhash": "d1f35b671393671e"
     },
     {
       "seq": 109,
