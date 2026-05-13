@@ -172,6 +172,27 @@
           "name": null
         }
       ]
+    },
+    "Buzzard": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 11161,
+          "name": null
+        },
+        {
+          "id": 11162,
+          "name": null
+        },
+        {
+          "id": 349,
+          "name": null
+        },
+        {
+          "id": 9711,
+          "name": null
+        }
+      ]
     }
   }
 }
