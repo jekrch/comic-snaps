@@ -16,7 +16,30 @@
         "swell"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-13T22:44:12.665Z"
+      "addedAt": "2026-05-13T22:44:12.665Z",
+      "width": 732,
+      "height": 1280,
+      "dominantColors": [
+        [
+          83.6,
+          -5.8,
+          -2.2
+        ],
+        [
+          73.6,
+          -13.9,
+          31.0
+        ],
+        [
+          51.0,
+          28.1,
+          -3.7
+        ]
+      ],
+      "colorfulness": 21.1,
+      "phash": "ca913685667a3b95",
+      "ahash": "ffffd8f0fff91000",
+      "dhash": "e1d399a5e4f33525"
     },
     {
       "seq": 113,

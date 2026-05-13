@@ -193,6 +193,51 @@
           "name": null
         }
       ]
+    },
+    "Nut": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 12994,
+          "name": null
+        },
+        {
+          "id": 541,
+          "name": null
+        },
+        {
+          "id": 7058,
+          "name": null
+        },
+        {
+          "id": 4131,
+          "name": null
+        },
+        {
+          "id": 4423,
+          "name": null
+        },
+        {
+          "id": 13460,
+          "name": null
+        },
+        {
+          "id": 13509,
+          "name": null
+        },
+        {
+          "id": 7923,
+          "name": null
+        },
+        {
+          "id": 7924,
+          "name": null
+        },
+        {
+          "id": 5985,
+          "name": null
+        }
+      ]
     }
   }
 }

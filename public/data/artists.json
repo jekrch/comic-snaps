@@ -87,6 +87,17 @@
       ]
     },
     {
+      "id": "brandon-john",
+      "name": "Brandon John",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "carlos-gomez",
       "name": "Carlos Gomez",
       "description": "",

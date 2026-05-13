@@ -984,6 +984,18 @@
       ]
     },
     {
+      "id": "nut",
+      "name": "Nut",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "omaha",
       "name": "Omaha",
       "parentSeries": null,
