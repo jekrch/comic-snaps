@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 111,
+      "id": "heavy-metal-325-1778690499",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 325,
+      "year": 2026,
+      "artist": "Ilias Kyriazis",
+      "image": "images/heavy-metal/issue-325-1778690499.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T16:41:41.676Z"
+    },
+    {
       "seq": 110,
       "id": "panic-4-1778689340",
       "title": "Panic",
@@ -32,7 +46,7 @@
       "dominantColors": [
         [
           32.7,
-          7.0,
+          7,
           -3.9
         ],
         [
