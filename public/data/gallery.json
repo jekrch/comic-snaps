@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 112,
+      "id": "buzzard-1-1778705027",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 1,
+      "year": 1990,
+      "artist": "Joe Sacco",
+      "image": "images/buzzard/issue-1-1778705027.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T20:43:49.588Z"
+    },
+    {
       "seq": 111,
       "id": "heavy-metal-325-1778690499",
       "title": "Heavy Metal",
