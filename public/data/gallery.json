@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 108,
+      "id": "panic-4-1778688553",
+      "title": "Panic",
+      "slug": "panic",
+      "issue": 4,
+      "year": 1954,
+      "artist": "Jack Davis",
+      "image": "images/panic/issue-4-1778688553.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-13T16:09:15.519Z"
+    },
+    {
       "seq": 107,
       "id": "seamonsters-and-superheroes-1-1778626837",
       "title": "Seamonsters and Superheroes",
