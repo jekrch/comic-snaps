@@ -1646,6 +1646,32 @@
       ]
     },
     {
+      "id": "trencher",
+      "name": "Trencher",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/64400-11102-97397-1-trencher.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/trencher/4050-11102/"
+        }
+      ],
+      "startYear": 1993,
+      "publisher": "Image",
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/trencher/b64a39c302b2.jpg",
+        "data/covers/trencher/a7d9d184c81a.jpg",
+        "data/covers/trencher/819b9765a794.jpg",
+        "data/covers/trencher/a834998c8654.jpg"
+      ]
+    },
+    {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring",
       "name": "Under the Trees Where Nobody Sees: Rite of Spring",
       "parentSeries": null,
