@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 117,
+      "id": "buzzard-1-1778732556",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 1,
+      "year": 1990,
+      "artist": "Steve Lafler",
+      "image": "images/buzzard/issue-1-1778732556.jpg",
+      "notes": null,
+      "tags": [
+        "cover"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-14T04:22:38.321Z"
+    },
+    {
       "seq": 116,
       "id": "trencher-1-1778732037",
       "title": "Trencher",
