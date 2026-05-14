@@ -805,6 +805,23 @@
       ]
     },
     {
+      "id": "mary-fleener",
+      "name": "Mary Fleener",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/79902/1903531-event_fleener_1_.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mary-fleener/4040-4460/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "michael-allred",
       "name": "Michael Allred",
       "description": "Michael Dalton \"Mike\" Allred (born 1962) is an American comic book artist and writer. He is most well known for his independent comics creation Madman and for co-creating and drawing the comic book series iZombie. His work often draws upon pop art, as well as commercial and comic art of the 1950s and 1960s.",
