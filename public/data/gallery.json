@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 116,
+      "id": "trencher-1-1778732037",
+      "title": "Trencher",
+      "slug": "trencher",
+      "issue": 1,
+      "year": 1993,
+      "artist": "Keith Giffen",
+      "image": "images/trencher/issue-1-1778732037.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-14T04:13:59.092Z"
+    },
+    {
       "seq": 115,
       "id": "buzzard-1-1778731519",
       "title": "Buzzard",
@@ -17,7 +31,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          18.0,
+          18,
           1.9,
           -12.9
         ],
@@ -27,8 +41,8 @@
           -4.7
         ],
         [
-          56.0,
-          -1.0,
+          56,
+          -1,
           -7.7
         ]
       ],
