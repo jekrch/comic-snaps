@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 118,
+      "id": "tasty-comix-2-1778806537",
+      "title": "Tasty Comix",
+      "slug": "tasty-comix",
+      "issue": 2,
+      "year": 1970,
+      "artist": "Patrick Burk",
+      "image": "images/tasty-comix/issue-2-1778806537.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-15T00:55:39.914Z"
+    },
+    {
       "seq": 117,
       "id": "buzzard-1-1778732556",
       "title": "Buzzard",
@@ -29,7 +43,7 @@
           -17.1
         ],
         [
-          68.0,
+          68,
           4.8,
           -1.9
         ]
