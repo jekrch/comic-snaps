@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 119,
+      "id": "femme-noire-1-1779326287",
+      "title": "Femme Noire",
+      "slug": "femme-noire",
+      "issue": 1,
+      "year": 1989,
+      "artist": "Dave Cherry",
+      "image": "images/femme-noire/issue-1-1779326287.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-21T01:18:09.638Z"
+    },
+    {
       "seq": 118,
       "id": "tasty-comix-2-1778806537",
       "title": "Tasty Comix",
