@@ -560,6 +560,18 @@
       ]
     },
     {
+      "id": "femme-noire",
+      "name": "Femme Noire",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "frank",
       "name": "Frank",
       "parentSeries": null,
