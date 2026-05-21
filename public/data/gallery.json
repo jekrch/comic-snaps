@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 121,
+      "id": "just-brutal-3-1779326609",
+      "title": "Just Brutal",
+      "slug": "just-brutal",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Brahm Revel",
+      "image": "images/just-brutal/issue-3-1779326609.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-21T01:23:30.954Z"
+    },
+    {
       "seq": 120,
       "id": "absolute-martian-manhunter-11-1779326493",
       "title": "Absolute Martian Manhunter",
@@ -24,7 +38,7 @@
         [
           24.6,
           14.6,
-          1.0
+          1
         ],
         [
           63.2,
