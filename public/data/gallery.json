@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 123,
+      "id": "w0rldtr33-20-1779422044",
+      "title": "W0rldtr33",
+      "slug": "w0rldtr33",
+      "issue": 20,
+      "year": 2026,
+      "artist": "Fernando Blanco",
+      "image": "images/w0rldtr33/issue-20-1779422044.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T03:54:06.111Z"
+    },
+    {
       "seq": 122,
       "id": "frank-4-1779421687",
       "title": "Frank",
@@ -23,13 +37,13 @@
         ],
         [
           29.1,
-          11.0,
+          11,
           6.8
         ],
         [
           65.2,
           -12.6,
-          42.0
+          42
         ]
       ],
       "colorfulness": 25.2,
