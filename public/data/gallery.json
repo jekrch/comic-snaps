@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 124,
+      "id": "buzzard-1-1779425599",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 1,
+      "year": 1990,
+      "artist": "Jim Ryan",
+      "image": "images/buzzard/issue-1-1779425599.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T04:53:21.529Z"
+    },
+    {
       "seq": 123,
       "id": "w0rldtr33-20-1779422044",
       "title": "W0rldtr33",
@@ -19,7 +33,7 @@
         [
           27.9,
           10.6,
-          9.0
+          9
         ],
         [
           47.3,
@@ -28,11 +42,11 @@
         ],
         [
           74.6,
-          6.0,
+          6,
           2.7
         ]
       ],
-      "colorfulness": 25.0,
+      "colorfulness": 25,
       "phash": "9197186c6f266769",
       "ahash": "ce1e0f0720314301",
       "dhash": "1c9c3c2c63e79797"
