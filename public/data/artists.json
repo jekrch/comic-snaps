@@ -308,6 +308,23 @@
       ]
     },
     {
+      "id": "fernando-blanco",
+      "name": "Fernando Blanco",
+      "description": "Interview with Fernando Blanco (In Spanish)",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9241/594243-0001413.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/fernando-blanco/4040-5627/"
+        }
+      ],
+      "country": "Spain",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "filipe-andrade",
       "name": "Filipe Andrade",
       "description": "",

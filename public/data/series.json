@@ -1725,6 +1725,32 @@
       ]
     },
     {
+      "id": "w0rldtr33",
+      "name": "W0rldtr33",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9623413-w0rldtr33-1a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/w0rldtr33/4050-149811/"
+        }
+      ],
+      "startYear": 2023,
+      "publisher": "Image",
+      "issueCount": 20,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverImages": [
+        "data/covers/w0rldtr33/76ecfdb47ef7.jpg",
+        "data/covers/w0rldtr33/9737c2b61a8c.jpg",
+        "data/covers/w0rldtr33/421ef485f043.jpg",
+        "data/covers/w0rldtr33/3bbfb31acbb8.jpg"
+      ]
+    },
+    {
       "id": "weird-magazine",
       "name": "Weird Magazine",
       "parentSeries": null,
