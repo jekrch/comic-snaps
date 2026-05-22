@@ -1,6 +1,82 @@
 {
   "panels": [
     {
+      "seq": 127,
+      "id": "ice-cream-man-45-1779493223",
+      "title": "Ice Cream Man",
+      "slug": "ice-cream-man",
+      "issue": 45,
+      "year": 2026,
+      "artist": "/ Martin Morazzo",
+      "image": "images/ice-cream-man/issue-45-1779493223.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T23:40:25.539Z",
+      "width": 1280,
+      "height": 656,
+      "dominantColors": [
+        [
+          39.1,
+          20.3,
+          11.8
+        ],
+        [
+          76.2,
+          -1.1,
+          -4.9
+        ],
+        [
+          54.3,
+          27.1,
+          33.1
+        ]
+      ],
+      "colorfulness": 20.7,
+      "phash": "d20a3c6e5ee508f9",
+      "ahash": "11096decac74e6ec",
+      "dhash": "2179d94969cdcc58"
+    },
+    {
+      "seq": 126,
+      "id": "trumpzilla-1-1779492671",
+      "title": "Trumpzilla",
+      "slug": "trumpzilla",
+      "issue": 1,
+      "year": 2024,
+      "artist": "Sandez Rey",
+      "image": "images/trumpzilla/issue-1-1779492671.jpg",
+      "notes": null,
+      "tags": [
+        "Minneapolis"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T23:31:13.844Z",
+      "width": 1205,
+      "height": 1280,
+      "dominantColors": [
+        [
+          80,
+          2.9,
+          -19.7
+        ],
+        [
+          4.6,
+          5.5,
+          -13.8
+        ],
+        [
+          48.6,
+          4.7,
+          -21.2
+        ]
+      ],
+      "colorfulness": 7.1,
+      "phash": "bff071c7812c2633",
+      "ahash": "fece87933f368187",
+      "dhash": "c2981c7666646d1b"
+    },
+    {
       "seq": 125,
       "id": "anubis-1-1779425800",
       "title": "Anubis",
@@ -24,7 +100,7 @@
         [
           53.5,
           2.6,
-          -16.0
+          -16
         ],
         [
           23.6,

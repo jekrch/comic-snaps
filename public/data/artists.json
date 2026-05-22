@@ -1244,6 +1244,22 @@
       ]
     },
     {
+      "id": "sandez-rey",
+      "name": "Sandez Rey",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sandez-rey/4040-60019/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "scott-berwanger",
       "name": "Scott Berwanger",
       "description": "",
