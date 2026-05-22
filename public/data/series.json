@@ -1740,6 +1740,18 @@
       ]
     },
     {
+      "id": "trumpzilla",
+      "name": "Trumpzilla",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring",
       "name": "Under the Trees Where Nobody Sees: Rite of Spring",
       "parentSeries": null,
