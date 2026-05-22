@@ -28,6 +28,10 @@ GCD_BASE = "https://www.comics.org/api"
 GCD_MAX_RETRIES = 4
 GCD_BASE_SLEEP = 5.0  # seconds between GCD requests
 
+# Reused for keep-alive across all GCD requests in a run.
+_SESSION = requests.Session()
+_SESSION.headers.update(API_HEADERS)
+
 
 def _gcd_request(url: str, params: dict | None = None,
                  health: IntegrationHealth | None = None) -> requests.Response | None:
@@ -39,7 +43,7 @@ def _gcd_request(url: str, params: dict | None = None,
         if health and health.should_bail:
             return None
         try:
-            resp = requests.get(url, params=params, headers=API_HEADERS, timeout=15)
+            resp = _SESSION.get(url, params=params, timeout=15)
             if resp.status_code == 429:
                 if health:
                     health.mark_throttled("rate limited (429)")

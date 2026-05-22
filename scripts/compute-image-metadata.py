@@ -24,7 +24,10 @@ module under the `metadata/` package.
 
 import argparse
 import json
+import os
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from pathlib import Path
 
 from metadata.covers import backfill_cover_images, localize_cover_images
 from metadata.image_metadata import compute_metadata, needs_update
@@ -128,33 +131,47 @@ def main():
     updated_count = 0
     error_count = 0
 
-    for panel in panels:
+    # Collect work first so we can fan it out across processes.  Metadata
+    # extraction is CPU-bound (KMeans, perceptual hashing, LAB conversion);
+    # a process pool yields ~Nx speedup on multi-core machines.
+    work: list[tuple[int, Path]] = []  # (panel_index, image_path)
+    for idx, panel in enumerate(panels):
         if not needs_update(panel):
             continue
-
         image_path = IMAGE_ROOT / panel["image"]
         if not image_path.exists():
             print(f"  SKIP (file not found): {panel['image']}", file=sys.stderr)
             error_count += 1
             continue
+        work.append((idx, image_path))
 
-        try:
-            meta = compute_metadata(image_path)
-            panel.update(meta)
-            updated_count += 1
-            colors_preview = " | ".join(
-                f"L={c[0]} a={c[1]} b={c[2]}" for c in meta["dominantColors"]
-            )
-            print(
-                f"  OK: {panel['image']} → "
-                f"{meta['width']}x{meta['height']} "
-                f"phash={meta['phash']} "
-                f"colorfulness={meta['colorfulness']} "
-                f"colors=[{colors_preview}]"
-            )
-        except Exception as e:
-            print(f"  ERROR: {panel['image']} → {e}", file=sys.stderr)
-            error_count += 1
+    if work:
+        max_workers = min(len(work), os.cpu_count() or 1)
+        with ProcessPoolExecutor(max_workers=max_workers) as pool:
+            future_to_idx = {
+                pool.submit(compute_metadata, path): idx for idx, path in work
+            }
+            for future in as_completed(future_to_idx):
+                idx = future_to_idx[future]
+                panel = panels[idx]
+                try:
+                    meta = future.result()
+                except Exception as e:
+                    print(f"  ERROR: {panel['image']} → {e}", file=sys.stderr)
+                    error_count += 1
+                    continue
+                panel.update(meta)
+                updated_count += 1
+                colors_preview = " | ".join(
+                    f"L={c[0]} a={c[1]} b={c[2]}" for c in meta["dominantColors"]
+                )
+                print(
+                    f"  OK: {panel['image']} → "
+                    f"{meta['width']}x{meta['height']} "
+                    f"phash={meta['phash']} "
+                    f"colorfulness={meta['colorfulness']} "
+                    f"colors=[{colors_preview}]"
+                )
 
     if updated_count == 0:
         print("No panels needed updating.")

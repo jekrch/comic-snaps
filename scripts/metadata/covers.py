@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import requests
@@ -14,6 +15,15 @@ from .sources.comicvine import fetch_comicvine_covers
 from .sources.metron import fetch_metron_covers
 
 COVER_DOWNLOAD_UA = "comic-snaps/1.0 (+https://github.com/jekrch/comic-snaps)"
+
+# Reused for keep-alive across all cover-download requests in a run.
+_DOWNLOAD_SESSION = requests.Session()
+_DOWNLOAD_SESSION.headers.update({"User-Agent": COVER_DOWNLOAD_UA})
+
+# Concurrent download workers for the bulk localize pass.  Cover URLs
+# come from a handful of CDNs (Metron, Comic Vine), so a small pool is
+# enough to overlap latency without hammering any one host.
+COVER_DOWNLOAD_WORKERS = 4
 
 
 def get_gallery_issues_for_series(panels: list, series_slug: str) -> list[int]:
@@ -120,7 +130,7 @@ def _cover_filename(url: str) -> str:
 
 def _download_cover(url: str, dest: Path) -> bool:
     try:
-        resp = requests.get(url, headers={"User-Agent": COVER_DOWNLOAD_UA}, timeout=20)
+        resp = _DOWNLOAD_SESSION.get(url, timeout=20)
         resp.raise_for_status()
     except Exception as e:
         print(f"    WARN: download failed for {url}: {e}", file=sys.stderr)
@@ -157,13 +167,62 @@ def localize_cover_images(path: Path) -> int:
     relative path. URLs that fail to download are dropped rather than kept,
     so the UI never renders a broken hotlink — the next run can re-discover
     them via backfill_cover_images.
+
+    Downloads happen in parallel across a small worker pool because each
+    cover is an independent HTTP GET — sequential downloads would idle
+    the CPU waiting on network latency.
     """
     if not path.exists():
         return 0
     data = json.loads(path.read_text())
     entries = data.get("series", [])
-    updated = 0
 
+    # Pass 1: collect every (url, slug) pair that requires a network
+    # fetch.  Local-path URLs and already-downloaded files are resolved
+    # inline since they don't block on I/O.
+    resolved: dict[tuple[str, str], str | None] = {}  # (url, slug) → local-or-None
+    to_download: list[tuple[str, str]] = []           # (url, slug)
+    download_set: set[tuple[str, str]] = set()        # dedupe membership
+    for entry in entries:
+        covers = entry.get("coverImages") or []
+        series_slug = entry.get("id")
+        if not covers or not series_slug:
+            continue
+        for url in covers:
+            key = (url, series_slug)
+            if key in resolved or key in download_set:
+                # Already accounted for (duplicate URL within or across series)
+                continue
+            if not url.startswith("http"):
+                resolved[key] = url
+                continue
+            filename = _cover_filename(url)
+            dest = COVERS_DIR / series_slug / filename
+            rel = f"{COVERS_WEB_PREFIX}/{series_slug}/{filename}"
+            if dest.exists() and dest.stat().st_size > 0:
+                resolved[key] = rel
+            else:
+                to_download.append(key)
+                download_set.add(key)
+
+    # Pass 2: parallel downloads.
+    if to_download:
+        def fetch(item: tuple[str, str]) -> tuple[tuple[str, str], str | None]:
+            url, slug = item
+            filename = _cover_filename(url)
+            dest = COVERS_DIR / slug / filename
+            rel = f"{COVERS_WEB_PREFIX}/{slug}/{filename}"
+            if _download_cover(url, dest):
+                return item, rel
+            return item, None
+
+        with ThreadPoolExecutor(max_workers=COVER_DOWNLOAD_WORKERS) as pool:
+            for key, local in pool.map(fetch, to_download):
+                resolved[key] = local
+
+    # Pass 3: rebuild each entry's coverImages in original order from the
+    # resolution map, preserving dedupe semantics from the original code.
+    updated = 0
     for entry in entries:
         covers = entry.get("coverImages") or []
         if not covers:
@@ -174,7 +233,7 @@ def localize_cover_images(path: Path) -> int:
 
         new_covers: list[str] = []
         for url in covers:
-            local = localize_cover_url(url, series_slug)
+            local = resolved.get((url, series_slug))
             if local is None:
                 continue
             if local not in new_covers:

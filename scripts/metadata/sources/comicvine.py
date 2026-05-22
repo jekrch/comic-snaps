@@ -23,6 +23,10 @@ COMIC_VINE_HEADERS = API_HEADERS
 
 COMIC_VINE_VOLUME_ID_RE = re.compile(r"/4050-(\d+)")
 
+# Reused for keep-alive across all Comic Vine requests in a run.
+_SESSION = requests.Session()
+_SESSION.headers.update(COMIC_VINE_HEADERS)
+
 
 def comic_vine_search(resource: str, name: str, api_key: str,
                       health: IntegrationHealth | None = None) -> list:
@@ -38,10 +42,9 @@ def comic_vine_search(resource: str, name: str, api_key: str,
         "limit": 20,
     }
     try:
-        resp = requests.get(
+        resp = _SESSION.get(
             f"{COMIC_VINE_BASE}/{resource}/",
             params=params,
-            headers=COMIC_VINE_HEADERS,
             timeout=15,
         )
         resp.raise_for_status()
@@ -237,10 +240,9 @@ def fetch_comicvine_covers(series_entry: dict, gallery_issues: list[int],
         "limit": 100,
     }
     try:
-        resp = requests.get(
+        resp = _SESSION.get(
             f"{COMIC_VINE_BASE}/issues/",
             params=params,
-            headers=COMIC_VINE_HEADERS,
             timeout=15,
         )
         resp.raise_for_status()

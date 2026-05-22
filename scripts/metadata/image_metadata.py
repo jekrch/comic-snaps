@@ -32,7 +32,9 @@ def extract_dominant_colors(pixels_lab: np.ndarray, k: int = NUM_DOMINANT_COLORS
     Returns a list of [L, a, b] arrays sorted by cluster size (most dominant
     first), with values rounded to one decimal place.
     """
-    kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)
+    # n_init=1 is fine because random_state is fixed — the run is deterministic
+    # and multiple inits don't add information.
+    kmeans = KMeans(n_clusters=k, n_init=1, random_state=42)
     kmeans.fit(pixels_lab)
 
     labels, counts = np.unique(kmeans.labels_, return_counts=True)
@@ -78,6 +80,10 @@ def compute_metadata(image_path: Path) -> dict:
         "dominantColors": extract_dominant_colors(pixels_lab),
         "colorfulness": compute_colorfulness(pixels_lab),
     }
+    # Each hash function does its own .convert("L") internally; passing a
+    # pre-greyscaled image skips the redundant conversions (the second and
+    # third .convert("L") become no-ops).
+    img_l = img.convert("L")
     for name, fn in HASH_FUNCTIONS.items():
-        result[name] = str(fn(img))
+        result[name] = str(fn(img_l))
     return result

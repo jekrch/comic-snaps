@@ -26,16 +26,19 @@ from . import API_HEADERS, MAX_COVER_IMAGES, pick_exact_match
 
 METRON_BASE = "https://metron.cloud/api"
 
+# Reused for keep-alive across all Metron requests in a run.
+_SESSION = requests.Session()
+_SESSION.headers.update(API_HEADERS)
+
 
 def metron_get(endpoint: str, params: dict, username: str, password: str,
                health: IntegrationHealth | None = None) -> dict | None:
     """Make an authenticated GET request to the Metron API."""
     try:
-        resp = requests.get(
+        resp = _SESSION.get(
             f"{METRON_BASE}/{endpoint}",
             params=params,
             auth=(username, password),
-            headers=API_HEADERS,
             timeout=15,
         )
         resp.raise_for_status()

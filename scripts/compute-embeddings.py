@@ -32,6 +32,7 @@ Usage
 """
 
 import json
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -43,6 +44,16 @@ from PIL import Image
 from sklearn.decomposition import PCA
 from torchvision import models, transforms
 from transformers import AutoImageProcessor, AutoModel, AutoProcessor
+
+# Cap PyTorch's intra-op thread pool to physical cores.  The default
+# heuristic often oversubscribes on hyperthreaded CPUs and the resulting
+# contention slows CPU-only inference noticeably.
+_THREADS = os.cpu_count() or 1
+torch.set_num_threads(_THREADS)
+
+# Default batch size for incremental (SigLIP / DINO) models.  Tunable via
+# env var for memory-constrained environments.
+INCREMENTAL_BATCH_SIZE = int(os.environ.get("EMBED_BATCH_SIZE", "8"))
 
 
 # Paths
@@ -144,16 +155,29 @@ def compute_embedding_siglip(
     img: Image.Image, model, processor
 ) -> np.ndarray:
     """SigLIP: use get_image_features → unit-normalize."""
-    inputs = processor(images=img, return_tensors="pt")
-    with torch.no_grad():
+    return compute_embeddings_siglip_batch([img], model, processor)[0]
+
+
+def compute_embeddings_siglip_batch(
+    images: list[Image.Image], model, processor
+) -> np.ndarray:
+    """Batched SigLIP: returns (B, dim) of unit-normalized vectors."""
+    inputs = processor(images=images, return_tensors="pt")
+    with torch.inference_mode():
         outputs = model.get_image_features(**inputs)
         if hasattr(outputs, "pooler_output"):
-            vec = outputs.pooler_output.squeeze().numpy()
+            vecs = outputs.pooler_output
         elif isinstance(outputs, torch.Tensor):
-            vec = outputs.squeeze().numpy()
+            vecs = outputs
         else:
-            vec = outputs[0].squeeze().numpy()
-    return vec / np.linalg.norm(vec)
+            vecs = outputs[0]
+        # Ensure shape (B, dim) even if the model produced extra dims
+        if vecs.ndim > 2:
+            vecs = vecs.reshape(vecs.shape[0], -1)
+        vecs_np = vecs.numpy()
+    norms = np.linalg.norm(vecs_np, axis=1, keepdims=True)
+    norms[norms == 0] = 1
+    return vecs_np / norms
 
 
 
@@ -169,13 +193,22 @@ def compute_embedding_dino(
     representation than CLS alone, especially for layout and
     composition similarity.
     """
-    inputs = processor(images=img, return_tensors="pt")
-    with torch.no_grad():
+    return compute_embeddings_dino_batch([img], model, processor)[0]
+
+
+def compute_embeddings_dino_batch(
+    images: list[Image.Image], model, processor
+) -> np.ndarray:
+    """Batched DINOv2: returns (B, dim) of unit-normalized vectors."""
+    inputs = processor(images=images, return_tensors="pt")
+    with torch.inference_mode():
         outputs = model(**inputs)
-        cls = outputs.last_hidden_state[:, 0]          # (1, dim)
-        patch_mean = outputs.last_hidden_state[:, 1:].mean(dim=1)  # (1, dim)
-        vec = ((cls + patch_mean) / 2).squeeze().numpy()
-    return vec / np.linalg.norm(vec)
+        cls = outputs.last_hidden_state[:, 0]                      # (B, dim)
+        patch_mean = outputs.last_hidden_state[:, 1:].mean(dim=1)  # (B, dim)
+        vecs_np = ((cls + patch_mean) / 2).numpy()
+    norms = np.linalg.norm(vecs_np, axis=1, keepdims=True)
+    norms[norms == 0] = 1
+    return vecs_np / norms
 
 
 
@@ -306,7 +339,7 @@ def compute_gram_features_batch(
         Concatenated per-layer-normalized upper-triangle Gram values.
     """
     batch = torch.stack([GRAM_TRANSFORM(img) for img in images])
-    with torch.no_grad():
+    with torch.inference_mode():
         grams = extractor(batch)                # list of (B, tri_i)
     return torch.cat(grams, dim=1).numpy()       # (B, total_features)
 
@@ -328,6 +361,11 @@ def compute_gram_features(
 COMPUTE_FN = {
     "siglip": compute_embedding_siglip,
     "dino": compute_embedding_dino,
+}
+
+BATCH_COMPUTE_FN = {
+    "siglip": compute_embeddings_siglip_batch,
+    "dino": compute_embeddings_dino_batch,
 }
 
 
@@ -384,20 +422,55 @@ def process_incremental(spec: ModelSpec, panels: list[dict]) -> None:
     updated = dict(pruned)
     error_count = 0
 
-    for i, panel in enumerate(to_compute):
+    # Pre-load images so we can batch through the model.  Skip and
+    # account for missing/unreadable files up front.
+    ready_panels: list[dict] = []
+    ready_images: list[Image.Image] = []
+    for panel in to_compute:
         image_path = IMAGE_ROOT / panel["image"]
         if not image_path.exists():
             print(f"  SKIP (file not found): {panel['image']}", file=sys.stderr)
             error_count += 1
             continue
+        try:
+            ready_images.append(Image.open(image_path).convert("RGB"))
+            ready_panels.append(panel)
+        except Exception as e:
+            print(f"  ERROR loading: {panel['image']} → {e}", file=sys.stderr)
+            error_count += 1
+
+    batch_fn = BATCH_COMPUTE_FN[spec.key]
+    total = len(ready_panels)
+    processed = 0
+    for start in range(0, total, INCREMENTAL_BATCH_SIZE):
+        end = min(start + INCREMENTAL_BATCH_SIZE, total)
+        chunk_panels = ready_panels[start:end]
+        chunk_imgs = ready_images[start:end]
 
         try:
-            vec = embed_image(image_path, spec, model, processor)
-            updated[panel["id"]] = vec
-            print(f"  [{i + 1}/{len(to_compute)}] OK: {panel['image']}")
+            vecs = batch_fn(chunk_imgs, model, processor)
+            for panel, vec in zip(chunk_panels, vecs):
+                updated[panel["id"]] = [round(float(v), 5) for v in vec]
+                processed += 1
+                print(f"  [{processed}/{total}] OK: {panel['image']}")
         except Exception as e:
-            print(f"  ERROR: {panel['image']} → {e}", file=sys.stderr)
-            error_count += 1
+            # Fall back to one-at-a-time so a single bad image doesn't
+            # take out the whole batch.
+            print(
+                f"  Batch {start}–{end} failed ({e}), "
+                f"falling back to single-image mode",
+                file=sys.stderr,
+            )
+            single_fn = COMPUTE_FN[spec.key]
+            for panel, img in zip(chunk_panels, chunk_imgs):
+                try:
+                    vec = single_fn(img, model, processor)
+                    updated[panel["id"]] = [round(float(v), 5) for v in vec]
+                    processed += 1
+                    print(f"  [{processed}/{total}] OK (fallback): {panel['image']}")
+                except Exception as e2:
+                    print(f"  ERROR: {panel['image']} → {e2}", file=sys.stderr)
+                    error_count += 1
 
     save_embeddings(spec, updated)
     print(

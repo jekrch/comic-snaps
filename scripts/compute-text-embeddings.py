@@ -351,6 +351,22 @@ def embed_text(model, text: str) -> list[float]:
     return [round(float(v), 5) for v in vec]
 
 
+def embed_texts(model, texts: list[str], batch_size: int = 32) -> list[list[float]]:
+    """Encode a list of strings in batches.
+
+    Same output as calling ``embed_text`` per string, but the sentence
+    transformer can amortise tokenisation and matmul across the batch.
+    """
+    vecs = model.encode(
+        texts,
+        batch_size=batch_size,
+        normalize_embeddings=True,
+        show_progress_bar=False,
+        convert_to_numpy=True,
+    )
+    return [[round(float(v), 5) for v in row] for row in vecs]
+
+
 # ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
@@ -481,17 +497,30 @@ def main():
     updated = dict(pruned)
     embed_error_count = 0
 
-    for i, panel in enumerate(to_embed):
-        try:
-            vec = embed_text(embedder, panel["text"])
+    texts = [panel["text"] for panel in to_embed]
+    try:
+        vecs = embed_texts(embedder, texts)
+        for i, (panel, vec) in enumerate(zip(to_embed, vecs)):
             updated[panel["id"]] = vec
             print(f"  [{i + 1}/{len(to_embed)}] OK: {panel['image']}")
-        except Exception as e:
-            print(
-                f"  ERROR embedding: {panel['image']} → {e}",
-                file=sys.stderr,
-            )
-            embed_error_count += 1
+    except Exception as e:
+        # Batch failed — fall back to per-panel so a single bad string
+        # doesn't take out the whole run.
+        print(
+            f"[text] Batch embed failed ({e}), falling back to per-panel.",
+            file=sys.stderr,
+        )
+        for i, panel in enumerate(to_embed):
+            try:
+                vec = embed_text(embedder, panel["text"])
+                updated[panel["id"]] = vec
+                print(f"  [{i + 1}/{len(to_embed)}] OK (fallback): {panel['image']}")
+            except Exception as e2:
+                print(
+                    f"  ERROR embedding: {panel['image']} → {e2}",
+                    file=sys.stderr,
+                )
+                embed_error_count += 1
 
     save_embeddings(updated)
     print(
