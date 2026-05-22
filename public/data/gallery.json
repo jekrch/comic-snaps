@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 126,
+      "id": "trumpzilla-1-1779492671",
+      "title": "Trumpzilla",
+      "slug": "trumpzilla",
+      "issue": 1,
+      "year": 2024,
+      "artist": "Sandez Rey",
+      "image": "images/trumpzilla/issue-1-1779492671.jpg",
+      "notes": null,
+      "tags": [
+        "Minneapolis"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T23:31:13.844Z"
+    },
+    {
       "seq": 125,
       "id": "anubis-1-1779425800",
       "title": "Anubis",
@@ -24,7 +40,7 @@
         [
           53.5,
           2.6,
-          -16.0
+          -16
         ],
         [
           23.6,
