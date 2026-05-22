@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 127,
+      "id": "ice-cream-man-45-1779493223",
+      "title": "Ice Cream Man",
+      "slug": "ice-cream-man",
+      "issue": 45,
+      "year": 2026,
+      "artist": "/ Martin Morazzo",
+      "image": "images/ice-cream-man/issue-45-1779493223.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-22T23:40:25.539Z"
+    },
+    {
       "seq": 126,
       "id": "trumpzilla-1-1779492671",
       "title": "Trumpzilla",
@@ -19,7 +33,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          80.0,
+          80,
           2.9,
           -19.7
         ],
