@@ -28,6 +28,38 @@ def mark_source(entry: dict, source_id: str) -> None:
         sources.append(source_id)
 
 
+def has_cover_source(entry: dict, source_id: str, gallery_issues: list[int]) -> bool:
+    """True if `source_id` has already been tried for covers with this issue set.
+
+    Returns False whenever the stored issue snapshot differs from the
+    current `gallery_issues`, so adding a new issue to the gallery
+    naturally retriggers a fetch for that series.  Returns False on any
+    malformed/missing marker (defensive — we'd rather retry than skip a
+    legitimately stale entry).
+    """
+    cs = entry.get("coverSources")
+    if not isinstance(cs, dict):
+        return False
+    stored = cs.get(source_id)
+    if not isinstance(stored, list):
+        return False
+    return set(stored) == set(gallery_issues)
+
+
+def mark_cover_source(entry: dict, source_id: str, gallery_issues: list[int]) -> None:
+    """Record that `source_id` was tried for covers at this gallery_issues snapshot.
+
+    Stored sorted+deduped so the on-disk JSON has a stable shape across
+    runs (otherwise the file would re-diff every CI run even when nothing
+    changed).
+    """
+    cs = entry.get("coverSources")
+    if not isinstance(cs, dict):
+        cs = {}
+        entry["coverSources"] = cs
+    cs[source_id] = sorted(set(gallery_issues))
+
+
 def ensure_reference(entry: dict, name: str, url: str) -> None:
     """Add a reference to `entry` if one with the same name isn't already present."""
     refs = entry.setdefault("references", [])

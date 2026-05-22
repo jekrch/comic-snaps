@@ -10,6 +10,12 @@ import requests
 
 from .health import IntegrationHealth
 from .paths import COVERS_DIR, COVERS_WEB_PREFIX
+from .references import (
+    SOURCE_COMICVINE,
+    SOURCE_METRON,
+    has_cover_source,
+    mark_cover_source,
+)
 from .sources import MAX_COVER_IMAGES
 from .sources.comicvine import fetch_comicvine_covers
 from .sources.metron import fetch_metron_covers
@@ -53,6 +59,7 @@ def backfill_cover_images(path: Path, panels: list) -> int:
     data = json.loads(path.read_text())
     entries = data.get("series", [])
     updated = 0
+    dirty = False  # set whenever ANY field on an entry changed, incl. coverSources
 
     metron_health = IntegrationHealth("Metron")
     comicvine_health = IntegrationHealth("Comic Vine")
@@ -84,32 +91,59 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             if local and local not in covers:
                 covers.append(local)
 
-        # Try Metron first
-        if username and password and not metron_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+        # Try Metron first.  Skip when we've already tried this source for
+        # this exact set of gallery_issues — the previous run either filled
+        # what it could or found nothing, and the API will return the same
+        # result this time.
+        try_metron = (
+            username
+            and password
+            and not metron_health.should_bail
+            and len(covers) < MAX_COVER_IMAGES
+            and not has_cover_source(entry, SOURCE_METRON, gallery_issues)
+        )
+        if try_metron:
             metron_covers = fetch_metron_covers(
                 entry, gallery_issues, username, password, health=metron_health
             )
             for url in metron_covers:
                 try_add(url)
+            # Only mark the source as tried when the integration actually
+            # completed.  If we got rate-limited mid-call, leave the marker
+            # off so the next run retries.
+            if not metron_health.should_bail:
+                mark_cover_source(entry, SOURCE_METRON, gallery_issues)
+                dirty = True
 
         # Supplement with Comic Vine. GCD covers are skipped — files1.comics.org
         # blocks automated downloads (captcha-gated in the browser).
-        if cv_api_key and not comicvine_health.should_bail and len(covers) < MAX_COVER_IMAGES:
+        try_cv = (
+            cv_api_key
+            and not comicvine_health.should_bail
+            and len(covers) < MAX_COVER_IMAGES
+            and not has_cover_source(entry, SOURCE_COMICVINE, gallery_issues)
+        )
+        if try_cv:
             cv_covers = fetch_comicvine_covers(
                 entry, gallery_issues, cv_api_key, health=comicvine_health
             )
             for url in cv_covers:
                 try_add(url)
+            if not comicvine_health.should_bail:
+                mark_cover_source(entry, SOURCE_COMICVINE, gallery_issues)
+                dirty = True
 
         if covers and covers != existing:
             entry["coverImages"] = covers
             updated += 1
+            dirty = True
             print(f"  {entry.get('name')}: {len(covers)} cover(s)")
 
-    if updated:
+    if dirty:
         data["series"] = entries
         path.write_text(json.dumps(data, indent=2) + "\n")
-        print(f"  Fetched covers for {updated} series.")
+        if updated:
+            print(f"  Fetched covers for {updated} series.")
 
     return updated
 

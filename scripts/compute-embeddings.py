@@ -45,11 +45,18 @@ from sklearn.decomposition import PCA
 from torchvision import models, transforms
 from transformers import AutoImageProcessor, AutoModel, AutoProcessor
 
-# Cap PyTorch's intra-op thread pool to physical cores.  The default
-# heuristic often oversubscribes on hyperthreaded CPUs and the resulting
-# contention slows CPU-only inference noticeably.
-_THREADS = os.cpu_count() or 1
-torch.set_num_threads(_THREADS)
+# Honor explicit thread counts from the environment.  PyTorch's own
+# default heuristic reads *physical* cores via OpenMP, which is usually
+# right; overriding to os.cpu_count() (logical CPUs) can oversubscribe
+# hyperthread pairs on shared CI runners and make inference noticeably
+# *slower*.  Set TORCH_NUM_THREADS / OMP_NUM_THREADS in the workflow to
+# tune for a specific runner.
+_env_threads = os.environ.get("TORCH_NUM_THREADS") or os.environ.get("OMP_NUM_THREADS")
+if _env_threads:
+    try:
+        torch.set_num_threads(int(_env_threads))
+    except ValueError:
+        pass
 
 # Default batch size for incremental (SigLIP / DINO) models.  Tunable via
 # env var for memory-constrained environments.
