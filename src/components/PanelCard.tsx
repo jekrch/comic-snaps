@@ -1,6 +1,7 @@
 import { useRef, useCallback, useId, useMemo } from "react";
 import type { Panel } from "../types";
 import { Expand } from "lucide-react";
+import { formatIssue } from "../utils/issueFormat";
 
 const DOUBLE_CLICK_DELAY = 400;
 const MOUSE_TOLERANCE = 20;
@@ -110,7 +111,7 @@ export default function PanelCard({ panel, onOpen }: Props) {
           <img
             ref={imgRef}
             src={imgSrc}
-            alt={`${panel.title} #${panel.issue}`}
+            alt={`${panel.title} ${formatIssue(panel.issue)}`}
             decoding="async"
             loading="lazy"
             className="block w-full"
@@ -132,7 +133,7 @@ export default function PanelCard({ panel, onOpen }: Props) {
             className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
             style={{ aspectRatio: "3/4" }}
           >
-            {panel.title} #{panel.issue}
+            {panel.title} {formatIssue(panel.issue)}
           </div>
         </div>
 
@@ -210,14 +211,14 @@ export default function PanelCard({ panel, onOpen }: Props) {
               focus:outline-none focus:ring-1 focus:ring-white/30
               active:scale-95
             "
-            aria-label={`View ${panel.title} #${panel.issue} full screen`}
+            aria-label={`View ${panel.title} ${formatIssue(panel.issue)} full screen`}
           >
             <Expand size={16} />
           </button>
 
           <p className="font-display text-sm text-ink leading-tight">
             {panel.title}{" "}
-            <span className="text-accent">#{panel.issue}</span>
+            <span className="text-accent">{formatIssue(panel.issue)}</span>
           </p>
           <p className="text-xs text-ink-muted mt-0.5">
             {panel.artist} · {panel.year}

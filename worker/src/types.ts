@@ -52,7 +52,7 @@ export interface GitHubContentsResponse {
 
 export interface PanelMetadata {
   title: string;
-  issue: number;
+  issue: number | string;
   year: number;
   artist: string;
   notes: string | null;

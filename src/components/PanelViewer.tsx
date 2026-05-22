@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info } from "lucide-react";
 import type { Panel } from "../types";
+import { formatIssue } from "../utils/issueFormat";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
@@ -104,7 +105,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
   // Search URL
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
-    `${panel.title} #${panel.issue} ${panel.year} ${panel.artist}`
+    `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
   )}`;
 
   // Navigate with drawer slide-out — close immediately so drawer slides with the image
@@ -211,7 +212,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
       style={{ touchAction: "none" }}
       role="dialog"
       aria-modal="true"
-      aria-label={`${panel.title} #${panel.issue} — full view`}
+      aria-label={`${panel.title} ${formatIssue(panel.issue)} — full view`}
     >
       {/* Clickable backdrop: closes viewer when clicking open space */}
       <div
@@ -243,7 +244,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
           <div style={{ pointerEvents: "auto", width: "fit-content" }}>
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.title}{" "}
-              <span className="text-accent">#{panel.issue}</span>{" "}
+              <span className="text-accent">{formatIssue(panel.issue)}</span>{" "}
               <span className="text-white/40 text-xs">({panel.year})</span>
             </p>
             <p className="text-xs text-white/60 mt-0.5 leading-snug">
@@ -360,7 +361,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
           >
             <img
               src={`${import.meta.env.BASE_URL}${prevPanel.image}`}
-              alt={`${prevPanel.title} #${prevPanel.issue}`}
+              alt={`${prevPanel.title} ${formatIssue(prevPanel.issue)}`}
               className="block w-auto h-auto object-contain rounded-sm"
               style={slideImgStyle}
               draggable={false}
@@ -386,7 +387,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
           <img
             ref={imgRef}
             src={`${import.meta.env.BASE_URL}${panel.image}`}
-            alt={`${panel.title} #${panel.issue}`}
+            alt={`${panel.title} ${formatIssue(panel.issue)}`}
             className="block w-auto h-auto object-contain rounded-sm"
             style={slideImgStyle}
             draggable={false}
@@ -402,7 +403,7 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
           >
             <img
               src={`${import.meta.env.BASE_URL}${nextPanel.image}`}
-              alt={`${nextPanel.title} #${nextPanel.issue}`}
+              alt={`${nextPanel.title} ${formatIssue(nextPanel.issue)}`}
               className="block w-auto h-auto object-contain rounded-sm"
               style={slideImgStyle}
               draggable={false}
@@ -473,11 +474,11 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
 
         {/* Hint text (when nav present) */}
         {!isZoomed && (hasPrev || hasNext) && (
-          <div className="text-center mt-0 mb-1 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
+          <div className="text-center mt-0 mb-4 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
             <span className="text-[11px] text-white/30 tracking-wide">
-              {isTouchDevice
+              {/* {isTouchDevice
                 ? "swipe to navigate · pinch to zoom"
-                : "← → or drag to navigate · scroll to zoom · esc to close"}
+                : "← → or drag to navigate · scroll to zoom · esc to close"} */}
             </span>
           </div>
         )}

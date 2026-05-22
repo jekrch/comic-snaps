@@ -102,6 +102,7 @@ export default function SimilarityGraph({
   const [loading, setLoading] = useState(true);
   const [embeddings, setEmbeddings] = useState<EmbeddingMap | null>(null);
   const [currentNeighbors, setCurrentNeighbors] = useState<Neighbor[]>([]);
+  const [slideOutSettled, setSlideOutSettled] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<PanelNodeData>>(
     []
@@ -325,9 +326,20 @@ export default function SimilarityGraph({
 
   const show = open && !closing;
 
+  // After the slide-out animation completes, snap the graph to its closed
+  // position (off-screen top) without transition. This prevents a diagonal
+  // animation across the viewport when slideDir later resets to null.
+  useEffect(() => {
+    if (slideDir && !show) {
+      const t = setTimeout(() => setSlideOutSettled(true), 300);
+      return () => clearTimeout(t);
+    }
+    setSlideOutSettled(false);
+  }, [slideDir, show]);
+
   // Determine transform based on slideDir or normal open/close
   let graphTransform = show ? "translateY(0)" : "translateY(-100vh)";
-  if (slideDir && !show) {
+  if (slideDir && !show && !slideOutSettled) {
     graphTransform = `translateX(${slideDir === "left" ? "-100%" : "100%"})`;
   }
   if (closing) {
@@ -446,9 +458,11 @@ export default function SimilarityGraph({
           opacity: closing ? 0 : 1,
           transition: closing
             ? "opacity 0.25s ease-out"
-            : slideDir
-              ? "transform 0.28s cubic-bezier(0.2, 0, 0, 1)"
-              : "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
+            : slideOutSettled
+              ? "none"
+              : slideDir
+                ? "transform 0.28s cubic-bezier(0.2, 0, 0, 1)"
+                : "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
           pointerEvents: show ? "auto" : "none",
         }}
         onClick={(e) => e.stopPropagation()}

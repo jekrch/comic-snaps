@@ -33,7 +33,7 @@ export interface Panel {
   id: string;
   title: string;
   slug: string;
-  issue: number;
+  issue: number | string;
   year: number;
   artist: string;
   image: string;

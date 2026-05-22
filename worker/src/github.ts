@@ -1,4 +1,10 @@
 import type { Env, Gallery, GitHubContentsResponse, PanelEntry } from "./types";
+import { parseIssue } from "./caption";
+
+// Display form for an issue identifier (e.g. `#5` for a number, `VOL 1` as-is).
+export function formatIssue(issue: number | string): string {
+  return typeof issue === "number" ? `#${issue}` : issue;
+}
 
 const GITHUB_API = "https://api.github.com";
 const USER_AGENT = "comic-panel-bot";
@@ -21,6 +27,26 @@ export function arrayBufferToBase64(buffer: ArrayBuffer): string {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);
+}
+
+// btoa/atob only handle Latin-1, so non-ASCII chars (curly quotes, em-dashes,
+// accents, emoji) need to round-trip through UTF-8 bytes.
+function utf8ToBase64(text: string): string {
+  const bytes = new TextEncoder().encode(text);
+  let binary = "";
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function base64ToUtf8(base64: string): string {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
 }
 
 /** Commit a single file to the repository. */
@@ -66,7 +92,7 @@ export async function readGalleryJson(
   if (getResp.ok) {
     const data: GitHubContentsResponse = await getResp.json();
     sha = data.sha;
-    const content = atob(data.content.replace(/\n/g, ""));
+    const content = base64ToUtf8(data.content.replace(/\n/g, ""));
     gallery = JSON.parse(content);
   } else if (getResp.status !== 404) {
     const err = await getResp.text();
@@ -86,7 +112,7 @@ async function writeGalleryJson(
   const [owner, repo] = env.GITHUB_REPO.split("/");
   const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/public/data/gallery.json`;
 
-  const updatedContent = btoa(JSON.stringify(gallery, null, 2));
+  const updatedContent = utf8ToBase64(JSON.stringify(gallery, null, 2));
 
   const putBody: Record<string, string> = {
     message: commitMessage,
@@ -127,7 +153,7 @@ export async function updateGalleryJson(
     env,
     gallery,
     sha,
-    `Update gallery: add ${newEntry.title} #${newEntry.issue}`
+    `Update gallery: add ${newEntry.title} ${formatIssue(newEntry.issue)}`
   );
 }
 
@@ -173,7 +199,7 @@ export async function deletePanel(
     env,
     gallery,
     sha,
-    `Update gallery: remove ${removed.title} #${removed.issue}`
+    `Update gallery: remove ${removed.title} ${formatIssue(removed.issue)}`
   );
 
   // Delete the image file from the repo
@@ -189,7 +215,7 @@ export async function deletePanel(
       env,
       imagePath,
       fileData.sha,
-      `Delete panel: ${removed.title} #${removed.issue}`
+      `Delete panel: ${removed.title} ${formatIssue(removed.issue)}`
     );
   }
 
@@ -225,8 +251,7 @@ export async function updatePanel(
       panel.title = value;
       break;
     case "issue":
-      panel.issue = parseInt(value, 10);
-      if (isNaN(panel.issue)) throw new Error(`Invalid issue number: "${value}"`);
+      panel.issue = parseIssue(value);
       break;
     case "year":
       panel.year = parseInt(value, 10);
@@ -247,7 +272,7 @@ export async function updatePanel(
     env,
     gallery,
     sha,
-    `Update gallery: edit ${panel.title} #${panel.issue} (${field})`
+    `Update gallery: edit ${panel.title} ${formatIssue(panel.issue)} (${field})`
   );
 
   return panel;

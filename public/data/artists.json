@@ -90,8 +90,14 @@
       "id": "brandon-john",
       "name": "Brandon John",
       "description": "",
-      "imageUrl": null,
-      "references": [],
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/c2f620d7-d2d2-40df-a6e6-1f9e033f3cac/DSC_0009.JPG?format=1000w",
+      "references": [{
+        "name": "Online Store",
+        "url": "https://row7.squarespace.com/brandon-john-1"
+      }, {
+        "name": "Instagram",
+        "url": "https://www.instagram.com/brandon_of_john/"
+      }],
       "sources": [
         "comicvine",
         "metron"
@@ -1263,11 +1269,15 @@
       "id": "steve-lafler",
       "name": "Steve Lafler",
       "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "imageUrl": "https://stevelafler.com/wp-content/uploads/2012/06/lafler_steve.jpg?w=367&h=391",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/steve-lafler/4040-58035/"
+        },
+        {
+          "name": "Artist's Website",
+          "url": "https://stevelafler.com/"
         }
       ],
       "country": "United States",

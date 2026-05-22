@@ -1000,11 +1000,17 @@
       "name": "Nut",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/b1fa0324-9ad5-4bc6-a3b5-95db10679cdf/NUT+5+cover_PI.png?format=1500w",
       "references": [],
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "coverImages": [
+        "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/b1fa0324-9ad5-4bc6-a3b5-95db10679cdf/NUT+5+cover_PI.png?format=1500w",
+        "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/35bb599d-bcc0-4b0e-a5d8-863d8cae822b/NUT+4+cover_PI.png?format=1500w",
+        "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/a20c6815-fee4-4191-88f3-ee9d30a5b406/NUT+3+cover_PI.png?format=1500w",
+        "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/9479a4ce-bdcb-424e-a6fe-49b12415318c/NUT+2+cover_PI.png?format=1500w"
       ]
     },
     {

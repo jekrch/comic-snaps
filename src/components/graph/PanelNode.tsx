@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
 import type { Panel } from "../../types";
+import { formatIssue } from "../../utils/issueFormat";
 import {
   NODE_SIZE,
   ANCHOR_SIZE,
@@ -557,7 +558,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
               {panel.title}
             </span>{" "}
             <span className="text-accent" style={{ whiteSpace: "nowrap" }}>
-              #{panel.issue}
+              {formatIssue(panel.issue)}
             </span>
           </p>
           <p
@@ -619,7 +620,7 @@ function PanelNode({ data }: NodeProps<Node<PanelNodeData>>) {
 
       <img
         src={`${import.meta.env.BASE_URL}${panel.image}`}
-        alt={`${panel.title} #${panel.issue}`}
+        alt={`${panel.title} ${formatIssue(panel.issue)}`}
         draggable={false}
         style={{
           width: "100%",

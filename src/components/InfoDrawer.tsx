@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, Reference } from "../types";
+import { formatIssue } from "../utils/issueFormat";
 
 function refIcon(ref: Reference) {
   const url = ref.url.toLowerCase();
@@ -39,6 +40,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
   const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
   const [swipeOffset, setSwipeOffset] = useState(0);
+  const [slideOutSettled, setSlideOutSettled] = useState(false);
   const thumbRectRef = useRef<DOMRect | null>(null);
   const thumbRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
   const expandedRef = useRef<HTMLDivElement | null>(null);
@@ -65,6 +67,18 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     setAnimPhase("idle");
     thumbRectRef.current = null;
   }, [panel.id]);
+
+  // After the slide-out animation completes, snap the drawer to its closed
+  // position (off-screen bottom) without transition. This prevents a diagonal
+  // animation across the viewport when slideDir later resets to null.
+  const show = open && !closing;
+  useEffect(() => {
+    if (slideDir && !show) {
+      const t = setTimeout(() => setSlideOutSettled(true), 300);
+      return () => clearTimeout(t);
+    }
+    setSlideOutSettled(false);
+  }, [slideDir, show]);
 
   const openCover = useCallback((idx: number) => {
     if (animPhase !== "idle") return;
@@ -347,11 +361,9 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   if (artist?.country) artistMetaParts.push(artist.country);
   const artistMeta = artistMetaParts.join(" · ");
 
-  const show = open && !closing;
-
   // Determine transform based on slideDir or normal open/close
   let transform = show ? "translateY(0)" : "translateY(100vh)";
-  if (slideDir && !show) {
+  if (slideDir && !show && !slideOutSettled) {
     transform = `translateX(${slideDir === "left" ? "-100%" : "100%"})`;
   }
   // When the viewer is closing, fade out instead of sliding down
@@ -369,9 +381,11 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
         opacity: closing ? 0 : 1,
         transition: closing
           ? "opacity 0.25s ease-out"
-          : slideDir
-            ? "transform 0.28s cubic-bezier(0.2, 0, 0, 1)"
-            : "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
+          : slideOutSettled
+            ? "none"
+            : slideDir
+              ? "transform 0.28s cubic-bezier(0.2, 0, 0, 1)"
+              : "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
         pointerEvents: show ? "auto" : "none",
       }}
       onClick={(e) => e.stopPropagation()}
@@ -619,7 +633,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                     onClick={() => onSelectPanel(p)}
                     className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
                     style={{ aspectRatio: `${p.width} / ${p.height}` }}
-                    title={`${p.title} #${p.issue}`}
+                    title={`${p.title} ${formatIssue(p.issue)}`}
                   >
                     <img
                       src={`${import.meta.env.BASE_URL}${p.image}`}
@@ -628,7 +642,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <span className="absolute bottom-0 inset-x-0 px-1.5 py-0.5 text-[9px] text-white/80 bg-gradient-to-t from-black/80 to-transparent leading-tight">
-                      #{p.issue}
+                      {formatIssue(p.issue)}
                     </span>
                   </button>
                 ))}
@@ -705,7 +719,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                     onClick={() => onSelectPanel(p)}
                     className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
                     style={{ aspectRatio: `${p.width} / ${p.height}` }}
-                    title={`${p.title} #${p.issue}`}
+                    title={`${p.title} ${formatIssue(p.issue)}`}
                   >
                     <img
                       src={`${import.meta.env.BASE_URL}${p.image}`}
@@ -714,7 +728,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <span className="absolute bottom-0 inset-x-0 px-1.5 py-0.5 text-[9px] text-white/80 bg-gradient-to-t from-black/80 to-transparent leading-tight">
-                      {p.title} #{p.issue}
+                      {p.title} {formatIssue(p.issue)}
                     </span>
                   </button>
                 ))}
@@ -764,7 +778,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
             className="inline-flex items-center gap-1.5 text-[11px] text-accent hover:text-accent-dim transition-colors"
           >
             <Search size={12} />
-            Search for {panel.title} #{panel.issue}
+            Search for {panel.title} {formatIssue(panel.issue)}
           </a>
         </div>
       </div>

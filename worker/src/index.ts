@@ -5,6 +5,7 @@ import {
   arrayBufferToBase64,
   commitFile,
   deletePanel,
+  formatIssue,
   isUpdatableField,
   nextSeq,
   readGalleryJson,
@@ -16,7 +17,9 @@ const HELP_TEXT = `Comic Snaps Bot — Commands:
 
 Add a panel:
   Post a photo with a caption in this format (notes and tags are optional):
-  Title // Issue # // Year // Artist // notes // tags
+  Title // Issue // Year // Artist // notes // tags
+
+  Issue can be a number (1, 42) or text (VOL 1, Annual 2).
 
   Example:
   Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera
@@ -87,7 +90,7 @@ export default {
               env.TELEGRAM_BOT_TOKEN,
               message.chat.id,
               message.message_id,
-              `Deleted panel #${seq}: ${removed.title} #${removed.issue}`
+              `Deleted panel #${seq}: ${removed.title} ${formatIssue(removed.issue)}`
             );
           }
           return new Response("OK");
@@ -122,7 +125,7 @@ export default {
               env.TELEGRAM_BOT_TOKEN,
               message.chat.id,
               message.message_id,
-              `Updated panel #${seq}: set ${field} to "${value}"\n→ ${updated.title} #${updated.issue}`
+              `Updated panel #${seq}: set ${field} to "${value}"\n→ ${updated.title} ${formatIssue(updated.issue)}`
             );
           }
           return new Response("OK");
@@ -149,7 +152,7 @@ export default {
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue # // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera"
+        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera"
       );
       return new Response("OK");
     }
@@ -174,10 +177,11 @@ export default {
       // 4. Generate paths and IDs
       const timestamp = Math.floor(Date.now() / 1000);
       const slug = slugify(metadata.title);
-      const filename = `issue-${metadata.issue}-${timestamp}.jpg`;
+      const issueSlug = slugify(String(metadata.issue));
+      const filename = `issue-${issueSlug}-${timestamp}.jpg`;
       const repoImagePath = `public/images/${slug}/${filename}`;
       const browserImagePath = `images/${slug}/${filename}`;
-      const id = `${slug}-${metadata.issue}-${timestamp}`;
+      const id = `${slug}-${issueSlug}-${timestamp}`;
 
       // 5. Commit image file to GitHub
       const base64Image = arrayBufferToBase64(imageBytes);
@@ -185,7 +189,7 @@ export default {
         env,
         repoImagePath,
         base64Image,
-        `Add panel: ${metadata.title} #${metadata.issue}`
+        `Add panel: ${metadata.title} ${formatIssue(metadata.issue)}`
       );
 
       // 6. Assign sequential ID and append entry to gallery.json
@@ -215,7 +219,7 @@ export default {
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        `Added to gallery (ID: ${seq}):\n  ${metadata.title} #${metadata.issue} (${metadata.year})\n  Artist: ${metadata.artist}${notesLine}${tagsLine}\n  → ${browserImagePath}`
+        `Added to gallery (ID: ${seq}):\n  ${metadata.title} ${formatIssue(metadata.issue)} (${metadata.year})\n  Artist: ${metadata.artist}${notesLine}${tagsLine}\n  → ${browserImagePath}`
       );
     } catch (err) {
       const errorMessage =
