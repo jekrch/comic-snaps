@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 129,
+      "id": "uneeda-comix-0-1779560005",
+      "title": "Uneeda Comix",
+      "slug": "uneeda-comix",
+      "issue": 0,
+      "year": 1970,
+      "artist": "Robert Crumb",
+      "image": "images/uneeda-comix/issue-0-1779560005.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T18:13:27.113Z"
+    },
+    {
       "seq": 128,
       "id": "absolute-martian-manhunter-11-1779494398",
       "title": "Absolute Martian Manhunter",
@@ -24,7 +38,7 @@
         [
           29.9,
           2.5,
-          -0.0
+          0
         ],
         [
           70.5,
@@ -32,7 +46,7 @@
           69.7
         ]
       ],
-      "colorfulness": 29.0,
+      "colorfulness": 29,
       "phash": "f8c37a409d61c7b4",
       "ahash": "e8fdfffffff08000",
       "dhash": "9399031bb7c1973a"
