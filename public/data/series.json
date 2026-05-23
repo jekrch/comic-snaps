@@ -2060,11 +2060,13 @@
       "coverSources": {
         "metron": [
           1,
-          2
+          2,
+          3
         ],
         "comicvine": [
           1,
-          2
+          2,
+          3
         ]
       }
     }
