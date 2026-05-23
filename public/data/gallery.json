@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 128,
+      "id": "absolute-martian-manhunter-11-1779494398",
+      "title": "Absolute Martian Manhunter",
+      "slug": "absolute-martian-manhunter",
+      "issue": 11,
+      "year": 2026,
+      "artist": "Javier RodrigueZ",
+      "image": "images/absolute-martian-manhunter/issue-11-1779494398.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T00:00:00.617Z"
+    },
+    {
       "seq": 127,
       "id": "ice-cream-man-45-1779493223",
       "title": "Ice Cream Man",
