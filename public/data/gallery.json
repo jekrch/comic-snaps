@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 129,
+      "id": "zap-3-1779568464",
+      "title": "Zap",
+      "slug": "zap",
+      "issue": 3,
+      "year": 1969,
+      "artist": "Victor Moscoso",
+      "image": "images/zap/issue-3-1779568464.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T20:34:26.298Z"
+    },
+    {
       "seq": 128,
       "id": "absolute-martian-manhunter-11-1779494398",
       "title": "Absolute Martian Manhunter",
