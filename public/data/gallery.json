@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 131,
+      "id": "uneeda-comix-0-1779574647",
+      "title": "Uneeda Comix",
+      "slug": "uneeda-comix",
+      "issue": 0,
+      "year": 1970,
+      "artist": "Robert Crumb",
+      "image": "images/uneeda-comix/issue-0-1779574647.jpg",
+      "notes": null,
+      "tags": [
+        "cover"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T22:17:29.268Z"
+    },
+    {
       "seq": 130,
       "id": "bizarre-sex-1-1779570977",
       "title": "Bizarre Sex",
