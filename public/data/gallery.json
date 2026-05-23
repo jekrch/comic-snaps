@@ -2,40 +2,40 @@
   "panels": [
     {
       "seq": 130,
-      "id": "bizarre-sex-1-1779568641",
+      "id": "bizarre-sex-1-1779570977",
       "title": "Bizarre Sex",
       "slug": "bizarre-sex",
       "issue": 1,
       "year": 1972,
       "artist": "Tim Boxell",
-      "image": "images/bizarre-sex/issue-1-1779568641.jpg",
+      "image": "images/bizarre-sex/issue-1-1779570977.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-23T20:37:23.725Z",
-      "width": 960,
+      "addedAt": "2026-05-23T21:16:19.191Z",
+      "width": 1044,
       "height": 1280,
       "dominantColors": [
         [
-          53.3,
-          -2.6,
-          16.0
+          55.5,
+          -3.4,
+          17.7
         ],
         [
-          41.6,
-          62.1,
-          -8.5
+          34.9,
+          55.7,
+          -15.8
         ],
         [
-          61.0,
-          -9.6,
-          -36.3
+          64.4,
+          -11.0,
+          -37.5
         ]
       ],
-      "colorfulness": 43.3,
-      "phash": "8ff33c8cb71782a0",
-      "ahash": "3fff7fee7b381000",
-      "dhash": "6e72d558eaf1732f"
+      "colorfulness": 40.9,
+      "phash": "8ff33c8cb31f04a8",
+      "ahash": "3fff7fefff381800",
+      "dhash": "63aad44d6bf173e6"
     },
     {
       "seq": 129,
