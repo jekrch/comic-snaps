@@ -9,8 +9,8 @@ import FillerLabels from "./FillerLabels";
 export const WORDS = ["SNAPS"];
 
 /** Random splash duration range (seconds, on-screen time). */
-const ACTIVE_MIN_SEC = 10;
-const ACTIVE_MAX_SEC = 16;
+const ACTIVE_MIN_SEC = 6;
+const ACTIVE_MAX_SEC = 10;
 /** Random rest between splashes (seconds). */
 const REST_MIN_SEC = 1;
 const REST_MAX_SEC = 2;
@@ -26,8 +26,14 @@ const COVERAGE_TOTAL = COVERAGE_COLS * COVERAGE_ROWS;
 const FLIP_THRESHOLD = 0.8;
 /** Number of candidate rest positions sampled per droplet (best one wins). */
 const REST_CANDIDATES = 3;
-/** Cap on retained settled globs per phase — prunes oldest to bound mask cost. */
-const MAX_SETTLED = 32;
+/**
+ * Cap on retained splash layers — chronological list. Once this many layers
+ * have accumulated, the next phase flip triggers a "takeover" glob in the
+ * base color that grows to cover the entire tile, after which all layers are
+ * cleared and the cycle restarts. Visually seamless because the takeover
+ * matches the underlying base hatch color.
+ */
+const MAX_LAYERS = 3;
 
 export const LUCIDE_ICONS: LucideIcon[] = [
   //MessageCircleMore,
@@ -37,7 +43,7 @@ export const LUCIDE_ICONS: LucideIcon[] = [
 ];
 
 const ROTATIONS = [45, 135];
-const COLORS = ["#7A8B2A", "#e97d62"];
+const COLORS = ["#596424", "#a75a49"];
 
 const STYLIZE_PLACEMENT = true;
 
@@ -104,6 +110,13 @@ interface SettledGlob {
   ry: number;
 }
 
+/** A chronological group of settled blobs from one continuous phase run. */
+interface SplashLayer {
+  id: number;
+  phase: "dark" | "light";
+  globs: SettledGlob[];
+}
+
 /** A single droplet in one splash event. Emerges → falls → decelerates → rests. */
 interface Droplet {
   /** Spawn x-position (pixels). */
@@ -134,6 +147,19 @@ interface Droplet {
   wobble2Amp: number;
   wobble2Freq: number;
   wobble2Phase: number;
+  /** Independent rx/ry scale oscillation — drives the amorphous bulging. */
+  bulgeXAmp: number;
+  bulgeXFreq: number;
+  bulgeXPhase: number;
+  bulgeYAmp: number;
+  bulgeYFreq: number;
+  bulgeYPhase: number;
+  /**
+   * Per-droplet emerge profile: list of (t, sx, sy) control points where
+   * t spans the emerge portion (0–1). Non-monotonic & axis-asymmetric, so
+   * the blob bulges into existence in fits rather than inflating smoothly.
+   */
+  growthProfile: { t: number; sx: number; sy: number }[];
   /**
    * Fall progression. Each entry maps a fraction of the *fall portion* of the
    * animation (t, 0–1) to a fraction of the fall distance covered (f, 0–1).
@@ -162,6 +188,12 @@ interface SplashEvent {
   /** Rest time after this event before the next one starts (2–4s). */
   restSec: number;
   droplets: Droplet[];
+  /**
+   * Marks the "engulf" event that grows a single base-color glob across the
+   * entire tile after MAX_LAYERS have accumulated. When this event finishes,
+   * all settled layers and coverage grids are cleared and the cycle restarts.
+   */
+  isTakeover?: boolean;
 }
 
 /**
@@ -237,7 +269,7 @@ function buildLiquidConfig(
   height: number,
   baseColor: string,
 ): LiquidConfig {
-  const darkColor = darkenHex(baseColor, 0.55);
+  const darkColor = darkenHex(baseColor, 0.35);
   if (!enabled || width <= 0 || height <= 0) {
     return { enabled: false, blurStd: 0, baseRadius: 0, darkColor };
   }
@@ -267,13 +299,18 @@ function generateFallProfile(): { t: number; f: number }[] {
   const speeds: number[] = [];
   for (let i = 0; i < controls; i++) {
     const slow = Math.random() < 0.38;
-    speeds.push(slow ? randBetween(0.06, 0.2) : randBetween(0.6, 1.0));
+    speeds.push(slow ? randBetween(0.04, 0.12) : randBetween(0.25, 0.45));
   }
+  // Force an acceleration out of rest: the first few control points are slow,
+  // so the blob eases into motion rather than springing into action.
+  speeds[0] = randBetween(0.01, 0.04);
+  speeds[1] = randBetween(0.06, 0.14);
+  speeds[2] = Math.min(speeds[2], randBetween(0.18, 0.3));
   // Force a deceleration into rest: the last few control points are slow,
   // so the blob eases to a stop at its final position rather than slamming.
-  speeds[controls - 3] = Math.min(speeds[controls - 3], randBetween(0.35, 0.6));
-  speeds[controls - 2] = randBetween(0.12, 0.25);
-  speeds[controls - 1] = randBetween(0.01, 0.05);
+  speeds[controls - 3] = Math.min(speeds[controls - 3], randBetween(0.18, 0.3));
+  speeds[controls - 2] = randBetween(0.06, 0.14);
+  speeds[controls - 1] = randBetween(0.01, 0.04);
   const smooth = (x: number) => x * x * (3 - 2 * x);
   const samples = 16;
   const rawF: number[] = [0];
@@ -296,6 +333,36 @@ function generateFallProfile(): { t: number; f: number }[] {
   return profile;
 }
 
+/**
+ * Build a per-droplet emerge profile: a sequence of (t, sx, sy) control
+ * points where t spans the emerge portion (0 → 1). The curve is a
+ * smoothstep ease, with a small per-axis time skew so one axis leads the
+ * other slightly. No per-step jitter — random jumps look like springs at
+ * small sizes (a 0.05 step at sx=0.1 is a 50% relative size change), and
+ * the brief is "grow in place, don't jump."
+ */
+function generateGrowthProfile(): { t: number; sx: number; sy: number }[] {
+  const steps = 20;
+  const profile: { t: number; sx: number; sy: number }[] = [];
+  // Per-axis time skew in [-0.18, 0.18]: bends the eased time forward or
+  // back so one axis crosses 0.5 before the other. The result is a subtle
+  // shape asymmetry — egg-shape early, sphere late — with no velocity
+  // discontinuity at any point.
+  const skewX = randBetween(-0.18, 0.18);
+  const skewY = randBetween(-0.18, 0.18);
+  const smoothstep = (x: number) => x * x * (3 - 2 * x);
+  const eased = (t: number, skew: number) => {
+    const u = Math.max(0, Math.min(1, t - skew * t * (1 - t)));
+    return smoothstep(u);
+  };
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    profile.push({ t, sx: eased(t, skewX), sy: eased(t, skewY) });
+  }
+  profile[profile.length - 1] = { t: 1, sx: 1, sy: 1 };
+  return profile;
+}
+
 function generateSplashEvent(
   id: number,
   phase: "dark" | "light",
@@ -310,14 +377,9 @@ function generateSplashEvent(
 
   const margin = baseRadius * 0.6;
   const xRange = Math.max(0, width - margin * 2);
-  const yMax = height * 0.55;
-  const yRange = Math.max(0, yMax - margin);
+  const yRange = Math.max(0, height - margin * 2);
 
   const count = Math.floor(randBetween(DROPLET_MIN, DROPLET_MAX + 1));
-
-  // ~40% of events: blobs enter the tile from above the visible frame
-  // (start at a negative y), falling in through the top edge.
-  const enterFromAbove = Math.random() < 0.4;
 
   // Working copy of the coverage grid so candidates within the same event
   // can avoid stacking on each other's intended landing spots.
@@ -326,39 +388,22 @@ function generateSplashEvent(
   const droplets: Droplet[] = [];
   for (let i = 0; i < count; i++) {
     const sizeBase = randBetween(0.95, 3.1);
-    const rx = baseRadius * sizeBase * randBetween(0.8, 1.2);
-    const ry = baseRadius * sizeBase * randBetween(0.8, 1.2);
-    const spawnX = margin + Math.random() * xRange;
-    const spawnY = enterFromAbove
-      ? -randBetween(ry * 0.8, ry * 2.0)
-      : margin + Math.random() * yRange;
+    // Wider per-axis variance produces eccentric, egg/oval base shapes
+    // rather than near-circles — the goo blur then reads as lopsided
+    // globules instead of clean disks.
+    const rx = baseRadius * sizeBase * randBetween(0.65, 1.45);
+    const ry = baseRadius * sizeBase * randBetween(0.65, 1.45);
 
-    // Rest position must be below spawn (so the drop actually falls). Keep
-    // it inside the tile with a small padding from the edges. The rest
-    // ceiling is capped well above the bottom so drops don't traverse the
-    // full tile height.
-    // Rest is constrained close to spawn so blobs drift and fall a short
-    // distance rather than traversing the tile — "less movement".
-    const restPad = Math.max(rx, ry) * 0.2;
-    const driftLimit = baseRadius * 0.1;
-    const fallLimit = baseRadius * 0.1;
-    const restMinX = Math.max(restPad, spawnX - driftLimit);
-    const restMaxX = Math.min(Math.max(restPad, width - restPad), spawnX + driftLimit);
-    const restMinY = Math.max(restPad, spawnY + ry * 1.2);
-    const restMaxY = Math.max(
-      restMinY,
-      Math.min(height - restPad, height * 0.82, spawnY + fallLimit),
-    );
-
-    // Best-of-3 candidates: a light bias toward territory that adds the most
-    // new same-color surface. Random jitter in the score keeps it from being
-    // fully greedy — the suboptimal candidate sometimes wins.
-    let bestX = (restMinX + restMaxX) / 2;
-    let bestY = (restMinY + restMaxY) / 2;
+    // Best-of-N candidate positions, scored to prefer uncovered territory.
+    // Random jitter keeps it from being fully greedy. Since blobs grow in
+    // place (no translation), the chosen position is used as both spawn
+    // and rest — the centroid never moves.
+    let bestX = margin + Math.random() * xRange;
+    let bestY = margin + Math.random() * yRange;
     let bestScore = -Infinity;
     for (let k = 0; k < REST_CANDIDATES; k++) {
-      const cx = restMinX + Math.random() * (restMaxX - restMinX);
-      const cy = restMinY + Math.random() * (restMaxY - restMinY);
+      const cx = margin + Math.random() * xRange;
+      const cy = margin + Math.random() * yRange;
       const raw = scoreCandidate(workGrid, { x: cx, y: cy, rx, ry }, width, height, targetMask);
       const jittered = raw + Math.random() * 1.5;
       if (jittered > bestScore) {
@@ -370,27 +415,78 @@ function generateSplashEvent(
     markCoverage(workGrid, { x: bestX, y: bestY, rx, ry }, width, height);
 
     droplets.push({
-      x: spawnX,
-      y: spawnY,
+      x: bestX,
+      y: bestY,
       rx,
       ry,
-      fallDistance: bestY - spawnY,
-      driftX: bestX - spawnX,
+      fallDistance: 0,
+      driftX: 0,
       finalX: bestX,
       finalY: bestY,
       inner: randBetween(0, 14),
-      // Two stacked sine waves give an organic meander. Amplitudes are
-      // sized against baseRadius (not rx) so small blobs don't lurch.
-      wobbleAmp: randBetween(baseRadius * 0.35, baseRadius * 0.9),
-      wobbleFreq: randBetween(1.5, 3.5),
-      wobblePhase: randBetween(0, Math.PI * 2),
-      wobble2Amp: randBetween(baseRadius * 0.12, baseRadius * 0.4),
-      wobble2Freq: randBetween(3.0, 6.0),
-      wobble2Phase: randBetween(0, Math.PI * 2),
+      // Horizontal wobble is disabled — the blobs should not translate at
+      // all. Shape variation comes from the per-axis bulge oscillation
+      // below.
+      wobbleAmp: 0,
+      wobbleFreq: 1,
+      wobblePhase: 0,
+      wobble2Amp: 0,
+      wobble2Freq: 1,
+      wobble2Phase: 0,
+      // Bulge oscillation is disabled — the blob must come to a complete
+      // stop at its final size. Any post-emerge motion (even a slow swell)
+      // breaks the "ease out to a stopping position" feel. Asymmetric
+      // shape comes from the per-axis time skew in the growth profile.
+      bulgeXAmp: 0,
+      bulgeXFreq: 1,
+      bulgeXPhase: 0,
+      bulgeYAmp: 0,
+      bulgeYFreq: 1,
+      bulgeYPhase: 0,
+      growthProfile: generateGrowthProfile(),
       fallProfile: generateFallProfile(),
     });
   }
   return { id, phase, activeSec, restSec, droplets };
+}
+
+/**
+ * Build the "engulf" event that fires once MAX_LAYERS layers have settled.
+ * A single glob centered on the tile, sized to cover every corner at scale 1,
+ * with no wobble/bulge/fall — just a clean, smooth growth from 0 to full. The
+ * fill is the base/original color (phase = "light"), so when the layers are
+ * cleared at the end it lines up perfectly with the underlying base hatch.
+ */
+function generateTakeoverEvent(id: number, width: number, height: number): SplashEvent {
+  const reach = Math.hypot(width, height);
+  const radius = reach * 0.65;
+  const cx = width / 2;
+  const cy = height / 2;
+  const droplet: Droplet = {
+    x: cx,
+    y: cy,
+    rx: radius,
+    ry: radius,
+    fallDistance: 0,
+    driftX: 0,
+    finalX: cx,
+    finalY: cy,
+    inner: 0,
+    wobbleAmp: 0, wobbleFreq: 1, wobblePhase: 0,
+    wobble2Amp: 0, wobble2Freq: 1, wobble2Phase: 0,
+    bulgeXAmp: 0, bulgeXFreq: 1, bulgeXPhase: 0,
+    bulgeYAmp: 0, bulgeYFreq: 1, bulgeYPhase: 0,
+    growthProfile: [],
+    fallProfile: [],
+  };
+  return {
+    id,
+    phase: "light",
+    activeSec: randBetween(5, 7),
+    restSec: randBetween(REST_MIN_SEC, REST_MAX_SEC),
+    droplets: [droplet],
+    isTakeover: true,
+  };
 }
 
 function generateDeterministicPlacement(index: number): PlacementStyle {
@@ -541,7 +637,6 @@ export default function HatchFiller({
   const maskId = useId();
   const gooFilterId = useId();
   const liquidMaskId = useId();
-  const lightMaskId = useId();
   const animId = useId().replace(/[^a-zA-Z0-9_-]/g, "_");
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 900, height: 600 });
@@ -629,7 +724,6 @@ export default function HatchFiller({
         y2="8"
         stroke={resolvedColor}
         strokeWidth="8"
-        strokeOpacity="0.68"
       />
     </pattern>
   );
@@ -651,8 +745,15 @@ export default function HatchFiller({
   // restores ~80% of the screen to light, both layers reset and we begin
   // a fresh dark cycle.
   const [phase, setPhase] = useState<"dark" | "light">("dark");
-  const [settledDark, setSettledDark] = useState<SettledGlob[]>([]);
-  const [settledLight, setSettledLight] = useState<SettledGlob[]>([]);
+  // Chronological layers — each phase run appends a new layer (or extends
+  // the last if same-phase). Rendering them in order means the newest phase
+  // always paints on top of older ones, so the dark/light cycle visibly
+  // continues forever instead of new dark blobs hiding under old light.
+  const [layers, setLayers] = useState<SplashLayer[]>([]);
+  // Mirror of `layers` for the fire() closure, which can't read state directly.
+  const layersRef = useRef<SplashLayer[]>([]);
+  useEffect(() => { layersRef.current = layers; }, [layers]);
+  const nextLayerIdRef = useRef(0);
   // Grids are refs (not state) — they're read inside the lifecycle timer
   // and don't need to drive re-renders on their own.
   const darkGridRef = useRef<Uint8Array>(new Uint8Array(COVERAGE_TOTAL));
@@ -672,6 +773,28 @@ export default function HatchFiller({
 
     const fire = () => {
       nextId += 1;
+
+      // Once MAX_LAYERS have settled and the next event would start a new
+      // layer (i.e. the phase has flipped since the topmost layer was laid),
+      // emit the takeover instead: a single base-color glob that grows to
+      // cover the tile, then clears every layer + grid to restart fresh.
+      const top = layersRef.current[layersRef.current.length - 1];
+      const startingNewLayer = !top || top.phase !== currentPhase;
+      if (layersRef.current.length >= MAX_LAYERS && startingNewLayer) {
+        const takeover = generateTakeoverEvent(nextId, size.width, size.height);
+        setEvent(takeover);
+        activeTimer = setTimeout(() => {
+          setLayers([]);
+          darkGridRef.current = new Uint8Array(COVERAGE_TOTAL);
+          lightGridRef.current = new Uint8Array(COVERAGE_TOTAL);
+          currentPhase = "dark";
+          setPhase("dark");
+          setEvent(null);
+        }, takeover.activeSec * 1000);
+        nextTimer = setTimeout(fire, (takeover.activeSec + takeover.restSec) * 1000);
+        return;
+      }
+
       // In dark phase: target is the whole tile (no mask). In light phase:
       // we only score cells already covered by dark — so the light blobs
       // are biased toward landing inside the dark territory.
@@ -700,27 +823,51 @@ export default function HatchFiller({
         for (const g of newSettled) {
           markCoverage(ownGrid, g, size.width, size.height);
         }
-        const pushCapped = (prev: SettledGlob[]) => {
-          const combined = prev.length + newSettled.length > MAX_SETTLED
-            ? [...prev.slice(prev.length + newSettled.length - MAX_SETTLED), ...newSettled]
-            : [...prev, ...newSettled];
-          return combined;
-        };
+        setLayers((prev) => {
+          const last = prev[prev.length - 1];
+          let next: SplashLayer[];
+          if (last && last.phase === e.phase) {
+            // Same phase as the most recent layer — merge into it so the
+            // whole phase shares one gooey-blurred silhouette.
+            next = [
+              ...prev.slice(0, -1),
+              { ...last, globs: [...last.globs, ...newSettled] },
+            ];
+          } else {
+            // Phase changed — start a new top layer. Renders above all
+            // earlier layers, so each cycle visibly overpaints the last.
+            nextLayerIdRef.current += 1;
+            next = [
+              ...prev,
+              { id: nextLayerIdRef.current, phase: e.phase, globs: newSettled },
+            ];
+          }
+          while (next.length > MAX_LAYERS) next = next.slice(1);
+          return next;
+        });
+        // Drop the active mask in the same batched update — the layer now
+        // owns these globs. Leaving the active mask up during rest would
+        // double-render the same area, and with strokeOpacity=0.68 on the
+        // base pattern that compounds into a darker patch. When the next
+        // event fires and the active mask swaps, the patch reverts —
+        // visible as a color blink.
+        setEvent(null);
         if (currentPhase === "dark") {
-          setSettledDark(pushCapped);
           if (coverageRatio(darkGridRef.current) >= FLIP_THRESHOLD) {
+            // Flip to light: reset lightGrid so the new phase tracks fresh
+            // coverage. darkGrid stays — it's the target mask for light
+            // placement so blobs bias toward the dark territory we just laid.
             currentPhase = "light";
+            lightGridRef.current = new Uint8Array(COVERAGE_TOTAL);
             setPhase("light");
           }
         } else {
-          setSettledLight(pushCapped);
           if (coverageRatio(lightGridRef.current) >= FLIP_THRESHOLD) {
-            // Full rotation complete — reset coverage tracking but keep the
-            // settled visuals so the tile never snaps back to a blank state.
-            // Pruning via MAX_SETTLED bounds the long-running mask cost.
+            // Flip back to dark: reset darkGrid so the next dark run spreads
+            // across the whole tile again rather than avoiding the now-stale
+            // dark coverage from the previous cycle.
             currentPhase = "dark";
             darkGridRef.current = new Uint8Array(COVERAGE_TOTAL);
-            lightGridRef.current = new Uint8Array(COVERAGE_TOTAL);
             setPhase("dark");
           }
         }
@@ -757,7 +904,6 @@ export default function HatchFiller({
         y2="8"
         stroke={liquid.darkColor}
         strokeWidth="8"
-        strokeOpacity="0.95"
       />
     </pattern>
   ) : null;
@@ -765,6 +911,19 @@ export default function HatchFiller({
 
   const dropKeyframes = useMemo(() => {
     if (!liquid.enabled || !event) return "";
+    if (event.isTakeover) {
+      return `
+        @keyframes drop-${animId}-0 {
+          0% { transform: translate(0, 0) scale(0); }
+          100% { transform: translate(0, 0) scale(1); }
+        }
+        .drop-${animId}-0 {
+          transform-box: fill-box;
+          transform-origin: center;
+          animation: drop-${animId}-0 ${event.activeSec.toFixed(2)}s ease-in-out 1 both;
+        }
+      `;
+    }
     return event.droplets.map((d, i) => {
       const a = d.inner;
       const fall = d.fallDistance;
@@ -775,33 +934,42 @@ export default function HatchFiller({
       const xAt = (driftFrac: number, pct: number, wobbleMul: number) =>
         (d.driftX * driftFrac + wobbleAt(pct) * wobbleMul).toFixed(1);
       const yAt = (frac: number) => (fall * frac).toFixed(1);
+      const bulgeAt = (pct: number) => {
+        const u = pct / 100;
+        const bx = 1 + Math.sin(u * d.bulgeXFreq * 2 * Math.PI + d.bulgeXPhase) * d.bulgeXAmp;
+        const by = 1 + Math.sin(u * d.bulgeYFreq * 2 * Math.PI + d.bulgeYPhase) * d.bulgeYAmp;
+        return { bx, by };
+      };
       const fallKeyframes = (emergeEnd: number) => {
-        const fallSpan = 100 - emergeEnd;
+        // Post-emerge hold: blob stays at its final size, with only the
+        // gentle bulge oscillation continuing. fallDistance and driftX are
+        // zero (blobs grow in place), so no translation. Settle envelope
+        // tapers the bulge to exactly (1, 1) at 100% so the active mask
+        // hands off to the static settled layer without any scale snap.
         const pts = d.fallProfile;
-        return pts.map((p, idx) => {
-          const isLast = idx === pts.length - 1;
+        const fallSpan = 100 - emergeEnd;
+        return pts.map((p) => {
           const pct = emergeEnd + fallSpan * p.t;
-          let vIn = 1;
-          let vOut = 1;
-          if (idx > 0) {
-            const prev = pts[idx - 1];
-            const dt = p.t - prev.t;
-            if (dt > 0) vIn = (p.f - prev.f) / dt;
-          }
-          if (idx < pts.length - 1) {
-            const next = pts[idx + 1];
-            const dt = next.t - p.t;
-            if (dt > 0) vOut = (next.f - p.f) / dt;
-          }
-          if (idx === 0) vIn = vOut;
-          if (idx === pts.length - 1) vOut = vIn;
-          const v = Math.max(0, Math.min(2.4, (vIn + vOut) / 2));
-          const sx = isLast ? 1 : 1.22 - 0.218 * v;
-          const sy = isLast ? 1 : 0.82 + 0.25 * v;
-          const wobbleMul = 1 - p.t * p.t;
-          return `${pct.toFixed(1)}% { transform: translate(${xAt(p.f, pct, wobbleMul)}px, ${yAt(p.f)}px) scale(${sx.toFixed(2)}, ${sy.toFixed(2)}); }`;
+          const settle = Math.max(0, Math.min(1, (p.t - 0.7) / 0.3));
+          const smoothSettle = settle * settle * (3 - 2 * settle);
+          const damp = 1 - smoothSettle;
+          const { bx, by } = bulgeAt(pct);
+          const sx = 1 + (bx - 1) * damp;
+          const sy = 1 + (by - 1) * damp;
+          return `${pct.toFixed(1)}% { transform: translate(${xAt(p.f, pct, 0)}px, ${yAt(p.f)}px) scale(${sx.toFixed(3)}, ${sy.toFixed(3)}); }`;
         }).join("\n          ");
       };
+      // Stretched emerge span — gives the slow, irregular growth instead
+      // of a quick mushroom puff. Larger value = even slower emergence.
+      const emergeSpan = 80;
+      const emergeEnd = a + emergeSpan;
+      const emergeKeyframes = d.growthProfile.map((p) => {
+        const pct = a + emergeSpan * p.t;
+        const { bx, by } = bulgeAt(pct);
+        const sx = p.sx * bx;
+        const sy = p.sy * by;
+        return `${pct.toFixed(1)}% { transform: translate(0, 0) scale(${sx.toFixed(2)}, ${sy.toFixed(2)}); }`;
+      }).join("\n        ");
       const body = fromAbove
         ? `
         0% { transform: translate(${xAt(0, 0, 1)}px, 0) scale(1); }
@@ -811,10 +979,8 @@ export default function HatchFiller({
         : `
         0% { transform: translate(0, 0) scale(0); }
         ${a.toFixed(1)}% { transform: translate(0, 0) scale(0); }
-        ${(a + 4).toFixed(1)}% { transform: translate(0, 0) scale(0.5, 0.4); }
-        ${(a + 10).toFixed(1)}% { transform: translate(0, 0) scale(1, 0.95); }
-        ${(a + 18).toFixed(1)}% { transform: translate(0, 0) scale(0.95, 1.08); }
-        ${fallKeyframes(a + 18)}
+        ${emergeKeyframes}
+        ${fallKeyframes(emergeEnd)}
           `;
       return `
       @keyframes drop-${animId}-${i} { ${body} }
@@ -959,30 +1125,39 @@ export default function HatchFiller({
                   values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
                 />
               </filter>
-              {/* Dark splash mask: settled phase-A globs + currently
-                  animating droplets (if phase is dark). Filter-merged
+              {/* One mask per chronological splash layer. Gooey-merged
                   ellipses become a single white "fluid" silhouette over
-                  black, which masks the dark pattern fill below. */}
-              <mask id={liquidMaskId}>
-                <rect width="100%" height="100%" fill="black" />
-                <g
-                  key={`dark-${event?.id ?? 0}`}
-                  filter={`url(#${gooFilterId})`}
-                  fill="white"
-                >
-                  {settledDark.map((g, i) => (
-                    <ellipse
-                      key={`s${i}`}
-                      cx={g.x}
-                      cy={g.y}
-                      rx={g.rx}
-                      ry={g.ry}
-                    />
-                  ))}
-                  {event && event.phase === "dark" &&
-                    event.droplets.map((d, i) => (
+                  black, which masks that layer's hatch pattern fill. */}
+              {layers.map((layer) => (
+                <mask id={`${liquidMaskId}-${layer.id}`} key={layer.id}>
+                  <rect width="100%" height="100%" fill="black" />
+                  <g filter={`url(#${gooFilterId})`} fill="white">
+                    {layer.globs.map((g, i) => (
                       <ellipse
-                        key={`a${i}`}
+                        key={i}
+                        cx={g.x}
+                        cy={g.y}
+                        rx={g.rx}
+                        ry={g.ry}
+                      />
+                    ))}
+                  </g>
+                </mask>
+              ))}
+              {/* Active-event mask: the currently animating droplets. Drawn
+                  last (on top of all settled layers) so a new in-flight
+                  splash is always visible regardless of cycle. */}
+              {event && (
+                <mask id={`${liquidMaskId}-active`}>
+                  <rect width="100%" height="100%" fill="black" />
+                  <g
+                    key={event.id}
+                    filter={`url(#${gooFilterId})`}
+                    fill="white"
+                  >
+                    {event.droplets.map((d, i) => (
+                      <ellipse
+                        key={i}
                         className={`drop-${animId}-${i}`}
                         cx={d.x}
                         cy={d.y}
@@ -990,41 +1165,9 @@ export default function HatchFiller({
                         ry={d.ry}
                       />
                     ))}
-                </g>
-              </mask>
-              {/* Light splash mask: settled phase-B globs + currently
-                  animating droplets (if phase is light). Used to paint
-                  fresh light hatch on top of the dark layer — "erasing"
-                  dark territory and rotating the cycle back. */}
-              <mask id={lightMaskId}>
-                <rect width="100%" height="100%" fill="black" />
-                <g
-                  key={`light-${event?.id ?? 0}`}
-                  filter={`url(#${gooFilterId})`}
-                  fill="white"
-                >
-                  {settledLight.map((g, i) => (
-                    <ellipse
-                      key={`s${i}`}
-                      cx={g.x}
-                      cy={g.y}
-                      rx={g.rx}
-                      ry={g.ry}
-                    />
-                  ))}
-                  {event && event.phase === "light" &&
-                    event.droplets.map((d, i) => (
-                      <ellipse
-                        key={`a${i}`}
-                        className={`drop-${animId}-${i}`}
-                        cx={d.x}
-                        cy={d.y}
-                        rx={d.rx}
-                        ry={d.ry}
-                      />
-                    ))}
-                </g>
-              </mask>
+                  </g>
+                </mask>
+              )}
             </>
           )}
         </defs>
@@ -1040,34 +1183,29 @@ export default function HatchFiller({
             height="100%"
             fill={`url(#${patternId})`}
           />
-          {/* Dark splash layer (phase A): dark hatch pattern visible only
-              where the dark splash silhouette is opaque. The base hatch
-              underneath stays perfectly static; only the dark *shading*
-              moves. Settled globs are static ellipses inside the mask —
-              only the in-flight droplet animates, keeping per-frame work
-              small even after many globs have accumulated. */}
-          {liquid.enabled &&
-            (settledDark.length > 0 || (event !== null && event.phase === "dark")) && (
-              <rect
-                width="100%"
-                height="100%"
-                fill={`url(#${darkPatternId})`}
-                mask={`url(#${liquidMaskId})`}
-              />
-            )}
-          {/* Light splash layer (phase B): light hatch pattern painted on
-              top of the dark layer, restoring the original shade inside
-              dark territory. When this layer covers ~80% of the tile,
-              both layers reset and the dark cycle begins again. */}
-          {liquid.enabled &&
-            (settledLight.length > 0 || (event !== null && event.phase === "light")) && (
-              <rect
-                width="100%"
-                height="100%"
-                fill={`url(#${patternId})`}
-                mask={`url(#${lightMaskId})`}
-              />
-            )}
+          {/* Chronological splash layers — render oldest first, so each new
+              phase visibly overpaints the previous one and the dark/light
+              cycle keeps building forever instead of stalling. The base
+              hatch underneath stays static; only the splash *shading* moves. */}
+          {liquid.enabled && layers.map((layer) => (
+            <rect
+              key={layer.id}
+              width="100%"
+              height="100%"
+              fill={layer.phase === "dark" ? `url(#${darkPatternId})` : `url(#${patternId})`}
+              mask={`url(#${liquidMaskId}-${layer.id})`}
+            />
+          ))}
+          {/* Active in-flight splash — rendered last so the animation is
+              always visible over the settled layers, regardless of phase. */}
+          {liquid.enabled && event && (
+            <rect
+              width="100%"
+              height="100%"
+              fill={event.phase === "dark" ? `url(#${darkPatternId})` : `url(#${patternId})`}
+              mask={`url(#${liquidMaskId}-active)`}
+            />
+          )}
         </g>
       </svg>
 
