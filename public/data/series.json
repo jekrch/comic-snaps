@@ -1970,12 +1970,8 @@
         "metron"
       ],
       "coverSources": {
-        "metron": [
-          0
-        ],
-        "comicvine": [
-          0
-        ]
+        "metron": [],
+        "comicvine": []
       },
       "coverImages": [
         "data/covers/uneeda-comix/5bbc78a37293.jpg"
