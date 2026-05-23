@@ -191,7 +191,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          8
+        ],
+        "comicvine": [
+          8
+        ]
+      }
     },
     {
       "id": "bleeding-hearts",
@@ -396,7 +404,15 @@
       ],
       "coverImages": [
         "data/covers/creatures-of-the-id/6effce31f74b.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "criminal",
@@ -438,7 +454,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          0
+        ],
+        "comicvine": [
+          0
+        ]
+      }
     },
     {
       "id": "dark-spaces-wildfire",
@@ -595,7 +619,15 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "frank",
@@ -612,7 +644,17 @@
         "wikipedia",
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1,
+          4
+        ],
+        "comicvine": [
+          1,
+          4
+        ]
+      }
     },
     {
       "id": "geiger",
@@ -650,7 +692,15 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "harley-quinn-x-elvira",
@@ -763,7 +813,21 @@
         "comicvine"
       ],
       "startYear": 2013,
-      "publisher": "https://www.comics.org/api/publisher/8368/?format=json"
+      "publisher": "https://www.comics.org/api/publisher/8368/?format=json",
+      "coverSources": {
+        "metron": [
+          5,
+          6,
+          12,
+          325
+        ],
+        "comicvine": [
+          5,
+          6,
+          12,
+          325
+        ]
+      }
     },
     {
       "id": "hyde-street",
@@ -897,7 +961,17 @@
         "data/covers/just-brutal/90aafc119c17.jpg",
         "data/covers/just-brutal/abfb661b87c6.jpg",
         "data/covers/just-brutal/15754eed571a.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          2,
+          3
+        ],
+        "comicvine": [
+          2,
+          3
+        ]
+      }
     },
     {
       "id": "lady-killer",
@@ -952,7 +1026,15 @@
         "comicvine"
       ],
       "startYear": 1987,
-      "publisher": "https://www.comics.org/api/publisher/543/?format=json"
+      "publisher": "https://www.comics.org/api/publisher/543/?format=json",
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "madman",
@@ -982,7 +1064,11 @@
         "data/covers/madman/87423f0773a3.jpg",
         "data/covers/madman/beb595e44314.jpg",
         "data/covers/madman/bc2700309b62.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      }
     },
     {
       "id": "madman-adventures-mini-comic",
@@ -993,7 +1079,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "minor-arcana",
@@ -1079,7 +1173,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          4
+        ],
+        "comicvine": [
+          4
+        ]
+      }
     },
     {
       "id": "pacific-presents",
@@ -1142,7 +1244,17 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          2,
+          3
+        ],
+        "comicvine": [
+          2,
+          3
+        ]
+      }
     },
     {
       "id": "red-book",
@@ -1191,7 +1303,15 @@
       ],
       "coverImages": [
         "data/covers/red-roots/77bf13a7fec6.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "rip-off-comix",
@@ -1483,7 +1603,15 @@
       "coverImages": [
         "data/covers/tasty-comix/d4d9e4e2d52e.jpg",
         "data/covers/tasty-comix/8a51d5620dd0.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      }
     },
     {
       "id": "the-beauty",
@@ -1532,7 +1660,15 @@
       ],
       "coverImages": [
         "data/covers/the-invisible-man/43ca4afa4727.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          3
+        ],
+        "comicvine": [
+          3
+        ]
+      }
     },
     {
       "id": "the-many-deaths-of-laila-starr",
@@ -1614,7 +1750,17 @@
         "data/covers/the-muppets-noir/5cf5e8fc35fb.jpg",
         "data/covers/the-muppets-noir/0e78666a57e3.jpg",
         "data/covers/the-muppets-noir/30fa8e5ec92b.jpg"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1,
+          3
+        ],
+        "comicvine": [
+          1,
+          3
+        ]
+      }
     },
     {
       "id": "the-nice-house-by-the-sea",
@@ -1657,7 +1803,15 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "the-peoples-comics",
@@ -1674,7 +1828,15 @@
         "wikipedia",
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "the-twilight-zone",
@@ -1711,7 +1873,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "trencher",
@@ -1749,7 +1919,15 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "under-the-trees-where-nobody-sees-rite-of-spring",
@@ -1760,7 +1938,17 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          5,
+          6
+        ],
+        "comicvine": [
+          5,
+          6
+        ]
+      }
     },
     {
       "id": "w0rldtr33",
@@ -1797,7 +1985,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          10
+        ],
+        "comicvine": [
+          10
+        ]
+      }
     },
     {
       "id": "xyz",
@@ -1808,7 +2004,15 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
     },
     {
       "id": "zap",
@@ -1825,7 +2029,17 @@
         "wikipedia",
         "metron",
         "comicvine"
-      ]
+      ],
+      "coverSources": {
+        "metron": [
+          1,
+          2
+        ],
+        "comicvine": [
+          1,
+          2
+        ]
+      }
     }
   ]
 }
