@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 132,
+      "id": "uneeda-comix-0-1779575370",
+      "title": "Uneeda Comix",
+      "slug": "uneeda-comix",
+      "issue": 0,
+      "year": 1970,
+      "artist": "Robert Crumb",
+      "image": "images/uneeda-comix/issue-0-1779575370.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T22:29:32.454Z"
+    },
+    {
       "seq": 131,
       "id": "uneeda-comix-0-1779575017",
       "title": "Uneeda Comix",
