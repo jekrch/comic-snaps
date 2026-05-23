@@ -1951,6 +1951,37 @@
       }
     },
     {
+      "id": "uneeda-comix",
+      "name": "Uneeda Comix",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2247905-unee.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/uneeda-comix/4050-46722/"
+        }
+      ],
+      "startYear": 1970,
+      "publisher": "Print Mint",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          0
+        ],
+        "comicvine": [
+          0
+        ]
+      },
+      "coverImages": [
+        "data/covers/uneeda-comix/5bbc78a37293.jpg"
+      ]
+    },
+    {
       "id": "w0rldtr33",
       "name": "W0rldtr33",
       "parentSeries": null,
