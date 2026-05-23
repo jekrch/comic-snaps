@@ -3,6 +3,7 @@ import { X, ZoomIn, ZoomOut, GitGraph, Info } from "lucide-react";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
+import { setHatchViewerOpen } from "../hooks/useHatchPause";
 import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
 import { useBarMeasure } from "../hooks/useBarMeasure";
 import { useGestureHandler } from "../hooks/useGestureHandler";
@@ -50,6 +51,11 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
   // Hooks
 
   useBodyScrollLock(containerRef);
+
+  useEffect(() => {
+    setHatchViewerOpen(true);
+    return () => setHatchViewerOpen(false);
+  }, []);
   const { topBarH, bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
 
   const zoomPan = useZoomPan(imgWrapperRef, currentIndex);

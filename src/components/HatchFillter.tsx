@@ -3,19 +3,20 @@ import { Globe, Eye, Bird } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import type { NeighborMap } from "../adjacency";
+import { useHatchViewerOpen } from "../hooks/useHatchPause";
 import FillerLabels from "./FillerLabels";
 
 export const WORDS = ["SNAPS"];
 
 /** Random splash duration range (seconds, on-screen time). */
-const ACTIVE_MIN_SEC = 7;
-const ACTIVE_MAX_SEC = 12;
+const ACTIVE_MIN_SEC = 10;
+const ACTIVE_MAX_SEC = 16;
 /** Random rest between splashes (seconds). */
 const REST_MIN_SEC = 1;
 const REST_MAX_SEC = 2;
-/** Per-event droplet count range — random 1–3 blobs per splash. */
+/** Per-event droplet count range. */
 const DROPLET_MIN = 1;
-const DROPLET_MAX = 3;
+const DROPLET_MAX = 4;
 
 /** Coverage grid resolution for tracking filled territory cheaply. */
 const COVERAGE_COLS = 12;
@@ -25,6 +26,8 @@ const COVERAGE_TOTAL = COVERAGE_COLS * COVERAGE_ROWS;
 const FLIP_THRESHOLD = 0.8;
 /** Number of candidate rest positions sampled per droplet (best one wins). */
 const REST_CANDIDATES = 3;
+/** Cap on retained settled globs per phase — prunes oldest to bound mask cost. */
+const MAX_SETTLED = 32;
 
 export const LUCIDE_ICONS: LucideIcon[] = [
   //MessageCircleMore,
@@ -152,6 +155,8 @@ interface LiquidConfig {
 interface SplashEvent {
   /** Increments on every event so React can remount and restart the CSS animation. */
   id: number;
+  /** Phase that generated this event — prevents rendering it in the wrong mask after a phase flip. */
+  phase: "dark" | "light";
   /** On-screen drip time (2–5s). */
   activeSec: number;
   /** Rest time after this event before the next one starts (2–4s). */
@@ -237,8 +242,8 @@ function buildLiquidConfig(
     return { enabled: false, blurStd: 0, baseRadius: 0, darkColor };
   }
   const minDim = Math.min(width, height);
-  const baseRadius = minDim * 0.13;
-  const blurStd = Math.max(3, Math.min(7, baseRadius * 0.4));
+  const baseRadius = minDim * 0.17;
+  const blurStd = Math.max(3, Math.min(6, baseRadius * 0.32));
   return { enabled: true, blurStd, baseRadius, darkColor };
 }
 
@@ -262,7 +267,7 @@ function generateFallProfile(): { t: number; f: number }[] {
   const speeds: number[] = [];
   for (let i = 0; i < controls; i++) {
     const slow = Math.random() < 0.38;
-    speeds.push(slow ? randBetween(0.04, 0.18) : randBetween(0.8, 1.45));
+    speeds.push(slow ? randBetween(0.06, 0.2) : randBetween(0.6, 1.0));
   }
   // Force a deceleration into rest: the last few control points are slow,
   // so the blob eases to a stop at its final position rather than slamming.
@@ -293,6 +298,7 @@ function generateFallProfile(): { t: number; f: number }[] {
 
 function generateSplashEvent(
   id: number,
+  phase: "dark" | "light",
   width: number,
   height: number,
   baseRadius: number,
@@ -304,7 +310,7 @@ function generateSplashEvent(
 
   const margin = baseRadius * 0.6;
   const xRange = Math.max(0, width - margin * 2);
-  const yMax = (height * 2) / 3;
+  const yMax = height * 0.55;
   const yRange = Math.max(0, yMax - margin);
 
   const count = Math.floor(randBetween(DROPLET_MIN, DROPLET_MAX + 1));
@@ -319,21 +325,30 @@ function generateSplashEvent(
 
   const droplets: Droplet[] = [];
   for (let i = 0; i < count; i++) {
-    const sizeBase = randBetween(0.55, 1.9);
+    const sizeBase = randBetween(0.95, 3.1);
     const rx = baseRadius * sizeBase * randBetween(0.8, 1.2);
     const ry = baseRadius * sizeBase * randBetween(0.8, 1.2);
     const spawnX = margin + Math.random() * xRange;
     const spawnY = enterFromAbove
-      ? -randBetween(ry * 1.2, ry * 3.5)
+      ? -randBetween(ry * 0.8, ry * 2.0)
       : margin + Math.random() * yRange;
 
     // Rest position must be below spawn (so the drop actually falls). Keep
-    // it inside the tile with a small padding from the edges.
-    const restPad = Math.max(rx, ry) * 0.7;
-    const restMinX = restPad;
-    const restMaxX = Math.max(restPad, width - restPad);
-    const restMinY = Math.max(restPad, spawnY + ry * 1.5);
-    const restMaxY = Math.max(restMinY, height - restPad);
+    // it inside the tile with a small padding from the edges. The rest
+    // ceiling is capped well above the bottom so drops don't traverse the
+    // full tile height.
+    // Rest is constrained close to spawn so blobs drift and fall a short
+    // distance rather than traversing the tile — "less movement".
+    const restPad = Math.max(rx, ry) * 0.2;
+    const driftLimit = baseRadius * 0.1;
+    const fallLimit = baseRadius * 0.1;
+    const restMinX = Math.max(restPad, spawnX - driftLimit);
+    const restMaxX = Math.min(Math.max(restPad, width - restPad), spawnX + driftLimit);
+    const restMinY = Math.max(restPad, spawnY + ry * 1.2);
+    const restMaxY = Math.max(
+      restMinY,
+      Math.min(height - restPad, height * 0.82, spawnY + fallLimit),
+    );
 
     // Best-of-3 candidates: a light bias toward territory that adds the most
     // new same-color surface. Random jitter in the score keeps it from being
@@ -375,7 +390,7 @@ function generateSplashEvent(
       fallProfile: generateFallProfile(),
     });
   }
-  return { id, activeSec, restSec, droplets };
+  return { id, phase, activeSec, restSec, droplets };
 }
 
 function generateDeterministicPlacement(index: number): PlacementStyle {
@@ -531,6 +546,8 @@ export default function HatchFiller({
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 900, height: 600 });
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [onScreen, setOnScreen] = useState(true);
+  const viewerOpen = useHatchViewerOpen();
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -558,6 +575,19 @@ export default function HatchFiller({
       clearTimeout(t1);
       clearTimeout(t2);
     };
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) setOnScreen(entry.isIntersecting);
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const stampRef = useRef<StampDef | null>(null);
@@ -628,8 +658,10 @@ export default function HatchFiller({
   const darkGridRef = useRef<Uint8Array>(new Uint8Array(COVERAGE_TOTAL));
   const lightGridRef = useRef<Uint8Array>(new Uint8Array(COVERAGE_TOTAL));
 
+  const animationActive = liquid.enabled && onScreen && !viewerOpen;
+
   useEffect(() => {
-    if (!liquid.enabled || size.width <= 0 || size.height <= 0) {
+    if (!animationActive || size.width <= 0 || size.height <= 0) {
       setEvent(null);
       return;
     }
@@ -647,6 +679,7 @@ export default function HatchFiller({
       const targetMask = currentPhase === "dark" ? null : darkGridRef.current;
       const e = generateSplashEvent(
         nextId,
+        currentPhase,
         size.width,
         size.height,
         liquid.baseRadius,
@@ -667,21 +700,27 @@ export default function HatchFiller({
         for (const g of newSettled) {
           markCoverage(ownGrid, g, size.width, size.height);
         }
+        const pushCapped = (prev: SettledGlob[]) => {
+          const combined = prev.length + newSettled.length > MAX_SETTLED
+            ? [...prev.slice(prev.length + newSettled.length - MAX_SETTLED), ...newSettled]
+            : [...prev, ...newSettled];
+          return combined;
+        };
         if (currentPhase === "dark") {
-          setSettledDark((prev) => [...prev, ...newSettled]);
+          setSettledDark(pushCapped);
           if (coverageRatio(darkGridRef.current) >= FLIP_THRESHOLD) {
             currentPhase = "light";
             setPhase("light");
           }
         } else {
-          setSettledLight((prev) => [...prev, ...newSettled]);
+          setSettledLight(pushCapped);
           if (coverageRatio(lightGridRef.current) >= FLIP_THRESHOLD) {
-            // Full rotation complete — reset both layers and start over.
+            // Full rotation complete — reset coverage tracking but keep the
+            // settled visuals so the tile never snaps back to a blank state.
+            // Pruning via MAX_SETTLED bounds the long-running mask cost.
             currentPhase = "dark";
             darkGridRef.current = new Uint8Array(COVERAGE_TOTAL);
             lightGridRef.current = new Uint8Array(COVERAGE_TOTAL);
-            setSettledDark([]);
-            setSettledLight([]);
             setPhase("dark");
           }
         }
@@ -701,7 +740,7 @@ export default function HatchFiller({
     // `currentPhase` so phase flips happen mid-effect without restarting
     // the whole timer chain.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [liquid.enabled, liquid.baseRadius, size.width, size.height]);
+  }, [animationActive, liquid.baseRadius, size.width, size.height]);
 
   const darkPatternContent = liquid.enabled ? (
     <pattern
@@ -723,6 +762,71 @@ export default function HatchFiller({
     </pattern>
   ) : null;
 
+
+  const dropKeyframes = useMemo(() => {
+    if (!liquid.enabled || !event) return "";
+    return event.droplets.map((d, i) => {
+      const a = d.inner;
+      const fall = d.fallDistance;
+      const fromAbove = d.y < 0;
+      const wobbleAt = (pct: number) =>
+        Math.sin((pct / 100) * d.wobbleFreq * 2 * Math.PI + d.wobblePhase) * d.wobbleAmp
+        + Math.sin((pct / 100) * d.wobble2Freq * 2 * Math.PI + d.wobble2Phase) * d.wobble2Amp;
+      const xAt = (driftFrac: number, pct: number, wobbleMul: number) =>
+        (d.driftX * driftFrac + wobbleAt(pct) * wobbleMul).toFixed(1);
+      const yAt = (frac: number) => (fall * frac).toFixed(1);
+      const fallKeyframes = (emergeEnd: number) => {
+        const fallSpan = 100 - emergeEnd;
+        const pts = d.fallProfile;
+        return pts.map((p, idx) => {
+          const isLast = idx === pts.length - 1;
+          const pct = emergeEnd + fallSpan * p.t;
+          let vIn = 1;
+          let vOut = 1;
+          if (idx > 0) {
+            const prev = pts[idx - 1];
+            const dt = p.t - prev.t;
+            if (dt > 0) vIn = (p.f - prev.f) / dt;
+          }
+          if (idx < pts.length - 1) {
+            const next = pts[idx + 1];
+            const dt = next.t - p.t;
+            if (dt > 0) vOut = (next.f - p.f) / dt;
+          }
+          if (idx === 0) vIn = vOut;
+          if (idx === pts.length - 1) vOut = vIn;
+          const v = Math.max(0, Math.min(2.4, (vIn + vOut) / 2));
+          const sx = isLast ? 1 : 1.22 - 0.218 * v;
+          const sy = isLast ? 1 : 0.82 + 0.25 * v;
+          const wobbleMul = 1 - p.t * p.t;
+          return `${pct.toFixed(1)}% { transform: translate(${xAt(p.f, pct, wobbleMul)}px, ${yAt(p.f)}px) scale(${sx.toFixed(2)}, ${sy.toFixed(2)}); }`;
+        }).join("\n          ");
+      };
+      const body = fromAbove
+        ? `
+        0% { transform: translate(${xAt(0, 0, 1)}px, 0) scale(1); }
+        ${a.toFixed(1)}% { transform: translate(${xAt(0, a, 1)}px, 0) scale(1); }
+        ${fallKeyframes(a)}
+          `
+        : `
+        0% { transform: translate(0, 0) scale(0); }
+        ${a.toFixed(1)}% { transform: translate(0, 0) scale(0); }
+        ${(a + 4).toFixed(1)}% { transform: translate(0, 0) scale(0.5, 0.4); }
+        ${(a + 10).toFixed(1)}% { transform: translate(0, 0) scale(1, 0.95); }
+        ${(a + 18).toFixed(1)}% { transform: translate(0, 0) scale(0.95, 1.08); }
+        ${fallKeyframes(a + 18)}
+          `;
+      return `
+      @keyframes drop-${animId}-${i} { ${body} }
+      .drop-${animId}-${i} {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: drop-${animId}-${i} ${event.activeSec.toFixed(2)}s linear 1 both;
+        will-change: transform;
+      }
+      `;
+    }).join("");
+  }, [event, liquid.enabled, animId]);
 
   const isSmall = Math.min(size.width, size.height) < 300;
 
@@ -820,81 +924,7 @@ export default function HatchFiller({
           opacity: 1;
           transform: scale(1);
         }
-        ${liquid.enabled && event ? event.droplets.map((d, i) => {
-          // Single-shot animation. The droplet emerges, falls, decelerates,
-          // and settles at (finalX, finalY) with scale (1,1). After
-          // settling, the active ellipse is replaced by a static settled
-          // one at the same coordinates (no visible pop).
-          const a = d.inner;
-          const fall = d.fallDistance;
-          const fromAbove = d.y < 0;
-          // Two stacked sines layered on top of linear drift. Wobble is
-          // damped to 0 by the end of the fall so the rest position is
-          // exactly (finalX, finalY) — matches the static ellipse handoff.
-          const wobbleAt = (pct: number) =>
-            Math.sin((pct / 100) * d.wobbleFreq * 2 * Math.PI + d.wobblePhase) * d.wobbleAmp
-            + Math.sin((pct / 100) * d.wobble2Freq * 2 * Math.PI + d.wobble2Phase) * d.wobble2Amp;
-          const xAt = (driftFrac: number, pct: number, wobbleMul: number) =>
-            (d.driftX * driftFrac + wobbleAt(pct) * wobbleMul).toFixed(1);
-          const yAt = (frac: number) => (fall * frac).toFixed(1);
-          // Emit fall keyframes from the profile. The fall portion spans
-          // emergeEnd% → 100% of the animation. The last point lands at
-          // (driftX, fall) — i.e. exactly at the resting position.
-          const fallKeyframes = (emergeEnd: number) => {
-            const fallSpan = 100 - emergeEnd;
-            const pts = d.fallProfile;
-            return pts.map((p, idx) => {
-              const isLast = idx === pts.length - 1;
-              const pct = emergeEnd + fallSpan * p.t;
-              // Local velocity in fall-fraction per time-fraction. v ≈ 1
-              // average; <1 stalled (bulges), >1 racing (stretches).
-              let vIn = 1;
-              let vOut = 1;
-              if (idx > 0) {
-                const prev = pts[idx - 1];
-                const dt = p.t - prev.t;
-                if (dt > 0) vIn = (p.f - prev.f) / dt;
-              }
-              if (idx < pts.length - 1) {
-                const next = pts[idx + 1];
-                const dt = next.t - p.t;
-                if (dt > 0) vOut = (next.f - p.f) / dt;
-              }
-              if (idx === 0) vIn = vOut;
-              if (idx === pts.length - 1) vOut = vIn;
-              const v = Math.max(0, Math.min(2.4, (vIn + vOut) / 2));
-              // At rest (isLast) force relaxed scale (1,1) so the handoff
-              // to the static settled ellipse is seamless.
-              const sx = isLast ? 1 : 1.22 - 0.218 * v;
-              const sy = isLast ? 1 : 0.82 + 0.25 * v;
-              // Wobble damps to 0 over the fall — fully zero by p.t=1.
-              const wobbleMul = 1 - p.t * p.t;
-              return `${pct.toFixed(1)}% { transform: translate(${xAt(p.f, pct, wobbleMul)}px, ${yAt(p.f)}px) scale(${sx.toFixed(2)}, ${sy.toFixed(2)}); }`;
-            }).join("\n          ");
-          };
-          const body = fromAbove
-            ? `
-          0% { transform: translate(${xAt(0, 0, 1)}px, 0) scale(1); }
-          ${a.toFixed(1)}% { transform: translate(${xAt(0, a, 1)}px, 0) scale(1); }
-          ${fallKeyframes(a)}
-            `
-            : `
-          0% { transform: translate(0, 0) scale(0); }
-          ${a.toFixed(1)}% { transform: translate(0, 0) scale(0); }
-          ${(a + 4).toFixed(1)}% { transform: translate(0, 0) scale(0.5, 0.4); }
-          ${(a + 10).toFixed(1)}% { transform: translate(0, 0) scale(1, 0.95); }
-          ${(a + 18).toFixed(1)}% { transform: translate(0, 0) scale(0.95, 1.08); }
-          ${fallKeyframes(a + 18)}
-            `;
-          return `
-        @keyframes drop-${animId}-${i} { ${body} }
-        .drop-${animId}-${i} {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation: drop-${animId}-${i} ${event.activeSec.toFixed(2)}s linear 1 both;
-          will-change: transform;
-        }
-        ` ;}).join("") : ""}
+        ${dropKeyframes}
       `}</style>
       <svg
         className="hatch-container"
@@ -949,7 +979,7 @@ export default function HatchFiller({
                       ry={g.ry}
                     />
                   ))}
-                  {phase === "dark" && event &&
+                  {event && event.phase === "dark" &&
                     event.droplets.map((d, i) => (
                       <ellipse
                         key={`a${i}`}
@@ -982,7 +1012,7 @@ export default function HatchFiller({
                       ry={g.ry}
                     />
                   ))}
-                  {phase === "light" && event &&
+                  {event && event.phase === "light" &&
                     event.droplets.map((d, i) => (
                       <ellipse
                         key={`a${i}`}
@@ -1017,7 +1047,7 @@ export default function HatchFiller({
               only the in-flight droplet animates, keeping per-frame work
               small even after many globs have accumulated. */}
           {liquid.enabled &&
-            (settledDark.length > 0 || (phase === "dark" && event !== null)) && (
+            (settledDark.length > 0 || (event !== null && event.phase === "dark")) && (
               <rect
                 width="100%"
                 height="100%"
@@ -1030,7 +1060,7 @@ export default function HatchFiller({
               dark territory. When this layer covers ~80% of the tile,
               both layers reset and the dark cycle begins again. */}
           {liquid.enabled &&
-            (settledLight.length > 0 || (phase === "light" && event !== null)) && (
+            (settledLight.length > 0 || (event !== null && event.phase === "light")) && (
               <rect
                 width="100%"
                 height="100%"
