@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 133,
+      "id": "zap-comix-3-1779576267",
+      "title": "Zap Comix",
+      "slug": "zap-comix",
+      "issue": 3,
+      "year": 1969,
+      "artist": "S. Clay Wilson",
+      "image": "images/zap-comix/issue-3-1779576267.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T22:44:28.814Z"
+    },
+    {
       "seq": 132,
       "id": "uneeda-comix-0-1779575370",
       "title": "Uneeda Comix",
