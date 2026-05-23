@@ -1227,6 +1227,25 @@
       ]
     },
     {
+      "id": "s-clay-wilson",
+      "name": "S. Clay Wilson",
+      "description": "One of the pioneers of American underground comix.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4714205-8230916521-scwBT.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/s-clay-wilson/4040-60043/"
+        }
+      ],
+      "birthYear": 1941,
+      "deathYear": 2021,
+      "country": "U.S.",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "sam-keith",
       "name": "Sam Keith",
       "description": "Samuel Coleman Kieth (January 11, 1963 \u2013 March 15, 2026) was an American comics artist and writer, best known as the creator of The Maxx and Zero Girl and co- creator of The Sandman.",
