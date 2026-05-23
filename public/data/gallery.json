@@ -1,43 +1,6 @@
 {
   "panels": [
     {
-      "seq": 133,
-      "id": "zap-3-1779575791",
-      "title": "Zap Comix",
-      "slug": "zap",
-      "issue": 3,
-      "year": 1969,
-      "artist": "S. Clay Wilson",
-      "image": "images/zap/issue-3-1779575791.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-05-23T22:36:42.490Z",
-      "width": 1280,
-      "height": 859,
-      "dominantColors": [
-        [
-          92.9,
-          -0.6,
-          4.3
-        ],
-        [
-          70.0,
-          -0.2,
-          3.3
-        ],
-        [
-          46.9,
-          -0.8,
-          3.6
-        ]
-      ],
-      "colorfulness": 3.4,
-      "phash": "8725d681e45adaec",
-      "ahash": "27230202637fbfbe",
-      "dhash": "4e4e6676d6d37868"
-    },
-    {
       "seq": 132,
       "id": "uneeda-comix-0-1779575370",
       "title": "Uneeda Comix",
