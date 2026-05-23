@@ -2088,10 +2088,38 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Zap_Comix"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix/4050-30068/"
         }
       ],
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine",
+        "metron"
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/27783/1042085-zap_1feb68.jpg",
+      "startYear": 1968,
+      "publisher": "Fantagraphics",
+      "issueCount": 17,
+      "coverSources": {
+        "metron": [
+          1,
+          2,
+          3
+        ],
+        "comicvine": [
+          1,
+          2,
+          3
+        ]
+      },
+      "coverImages": [
+        "data/covers/zap/828bcab32b1e.jpg",
+        "data/covers/zap/96e997803091.jpg",
+        "data/covers/zap/745bdfa0d8ac.jpg",
+        "data/covers/zap/8d1ae6d09c0f.jpg"
       ]
     }
   ]
