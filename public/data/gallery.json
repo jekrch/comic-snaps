@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 130,
+      "id": "bizarre-sex-1-1779570977",
+      "title": "Bizarre Sex",
+      "slug": "bizarre-sex",
+      "issue": 1,
+      "year": 1972,
+      "artist": "Tim Boxell",
+      "image": "images/bizarre-sex/issue-1-1779570977.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-23T21:16:19.191Z"
+    },
+    {
       "seq": 129,
       "id": "zap-3-1779568464",
       "title": "Zap",
