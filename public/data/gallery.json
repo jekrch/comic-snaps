@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 135,
+      "id": "zap-comix-3-1779581665",
+      "title": "Zap Comix",
+      "slug": "zap-comix",
+      "issue": 3,
+      "year": 1969,
+      "artist": "Victor Moscoso",
+      "image": "images/zap-comix/issue-3-1779581665.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-24T00:14:35.693Z"
+    },
+    {
       "seq": 134,
       "id": "odin-1-1779581382",
       "title": "Odin",
