@@ -247,6 +247,27 @@
           "name": null
         }
       ]
+    },
+    "Odin": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 3507,
+          "name": null
+        },
+        {
+          "id": 3529,
+          "name": null
+        },
+        {
+          "id": 7046,
+          "name": null
+        },
+        {
+          "id": 15564,
+          "name": null
+        }
+      ]
     }
   }
 }
