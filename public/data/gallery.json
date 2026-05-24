@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 136,
+      "id": "trencher-2-1779586384",
+      "title": "Trencher",
+      "slug": "trencher",
+      "issue": 2,
+      "year": 1993,
+      "artist": "Keith Griffen",
+      "image": "images/trencher/issue-2-1779586384.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-24T01:33:06.310Z"
+    },
+    {
       "seq": 135,
       "id": "zap-comix-3-1779581665",
       "title": "Zap Comix",
@@ -24,11 +38,11 @@
         [
           62.6,
           0.6,
-          -1.0
+          -1
         ],
         [
           16.4,
-          1.0,
+          1,
           -5.8
         ]
       ],
