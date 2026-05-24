@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 137,
+      "id": "nut-3-1779663336",
+      "title": "Nut",
+      "slug": "nut",
+      "issue": 3,
+      "year": 2024,
+      "artist": "Brandon John",
+      "image": "images/nut/issue-3-1779663336.jpg",
+      "notes": null,
+      "tags": [
+        "Minneapolis"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-24T22:55:38.742Z"
+    },
+    {
       "seq": 136,
       "id": "trencher-2-1779586384",
       "title": "Trencher",
