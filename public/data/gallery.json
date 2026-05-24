@@ -14,7 +14,30 @@
         "Minneapolis"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-05-24T22:55:38.742Z"
+      "addedAt": "2026-05-24T22:55:38.742Z",
+      "width": 1008,
+      "height": 1280,
+      "dominantColors": [
+        [
+          94.7,
+          -2.3,
+          -2.5
+        ],
+        [
+          63.9,
+          -0.9,
+          -3.1
+        ],
+        [
+          5.2,
+          0.0,
+          -0.5
+        ]
+      ],
+      "colorfulness": 2.4,
+      "phash": "a42727b548c9d9d9",
+      "ahash": "0107e3f9dfffefc0",
+      "dhash": "676e8f83393c8997"
     },
     {
       "seq": 136,
