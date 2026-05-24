@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 134,
+      "id": "odin-1-1779581382",
+      "title": "Odin",
+      "slug": "odin",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Letizia Cadonici",
+      "image": "images/odin/issue-1-1779581382.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-24T00:09:44.544Z"
+    },
+    {
       "seq": 133,
       "id": "zap-comix-3-1779576267",
       "title": "Zap Comix",
@@ -28,11 +42,11 @@
         ],
         [
           45.4,
-          -1.0,
+          -1,
           3.6
         ]
       ],
-      "colorfulness": 3.0,
+      "colorfulness": 3,
       "phash": "a73682817e9accf2",
       "ahash": "37230382237b7fbf",
       "dhash": "4e4e6e7656d6d168"
