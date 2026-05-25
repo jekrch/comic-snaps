@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 139,
+      "id": "buzzard-2-1779673958",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 2,
+      "year": 1990,
+      "artist": "Steve Lafler",
+      "image": "images/buzzard/issue-2-1779673958.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-25T01:52:40.105Z"
+    },
+    {
       "seq": 138,
       "id": "buzzard-2-1779671857",
       "title": "Buzzard",
@@ -22,9 +36,9 @@
           0.6
         ],
         [
-          88.0,
+          88,
           0.8,
-          4.0
+          4
         ],
         [
           44.2,
