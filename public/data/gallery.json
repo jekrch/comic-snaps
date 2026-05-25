@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 141,
+      "id": "buzzard-2-1779689119",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 2,
+      "year": 1990,
+      "artist": "Steve Lafler",
+      "image": "images/buzzard/issue-2-1779689119.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-25T06:05:21.235Z"
+    },
+    {
       "seq": 140,
       "id": "snarf-2-1779687914",
       "title": "Snarf",
