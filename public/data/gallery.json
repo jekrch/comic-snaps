@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 142,
+      "id": "the-beauty-5-1779691422",
+      "title": "The Beauty",
+      "slug": "the-beauty",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Anand RK",
+      "image": "images/the-beauty/issue-5-1779691422.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-25T06:43:44.148Z"
+    },
+    {
       "seq": 141,
       "id": "buzzard-2-1779689119",
       "title": "Buzzard",
@@ -23,12 +37,12 @@
         ],
         [
           66.6,
-          -0.0,
+          0,
           -5.2
         ],
         [
-          4.0,
-          -0.0,
+          4,
+          0,
           -0.6
         ]
       ],
