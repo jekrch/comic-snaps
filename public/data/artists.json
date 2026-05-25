@@ -445,7 +445,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "hayden-sherman",
@@ -542,7 +543,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "jeff-jones",
@@ -937,7 +939,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "michael-allred",
@@ -1166,7 +1169,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "richard-corben",
@@ -1193,7 +1197,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "rick-griffin",
@@ -1220,7 +1225,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "robert-crumb",
@@ -1248,7 +1254,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "roger-langridge",
@@ -1283,7 +1290,7 @@
           "url": "https://comicvine.gamespot.com/ryan-ottley/4040-46140/"
         }
       ],
-      "birthYear": 2010,
+      "birthYear": 1975,
       "country": "United States",
       "sources": [
         "wikipedia",
@@ -1308,7 +1315,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "sam-keith",
@@ -1431,7 +1439,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "stipan-morian",
@@ -1465,7 +1474,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     },
     {
       "id": "tim-conrad",
@@ -1565,7 +1575,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "tags": ["underground"]
     }
   ]
 }

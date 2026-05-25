@@ -233,6 +233,9 @@
         "data/covers/bizarre-sex/f7c4217f3c43.jpg",
         "data/covers/bizarre-sex/30a8ec72d73b.jpg",
         "data/covers/bizarre-sex/a70519813f15.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -319,6 +322,9 @@
         "data/covers/buzzard/956d863b09ff.jpg",
         "data/covers/buzzard/be637d1379a3.jpg",
         "data/covers/buzzard/f4b3f036980b.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1228,6 +1234,9 @@
         "data/covers/omaha/0c200dc24ac4.jpg",
         "data/covers/omaha/8dd0ccb91e17.jpg",
         "data/covers/omaha/28d683aef460.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1247,7 +1256,10 @@
         "comicvine": [
           4
         ]
-      }
+      },
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "pacific-presents",
@@ -1403,6 +1415,9 @@
         "data/covers/rip-off-comix/69d01d52b9a8.jpg",
         "data/covers/rip-off-comix/f18ff83f60e3.jpg",
         "data/covers/rip-off-comix/6f87af50aab0.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1515,6 +1530,9 @@
         "data/covers/snarf/2167e758b0af.jpg",
         "data/covers/snarf/66ba49a9c055.jpg",
         "data/covers/snarf/ef567c458ceb.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1711,7 +1729,10 @@
         "comicvine": [
           2
         ]
-      }
+      },
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "the-beauty",
@@ -1936,7 +1957,10 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "the-twilight-zone",
@@ -1981,7 +2005,10 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "trencher",
@@ -2079,6 +2106,9 @@
       },
       "coverImages": [
         "data/covers/uneeda-comix/5bbc78a37293.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -2186,6 +2216,9 @@
         "data/covers/zap/96e997803091.jpg",
         "data/covers/zap/745bdfa0d8ac.jpg",
         "data/covers/zap/8d1ae6d09c0f.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -2220,6 +2253,9 @@
         "data/covers/zap-comix/828bcab32b1e.jpg",
         "data/covers/zap-comix/96e997803091.jpg",
         "data/covers/zap-comix/8d1ae6d09c0f.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     }
   ]
