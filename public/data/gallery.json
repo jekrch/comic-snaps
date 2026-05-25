@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 140,
+      "id": "snarf-2-1779687914",
+      "title": "Snarf",
+      "slug": "snarf",
+      "issue": 2,
+      "year": 1972,
+      "artist": "Jay Lynch",
+      "image": "images/snarf/issue-2-1779687914.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-25T05:45:16.766Z"
+    },
+    {
       "seq": 139,
       "id": "buzzard-2-1779673958",
       "title": "Buzzard",
@@ -29,7 +43,7 @@
         [
           15.7,
           0.6,
-          5.0
+          5
         ]
       ],
       "colorfulness": 2.5,
