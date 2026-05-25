@@ -36,9 +36,18 @@ export function parseCaption(caption: string): PanelMetadata {
       if (isNaN(year)) throw new Error(`Invalid year: "${parts[2]}"`);
 
       const notes = parts.length > 4 && parts[4] !== "" ? parts[4] : null;
-      const tags = parts.length > 5 ? parseTags(parts[5]) : [];
+      const tagBuckets = parts.length > 5 ? parseTags(parts[5]) : { tags: [], seriesTags: [], artistTags: [] };
 
-      return { title: parts[0], issue, year, artist: parts[3], notes, tags };
+      return {
+        title: parts[0],
+        issue,
+        year,
+        artist: parts[3],
+        notes,
+        tags: tagBuckets.tags,
+        seriesTags: tagBuckets.seriesTags,
+        artistTags: tagBuckets.artistTags,
+      };
     }
   }
 
@@ -51,6 +60,8 @@ export function parseCaption(caption: string): PanelMetadata {
       artist: match[4].trim(),
       notes: null,
       tags: [],
+      seriesTags: [],
+      artistTags: [],
     };
   }
 
@@ -59,12 +70,36 @@ export function parseCaption(caption: string): PanelMetadata {
   );
 }
 
-/** Parse a comma-separated tag string into a trimmed, non-empty array. */
-function parseTags(raw: string): string[] {
-  return raw
-    .split(",")
-    .map((t) => t.trim())
-    .filter((t) => t.length > 0);
+/**
+ * Parse a comma-separated tag string, bucketing by prefix:
+ *   `tag`   → panel tag
+ *   `+tag`  → series tag
+ *   `++tag` → artist tag
+ */
+export function parseTags(raw: string): {
+  tags: string[];
+  seriesTags: string[];
+  artistTags: string[];
+} {
+  const tags: string[] = [];
+  const seriesTags: string[] = [];
+  const artistTags: string[] = [];
+
+  for (const part of raw.split(",")) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.startsWith("++")) {
+      const v = trimmed.slice(2).trim();
+      if (v) artistTags.push(v);
+    } else if (trimmed.startsWith("+")) {
+      const v = trimmed.slice(1).trim();
+      if (v) seriesTags.push(v);
+    } else {
+      tags.push(trimmed);
+    }
+  }
+
+  return { tags, seriesTags, artistTags };
 }
 
 /** Convert a title into a URL-safe slug. */

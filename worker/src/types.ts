@@ -57,17 +57,48 @@ export interface PanelMetadata {
   artist: string;
   notes: string | null;
   tags: string[];
+  seriesTags: string[];
+  artistTags: string[];
 }
 
-export interface PanelEntry extends PanelMetadata {
+export interface PanelEntry {
   seq: number;
   id: string;
+  title: string;
   slug: string;
+  issue: number | string;
+  year: number;
+  artist: string;
   image: string;
+  notes: string | null;
+  tags: string[];
   postedBy: string;
   addedAt: string;
 }
 
 export interface Gallery {
   panels: PanelEntry[];
+}
+
+export interface SeriesEntry {
+  id: string;
+  name: string;
+  tags?: string[];
+  [key: string]: unknown;
+}
+
+export interface ArtistEntry {
+  id: string;
+  name: string;
+  aliases?: string[];
+  tags?: string[];
+  [key: string]: unknown;
+}
+
+export interface SeriesFile {
+  series: SeriesEntry[];
+}
+
+export interface ArtistsFile {
+  artists: ArtistEntry[];
 }

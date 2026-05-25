@@ -9,6 +9,7 @@ import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
+import { loadMetadata } from "./utils/metadata";
 import BirdIcon from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
 
@@ -72,13 +73,33 @@ export default function App() {
   }, [syncTab]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/gallery.json`)
-      .then((res) => {
+    Promise.all([
+      fetch(`${import.meta.env.BASE_URL}data/gallery.json`).then((res) => {
         if (!res.ok) throw new Error(`${res.status}`);
         return res.json() as Promise<Gallery>;
-      })
-      .then((data) => {
-        setPanels(data.panels);
+      }),
+      loadMetadata(),
+    ])
+      .then(([gallery, { artists, series }]) => {
+        const seriesTagMap = new Map<string, string[]>();
+        for (const s of series) {
+          if (s.tags?.length) seriesTagMap.set(s.id, s.tags);
+        }
+        const artistTagMap = new Map<string, string[]>();
+        for (const a of artists) {
+          if (a.tags?.length) artistTagMap.set(a.name, a.tags);
+        }
+
+        const merged = gallery.panels.map((p) => {
+          const extra = [
+            ...(seriesTagMap.get(p.slug) ?? []),
+            ...(artistTagMap.get(p.artist) ?? []),
+          ];
+          if (extra.length === 0) return p;
+          return { ...p, tags: Array.from(new Set([...(p.tags ?? []), ...extra])) };
+        });
+
+        setPanels(merged);
         setStatus("ready");
       })
       .catch(() => setStatus("error"));

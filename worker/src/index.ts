@@ -1,7 +1,9 @@
 import type { Env, PanelEntry, TelegramUpdate } from "./types";
-import { parseCaption, slugify } from "./caption";
+import { parseCaption, parseTags, slugify } from "./caption";
 import { downloadFile, sendReply } from "./telegram";
 import {
+  addArtistTags,
+  addSeriesTags,
   arrayBufferToBase64,
   commitFile,
   deletePanel,
@@ -21,19 +23,67 @@ Add a panel:
 
   Issue can be a number (1, 42) or text (VOL 1, Annual 2).
 
+  Tags accept prefixes:
+    tag    → panel tag
+    +tag   → series tag (applied to the matching series)
+    ++tag  → artist tag (applied to the matching artist)
+
   Example:
-  Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera
+  Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, +space opera, ++indie
 
 Commands:
   /delete {id} — Delete a panel by its numeric ID
   /update {id} {field} {value} — Update a field on a panel
+  /tag_series {ref} // {tags} — Add tags to a series (ref = id or name)
+  /tag_artist {ref} // {tags} — Add tags to an artist (ref = id, name, or alias)
 
 Updatable fields: title, issue, year, artist, notes, tags
 
 Examples:
   /delete 5
   /update 3 artist Fiona Staples
-  /update 3 tags sci-fi, space opera`;
+  /update 3 tags sci-fi, space opera
+  /tag_series Saga // sci-fi, space opera
+  /tag_artist Fiona Staples // canadian`;
+
+/**
+ * Handle `/tag_series` and `/tag_artist`. Argument form: `ref // tag1, tag2, ...`
+ * Tags may carry `+`/`++` prefixes but the prefix is stripped — the target type
+ * is determined by the command, not the prefix.
+ */
+async function handleTagCommand(
+  env: Env,
+  argument: string,
+  type: "series" | "artist"
+): Promise<string> {
+  const sepIdx = argument.indexOf("//");
+  if (sepIdx === -1) {
+    return `Expected format:\n/tag_${type} {ref} // tag1, tag2`;
+  }
+
+  const ref = argument.slice(0, sepIdx).trim();
+  const rawTags = argument.slice(sepIdx + 2).trim();
+
+  if (!ref) return `Missing ${type} reference.`;
+  if (!rawTags) return `No tags provided.`;
+
+  const buckets = parseTags(rawTags);
+  const tags = [...buckets.tags, ...buckets.seriesTags, ...buckets.artistTags];
+  if (tags.length === 0) return `No tags provided.`;
+
+  const result =
+    type === "series"
+      ? await addSeriesTags(env, ref, tags)
+      : await addArtistTags(env, ref, tags);
+
+  if (!result.entry) {
+    return `No ${type} found matching "${ref}".`;
+  }
+  if (result.addedTags.length === 0) {
+    return `${result.entry.name}: all tags already present.\n  Tags: ${result.allTags.join(", ")}`;
+  }
+  return `Tagged ${type} ${result.entry.name}:\n  Added: ${result.addedTags.join(", ")}\n  Tags: ${result.allTags.join(", ")}`;
+}
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -93,6 +143,20 @@ export default {
               `Deleted panel #${seq}: ${removed.title} ${formatIssue(removed.issue)}`
             );
           }
+          return new Response("OK");
+        }
+
+        const tagSeriesMatch = text.match(/^\/tag_series\s+([\s\S]+)$/);
+        if (tagSeriesMatch) {
+          const reply = await handleTagCommand(env, tagSeriesMatch[1], "series");
+          await sendReply(env.TELEGRAM_BOT_TOKEN, message.chat.id, message.message_id, reply);
+          return new Response("OK");
+        }
+
+        const tagArtistMatch = text.match(/^\/tag_artist\s+([\s\S]+)$/);
+        if (tagArtistMatch) {
+          const reply = await handleTagCommand(env, tagArtistMatch[1], "artist");
+          await sendReply(env.TELEGRAM_BOT_TOKEN, message.chat.id, message.message_id, reply);
           return new Response("OK");
         }
 

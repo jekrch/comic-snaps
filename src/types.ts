@@ -13,6 +13,7 @@ export interface Artist {
   deathYear?: number | null;
   country?: string | null;
   aliases?: string[] | null;
+  tags?: string[] | null;
 }
 
 export interface Series {
@@ -27,6 +28,7 @@ export interface Series {
   issueCount?: number | null;
   aliases?: string[] | null;
   coverImages?: string[] | null;
+  tags?: string[] | null;
 }
 
 export interface Panel {

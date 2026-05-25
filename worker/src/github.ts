@@ -1,4 +1,13 @@
-import type { Env, Gallery, GitHubContentsResponse, PanelEntry } from "./types";
+import type {
+  ArtistEntry,
+  ArtistsFile,
+  Env,
+  Gallery,
+  GitHubContentsResponse,
+  PanelEntry,
+  SeriesEntry,
+  SeriesFile,
+} from "./types";
 import { parseIssue } from "./caption";
 
 // Display form for an issue identifier (e.g. `#5` for a number, `VOL 1` as-is).
@@ -227,6 +236,178 @@ type UpdatableField = typeof UPDATABLE_FIELDS[number];
 
 export function isUpdatableField(field: string): field is UpdatableField {
   return (UPDATABLE_FIELDS as readonly string[]).includes(field);
+}
+
+/** Generic JSON file read from GitHub. */
+async function readJsonFile<T>(
+  env: Env,
+  path: string
+): Promise<{ data: T | null; sha: string | null }> {
+  const [owner, repo] = env.GITHUB_REPO.split("/");
+  const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`;
+
+  const resp = await fetch(url, { headers: githubHeaders(env.GITHUB_TOKEN) });
+
+  if (resp.status === 404) return { data: null, sha: null };
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Failed to read ${path} (${resp.status}): ${err}`);
+  }
+
+  const meta: GitHubContentsResponse = await resp.json();
+  const content = base64ToUtf8(meta.content.replace(/\n/g, ""));
+  return { data: JSON.parse(content) as T, sha: meta.sha };
+}
+
+/** Generic JSON file write to GitHub. */
+async function writeJsonFile(
+  env: Env,
+  path: string,
+  data: unknown,
+  sha: string | null,
+  commitMessage: string
+): Promise<void> {
+  const [owner, repo] = env.GITHUB_REPO.split("/");
+  const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`;
+
+  const body: Record<string, string> = {
+    message: commitMessage,
+    content: utf8ToBase64(JSON.stringify(data, null, 2)),
+    branch: "main",
+  };
+  if (sha) body.sha = sha;
+
+  const resp = await fetch(url, {
+    method: "PUT",
+    headers: githubHeaders(env.GITHUB_TOKEN),
+    body: JSON.stringify(body),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Write to ${path} failed (${resp.status}): ${err}`);
+  }
+}
+
+function normalize(s: string): string {
+  return s.trim().toLowerCase();
+}
+
+/** Match a series by id (case-insensitive) or name (case-insensitive). */
+function findSeries(list: SeriesEntry[], ref: string): SeriesEntry | undefined {
+  const r = normalize(ref);
+  return (
+    list.find((s) => normalize(s.id) === r) ??
+    list.find((s) => normalize(s.name) === r)
+  );
+}
+
+/** Match an artist by id, name, or alias (all case-insensitive). */
+function findArtist(list: ArtistEntry[], ref: string): ArtistEntry | undefined {
+  const r = normalize(ref);
+  return (
+    list.find((a) => normalize(a.id) === r) ??
+    list.find((a) => normalize(a.name) === r) ??
+    list.find((a) => a.aliases?.some((alias) => normalize(alias) === r))
+  );
+}
+
+/** Merge new tags into an entry's tag array, returning only the newly added tags. */
+function mergeTags(entry: { tags?: string[] }, incoming: string[]): string[] {
+  const existing = new Set(entry.tags ?? []);
+  const added: string[] = [];
+  for (const t of incoming) {
+    if (!existing.has(t)) {
+      existing.add(t);
+      added.push(t);
+    }
+  }
+  entry.tags = Array.from(existing);
+  return added;
+}
+
+export interface TagAddResult {
+  entry: { id: string; name: string } | null;
+  addedTags: string[];
+  allTags: string[];
+}
+
+/** Add tags to a series identified by id or name. Returns result with diff. */
+export async function addSeriesTags(
+  env: Env,
+  ref: string,
+  newTags: string[]
+): Promise<TagAddResult> {
+  if (newTags.length === 0) {
+    return { entry: null, addedTags: [], allTags: [] };
+  }
+  const { data, sha } = await readJsonFile<SeriesFile>(env, "public/data/series.json");
+  if (!data) return { entry: null, addedTags: [], allTags: [] };
+
+  const entry = findSeries(data.series, ref);
+  if (!entry) return { entry: null, addedTags: [], allTags: [] };
+
+  const added = mergeTags(entry, newTags);
+  if (added.length === 0) {
+    return {
+      entry: { id: entry.id, name: entry.name },
+      addedTags: [],
+      allTags: entry.tags ?? [],
+    };
+  }
+
+  await writeJsonFile(
+    env,
+    "public/data/series.json",
+    data,
+    sha,
+    `Update series: tag ${entry.name} (${added.join(", ")})`
+  );
+
+  return {
+    entry: { id: entry.id, name: entry.name },
+    addedTags: added,
+    allTags: entry.tags ?? [],
+  };
+}
+
+/** Add tags to an artist identified by id, name, or alias. Returns result with diff. */
+export async function addArtistTags(
+  env: Env,
+  ref: string,
+  newTags: string[]
+): Promise<TagAddResult> {
+  if (newTags.length === 0) {
+    return { entry: null, addedTags: [], allTags: [] };
+  }
+  const { data, sha } = await readJsonFile<ArtistsFile>(env, "public/data/artists.json");
+  if (!data) return { entry: null, addedTags: [], allTags: [] };
+
+  const entry = findArtist(data.artists, ref);
+  if (!entry) return { entry: null, addedTags: [], allTags: [] };
+
+  const added = mergeTags(entry, newTags);
+  if (added.length === 0) {
+    return {
+      entry: { id: entry.id, name: entry.name },
+      addedTags: [],
+      allTags: entry.tags ?? [],
+    };
+  }
+
+  await writeJsonFile(
+    env,
+    "public/data/artists.json",
+    data,
+    sha,
+    `Update artist: tag ${entry.name} (${added.join(", ")})`
+  );
+
+  return {
+    entry: { id: entry.id, name: entry.name },
+    addedTags: added,
+    allTags: entry.tags ?? [],
+  };
 }
 
 /** Update a single field on a panel by seq ID. Returns the updated entry or null. */
