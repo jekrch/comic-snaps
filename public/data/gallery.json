@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 138,
+      "id": "buzzard-2-1779671857",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 2,
+      "year": 1990,
+      "artist": "Pete Friedrich",
+      "image": "images/buzzard/issue-2-1779671857.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-25T01:17:43.287Z"
+    },
+    {
       "seq": 137,
       "id": "nut-3-1779663336",
       "title": "Nut",
@@ -30,7 +44,7 @@
         ],
         [
           5.2,
-          0.0,
+          0,
           -0.5
         ]
       ],
