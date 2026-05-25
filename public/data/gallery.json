@@ -10,7 +10,9 @@
       "artist": "Jay Lynch",
       "image": "images/snarf/issue-2-1779687914.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "cover"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-25T05:45:16.766Z",
       "width": 1026,
