@@ -446,7 +446,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "hayden-sherman",
@@ -544,7 +546,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "jeff-jones",
@@ -940,7 +944,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "michael-allred",
@@ -1170,7 +1176,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "richard-corben",
@@ -1198,7 +1206,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "rick-griffin",
@@ -1226,7 +1236,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "robert-crumb",
@@ -1255,7 +1267,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "roger-langridge",
@@ -1316,7 +1330,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "sam-keith",
@@ -1440,7 +1456,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "stipan-morian",
@@ -1475,7 +1493,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "tim-conrad",
@@ -1576,7 +1596,9 @@
         "comicvine",
         "metron"
       ],
-      "tags": ["underground"]
+      "tags": [
+        "underground"
+      ]
     }
   ]
 }

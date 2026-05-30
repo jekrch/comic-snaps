@@ -202,6 +202,40 @@
       }
     },
     {
+      "id": "bijou-funnies",
+      "name": "Bijou Funnies",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2302660-bij4.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bijou-funnies/4050-48147/"
+        }
+      ],
+      "startYear": 1968,
+      "publisher": "Kitchen Sink",
+      "issueCount": 8,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          7
+        ],
+        "comicvine": [
+          7
+        ]
+      },
+      "coverImages": [
+        "data/covers/bijou-funnies/be5b14c24334.jpg",
+        "data/covers/bijou-funnies/6df2e87add63.jpg",
+        "data/covers/bijou-funnies/580b1e977731.jpg",
+        "data/covers/bijou-funnies/6020322d3a3a.jpg"
+      ]
+    },
+    {
       "id": "bizarre-sex",
       "name": "Bizarre Sex",
       "parentSeries": null,
