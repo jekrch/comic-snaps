@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 145,
+      "id": "did-you-hear-about-mimi-green-1-1780180129",
+      "title": "Did You Hear About Mimi Green?",
+      "slug": "did-you-hear-about-mimi-green",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Josh Cornillon",
+      "image": "images/did-you-hear-about-mimi-green/issue-1-1780180129.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-30T22:28:51.355Z"
+    },
+    {
       "seq": 144,
       "id": "bijou-funnies-7-1780176895",
       "title": "Bijou Funnies",
@@ -23,13 +37,13 @@
         ],
         [
           90.8,
-          0.0,
+          0,
           2.5
         ],
         [
           32.2,
           1.1,
-          -4.0
+          -4
         ]
       ],
       "colorfulness": 3.5,
