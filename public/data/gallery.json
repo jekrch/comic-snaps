@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 147,
+      "id": "final-cut-n-a-1780266055",
+      "title": "Final Cut",
+      "slug": "final-cut",
+      "issue": "N/A",
+      "year": 2024,
+      "artist": "Charles Burns",
+      "image": "images/final-cut/issue-n-a-1780266055.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-31T22:20:57.034Z"
+    },
+    {
       "seq": 146,
       "id": "final-cut-n-a-1780265368",
       "title": "Final Cut",
@@ -24,7 +38,7 @@
         [
           54.7,
           11.9,
-          18.0
+          18
         ],
         [
           74.3,
