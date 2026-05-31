@@ -735,6 +735,33 @@
       }
     },
     {
+      "id": "final-cut",
+      "name": "Final Cut",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/9490920-fc.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/final-cut/4050-160092/"
+        }
+      ],
+      "startYear": 2024,
+      "publisher": "Pantheon Books",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      },
+      "coverImages": [
+        "data/covers/final-cut/d02caef7159b.jpg"
+      ]
+    },
+    {
       "id": "frank",
       "name": "Frank",
       "parentSeries": null,

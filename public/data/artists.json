@@ -136,6 +136,24 @@
       ]
     },
     {
+      "id": "charles-burns",
+      "name": "Charles Burns",
+      "description": "Charles Burns started out with Sub Pop fanzine as well as Raw Magazine. His Fantagraphics works include El Borah (1999) Big Baby (2000) Skin Deep 2001, as well as his 12 issue anthology Black Hole.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/5837328-3223999327-31494.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/charles-burns/4040-18822/"
+        }
+      ],
+      "birthYear": 1955,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "dani",
       "name": "Dani",
       "description": "",
