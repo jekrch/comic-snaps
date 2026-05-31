@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 146,
+      "id": "final-cut-n-a-1780265368",
+      "title": "Final Cut",
+      "slug": "final-cut",
+      "issue": "N/A",
+      "year": 2024,
+      "artist": "Charles Burns",
+      "image": "images/final-cut/issue-n-a-1780265368.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-05-31T22:09:30.721Z"
+    },
+    {
       "seq": 145,
       "id": "did-you-hear-about-mimi-green-1-1780180129",
       "title": "Did You Hear About Mimi Green?",
@@ -18,13 +32,13 @@
       "dominantColors": [
         [
           68.9,
-          18.0,
+          18,
           -9.2
         ],
         [
           49.3,
           22.8,
-          26.0
+          26
         ],
         [
           22.5,
