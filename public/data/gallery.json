@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 148,
+      "id": "stray-bullets-sunshine-roses-29-1780706289",
+      "title": "Stray Bullets: Sunshine & Roses",
+      "slug": "stray-bullets-sunshine-roses",
+      "issue": 29,
+      "year": 2017,
+      "artist": "David Lapham",
+      "image": "images/stray-bullets-sunshine-roses/issue-29-1780706289.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-06T00:38:11.060Z"
+    },
+    {
       "seq": 147,
       "id": "final-cut-n-a-1780266055",
       "title": "Final Cut",
@@ -19,17 +33,17 @@
         [
           27.9,
           7.8,
-          12.0
+          12
         ],
         [
           56.2,
           0.8,
-          6.0
+          6
         ],
         [
           71.1,
           13.4,
-          28.0
+          28
         ]
       ],
       "colorfulness": 12.1,
