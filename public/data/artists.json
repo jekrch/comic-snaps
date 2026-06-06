@@ -838,6 +838,23 @@
       ]
     },
     {
+      "id": "kelly-thompson",
+      "name": "Kelly Thompson",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7017628-thompson.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kelly-thompson/4040-83841/"
+        }
+      ],
+      "country": "U.S.A.",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kev-walker",
       "name": "Kev Walker",
       "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",

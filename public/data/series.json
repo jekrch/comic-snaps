@@ -1045,6 +1045,26 @@
       ]
     },
     {
+      "id": "it-s-jeff-brand-new-week",
+      "name": "It\u2019s Jeff: Brand New Week",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "jacked",
       "name": "Jacked",
       "parentSeries": null,
