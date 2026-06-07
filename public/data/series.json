@@ -763,10 +763,10 @@
     },
     {
       "id": "floating-bunnyhead-bonus-levels-collection",
-      "name": "Floating Bunnyhead: Bonus Levels Collection",
+      "name": "Floating BunnyHead: Bonus Levels Collection",
       "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
+      "description": "Floating BunnyHead and friends are a group of oddball rascals who find themselves neck-deep in trouble seemingly everywhere they go.",
+      "imageUrl": "https://www.indyplanet.com/wp-content/uploads/2026/05/7004_246969B.jpg",
       "references": [],
       "sources": [
         "comicvine",
@@ -779,7 +779,11 @@
         "comicvine": [
           2
         ]
-      }
+      },
+      "coverImages": [
+        "https://www.indyplanet.com/wp-content/uploads/2026/05/7004_246969B.jpg",
+        "https://www.indyplanet.com/wp-content/uploads/2018/02/7004_85932B.jpg"
+      ]
     },
     {
       "id": "frank",

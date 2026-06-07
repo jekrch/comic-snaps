@@ -745,8 +745,24 @@
       "id": "jonathan-sims",
       "name": "Jonathan Sims",
       "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/599ffc74f5e231269054ae32/1c279885-2fc5-4297-a20d-3ffb41811c3e/Me_2022.jpg",
       "references": [
+        {
+          "name": "Artist Website",
+          "url": "https://www.skelenaut.com/"
+        },
+        {
+          "name": "Series Store",
+          "url": "https://www.indyplanet.com/?s=floating+bunnyhead"
+        },
+        {
+          "name": "Threadless Merch Shop",
+          "url": "https://skelenaut.threadless.com/"
+        },
+        {
+          "name": "Instagram",
+          "url": "https://www.instagram.com/skelenaut/"
+        },
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/jonathan-sims/4040-71215/"
