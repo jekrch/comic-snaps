@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-06-07T21:04:19.956Z"
+      "addedAt": "2026-06-07T21:04:19.956Z",
+      "width": 513,
+      "height": 1280,
+      "dominantColors": [
+        [
+          48.7,
+          64.4,
+          54.8
+        ],
+        [
+          21.3,
+          25.3,
+          21.1
+        ],
+        [
+          65.8,
+          20.9,
+          27.4
+        ]
+      ],
+      "colorfulness": 28.7,
+      "phash": "d01f43ee78c26d32",
+      "ahash": "1c1c0e5edef07e64",
+      "dhash": "b9f8babcba828c88"
     },
     {
       "seq": 151,
@@ -91,7 +114,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,

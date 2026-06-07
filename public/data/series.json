@@ -1038,6 +1038,37 @@
       ]
     },
     {
+      "id": "if-destruction-be-our-lot",
+      "name": "If Destruction Be Our Lot",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10060518-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/if-destruction-be-our-lot/4050-171776/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Image",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/if-destruction-be-our-lot/9ae641fc7206.jpg"
+      ]
+    },
+    {
       "id": "infernal-hulk",
       "name": "Infernal Hulk",
       "parentSeries": null,
