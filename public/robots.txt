@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://snaps.jacobkrch.com/sitemap.xml
