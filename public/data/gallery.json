@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 152,
+      "id": "if-destruction-be-our-lot-1-1780866258",
+      "title": "If Destruction Be Our Lot",
+      "slug": "if-destruction-be-our-lot",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Andy MacDonald",
+      "image": "images/if-destruction-be-our-lot/issue-1-1780866258.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-07T21:04:19.956Z"
+    },
+    {
       "seq": 151,
       "id": "the-twilight-zone-7-1780861918",
       "title": "The Twilight Zone",
@@ -24,7 +38,7 @@
         [
           23.4,
           -1.1,
-          2.0
+          2
         ],
         [
           56.8,
@@ -32,7 +46,7 @@
           1.8
         ]
       ],
-      "colorfulness": 2.0,
+      "colorfulness": 2,
       "phash": "a6a7cbb314c3051f",
       "ahash": "3fff372707072c00",
       "dhash": "db1f66c63eaec9a2"
@@ -77,7 +91,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
