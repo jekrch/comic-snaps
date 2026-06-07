@@ -742,6 +742,22 @@
       ]
     },
     {
+      "id": "jonathan-sims",
+      "name": "Jonathan Sims",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jonathan-sims/4040-71215/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jose-martin-sauri",
       "name": "Jose Martin Sauri",
       "description": "",

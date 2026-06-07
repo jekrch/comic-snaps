@@ -762,6 +762,26 @@
       ]
     },
     {
+      "id": "floating-bunnyhead-bonus-levels-collection",
+      "name": "Floating Bunnyhead: Bonus Levels Collection",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      }
+    },
+    {
       "id": "frank",
       "name": "Frank",
       "parentSeries": null,
