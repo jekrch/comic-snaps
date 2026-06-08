@@ -240,7 +240,7 @@
       "name": "Bizarre Sex",
       "parentSeries": null,
       "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8485388-bizarresex01a.jpg",
+      "imageUrl": "https://storage.googleapis.com/hipcomic/p/11f9dfd4ed2947c56e30202304b2711a-800.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -262,12 +262,6 @@
           1
         ]
       },
-      "coverImages": [
-        "data/covers/bizarre-sex/ab427e9d9b85.jpg",
-        "data/covers/bizarre-sex/f7c4217f3c43.jpg",
-        "data/covers/bizarre-sex/30a8ec72d73b.jpg",
-        "data/covers/bizarre-sex/a70519813f15.jpg"
-      ],
       "tags": [
         "underground"
       ]
@@ -1344,17 +1338,16 @@
       "id": "odin",
       "name": "Odin",
       "parentSeries": null,
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2847501-odin1.jpg",
+      "description": "Green Room meets Midsommar in JAMES TYNION’s most relentless Horror story yet! Adela will do anything for the perfect story. Including going undercover with Neo Nazi punks headed to the frozen forests of Norway under the misbegotten belief that they can summon Odin and achieve their promised white destiny. But what awaits them in the woods is far older and stranger than any of them can comprehend. And no gods are coming to answer their prayers for help.\n\nMultiple Eisner Award-winning creator JAMES TYNION IV (Exquisite Corpses), no-holds-barred writer MARGUERITE BENNETT (Witchblade), rising star artist LETIZIA CADONICI (House of Slaughter), and Eisner Award-winning colorist JORDIE BELLAIRE (Redlands) conjure a hallucinogenic horror story that leaves absolutely no taboo unbroken.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10075342-cover.jpg",
       "references": [
         {
           "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/odin/4050-56595/"
+          "url": "https://comicvine.gamespot.com/odin/4050-172009/"
         }
       ],
-      "startYear": 2011,
-      "publisher": "Egmont Ehapa Verlag",
-      "issueCount": 2,
+      "startYear": 2026,
+      "publisher": "Image",    
       "sources": [
         "comicvine",
         "metron"
@@ -1368,8 +1361,7 @@
         ]
       },
       "coverImages": [
-        "data/covers/odin/547f368c66ba.jpg",
-        "data/covers/odin/27944a447412.jpg"
+        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10075342-cover.jpg"
       ]
     },
     {
@@ -2133,26 +2125,25 @@
       "id": "the-twilight-zone",
       "name": "The Twilight Zone",
       "parentSeries": null,
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/3541572-01.jpg",
+      "description": "Return to the Twilight Zone in this all-new anthology series featuring stories by some of the best creators in comics today! Each issue is a new tale in the vein of the iconic original television series that’s captivated audiences for over 60 years. And like the show, these stories will be revealed in terrifying black and white!",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10087573-cover.jpg",
       "references": [
         {
           "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/the-twilight-zone/4050-70526/"
+          "url": "https://comicvine.gamespot.com/the-twilight-zone/4050-167197/"
         }
       ],
-      "startYear": 2013,
-      "publisher": "Dynamite Entertainment",
-      "issueCount": 13,
+      "startYear": 2026,
+      "publisher": "IDW Publishing",
       "sources": [
         "metron",
         "comicvine"
       ],
       "coverImages": [
-        "data/covers/the-twilight-zone/1eab066d8514.jpg",
-        "data/covers/the-twilight-zone/56739f773dc3.jpg",
-        "data/covers/the-twilight-zone/839cdd409238.jpg",
-        "data/covers/the-twilight-zone/75a02785de0c.jpg"
+        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10087573-cover.jpg",
+        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9978921-cover.jpg",
+        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10004900-cover.jpg",
+        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9876084-cover.jpg"
       ]
     },
     {
