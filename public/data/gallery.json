@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 153,
+      "id": "the-nice-house-by-the-sea-10-1781397240",
+      "title": "The Nice House by the Sea",
+      "slug": "the-nice-house-by-the-sea",
+      "issue": 10,
+      "year": 2026,
+      "artist": "Alvaro Martinez Bueno",
+      "image": "images/the-nice-house-by-the-sea/issue-10-1781397240.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-14T00:34:02.329Z"
+    },
+    {
       "seq": 152,
       "id": "if-destruction-be-our-lot-1-1780866258",
       "title": "If Destruction Be Our Lot",
@@ -114,7 +128,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
