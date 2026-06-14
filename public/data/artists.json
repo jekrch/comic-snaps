@@ -848,7 +848,8 @@
       "name": "Josh Cornillon",
       "description": "",
       "imageUrl": null,
-      "references": [{
+      "references": [
+        {
           "name": "Artist Website",
           "url": "https://joshcornillon.com"
         }
@@ -985,9 +986,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/letizia-cadonici/4040-114034/"
-        }, {
-            "name": "Artist Website",
-            "url": "https://kineticcollectibles.com/pages/letizia-cadonici"
+        },
+        {
+          "name": "Artist Website",
+          "url": "https://kineticcollectibles.com/pages/letizia-cadonici"
         }
       ],
       "sources": [

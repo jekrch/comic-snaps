@@ -1338,7 +1338,7 @@
       "id": "odin",
       "name": "Odin",
       "parentSeries": null,
-      "description": "Green Room meets Midsommar in JAMES TYNION’s most relentless Horror story yet! Adela will do anything for the perfect story. Including going undercover with Neo Nazi punks headed to the frozen forests of Norway under the misbegotten belief that they can summon Odin and achieve their promised white destiny. But what awaits them in the woods is far older and stranger than any of them can comprehend. And no gods are coming to answer their prayers for help.\n\nMultiple Eisner Award-winning creator JAMES TYNION IV (Exquisite Corpses), no-holds-barred writer MARGUERITE BENNETT (Witchblade), rising star artist LETIZIA CADONICI (House of Slaughter), and Eisner Award-winning colorist JORDIE BELLAIRE (Redlands) conjure a hallucinogenic horror story that leaves absolutely no taboo unbroken.",
+      "description": "Green Room meets Midsommar in JAMES TYNION\u2019s most relentless Horror story yet! Adela will do anything for the perfect story. Including going undercover with Neo Nazi punks headed to the frozen forests of Norway under the misbegotten belief that they can summon Odin and achieve their promised white destiny. But what awaits them in the woods is far older and stranger than any of them can comprehend. And no gods are coming to answer their prayers for help.\n\nMultiple Eisner Award-winning creator JAMES TYNION IV (Exquisite Corpses), no-holds-barred writer MARGUERITE BENNETT (Witchblade), rising star artist LETIZIA CADONICI (House of Slaughter), and Eisner Award-winning colorist JORDIE BELLAIRE (Redlands) conjure a hallucinogenic horror story that leaves absolutely no taboo unbroken.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10075342-cover.jpg",
       "references": [
         {
@@ -1347,7 +1347,7 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",    
+      "publisher": "Image",
       "sources": [
         "comicvine",
         "metron"
@@ -1361,7 +1361,7 @@
         ]
       },
       "coverImages": [
-        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10075342-cover.jpg"
+        "data/covers/odin/b6fcfda3c698.jpg"
       ]
     },
     {
@@ -2125,7 +2125,7 @@
       "id": "the-twilight-zone",
       "name": "The Twilight Zone",
       "parentSeries": null,
-      "description": "Return to the Twilight Zone in this all-new anthology series featuring stories by some of the best creators in comics today! Each issue is a new tale in the vein of the iconic original television series that’s captivated audiences for over 60 years. And like the show, these stories will be revealed in terrifying black and white!",
+      "description": "Return to the Twilight Zone in this all-new anthology series featuring stories by some of the best creators in comics today! Each issue is a new tale in the vein of the iconic original television series that\u2019s captivated audiences for over 60 years. And like the show, these stories will be revealed in terrifying black and white!",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10087573-cover.jpg",
       "references": [
         {
@@ -2140,10 +2140,10 @@
         "comicvine"
       ],
       "coverImages": [
-        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10087573-cover.jpg",
-        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9978921-cover.jpg",
-        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10004900-cover.jpg",
-        "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9876084-cover.jpg"
+        "data/covers/the-twilight-zone/3b2ab16d0352.jpg",
+        "data/covers/the-twilight-zone/973133adeeb9.jpg",
+        "data/covers/the-twilight-zone/2a8e9b88ae04.jpg",
+        "data/covers/the-twilight-zone/2c3caaedeb18.jpg"
       ]
     },
     {
