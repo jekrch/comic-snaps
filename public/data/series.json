@@ -1920,6 +1920,22 @@
       ]
     },
     {
+      "id": "the-complete-omaha-the-cat-dancer",
+      "name": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      }
+    },
+    {
       "id": "the-invisible-man",
       "name": "The Invisible Man",
       "parentSeries": null,
