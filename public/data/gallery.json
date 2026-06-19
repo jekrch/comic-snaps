@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 154,
+      "id": "stray-bullets-sunshine-roses-40-1781895383",
+      "title": "Stray Bullets: Sunshine & Roses",
+      "slug": "stray-bullets-sunshine-roses",
+      "issue": 40,
+      "year": 2018,
+      "artist": "David Lapham",
+      "image": "images/stray-bullets-sunshine-roses/issue-40-1781895383.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-19T18:56:25.396Z"
+    },
+    {
       "seq": 153,
       "id": "the-nice-house-by-the-sea-10-1781397240",
       "title": "The Nice House by the Sea",
@@ -19,17 +33,17 @@
         [
           78.7,
           -4.2,
-          14.0
+          14
         ],
         [
           45.8,
-          2.0,
+          2,
           -19.6
         ],
         [
           33.4,
           7.6,
-          2.0
+          2
         ]
       ],
       "colorfulness": 21.9,
@@ -151,7 +165,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
