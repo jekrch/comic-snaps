@@ -1,9 +1,23 @@
 {
   "panels": [
     {
+      "seq": 156,
+      "id": "absolute-wonder-woman-19-1781983463",
+      "title": "Absolute Wonder Woman",
+      "slug": "absolute-wonder-woman",
+      "issue": 19,
+      "year": 2026,
+      "artist": "Hayden Sherman",
+      "image": "images/absolute-wonder-woman/issue-19-1781983463.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-20T19:24:25.218Z"
+    },
+    {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -28,11 +42,11 @@
         ],
         [
           56.6,
-          0.0,
-          2.0
+          0,
+          2
         ]
       ],
-      "colorfulness": 1.0,
+      "colorfulness": 1,
       "phash": "c37c9fd80422f5e8",
       "ahash": "fefce06060ee757f",
       "dhash": "c4d149cc82d8c9ce"
@@ -225,7 +239,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
