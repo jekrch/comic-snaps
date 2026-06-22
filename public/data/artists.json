@@ -1570,6 +1570,27 @@
       ]
     },
     {
+      "id": "simon-bisley",
+      "name": "Simon Bisley",
+      "description": "UK artist who got his big break on 2000AD illustrating ABC Warriors and Slaine: the Horned God.\r\n\r\nHe was part of the British Invasion to the USA in the early 90s where he made a name for himself at DC illustrating Lobo. Primarily he did covers (such as Doom Patrol) and the occasional interior for DC. The Biz \u00a0illustrated covers and the occasional interior for\u00a0Hellblazer\u00a0from issue #259 right up until its ending issue #300.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9974766-simon_bisley.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/simon-bisley/4040-8849/"
+        }
+      ],
+      "birthYear": 1962,
+      "country": "England, United Kingdom",
+      "aliases": [
+        "Biz"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "steve-carr",
       "name": "Steve Carr",
       "description": "",

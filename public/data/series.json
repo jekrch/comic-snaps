@@ -1208,6 +1208,40 @@
       ]
     },
     {
+      "id": "lobo",
+      "name": "Lobo",
+      "parentSeries": null,
+      "description": "This series featuring Lobo ran for 64 issues with two special issues.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1812/102262-18356-107632-1-lobo.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lobo/4050-18356/"
+        }
+      ],
+      "startYear": 1993,
+      "publisher": "DC Comics",
+      "issueCount": 66,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/lobo/e118b04bec53.jpg",
+        "data/covers/lobo/eed0d1d23772.jpg",
+        "data/covers/lobo/977bf0cad267.jpg",
+        "data/covers/lobo/241bc5a0b1f8.jpg"
+      ]
+    },
+    {
       "id": "love-rockets",
       "name": "Love & Rockets",
       "parentSeries": null,

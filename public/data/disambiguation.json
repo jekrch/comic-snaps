@@ -295,6 +295,51 @@
           "name": null
         }
       ]
+    },
+    "Lobo": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 15341,
+          "name": null
+        },
+        {
+          "id": 11945,
+          "name": null
+        },
+        {
+          "id": 11946,
+          "name": null
+        },
+        {
+          "id": 2234,
+          "name": null
+        },
+        {
+          "id": 3998,
+          "name": null
+        },
+        {
+          "id": 13914,
+          "name": null
+        },
+        {
+          "id": 13118,
+          "name": null
+        },
+        {
+          "id": 8714,
+          "name": null
+        },
+        {
+          "id": 3257,
+          "name": null
+        },
+        {
+          "id": 13845,
+          "name": null
+        }
+      ]
     }
   }
 }
