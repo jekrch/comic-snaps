@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 159,
+      "id": "stray-bullets-sunshine-roses-40-1782155942",
+      "title": "Stray Bullets: Sunshine & Roses",
+      "slug": "stray-bullets-sunshine-roses",
+      "issue": 40,
+      "year": 2018,
+      "artist": "David Lapham",
+      "image": "images/stray-bullets-sunshine-roses/issue-40-1782155942.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-22T19:19:03.873Z"
+    },
+    {
       "seq": 158,
       "id": "battle-beast-10-1782155326",
       "title": "Battle Beast",
@@ -17,7 +31,7 @@
       "height": 563,
       "dominantColors": [
         [
-          82.0,
+          82,
           9.7,
           12.4
         ],
@@ -40,7 +54,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -114,7 +128,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -336,7 +350,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
