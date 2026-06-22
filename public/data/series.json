@@ -194,10 +194,12 @@
       ],
       "coverSources": {
         "metron": [
-          8
+          8,
+          10
         ],
         "comicvine": [
-          8
+          8,
+          10
         ]
       }
     },
