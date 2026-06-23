@@ -2,6 +2,7 @@ import { useRef, useCallback, useId, useMemo } from "react";
 import type { Panel } from "../types";
 import { Expand } from "lucide-react";
 import { formatIssue } from "../utils/issueFormat";
+import { useNearViewport } from "../hooks/useNearViewport";
 
 const DOUBLE_CLICK_DELAY = 400;
 const MOUSE_TOLERANCE = 20;
@@ -41,12 +42,21 @@ export default function PanelCard({ panel, onOpen }: Props) {
   const hatchFadeId = useId();
   const hatchMaskId = useId();
 
+  const { ref: cardRef, near } = useNearViewport<HTMLDivElement>();
+
   const imgSrc = `${import.meta.env.BASE_URL}${panel.image}`;
 
   const aspectRatio =
     panel.width && panel.height && panel.width > 0 && panel.height > 0
       ? `${panel.width} / ${panel.height}`
       : "3 / 4";
+
+  // Use the panel's dominant color as a placeholder so images fade in from a
+  // matching tone instead of the near-black surface, avoiding the scroll flash.
+  const placeholderColor = useMemo(() => {
+    const c = panel.dominantColors?.[0];
+    return c ? `rgb(${c[0]}, ${c[1]}, ${c[2]})` : undefined;
+  }, [panel.dominantColors]);
 
   const openViewer = useCallback(() => {
     onOpen(panel);
@@ -103,17 +113,24 @@ export default function PanelCard({ panel, onOpen }: Props) {
   return (
     <>
       <div
+        ref={cardRef}
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
         style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
-        <div style={{ aspectRatio, width: "100%" }}>
+        <div
+          style={{
+            aspectRatio,
+            width: "100%",
+            backgroundColor: placeholderColor,
+          }}
+        >
+          {near && (
           <img
             ref={imgRef}
             src={imgSrc}
             alt={`${panel.title} ${formatIssue(panel.issue)}`}
             decoding="async"
-            loading="lazy"
             className="block w-full"
             style={{
               aspectRatio,
@@ -129,6 +146,7 @@ export default function PanelCard({ panel, onOpen }: Props) {
               )!.style.display = "flex";
             }}
           />
+          )}
           <div
             className="fallback hidden items-center justify-center bg-surface-raised text-ink-faint text-xs font-display"
             style={{ aspectRatio: "3/4" }}
