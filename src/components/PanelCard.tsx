@@ -53,9 +53,10 @@ export default function PanelCard({ panel, onOpen }: Props) {
 
   // Use the panel's dominant color as a placeholder so images fade in from a
   // matching tone instead of the near-black surface, avoiding the scroll flash.
+  // dominantColors are stored as CIELAB [L, a, b], fed straight into CSS lab().
   const placeholderColor = useMemo(() => {
     const c = panel.dominantColors?.[0];
-    return c ? `rgb(${c[0]}, ${c[1]}, ${c[2]})` : undefined;
+    return c ? `lab(${c[0]} ${c[1]} ${c[2]})` : undefined;
   }, [panel.dominantColors]);
 
   const openViewer = useCallback(() => {
