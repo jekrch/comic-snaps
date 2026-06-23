@@ -60,14 +60,20 @@ button,
   opacity: 1;
 }
 
-/* Subtle image scale on hover */
+/* Subtle image scale on hover.
+   NOTE: do NOT set `will-change` here — it would permanently promote every
+   panel image (~160) to its own GPU layer, blowing iOS's tile/layer budget and
+   causing panels to blink/black-out and repaint late during scroll. Promote
+   only while hovering (never fires on iOS touch), so scrolling stays cheap. */
 .panel-item img {
   transition: transform 0.3s ease-in-out;
-  will-change: transform;
 }
 
-.panel-item:hover img {
-  transform: scale(1.02);
+@media (hover: hover) {
+  .panel-item:hover img {
+    transform: scale(1.02);
+    will-change: transform;
+  }
 }
 
 /* Placeholder shimmer for loading */

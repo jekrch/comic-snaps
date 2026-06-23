@@ -116,7 +116,6 @@ export default function PanelCard({ panel, onOpen }: Props) {
       <div
         ref={cardRef}
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
-        style={{ WebkitMaskImage: "radial-gradient(white, white)" }}
         onPointerUp={handlePointerUp}
       >
         <div
