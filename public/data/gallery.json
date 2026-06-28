@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 166,
+      "id": "red-roots-3-1782671349",
+      "title": "Red Roots",
+      "slug": "red-roots",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Lorenzo de Felici",
+      "image": "images/red-roots/issue-3-1782671349.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-28T18:29:10.950Z"
+    },
+    {
       "seq": 165,
       "id": "absolute-wonder-woman-21-1782605673",
       "title": "Absolute Wonder Woman",
@@ -55,7 +69,7 @@
       "dominantColors": [
         [
           76.9,
-          -2.0,
+          -2,
           -3.2
         ],
         [
@@ -65,7 +79,7 @@
         ],
         [
           16.9,
-          -3.0,
+          -3,
           -1.4
         ]
       ],
@@ -299,7 +313,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -373,7 +387,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -595,7 +609,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
