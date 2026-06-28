@@ -367,6 +367,23 @@
           "name": null
         }
       ]
+    },
+    "Feral": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 7231,
+          "name": null
+        },
+        {
+          "id": 13736,
+          "name": null
+        },
+        {
+          "id": 8744,
+          "name": null
+        }
+      ]
     }
   }
 }
