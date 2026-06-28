@@ -2022,6 +2022,40 @@
       }
     },
     {
+      "id": "the-eye-collector",
+      "name": "The Eye Collector",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111221019/8291797-1816822001-98012.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-eye-collector/4050-140450/"
+        }
+      ],
+      "startYear": 2021,
+      "publisher": "VIRUS",
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-eye-collector/0885184a135e.jpg",
+        "data/covers/the-eye-collector/34ad7d5ea401.jpg",
+        "data/covers/the-eye-collector/598b1a46d75d.jpg",
+        "data/covers/the-eye-collector/c8c894e25f4b.jpg"
+      ]
+    },
+    {
       "id": "the-invisible-man",
       "name": "The Invisible Man",
       "parentSeries": null,
