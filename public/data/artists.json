@@ -1,6 +1,23 @@
 {
   "artists": [
     {
+      "id": "adam-gorham",
+      "name": "Adam Gorham",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/62444/1804476-adamgorham.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/adam-gorham/4040-61410/"
+        }
+      ],
+      "country": "Canada",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "alexis-ziritt",
       "name": "Alexis Ziritt",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/536bb26fe4b0b68ea1c248ff/1423337639184-W9XF60A3ON627CT9TQYP/image-asset.jpeg",
