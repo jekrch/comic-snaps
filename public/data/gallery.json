@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 164,
+      "id": "the-eye-collector-1-1782605425",
+      "title": "The Eye Collector",
+      "slug": "the-eye-collector",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Gmb Chomichuk",
+      "image": "images/the-eye-collector/issue-1-1782605425.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-28T00:10:27.206Z"
+    },
+    {
       "seq": 163,
       "id": "blood-of-the-wolf-man-1-1782605333",
       "title": "Blood of the Wolf Man",
