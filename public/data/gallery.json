@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 168,
+      "id": "infernal-hulk-8-1782675344",
+      "title": "Infernal Hulk",
+      "slug": "infernal-hulk",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Adam Gorham",
+      "image": "images/infernal-hulk/issue-8-1782675344.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-06-28T19:35:45.569Z"
+    },
+    {
       "seq": 167,
       "id": "feral-23-1782674904",
       "title": "Feral",
@@ -22,7 +36,7 @@
           0.7
         ],
         [
-          62.0,
+          62,
           1.8,
           -12.6
         ],
@@ -373,7 +387,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -447,7 +461,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -669,7 +683,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
