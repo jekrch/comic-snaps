@@ -612,6 +612,39 @@
       ]
     },
     {
+      "id": "dracula-vlad-the-impaler",
+      "name": "Dracula: Vlad the Impaler",
+      "parentSeries": null,
+      "description": "This mini-series recounts the life of Vlad the Impaler and his origin as the vampire Dracula.\r\n\r\nCollected in Dracula: Vlad the Impaler.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/33037-5187-36878-1-dracula-vlad-the-im.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dracula-vlad-the-impaler/4050-5187/"
+        }
+      ],
+      "startYear": 1993,
+      "publisher": "Topps Comics",
+      "issueCount": 3,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/dracula-vlad-the-impaler/ceefff5a10b2.jpg",
+        "data/covers/dracula-vlad-the-impaler/20466a0a967e.jpg",
+        "data/covers/dracula-vlad-the-impaler/bcc1d4504145.jpg"
+      ]
+    },
+    {
       "id": "eerie",
       "name": "Eerie",
       "parentSeries": null,

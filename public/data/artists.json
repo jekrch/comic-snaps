@@ -414,6 +414,23 @@
       ]
     },
     {
+      "id": "esteban-maroto",
+      "name": "Esteban Maroto",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/225835-124792-esteban-maroto.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/esteban-maroto/4040-28742/"
+        }
+      ],
+      "country": "Spain",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "fernando-blanco",
       "name": "Fernando Blanco",
       "description": "Interview with Fernando Blanco (In Spanish)",
