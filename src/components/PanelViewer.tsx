@@ -1,15 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut, GitGraph, Info } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import { ImageViewer } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
-import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 import { setHatchViewerOpen } from "../hooks/useHatchPause";
-import { MAX_SCALE, MIN_SCALE, useZoomPan } from "../hooks/useZoomPan";
-import { useBarMeasure } from "../hooks/useBarMeasure";
-import { useGestureHandler } from "../hooks/useGestureHandler";
-import { useSlideNavigation } from "../hooks/useSlideNavigation";
 import { useMetadata } from "../hooks/useMetadata";
-import NavButton from "./NavButton";
 import SimilarityGraph from "./graph/SimilarityGraph";
 import InfoDrawer from "./InfoDrawer";
 
@@ -23,518 +18,60 @@ interface Props {
   onSelectPanel: (panel: Panel) => void;
 }
 
-export default function PanelViewer({ panel, panels, allPanels, currentIndex, onClose, onNavigate, onSelectPanel }: Props) {
-  const [visible, setVisible] = useState(false);
-  const [closing, setClosing] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [graphOpen, setGraphOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
-  const [graphSlideDir, setGraphSlideDir] = useState<"left" | "right" | null>(null);
-
-  const { artist, series, parentSeries, hasContent } = useMetadata(panel.artist, panel.slug);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imgWrapperRef = useRef<HTMLDivElement>(null);
-  const topBarRef = useRef<HTMLDivElement>(null);
-  const bottomBarRef = useRef<HTMLDivElement>(null);
-
-  // Portal target for graph toolbar controls (rendered inside top bar)
-  const [graphToolbarEl, setGraphToolbarEl] = useState<HTMLElement | null>(null);
-
-  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
-
-  // Navigation flags
-  const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex < panels.length - 1;
-
-  // Hooks
-
-  useBodyScrollLock(containerRef);
-
-  useEffect(() => {
-    setHatchViewerOpen(true);
-    return () => setHatchViewerOpen(false);
-  }, []);
-  const { topBarH, bottomBarH } = useBarMeasure(topBarRef, bottomBarRef, currentIndex);
-
-  const zoomPan = useZoomPan(imgWrapperRef, currentIndex);
-  const {
-    imgRef,
-    displayScale,
-    isZoomed,
-    transformRef,
-    resetTransform,
-    setTransform,
-    clampTranslate,
-    measureBaseDims,
-    handleDoubleClick,
-  } = zoomPan;
-
-  const slide = useSlideNavigation(panels, currentIndex, onNavigate);
-  const {
-    slideTrackRef,
-    slideActive,
-    slideAnimating,
-    swipeOffset,
-    commitSlide,
-  } = slide;
-
-  const gestures = useGestureHandler(zoomPan, slide, hasPrev, hasNext);
-
-  // Detect touch device
-
-  useEffect(() => {
-    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
-  }, []);
-
-  // Viewport width tracking
-
-  useEffect(() => {
-    const onResize = () => setViewportWidth(window.innerWidth);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  // Animate in
-
-  useEffect(() => {
-    requestAnimationFrame(() => setVisible(true));
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setClosing(true);
-    setVisible(false);
-    setTimeout(onClose, 250);
-  }, [onClose]);
-
-  // Search URL
+/**
+ * Overlay content rendered inside the lightbox: the info drawer (slides up,
+ * pushing the image up) and the similarity graph (slides down, pushing the
+ * image down). Lives in its own component so it can call `setContentShift`
+ * from an effect — that hook is only available on the viewer context handed to
+ * render slots.
+ */
+function ViewerOverlay({
+  panel,
+  panels,
+  allPanels,
+  drawerOpen,
+  graphOpen,
+  drawerSlideDir,
+  graphSlideDir,
+  graphToolbarEl,
+  topOffset,
+  bottomOffset,
+  closing,
+  onSelectPanel,
+  setContentShift,
+}: {
+  panel: Panel;
+  panels: Panel[];
+  allPanels: Panel[];
+  drawerOpen: boolean;
+  graphOpen: boolean;
+  drawerSlideDir: "left" | "right" | null;
+  graphSlideDir: "left" | "right" | null;
+  graphToolbarEl: HTMLElement | null;
+  topOffset: number;
+  bottomOffset: number;
+  closing: boolean;
+  onSelectPanel: (panel: Panel) => void;
+  setContentShift: (transform: string | null, animate?: boolean) => void;
+}) {
+  const { artist, series, parentSeries } = useMetadata(panel.artist, panel.slug);
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
   )}`;
 
-  // Navigate with drawer slide-out — close immediately so drawer slides with the image
-  const handleNavigate = useCallback((dir: "prev" | "next") => {
-    const slideOut = dir === "next" ? "left" : "right";
-    if (drawerOpen) {
-      setDrawerSlideDir(slideOut);
-      setDrawerOpen(false);
-    }
-    if (graphOpen) {
-      setGraphSlideDir(slideOut);
-      setGraphOpen(false);
-    }
-    commitSlide(dir);
-  }, [drawerOpen, graphOpen, commitSlide]);
-
-  // Close drawer/graph on panel change
+  // Push the image track out of the way for whichever overlay is open: up for
+  // the drawer (slides from the bottom), down for the graph (slides from the
+  // top). The shared-element close/collapse still measures the resting image,
+  // so reset to center before the viewer tears down.
   useEffect(() => {
-    setDrawerOpen(false);
-    setGraphOpen(false);
-    const timer = setTimeout(() => {
-      setDrawerSlideDir(null);
-      setGraphSlideDir(null);
-    }, 450);
-    return () => clearTimeout(timer);
-  }, [currentIndex]);
-
-  // Sync current panel id to URL so the viewer is linkable
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("panel", panel.id);
-    const qs = params.toString();
-    const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
-    window.history.replaceState(null, "", url);
-
-    return () => {
-      const p = new URLSearchParams(window.location.search);
-      if (p.get("panel") === panel.id) {
-        p.delete("panel");
-        const q = p.toString();
-        const u = q ? `${window.location.pathname}?${q}` : window.location.pathname;
-        window.history.replaceState(null, "", u);
-      }
-    };
-  }, [panel.id]);
-
-  // Keyboard navigation
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (graphOpen) { setGraphOpen(false); return; }
-        if (drawerOpen) { setDrawerOpen(false); return; }
-        handleClose();
-      }
-      if (graphOpen) return;
-      if (e.key === "ArrowLeft" && hasPrev && displayScale <= 1) handleNavigate("prev");
-      if (e.key === "ArrowRight" && hasNext && displayScale <= 1) handleNavigate("next");
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [handleClose, hasPrev, hasNext, displayScale, commitSlide, graphOpen, drawerOpen]);
-
-  // Layout calculations
-
-  const IMG_PADDING = 44;
-  const reservedH = bottomBarH + IMG_PADDING * 2;
-  const imgMaxHeight = `calc(100vh - ${reservedH}px)`;
-
-  const totalDigits = String(panels.length).length;
-  const counterMinWidth = `${totalDigits * 2 * 0.6 + 1.5}em`;
-
-  // Adjacent panels for slide effect
-  const prevPanel = hasPrev ? panels[currentIndex - 1] : null;
-  const nextPanel = hasNext ? panels[currentIndex + 1] : null;
-  const showAdjacentSlides = slideActive || slideAnimating || swipeOffset !== 0;
-  const showPrev = !!prevPanel && showAdjacentSlides;
-  const showNext = !!nextPanel && showAdjacentSlides;
-  const adjacentOpacity = Math.min(1, Math.abs(swipeOffset) / (viewportWidth * 0.8));
-
-  const slideImgStyle: React.CSSProperties = {
-    maxWidth: "96vw",
-    maxHeight: imgMaxHeight,
-    willChange: "transform",
-  };
-
-  // Image slide direction: down for graph, up for drawer
-  const slideTrackTransform = drawerOpen
-    ? "translateY(-100vh)"
-    : graphOpen
-      ? "translateY(100vh)"
-      : "translateY(0)";
-
-  // Render
+    if (drawerOpen) setContentShift("translateY(-100vh)");
+    else if (graphOpen) setContentShift("translateY(100vh)");
+    else setContentShift(null);
+  }, [drawerOpen, graphOpen, setContentShift]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`
-        fixed inset-0 z-50 flex items-center justify-center
-        transition-all duration-250 ease-out
-        ${visible && !closing ? "bg-black/90" : "bg-black/0"}
-      `}
-      style={{ touchAction: "none" }}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${panel.title} ${formatIssue(panel.issue)} — full view`}
-    >
-      {/* Clickable backdrop: closes viewer when clicking open space */}
-      <div
-        className={`
-          absolute inset-0 z-0 transition-all duration-250 ease-out
-          ${visible && !closing ? "backdrop-blur-sm" : "backdrop-blur-0"}
-        `}
-        onClick={drawerOpen ? () => setDrawerOpen(false) : handleClose}
-        aria-hidden="true"
-      />
-
-      {/* Top bar */}
-      <div
-        ref={topBarRef}
-        className={`
-          absolute top-0 inset-x-0 z-20 flex items-start justify-between
-          px-4 py-3 sm:px-6 sm:py-4
-          bg-gradient-to-b from-black/70 via-black/40 to-transparent
-          transition-all duration-250 ease-out
-          ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-3"}
-        `}
-        style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))", pointerEvents: "none" }}
-      >
-        {/* Left side: normal title OR graph controls portal target */}
-        <div
-          className="min-w-0 flex-1 px-2!"
-          style={{ pointerEvents: "none", display: graphOpen ? "none" : undefined }}
-        >
-          <div style={{ pointerEvents: "auto", width: "fit-content" }}>
-            <p className="font-display text-sm text-white/90 leading-snug">
-              {panel.title}{" "}
-              <span className="text-accent">{formatIssue(panel.issue)}</span>{" "}
-              <span className="text-white/40 text-xs">({panel.year})</span>
-            </p>
-            <p className="text-xs text-white/60 mt-0.5 leading-snug">
-              {panel.artist}
-            </p>
-          </div>
-        </div>
-
-        {/* Graph toolbar portal target — visible when graph is open */}
-        <div
-          ref={setGraphToolbarEl}
-          className="min-w-0 flex-1 flex items-center"
-          style={{
-            pointerEvents: graphOpen ? "auto" : "none",
-            display: graphOpen ? "flex" : "none",
-          }}
-        />
-
-        {/* Right side: zoom controls + close */}
-        <div className="flex flex-col items-end ml-3 shrink-0" style={{ pointerEvents: "auto" }}>
-          <div className="flex items-center gap-1">
-
-          {!graphOpen && !isTouchDevice && !drawerOpen && isZoomed && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                resetTransform();
-              }}
-              className="viewer-btn text-[11px] tabular-nums font-mono"
-              title="Reset zoom"
-            >
-              {Math.round(displayScale * 100)}%
-            </button>
-          )}
-
-          {!graphOpen && !isTouchDevice && !drawerOpen && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const t = transformRef.current;
-                const next = Math.min(MAX_SCALE, t.scale * 1.3);
-                const clamped = clampTranslate(t.x, t.y, next);
-                setTransform({ scale: next, ...clamped }, true);
-              }}
-              className="viewer-btn"
-              title="Zoom in"
-            >
-              <ZoomIn size={16} strokeWidth={1.5} />
-            </button>
-          )}
-
-          {!graphOpen && !isTouchDevice && !drawerOpen && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const t = transformRef.current;
-                const next = Math.max(MIN_SCALE, t.scale / 1.3);
-                const clamped = next <= 1 ? { x: 0, y: 0 } : clampTranslate(t.x, t.y, next);
-                setTransform({ scale: next, ...clamped }, true);
-              }}
-              className="viewer-btn"
-              title="Zoom out"
-            >
-              <ZoomOut size={16} strokeWidth={1.5} />
-            </button>
-          )}
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClose();
-            }}
-            className={`viewer-btn ${!isTouchDevice && !graphOpen ? "ml-1" : ""}`}
-            title="Close (Esc)"
-          >
-            <X size={16} strokeWidth={1.5} />
-          </button>
-        </div>
-        {!graphOpen && (
-          <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap mt-2">
-            {panel.postedBy} · {new Date(panel.addedAt).toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
-        )}
-        </div>
-
-      </div>
-
-      {/* Slide track wrapper: shifts image up for drawer, down for graph */}
-      <div
-        className="relative z-10 w-full h-full"
-        style={{
-          transform: slideTrackTransform,
-          transition: "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
-        }}
-      >
-      <div
-        ref={slideTrackRef}
-        className={`
-          relative flex items-center justify-center w-full h-full
-          transition-opacity duration-250 ease-out
-          ${visible && !closing ? "opacity-100" : "opacity-0"}
-        `}
-        style={{ touchAction: "none", pointerEvents: "none" }}
-      >
-        {/* Previous panel (off-screen left) */}
-        {showPrev && prevPanel && (
-          <div
-            className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
-            style={{ transform: `translateX(-${viewportWidth}px)`, opacity: adjacentOpacity }}
-          >
-            <img
-              src={`${import.meta.env.BASE_URL}${prevPanel.image}`}
-              alt={`${prevPanel.title} ${formatIssue(prevPanel.issue)}`}
-              className="block w-auto h-auto object-contain rounded-sm"
-              style={slideImgStyle}
-              draggable={false}
-            />
-          </div>
-        )}
-
-        {/* Current panel (center) */}
-        <div
-          ref={imgWrapperRef}
-          className="relative flex items-center justify-center select-none overflow-hidden cursor-default"
-          style={{ touchAction: "none", pointerEvents: "auto" }}
-          onClick={(e) => e.stopPropagation()}
-          onDoubleClick={handleDoubleClick}
-          onPointerDown={gestures.handlePointerDown}
-          onPointerMove={gestures.handlePointerMove}
-          onPointerUp={gestures.handlePointerUp}
-          onPointerLeave={gestures.handlePointerUp}
-          onTouchStart={gestures.handleTouchStart}
-          onTouchMove={gestures.handleTouchMove}
-          onTouchEnd={gestures.handleTouchEnd}
-        >
-          <img
-            ref={imgRef}
-            src={`${import.meta.env.BASE_URL}${panel.image}`}
-            alt={`${panel.title} ${formatIssue(panel.issue)}`}
-            className="block w-auto h-auto object-contain rounded-sm"
-            style={slideImgStyle}
-            draggable={false}
-            onLoad={measureBaseDims}
-          />
-        </div>
-
-        {/* Next panel (off-screen right) */}
-        {showNext && nextPanel && (
-          <div
-            className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
-            style={{ transform: `translateX(${viewportWidth}px)`, opacity: adjacentOpacity }}
-          >
-            <img
-              src={`${import.meta.env.BASE_URL}${nextPanel.image}`}
-              alt={`${nextPanel.title} ${formatIssue(nextPanel.issue)}`}
-              className="block w-auto h-auto object-contain rounded-sm"
-              style={slideImgStyle}
-              draggable={false}
-            />
-          </div>
-        )}
-      </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div
-        ref={bottomBarRef}
-        className={`
-          absolute bottom-0 inset-x-0 z-20 pt-4
-          transition-all duration-250 ease-out
-          ${visible && !closing ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
-        `}
-        style={{ paddingBottom: "max(0.3rem, env(safe-area-inset-bottom))", pointerEvents: "none" }}
-      >
-        {/* Navigation strip with flanking buttons */}
-        {!isZoomed && (hasPrev || hasNext) && (
-          <div className="relative flex items-center justify-center" style={{ pointerEvents: "auto" }}>
-            {/* Info button — left of nav */}
-            {/* Center nav controls with flanking icon buttons */}
-            <div className="flex items-center justify-center gap-3">
-              {hasContent && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDrawerOpen((d) => {
-                      if (!d) setGraphOpen(false);
-                      return !d;
-                    });
-                  }}
-                  className={`viewer-btn mr-2 ${drawerOpen ? "bg-accent/20! text-white!" : ""}`}
-                  title="Show details"
-                >
-                  <Info size={16} strokeWidth={1.5} />
-                </button>
-              )}
-
-              <NavButton direction="prev" enabled={hasPrev} onClick={() => handleNavigate("prev")} />
-
-              <span
-                className="text-[11px] text-white/50 tabular-nums tracking-wide select-none text-center inline-block font-mono"
-                style={{ minWidth: counterMinWidth }}
-              >
-                {currentIndex + 1} / {panels.length}
-              </span>
-
-              <NavButton direction="next" enabled={hasNext} onClick={() => handleNavigate("next")} />
-
-              <button
-                onClick={() => {
-                  setGraphOpen((g) => {
-                    if (!g) setDrawerOpen(false);
-                    return !g;
-                  });
-                }}
-                className={`viewer-btn ml-2 ${graphOpen ? "bg-accent/20! text-white!" : ""}`}
-                title="Similarity graph"
-              >
-                <GitGraph size={16} strokeWidth={1.5} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Hint text (when nav present) */}
-        {!isZoomed && (hasPrev || hasNext) && (
-          <div className="text-center mt-0 mb-4 mx-auto w-fit" style={{ pointerEvents: "auto" }}>
-            <span className="text-[11px] text-white/30 tracking-wide">
-              {/* {isTouchDevice
-                ? "swipe to navigate · pinch to zoom"
-                : "← → or drag to navigate · scroll to zoom · esc to close"} */}
-            </span>
-          </div>
-        )}
-
-        {/* Single-panel case: still show both flanking buttons */}
-        {!isZoomed && !hasPrev && !hasNext && (
-          <div className="flex items-center justify-center gap-5" style={{ pointerEvents: "auto" }}>
-            {hasContent && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDrawerOpen((d) => {
-                    if (!d) setGraphOpen(false);
-                    return !d;
-                  });
-                }}
-                className={`viewer-btn ${drawerOpen ? "bg-accent/20! text-white!" : ""}`}
-                title="Show details"
-              >
-                <Info size={16} strokeWidth={1.5} />
-              </button>
-            )}
-
-            <div className="text-center mx-auto w-fit">
-              <span className="text-[11px] text-white/30 tracking-wide">
-                {isTouchDevice
-                  ? "pinch to zoom · double-tap to enlarge"
-                  : "scroll to zoom · double-click to enlarge · esc to close"}
-              </span>
-            </div>
-
-            <button
-              onClick={() => {
-                setGraphOpen((g) => {
-                  if (!g) setDrawerOpen(false);
-                  return !g;
-                });
-              }}
-              className={`viewer-btn ${graphOpen ? "bg-accent/20! text-white!" : ""}`}
-              title="Similarity graph"
-            >
-              <GitGraph size={16} strokeWidth={1.5} />
-            </button>
-          </div>
-        )}
-
-
-      </div>
-
-      {/* Info panel — z-15: above image (z-10), below controls (z-20) */}
+    <>
       <InfoDrawer
         open={drawerOpen}
         closing={closing}
@@ -545,22 +82,249 @@ export default function PanelViewer({ panel, panels, allPanels, currentIndex, on
         series={series}
         parentSeries={parentSeries}
         searchUrl={searchUrl}
-        topOffset={topBarH}
-        bottomOffset={bottomBarH}
+        topOffset={topOffset}
+        bottomOffset={bottomOffset}
         slideDir={drawerSlideDir}
       />
 
-      {/* Similarity Graph — z-15: slides down from top, mirrors InfoDrawer */}
       <SimilarityGraph
         panel={panel}
         allPanels={panels}
         open={graphOpen}
         closing={closing}
-        topOffset={topBarH}
-        bottomOffset={bottomBarH}
+        topOffset={topOffset}
+        bottomOffset={bottomOffset}
         toolbarContainer={graphToolbarEl}
         slideDir={graphSlideDir}
       />
-    </div>
+    </>
+  );
+}
+
+export default function PanelViewer({
+  panel,
+  panels,
+  allPanels,
+  currentIndex,
+  onClose,
+  onNavigate,
+  onSelectPanel,
+}: Props) {
+  const [graphOpen, setGraphOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
+  const [graphSlideDir, setGraphSlideDir] = useState<"left" | "right" | null>(null);
+  const [graphToolbarEl, setGraphToolbarEl] = useState<HTMLElement | null>(null);
+
+  // Drawer is only offered when there's artist/series metadata to show.
+  const { hasContent } = useMetadata(panel.artist, panel.slug);
+
+  const items = useMemo(
+    () =>
+      panels.map((p) => ({
+        id: p.id,
+        src: `${import.meta.env.BASE_URL}${p.image}`,
+        alt: `${p.title} ${formatIssue(p.issue)}`,
+      })),
+    [panels]
+  );
+
+  const overlayOpen = drawerOpen || graphOpen;
+
+  // Shared-element open/close: expand from (and collapse back into) the gallery
+  // card with the matching id. Offscreen cards return their (offscreen) rect and
+  // the library falls back to a plain fade, so this is safe after deep nav.
+  // While an overlay is open the image stage is shifted off-screen, so its rect
+  // no longer matches the thumbnail — return null to fall back to a fade close.
+  const getOriginRect = useCallback(
+    (i: number) => {
+      if (overlayOpen) return null;
+      const it = items[i];
+      if (!it) return null;
+      const el = document.querySelector(`[data-panel-id="${CSS.escape(it.id)}"]`);
+      return el ? el.getBoundingClientRect() : null;
+    },
+    [items, overlayOpen]
+  );
+
+  // Pause the background hatch animation while the viewer owns the screen.
+  useEffect(() => {
+    setHatchViewerOpen(true);
+    return () => setHatchViewerOpen(false);
+  }, []);
+
+  // Keep the open panel id in the URL so the viewer is linkable.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("panel", panel.id);
+    const qs = params.toString();
+    window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
+
+    return () => {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get("panel") === panel.id) {
+        p.delete("panel");
+        const q = p.toString();
+        window.history.replaceState(null, "", q ? `${window.location.pathname}?${q}` : window.location.pathname);
+      }
+    };
+  }, [panel.id]);
+
+  // Close any open overlay when the panel changes, then clear the slide
+  // direction once the slide-out has settled.
+  useEffect(() => {
+    setDrawerOpen(false);
+    setGraphOpen(false);
+    const t = setTimeout(() => {
+      setDrawerSlideDir(null);
+      setGraphSlideDir(null);
+    }, 450);
+    return () => clearTimeout(t);
+  }, [currentIndex]);
+
+  const toggleDrawer = useCallback(() => {
+    setDrawerOpen((d) => {
+      if (!d) setGraphOpen(false);
+      return !d;
+    });
+  }, []);
+
+  const toggleGraph = useCallback(() => {
+    setGraphOpen((g) => {
+      if (!g) setDrawerOpen(false);
+      return !g;
+    });
+  }, []);
+
+  // Slide the open overlay out horizontally in sync with the image as it
+  // navigates (fires before the slide + index change).
+  const handleViewerNavigate = useCallback(
+    (dir: "prev" | "next") => {
+      const slideOut = dir === "next" ? "left" : "right";
+      if (drawerOpen) {
+        setDrawerSlideDir(slideOut);
+        setDrawerOpen(false);
+      }
+      if (graphOpen) {
+        setGraphSlideDir(slideOut);
+        setGraphOpen(false);
+      }
+    },
+    [drawerOpen, graphOpen]
+  );
+
+  // Esc closes the graph, then the drawer, then (default) the viewer.
+  const handleEscape = useCallback(() => {
+    if (graphOpen) {
+      setGraphOpen(false);
+      return true;
+    }
+    if (drawerOpen) {
+      setDrawerOpen(false);
+      return true;
+    }
+    return false;
+  }, [graphOpen, drawerOpen]);
+
+  return (
+    <ImageViewer
+      items={items}
+      index={currentIndex}
+      onIndexChange={onNavigate}
+      onNavigate={handleViewerNavigate}
+      onClose={onClose}
+      onEscape={handleEscape}
+      getOriginRect={getOriginRect}
+      disableNavigation={graphOpen}
+      navSlotPlacement="inline"
+      showZoomControls={!overlayOpen}
+      closeOnBackdropClick={!overlayOpen}
+      ariaLabel={`${panel.title} ${formatIssue(panel.issue)} — full view`}
+      icons={{
+        close: <X size={16} strokeWidth={1.5} />,
+        zoomIn: <ZoomIn size={16} strokeWidth={1.5} />,
+        zoomOut: <ZoomOut size={16} strokeWidth={1.5} />,
+        prev: <ChevronLeft size={38} strokeWidth={1.5} />,
+        next: <ChevronRight size={38} strokeWidth={1.5} />,
+      }}
+      renderHeader={() =>
+        graphOpen ? (
+          // Portal target for the graph's toolbar (replaces the title while open).
+          <div ref={setGraphToolbarEl} className="min-w-0 flex-1 flex items-center" />
+        ) : (
+          <div className="min-w-0">
+            <p className="font-display text-sm text-white/90 leading-snug">
+              {panel.title} <span className="text-accent">{formatIssue(panel.issue)}</span>{" "}
+              <span className="text-white/40 text-xs">({panel.year})</span>
+            </p>
+            <p className="text-xs text-white/60 mt-0.5 leading-snug">{panel.artist}</p>
+            <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
+              {panel.postedBy} ·{" "}
+              {new Date(panel.addedAt).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </p>
+          </div>
+        )
+      }
+      renderNavStart={
+        hasContent
+          ? () => (
+              <button
+                type="button"
+                onClick={toggleDrawer}
+                className={`rvl-btn ${drawerOpen ? "is-active" : ""}`}
+                title="Show details"
+                aria-label="Show details"
+              >
+                <Info size={16} strokeWidth={1.5} />
+              </button>
+            )
+          : undefined
+      }
+      renderNavEnd={() => (
+        <button
+          type="button"
+          onClick={toggleGraph}
+          className={`rvl-btn ${graphOpen ? "is-active" : ""}`}
+          title="Similarity graph"
+          aria-label="Similarity graph"
+        >
+          <GitGraph size={16} strokeWidth={1.5} />
+        </button>
+      )}
+      renderFooter={
+        items.length <= 1
+          ? (ctx) => (
+              <div className="rvl-hint">
+                <span>
+                  {ctx.isTouchDevice
+                    ? "pinch to zoom · double-tap to enlarge"
+                    : "scroll to zoom · double-click to enlarge · esc to close"}
+                </span>
+              </div>
+            )
+          : undefined
+      }
+      renderOverlay={(ctx) => (
+        <ViewerOverlay
+          panel={panel}
+          panels={panels}
+          allPanels={allPanels}
+          drawerOpen={drawerOpen}
+          graphOpen={graphOpen}
+          drawerSlideDir={drawerSlideDir}
+          graphSlideDir={graphSlideDir}
+          graphToolbarEl={graphToolbarEl}
+          topOffset={ctx.topBarHeight}
+          bottomOffset={ctx.bottomBarHeight}
+          closing={ctx.closing}
+          onSelectPanel={onSelectPanel}
+          setContentShift={ctx.setContentShift}
+        />
+      )}
+    />
   );
 }

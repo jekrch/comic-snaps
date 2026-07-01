@@ -115,6 +115,7 @@ export default function PanelCard({ panel, onOpen }: Props) {
     <>
       <div
         ref={cardRef}
+        data-panel-id={panel.id}
         className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
         onPointerUp={handlePointerUp}
       >

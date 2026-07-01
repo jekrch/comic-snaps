@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@import "@jekrch/react-viewport-lightbox/styles.css";
+
+/* Theme the lightbox to match the app accent (overrides the library default,
+   which is imported above so this wins in the cascade). */
+:root {
+  --rvl-accent: #e85d3a;
+  /* Counter / zoom-scale readout use the app's monospace face. */
+  --rvl-font-mono: "Space Mono", monospace;
+  /* Subtle accent wash for toggled (info/graph) buttons instead of the library's
+     solid-accent default. */
+  --rvl-btn-bg-active: color-mix(in srgb, var(--rvl-accent) 20%, transparent);
+}
 
 @theme {
   --font-sans: "DM Sans", sans-serif;
