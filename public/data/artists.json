@@ -943,6 +943,24 @@
       ]
     },
     {
+      "id": "julie-doucet",
+      "name": "Julie Doucet",
+      "description": "French-Canadian cartoonist best known for Dirty Plotte series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/79902/1903524-2574905571_1c46c1b704.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/julie-doucet/4040-48183/"
+        }
+      ],
+      "birthYear": 1965,
+      "country": "Canada",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "junko-hosizawa",
       "name": "Junko Hosizawa",
       "description": "",
