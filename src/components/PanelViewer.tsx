@@ -132,17 +132,16 @@ export default function PanelViewer({
   const overlayOpen = drawerOpen || graphOpen;
 
   // Shared-element open/close: expand from (and collapse back into) the gallery
-  // card with the matching id. Offscreen cards return their (offscreen) rect and
-  // the library falls back to a plain fade, so this is safe after deep nav.
+  // card with the matching id. Offscreen cards return their (offscreen) element
+  // and the library falls back to a plain fade, so this is safe after deep nav.
   // While an overlay is open the image stage is shifted off-screen, so its rect
   // no longer matches the thumbnail — return null to fall back to a fade close.
-  const getOriginRect = useCallback(
+  const getOrigin = useCallback(
     (i: number) => {
       if (overlayOpen) return null;
       const it = items[i];
       if (!it) return null;
-      const el = document.querySelector(`[data-panel-id="${CSS.escape(it.id)}"]`);
-      return el ? el.getBoundingClientRect() : null;
+      return document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
     },
     [items, overlayOpen]
   );
@@ -234,7 +233,7 @@ export default function PanelViewer({
       onNavigate={handleViewerNavigate}
       onClose={onClose}
       onEscape={handleEscape}
-      getOriginRect={getOriginRect}
+      getOrigin={getOrigin}
       disableNavigation={graphOpen}
       navSlotPlacement="inline"
       showZoomControls={!overlayOpen}
