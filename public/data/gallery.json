@@ -1,6 +1,43 @@
 {
   "panels": [
     {
+      "seq": 170,
+      "id": "buzzard-4-1783113460",
+      "title": "Buzzard",
+      "slug": "buzzard",
+      "issue": 4,
+      "year": 1991,
+      "artist": "Julie Doucet",
+      "image": "images/buzzard/issue-4-1783113460.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-03T21:17:42.619Z",
+      "width": 1280,
+      "height": 613,
+      "dominantColors": [
+        [
+          85.5,
+          0.1,
+          -0.2
+        ],
+        [
+          52.0,
+          0.2,
+          -0.6
+        ],
+        [
+          13.2,
+          0.5,
+          -1.4
+        ]
+      ],
+      "colorfulness": 1.4,
+      "phash": "cc56c9f194f0a4c7",
+      "ahash": "fef0308002c3fb3f",
+      "dhash": "306566342a87d362"
+    },
+    {
       "seq": 169,
       "id": "dracula-vlad-the-impaler-1-1782675591",
       "title": "Dracula: Vlad the Impaler",
@@ -32,7 +69,7 @@
           14.8
         ]
       ],
-      "colorfulness": 25.0,
+      "colorfulness": 25,
       "phash": "d0b05bd01bfae0b9",
       "ahash": "ccffffdedef08000",
       "dhash": "99b89638b4a02062"
