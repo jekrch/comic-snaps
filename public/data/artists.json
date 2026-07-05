@@ -1,6 +1,25 @@
 {
   "artists": [
     {
+      "id": "abel-laxamana",
+      "name": "Abel Laxamana",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/abel-laxamana/4040-61839/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10409/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "abigail-larson",
       "name": "Abigail Larson",
       "description": "",
@@ -39,7 +58,7 @@
     {
       "id": "aditya-bidikar",
       "name": "Aditya Bidikar",
-      "description": "My name is Aditya Bidikar, and you will most likely know me as a letterer for comics from Vault, DC Comics, Image, Dark Horse, Oni, and other comics publishers. I grew up in Pune, India, and spent some years in Kolkata and Bengaluru before returning to Pune, where I now reside. In previous lives, I have been a content writer, a technical translator, a book reviewer, a comics editor, and occasional fiction writer before I backed into my current profession of lettering. I mainly work in digital comics lettering, and I like to integrate hand-drawn sound effects and text design into my work. I have also hand-lettered two graphic novels so far, and am currently working on a third. I have also designed some of my own comics lettering fonts, and I’m currently working on a way to make those and others available for purchase. But this is some way into the future, so let’s not hold our breath. After spending years away from writing as a profession, I have recently returned to it, and have been publishing short comics and prose stories in the last year, and I’m currently scripting a long-form comic book that I hope to publish in the near future.",
+      "description": "My name is Aditya Bidikar, and you will most likely know me as a letterer for comics from Vault, DC Comics, Image, Dark Horse, Oni, and other comics publishers. I grew up in Pune, India, and spent some years in Kolkata and Bengaluru before returning to Pune, where I now reside. In previous lives, I have been a content writer, a technical translator, a book reviewer, a comics editor, and occasional fiction writer before I backed into my current profession of lettering. I mainly work in digital comics lettering, and I like to integrate hand-drawn sound effects and text design into my work. I have also hand-lettered two graphic novels so far, and am currently working on a third. I have also designed some of my own comics lettering fonts, and I\u2019m currently working on a way to make those and others available for purchase. But this is some way into the future, so let\u2019s not hold our breath. After spending years away from writing as a profession, I have recently returned to it, and have been publishing short comics and prose stories in the last year, and I\u2019m currently scripting a long-form comic book that I hope to publish in the near future.",
       "imageUrl": "https://static.metron.cloud/media/creator/2020/10/05/aditya.jpg",
       "references": [
         {
@@ -170,9 +189,28 @@
       ]
     },
     {
+      "id": "alex-ni-o",
+      "name": "Alex Ni\u00f1o",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/alex-nino/4040-31553/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3547/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "alex-ross",
       "name": "Alex Ross",
-      "description": "Nelson Alexander Ross is an American comic book writer/artist known primarily for his painted interiors, covers, and design work. He first became known with the 1994 miniseries Marvels, on which he collaborated with writer Kurt Busiek for Marvel Comics. He has since done a variety of projects for both Marvel and DC Comics, such as the 1996 miniseries Kingdom Come, which Ross co-wrote. Since then he has done covers and character designs for Busiek's series Astro City, and various projects for Dynamite Entertainment. His feature film work includes concept and narrative art for Spider-Man and Spider-Man 2, and DVD packaging art for the M. Night Shyamalan film Unbreakable. He has done covers for TV Guide, promotional artwork for the Academy Awards, posters and packaging design for video games, and his renditions of superheroes have been merchandised as action figures.\r\n\r\nRoss' style has been said to exhibit \"a Norman-Rockwell-meets-George-Pérez vibe\", and has been praised for its realistic, human depictions of classic comic book characters. His rendering style, his attention to detail, and the perceived tendency of his characters to be depicted staring off into the distance in cover images has been satirized in Mad magazine. Because of the time it takes Ross to produce his art, he primarily serves as a plotter and/or cover artist. Comics Buyer's Guide Senior Editor Maggie Thompson, commenting on that publication's retirement of the Favorite Painter award from their CBG Fan Awards due to Ross' domination of that category, stated in 2010, \"Ross may simply be the field's Favorite Painter, period. That's despite the fact that many outstanding painters are at work in today's comic books.\"",
+      "description": "Nelson Alexander Ross is an American comic book writer/artist known primarily for his painted interiors, covers, and design work. He first became known with the 1994 miniseries Marvels, on which he collaborated with writer Kurt Busiek for Marvel Comics. He has since done a variety of projects for both Marvel and DC Comics, such as the 1996 miniseries Kingdom Come, which Ross co-wrote. Since then he has done covers and character designs for Busiek's series Astro City, and various projects for Dynamite Entertainment. His feature film work includes concept and narrative art for Spider-Man and Spider-Man 2, and DVD packaging art for the M. Night Shyamalan film Unbreakable. He has done covers for TV Guide, promotional artwork for the Academy Awards, posters and packaging design for video games, and his renditions of superheroes have been merchandised as action figures.\r\n\r\nRoss' style has been said to exhibit \"a Norman-Rockwell-meets-George-P\u00e9rez vibe\", and has been praised for its realistic, human depictions of classic comic book characters. His rendering style, his attention to detail, and the perceived tendency of his characters to be depicted staring off into the distance in cover images has been satirized in Mad magazine. Because of the time it takes Ross to produce his art, he primarily serves as a plotter and/or cover artist. Comics Buyer's Guide Senior Editor Maggie Thompson, commenting on that publication's retirement of the Favorite Painter award from their CBG Fan Awards due to Ross' domination of that category, stated in 2010, \"Ross may simply be the field's Favorite Painter, period. That's despite the fact that many outstanding painters are at work in today's comic books.\"",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/Alex-Ross.jpg",
       "references": [
         {
@@ -211,6 +249,25 @@
       ]
     },
     {
+      "id": "alfredo-alcala",
+      "name": "Alfredo Alcala",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/alfredo-alcala/4040-20389/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1417/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "alison-sampson",
       "name": "Alison Sampson",
       "description": "A comic book artist and architect based in London, UK.",
@@ -244,7 +301,7 @@
       "id": "alvaro-martinez-bueno",
       "name": "Alvaro Martinez Bueno",
       "imageUrl": "https://cdn.prod.website-files.com/6501d53746370d07299ed666/68f8ff4196e7151a814b38f5_Alvaro-Martinez-Bueno.jpg",
-      "description": "Álvaro Martínez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
+      "description": "\u00c1lvaro Mart\u00ednez Bueno is a Spanish comic book artist known for his work with major comic book publishers, particularly DC Comics. He is recognized for his detailed line work and atmospheric storytelling, which have been acknowledged through various industry awards.",
       "references": [],
       "sources": [
         "comicvine",
@@ -316,6 +373,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2356/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "andy-kubert",
+      "name": "Andy Kubert",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/andy-kubert/4040-8472/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/199/"
         }
       ],
       "sources": [
@@ -470,7 +546,7 @@
     {
       "id": "art-spiegelman",
       "name": "Art Spiegelman",
-      "description": "Born Arthur Spiegelman  on February 15, 1948 in Stockholm, Sweden.   He now lives in New York (downtown Manhattan), married with a wife and two kids.",
+      "description": "Born Arthur Spiegelman\u00a0 on February 15, 1948 in Stockholm, Sweden. \u00a0 He now lives in New York (downtown Manhattan), married with a wife and two kids.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/19151/648622-art_spiegelman__2007_.jpg",
       "references": [
         {
@@ -539,6 +615,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4031/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "barbara-randall-kesel",
+      "name": "Barbara Randall Kesel",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/barbara-randall-kesel/4040-42187/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/694/"
         }
       ],
       "sources": [
@@ -664,6 +759,44 @@
       ]
     },
     {
+      "id": "bill-dubay",
+      "name": "Bill DuBay",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bill-dubay/4040-6780/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10174/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bill-griffith",
+      "name": "Bill Griffith",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bill-griffith/4040-59468/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16515/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "bill-messner-loebs",
       "name": "Bill Messner-Loebs",
       "description": "William Francis Messner-Loebs is an American comics artist and writer from Michigan, also known as Bill Loebs and Bill Messner-Loebs. His hyphenated surname is a combination of his and his wife Nadine's unmarried surnames.\r\n\r\nIn the 1980's and 1990's he wrote runs of series published by DC Comics, Image Comics, Comico, and other comics publishers, including DC's superhero series Flash and Wonder Woman among others. Additionally he has both written and drawn original creator-owned works, such as Journey: The Adventures of Wolverine MacAlistaire.",
@@ -680,9 +813,28 @@
       ]
     },
     {
+      "id": "bill-mohalley",
+      "name": "Bill Mohalley",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bill-mohalley/4040-35772/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10393/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "bill-sienkiewicz",
       "name": "Bill Sienkiewicz",
-      "description": "Boleslav William Felix Robert Sienkiewicz better known as Bill Sienkiewicz, is an American artist known for his work in comic books—particularly for Marvel Comics' The New Mutants, Moon Knight, and Elektra: Assassin. Sienkiewicz's work in the 1980's was considered revolutionary in mainstream US comics, due to his highly stylized art that verged on abstraction and made use of oil painting, photorealism, collage, mimeograph, and other forms generally uncommon in comic books.",
+      "description": "Boleslav William Felix Robert Sienkiewicz better known as Bill Sienkiewicz, is an American artist known for his work in comic books\u2014particularly for Marvel Comics' The New Mutants, Moon Knight, and Elektra: Assassin. Sienkiewicz's work in the 1980's was considered revolutionary in mainstream US comics, due to his highly stylized art that verged on abstraction and made use of oil painting, photorealism, collage, mimeograph, and other forms generally uncommon in comic books.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/bill_swienkiewicz.jpg",
       "references": [
         {
@@ -691,6 +843,25 @@
         }
       ],
       "birthYear": 1958,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bill-spicer",
+      "name": "Bill Spicer",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bill-spicer/4040-7784/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3921/"
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -720,6 +891,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/101/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/brad-anderson/4040-41951/"
         }
       ],
       "sources": [
@@ -803,6 +978,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/188/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/brian-cunningham/4040-56413/"
         }
       ],
       "sources": [
@@ -833,6 +1012,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/942/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bruce-hilvitz",
+      "name": "Bruce Hilvitz",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bruce-hilvitz/4040-59879/"
         }
       ],
       "sources": [
@@ -1094,6 +1288,21 @@
       ]
     },
     {
+      "id": "chris-horn",
+      "name": "Chris Horn",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2287/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "chris-mooneyham",
       "name": "Chris Mooneyham",
       "description": "",
@@ -1117,6 +1326,36 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1240/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "chris-rosa",
+      "name": "Chris Rosa",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4611/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "chris-warner",
+      "name": "Chris Warner",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/04/23/c-warner.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3565/"
         }
       ],
       "sources": [
@@ -1262,6 +1501,25 @@
       ]
     },
     {
+      "id": "corrado-mastantuono",
+      "name": "Corrado Mastantuono",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/corrado-mastantuono/4040-23875/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6888/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "cory-petit",
       "name": "Cory Petit",
       "description": "",
@@ -1330,6 +1588,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/75/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dan-clyne",
+      "name": "Dan Clyne",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dan-clyne/4040-60007/"
         }
       ],
       "sources": [
@@ -1457,6 +1730,21 @@
       ]
     },
     {
+      "id": "dave-herring",
+      "name": "Dave Herring",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dave-herring/4040-60009/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "dave-johnson",
       "name": "Dave Johnson",
       "description": "",
@@ -1484,6 +1772,21 @@
       ],
       "aliases": [
         "David Sharpe"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dave-sheridan",
+      "name": "Dave Sheridan",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dave-sheridan/4040-59469/"
+        }
       ],
       "sources": [
         "metron"
@@ -1712,6 +2015,21 @@
       ]
     },
     {
+      "id": "denis-kitchen",
+      "name": "Denis Kitchen",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/denis-kitchen/4040-7840/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "deniz-camp",
       "name": "Deniz Camp",
       "description": "",
@@ -1754,6 +2072,25 @@
       ],
       "aliases": [
         "Dennis Hallum"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dennis-worden",
+      "name": "Dennis Worden",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dennis-worden/4040-59684/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18421/"
+        }
       ],
       "sources": [
         "metron"
@@ -1818,6 +2155,21 @@
       "references": [],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "don-glassford",
+      "name": "Don Glassford",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/don-glassford/4040-59916/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1941,6 +2293,21 @@
       ]
     },
     {
+      "id": "elizabeth-chadwick",
+      "name": "Elizabeth Chadwick",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/elizabeth-chadwick/4040-20416/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "ellie-pyle",
       "name": "Ellie Pyle",
       "description": "",
@@ -1973,8 +2340,8 @@
       "birthYear": 1951,
       "country": "Serbia",
       "aliases": [
-        "Enes Bilalović",
-        "エンキ・ビラル"
+        "Enes Bilalovi\u0107",
+        "\u30a8\u30f3\u30ad\u30fb\u30d3\u30e9\u30eb"
       ],
       "sources": [
         "wikipedia",
@@ -2097,6 +2464,40 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4997/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "evert-geradts",
+      "name": "Evert Geradts",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/evert-geradts/4040-57006/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10640/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fabian-rangel-jr",
+      "name": "Fabian Rangel, Jr.",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/fabian-rangel-jr/4040-62020/"
         }
       ],
       "sources": [
@@ -2328,6 +2729,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/92/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/geoff-johns/4040-40439/"
         }
       ],
       "birthYear": 1973,
@@ -2338,7 +2743,7 @@
     {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
-      "description": "Gilberto Hernández (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [ˈbeto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
+      "description": "Gilberto Hern\u00e1ndez (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [\u02c8beto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
       "imageUrl": "https://guernicamag.com/wp-content/uploads/2015/08/GilbertHernandez_portrait.jpg",
       "references": [
         {
@@ -2570,6 +2975,21 @@
       ]
     },
     {
+      "id": "harry-driggs",
+      "name": "Harry Driggs",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harry-driggs/4040-59470/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "hassan-otsmane-elhaou",
       "name": "Hassan Otsmane-Elhaou",
       "description": "",
@@ -2642,7 +3062,7 @@
     },
     {
       "id": "in-s-amaro",
-      "name": "Inês Amaro",
+      "name": "In\u00eas Amaro",
       "description": "",
       "imageUrl": null,
       "references": [
@@ -2679,6 +3099,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5576/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "j-r-williams",
+      "name": "J. R. Williams",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/j-r-williams/4040-52345/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9912/"
         }
       ],
       "sources": [
@@ -2817,6 +3256,25 @@
       ]
     },
     {
+      "id": "james-warren",
+      "name": "James Warren",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/james-warren/4040-48271/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10334/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "jamie-s-rich",
       "name": "Jamie S. Rich",
       "description": "Jamie S. Rich is an American comic book editor and writer. He is the Group Editor of Batman-related titles at DC Comics. Previously, he was an editor at DC's Vertigo imprint.\r\n\r\nHe was editor-in-chief at Oni Press from 1998 to 2004, and was an editor for Dark Horse Comics before that. He has written graphic novels including 12 Reasons Why I Love Her and You Have Killed Me, and the prose novel Cut My Hair",
@@ -2894,7 +3352,7 @@
     {
       "id": "javier-rodriguez",
       "name": "Javier Rodriguez",
-      "description": "Javier Rodríguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",
+      "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colorist for the American market. Among his most notable works are Batgirl: Year One, Daredevil, The Amazing Spider-Man and Absolute Martian Manhunter.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg/500px-Javier_Rodr%C3%ADguez._40_Comic_Barcelona.jpg",
       "references": [
         {
@@ -2915,8 +3373,8 @@
     },
     {
       "id": "javier-rodr-guez",
-      "name": "Javier Rodríguez",
-      "description": "Javier Rodríguez is a Spanish comic book artist working primarily as a colourist for the American market. Among his most notable works are Batgirl: Year One, Daredevil and The Amazing Spider-Man.",
+      "name": "Javier Rodr\u00edguez",
+      "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colourist for the American market. Among his most notable works are Batgirl: Year One, Daredevil and The Amazing Spider-Man.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/j-rodriguez.jpg",
       "references": [
         {
@@ -3047,6 +3505,24 @@
       ]
     },
     {
+      "id": "jenny-blenk",
+      "name": "Jenny Blenk",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/11/Jenny-Blenk.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/690/"
+        }
+      ],
+      "aliases": [
+        "Jenny Bingham-Blenk"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "jeremy-haun",
       "name": "Jeremy Haun",
       "description": "",
@@ -3148,7 +3624,7 @@
     {
       "id": "jim-lee",
       "name": "Jim Lee",
-      "description": "Jim Lee is a Korean American comic-book artist, writer, editor, and publisher. He entered the industry in 1987 as an artist for Marvel Comics, illustrating titles such as Alpha Flight and The Punisher War Journal, before gaining popularity on The Uncanny X-Men. X-Men No. 1, the 1991 spin-off series premiere that Lee penciled and co-wrote with Chris Claremont, remains the best-selling comic book of all time, according to Guinness World Records.\r\n\r\nIn 1992, Lee and several other artists formed their own publishing company, Image Comics, to publish their creator-owned titles, with Lee publishing titles such as WildC.A.T.s and Gen¹³ through his studio Wildstorm Productions. Eschewing the role of publisher in order to return to illustration, Lee sold Wildstorm in 1998 to DC Comics, where he continued to run it as a DC imprint until 2010, as well as illustrating successful titles set in DC's main fictional universe, such as the year-long \"Batman: Hush\" and \"Superman: For Tomorrow\" story-lines. On February 18, 2010, Jim Lee was announced as the new Co-Publisher of DC Comics with Dan DiDio, both replacing Paul Levitz.",
+      "description": "Jim Lee is a Korean American comic-book artist, writer, editor, and publisher. He entered the industry in 1987 as an artist for Marvel Comics, illustrating titles such as Alpha Flight and The Punisher War Journal, before gaining popularity on The Uncanny X-Men. X-Men No. 1, the 1991 spin-off series premiere that Lee penciled and co-wrote with Chris Claremont, remains the best-selling comic book of all time, according to Guinness World Records.\r\n\r\nIn 1992, Lee and several other artists formed their own publishing company, Image Comics, to publish their creator-owned titles, with Lee publishing titles such as WildC.A.T.s and Gen\u00b9\u00b3 through his studio Wildstorm Productions. Eschewing the role of publisher in order to return to illustration, Lee sold Wildstorm in 1998 to DC Comics, where he continued to run it as a DC imprint until 2010, as well as illustrating successful titles set in DC's main fictional universe, such as the year-long \"Batman: Hush\" and \"Superman: For Tomorrow\" story-lines. On February 18, 2010, Jim Lee was announced as the new Co-Publisher of DC Comics with Dan DiDio, both replacing Paul Levitz.",
       "imageUrl": "https://static.metron.cloud/media/creator/2021/08/05/j-lee.jpg",
       "references": [
         {
@@ -3157,6 +3633,44 @@
         }
       ],
       "birthYear": 1964,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jim-mitchell",
+      "name": "Jim Mitchell",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jim-mitchell/4040-28127/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10787/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jim-rugg",
+      "name": "Jim Rugg",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jim-rugg/4040-44803/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3046/"
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -3174,6 +3688,25 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jim-salicrup",
+      "name": "Jim Salicrup",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jim-salicrup/4040-46465/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1531/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -3196,7 +3729,7 @@
     {
       "id": "jim-woodring",
       "name": "Jim Woodring",
-      "description": "James William Woodring (born October 11, 1952) is an American cartoonist, fine artist, writer and toy designer. He is best known for the dream-based comics he published in his magazine Jim, and as the creator of the anthropomorphic cartoon character Frank, who has appeared in a number of short comics and graphic novels.\r\n\r\nSince he was a child, Woodring has experienced hallucinatory \"apparitions\", which have inspired much of his surreal work. He keeps an \"autojournal\" of his dreams, some of which have formed the basis of some of his comics. His most famous creation is fictional—the pantomime comics set in the universe he calls the Unifactor, usually featuring Frank. These stories incorporate a highly personal symbolism largely inspired by Woodring's belief in Vedanta from Hindu philosophy. He also does a large amount of surrealist painting, and has been the writer on a number of comics from licensed franchises published by Dark Horse and others.\r\n\r\nWoodring identified Bimbo's Initiation as \"one of the things that laid the foundation for my life's philosophy.\"\r\n\r\nWoodring has won or been nominated for a number of awards. He placed twice on The Comics Journal's list of the 100 best comics of the century, with the Frank stories ranked #55, and The Book of Jim ranked #71.",
+      "description": "James William Woodring (born October 11, 1952) is an American cartoonist, fine artist, writer and toy designer. He is best known for the dream-based comics he published in his magazine Jim, and as the creator of the anthropomorphic cartoon character Frank, who has appeared in a number of short comics and graphic novels.\r\n\r\nSince he was a child, Woodring has experienced hallucinatory \"apparitions\", which have inspired much of his surreal work. He keeps an \"autojournal\" of his dreams, some of which have formed the basis of some of his comics. His most famous creation is fictional\u2014the pantomime comics set in the universe he calls the Unifactor, usually featuring Frank. These stories incorporate a highly personal symbolism largely inspired by Woodring's belief in Vedanta from Hindu philosophy. He also does a large amount of surrealist painting, and has been the writer on a number of comics from licensed franchises published by Dark Horse and others.\r\n\r\nWoodring identified Bimbo's Initiation as \"one of the things that laid the foundation for my life's philosophy.\"\r\n\r\nWoodring has won or been nominated for a number of awards. He placed twice on The Comics Journal's list of the 100 best comics of the century, with the Frank stories ranked #55, and The Book of Jim ranked #71.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/71/JimWoodringDrawing.jpg",
       "references": [
         {
@@ -3228,6 +3761,25 @@
         }
       ],
       "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jo-meugniot",
+      "name": "Jo Meugniot",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jo-meugniot/4040-28596/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6932/"
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -3368,6 +3920,44 @@
         }
       ],
       "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "john-bolton",
+      "name": "John Bolton",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/john-bolton/4040-5108/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3655/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "john-costanza",
+      "name": "John Costanza",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/john-costanza/4040-9421/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/317/"
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -3570,7 +4160,7 @@
     },
     {
       "id": "jorge-forn-s",
-      "name": "Jorge Fornés",
+      "name": "Jorge Forn\u00e9s",
       "description": "",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/Jorge-Fornes.jpg",
       "references": [
@@ -3747,8 +4337,8 @@
     },
     {
       "id": "jo-lle-jones",
-      "name": "Joëlle Jones",
-      "description": "Joëlle Jones is an American comic book artist and writer. She is best known for creating Lady Killer, a series published in 2015–2017 by Dark Horse Comics.\r\n\r\nJones was born in 1980 in Boise, Idaho and grew up there. She attended the Pacific Northwest College of Art to study oil painting. She left school to pursue comic book illustration. She stayed in the Portland, Oregon area for several years, where she worked as a freelance artist for Dark Horse Comics and Oni Press.",
+      "name": "Jo\u00eblle Jones",
+      "description": "Jo\u00eblle Jones is an American comic book artist and writer. She is best known for creating Lady Killer, a series published in 2015\u20132017 by Dark Horse Comics.\r\n\r\nJones was born in 1980 in Boise, Idaho and grew up there. She attended the Pacific Northwest College of Art to study oil painting. She left school to pursue comic book illustration. She stayed in the Portland, Oregon area for several years, where she worked as a freelance artist for Dark Horse Comics and Oni Press.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/joelle-jones.jpeg",
       "references": [
         {
@@ -3844,6 +4434,25 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "justin-green",
+      "name": "Justin Green",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/justin-green/4040-48181/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16702/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -3983,7 +4592,7 @@
     {
       "id": "ken-bruzenak",
       "name": "Ken Bruzenak",
-      "description": "Ken Bruzenak is an American comic book letterer, primarily known for his work on Howard Chaykin’s American Flagg! Bruzenak's lettering and logowork was integral to the comic's futuristic, trademark-littered ambiance. During the course of his career, Bruzenak has been closely associated with both Chaykin and Jim Steranko.",
+      "description": "Ken Bruzenak is an American comic book letterer, primarily known for his work on Howard Chaykin\u2019s American Flagg! Bruzenak's lettering and logowork was integral to the comic's futuristic, trademark-littered ambiance. During the course of his career, Bruzenak has been closely associated with both Chaykin and Jim Steranko.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/01/21/Ken_Bruzenak.jpg",
       "references": [
         {
@@ -4131,6 +4740,25 @@
       ]
     },
     {
+      "id": "larry-rippee",
+      "name": "Larry Rippee",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/larry-rippee/4040-59922/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10326/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "laura-allred",
       "name": "Laura Allred",
       "description": "Laura Allred is an American comics artist who is best known for her work with her husband, Mike Allred, as a colorist.",
@@ -4139,6 +4767,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/142/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/laura-allred/4040-4800/"
         }
       ],
       "sources": [
@@ -4169,6 +4801,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16838/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lee-kohse/4040-71237/"
         }
       ],
       "sources": [
@@ -4206,6 +4842,16 @@
       ]
     },
     {
+      "id": "leo-fox",
+      "name": "Leo Fox",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "leomacs",
       "name": "Leomacs",
       "description": "",
@@ -4225,6 +4871,25 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "leopoldo-dura-ona",
+      "name": "Leopoldo Dura\u00f1ona",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/leopoldo-duranona/4040-29304/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2517/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -4300,6 +4965,25 @@
       ]
     },
     {
+      "id": "lloyd-dangle",
+      "name": "Lloyd Dangle",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lloyd-dangle/4040-60015/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18295/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "lorenzo-de-felici",
       "name": "Lorenzo De Felici",
       "description": "",
@@ -4316,6 +5000,21 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "louise-jones-simonson",
+      "name": "Louise Jones Simonson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/louise-jones-simonson/4040-41688/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -4350,6 +5049,25 @@
       ]
     },
     {
+      "id": "lucio-parrillo",
+      "name": "Lucio Parrillo",
+      "description": "Lucio Parrillo is an artist, known for comic books, role-playing game covers, and Magic: The Gathering cards.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/12/lucio_parrillo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2083/"
+        }
+      ],
+      "birthYear": 1974,
+      "aliases": [
+        "Lucio Parillo"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "lyndon-radchenka",
       "name": "Lyndon Radchenka",
       "description": "",
@@ -4373,6 +5091,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/700/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "malcolm-bourne",
+      "name": "Malcolm Bourne",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/malcolm-bourne/4040-61739/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/15487/"
         }
       ],
       "sources": [
@@ -4492,6 +5229,25 @@
       ]
     },
     {
+      "id": "mario-hernandez",
+      "name": "Mario Hernandez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mario-hernandez/4040-51746/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9675/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "marissa-louise",
       "name": "Marissa Louise",
       "description": "",
@@ -4552,6 +5308,21 @@
       ]
     },
     {
+      "id": "mark-spears",
+      "name": "Mark Spears",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7285/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "martin-biro",
       "name": "Martin Biro",
       "description": "",
@@ -4605,7 +5376,7 @@
     },
     {
       "id": "mart-n-morazzo",
-      "name": "Martín Morazzo",
+      "name": "Mart\u00edn Morazzo",
       "description": "",
       "imageUrl": "https://static.metron.cloud/media/creator/2020/09/04/m-morazzo.jpg",
       "references": [
@@ -4640,7 +5411,7 @@
     },
     {
       "id": "mar-a-lapham",
-      "name": "María Lapham",
+      "name": "Mar\u00eda Lapham",
       "description": "",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/02/06/m-lapham.jpg",
       "references": [
@@ -4886,6 +5657,25 @@
       ]
     },
     {
+      "id": "mike-allred",
+      "name": "Mike Allred",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mike-allred/4040-16768/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/244/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "mike-huddleston",
       "name": "Mike Huddleston",
       "description": "",
@@ -4979,10 +5769,25 @@
       ]
     },
     {
+      "id": "misha-gehr",
+      "name": "Misha Gehr",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5912/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "moebius",
       "name": "Moebius",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Moebius_Lodz_2008.jpg/500px-Moebius_Lodz_2008.jpg",
-      "description": "Jean Henri Gaston Giraud (French: [ʒiʁo]; 8 May 1938 – 10 March 2012) was a French artist, cartoonist, and writer who worked in the Franco-Belgian bandes dessinées (BD) tradition. Giraud garnered worldwide acclaim predominantly under the pseudonym Mœbius (; French: [møbjys]) for his fantasy/science-fiction work, and to a slightly lesser extent as Gir (French: [ʒiʁ]), which he used for his Western-themed work. Esteemed by Federico Fellini, Stan Lee, and Hayao Miyazaki, among others, he has been described as the most influential bande dessinée artist after Hergé.\r\n\r\nHis most famous body of work as Gir concerns the Blueberry series, created with writer Jean-Michel Charlier, featuring one of the first antiheroes in Western comics. As Mœbius, he achieved worldwide renown with science-fiction and fantasy comics drawn in a highly imaginative, surreal, almost abstract style. These works include Arzach and the Airtight Garage of Jerry Cornelius. He also collaborated with avant garde filmmaker Alejandro Jodorowsky for an unproduced adaptation of Dune and the comic-book series The Incal.\r\n\r\nMœbius also contributed storyboards and concept designs to several science-fiction and fantasy films, such as Alien, Tron, The Fifth Element, and The Abyss. Blueberry was adapted for the screen in 2004 by French director Jan Kounen.",
+      "description": "Jean Henri Gaston Giraud (French: [\u0292i\u0281o]; 8 May 1938 \u2013 10 March 2012) was a French artist, cartoonist, and writer who worked in the Franco-Belgian bandes dessin\u00e9es (BD) tradition. Giraud garnered worldwide acclaim predominantly under the pseudonym M\u0153bius (; French: [m\u00f8bjys]) for his fantasy/science-fiction work, and to a slightly lesser extent as Gir (French: [\u0292i\u0281]), which he used for his Western-themed work. Esteemed by Federico Fellini, Stan Lee, and Hayao Miyazaki, among others, he has been described as the most influential bande dessin\u00e9e artist after Herg\u00e9.\r\n\r\nHis most famous body of work as Gir concerns the Blueberry series, created with writer Jean-Michel Charlier, featuring one of the first antiheroes in Western comics. As M\u0153bius, he achieved worldwide renown with science-fiction and fantasy comics drawn in a highly imaginative, surreal, almost abstract style. These works include Arzach and the Airtight Garage of Jerry Cornelius. He also collaborated with avant garde filmmaker Alejandro Jodorowsky for an unproduced adaptation of Dune and the comic-book series The Incal.\r\n\r\nM\u0153bius also contributed storyboards and concept designs to several science-fiction and fantasy films, such as Alien, Tron, The Fifth Element, and The Abyss. Blueberry was adapted for the screen in 2004 by French director Jan Kounen.",
       "references": [
         {
           "name": "Wikipedia",
@@ -5037,6 +5842,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2027/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "nicola-cuti",
+      "name": "Nicola Cuti",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nicola-cuti/4040-52990/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3497/"
         }
       ],
       "sources": [
@@ -5148,6 +5972,21 @@
       ]
     },
     {
+      "id": "patrick-satterfield",
+      "name": "Patrick Satterfield",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/691/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "paul-chadwick",
       "name": "Paul Chadwick",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Paul_Chadwick_in_2006.jpg/500px-Paul_Chadwick_in_2006.jpg",
@@ -5156,11 +5995,34 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Paul_Chadwick"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/paul-chadwick/4040-6906/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1210/"
         }
       ],
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "paul-kaminski",
+      "name": "Paul Kaminski",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/paul-kaminski.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/61/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -5188,6 +6050,25 @@
       ]
     },
     {
+      "id": "paul-mounts",
+      "name": "Paul Mounts",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/paul-mounts/4040-2464/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/23/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "paul-pope",
       "name": "Paul Pope",
       "description": "Paul Pope (born September 25, 1970) is an American alternative cartoonist. Pope's work combines the precision and romance of European comics artists with the energy and page design of the manga tradition. Pope's two protagonist types are the silent, lanky outsider male of The One Trick Rip-Off, Escapo, and Heavy Liquid; or the resourceful, aggressive, humorous young teenage girls of THB. He has self-published some of his work, most notably THB, through his own Horse Press, with other work for such publishers as DC Comics/Vertigo and First Second Books.",
@@ -5209,7 +6090,7 @@
       "birthYear": 1970,
       "country": "United States",
       "aliases": [
-        "ポール・ポープ"
+        "\u30dd\u30fc\u30eb\u30fb\u30dd\u30fc\u30d7"
       ],
       "sources": [
         "wikipedia",
@@ -5272,6 +6153,36 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "peter-loft",
+      "name": "Peter Loft",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/peter-loft/4040-20825/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "peter-poplaski",
+      "name": "Peter Poplaski",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/peter-poplaski/4040-20235/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -5396,6 +6307,25 @@
       ]
     },
     {
+      "id": "randy-stradley",
+      "name": "Randy Stradley",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/randy-stradley/4040-29481/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1222/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "raymond-gay",
       "name": "Raymond Gay",
       "description": "",
@@ -5448,8 +6378,8 @@
     },
     {
       "id": "ren-e-witterstaetter",
-      "name": "Renée Witterstaetter",
-      "description": "Renée Witterstaetter, sometimes credited as Eva Renee Witterstaetter, is an American comic book colorist, editor, producer, and writer. She has worked on comics such as the Avengers, Spider-Man, She-Hulk, and Superman. She is best known for her work as an editor with John Byrne on the Marvel Comics series The Sensational She-Hulk. Witterstaetter was also featured as a fourth wall breaking character in the same series.",
+      "name": "Ren\u00e9e Witterstaetter",
+      "description": "Ren\u00e9e Witterstaetter, sometimes credited as Eva Renee Witterstaetter, is an American comic book colorist, editor, producer, and writer. She has worked on comics such as the Avengers, Spider-Man, She-Hulk, and Superman. She is best known for her work as an editor with John Byrne on the Marvel Comics series The Sensational She-Hulk. Witterstaetter was also featured as a fourth wall breaking character in the same series.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/03/02/r-witterstaetter.jpg",
       "references": [
         {
@@ -5477,9 +6407,28 @@
       ]
     },
     {
+      "id": "richard-grass-green",
+      "name": "Richard (Grass) Green",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/richard-grass-green/4040-29581/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17800/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "richard-corben",
       "name": "Richard Corben",
-      "description": "Richard Corben (November 1, 1940 – December 2, 2020) was an American illustrator and comic book artist best known for his comics featured in Heavy Metal magazine, especially the Den series which was featured in the magazine's first film adaptation in 1981. He was the winner of the 2009 Spectrum Grand Master Award and the 2018 Grand Prix at Angoulême. In 2012 he was elected to the Will Eisner Award Hall of Fame.",
+      "description": "Richard Corben (November 1, 1940 \u2013 December 2, 2020) was an American illustrator and comic book artist best known for his comics featured in Heavy Metal magazine, especially the Den series which was featured in the magazine's first film adaptation in 1981. He was the winner of the 2009 Spectrum Grand Master Award and the 2018 Grand Prix at Angoul\u00eame. In 2012 he was elected to the Will Eisner Award Hall of Fame.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d4/Richard_corben_at_his_studio.jpg",
       "references": [
         {
@@ -5528,7 +6477,7 @@
     {
       "id": "rick-griffin",
       "name": "Rick Griffin",
-      "description": "Richard Alden Griffin (June 18, 1944 – August 18, 1991) was an American artist and one of the leading designers of psychedelic posters in the 1960s. He was a key figure in the underground comix movement as a founding member of the Zap Comix collective. Griffin was closely identified with the Grateful Dead, designing some of their best-known posters and album covers including Aoxomoxoa. His work within the surfing subculture included both film posters and his comic strip, Murphy.",
+      "description": "Richard Alden Griffin (June 18, 1944 \u2013 August 18, 1991) was an American artist and one of the leading designers of psychedelic posters in the 1960s. He was a key figure in the underground comix movement as a founding member of the Zap Comix collective. Griffin was closely identified with the Grateful Dead, designing some of their best-known posters and album covers including Aoxomoxoa. His work within the surfing subculture included both film posters and his comic strip, Murphy.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/9/92/Rickgriffinfamilydog.jpg",
       "references": [
         {
@@ -5579,6 +6528,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/107/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rob-leigh/4040-4519/"
         }
       ],
       "sources": [
@@ -5588,7 +6541,7 @@
     {
       "id": "robert-crumb",
       "name": "Robert Crumb",
-      "description": "Robert Dennis Crumb (; born August 30, 1943) is an American artist who often signs his work R. Crumb. His work displays a nostalgia for American folk culture of the late 19th and early 20th centuries, and satire of contemporary American culture.\r\n\r\nCrumb contributed to many of the seminal works of the underground comix movement in the 1960s, including being a founder of the first successful underground comix publication, Zap Comix, contributing to all 16 issues. He was additionally contributing to the East Village Other and many other publications, including a variety of one-off and anthology comics. During this time, inspired by psychedelics and cartoons from the 1920s and 1930s, he introduced a wide variety of characters that became extremely popular, including countercultural icons Fritz the Cat and Mr. Natural, and the images from his Keep On Truckin' strip. Sexual themes abounded in all these projects, often shading into scatological and pornographic comics. In the mid-1970s, he contributed to the Arcade anthology; following the decline of the underground, he moved towards biographical and autobiographical subjects while refining his drawing style, a heavily crosshatched pen-and-ink style inspired by late 19th- and early 20th-century cartooning. Much of his work appeared in a magazine he founded, Weirdo (1981–1993), which was one of the most prominent publications of the alternative comics era. As his career progressed, his comic work became more autobiographical.\r\n\r\nIn 1991 Crumb was inducted into the comic book industry's Will Eisner Comic Book Hall of Fame, and in 1994 the Terry Zwigoff film Crumb explored his artistic career and personal life. He was married to cartoonist Aline Kominsky-Crumb, with whom he frequently collaborated. Their daughter, Sophie Crumb, has also followed a cartooning career.",
+      "description": "Robert Dennis Crumb (; born August 30, 1943) is an American artist who often signs his work R. Crumb. His work displays a nostalgia for American folk culture of the late 19th and early 20th centuries, and satire of contemporary American culture.\r\n\r\nCrumb contributed to many of the seminal works of the underground comix movement in the 1960s, including being a founder of the first successful underground comix publication, Zap Comix, contributing to all 16 issues. He was additionally contributing to the East Village Other and many other publications, including a variety of one-off and anthology comics. During this time, inspired by psychedelics and cartoons from the 1920s and 1930s, he introduced a wide variety of characters that became extremely popular, including countercultural icons Fritz the Cat and Mr. Natural, and the images from his Keep On Truckin' strip. Sexual themes abounded in all these projects, often shading into scatological and pornographic comics. In the mid-1970s, he contributed to the Arcade anthology; following the decline of the underground, he moved towards biographical and autobiographical subjects while refining his drawing style, a heavily crosshatched pen-and-ink style inspired by late 19th- and early 20th-century cartooning. Much of his work appeared in a magazine he founded, Weirdo (1981\u20131993), which was one of the most prominent publications of the alternative comics era. As his career progressed, his comic work became more autobiographical.\r\n\r\nIn 1991 Crumb was inducted into the comic book industry's Will Eisner Comic Book Hall of Fame, and in 1994 the Terry Zwigoff film Crumb explored his artistic career and personal life. He was married to cartoonist Aline Kominsky-Crumb, with whom he frequently collaborated. Their daughter, Sophie Crumb, has also followed a cartooning career.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG/500px-Robert_Crumb_-_Lucca_Comics_%26_Games_2014_2.JPG",
       "references": [
         {
@@ -5732,6 +6685,25 @@
       ]
     },
     {
+      "id": "roy-thomas",
+      "name": "Roy Thomas",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/roy-thomas/4040-42067/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/185/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "rus-wooton",
       "name": "Rus Wooton",
       "description": "Rus Wooton is a comics letterer who has worked on hundreds of your favorite comics, from INVINCIBLE to THE WALKING DEAD and beyond",
@@ -5770,6 +6742,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/12288/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ryan-ferrier",
+      "name": "Ryan Ferrier",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ryan-ferrier/4040-67880/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7350/"
         }
       ],
       "sources": [
@@ -5873,7 +6864,7 @@
     {
       "id": "sam-keith",
       "name": "Sam Keith",
-      "description": "Samuel Coleman Kieth (January 11, 1963 – March 15, 2026) was an American comics artist and writer, best known as the creator of The Maxx and Zero Girl and co- creator of The Sandman.",
+      "description": "Samuel Coleman Kieth (January 11, 1963 \u2013 March 15, 2026) was an American comics artist and writer, best known as the creator of The Maxx and Zero Girl and co- creator of The Sandman.",
       "imageUrl": "https://static01.nyt.com/images/2026/03/30/multimedia/24Keith--04-tkjv-print1/24Keith--04-tkjv-superJumbo.jpg?quality=75&auto=webp",
       "references": [
         {
@@ -5921,6 +6912,25 @@
       ]
     },
     {
+      "id": "sandy-tanaka",
+      "name": "Sandy Tanaka",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sandy-tanaka/4040-76921/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6789/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "satoshi-shiki",
       "name": "Satoshi Shiki",
       "description": "",
@@ -5958,6 +6968,21 @@
       "references": [],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "scott-henry-berwanger",
+      "name": "Scott Henry Berwanger",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/scott-henry-berwanger/4040-130104/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -6147,7 +7172,7 @@
     {
       "id": "simon-bisley",
       "name": "Simon Bisley",
-      "description": "UK artist who got his big break on 2000AD illustrating ABC Warriors and Slaine: the Horned God.\r\n\r\nHe was part of the British Invasion to the USA in the early 90s where he made a name for himself at DC illustrating Lobo. Primarily he did covers (such as Doom Patrol) and the occasional interior for DC. The Biz  illustrated covers and the occasional interior for Hellblazer from issue #259 right up until its ending issue #300.",
+      "description": "UK artist who got his big break on 2000AD illustrating ABC Warriors and Slaine: the Horned God.\r\n\r\nHe was part of the British Invasion to the USA in the early 90s where he made a name for himself at DC illustrating Lobo. Primarily he did covers (such as Doom Patrol) and the occasional interior for DC. The Biz \u00a0illustrated covers and the occasional interior for\u00a0Hellblazer\u00a0from issue #259 right up until its ending issue #300.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9974766-simon_bisley.jpg",
       "references": [
         {
@@ -6200,14 +7225,48 @@
       ]
     },
     {
+      "id": "skip-williamson",
+      "name": "Skip Williamson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/skip-williamson/4040-59840/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16387/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "stevan-subi",
-      "name": "Stevan Subić",
+      "name": "Stevan Subi\u0107",
       "description": "",
       "imageUrl": "https://static.metron.cloud/media/creator/2022/10/22/s-subic.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6695/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-beaupre",
+      "name": "Steve Beaupre",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-beaupre/4040-66346/"
         }
       ],
       "sources": [
@@ -6223,6 +7282,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4778/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-blackwell/4040-74934/"
         }
       ],
       "sources": [
@@ -6249,6 +7312,25 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-ditko",
+      "name": "Steve Ditko",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-ditko/4040-4026/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/139/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -6366,6 +7448,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4786/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ted-richards",
+      "name": "Ted Richards",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ted-richards/4040-34959/"
         }
       ],
       "sources": [
@@ -6578,6 +7675,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2839/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tony-fleecs/4040-66758/"
         }
       ],
       "birthYear": 1979,
@@ -6588,7 +7689,7 @@
     {
       "id": "tony-millionaire",
       "name": "Tony Millionaire",
-      "description": "Tony Millionaire was born Scott Richardson in 1956. He was born in Boston, but grew up in Gloucester, the seaside town made famous by the film, THE PERFECT STORM.\r\n\r\nHis father was a commercial illustrator and his mother and grandparents were painters. The whole family encouraged Millionaire to draw from an early age. His grandfather was a friend of the cartoonist Roy Crane, and had a large collection of old Sunday comics, from which Millionaire exacted enormous inspiration. He drew his first comic strip, \"about an egg-shaped superhero who flew around talking about how great he was and then crashing into a cliff,\" when he was nine. During high school, Millionaire continued to amuse himself drawing comic strips.\r\n\r\nMillionaire majored in painting at the Massachusetts College of Art, but left without graduating. After college, he moved around a bit, living in California, Florida and Italy, before settling in Berlin for five years. Returning to the US in the early '90s, he moved to Brooklyn. There, he began drawing a regular comic strip, MEDEA’S WEEKEND for the newsweekly WATERFRONT WEEK.\r\n\r\nThen one night at a local bar, Millionaire drew a cartoon about a little bird that drank liquor and blew his brains out on a napkin. That bird became his best known character, Drinky Crow. The bartender encouraged him, offering him a free beer for each new cartoon he completed. After doing a number of these cocktail napkin drawings, Millionaire began drawing more finished versions for publication in various magazines, including HAPPYLAND, NINNY and MURTAUGH along with Al Goldstein’s controversial tabloid, SCREW. Eventually the NEW YORK PRESS asked him to draw a weekly strip, and in 1994 MAAKIES made its debut, eventually moving on to THE VILLAGE VOICE.\r\n\r\nMillionaire is also the writer and artist of SOCK MONKEY, a series of comics and picture books. He has also occasionally contributed to anthologies including BIZARRO COMICS, STAR WARS TALES, DIRTY STORIES and LEGAL ACTION COMICS. One can also find his illustrations in many leading venues including THE WALL STREET JOURNAL, THE NEW YORK TIMES and THE NEW YORKER.\r\n\r\nIn 2006, Fantagraphics published his graphic novel, BILLY HAZELNUTS and he is currently working on a children's book to be published by Hyperion Press.\r\n\r\nThe seaside settings of much of Millionaire's work draw inspiration from his childhood memories of his grandparents' nautical artwork and his home as well as the novels of Patrick O’Brian. As far as artistic influences go, many of Millionaire's fans see a similarity in his pen & inks to the work of E.C. Segar.\r\n\r\nWhen asked why he uses a pseudonym, Millionaire maintains that he doesn’t, and that \"Tony Millionaire\" is his true legal name. He has claims that his surname is an Old French word meaning \"a person who owns a thousand serfs.\" Skeptics trace the origin of the name \"Tony Millionaire\" to a character in an episode of the television program, “I Dream of Jeannie.”",
+      "description": "Tony Millionaire was born Scott Richardson in 1956. He was born in Boston, but grew up in Gloucester, the seaside town made famous by the film, THE PERFECT STORM.\r\n\r\nHis father was a commercial illustrator and his mother and grandparents were painters. The whole family encouraged Millionaire to draw from an early age. His grandfather was a friend of the cartoonist Roy Crane, and had a large collection of old Sunday comics, from which Millionaire exacted enormous inspiration. He drew his first comic strip, \"about an egg-shaped superhero who flew around talking about how great he was and then crashing into a cliff,\" when he was nine. During high school, Millionaire continued to amuse himself drawing comic strips.\r\n\r\nMillionaire majored in painting at the Massachusetts College of Art, but left without graduating. After college, he moved around a bit, living in California, Florida and Italy, before settling in Berlin for five years. Returning to the US in the early '90s, he moved to Brooklyn. There, he began drawing a regular comic strip, MEDEA\u2019S WEEKEND for the newsweekly WATERFRONT WEEK.\r\n\r\nThen one night at a local bar, Millionaire drew a cartoon about a little bird that drank liquor and blew his brains out on a napkin. That bird became his best known character, Drinky Crow. The bartender encouraged him, offering him a free beer for each new cartoon he completed. After doing a number of these cocktail napkin drawings, Millionaire began drawing more finished versions for publication in various magazines, including HAPPYLAND, NINNY and MURTAUGH along with Al Goldstein\u2019s controversial tabloid, SCREW. Eventually the NEW YORK PRESS asked him to draw a weekly strip, and in 1994 MAAKIES made its debut, eventually moving on to THE VILLAGE VOICE.\r\n\r\nMillionaire is also the writer and artist of SOCK MONKEY, a series of comics and picture books. He has also occasionally contributed to anthologies including BIZARRO COMICS, STAR WARS TALES, DIRTY STORIES and LEGAL ACTION COMICS. One can also find his illustrations in many leading venues including THE WALL STREET JOURNAL, THE NEW YORK TIMES and THE NEW YORKER.\r\n\r\nIn 2006, Fantagraphics published his graphic novel, BILLY HAZELNUTS and he is currently working on a children's book to be published by Hyperion Press.\r\n\r\nThe seaside settings of much of Millionaire's work draw inspiration from his childhood memories of his grandparents' nautical artwork and his home as well as the novels of Patrick O\u2019Brian. As far as artistic influences go, many of Millionaire's fans see a similarity in his pen & inks to the work of E.C. Segar.\r\n\r\nWhen asked why he uses a pseudonym, Millionaire maintains that he doesn\u2019t, and that \"Tony Millionaire\" is his true legal name. He has claims that his surname is an Old French word meaning \"a person who owns a thousand serfs.\" Skeptics trace the origin of the name \"Tony Millionaire\" to a character in an episode of the television program, \u201cI Dream of Jeannie.\u201d",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/11785/296947-84357-tony-millionaire.jpg",
       "references": [
         {
@@ -6716,7 +7817,7 @@
     {
       "id": "victor-moscoso",
       "name": "Victor Moscoso",
-      "description": "Victor Moscoso (born July 28, 1936) is a Spanish–American artist best known for producing psychedelic rock posters, advertisements, and underground comix in San Francisco during the 1960s and 1970s. He was the first of the rock poster artists of the 1960s era with formal academic training and experience. He was the first of the rock poster artists to use photographic collage in many of his posters.",
+      "description": "Victor Moscoso (born July 28, 1936) is a Spanish\u2013American artist best known for producing psychedelic rock posters, advertisements, and underground comix in San Francisco during the 1960s and 1970s. He was the first of the rock poster artists of the 1960s era with formal academic training and experience. He was the first of the rock poster artists to use photographic collage in many of his posters.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/57/Victor_Moscoso%2C_psychedelic_poster_and_comix_artist.jpg",
       "references": [
         {
@@ -6771,7 +7872,7 @@
     {
       "id": "wally-wood",
       "name": "Wally Wood",
-      "description": "Wallace Allan Wood was an American comic book writer, artist and independent publisher, best known for his work on EC Comics's Mad and Marvel's Daredevil. He was one of Mad's founding cartoonists in 1952. Although much of his early professional artwork is signed Wallace Wood, he became known as Wally Wood, a name he claimed to dislike. Within the comics community, he was also known as Woody, a name he sometimes used as a signature.\r\n\r\nIn addition to Wood's hundreds of comic book pages, he illustrated for books and magazines while also working in a variety of other areas – advertising; packaging and product illustrations; gag cartoons; record album covers; posters; syndicated comic strips; and trading cards, including work on Topps' landmark Mars Attacks set.\r\n\r\nEC publisher William Gaines once stated, \"Wally may have been our most troubled artist... I'm not suggesting any connection, but he may have been our most brilliant\".\r\n\r\nHe was the inaugural inductee into the comic book industry's Jack Kirby Hall of Fame in 1989, and was inducted into the Will Eisner Comic Book Hall of Fame in 1992.",
+      "description": "Wallace Allan Wood was an American comic book writer, artist and independent publisher, best known for his work on EC Comics's Mad and Marvel's Daredevil. He was one of Mad's founding cartoonists in 1952. Although much of his early professional artwork is signed Wallace Wood, he became known as Wally Wood, a name he claimed to dislike. Within the comics community, he was also known as Woody, a name he sometimes used as a signature.\r\n\r\nIn addition to Wood's hundreds of comic book pages, he illustrated for books and magazines while also working in a variety of other areas \u2013 advertising; packaging and product illustrations; gag cartoons; record album covers; posters; syndicated comic strips; and trading cards, including work on Topps' landmark Mars Attacks set.\r\n\r\nEC publisher William Gaines once stated, \"Wally may have been our most troubled artist... I'm not suggesting any connection, but he may have been our most brilliant\".\r\n\r\nHe was the inaugural inductee into the comic book industry's Jack Kirby Hall of Fame in 1989, and was inducted into the Will Eisner Comic Book Hall of Fame in 1992.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/18/wood_wallace.jpg",
       "references": [
         {
@@ -6813,6 +7914,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/751/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "wendel-pugh",
+      "name": "Wendel Pugh",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/wendel-pugh/4040-59915/"
         }
       ],
       "sources": [
@@ -6881,6 +7997,25 @@
       ]
     },
     {
+      "id": "will-meugniot",
+      "name": "Will Meugniot",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/will-meugniot/4040-31548/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1524/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "will-robson",
       "name": "Will Robson",
       "description": "",
@@ -6927,7 +8062,7 @@
     },
     {
       "id": "lvaro-mart-nez-bueno",
-      "name": "Álvaro Martínez Bueno",
+      "name": "\u00c1lvaro Mart\u00ednez Bueno",
       "description": "Spanish comic artist, currently working on Justice League Dark for DC Comics.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/alvaro-martinez.jpg",
       "references": [

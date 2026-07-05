@@ -522,6 +522,44 @@
       ]
     },
     {
+      "id": "concrete-stars-over-sand",
+      "name": "Concrete: Stars Over Sand",
+      "parentSeries": null,
+      "description": "First new Concrete comic in 20 years!\r\n\r\nAward-winning creator of an award-winning series.\r\n\r\nFive-issue series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10099840-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/concrete-stars-over-sand/4050-173106/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15992/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Dark Horse Comics",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/concrete-stars-over-sand/f6647a0732d5.jpg",
+        "data/covers/concrete-stars-over-sand/dc3c854eb3e9.jpg",
+        "data/covers/concrete-stars-over-sand/c0cafe56de93.jpg",
+        "data/covers/concrete-stars-over-sand/adbd820470e4.jpg"
+      ]
+    },
+    {
       "id": "creatures-of-the-id",
       "name": "Creatures of the Id",
       "parentSeries": null,
@@ -1661,6 +1699,26 @@
       ]
     },
     {
+      "id": "my-body-is-unspooling",
+      "name": "My Body is Unspooling",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          0
+        ],
+        "comicvine": [
+          0
+        ]
+      }
+    },
+    {
       "id": "nut",
       "name": "Nut",
       "parentSeries": null,
@@ -2369,6 +2427,44 @@
         "metron": [],
         "comicvine": []
       }
+    },
+    {
+      "id": "the-deadman",
+      "name": "The Deadman",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10087500-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-deadman/4050-172456/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15763/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "DC Comics",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-deadman/f2e4bceaec8b.jpg",
+        "data/covers/the-deadman/4a0bf30b69d0.jpg",
+        "data/covers/the-deadman/447490374ee8.jpg",
+        "data/covers/the-deadman/22365ce2d81a.jpg"
+      ]
     },
     {
       "id": "the-eye-collector",

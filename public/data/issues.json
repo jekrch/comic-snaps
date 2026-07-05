@@ -117,7 +117,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodríguez",
+          "name": "Javier Rodr\u00edguez",
           "roles": [
             "Artist",
             "Cover"
@@ -206,7 +206,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodríguez",
+          "name": "Javier Rodr\u00edguez",
           "roles": [
             "Artist",
             "Colorist",
@@ -296,7 +296,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodríguez",
+          "name": "Javier Rodr\u00edguez",
           "roles": [
             "Artist",
             "Cover"
@@ -815,6 +815,31 @@
       ]
     },
     {
+      "id": "anubis-1",
+      "series": "anubis",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "scott-henry-berwanger",
+          "name": "Scott Henry Berwanger",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/anubis-1-anubis/4000-341602/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "assorted-crisis-events-8",
       "series": "assorted-crisis-events",
       "issue": 8,
@@ -850,7 +875,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodríguez",
+          "name": "Javier Rodr\u00edguez",
           "roles": [
             "Cover"
           ]
@@ -1185,6 +1210,169 @@
       ]
     },
     {
+      "id": "bijou-funnies-7",
+      "series": "bijou-funnies",
+      "issue": 7,
+      "credits": [
+        {
+          "artistId": "art-spiegelman",
+          "name": "Art Spiegelman",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dan-clyne",
+          "name": "Dan Clyne",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "evert-geradts",
+          "name": "Evert Geradts",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "jay-lynch",
+          "name": "Jay Lynch",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "justin-green",
+          "name": "Justin Green",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "skip-williamson",
+          "name": "Skip Williamson",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bijou-funnies-7-thrills-relevance-laughs/4000-333058/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "bizarre-sex-1",
+      "series": "bizarre-sex",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "art-spiegelman",
+          "name": "Art Spiegelman",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dan-clyne",
+          "name": "Dan Clyne",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dave-herring",
+          "name": "Dave Herring",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "don-glassford",
+          "name": "Don Glassford",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jim-mitchell",
+          "name": "Jim Mitchell",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "peter-loft",
+          "name": "Peter Loft",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "tim-boxell",
+          "name": "Tim Boxell",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "denis-kitchen",
+          "name": "Denis Kitchen",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bizarre-sex-1/4000-94836/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "bleeding-hearts-2",
       "series": "bleeding-hearts",
       "issue": 2,
@@ -1314,7 +1502,7 @@
         },
         {
           "artistId": "stevan-subi",
-          "name": "Stevan Subić",
+          "name": "Stevan Subi\u0107",
           "roles": [
             "Cover"
           ]
@@ -1439,7 +1627,7 @@
         },
         {
           "artistId": "jorge-forn-s",
-          "name": "Jorge Fornés",
+          "name": "Jorge Forn\u00e9s",
           "roles": [
             "Cover"
           ]
@@ -1512,13 +1700,117 @@
       ]
     },
     {
-      "id": "buzzard-1",
-      "series": "buzzard",
+      "id": "buzz-1",
+      "series": "buzz",
       "issue": 1,
       "credits": [],
       "references": [],
       "sources": [
-        "metron"
+        "comicvine"
+      ]
+    },
+    {
+      "id": "buzzard-1",
+      "series": "buzzard",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "bruce-hilvitz",
+          "name": "Bruce Hilvitz",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dennis-worden",
+          "name": "Dennis Worden",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "j-r-williams",
+          "name": "J. R. Williams",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jim-ryan",
+          "name": "Jim Ryan",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "joe-sacco",
+          "name": "Joe Sacco",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "julie-doucet",
+          "name": "Julie Doucet",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "lloyd-dangle",
+          "name": "Lloyd Dangle",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "steve-beaupre",
+          "name": "Steve Beaupre",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "steve-lafler",
+          "name": "Steve Lafler",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mario-hernandez",
+          "name": "Mario Hernandez",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "mary-fleener",
+          "name": "Mary Fleener",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/buzzard-1/4000-363330/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -1528,17 +1820,219 @@
       "credits": [],
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "buzzard-4",
       "series": "buzzard",
       "issue": 4,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "mary-fleener",
+          "name": "Mary Fleener",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Colorist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/buzzard-4/4000-363697/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
+      "id": "concrete-fragile-creature-1",
+      "series": "concrete-fragile-creature",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "paul-chadwick",
+          "name": "Paul Chadwick",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "elizabeth-chadwick",
+          "name": "Elizabeth Chadwick",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "bill-spicer",
+          "name": "Bill Spicer",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "randy-stradley",
+          "name": "Randy Stradley",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/concrete-fragile-creatures-1/4000-134380/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "concrete-killer-smile-4",
+      "series": "concrete-killer-smile",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "paul-chadwick",
+          "name": "Paul Chadwick",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "elizabeth-chadwick",
+          "name": "Elizabeth Chadwick",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "bill-spicer",
+          "name": "Bill Spicer",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "randy-stradley",
+          "name": "Randy Stradley",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/concrete-killer-smile-4/4000-39734/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "concrete-stars-over-sand-1",
+      "series": "concrete-stars-over-sand",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "paul-chadwick",
+          "name": "Paul Chadwick",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-warner",
+          "name": "Chris Warner",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jenny-blenk",
+          "name": "Jenny Blenk",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "misha-gehr",
+          "name": "Misha Gehr",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "patrick-satterfield",
+          "name": "Patrick Satterfield",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "chris-horn",
+          "name": "Chris Horn",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/concrete-stars-over-sand-2026-1/"
+        }
+      ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "creatures-of-the-id-1",
+      "series": "creatures-of-the-id",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "mike-allred",
+          "name": "Mike Allred",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "laura-allred",
+          "name": "Laura Allred",
+          "roles": [
+            "Other"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/creatures-of-the-id-1/4000-107226/"
+        }
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -1725,13 +2219,147 @@
       ]
     },
     {
+      "id": "dracula-vlad-the-impaler-1",
+      "series": "dracula-vlad-the-impaler",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "roy-thomas",
+          "name": "Roy Thomas",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "esteban-maroto",
+          "name": "Esteban Maroto",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-mounts",
+          "name": "Paul Mounts",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-costanza",
+          "name": "John Costanza",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jim-salicrup",
+          "name": "Jim Salicrup",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dracula-vlad-the-impaler-1-i-am-dracula/4000-36878/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "eerie-93",
       "series": "eerie",
       "issue": 93,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "bill-dubay",
+          "name": "Bill DuBay",
+          "roles": [
+            "Writer",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "nicola-cuti",
+          "name": "Nicola Cuti",
+          "roles": [
+            "Writer",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "abel-laxamana",
+          "name": "Abel Laxamana",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "alex-ni-o",
+          "name": "Alex Ni\u00f1o",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "alfredo-alcala",
+          "name": "Alfredo Alcala",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "leopoldo-dura-ona",
+          "name": "Leopoldo Dura\u00f1ona",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "don-maitz",
+          "name": "Don Maitz",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "james-warren",
+          "name": "James Warren",
+          "roles": [
+            "Editor",
+            "Other"
+          ]
+        },
+        {
+          "artistId": "louise-jones-simonson",
+          "name": "Louise Jones Simonson",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "bill-mohalley",
+          "name": "Bill Mohalley",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/eerie-93/4000-18600/"
+        }
+      ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -2099,10 +2727,75 @@
       "id": "geiger-22",
       "series": "geiger",
       "issue": 22,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "geoff-johns",
+          "name": "Geoff Johns",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "gary-frank",
+          "name": "Gary Frank",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-anderson",
+          "name": "Brad Anderson",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rob-leigh",
+          "name": "Rob Leigh",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "corrado-mastantuono",
+          "name": "Corrado Mastantuono",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-kohse",
+          "name": "Lee Kohse",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brian-cunningham",
+          "name": "Brian Cunningham",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-blackwell",
+          "name": "Steve Blackwell",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/geiger-22/4000-1159657/"
+        }
+      ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -2390,6 +3083,31 @@
       ]
     },
     {
+      "id": "hup-1",
+      "series": "hup",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/hup-1-hup/4000-267196/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "hyde-street-10",
       "series": "hyde-street",
       "issue": 10,
@@ -2491,7 +3209,7 @@
         },
         {
           "artistId": "mart-n-morazzo",
-          "name": "Martín Morazzo",
+          "name": "Mart\u00edn Morazzo",
           "roles": [
             "Artist",
             "Cover"
@@ -3282,7 +4000,7 @@
         },
         {
           "artistId": "jo-lle-jones",
-          "name": "Joëlle Jones",
+          "name": "Jo\u00eblle Jones",
           "roles": [
             "Writer",
             "Artist",
@@ -3402,7 +4120,8 @@
       "credits": [],
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -3707,6 +4426,56 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "pacific-presents-3",
+      "series": "pacific-presents",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "will-meugniot",
+          "name": "Will Meugniot",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "steve-ditko",
+          "name": "Steve Ditko",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "tim-conrad",
+          "name": "Tim Conrad",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "jo-meugniot",
+          "name": "Jo Meugniot",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andy-kubert",
+          "name": "Andy Kubert",
+          "roles": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/pacific-presents-3/4000-49437/"
+        }
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -4174,6 +4943,85 @@
       ]
     },
     {
+      "id": "rip-off-comix-3",
+      "series": "rip-off-comix",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "bill-griffith",
+          "name": "Bill Griffith",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dave-sheridan",
+          "name": "Dave Sheridan",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "gilbert-shelton",
+          "name": "Gilbert Shelton",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "harry-driggs",
+          "name": "Harry Driggs",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "ted-richards",
+          "name": "Ted Richards",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "larry-rippee",
+          "name": "Larry Rippee",
+          "roles": [
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rip-off-comix-3-return-from-the-planet-of-the-pigs/4000-175911/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "seamonsters-and-superheroes-1",
+      "series": "seamonsters-and-superheroes",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "scott-mills",
+          "name": "Scott Mills",
+          "roles": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/seamonsters-and-superheroes-1/4000-412686/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "silver-surfer-annual-4",
       "series": "silver-surfer-annual",
       "issue": 4,
@@ -4283,7 +5131,7 @@
         },
         {
           "artistId": "ren-e-witterstaetter",
-          "name": "Renée Witterstaetter",
+          "name": "Ren\u00e9e Witterstaetter",
           "roles": [
             "Colorist"
           ]
@@ -4425,6 +5273,180 @@
       ]
     },
     {
+      "id": "snarf-2",
+      "series": "snarf",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "denis-kitchen",
+          "name": "Denis Kitchen",
+          "roles": [
+            "Writer",
+            "Editor",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "evert-geradts",
+          "name": "Evert Geradts",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "peter-poplaski",
+          "name": "Peter Poplaski",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "richard-grass-green",
+          "name": "Richard (Grass) Green",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "tim-boxell",
+          "name": "Tim Boxell",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "wendel-pugh",
+          "name": "Wendel Pugh",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jay-lynch",
+          "name": "Jay Lynch",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/snarf-2/4000-232265/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "space-riders-2",
+      "series": "space-riders",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "fabian-rangel-jr",
+          "name": "Fabian Rangel, Jr.",
+          "roles": [
+            "Writer",
+            "Other"
+          ]
+        },
+        {
+          "artistId": "alexis-ziritt",
+          "name": "Alexis Ziritt",
+          "roles": [
+            "Artist",
+            "Cover",
+            "Other"
+          ]
+        },
+        {
+          "artistId": "ryan-ferrier",
+          "name": "Ryan Ferrier",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/space-riders-2-chapter-two-escape-from-the-haunted/4000-488739/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "space-riders-galaxy-of-brutality-1",
+      "series": "space-riders-galaxy-of-brutality",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "fabian-rangel-jr",
+          "name": "Fabian Rangel, Jr.",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "alexis-ziritt",
+          "name": "Alexis Ziritt",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-ferrier",
+          "name": "Ryan Ferrier",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jim-rugg",
+          "name": "Jim Rugg",
+          "roles": [
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/space-riders-galaxy-of-brutality-1-chapter-one-cha/4000-589900/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "space-riders-vortex-of-darkness-4",
+      "series": "space-riders-vortex-of-darkness",
+      "issue": 4,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "stray-bullets-1",
       "series": "stray-bullets",
       "issue": 1,
@@ -4499,7 +5521,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "María Lapham",
+          "name": "Mar\u00eda Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4541,7 +5563,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "María Lapham",
+          "name": "Mar\u00eda Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4582,7 +5604,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "María Lapham",
+          "name": "Mar\u00eda Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4624,7 +5646,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "María Lapham",
+          "name": "Mar\u00eda Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4646,6 +5668,86 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "street-poet-ray-1",
+      "series": "street-poet-ray",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "junko-hosizawa",
+          "name": "Junko Hosizawa",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/street-poet-ray-1/4000-104447/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "tales-of-ordinary-madness-2",
+      "series": "tales-of-ordinary-madness",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "malcolm-bourne",
+          "name": "Malcolm Bourne",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mike-allred",
+          "name": "Mike Allred",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "john-bolton",
+          "name": "John Bolton",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "barbara-randall-kesel",
+          "name": "Barbara Randall Kesel",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tales-of-ordinary-madness-2-moods/4000-127085/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "tasty-comix-2",
+      "series": "tasty-comix",
+      "issue": 2,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -4688,6 +5790,110 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/issue/the-beauty-2015-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-deadman-2",
+      "series": "the-deadman",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alex-eckman-lawn",
+          "name": "Alex Eckman-Lawn",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lucio-parrillo",
+          "name": "Lucio Parrillo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mark-spears",
+          "name": "Mark Spears",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "stevan-subi",
+          "name": "Stevan Subi\u0107",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-kaminski",
+          "name": "Paul Kaminski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "chris-rosa",
+          "name": "Chris Rosa",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-deadman-2026-2/"
         }
       ],
       "sources": [
@@ -4848,7 +6054,7 @@
         },
         {
           "artistId": "in-s-amaro",
-          "name": "Inês Amaro",
+          "name": "In\u00eas Amaro",
           "roles": [
             "Colorist"
           ]
@@ -5128,7 +6334,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "Álvaro Martínez Bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
           "roles": [
             "Artist",
             "Cover"
@@ -5211,7 +6417,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "Álvaro Martínez Bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
           "roles": [
             "Artist",
             "Cover"
@@ -5294,7 +6500,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "Álvaro Martínez Bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
           "roles": [
             "Artist",
             "Cover"
@@ -5367,20 +6573,66 @@
       "id": "the-twilight-zone-6",
       "series": "the-twilight-zone",
       "issue": 6,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "nicole-goux",
+          "name": "Nicole Goux",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-twilight-zone-6/4000-1162512/"
+        }
+      ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "the-twilight-zone-7",
       "series": "the-twilight-zone",
       "issue": 7,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Writer",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "andy-price",
+          "name": "Andy Price",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "sandy-tanaka",
+          "name": "Sandy Tanaka",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-twilight-zone-7/4000-1169631/"
+        }
+      ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5447,6 +6699,16 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "uneeda-comix-0",
+      "series": "uneeda-comix",
+      "issue": 0,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -5520,6 +6782,182 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "zap-1",
+      "series": "zap",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Editor",
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-1-zap-comix/4000-185244/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "zap-2",
+      "series": "zap",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "rick-griffin",
+          "name": "Rick Griffin",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "s-clay-wilson",
+          "name": "S. Clay Wilson",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "victor-moscoso",
+          "name": "Victor Moscoso",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-2/4000-185245/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "zap-3",
+      "series": "zap",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "gilbert-shelton",
+          "name": "Gilbert Shelton",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "rick-griffin",
+          "name": "Rick Griffin",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "s-clay-wilson",
+          "name": "S. Clay Wilson",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "victor-moscoso",
+          "name": "Victor Moscoso",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-3/4000-185246/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "zap-comix-3",
+      "series": "zap-comix",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "gilbert-shelton",
+          "name": "Gilbert Shelton",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "rick-griffin",
+          "name": "Rick Griffin",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "s-clay-wilson",
+          "name": "S. Clay Wilson",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "victor-moscoso",
+          "name": "Victor Moscoso",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-3/4000-185246/"
+        }
+      ],
+      "sources": [
+        "comicvine"
       ]
     }
   ]
