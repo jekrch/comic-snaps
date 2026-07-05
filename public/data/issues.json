@@ -3769,6 +3769,26 @@
       ]
     },
     {
+      "id": "nut-3",
+      "series": "nut",
+      "issue": 3,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "nut-5",
+      "series": "nut",
+      "issue": 5,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "odin-1",
       "series": "odin",
       "issue": 1,

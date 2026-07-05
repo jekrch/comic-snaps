@@ -4,6 +4,8 @@ export interface Filters {
   decades: Set<string>;
   tags: Set<string>;
   artists: Set<string>;
+  colorists: Set<string>;
+  letterers: Set<string>;
   postedBy: Set<string>;
   series: Set<string>;
 }
@@ -12,16 +14,26 @@ export const EMPTY_FILTERS: Filters = {
   decades: new Set(),
   tags: new Set(),
   artists: new Set(),
+  colorists: new Set(),
+  letterers: new Set(),
   postedBy: new Set(),
   series: new Set(),
 };
 
 export function hasActiveFilters(filters: Filters): boolean {
-  return filters.decades.size > 0 || filters.tags.size > 0 || filters.artists.size > 0 || filters.postedBy.size > 0 || filters.series.size > 0;
+  return activeFilterCount(filters) > 0;
 }
 
 export function activeFilterCount(filters: Filters): number {
-  return filters.decades.size + filters.tags.size + filters.artists.size + filters.postedBy.size + filters.series.size;
+  return (
+    filters.decades.size +
+    filters.tags.size +
+    filters.artists.size +
+    filters.colorists.size +
+    filters.letterers.size +
+    filters.postedBy.size +
+    filters.series.size
+  );
 }
 
 export function getDecade(year: number): string {
@@ -34,6 +46,8 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
   return panels.filter((p) => {
     if (filters.decades.size > 0 && !filters.decades.has(getDecade(p.year))) return false;
     if (filters.artists.size > 0 && !filters.artists.has(p.artist)) return false;
+    if (filters.colorists.size > 0 && !(p.colorists ?? []).some((c) => filters.colorists.has(c))) return false;
+    if (filters.letterers.size > 0 && !(p.letterers ?? []).some((l) => filters.letterers.has(l))) return false;
     if (filters.postedBy.size > 0 && !filters.postedBy.has(p.postedBy)) return false;
     if (filters.series.size > 0 && !filters.series.has(p.title)) return false;
     if (filters.tags.size > 0) {
@@ -48,35 +62,56 @@ export function computeFacets(panels: Panel[], filters: Filters) {
   const decadeCounts = new Map<string, number>();
   const tagCounts = new Map<string, number>();
   const artistCounts = new Map<string, number>();
+  const coloristCounts = new Map<string, number>();
+  const lettererCounts = new Map<string, number>();
   const postedByCounts = new Map<string, number>();
   const seriesCounts = new Map<string, number>();
 
   for (const p of panels) {
-    const passArtist = filters.artists.size === 0 || filters.artists.has(p.artist);
-    const passTags = filters.tags.size === 0 || (p.tags ?? []).some((t) => filters.tags.has(t));
-    const passDecade = filters.decades.size === 0 || filters.decades.has(getDecade(p.year));
-    const passPostedBy = filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy);
-    const passSeries = filters.series.size === 0 || filters.series.has(p.title);
+    // pass flags per facet dimension; each facet is counted against all
+    // filters except its own so the counts reflect what selecting it adds
+    const pass = {
+      decades: filters.decades.size === 0 || filters.decades.has(getDecade(p.year)),
+      tags: filters.tags.size === 0 || (p.tags ?? []).some((t) => filters.tags.has(t)),
+      artists: filters.artists.size === 0 || filters.artists.has(p.artist),
+      colorists: filters.colorists.size === 0 || (p.colorists ?? []).some((c) => filters.colorists.has(c)),
+      letterers: filters.letterers.size === 0 || (p.letterers ?? []).some((l) => filters.letterers.has(l)),
+      postedBy: filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy),
+      series: filters.series.size === 0 || filters.series.has(p.title),
+    };
 
-    if (passArtist && passTags && passPostedBy && passSeries) {
+    const passAllExcept = (skip: keyof typeof pass) =>
+      (Object.keys(pass) as (keyof typeof pass)[]).every((k) => k === skip || pass[k]);
+
+    if (passAllExcept("decades")) {
       const dec = getDecade(p.year);
       decadeCounts.set(dec, (decadeCounts.get(dec) ?? 0) + 1);
     }
-    if (passArtist && passDecade && passPostedBy && passSeries) {
+    if (passAllExcept("tags")) {
       for (const t of p.tags ?? []) {
         tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
       }
     }
-    if (passTags && passDecade && passPostedBy && passSeries) {
+    if (passAllExcept("artists")) {
       artistCounts.set(p.artist, (artistCounts.get(p.artist) ?? 0) + 1);
     }
-    if (passTags && passDecade && passArtist && passSeries) {
+    if (passAllExcept("colorists")) {
+      for (const c of p.colorists ?? []) {
+        coloristCounts.set(c, (coloristCounts.get(c) ?? 0) + 1);
+      }
+    }
+    if (passAllExcept("letterers")) {
+      for (const l of p.letterers ?? []) {
+        lettererCounts.set(l, (lettererCounts.get(l) ?? 0) + 1);
+      }
+    }
+    if (passAllExcept("postedBy")) {
       postedByCounts.set(p.postedBy, (postedByCounts.get(p.postedBy) ?? 0) + 1);
     }
-    if (passTags && passDecade && passArtist && passPostedBy) {
+    if (passAllExcept("series")) {
       seriesCounts.set(p.title, (seriesCounts.get(p.title) ?? 0) + 1);
     }
   }
 
-  return { decadeCounts, tagCounts, artistCounts, postedByCounts, seriesCounts };
+  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, postedByCounts, seriesCounts };
 }

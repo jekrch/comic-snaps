@@ -4,12 +4,15 @@
       "id": "abigail-larson",
       "name": "Abigail Larson",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/01/16/a-larson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3277/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -90,12 +93,15 @@
       "id": "alanna-smith",
       "name": "Alanna Smith",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/alanna-smith.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/536/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -122,12 +128,15 @@
       "id": "alex-antone",
       "name": "Alex Antone",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/25/alex-antone.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/381/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -163,13 +172,17 @@
     {
       "id": "alex-ross",
       "name": "Alex Ross",
-      "description": "",
-      "imageUrl": null,
+      "description": "Nelson Alexander Ross is an American comic book writer/artist known primarily for his painted interiors, covers, and design work. He first became known with the 1994 miniseries Marvels, on which he collaborated with writer Kurt Busiek for Marvel Comics. He has since done a variety of projects for both Marvel and DC Comics, such as the 1996 miniseries Kingdom Come, which Ross co-wrote. Since then he has done covers and character designs for Busiek's series Astro City, and various projects for Dynamite Entertainment. His feature film work includes concept and narrative art for Spider-Man and Spider-Man 2, and DVD packaging art for the M. Night Shyamalan film Unbreakable. He has done covers for TV Guide, promotional artwork for the Academy Awards, posters and packaging design for video games, and his renditions of superheroes have been merchandised as action figures.\r\n\r\nRoss' style has been said to exhibit \"a Norman-Rockwell-meets-George-P\u00e9rez vibe\", and has been praised for its realistic, human depictions of classic comic book characters. His rendering style, his attention to detail, and the perceived tendency of his characters to be depicted staring off into the distance in cover images has been satirized in Mad magazine. Because of the time it takes Ross to produce his art, he primarily serves as a plotter and/or cover artist. Comics Buyer's Guide Senior Editor Maggie Thompson, commenting on that publication's retirement of the Favorite Painter award from their CBG Fan Awards due to Ross' domination of that category, stated in 2010, \"Ross may simply be the field's Favorite Painter, period. That's despite the fact that many outstanding painters are at work in today's comic books.\"",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/Alex-Ross.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/37/"
         }
+      ],
+      "birthYear": 1970,
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -419,6 +432,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/6689/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -518,24 +534,30 @@
       "id": "austin-hatch",
       "name": "Austin Hatch",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/10/13/a-hatch.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16639/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "baldemar-rivas",
       "name": "Baldemar Rivas",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/10/13/b-rivas.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4031/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -574,12 +596,15 @@
       "id": "ben-abernathy",
       "name": "Ben Abernathy",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/18/b-abernathy.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1190/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -672,13 +697,17 @@
     {
       "id": "bill-sienkiewicz",
       "name": "Bill Sienkiewicz",
-      "description": "",
-      "imageUrl": null,
+      "description": "Boleslav William Felix Robert Sienkiewicz better known as Bill Sienkiewicz, is an American artist known for his work in comic books\u2014particularly for Marvel Comics' The New Mutants, Moon Knight, and Elektra: Assassin. Sienkiewicz's work in the 1980's was considered revolutionary in mainstream US comics, due to his highly stylized art that verged on abstraction and made use of oil painting, photorealism, collage, mimeograph, and other forms generally uncommon in comic books.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/bill_swienkiewicz.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/533/"
         }
+      ],
+      "birthYear": 1958,
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -829,12 +858,15 @@
       "id": "brian-reber",
       "name": "Brian Reber",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/26/Brian-Reber.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/942/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -847,18 +879,28 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/4241/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "c-b-cebulski",
       "name": "C. B. Cebulski",
-      "description": "",
-      "imageUrl": null,
+      "description": "C.B. Cebulski is an American writer and editor for Marvel Comics, known for his work on titles such as Marvel Fairy Tales. As of November 2017, he holds the position of Editor-in-chief",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/cebulski.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/215/"
         }
+      ],
+      "aliases": [
+        "Akira Yoshida",
+        "C.B. Cebulski"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -871,6 +913,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/17640/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -883,18 +928,24 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/16233/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "cam-smith",
       "name": "Cam Smith",
-      "description": "",
-      "imageUrl": null,
+      "description": "Cam Smith is a British comic book artist and inker known to British comic book readers for his work on 2000 AD and in the American comic book market for his collaborations with Gary Frank, inking that would earn him an Eisner Award nomination.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/03/cam-smith.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/501/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -915,24 +966,33 @@
     {
       "id": "carlos-gomez",
       "name": "Carlos Gomez",
-      "description": "",
-      "imageUrl": null,
-      "references": [],
+      "description": "A Spanish artist who has worked for Marvel Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2023/08/20/carols-gomez.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1247/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "birthYear": 1985
     },
     {
       "id": "carlos-lao",
       "name": "Carlos Lao",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/14/carlos-lao.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/775/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -961,6 +1021,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/6020/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -999,25 +1062,32 @@
     {
       "id": "chris-bachalo",
       "name": "Chris Bachalo",
-      "description": "",
-      "imageUrl": null,
+      "description": "Chris Bachalo is a Canadian comic book illustrator known for his quirky, cartoon-like style. He became well known for stints on DC Comics' Shade, the Changing Man and Neil Gaiman's two Death series. Chris has also illustrated several of Marvel Comics' X-Men-related series, including Generation X (which he co-created), X-Men Vol. 2, Uncanny X-Men, and Ultimate X-Men. Beginning in April, 2000 Chris illustrated his creator-owned series Steampunk.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/07/Chris_Bachalo.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/606/"
         }
+      ],
+      "birthYear": 1965,
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "chris-burnham",
       "name": "Chris Burnham",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/26/chris-burnham.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/394/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1057,12 +1127,15 @@
       "id": "chris-mooneyham",
       "name": "Chris Mooneyham",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/01/20/c-mooneyham.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2906/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1120,6 +1193,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/16635/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1144,12 +1220,15 @@
       "id": "clayton-crain",
       "name": "Clayton Crain",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/22/clayton-crain.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/346/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1171,12 +1250,15 @@
       "id": "cliff-rathburn",
       "name": "Cliff Rathburn",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/06/cliff_rathburn.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/596/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1213,12 +1295,15 @@
       "id": "cory-petit",
       "name": "Cory Petit",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/cory-petit.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/224/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1315,13 +1400,22 @@
     {
       "id": "dani-strips",
       "name": "Dani Strips",
-      "description": "",
-      "imageUrl": null,
+      "description": "Born in Athens, Greece in 1992 and studied sculpture in Athens School of Fine Arts.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/09/06/34054242_1663202013796186_8940518813728768000_o.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2742/"
         }
+      ],
+      "birthYear": 1992,
+      "aliases": [
+        "Danai Kilaidoni",
+        "Dani K",
+        "Dani"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1370,12 +1464,15 @@
       "id": "daniele-di-nicuolo",
       "name": "Daniele Di Nicuolo",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/08/05/ddinicuolo.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3897/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1456,12 +1553,15 @@
       "id": "david-aja",
       "name": "David Aja",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/25/d-aja.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2460/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1482,25 +1582,34 @@
     {
       "id": "david-c-hopkins",
       "name": "David C. Hopkins",
-      "description": "",
-      "imageUrl": null,
+      "description": "DC Hopkins is a professional letterer and designer working for clients such as BooM!, Dark Horse, DC Comics, Dynamite, Heavy Metal, Humanoids, IDW, Image, Lion Forge/Oni, Scout and more. He is also a staff letterer at Deron Bennett's AndWorld Design studio. DC lives in Indiana with his wife and son.\r\n\r\nTwitter: @dc_hopkins",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/08/09/dc-hopkins.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5208/"
         }
+      ],
+      "aliases": [
+        "DC Hopkins"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "david-curiel",
       "name": "David Curiel",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/David_Curiel.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/250/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1576,6 +1685,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/8384/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1588,6 +1700,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/4125/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1715,6 +1830,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/1867/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1837,13 +1955,16 @@
     {
       "id": "edgar-delgado",
       "name": "Edgar Delgado",
-      "description": "",
-      "imageUrl": null,
+      "description": "A colorist who has primarily worked for Marvel Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/edgar-delgado.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/214/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2142,6 +2263,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/7026/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2429,6 +2553,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/18315/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2465,24 +2592,34 @@
       "id": "guillem-march",
       "name": "Guillem March",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/13/g-march.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/726/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "gurihiru",
       "name": "Gurihiru",
-      "description": "",
-      "imageUrl": null,
+      "description": "A Japanese illustration team, consisting of Chifuyu Sasaki (workplan design, pencils, inks) and Naoko Kawano (workplan design, colors, webdesign). Both originating from Sapporo, Japan, they are currently based in Saitama, mainly working as artists for American comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/05/11/gurihiru.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2543/"
         }
+      ],
+      "aliases": [
+        "Chifuyu Sasaki",
+        "Naoko Kawano"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2622,6 +2759,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/5576/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2683,24 +2823,30 @@
       "id": "jaime-mendoza",
       "name": "Jaime Mendoza",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/jaime-mendoza.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/70/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "jake-thomas",
       "name": "Jake Thomas",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/24/jake_thomas.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/885/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -2783,12 +2929,15 @@
       "id": "jasmine-alvarez",
       "name": "Jasmine Alvarez",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2022/09/22/j-alvarez.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6618/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3001,6 +3150,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/3389/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3043,24 +3195,33 @@
       "id": "jillian-crab",
       "name": "Jillian Crab",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/10/31/j-crab.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3039/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "jim-campbell",
       "name": "Jim Campbell",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/24/jim-campbell.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/364/"
         }
+      ],
+      "aliases": [
+        "James Campbell"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3154,12 +3315,15 @@
       "id": "joe-caramagna",
       "name": "Joe Caramagna",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/16/Joe_Caramagna.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/296/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3208,12 +3372,15 @@
       "id": "joe-sabino",
       "name": "Joe Sabino",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/24/joe-sabino.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/365/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3288,12 +3455,15 @@
       "id": "john-giang",
       "name": "John Giang",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/12/27/32333.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3855/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3357,12 +3527,15 @@
       "id": "john-livesay",
       "name": "John Livesay",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/10/livesay.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/658/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3432,12 +3605,15 @@
       "id": "jordan-d-white",
       "name": "Jordan D. White",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/jordan-white.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/217/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3475,12 +3651,15 @@
       "id": "jorge-forn-s",
       "name": "Jorge Forn\u00e9s",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/Jorge-Fornes.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1121/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3576,6 +3755,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/2660/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3596,25 +3778,32 @@
     {
       "id": "joshua-middleton",
       "name": "Joshua Middleton",
-      "description": "",
-      "imageUrl": null,
+      "description": "Joshua Middleton (sometimes credited as Josh Middleton) is an artist and designer working in the animation, film, comics, and book industries. In 2004 he was nominated for an Eisner Award as \"Best Cover Artist\" for his work on Marvel's NYX, X-Men Unlimited, and New Mutants.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/joshua-middleton.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/190/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "joshua-williamson",
       "name": "Joshua Williamson",
-      "description": "",
-      "imageUrl": null,
+      "description": "Joshua Williamson is the writer of creator-owned titles GHOSTED, NAILBITER, and BIRTHRIGHT at Image Comics. He is also the writer for THE FLASH at DC Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/18/joshua-williamson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/329/"
         }
+      ],
+      "birthYear": 1981,
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3674,12 +3863,15 @@
       "id": "julian-totino-tedesco",
       "name": "Julian Totino Tedesco",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/tedesco.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/219/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3738,24 +3930,33 @@
       "id": "kaeden-mcgahey",
       "name": "Kaeden McGahey",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2023/05/17/Kaeden_McGahey.webp",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5653/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "kat-gregorowicz",
       "name": "Kat Gregorowicz",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/11/27/kat-gregorowicz.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4155/"
         }
+      ],
+      "aliases": [
+        "Kat Walkington"
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -3965,13 +4166,16 @@
     {
       "id": "kevin-walker",
       "name": "Kevin Walker",
-      "description": "",
-      "imageUrl": null,
+      "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/08/28/kev-walker.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2352/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4083,13 +4287,16 @@
     {
       "id": "lee-weeks",
       "name": "Lee Weeks",
-      "description": "",
-      "imageUrl": null,
+      "description": "An American comics artist known for his work on such titles as Daredevil.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/lee-weeks.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/450/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4160,24 +4367,30 @@
       "id": "lindsey-cohick",
       "name": "Lindsey Cohick",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/28/l-cohick.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1557/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "lipwei-chang",
       "name": "Lipwei Chang",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/04/09/23788e98a93f44ceab2e3944ec3747a5.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/17755/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4307,6 +4520,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/4834/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4424,18 +4640,24 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/2785/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "martin-biro",
       "name": "Martin Biro",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/04/10/Martin-Biro.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1617/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4592,24 +4814,30 @@
       "id": "matthew-wilson",
       "name": "Matthew Wilson",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/matthew-wilson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/10/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "mattia-de-iulis",
       "name": "Mattia De Iulis",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/11/Mattia_De_Iulis.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2355/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4725,24 +4953,30 @@
       "id": "michael-walsh",
       "name": "Michael Walsh",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/27/michael-walsh.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/419/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "michelle-marchese",
       "name": "Michelle Marchese",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/11/03/m-marchese.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6167/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4827,12 +5061,15 @@
       "id": "mirka-andolfo",
       "name": "Mirka Andolfo",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/01/Mirka-Andolfo.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/480/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -4888,13 +5125,16 @@
     {
       "id": "nic-klein",
       "name": "Nic Klein",
-      "description": "",
-      "imageUrl": null,
+      "description": "A German comic book artist. He has worked on such titles as Winter Soldier, Captain America and Doc Savage. For image comics he co-created Viking, Dancer and Drifter.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/24/n-klein.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/889/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5090,12 +5330,16 @@
       "id": "pepe-larraz",
       "name": "Pepe Larraz",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/pepe_larraz.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16/"
         }
+      ],
+      "birthYear": 1981,
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5144,24 +5388,30 @@
       "id": "phillip-kennedy-johnson",
       "name": "Phillip Kennedy Johnson",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/23/johnson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1245/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "pip-martin",
       "name": "Pip Martin",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/11/24/pipmartincolours-avatar--20251116_103909_5358729335.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6246/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5183,24 +5433,30 @@
       "id": "rachelle-rosenberg",
       "name": "Rachelle Rosenberg",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/rachelle-rosenberg.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/216/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "rachta-lin",
       "name": "Rachta Lin",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/12/23/r-linn.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5833/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5258,6 +5514,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/5497/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5370,6 +5629,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/6918/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5505,12 +5767,15 @@
       "id": "romulo-fajardo-jr",
       "name": "Romulo Fajardo Jr.",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/romulo-fajardo-jr.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/89/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5650,13 +5915,16 @@
     {
       "id": "ryan-sook",
       "name": "Ryan Sook",
-      "description": "",
-      "imageUrl": null,
+      "description": "Ryan Sook is an American comic book artist, known for his work on books such as Seven Soldiers: Zatanna, X-Factor and The Spectre. His style has been compared to that of Mike Mignola, Adam Hughes, and Kevin Nowlan.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/ryan-sook.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/24/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5771,6 +6039,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/17117/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -5906,12 +6177,15 @@
       "id": "shannon-andrews-ballesteros",
       "name": "Shannon Andrews Ballesteros",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/27/s-andrews.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1552/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6023,12 +6297,15 @@
       "id": "skan-srisuwan",
       "name": "Skan Srisuwan",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/17/skan.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1360/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6184,6 +6461,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/4991/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6272,25 +6552,31 @@
     {
       "id": "todd-nauck",
       "name": "Todd Nauck",
-      "description": "",
-      "imageUrl": null,
+      "description": "Todd Nauck is an American comic book artist and writer. Nauck is most notable for his work on Friendly Neighborhood Spider-Man, Young Justice and his own creation, Wildguard.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/todd_nauck.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/280/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
       "id": "tom-brevoort",
       "name": "Tom Brevoort",
-      "description": "",
-      "imageUrl": null,
+      "description": "Tom Brevoort is an American comic book editor, known for his work for Marvel Comics, where he has overseen titles such as New Avengers, Civil War, and Fantastic Four. He became Executive Editor in 2007, and in January 2011 was promoted to Senior Vice President of Publishing.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/tom-brevoort.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/537/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6477,12 +6763,15 @@
       "id": "tyler-boss",
       "name": "Tyler Boss",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/27/tyler-boss.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/428/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6627,13 +6916,16 @@
     {
       "id": "wayne-faucher",
       "name": "Wayne Faucher",
-      "description": "",
-      "imageUrl": null,
+      "description": "Wayne Faucher is an American comic book inker. He is known mostly for his ink work on the Batman family of comics for DC Comics and for Spider-Man titles for Marvel Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/14/wayne-faucher.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/751/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6677,6 +6969,9 @@
           "name": "Metron",
           "url": "https://metron.cloud/creator/16672/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -6698,12 +6993,15 @@
       "id": "will-robson",
       "name": "Will Robson",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/27/Will-Robson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/986/"
         }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {

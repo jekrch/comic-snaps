@@ -21,7 +21,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, postedByCounts, seriesCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, postedByCounts, seriesCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -56,6 +56,22 @@ export default function FilterControl({
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [artistCounts]
+  );
+
+  const coloristItems = useMemo(
+    () =>
+      Array.from(coloristCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [coloristCounts]
+  );
+
+  const lettererItems = useMemo(
+    () =>
+      Array.from(lettererCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [lettererCounts]
   );
 
   const seriesItems = useMemo(
@@ -166,6 +182,18 @@ export default function FilterControl({
               items={artistItems}
               selected={filters.artists}
               onToggle={(v) => toggleInSet("artists", v)}
+            />
+            <FacetSection
+              title="COLORIST"
+              items={coloristItems}
+              selected={filters.colorists}
+              onToggle={(v) => toggleInSet("colorists", v)}
+            />
+            <FacetSection
+              title="LETTERER"
+              items={lettererItems}
+              selected={filters.letterers}
+              onToggle={(v) => toggleInSet("letterers", v)}
             />
             <FacetSection
               title="POSTED BY"

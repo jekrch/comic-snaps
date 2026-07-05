@@ -81,7 +81,7 @@ export default function App() {
       }),
       loadMetadata(),
     ])
-      .then(([gallery, { artists, series }]) => {
+      .then(([gallery, { artists, series, issues }]) => {
         const seriesTagMap = new Map<string, string[]>();
         for (const s of series) {
           if (s.tags?.length) seriesTagMap.set(s.id, s.tags);
@@ -90,14 +90,28 @@ export default function App() {
         for (const a of artists) {
           if (a.tags?.length) artistTagMap.set(a.name, a.tags);
         }
+        const creditMap = new Map<string, { colorists: string[]; letterers: string[] }>();
+        for (const i of issues) {
+          const colorists = i.credits.filter((c) => c.roles.includes("Colorist")).map((c) => c.name);
+          const letterers = i.credits.filter((c) => c.roles.includes("Letterer")).map((c) => c.name);
+          if (colorists.length || letterers.length) {
+            creditMap.set(`${i.series}|${i.issue}`, { colorists, letterers });
+          }
+        }
 
         const merged = gallery.panels.map((p) => {
           const extra = [
             ...(seriesTagMap.get(p.slug) ?? []),
             ...(artistTagMap.get(p.artist) ?? []),
           ];
-          if (extra.length === 0) return p;
-          return { ...p, tags: Array.from(new Set([...(p.tags ?? []), ...extra])) };
+          const credits = creditMap.get(`${p.slug}|${p.issue}`);
+          if (extra.length === 0 && !credits) return p;
+          return {
+            ...p,
+            ...(extra.length > 0 && { tags: Array.from(new Set([...(p.tags ?? []), ...extra])) }),
+            ...(credits?.colorists.length && { colorists: credits.colorists }),
+            ...(credits?.letterers.length && { letterers: credits.letterers }),
+          };
         });
 
         setPanels(merged);

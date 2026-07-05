@@ -1664,9 +1664,14 @@
       "id": "nut",
       "name": "Nut",
       "parentSeries": null,
-      "description": "",
+      "description": "One-shot issue featuring the self-published character of Nut. Was first a crowdfunded issue, via Kickstarter, now can be purchased directly from their website.",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/b1fa0324-9ad5-4bc6-a3b5-95db10679cdf/NUT+5+cover_PI.png?format=1500w",
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/13509/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -1676,7 +1681,10 @@
         "data/covers/nut/0339a4857634.png",
         "data/covers/nut/0fb0cf14806f.png",
         "data/covers/nut/0201ed259500.png"
-      ]
+      ],
+      "startYear": 2025,
+      "publisher": "Row 7 Publishing",
+      "issueCount": 1
     },
     {
       "id": "odin",

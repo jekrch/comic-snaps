@@ -66,6 +66,8 @@ export interface Panel {
   colorfulness: number | null;
   blur: "ew" | "nsfw" | null;
   blurStart: "all" | "top" | "bottom" | "right" | "left" | null;
+  colorists?: string[];
+  letterers?: string[];
 }
 
 export interface Gallery {
