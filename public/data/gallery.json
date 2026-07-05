@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 176,
+      "id": "concrete-stars-over-sand-1-1783290357",
+      "title": "Concrete: Stars Over Sand",
+      "slug": "concrete-stars-over-sand",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Paul Chadwick",
+      "image": "images/concrete-stars-over-sand/issue-1-1783290357.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-05T22:25:59.326Z"
+    },
+    {
       "seq": 175,
       "id": "the-deadman-2-1783288719",
       "title": "The Deadman",
