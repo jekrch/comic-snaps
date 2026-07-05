@@ -4308,6 +4308,115 @@
       ]
     },
     {
+      "id": "minor-arcana-16",
+      "series": "minor-arcana",
+      "issue": 16,
+      "credits": [
+        {
+          "artistId": "jeff-lemire",
+          "name": "Jeff Lemire",
+          "roles": [
+            "Writer",
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "patricio-delpeche",
+          "name": "Patricio Delpeche",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "steve-wands",
+          "name": "Steve Wands",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "andrew-k-currey",
+          "name": "Andrew K. Currey",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "anwita-citriya",
+          "name": "Anwita Citriya",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nate-powell",
+          "name": "Nate Powell",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "maya-bollinger",
+          "name": "Maya Bollinger",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "andy-schmidt",
+          "name": "Andy Schmidt",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "armando-elizondo",
+          "name": "Armando Elizondo",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "grace-park",
+          "name": "Grace Park",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "tom-muller",
+          "name": "Tom Muller",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "letizia-cadonici",
+          "name": "Letizia Cadonici",
+          "roles": [
+            "Illustrator"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/minor-arcana-2024-16/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "nut-3",
       "series": "nut",
       "issue": 3,

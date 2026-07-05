@@ -380,6 +380,21 @@
       ]
     },
     {
+      "id": "andrew-k-currey",
+      "name": "Andrew K. Currey",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/13563/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "andy-kubert",
       "name": "Andy Kubert",
       "description": "",
@@ -5797,6 +5812,22 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "nate-powell",
+      "name": "Nate Powell",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/09/04/n-powell.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7966/"
+        }
+      ],
+      "birthYear": 1978,
+      "sources": [
         "metron"
       ]
     },
