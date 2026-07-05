@@ -18,6 +18,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/17577/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/6195/"
         }
       ],
       "startYear": 2002,
@@ -25,8 +29,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/100/4e180f72efcf.jpg",
@@ -52,6 +56,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/222122/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/10356/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9668380-wwww.jpg",
@@ -59,8 +67,8 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "issueCount": 10,
       "coverImages": [
@@ -84,14 +92,18 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/216727/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/8482/"
         }
       ],
       "startYear": 2024,
       "publisher": "DC Comics",
       "issueCount": 18,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/absolute-wonder-woman/877b6081a60a.jpg",
@@ -110,6 +122,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/action-comics/4050-18005/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/2491/"
         }
       ],
       "startYear": 1938,
@@ -165,6 +181,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/221884/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/10451/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9655759-cover.jpg",
@@ -172,8 +192,8 @@
       "publisher": "Image",
       "issueCount": 8,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/assorted-crisis-events/35bd6340062b.jpg",
@@ -187,10 +207,15 @@
       "name": "Battle Beast",
       "parentSeries": null,
       "description": "",
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/11881/"
+        }
+      ],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -201,7 +226,10 @@
           8,
           10
         ]
-      }
+      },
+      "startYear": 2025,
+      "publisher": "Image Comics",
+      "issueCount": 12
     },
     {
       "id": "bijou-funnies",
@@ -281,6 +309,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/233344/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/14789/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg",
@@ -288,8 +320,8 @@
       "publisher": "DC Comics",
       "issueCount": 3,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/bleeding-hearts/818d07f62939.jpg",
@@ -304,7 +336,12 @@
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16109/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -316,7 +353,10 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "startYear": 2026,
+      "publisher": "Skybound",
+      "issueCount": 3
     },
     {
       "id": "buzz",
@@ -338,8 +378,8 @@
       "publisher": "D.C. Thomson & Co.",
       "issueCount": 103,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/buzz/04f3e710dabf.jpg",
@@ -358,6 +398,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/buzzard/4050-53415/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/349/"
         }
       ],
       "startYear": 1990,
@@ -395,6 +439,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/3502/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15455/"
         }
       ],
       "startYear": 1987,
@@ -402,8 +450,8 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/concrete/2d8093191346.jpg",
@@ -433,8 +481,8 @@
       "issueCount": 4,
       "sources": [
         "gcd",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/concrete-fragile-creature/141739334243.jpg",
@@ -463,8 +511,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/concrete-killer-smile/18e5fed62bd5.jpg",
@@ -489,8 +537,8 @@
       "publisher": "Caliber Comics",
       "issueCount": 1,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/creatures-of-the-id/6effce31f74b.jpg"
@@ -518,6 +566,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/criminal/4050-18454/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/1086/"
         }
       ],
       "startYear": 2006,
@@ -525,8 +577,8 @@
       "issueCount": 10,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/criminal/4d7bb0d910d5.jpg",
@@ -540,10 +592,15 @@
       "name": "Criminal: The Special Edition",
       "parentSeries": "criminal",
       "description": "",
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/98/"
+        }
+      ],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -552,7 +609,9 @@
         "comicvine": [
           0
         ]
-      }
+      },
+      "startYear": 2015,
+      "issueCount": 1
     },
     {
       "id": "dark-spaces-wildfire",
@@ -563,6 +622,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/dark-spaces-wildfire/4050-144118/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/3642/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11143/111431054/8584954-darkspaces-wildfire01%28of05%29-000.jpg",
@@ -570,8 +633,8 @@
       "publisher": "IDW Publishing",
       "issueCount": 5,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/dark-spaces-wildfire/2470a88dd312.jpg",
@@ -590,6 +653,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/did-you-hear-about-mimi-green/4050-172117/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15704/"
         }
       ],
       "startYear": 2026,
@@ -658,6 +725,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/eerie/4050-2300/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/6846/"
         }
       ],
       "startYear": 1966,
@@ -665,8 +736,8 @@
       "issueCount": 139,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/eerie/b08160d7342e.jpg",
@@ -688,6 +759,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/eightball/4050-7153/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/10734/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/43700-7153-51089-1-eightball.jpg",
@@ -696,8 +771,8 @@
       "issueCount": 23,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/eightball/fa66112f64b8.jpg",
@@ -715,6 +790,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/faithless-ii/4050-127811/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/4490/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7417959-01a-main.jpg",
@@ -722,8 +801,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 6,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/faithless-ii/f1dc71112baa.jpg",
@@ -746,6 +825,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/fatale/4050-44935/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/973/"
         }
       ],
       "startYear": 2012,
@@ -753,8 +836,8 @@
       "issueCount": 24,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/fatale/5ff6b1522173.jpg",
@@ -793,6 +876,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/feral/4050-157432/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7231/"
         }
       ],
       "startYear": 2024,
@@ -881,8 +968,8 @@
       ],
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -904,6 +991,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/geiger/4050-157520/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/2095/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9320236-cover.jpg",
@@ -911,8 +1002,8 @@
       "publisher": "Image",
       "issueCount": 22,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/geiger/9a1ad1a734ee.jpg",
@@ -951,6 +1042,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/harley-quinn-x-elvira/4050-167500/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/13229/"
         }
       ],
       "startYear": 2025,
@@ -980,6 +1075,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/harrow-county/4050-81991/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/2823/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4559059-5248350691-26606.jpg",
@@ -988,8 +1087,8 @@
       "issueCount": 32,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/harrow-county/61415c41c9cc.jpg",
@@ -1011,6 +1110,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/heavy-liquid/4050-19317/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/3299/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10162/217436-19317-115960-1-heavy-liquid.jpg",
@@ -1019,8 +1122,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/heavy-liquid/4cd6f7f77bbd.jpg",
@@ -1043,13 +1146,17 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/183920/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/10794/"
         }
       ],
       "sources": [
         "wikipedia",
         "gcd",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "startYear": 2013,
       "publisher": "https://www.comics.org/api/publisher/8368/?format=json",
@@ -1066,7 +1173,8 @@
           12,
           325
         ]
-      }
+      },
+      "issueCount": 5
     },
     {
       "id": "hup",
@@ -1111,6 +1219,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/hyde-street/4050-160218/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/8487/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9498349-cover.jpg",
@@ -1118,8 +1230,8 @@
       "publisher": "Image",
       "issueCount": 11,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/hyde-street/89c63d4a23bc.jpg",
@@ -1138,6 +1250,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/ice-cream-man/4050-107948/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/4527/"
         }
       ],
       "startYear": 2018,
@@ -1164,6 +1280,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/if-destruction-be-our-lot/4050-171776/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15477/"
         }
       ],
       "startYear": 2026,
@@ -1198,6 +1318,10 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/229882/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/13913/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9923000-cover.jpg",
@@ -1206,8 +1330,8 @@
       "issueCount": 5,
       "sources": [
         "gcd",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/infernal-hulk/9c245f46aff5.jpg",
@@ -1222,7 +1346,12 @@
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15867/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -1234,7 +1363,10 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "startYear": 2026,
+      "publisher": "Marvel",
+      "issueCount": 1
     },
     {
       "id": "jacked",
@@ -1245,6 +1377,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/jacked/4050-86238/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15344/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4923786-01.jpg",
@@ -1252,8 +1388,8 @@
       "publisher": "DC Comics",
       "issueCount": 6,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/jacked/093ab60c231f.jpg",
@@ -1271,6 +1407,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/just-brutal/4050-170547/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16148/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985196-cover.jpg",
@@ -1278,8 +1418,8 @@
       "publisher": "Ignition Press",
       "issueCount": 2,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/just-brutal/90aafc119c17.jpg",
@@ -1310,6 +1450,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/lady-killer/4050-79261/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/100/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4313687-01.jpg",
@@ -1318,8 +1462,8 @@
       "issueCount": 5,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/lady-killer/4a5f056ebad2.jpg",
@@ -1338,6 +1482,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/lobo/4050-18356/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/8714/"
         }
       ],
       "startYear": 1993,
@@ -1380,8 +1528,8 @@
       "sources": [
         "wikipedia",
         "gcd",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "startYear": 1987,
       "publisher": "https://www.comics.org/api/publisher/543/?format=json",
@@ -1415,8 +1563,8 @@
       "issueCount": 3,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/madman/87423f0773a3.jpg",
@@ -1435,8 +1583,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -1457,6 +1605,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/mind-mgmt-new-and-improved/4050-173287/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16107/"
         }
       ],
       "publisher": "Oni Press",
@@ -1475,7 +1627,8 @@
       },
       "coverImages": [
         "data/covers/mind-mgmt-new-improved/d88427fdbd88.jpg"
-      ]
+      ],
+      "startYear": 2026
     },
     {
       "id": "minor-arcana",
@@ -1486,6 +1639,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/minor-arcana/4050-159637/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/8339/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9466557-6820814136-B0CW1.jpg",
@@ -1493,8 +1650,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 15,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/minor-arcana/2dd673872256.jpg",
@@ -1502,26 +1659,6 @@
         "data/covers/minor-arcana/8dd4cfc11dc8.jpg",
         "data/covers/minor-arcana/4e2504b30a23.jpg"
       ]
-    },
-    {
-      "id": "my-body-is-unspooling",
-      "name": "My Body is Unspooling",
-      "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          0
-        ],
-        "comicvine": [
-          0
-        ]
-      }
     },
     {
       "id": "nut",
@@ -1551,6 +1688,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/odin/4050-172009/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15564/"
         }
       ],
       "startYear": 2026,
@@ -1569,7 +1710,8 @@
       },
       "coverImages": [
         "data/covers/odin/b6fcfda3c698.jpg"
-      ]
+      ],
+      "issueCount": 4
     },
     {
       "id": "omaha",
@@ -1592,8 +1734,8 @@
       "issueCount": 9,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/omaha/66d9645cb3d5.jpg",
@@ -1612,8 +1754,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -1663,6 +1805,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/panic/4050-19325/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/6754/"
         }
       ],
       "startYear": 1954,
@@ -1684,10 +1830,15 @@
       "name": "Phantom of the Opera",
       "parentSeries": null,
       "description": "",
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/14693/"
+        }
+      ],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -1698,7 +1849,10 @@
           2,
           3
         ]
-      }
+      },
+      "startYear": 2026,
+      "publisher": "Skybound",
+      "issueCount": 4
     },
     {
       "id": "red-book",
@@ -1709,6 +1863,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/red-book/4050-167510/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/13238/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9887543-cover.jpg",
@@ -1716,8 +1874,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/red-book/ee4a01b39e8a.jpg",
@@ -1736,6 +1894,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/red-roots/4050-171694/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/15446/"
         }
       ],
       "startYear": 2026,
@@ -1777,8 +1939,8 @@
       "publisher": "Rip Off Press",
       "issueCount": 31,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/rip-off-comix/9bbcb0dbcf4b.jpg",
@@ -1826,6 +1988,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/silver-surfer-annual/4050-4069/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/2060/"
         }
       ],
       "startYear": 1988,
@@ -1852,6 +2018,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/skinbreaker/4050-167194/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/13215/"
         }
       ],
       "startYear": 2025,
@@ -1921,8 +2091,8 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/space-riders/92e5b4f9149e.jpg",
@@ -1947,8 +2117,8 @@
       "publisher": "Black Mask Studios",
       "issueCount": 4,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/space-riders-galaxy-of-brutality/54c26b99f161.jpg",
@@ -2005,6 +2175,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/stray-bullets/4050-9584/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7400/"
         }
       ],
       "startYear": 1995,
@@ -2012,8 +2186,8 @@
       "issueCount": 41,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/stray-bullets/ef2de413f2db.jpg",
@@ -2031,6 +2205,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/stray-bullets-sunshine-and-roses/4050-79879/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7399/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4370533-sbsr01solicitcvr.jpg",
@@ -2041,8 +2219,8 @@
         "Stray Bullets: Sunshine and Roses"
       ],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/stray-bullets-sunshine-roses/27bd2ac10e40.jpg",
@@ -2093,8 +2271,8 @@
       "publisher": "Dark Horse Comics",
       "issueCount": 4,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/tales-of-ordinary-madness/3496e8c00528.jpg",
@@ -2148,6 +2326,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-beauty/4050-83799/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7402/"
         }
       ],
       "startYear": 2015,
@@ -2190,6 +2372,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-eye-collector/4050-140450/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16104/"
         }
       ],
       "startYear": 2021,
@@ -2223,6 +2409,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-invisible-man/4050-58217/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/12574/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2903793-inviman.jpg",
@@ -2230,8 +2420,8 @@
       "publisher": "Universal",
       "issueCount": 1,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/the-invisible-man/43ca4afa4727.jpg"
@@ -2254,6 +2444,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-many-deaths-of-laila-starr/4050-135563/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/5159/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7928449-01a.jpg",
@@ -2261,8 +2455,8 @@
       "publisher": "Boom! Studios",
       "issueCount": 5,
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/the-many-deaths-of-laila-starr/112e931bd3b2.jpg",
@@ -2285,6 +2479,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-maxx/4050-5168/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7415/"
         }
       ],
       "startYear": 1993,
@@ -2292,8 +2490,8 @@
       "issueCount": 35,
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/the-maxx/c65b46d30e25.jpg",
@@ -2312,6 +2510,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-muppets-noir/4050-170595/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/14685/"
         }
       ],
       "startYear": 2026,
@@ -2350,6 +2552,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-nice-house-by-the-sea/4050-159011/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7982/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9421875-wwww.jpg",
@@ -2357,8 +2563,8 @@
       "publisher": "DC Comics",
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "issueCount": 9,
       "coverImages": [
@@ -2401,8 +2607,8 @@
       ],
       "sources": [
         "wikipedia",
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -2426,20 +2632,25 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-twilight-zone/4050-167197/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/5921/"
         }
       ],
       "startYear": 2026,
       "publisher": "IDW Publishing",
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverImages": [
         "data/covers/the-twilight-zone/3b2ab16d0352.jpg",
         "data/covers/the-twilight-zone/973133adeeb9.jpg",
         "data/covers/the-twilight-zone/2a8e9b88ae04.jpg",
         "data/covers/the-twilight-zone/2c3caaedeb18.jpg"
-      ]
+      ],
+      "issueCount": 92
     },
     {
       "id": "thumpn-guts",
@@ -2448,8 +2659,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -2473,6 +2684,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/trencher/4050-11102/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/5233/"
         }
       ],
       "startYear": 1993,
@@ -2516,8 +2731,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -2574,6 +2789,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/w0rldtr33/4050-149811/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/4989/"
         }
       ],
       "startYear": 2023,
@@ -2597,8 +2816,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [
@@ -2616,8 +2835,8 @@
       "description": "",
       "references": [],
       "sources": [
-        "metron",
-        "comicvine"
+        "comicvine",
+        "metron"
       ],
       "coverSources": {
         "metron": [

@@ -71,6 +71,45 @@ def comic_vine_search(resource: str, name: str, api_key: str,
         return []
 
 
+def comic_vine_get(path: str, params: dict, api_key: str,
+                   health: IntegrationHealth | None = None) -> dict | None:
+    """
+    GET an arbitrary Comic Vine API path (e.g. 'issues/', 'issue/4000-123/').
+
+    Returns the full parsed response dict on success, None on any failure.
+    """
+    query = {"api_key": api_key, "format": "json"}
+    query.update(params)
+    try:
+        resp = _SESSION.get(
+            f"{COMIC_VINE_BASE}/{path}",
+            params=query,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        if data.get("status_code") != 1:
+            error = str(data.get("error") or "")
+            if health and ("rate" in error.lower() or "limit" in error.lower()):
+                health.mark_throttled(f"API error: {error}")
+            print(f"    WARN: Comic Vine {path} error: {error}", file=sys.stderr)
+            return None
+        return data
+    except requests.exceptions.Timeout:
+        if health:
+            health.mark_throttled("request timed out")
+        print(f"    WARN: Comic Vine {path} request timed out", file=sys.stderr)
+        return None
+    except requests.exceptions.HTTPError as e:
+        if health and e.response is not None and e.response.status_code == 429:
+            health.mark_throttled("rate limited (429)")
+        print(f"    WARN: Comic Vine {path} request failed: {e}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"    WARN: Comic Vine {path} request failed: {e}", file=sys.stderr)
+        return None
+
+
 def ensure_comicvine_reference(entry: dict, site_url: str) -> None:
     """Add a Comic Vine reference to `entry` if one isn't already present."""
     ensure_reference(entry, "Comic Vine", site_url)

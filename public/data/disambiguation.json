@@ -1,387 +1,421 @@
 {
   "metron:creator": {
     "Carlos Gomez": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 1247,
-          "name": "Carlos G\u00f3mez"
-        }
-      ]
+      "id": 1247
+    },
+    "Baldemar Rivas": {
+      "id": 4031
+    },
+    "Ben Abernathy": {
+      "id": 1190
+    },
+    "Brian Reber": {
+      "id": 942
+    },
+    "Chris Burnham": {
+      "id": 394
+    },
+    "Christopher Marchman": {
+      "id": 16635
+    },
+    "Cliff Rathburn": {
+      "id": 596
+    },
+    "Francesco Tomaselli": {
+      "id": 7026
+    },
+    "Ivan Tao": {
+      "id": 5576
+    },
+    "Jillian Crab": {
+      "id": 3039
+    },
+    "John Giang": {
+      "id": 3855
+    },
+    "Ryan Sook": {
+      "id": 24
+    },
+    "Sunghan Yune": {
+      "id": 4991
+    },
+    "Joshua Cassara": {
+      "id": 2660
+    },
+    "Lipwei Chang": {
+      "id": 17755
+    },
+    "Mark Englert": {
+      "id": 2785
+    },
+    "Mirka Andolfo": {
+      "id": 480
+    },
+    "Rachta Lin": {
+      "id": 5833
+    },
+    "Raymond Gay": {
+      "id": 5497
+    },
+    "Romulo Fajardo Jr.": {
+      "id": 89
+    },
+    "Satoshi Shiki": {
+      "id": 17117
+    },
+    "Wil Shrike": {
+      "id": 16672
+    },
+    "Bill Sienkiewicz": {
+      "id": 533
+    },
+    "Caitlin Chappel": {
+      "id": 16233
+    },
+    "Casey Parsons": {
+      "id": 6020
+    },
+    "CJ Han": {
+      "id": 17640
+    },
+    "Clayton Crain": {
+      "id": 346
+    },
+    "David C. Hopkins": {
+      "id": 5208
+    },
+    "David Sanchez": {
+      "id": 8384
+    },
+    "David Talaski": {
+      "id": 4125
+    },
+    "Diego Lopez": {
+      "id": 1867
+    },
+    "Guillem March": {
+      "id": 726
+    },
+    "Jorge Forn\u00e9s": {
+      "id": 1121
+    },
+    "Joshua Middleton": {
+      "id": 190
+    },
+    "Joshua Williamson": {
+      "id": 329
+    },
+    "Maria Wolf": {
+      "id": 4834
+    },
+    "Michael Walsh": {
+      "id": 419
+    },
+    "Pip Martin": {
+      "id": 6246
+    },
+    "Austin Hatch": {
+      "id": 16639
+    },
+    "Cam Smith": {
+      "id": 501
+    },
+    "Carlos Lao": {
+      "id": 775
+    },
+    "C. B. Cebulski": {
+      "id": 215
+    },
+    "Cory Petit": {
+      "id": 224
+    },
+    "Edgar Delgado": {
+      "id": 214
+    },
+    "Jordan D. White": {
+      "id": 217
+    },
+    "Kaeden McGahey": {
+      "id": 5653
+    },
+    "Kevin Walker": {
+      "id": 2352
+    },
+    "Martin Biro": {
+      "id": 1617
+    },
+    "Matthew Wilson": {
+      "id": 10
+    },
+    "Nic Klein": {
+      "id": 889
+    },
+    "Phillip Kennedy Johnson": {
+      "id": 1245
+    },
+    "Skan Srisuwan": {
+      "id": 1360
+    },
+    "Alex Ross": {
+      "id": 37
+    },
+    "Jeremy Wilson": {
+      "id": 3389
+    },
+    "Will Robson": {
+      "id": 986
+    },
+    "Alanna Smith": {
+      "id": 536
+    },
+    "Bryan Valenza": {
+      "id": 4241
+    },
+    "Chris Bachalo": {
+      "id": 606
+    },
+    "Daniele Di Nicuolo": {
+      "id": 3897
+    },
+    "David Curiel": {
+      "id": 250
+    },
+    "Goodman Yamada": {
+      "id": 18315
+    },
+    "Gurihiru": {
+      "id": 2543
+    },
+    "Jaime Mendoza": {
+      "id": 70
+    },
+    "Jake Thomas": {
+      "id": 885
+    },
+    "Jasmine Alvarez": {
+      "id": 6618
+    },
+    "Jim Campbell": {
+      "id": 364
+    },
+    "Joe Caramagna": {
+      "id": 296
+    },
+    "Joe Sabino": {
+      "id": 365
+    },
+    "John Livesay": {
+      "id": 658
+    },
+    "Kat Gregorowicz": {
+      "id": 4155
+    },
+    "Lindsey Cohick": {
+      "id": 1557
+    },
+    "Michelle Marchese": {
+      "id": 6167
+    },
+    "Pepe Larraz": {
+      "id": 16
+    },
+    "Rachelle Rosenberg": {
+      "id": 216
+    },
+    "Shannon Andrews Ballesteros": {
+      "id": 1552
+    },
+    "Todd Nauck": {
+      "id": 280
+    },
+    "Tom Brevoort": {
+      "id": 537
+    },
+    "Wayne Faucher": {
+      "id": 751
+    },
+    "Abigail Larson": {
+      "id": 3277
+    },
+    "Alex Antone": {
+      "id": 381
+    },
+    "Anwita Citriya": {
+      "id": 6689
+    },
+    "Lee Weeks": {
+      "id": 450
+    },
+    "Tyler Boss": {
+      "id": 428
+    },
+    "Julian Totino Tedesco": {
+      "id": 219
+    },
+    "Mattia De Iulis": {
+      "id": 2355
+    },
+    "Chris Mooneyham": {
+      "id": 2906
+    },
+    "Dani Strips": {
+      "id": 2742
+    },
+    "David Aja": {
+      "id": 2460
+    },
+    "Richard Mercado": {
+      "id": 6918
     }
   },
   "metron:series": {
-    "Ice Cream Man": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 4527,
-          "name": null
-        },
-        {
-          "id": 7139,
-          "name": null
-        },
-        {
-          "id": 12541,
-          "name": null
-        }
-      ]
-    },
-    "The Beauty": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 7402,
-          "name": null
-        },
-        {
-          "id": 8972,
-          "name": null
-        },
-        {
-          "id": 7328,
-          "name": null
-        }
-      ]
-    },
-    "Action Comics": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 2491,
-          "name": null
-        },
-        {
-          "id": 756,
-          "name": null
-        },
-        {
-          "id": 64,
-          "name": null
-        },
-        {
-          "id": 2359,
-          "name": null
-        },
-        {
-          "id": 3370,
-          "name": null
-        },
-        {
-          "id": 6324,
-          "name": null
-        },
-        {
-          "id": 8690,
-          "name": null
-        },
-        {
-          "id": 757,
-          "name": null
-        },
-        {
-          "id": 758,
-          "name": null
-        },
-        {
-          "id": 5391,
-          "name": null
-        }
-      ]
-    },
-    "Skinbreaker": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 13215,
-          "name": null
-        }
-      ]
-    },
-    "Red Roots": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 15446,
-          "name": null
-        }
-      ]
-    },
-    "Harley Quinn X Elvira": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 13229,
-          "name": null
-        }
-      ]
-    },
-    "The Muppets Noir": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 14685,
-          "name": null
-        }
-      ]
-    },
-    "Panic": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 13198,
-          "name": null
-        },
-        {
-          "id": 4763,
-          "name": null
-        },
-        {
-          "id": 8447,
-          "name": null
-        },
-        {
-          "id": 4762,
-          "name": null
-        },
-        {
-          "id": 6754,
-          "name": null
-        }
-      ]
-    },
-    "Silver Surfer Annual": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 2060,
-          "name": null
-        },
-        {
-          "id": 9302,
-          "name": null
-        }
-      ]
-    },
-    "Buzzard": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 11161,
-          "name": null
-        },
-        {
-          "id": 11162,
-          "name": null
-        },
-        {
-          "id": 349,
-          "name": null
-        },
-        {
-          "id": 9711,
-          "name": null
-        }
-      ]
-    },
     "Nut": {
       "id": null,
       "candidates": [
         {
           "id": 12994,
-          "name": null
+          "name": "39 Minutes GN (2013)"
         },
         {
           "id": 541,
-          "name": null
+          "name": "Before Watchmen: Minutemen (2012)"
         },
         {
           "id": 7058,
-          "name": null
+          "name": "The Complete Peanuts HC (2004)"
         },
         {
           "id": 4131,
-          "name": null
+          "name": "The Flash: One-Minute War Special (2023)"
         },
         {
           "id": 4423,
-          "name": null
+          "name": "The Flash: One-Minute War - Start the Clock (2023)"
         },
         {
           "id": 13460,
-          "name": null
+          "name": "Nutsy Squirrel (1954)"
         },
         {
           "id": 13509,
-          "name": null
+          "name": "Nut: The Pitfalls of a Cardboard Mortgage (2025)"
         },
         {
           "id": 7923,
-          "name": null
-        },
-        {
-          "id": 7924,
-          "name": null
-        },
-        {
-          "id": 5985,
-          "name": null
+          "name": "Peanuts (2011)"
         }
       ]
     },
-    "Trencher": {
+    "Buzz": {
       "id": null,
       "candidates": [
         {
-          "id": 5233,
-          "name": null
+          "id": 11161,
+          "name": "The Amazing Joy Buzzards"
+        },
+        {
+          "id": 11162,
+          "name": "The Amazing Joy Buzzards"
+        },
+        {
+          "id": 8227,
+          "name": "The Buzz"
+        },
+        {
+          "id": 10374,
+          "name": "Buzz! TPB"
+        },
+        {
+          "id": 349,
+          "name": "Buzzard"
+        },
+        {
+          "id": 9711,
+          "name": "Buzzard and Bone"
+        },
+        {
+          "id": 5235,
+          "name": "Buzzy"
         }
       ]
     },
-    "W0rldtr33": {
+    "Frank": {
       "id": null,
       "candidates": [
         {
-          "id": 4989,
-          "name": null
+          "id": 15927,
+          "name": "Angel vs. Frankenstein"
+        },
+        {
+          "id": 15930,
+          "name": "Angel vs. Frankenstein II"
+        },
+        {
+          "id": 14882,
+          "name": "Criminal Macabre: The Eyes of Frankenstein"
+        },
+        {
+          "id": 10288,
+          "name": "Dean Koontz's Frankenstein: Prodigal Son"
+        },
+        {
+          "id": 10289,
+          "name": "Dean Koontz\u2019s Frankenstein: Storm Surge"
+        },
+        {
+          "id": 12624,
+          "name": "Fantastic Four Presents Franklin Richards"
+        },
+        {
+          "id": 2536,
+          "name": "Flashpoint: Frankenstein & the Creatures of the Unknown"
+        },
+        {
+          "id": 8518,
+          "name": "Franken-Castle"
+        },
+        {
+          "id": 13508,
+          "name": "Frankenstein"
+        },
+        {
+          "id": 1258,
+          "name": "Frankenstein"
         }
       ]
     },
-    "Odin": {
+    "Madman": {
       "id": null,
       "candidates": [
         {
-          "id": 3507,
-          "name": null
+          "id": 7653,
+          "name": "Madman Atomic Comics"
         },
         {
-          "id": 3529,
-          "name": null
-        },
-        {
-          "id": 7046,
-          "name": null
-        },
-        {
-          "id": 15564,
-          "name": null
+          "id": 7652,
+          "name": "Madman Comics"
         }
       ]
     },
-    "Did You Hear About Mimi Green?": {
+    "Omaha": {
       "id": null,
       "candidates": [
         {
-          "id": 15704,
-          "name": null
+          "id": 11225,
+          "name": "Atomahawk"
+        },
+        {
+          "id": 4914,
+          "name": "Tomahawk"
         }
       ]
     },
-    "It\u2019s Jeff: Brand New Week": {
+    "XYZ": {
       "id": null,
       "candidates": [
         {
-          "id": 15867,
-          "name": null
-        }
-      ]
-    },
-    "If Destruction Be Our Lot": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 15477,
-          "name": null
-        }
-      ]
-    },
-    "Lobo": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 15341,
-          "name": null
-        },
-        {
-          "id": 11945,
-          "name": null
-        },
-        {
-          "id": 11946,
-          "name": null
-        },
-        {
-          "id": 2234,
-          "name": null
-        },
-        {
-          "id": 3998,
-          "name": null
-        },
-        {
-          "id": 13914,
-          "name": null
-        },
-        {
-          "id": 13118,
-          "name": null
-        },
-        {
-          "id": 8714,
-          "name": null
-        },
-        {
-          "id": 3257,
-          "name": null
-        },
-        {
-          "id": 13845,
-          "name": null
-        }
-      ]
-    },
-    "Mind MGMT: New & Improved": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 16107,
-          "name": null
-        }
-      ]
-    },
-    "Blood of the Wolf Man": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 16109,
-          "name": null
-        }
-      ]
-    },
-    "The Eye Collector": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 16104,
-          "name": null
-        }
-      ]
-    },
-    "Feral": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 7231,
-          "name": null
-        },
-        {
-          "id": 13736,
-          "name": null
-        },
-        {
-          "id": 8744,
-          "name": null
+          "id": 13110,
+          "name": "Mr. Mxyzptlk (Villains)"
         }
       ]
     }

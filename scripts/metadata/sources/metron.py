@@ -67,6 +67,28 @@ def metron_search(resource: str, name: str, username: str, password: str,
     return data.get("results", []) or []
 
 
+METRON_SERIES_DISPLAY_RE = re.compile(r"^(.*?)\s*\((\d{4})\)\s*$")
+
+
+def normalize_series_results(results: list) -> list:
+    """
+    Metron series *list* results carry the display name under "series"
+    (e.g. "Hup (1987)") and no "name" key, so generic name matching never
+    hits. Lift a plain name (and year, when parseable) onto each result.
+    """
+    for r in results:
+        if r.get("name"):
+            continue
+        display = r.get("series") or ""
+        m = METRON_SERIES_DISPLAY_RE.match(display)
+        if m:
+            r["name"] = m.group(1)
+            r.setdefault("year_began", int(m.group(2)))
+        elif display:
+            r["name"] = display
+    return results
+
+
 def extract_metron_artist_fields(match: dict) -> dict:
     """Pull supplemental fields from a Metron creator result."""
     aliases_raw = match.get("alias") or []
@@ -180,6 +202,8 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
             print(f"  Searching Metron ({resource}) for {name}...")
             results = metron_search(resource, name, username, password, health=health)
             time.sleep(3.0)  # 20 requests/min limit
+            if resource == "series":
+                results = normalize_series_results(results)
 
             match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
             if not match and results:
@@ -220,7 +244,9 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
                 changed = True
                 print(f"    {field}: {value}")
 
-        if changed and ref_url:
+        # Reference the match even when no fields were new — it records
+        # the resolved identity for later steps (credits, covers).
+        if ref_url:
             ensure_reference(entry, "Metron", ref_url)
 
         mark_source(entry, SOURCE_METRON)

@@ -31,6 +31,20 @@ export interface Series {
   tags?: string[] | null;
 }
 
+export interface IssueCredit {
+  artistId: string | null;
+  name: string;
+  roles: string[];
+}
+
+export interface IssueCredits {
+  id: string;
+  series: string;
+  issue: number;
+  credits: IssueCredit[];
+  references?: Reference[];
+}
+
 export interface Panel {
   id: string;
   title: string;

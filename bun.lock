@@ -5,7 +5,7 @@
     "": {
       "name": "comic-snaps",
       "dependencies": {
-        "@jekrch/react-viewport-lightbox": "^0.6.0",
+        "@jekrch/react-viewport-lightbox": "^0.7.0",
         "@xyflow/react": "^12.10.1",
         "lucide-react": "^0.575.0",
         "react": "^19.0.0",
@@ -113,7 +113,7 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.12", "", { "os": "win32", "cpu": "x64" }, "sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA=="],
 
-    "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@0.6.0", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-n/CL6UW/3L6MtE6e13+B54a23LPPaiGiKs2IyJrJCFxKCGZYWAaYKhRB27BIOIHJOD/fdev8ohTK6XGXgE7x2A=="],
+    "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@0.7.0", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-QmHry8KLSQCiVQkhk35PGAHNniM8kO1CnBR51lu2nt32UV7OpW2BCw5IMsKHT64K3YAuky+8zTXqvlTxBoC7wA=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 

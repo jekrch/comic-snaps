@@ -1,0 +1,5686 @@
+{
+  "issues": [
+    {
+      "id": "100-2",
+      "series": "100",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-loughridge",
+          "name": "Lee Loughridge",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-workman",
+          "name": "John Workman",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/100-2002-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "100-3",
+      "series": "100",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-loughridge",
+          "name": "Lee Loughridge",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-workman",
+          "name": "John Workman",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/100-2002-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "100-5",
+      "series": "100",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/100-2002-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-martian-manhunter-8",
+      "series": "absolute-martian-manhunter",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "javier-rodr-guez",
+          "name": "Javier Rodr\u00edguez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "bengal",
+          "name": "Bengal",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-canete",
+          "name": "Eric Canete",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "werther-dell-edera",
+          "name": "Werther Dell'Edera",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "katie-kubert",
+          "name": "Katie Kubert",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-futch",
+          "name": "Sabrina Futch",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-martian-manhunter-2025-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-martian-manhunter-10",
+      "series": "absolute-martian-manhunter",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "javier-rodr-guez",
+          "name": "Javier Rodr\u00edguez",
+          "roles": [
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "declan-shalvey",
+          "name": "Declan Shalvey",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "james-harren",
+          "name": "James Harren",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "werther-dell-edera",
+          "name": "Werther Dell'Edera",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "katie-kubert",
+          "name": "Katie Kubert",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-futch",
+          "name": "Sabrina Futch",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-martian-manhunter-2025-10/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-martian-manhunter-11",
+      "series": "absolute-martian-manhunter",
+      "issue": 11,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "javier-rodr-guez",
+          "name": "Javier Rodr\u00edguez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "dave-johnson",
+          "name": "Dave Johnson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-del-mundo",
+          "name": "Michael Del Mundo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "werther-dell-edera",
+          "name": "Werther Dell'Edera",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "katie-kubert",
+          "name": "Katie Kubert",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-futch",
+          "name": "Sabrina Futch",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-martian-manhunter-2025-11/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-wonder-woman-18",
+      "series": "absolute-wonder-woman",
+      "issue": 18,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "kendrick-lim",
+          "name": "Kendrick Lim",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachel-dodson",
+          "name": "Rachel Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "terry-dodson",
+          "name": "Terry Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "yasmine-putri",
+          "name": "Yasmine Putri",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-wonder-woman-2024-18/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-wonder-woman-19",
+      "series": "absolute-wonder-woman",
+      "issue": 19,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ben-oliver",
+          "name": "Ben Oliver",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "carmine-di-giandomenico",
+          "name": "Carmine Di Giandomenico",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachel-dodson",
+          "name": "Rachel Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "terry-dodson",
+          "name": "Terry Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-wonder-woman-2024-19/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "absolute-wonder-woman-21",
+      "series": "absolute-wonder-woman",
+      "issue": 21,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "dillon-snook",
+          "name": "Dillon Snook",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "david-nakayama",
+          "name": "David Nakayama",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "giuseppe-camuncoli",
+          "name": "Giuseppe Camuncoli",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachel-dodson",
+          "name": "Rachel Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "terry-dodson",
+          "name": "Terry Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-wonder-woman-2024-21/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "action-comics-1",
+      "series": "action-comics",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "frank-thomas",
+          "name": "Frank Thomas",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "fred-guardineer",
+          "name": "Fred Guardineer",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "gardner-fox",
+          "name": "Gardner Fox",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "homer-fleming",
+          "name": "Homer Fleming",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jerry-siegel",
+          "name": "Jerry Siegel",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "ken-fitch",
+          "name": "Ken Fitch",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "russell-cole",
+          "name": "Russell Cole",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "sven-elven",
+          "name": "Sven Elven",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "will-ely",
+          "name": "Will Ely",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "bernard-baily",
+          "name": "Bernard Baily",
+          "roles": [
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "joe-shuster",
+          "name": "Joe Shuster",
+          "roles": [
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sheldon-moldoff",
+          "name": "Sheldon Moldoff",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jack-adler",
+          "name": "Jack Adler",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "vincent-sullivan",
+          "name": "Vincent Sullivan",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/action-comics-1938-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "assorted-crisis-events-8",
+      "series": "assorted-crisis-events",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "eric-zawadzki",
+          "name": "Eric Zawadzki",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "javier-rodr-guez",
+          "name": "Javier Rodr\u00edguez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tom-muller",
+          "name": "Tom Muller",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "wesley-griffith",
+          "name": "Wesley Griffith",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/assorted-crisis-events-2025-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "battle-beast-8",
+      "series": "battle-beast",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "robert-kirkman",
+          "name": "Robert Kirkman",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "ryan-ottley",
+          "name": "Ryan Ottley",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "annalisa-leoni",
+          "name": "Annalisa Leoni",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "baldemar-rivas",
+          "name": "Baldemar Rivas",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brian-reber",
+          "name": "Brian Reber",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-burnham",
+          "name": "Chris Burnham",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "christopher-marchman",
+          "name": "Christopher Marchman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "cliff-rathburn",
+          "name": "Cliff Rathburn",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "francesco-tomaselli",
+          "name": "Francesco Tomaselli",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ivan-tao",
+          "name": "Ivan Tao",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "john-giang",
+          "name": "John Giang",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lorenzo-de-felici",
+          "name": "Lorenzo De Felici",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-sook",
+          "name": "Ryan Sook",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sunghan-yune",
+          "name": "Sunghan Yune",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ben-abernathy",
+          "name": "Ben Abernathy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sean-mackiewicz",
+          "name": "Sean Mackiewicz",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "andres-juarez",
+          "name": "Andres Juarez",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/invincible-universe-battle-beast-2025-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "battle-beast-10",
+      "series": "battle-beast",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "robert-kirkman",
+          "name": "Robert Kirkman",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "ryan-ottley",
+          "name": "Ryan Ottley",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "annalisa-leoni",
+          "name": "Annalisa Leoni",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "brian-reber",
+          "name": "Brian Reber",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-burnham",
+          "name": "Chris Burnham",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joshua-cassara",
+          "name": "Joshua Cassara",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lipwei-chang",
+          "name": "Lipwei Chang",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mark-englert",
+          "name": "Mark Englert",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mirka-andolfo",
+          "name": "Mirka Andolfo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachta-lin",
+          "name": "Rachta Lin",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "raymond-gay",
+          "name": "Raymond Gay",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "romulo-fajardo-jr",
+          "name": "Romulo Fajardo Jr.",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "satoshi-shiki",
+          "name": "Satoshi Shiki",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "wil-shrike",
+          "name": "Wil Shrike",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ben-abernathy",
+          "name": "Ben Abernathy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sean-mackiewicz",
+          "name": "Sean Mackiewicz",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "andres-juarez",
+          "name": "Andres Juarez",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/invincible-universe-battle-beast-2025-10/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bleeding-hearts-2",
+      "series": "bleeding-hearts",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "stipan-morian",
+          "name": "Stipan Morian",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "matt-hollingsworth",
+          "name": "Matt Hollingsworth",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alex-eckman-lawn",
+          "name": "Alex Eckman-Lawn",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dillon-snook",
+          "name": "Dillon Snook",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "matthew-levine",
+          "name": "Matthew Levine",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/bleeding-hearts-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bleeding-hearts-3",
+      "series": "bleeding-hearts",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "stipan-morian",
+          "name": "Stipan Morian",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "matt-hollingsworth",
+          "name": "Matt Hollingsworth",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "nimit-malavia",
+          "name": "Nimit Malavia",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "stevan-subi",
+          "name": "Stevan Subi\u0107",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "matthew-levine",
+          "name": "Matthew Levine",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/bleeding-hearts-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "blood-of-the-wolf-man-1",
+      "series": "blood-of-the-wolf-man",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "joshua-williamson",
+          "name": "Joshua Williamson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "leomacs",
+          "name": "Leomacs",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "pip-martin",
+          "name": "Pip Martin",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-c-hopkins",
+          "name": "David C. Hopkins",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "bill-sienkiewicz",
+          "name": "Bill Sienkiewicz",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "casey-parsons",
+          "name": "Casey Parsons",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "clayton-crain",
+          "name": "Clayton Crain",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-sanchez",
+          "name": "David Sanchez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-talaski",
+          "name": "David Talaski",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "guillem-march",
+          "name": "Guillem March",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jorge-forn-s",
+          "name": "Jorge Forn\u00e9s",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joshua-middleton",
+          "name": "Joshua Middleton",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "maria-wolf",
+          "name": "Maria Wolf",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-spicer",
+          "name": "Michael Spicer",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "diego-lopez",
+          "name": "Diego Lopez",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-blood-of-the-wolf-man-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "buzzard-1",
+      "series": "buzzard",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "eric-powell",
+          "name": "Eric Powell",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kyle-hotz",
+          "name": "Kyle Hotz",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dan-brown",
+          "name": "Dan Brown",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nate-piekos",
+          "name": "Nate Piekos",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "richard-corben",
+          "name": "Richard Corben",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "scott-allie",
+          "name": "Scott Allie",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "brendan-wright",
+          "name": "Brendan Wright",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "freddye-miller",
+          "name": "Freddye Miller",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "amy-arendts",
+          "name": "Amy Arendts",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/buzzard-2010-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "buzzard-2",
+      "series": "buzzard",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "eric-powell",
+          "name": "Eric Powell",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kyle-hotz",
+          "name": "Kyle Hotz",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dan-brown",
+          "name": "Dan Brown",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "nate-piekos",
+          "name": "Nate Piekos",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "scott-allie",
+          "name": "Scott Allie",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "brendan-wright",
+          "name": "Brendan Wright",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "freddye-miller",
+          "name": "Freddye Miller",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "amy-arendts",
+          "name": "Amy Arendts",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/buzzard-2010-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "buzzard-4",
+      "series": "buzzard",
+      "issue": 4,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "criminal-the-special-edition-0",
+      "series": "criminal-the-special-edition",
+      "issue": 0,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dark-spaces-wildfire-1",
+      "series": "dark-spaces-wildfire",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "scott-snyder",
+          "name": "Scott Snyder",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "ronda-pattison",
+          "name": "Ronda Pattison",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "maggie-howell",
+          "name": "Maggie Howell",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "mark-doyle",
+          "name": "Mark Doyle",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jake-williams",
+          "name": "Jake Williams",
+          "roles": [
+            "Assistant Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/dark-spaces-wildfire-2022-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "did-you-hear-about-mimi-green-1",
+      "series": "did-you-hear-about-mimi-green",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "connor-goldsmith",
+          "name": "Connor Goldsmith",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "joshua-cornillon",
+          "name": "Joshua Cornillon",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ariana-maher",
+          "name": "Ariana Maher",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "nick-robles",
+          "name": "Nick Robles",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rosemary-valero-o-connell",
+          "name": "Rosemary Valero-O'Connell",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "konner-knudsen",
+          "name": "Konner Knudsen",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "foster-r-kupbens",
+          "name": "Foster R. Kupbens",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "chuck-howitt",
+          "name": "Chuck Howitt",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "hannah-noble",
+          "name": "Hannah Noble",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "alex-buckland",
+          "name": "Alex Buckland",
+          "roles": [
+            "Color Assists"
+          ]
+        },
+        {
+          "artistId": "conley-presler",
+          "name": "Conley Presler",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/did-you-hear-about-mimi-green-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eerie-93",
+      "series": "eerie",
+      "issue": 93,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eightball-8",
+      "series": "eightball",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "daniel-clowes",
+          "name": "Daniel Clowes",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/eightball-1989-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eightball-13",
+      "series": "eightball",
+      "issue": 13,
+      "credits": [
+        {
+          "artistId": "daniel-clowes",
+          "name": "Daniel Clowes",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/eightball-1989-13/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "faithless-ii-5",
+      "series": "faithless-ii",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "brian-azzarello",
+          "name": "Brian Azzarello",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "maria-llovet",
+          "name": "Maria Llovet",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "lovern-kindzierski",
+          "name": "Lovern Kindzierski",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tula-lotay",
+          "name": "Tula Lotay",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "amanda-lafranco",
+          "name": "Amanda LaFranco",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "scott-newman",
+          "name": "Scott Newman",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/faithless-ii-2020-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fatale-2",
+      "series": "fatale",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "ed-brubaker",
+          "name": "Ed Brubaker",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "sean-phillips",
+          "name": "Sean Phillips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/fatale-2012-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fatale-4",
+      "series": "fatale",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "ed-brubaker",
+          "name": "Ed Brubaker",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "sean-phillips",
+          "name": "Sean Phillips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/fatale-2012-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fatale-9",
+      "series": "fatale",
+      "issue": 9,
+      "credits": [
+        {
+          "artistId": "ed-brubaker",
+          "name": "Ed Brubaker",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "sean-phillips",
+          "name": "Sean Phillips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/fatale-2012-9/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fatale-17",
+      "series": "fatale",
+      "issue": 17,
+      "credits": [
+        {
+          "artistId": "ed-brubaker",
+          "name": "Ed Brubaker",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "sean-phillips",
+          "name": "Sean Phillips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "elizabeth-breitweiser",
+          "name": "Elizabeth Breitweiser",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/fatale-2012-17/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "feral-23",
+      "series": "feral",
+      "issue": 23,
+      "credits": [
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Writer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tone-rodriguez",
+          "name": "Tone Rodriguez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "trish-forstner",
+          "name": "Trish Forstner",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-simpson",
+          "name": "Brad Simpson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "allen-passalaqua",
+          "name": "Allen Passalaqua",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dennis-culver",
+          "name": "Dennis Culver",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "erika-schnatz",
+          "name": "Erika Schnatz",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "lauren-herda",
+          "name": "Lauren Herda",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/feral-2024-23/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "geiger-22",
+      "series": "geiger",
+      "issue": 22,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "harley-quinn-x-elvira-6",
+      "series": "harley-quinn-x-elvira",
+      "issue": 6,
+      "credits": [
+        {
+          "artistId": "amanda-conner",
+          "name": "Amanda Conner",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jimmy-palmiotti",
+          "name": "Jimmy Palmiotti",
+          "roles": [
+            "Writer",
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "juan-samu",
+          "name": "Juan Samu",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "walter-pereyra",
+          "name": "Walter Pereyra",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "dave-sharpe",
+          "name": "Dave Sharpe",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ben-caldwell",
+          "name": "Ben Caldwell",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chad-hardin",
+          "name": "Chad Hardin",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joseph-michael-linsner",
+          "name": "Joseph Michael Linsner",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "joseph-rybandt",
+          "name": "Joseph Rybandt",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "david-avallone",
+          "name": "David Avallone",
+          "roles": [
+            "Consulting Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/harley-quinn-x-elvira-2025-6/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "harrow-county-25",
+      "series": "harrow-county",
+      "issue": 25,
+      "credits": [
+        {
+          "artistId": "cullen-bunn",
+          "name": "Cullen Bunn",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "tyler-crook",
+          "name": "Tyler Crook",
+          "roles": [
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "cardner-clark",
+          "name": "Cardner Clark",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "keith-wood",
+          "name": "Keith Wood",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "christianne-gillenardo-goudreau",
+          "name": "Christianne Gillenardo-Goudreau",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/harrow-county-2015-25/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-liquid-1",
+      "series": "heavy-liquid",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-loughridge",
+          "name": "Lee Loughridge",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-workman",
+          "name": "John Workman",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/heavy-liquid-1999-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-liquid-3",
+      "series": "heavy-liquid",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-loughridge",
+          "name": "Lee Loughridge",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-workman",
+          "name": "John Workman",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/heavy-liquid-1999-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-metal-5",
+      "series": "heavy-metal",
+      "issue": 5,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-metal-6",
+      "series": "heavy-metal",
+      "issue": 6,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-metal-12",
+      "series": "heavy-metal",
+      "issue": 12,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "heavy-metal-325",
+      "series": "heavy-metal",
+      "issue": 325,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "hyde-street-10",
+      "series": "hyde-street",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "geoff-johns",
+          "name": "Geoff Johns",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "francis-portela",
+          "name": "Francis Portela",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-anderson",
+          "name": "Brad Anderson",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rob-leigh",
+          "name": "Rob Leigh",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "danny-miki",
+          "name": "Danny Miki",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ivan-reis",
+          "name": "Ivan Reis",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-kohse",
+          "name": "Lee Kohse",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sean-von-gorman",
+          "name": "Sean Von Gorman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brian-cunningham",
+          "name": "Brian Cunningham",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-blackwell",
+          "name": "Steve Blackwell",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/hyde-street-2024-10/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ice-cream-man-45",
+      "series": "ice-cream-man",
+      "issue": 45,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alison-sampson",
+          "name": "Alison Sampson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ashley-walker",
+          "name": "Ashley Walker",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/ice-cream-man-2018-45/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "if-destruction-be-our-lot-1",
+      "series": "if-destruction-be-our-lot",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "mark-elijah-rosenberg",
+          "name": "Mark Elijah Rosenberg",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "matthew-rosenberg",
+          "name": "Matthew Rosenberg",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "andy-macdonald",
+          "name": "Andy MacDonald",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "francesco-segala",
+          "name": "Francesco Segala",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-foxe",
+          "name": "Steve Foxe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "courtney-menard",
+          "name": "Courtney Menard",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "deana-avila",
+          "name": "Deana Avila",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "gloria-martinelli",
+          "name": "Gloria Martinelli",
+          "roles": [
+            "Color Assists"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/if-destruction-be-our-lot-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "infernal-hulk-5",
+      "series": "infernal-hulk",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "phillip-kennedy-johnson",
+          "name": "Phillip Kennedy Johnson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "kevin-walker",
+          "name": "Kevin Walker",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "cam-smith",
+          "name": "Cam Smith",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "matthew-wilson",
+          "name": "Matthew Wilson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "cory-petit",
+          "name": "Cory Petit",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "adam-gorham",
+          "name": "Adam Gorham",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "edgar-delgado",
+          "name": "Edgar Delgado",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "giuseppe-camuncoli",
+          "name": "Giuseppe Camuncoli",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nic-klein",
+          "name": "Nic Klein",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "romulo-fajardo-jr",
+          "name": "Romulo Fajardo Jr.",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "skan-srisuwan",
+          "name": "Skan Srisuwan",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordan-d-white",
+          "name": "Jordan D. White",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "austin-hatch",
+          "name": "Austin Hatch",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "kaeden-mcgahey",
+          "name": "Kaeden McGahey",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "martin-biro",
+          "name": "Martin Biro",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "c-b-cebulski",
+          "name": "C. B. Cebulski",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "carlos-lao",
+          "name": "Carlos Lao",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-infernal-hulk-2026-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "infernal-hulk-8",
+      "series": "infernal-hulk",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "phillip-kennedy-johnson",
+          "name": "Phillip Kennedy Johnson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "adam-gorham",
+          "name": "Adam Gorham",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "matthew-wilson",
+          "name": "Matthew Wilson",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "cory-petit",
+          "name": "Cory Petit",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alex-ross",
+          "name": "Alex Ross",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jeremy-wilson",
+          "name": "Jeremy Wilson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nic-klein",
+          "name": "Nic Klein",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "will-robson",
+          "name": "Will Robson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordan-d-white",
+          "name": "Jordan D. White",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "kaeden-mcgahey",
+          "name": "Kaeden McGahey",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "martin-biro",
+          "name": "Martin Biro",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "c-b-cebulski",
+          "name": "C. B. Cebulski",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "carlos-lao",
+          "name": "Carlos Lao",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-infernal-hulk-2026-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "it-s-jeff-brand-new-week-1",
+      "series": "it-s-jeff-brand-new-week",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "goodman-yamada",
+          "name": "Goodman Yamada",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "gurihiru",
+          "name": "Gurihiru",
+          "roles": [
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "pepe-larraz",
+          "name": "Pepe Larraz",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "chris-bachalo",
+          "name": "Chris Bachalo",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "jaime-mendoza",
+          "name": "Jaime Mendoza",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "john-livesay",
+          "name": "John Livesay",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "wayne-faucher",
+          "name": "Wayne Faucher",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "david-curiel",
+          "name": "David Curiel",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "jim-campbell",
+          "name": "Jim Campbell",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "joe-caramagna",
+          "name": "Joe Caramagna",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "joe-sabino",
+          "name": "Joe Sabino",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "bryan-valenza",
+          "name": "Bryan Valenza",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniele-di-nicuolo",
+          "name": "Daniele Di Nicuolo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachelle-rosenberg",
+          "name": "Rachelle Rosenberg",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "todd-nauck",
+          "name": "Todd Nauck",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jake-thomas",
+          "name": "Jake Thomas",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "michelle-marchese",
+          "name": "Michelle Marchese",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "tom-brevoort",
+          "name": "Tom Brevoort",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "lindsey-cohick",
+          "name": "Lindsey Cohick",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "shannon-andrews-ballesteros",
+          "name": "Shannon Andrews Ballesteros",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "alanna-smith",
+          "name": "Alanna Smith",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "c-b-cebulski",
+          "name": "C. B. Cebulski",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "kat-gregorowicz",
+          "name": "Kat Gregorowicz",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "jasmine-alvarez",
+          "name": "Jasmine Alvarez",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/its-jeff-brand-new-week-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jacked-1",
+      "series": "jacked",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "eric-kripke",
+          "name": "Eric Kripke",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "john-higgins",
+          "name": "John Higgins",
+          "roles": [
+            "Artist",
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "sally-hurst",
+          "name": "Sally Hurst",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "clem-robins",
+          "name": "Clem Robins",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "glenn-fabry",
+          "name": "Glenn Fabry",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-brown",
+          "name": "Ryan Brown",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ellie-pyle",
+          "name": "Ellie Pyle",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "shelly-bond",
+          "name": "Shelly Bond",
+          "roles": [
+            "Executive Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/jacked-2016-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "just-brutal-2",
+      "series": "just-brutal",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marissa-louise",
+          "name": "Marissa Louise",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "brian-level",
+          "name": "Brian Level",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jorge-corona",
+          "name": "Jorge Corona",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-spicer",
+          "name": "Michael Spicer",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "scott-newman",
+          "name": "Scott Newman",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/just-brutal-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "just-brutal-3",
+      "series": "just-brutal",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marissa-louise",
+          "name": "Marissa Louise",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "brian-level",
+          "name": "Brian Level",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jorge-corona",
+          "name": "Jorge Corona",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-spicer",
+          "name": "Michael Spicer",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "scott-newman",
+          "name": "Scott Newman",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/just-brutal-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lady-killer-1",
+      "series": "lady-killer",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "jo-lle-jones",
+          "name": "Jo\u00eblle Jones",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "laura-allred",
+          "name": "Laura Allred",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-crank",
+          "name": "Chris Crank",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "scott-allie",
+          "name": "Scott Allie",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jemiah-jefferson",
+          "name": "Jemiah Jefferson",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "shantel-larocque",
+          "name": "Shantel LaRocque",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "kat-larson",
+          "name": "Kat Larson",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/lady-killer-2015-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lobo-1",
+      "series": "lobo",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "alan-grant",
+          "name": "Alan Grant",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "keith-giffen",
+          "name": "Keith Giffen",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "simon-bisley",
+          "name": "Simon Bisley",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lovern-kindzierski",
+          "name": "Lovern Kindzierski",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "todd-klein",
+          "name": "Todd Klein",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/lobo-1990-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mind-mgmt-new-improved-1",
+      "series": "mind-mgmt-new-improved",
+      "issue": 1,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "minor-arcana-14",
+      "series": "minor-arcana",
+      "issue": 14,
+      "credits": [
+        {
+          "artistId": "jeff-lemire",
+          "name": "Jeff Lemire",
+          "roles": [
+            "Writer",
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "patricio-delpeche",
+          "name": "Patricio Delpeche",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "steve-wands",
+          "name": "Steve Wands",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "simon-gane",
+          "name": "Simon Gane",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "maya-bollinger",
+          "name": "Maya Bollinger",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "andy-schmidt",
+          "name": "Andy Schmidt",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "grace-park",
+          "name": "Grace Park",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "tom-muller",
+          "name": "Tom Muller",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/minor-arcana-2024-14/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "minor-arcana-15",
+      "series": "minor-arcana",
+      "issue": 15,
+      "credits": [
+        {
+          "artistId": "jeff-lemire",
+          "name": "Jeff Lemire",
+          "roles": [
+            "Writer",
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "patricio-delpeche",
+          "name": "Patricio Delpeche",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "steve-wands",
+          "name": "Steve Wands",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jenn-woodall",
+          "name": "Jenn Woodall",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "toni-fejzula",
+          "name": "Toni Fejzula",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "yuko-shimizu",
+          "name": "Yuko Shimizu",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "maya-bollinger",
+          "name": "Maya Bollinger",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "andy-schmidt",
+          "name": "Andy Schmidt",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "armando-elizondo",
+          "name": "Armando Elizondo",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "grace-park",
+          "name": "Grace Park",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "tom-muller",
+          "name": "Tom Muller",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/minor-arcana-2024-15/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "odin-1",
+      "series": "odin",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marguerite-bennett",
+          "name": "Marguerite Bennett",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "letizia-cadonici",
+          "name": "Letizia Cadonici",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "tom-napolitano",
+          "name": "Tom Napolitano",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "christian-ward",
+          "name": "Christian Ward",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jae-lee",
+          "name": "Jae Lee",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-foxe",
+          "name": "Steve Foxe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "courtney-menard",
+          "name": "Courtney Menard",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "dylan-todd",
+          "name": "Dylan Todd",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/odin-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "panic-4",
+      "series": "panic",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "albert-feldstein",
+          "name": "Albert Feldstein",
+          "roles": [
+            "Writer",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "basil-wolverton",
+          "name": "Basil Wolverton",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jack-davis",
+          "name": "Jack Davis",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "joe-orlando",
+          "name": "Joe Orlando",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "wally-wood",
+          "name": "Wally Wood",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "marie-severin",
+          "name": "Marie Severin",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/panic-1954-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "phantom-of-the-opera-2",
+      "series": "phantom-of-the-opera",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "abigail-larson",
+          "name": "Abigail Larson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "anwita-citriya",
+          "name": "Anwita Citriya",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Cover",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "lee-weeks",
+          "name": "Lee Weeks",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "phantom-of-the-opera-3",
+      "series": "phantom-of-the-opera",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "anwita-citriya",
+          "name": "Anwita Citriya",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Cover",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "julian-totino-tedesco",
+          "name": "Julian Totino Tedesco",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "luana-vecchio",
+          "name": "Luana Vecchio",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mattia-de-iulis",
+          "name": "Mattia De Iulis",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "red-book-4",
+      "series": "red-book",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "michael-avon-oeming",
+          "name": "Michael Avon Oeming",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tom-napolitano",
+          "name": "Tom Napolitano",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jill-thompson",
+          "name": "Jill Thompson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "gregory-lockard",
+          "name": "Gregory Lockard",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "foster-r-kupbens",
+          "name": "Foster R. Kupbens",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "chuck-howitt",
+          "name": "Chuck Howitt",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "courtney-menard",
+          "name": "Courtney Menard",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "dylan-todd",
+          "name": "Dylan Todd",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "josie-christensen",
+          "name": "Josie Christensen",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/red-book-2025-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "red-roots-1",
+      "series": "red-roots",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "lorenzo-de-felici",
+          "name": "Lorenzo De Felici",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jason-howard",
+          "name": "Jason Howard",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "luana-vecchio",
+          "name": "Luana Vecchio",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mike-mignola",
+          "name": "Mike Mignola",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "riley-rossmo",
+          "name": "Riley Rossmo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-ottley",
+          "name": "Ryan Ottley",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "drew-gill",
+          "name": "Drew Gill",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/red-roots-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "red-roots-3",
+      "series": "red-roots",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "lorenzo-de-felici",
+          "name": "Lorenzo De Felici",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "drew-gill",
+          "name": "Drew Gill",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/red-roots-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "silver-surfer-annual-4",
+      "series": "silver-surfer-annual",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "ron-marz",
+          "name": "Ron Marz",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "dale-eaglesham",
+          "name": "Dale Eaglesham",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "denys-cowan",
+          "name": "Denys Cowan",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "joe-jusko",
+          "name": "Joe Jusko",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "kevin-maguire",
+          "name": "Kevin Maguire",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "klaus-janson",
+          "name": "Klaus Janson",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "mike-zeck",
+          "name": "Mike Zeck",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "ron-lim",
+          "name": "Ron Lim",
+          "roles": [
+            "Penciller",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "steve-carr",
+          "name": "Steve Carr",
+          "roles": [
+            "Penciller"
+          ]
+        },
+        {
+          "artistId": "al-williamson",
+          "name": "Al Williamson",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "bob-wiacek",
+          "name": "Bob Wiacek",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "john-beatty",
+          "name": "John Beatty",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "pat-redding",
+          "name": "Pat Redding",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "ralph-cabrera",
+          "name": "Ralph Cabrera",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "ren-e-witterstaetter",
+          "name": "Ren\u00e9e Witterstaetter",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "tom-vincent",
+          "name": "Tom Vincent",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "ken-bruzenak",
+          "name": "Ken Bruzenak",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "craig-anderson",
+          "name": "Craig Anderson",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "john-lewandowski",
+          "name": "John Lewandowski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "tom-defalco",
+          "name": "Tom DeFalco",
+          "roles": [
+            "Editor in Chief"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/silver-surfer-annual-1988-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "skinbreaker-8",
+      "series": "skinbreaker",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "robert-kirkman",
+          "name": "Robert Kirkman",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "david-finch",
+          "name": "David Finch",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "andres-juarez",
+          "name": "Andres Juarez",
+          "roles": [
+            "Colorist",
+            "Designer",
+            "Logo Design"
+          ]
+        },
+        {
+          "artistId": "annalisa-leoni",
+          "name": "Annalisa Leoni",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "e-m-gist",
+          "name": "E. M. Gist",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-canete",
+          "name": "Eric Canete",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lorenzo-de-felici",
+          "name": "Lorenzo De Felici",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tony-moore",
+          "name": "Tony Moore",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sean-mackiewicz",
+          "name": "Sean Mackiewicz",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/skinbreaker-2025-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-1",
+      "series": "stray-bullets",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "janet-jackson",
+          "name": "Janet Jackson",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-1995-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-23",
+      "series": "stray-bullets",
+      "issue": 23,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-1995-23/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-sunshine-roses-17",
+      "series": "stray-bullets-sunshine-roses",
+      "issue": 17,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mar-a-lapham",
+          "name": "Mar\u00eda Lapham",
+          "roles": [
+            "Editor",
+            "Production"
+          ]
+        },
+        {
+          "artistId": "renee-miller",
+          "name": "Renee Miller",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-sunshine-roses-2015-17/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-sunshine-roses-29",
+      "series": "stray-bullets-sunshine-roses",
+      "issue": 29,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mar-a-lapham",
+          "name": "Mar\u00eda Lapham",
+          "roles": [
+            "Editor",
+            "Production"
+          ]
+        },
+        {
+          "artistId": "renee-miller",
+          "name": "Renee Miller",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-sunshine-roses-2015-29/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-sunshine-roses-40",
+      "series": "stray-bullets-sunshine-roses",
+      "issue": 40,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mar-a-lapham",
+          "name": "Mar\u00eda Lapham",
+          "roles": [
+            "Editor",
+            "Production"
+          ]
+        },
+        {
+          "artistId": "renee-miller",
+          "name": "Renee Miller",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-sunshine-roses-2015-40/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "stray-bullets-sunshine-roses-42",
+      "series": "stray-bullets-sunshine-roses",
+      "issue": 42,
+      "credits": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mar-a-lapham",
+          "name": "Mar\u00eda Lapham",
+          "roles": [
+            "Editor",
+            "Production"
+          ]
+        },
+        {
+          "artistId": "renee-miller",
+          "name": "Renee Miller",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/stray-bullets-sunshine-roses-2015-42/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-beauty-5",
+      "series": "the-beauty",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "jason-a-hurley",
+          "name": "Jason A. Hurley",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "jeremy-haun",
+          "name": "Jeremy Haun",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mike-huddleston",
+          "name": "Mike Huddleston",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mike-tisserand",
+          "name": "Mike Tisserand",
+          "roles": [
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-beauty-2015-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-eye-collector-1",
+      "series": "the-eye-collector",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jonathan-ball",
+          "name": "Jonathan Ball",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "g-m-b-chomichuk",
+          "name": "G. M. B. Chomichuk",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lyndon-radchenka",
+          "name": "Lyndon Radchenka",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-eye-collector-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-invisible-man-3",
+      "series": "the-invisible-man",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "dani-strips",
+          "name": "Dani Strips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-simpson",
+          "name": "Brad Simpson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "chris-mooneyham",
+          "name": "Chris Mooneyham",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-aja",
+          "name": "David Aja",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-weeks",
+          "name": "Lee Weeks",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "richard-mercado",
+          "name": "Richard Mercado",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-invisible-man-2025-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-many-deaths-of-laila-starr-4",
+      "series": "the-many-deaths-of-laila-starr",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "ram-v",
+          "name": "Ram V",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "in-s-amaro",
+          "name": "In\u00eas Amaro",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ariela-kristantina",
+          "name": "Ariela Kristantina",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "evan-cagle",
+          "name": "Evan Cagle",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "filipe-andrade",
+          "name": "Filipe Andrade",
+          "roles": [
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ramiro-portnoy",
+          "name": "Ramiro Portnoy",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "grace-park",
+          "name": "Grace Park",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "marie-krupina",
+          "name": "Marie Krupina",
+          "roles": [
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-many-deaths-of-laila-starr-2021-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-maxx-1",
+      "series": "the-maxx",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "bill-messner-loebs",
+          "name": "Bill Messner-Loebs",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "sam-kieth",
+          "name": "Sam Kieth",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jim-sinclair",
+          "name": "Jim Sinclair",
+          "roles": [
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "olyoptics",
+          "name": "Olyoptics",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "reuben-rude",
+          "name": "Reuben Rude",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "steve-oliff",
+          "name": "Steve Oliff",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "michael-heisler",
+          "name": "Michael Heisler",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-maxx-1993-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-maxx-5",
+      "series": "the-maxx",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "sam-kieth",
+          "name": "Sam Kieth",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jim-sinclair",
+          "name": "Jim Sinclair",
+          "roles": [
+            "Inker"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-maxx-1993-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-muppets-noir-1",
+      "series": "the-muppets-noir",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "roger-langridge",
+          "name": "Roger Langridge",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dearbhla-kelly",
+          "name": "Dearbhla Kelly",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "nathan-cosby",
+          "name": "Nathan Cosby",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-muppets-noir-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-muppets-noir-3",
+      "series": "the-muppets-noir",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "roger-langridge",
+          "name": "Roger Langridge",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dearbhla-kelly",
+          "name": "Dearbhla Kelly",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "jae-lee",
+          "name": "Jae Lee",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "june-chung",
+          "name": "June Chung",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nathan-cosby",
+          "name": "Nathan Cosby",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-muppets-noir-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-nice-house-by-the-sea-8",
+      "series": "the-nice-house-by-the-sea",
+      "issue": 8,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "lvaro-mart-nez-bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "john-j-pearson",
+          "name": "John J. Pearson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-nice-house-by-the-sea-2024-8/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-nice-house-by-the-sea-9",
+      "series": "the-nice-house-by-the-sea",
+      "issue": 9,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "lvaro-mart-nez-bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "fernando-blanco",
+          "name": "Fernando Blanco",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-nice-house-by-the-sea-2024-9/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-nice-house-by-the-sea-10",
+      "series": "the-nice-house-by-the-sea",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "lvaro-mart-nez-bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "annie-wu",
+          "name": "Annie Wu",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-nice-house-by-the-sea-2024-10/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-twilight-zone-6",
+      "series": "the-twilight-zone",
+      "issue": 6,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-twilight-zone-7",
+      "series": "the-twilight-zone",
+      "issue": 7,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "trencher-1",
+      "series": "trencher",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "keith-giffen",
+          "name": "Keith Giffen",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lovern-kindzierski",
+          "name": "Lovern Kindzierski",
+          "roles": [
+            "Colorist",
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/trencher-1993-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "trencher-2",
+      "series": "trencher",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "keith-giffen",
+          "name": "Keith Giffen",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lovern-kindzierski",
+          "name": "Lovern Kindzierski",
+          "roles": [
+            "Colorist",
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/trencher-1993-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "w0rldtr33-20",
+      "series": "w0rldtr33",
+      "issue": 20,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "fernando-blanco",
+          "name": "Fernando Blanco",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "aditya-bidikar",
+          "name": "Aditya Bidikar",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "annie-wu",
+          "name": "Annie Wu",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jeffrey-alan-love",
+          "name": "Jeffrey Alan Love",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "steve-foxe",
+          "name": "Steve Foxe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "dylan-todd",
+          "name": "Dylan Todd",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/w0rldtr33-2023-20/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    }
+  ]
+}

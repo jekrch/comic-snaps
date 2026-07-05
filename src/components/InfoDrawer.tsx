@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Panel, Artist, Series, Reference } from "../types";
+import type { Panel, Artist, Series, Reference, IssueCredits } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 
 function refIcon(ref: Reference) {
@@ -18,6 +18,7 @@ interface Props {
   artist: Artist | null;
   series: Series | null;
   parentSeries: Series | null;
+  issueCredits: IssueCredits | null;
   searchUrl: string;
   topOffset?: number;
   bottomOffset?: number;
@@ -25,7 +26,7 @@ interface Props {
   slideDir?: "left" | "right" | null;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -346,6 +347,20 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     return () => window.removeEventListener("keydown", handler, true);
   }, [selectedCoverIdx, len, closeCover, commitSlide]);
 
+  // Group credited names by role, preserving the role order the backfill
+  // stored (credits arrive sorted by role prominence).
+  const creditGroups: [string, string[]][] = [];
+  if (issueCredits) {
+    const byRole = new Map<string, string[]>();
+    for (const credit of issueCredits.credits) {
+      for (const role of credit.roles) {
+        if (!byRole.has(role)) byRole.set(role, []);
+        byRole.get(role)!.push(credit.name);
+      }
+    }
+    creditGroups.push(...byRole.entries());
+  }
+
   const seriesMetaParts: string[] = [];
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
   if (effectiveSeries?.publisher) seriesMetaParts.push(effectiveSeries.publisher);
@@ -449,6 +464,27 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
             )}
           </div>
         </div>
+
+        {/* Issue credits */}
+        {creditGroups.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30">
+                <span>Credits</span>
+                <span className="text-white/20 normal-case tracking-normal">· {formatIssue(panel.issue)}</span>
+              </div>
+              <div className="space-y-1.5">
+                {creditGroups.map(([role, names]) => (
+                  <div key={role} className="flex gap-3 text-xs leading-relaxed">
+                    <span className="w-24 shrink-0 text-white/35">{role}</span>
+                    <span className="text-white/70">{names.join(", ")}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Covers — only mount images once the drawer has opened, so the browser
             doesn't fetch them while the drawer is hidden off-screen. */}

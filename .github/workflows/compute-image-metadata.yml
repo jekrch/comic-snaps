@@ -61,6 +61,7 @@ jobs:
       - name: Commit updated data
         run: |
           git add public/data/gallery.json public/data/embeddings.json public/data/embeddings-dino.json public/data/embeddings-gram.json public/data/artists.json public/data/series.json
+          [ -f public/data/issues.json ] && git add public/data/issues.json
           [ -f public/data/disambiguation.json ] && git add public/data/disambiguation.json
           [ -d public/data/covers ] && git add public/data/covers
           git diff --cached --quiet && exit 0

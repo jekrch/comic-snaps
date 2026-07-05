@@ -1,6 +1,18 @@
 {
   "artists": [
     {
+      "id": "abigail-larson",
+      "name": "Abigail Larson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3277/"
+        }
+      ]
+    },
+    {
       "id": "adam-gorham",
       "name": "Adam Gorham",
       "description": "",
@@ -9,12 +21,155 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/adam-gorham/4040-61410/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/412/"
         }
       ],
       "country": "Canada",
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "aditya-bidikar",
+      "name": "Aditya Bidikar",
+      "description": "My name is Aditya Bidikar, and you will most likely know me as a letterer for comics from Vault, DC Comics, Image, Dark Horse, Oni, and other comics publishers. I grew up in Pune, India, and spent some years in Kolkata and Bengaluru before returning to Pune, where I now reside. In previous lives, I have been a content writer, a technical translator, a book reviewer, a comics editor, and occasional fiction writer before I backed into my current profession of lettering. I mainly work in digital comics lettering, and I like to integrate hand-drawn sound effects and text design into my work. I have also hand-lettered two graphic novels so far, and am currently working on a third. I have also designed some of my own comics lettering fonts, and I\u2019m currently working on a way to make those and others available for purchase. But this is some way into the future, so let\u2019s not hold our breath. After spending years away from writing as a profession, I have recently returned to it, and have been publishing short comics and prose stories in the last year, and I\u2019m currently scripting a long-form comic book that I hope to publish in the near future.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/10/05/aditya.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3300/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "al-williamson",
+      "name": "Al Williamson",
+      "description": "An American cartoonist, comic book artist and illustrator specializing in adventure, Western, science fiction and fantasy.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/05/15/al-williamson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2966/"
+        }
+      ],
+      "birthYear": 1931,
+      "deathYear": 2010,
+      "aliases": [
+        "Albret Blevinson",
+        "Alfonso Williamson"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "alan-grant",
+      "name": "Alan Grant",
+      "description": "Alan Grant is a Scottish comic book writer known for writing Judge Dredd in 2000 AD as well as various Batman titles from the late 1980's to the early 2000's. He is the creator of the characters Anarky, Victor Zsasz, and the Ventriloquist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/18/alan-grant.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/327/"
+        }
+      ],
+      "birthYear": 1949,
+      "deathYear": 2022,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "alanna-smith",
+      "name": "Alanna Smith",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/536/"
+        }
+      ]
+    },
+    {
+      "id": "albert-feldstein",
+      "name": "Albert Feldstein",
+      "description": "Albert Bernard Feldstein was an American writer, editor, and artist, best known for his work at EC Comics and, from 1956 to 1985, as the editor of the satirical magazine Mad. After retiring from Mad, Feldstein concentrated on American paintings of Western wildlife.\r\n\r\nAlbert Feldstein began working in comics at 15 at the Eisner and Iger Studio. He graduated from the High School of Music and Art, then attended classes at Brooklyn College and the Art Students League before entering the Air Corps during World War II. After the war, he worked for Iger again before moving on to Fox Feature Syndicate.\r\n\r\nFeldstein began his career at EC in 1947. Though initially hired as an artist, he is best known for his writing. He also served as editor for most of EC's comic book titles. With Bill Gaines, he created EC's famous line of horror and science fiction comics, including Tales From the Crypt and Weird Science. He became editor of Mad in 1956, where he remained until 1984.\r\n\r\nHe later moved to Livingston, Montana, with his wife, Michelle. In 1999, he received an honorary Doctorate of the Arts degree from Rocky Mountain College in Billings, Montana.\r\n\r\nFeldstein was inducted into the Will Eisner Comic Book Hall of Fame in 2003. In 2011, he received the Bram Stoker Award for Lifetime Achievement from the Horror Writers Association. He died at home, April 29, 2014.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/05/08/al-feldstein.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1877/"
+        }
+      ],
+      "birthYear": 1925,
+      "deathYear": 2014,
+      "aliases": [
+        "Al Feldstein"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "alex-antone",
+      "name": "Alex Antone",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/381/"
+        }
+      ]
+    },
+    {
+      "id": "alex-buckland",
+      "name": "Alex Buckland",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18312/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "alex-eckman-lawn",
+      "name": "Alex Eckman-Lawn",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6433/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "alex-ross",
+      "name": "Alex Ross",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/37/"
+        }
       ]
     },
     {
@@ -43,6 +198,36 @@
       ]
     },
     {
+      "id": "alison-sampson",
+      "name": "Alison Sampson",
+      "description": "A comic book artist and architect based in London, UK.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/02/17/a-sampson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2990/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "allen-passalaqua",
+      "name": "Allen Passalaqua",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/01/Allen-Passalaqua.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/486/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "alvaro-martinez-bueno",
       "name": "Alvaro Martinez Bueno",
       "imageUrl": "https://cdn.prod.website-files.com/6501d53746370d07299ed666/68f8ff4196e7151a814b38f5_Alvaro-Martinez-Bueno.jpg",
@@ -50,6 +235,51 @@
       "references": [],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "amanda-conner",
+      "name": "Amanda Conner",
+      "description": "Amanda Conner is an American comics artist and commercial art illustrator. She began her career in the late 1980's for Archie Comics and Marvel Comics, before moving on to contribute work for Claypool Comics' Soulsearchers and Company and Harris Comics' Vampirella in the 1990's. Her 2000's work includes Mad magazine, and such DC Comics characters as Power Girl and Atlee.\r\n\r\nHer other published work includes illustrations for The New York Times and Revolver magazine, advertising work for products such as Arm & Hammer, Playskool, design work for ABC's Nightline, and commercials for A&E's Biography magazine.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/amanda-conner.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/165/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "amanda-lafranco",
+      "name": "Amanda LaFranco",
+      "description": "Former Associate Editor at BOOM! Studios",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/08/15/amanda-lafranco.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2554/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "amy-arendts",
+      "name": "Amy Arendts",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/14/a-arendts.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1493/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -65,6 +295,36 @@
       ]
     },
     {
+      "id": "andworld-design",
+      "name": "AndWorld Design",
+      "description": "AndWorld Design is the lettering and design studio founded Eisner and Harvey-Nominated letterer Deron Bennett. Joined by the talented DC Hopkins, Erika Terriquez, Justin Birch, Morgan Martinez, and Tom Napolitano. AndWorld Design delivers quality comic books for publishers big and small. Their clients include DC Comics, Image Comics, BooM! Studios, IDW Publishing, Vault Comics, and many more.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/27/andworld.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1395/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "andres-juarez",
+      "name": "Andres Juarez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2356/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "andy-macdonald",
       "name": "Andy MacDonald",
       "description": "",
@@ -73,6 +333,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/andy-macdonald/4040-56391/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2254/"
         }
       ],
       "aliases": [
@@ -101,6 +365,108 @@
       ]
     },
     {
+      "id": "andy-schmidt",
+      "name": "Andy Schmidt",
+      "description": "An American comic book editor and writer. He is best known for his work at Marvel and is now editing and writing at other companies.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/25/andy_schmidt.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1542/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "annalisa-leoni",
+      "name": "Annalisa Leoni",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7097/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "annie-wu",
+      "name": "Annie Wu",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/25/annie-wu.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1390/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "anwita-citriya",
+      "name": "Anwita Citriya",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6689/"
+        }
+      ]
+    },
+    {
+      "id": "ariana-maher",
+      "name": "Ariana Maher",
+      "description": "A comic book letterer who works with both independent imprints such as LittleFoolery and publishers such as Marvel, Image Comics, Dynamite Entertainment, and Skybound.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/08/26/a-maher.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3883/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ariela-kristantina",
+      "name": "Ariela Kristantina",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/12/03/a-kristantina.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4410/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "armando-elizondo",
+      "name": "Armando Elizondo",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/13149/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "art-spiegelman",
       "name": "Art Spiegelman",
       "description": "Born Arthur Spiegelman\u00a0 on February 15, 1948 in Stockholm, Sweden. \u00a0 He now lives in New York (downtown Manhattan), married with a wife and two kids.",
@@ -119,6 +485,149 @@
       ]
     },
     {
+      "id": "ash-padilla",
+      "name": "Ash Padilla",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/07/02/ash-padilla.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11592/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ashley-walker",
+      "name": "Ashley Walker",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7353/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "austin-hatch",
+      "name": "Austin Hatch",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16639/"
+        }
+      ]
+    },
+    {
+      "id": "baldemar-rivas",
+      "name": "Baldemar Rivas",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4031/"
+        }
+      ]
+    },
+    {
+      "id": "basil-wolverton",
+      "name": "Basil Wolverton",
+      "description": "Basil Wolverton was an American cartoonist and illustrator known for his intricately detailed grotesques of bizarre or misshapen people. Wolverton was described as \"Producer of Preposterous Pictures of Peculiar People who Prowl this Perplexing Planet.\" His many publishers included Marvel Comics and Mad magazine.\r\n\r\nHis drawings have elicited a wide range of reactions. Cartoonist Will Elder said he found Wolverton's technique \"outrageously inventive, defying every conventional standard yet upholding a very unusual sense of humor. He was a refreshing original.\" But Jules Feiffer stated, \"I don't like his work. I think it's ugly.\"\r\n\r\n\"Basil Wolverton came to national attention in 1946 when he won a contest to depict Lena the Hyena, 'the world's ugliest woman.' Lena had been a running gag in Al Capp's Li'l Abner newspaper strip, her face always hidden to protect readers from her horrible visage.\r\n\r\nBut Wolverton was no amateur contest entrant. A Christian minister and former vaudeville performer, he had, by that time, been producing comic book stories for years, most notably Spacehawk for Target Comics and Powerhouse Pepper for Timely.\r\n\r\nWolverton drew a Lena-like cover for Mad #11 (May 1954) but contributed to the magazine only rarely after that. He also drew for EC's Panic. Hew drew a series of 'Ugly Posters' bubble gum cards for Topps in 1968 and returned to mainstream comics on a more regular basis in 1973 for DC's Plop! humor title.\r\n\r\nWolverton was baptized into Herbert W. Armstrong's Radio Church of God in 1941 and later became an elder and a board member. For the church's Plain Truth magazine, he began a serialization of The Bible that continued for more than ten years. The entire work was collected in 2009 in The Wolverton Bible (Fantagraphics Books).\r\n\r\nWolverton's style was unique. Some loved it, some hated it. Will Elder called it 'outrageously inventive' and called Wolverton 'a refreshing original.'\r\n\r\nBasil Wolverton was posthumously inducted into the Jack Kirby Hall of Fame in 1991.\" -- The Million Year Panic and Other Stories (Fantagraphics)",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/05/08/Basil_wolverton.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1875/"
+        }
+      ],
+      "birthYear": 1909,
+      "deathYear": 1978,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "becca-carey",
+      "name": "Becca Carey",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/04/07/b-carey-fixed.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1235/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ben-abernathy",
+      "name": "Ben Abernathy",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1190/"
+        }
+      ]
+    },
+    {
+      "id": "ben-caldwell",
+      "name": "Ben Caldwell",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/14/ben-caldwell.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1151/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ben-oliver",
+      "name": "Ben Oliver",
+      "description": "Ben Oliver is a British comics artist who has worked for 2000 AD on Judge Dredd as well as providing art for The Authority, The Losers, and Ultimate X-Men",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/19/ben-oliver.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/822/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bengal",
+      "name": "Bengal",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/16/bengal.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/804/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "bernard-baily",
       "name": "Bernard Baily",
       "description": "Bernard Baily was a comic book artist best known as co-creator of the DC Comics characters the Spectre and Hourman, and a comics publisher of Baily Publication, writer, and editor.",
@@ -127,6 +636,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/bernard-baily/4040-6098/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3615/"
         }
       ],
       "birthYear": 1916,
@@ -137,6 +650,80 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "bill-messner-loebs",
+      "name": "Bill Messner-Loebs",
+      "description": "William Francis Messner-Loebs is an American comics artist and writer from Michigan, also known as Bill Loebs and Bill Messner-Loebs. His hyphenated surname is a combination of his and his wife Nadine's unmarried surnames.\r\n\r\nIn the 1980's and 1990's he wrote runs of series published by DC Comics, Image Comics, Comico, and other comics publishers, including DC's superhero series Flash and Wonder Woman among others. Additionally he has both written and drawn original creator-owned works, such as Journey: The Adventures of Wolverine MacAlistaire.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/01/bill-loebs.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/483/"
+        }
+      ],
+      "birthYear": 1949,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "bill-sienkiewicz",
+      "name": "Bill Sienkiewicz",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/533/"
+        }
+      ]
+    },
+    {
+      "id": "bob-wiacek",
+      "name": "Bob Wiacek",
+      "description": "Bob Wiacek is an American comic book artist and writer, working primarily as an inker.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/27/Bob_Wiacek.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1266/"
+        }
+      ],
+      "birthYear": 1953,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brad-anderson",
+      "name": "Brad Anderson",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/brad-anderson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/101/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brad-simpson",
+      "name": "Brad Simpson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3991/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -178,6 +765,154 @@
       ]
     },
     {
+      "id": "brendan-wright",
+      "name": "Brendan Wright",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2282/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brian-azzarello",
+      "name": "Brian Azzarello",
+      "description": "Brian Azzarello is an American comic book writer and screenwriter. He came to prominence with the hard-boiled crime series 100 Bullets, published by DC Comics' mature-audience imprint Vertigo. In 2011, he became the writer of DC's relaunched Wonder Woman series.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/Brian_Azzarello.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/157/"
+        }
+      ],
+      "birthYear": 1962,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brian-cunningham",
+      "name": "Brian Cunningham",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/brian-cunningham.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/188/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brian-level",
+      "name": "Brian Level",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/27/b-level.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2222/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "brian-reber",
+      "name": "Brian Reber",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/942/"
+        }
+      ]
+    },
+    {
+      "id": "bryan-valenza",
+      "name": "Bryan Valenza",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4241/"
+        }
+      ]
+    },
+    {
+      "id": "c-b-cebulski",
+      "name": "C. B. Cebulski",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/215/"
+        }
+      ]
+    },
+    {
+      "id": "cj-han",
+      "name": "CJ Han",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17640/"
+        }
+      ]
+    },
+    {
+      "id": "caitlin-chappel",
+      "name": "Caitlin Chappel",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16233/"
+        }
+      ]
+    },
+    {
+      "id": "cam-smith",
+      "name": "Cam Smith",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/501/"
+        }
+      ]
+    },
+    {
+      "id": "cardner-clark",
+      "name": "Cardner Clark",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5181/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "carlos-gomez",
       "name": "Carlos Gomez",
       "description": "",
@@ -185,6 +920,61 @@
       "references": [],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "carlos-lao",
+      "name": "Carlos Lao",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/775/"
+        }
+      ]
+    },
+    {
+      "id": "carmine-di-giandomenico",
+      "name": "Carmine Di Giandomenico",
+      "description": "Italian penciler who has worked on acclaimed Marvel Knights miniseries such as Daredevil; Battlin' Jack Murdock and X-Men; Magneto Testament.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/18/Carmine_Di_Giandomenico.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/330/"
+        }
+      ],
+      "birthYear": 1973,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "casey-parsons",
+      "name": "Casey Parsons",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6020/"
+        }
+      ]
+    },
+    {
+      "id": "chad-hardin",
+      "name": "Chad Hardin",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/13/Chad-Hardin.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/738/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -207,6 +997,306 @@
       ]
     },
     {
+      "id": "chris-bachalo",
+      "name": "Chris Bachalo",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/606/"
+        }
+      ]
+    },
+    {
+      "id": "chris-burnham",
+      "name": "Chris Burnham",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/394/"
+        }
+      ]
+    },
+    {
+      "id": "chris-conroy",
+      "name": "Chris Conroy",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/chris_conroy.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/177/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "chris-crank",
+      "name": "Chris Crank",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/10/crank.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/661/"
+        }
+      ],
+      "aliases": [
+        "Crank!"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "chris-mooneyham",
+      "name": "Chris Mooneyham",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2906/"
+        }
+      ]
+    },
+    {
+      "id": "chris-o-halloran",
+      "name": "Chris O'Halloran",
+      "description": "Chris is a comic book colorist from Cork City in Ireland. His work includes Ice Cream Man and Generation Gone from Image Comics, as well as various work for Marvel, Dynamite, and Vertigo including X23, Lockjaw, and James Bond.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/03/05/41a8JhFBQkL_8ot2VSr.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1240/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "christian-ward",
+      "name": "Christian Ward",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/christian-ward.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/841/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "christianne-gillenardo-goudreau",
+      "name": "Christianne Gillenardo-Goudreau",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/19/c-gillenardo-goudreau.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2157/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "christopher-marchman",
+      "name": "Christopher Marchman",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16635/"
+        }
+      ]
+    },
+    {
+      "id": "chuck-howitt",
+      "name": "Chuck Howitt",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/09/c-howitt.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1475/"
+        }
+      ],
+      "aliases": [
+        "Chuck Howitt-Lease"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "clayton-crain",
+      "name": "Clayton Crain",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/346/"
+        }
+      ]
+    },
+    {
+      "id": "clem-robins",
+      "name": "Clem Robins",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/11/Clem-Robins.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/689/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "cliff-rathburn",
+      "name": "Cliff Rathburn",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/596/"
+        }
+      ]
+    },
+    {
+      "id": "conley-presler",
+      "name": "Conley Presler",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/07/16/c-presler.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16009/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "connor-goldsmith",
+      "name": "Connor Goldsmith",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18313/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "cory-petit",
+      "name": "Cory Petit",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/224/"
+        }
+      ]
+    },
+    {
+      "id": "courtney-menard",
+      "name": "Courtney Menard",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5670/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "craig-anderson",
+      "name": "Craig Anderson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3579/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "cullen-bunn",
+      "name": "Cullen Bunn",
+      "description": "Cullen Bunn is an American comics writer, novelist, and short story writer. He grew up in rural North Carolina.\r\n\r\nHe is best known for his work on comic books such as Uncanny X-Men, X-Men: Blue, Magneto and various Deadpool miniseries for Marvel Comics, and his creator-owned series The Damned and The Sixth Gun for Oni Press and Harrow County for Dark Horse, as well as his middle reader horror novel Crooked Hills, and his short story work collection Creeping Stones & Other Stories.\r\n\r\nAs of 2018, Bunn writes X-Men: Blue and Venomized for Marvel, PumpkinHead for Dynamite, Subspecies for Action Lab, Shadow Roads for Oni Press, Regression for Image, Unholy Grail, Brothers Dracul and Dark Ark for Aftershock, and Harrow County for Dark Horse.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/6216379-cullen-print_324_480_s_c1.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/265/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dale-eaglesham",
+      "name": "Dale Eaglesham",
+      "description": "Dale Eaglesham is a Canadian comic book illustrator who has been working in the American industry since 1986. He is best known for his work on titles like Conan, Punisher, Green Lantern, Villains United, Justice Society of America and Fantastic Four. In 2008, the Shuster Awards selected him as Outstanding Canadian Comic Book Artist of the year.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/dale-eaglesham.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/75/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dan-brown",
+      "name": "Dan Brown",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/23/d-brown.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1243/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "dani",
       "name": "Dani",
       "description": "",
@@ -223,6 +1313,33 @@
       ]
     },
     {
+      "id": "dani-strips",
+      "name": "Dani Strips",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2742/"
+        }
+      ]
+    },
+    {
+      "id": "daniel-chabon",
+      "name": "Daniel Chabon",
+      "description": "Dark Horse editor and younger brother of Michael Chabon.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/09/d-chabon.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1473/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "daniel-clowes",
       "name": "Daniel Clowes",
       "imageUrl": "https://www.fulgenciopimentel.com/wp-content/uploads/2022/06/daniel_clowes-768x768.jpg",
@@ -235,6 +1352,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/daniel-clowes/4040-19497/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9530/"
         }
       ],
       "birthYear": 1961,
@@ -242,6 +1363,33 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "daniele-di-nicuolo",
+      "name": "Daniele Di Nicuolo",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3897/"
+        }
+      ]
+    },
+    {
+      "id": "danny-miki",
+      "name": "Danny Miki",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/24/Danny-Miki.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/886/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -257,6 +1405,105 @@
       ]
     },
     {
+      "id": "dave-johnson",
+      "name": "Dave Johnson",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/06/dave_johnson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/578/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dave-sharpe",
+      "name": "Dave Sharpe",
+      "description": "Letters and Design for DC and Valiant comics",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/dave-sharpe.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/178/"
+        }
+      ],
+      "aliases": [
+        "David Sharpe"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dave-stewart",
+      "name": "Dave Stewart",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/11/dave-stewart.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/688/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "david-aja",
+      "name": "David Aja",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2460/"
+        }
+      ]
+    },
+    {
+      "id": "david-avallone",
+      "name": "David Avallone",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/02/05/10696.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5890/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "david-c-hopkins",
+      "name": "David C. Hopkins",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5208/"
+        }
+      ]
+    },
+    {
+      "id": "david-curiel",
+      "name": "David Curiel",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/250/"
+        }
+      ]
+    },
+    {
       "id": "david-finch",
       "name": "David Finch",
       "description": "David Finch began his career working for Top Cow Productions in titles like Cyberforce, Ascension, The Darkness, etc.\r\n\r\nAfter a hiatus, he returned to the industry in 2003 to work for Marvel in the Ultimate X-Men project along with Brian Michael Bendis. In 2005, he worked on the New Avengers title and has also worked on Moon Knight, Fallen Son, The Death of Captain America, X-Men: Messiah CompleX, and X-Men: Second Coming. Finch signed an exclusive contract with DC Comics and multiple covers for DC's Brightest Day series. Most recently he has taken on his own title Batman: The Dark Knight were he is playing the role of both artist and writer. However with only two issues in DC has announced that Batman: The Dark Knight will begin again at issue #1 with 52 other titles this September <2011>.\r\n\r\nAfter a 15-issue run on Batman: The Dark Knight , David Finch leaves to start start penciling Justice League of America with writer Geoff Johns starting February in 2013. He was also the artist for the Forever Evil miniseries, also with writer Geoff Johns.\r\n\r\nFinch is also a part of the creative team for New 52 Wonder Woman along with his wife Meredith Finch, taking over the reigns from the previous team of Brian Azzarello and Cliff Chiang.\r\n\r\nSome Characters Created:\r\n\r\nDC\r\n\r\n- Traktir - Spidra - The Heretic - Dawn Golden - Aleister Golden - Mira - Jack Forbes - White Rabbit - Natalya Trusevich - Dr. Crane - Derinoe - Clyemne - Nisos - Gotham Girl - Gotham - Oleg Balinoff - Bob Castro",
@@ -265,6 +1512,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/david-finch/4040-3226/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/465/"
         }
       ],
       "birthYear": 1972,
@@ -287,12 +1538,85 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/david-lapham/4040-10517/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1328/"
         }
       ],
       "country": "U.S.A.",
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "david-nakayama",
+      "name": "David Nakayama",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/31/david-nakayama.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1583/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "david-sanchez",
+      "name": "David Sanchez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8384/"
+        }
+      ]
+    },
+    {
+      "id": "david-talaski",
+      "name": "David Talaski",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4125/"
+        }
+      ]
+    },
+    {
+      "id": "deana-avila",
+      "name": "Deana Avila",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12352/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dearbhla-kelly",
+      "name": "Dearbhla Kelly",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/07/d-kelly.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1333/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -305,12 +1629,92 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/declan-shalvey/4040-57300/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1480/"
         }
       ],
       "country": "Ireland",
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "deniz-camp",
+      "name": "Deniz Camp",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/04/14/d-camp.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6503/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dennis-culver",
+      "name": "Dennis Culver",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/05/08/d-culver.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4899/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dennis-hopeless",
+      "name": "Dennis Hopeless",
+      "description": "Dennis Hopeless is an American comics writer from Kansas City, Missouri who has written for Marvel Comics, Image Comics, Dark Horse Comics, Boom! Studios, Arcana Studio, and Oni Press.\r\n\r\nHopeless has written multiple series starring teenage superheroes and has said that he \"tend[s] to write about the challenge of growing up.\" He's been praised by critics for including a female point-of-view in his comics. After finding success with two creator-owned comics, Hopeless began writing for Marvel in 2011. In 2015, Hopeless wrote two limited series as part of Marvel's Secret Wars event. The following year, Hopeless began scripting Marvel's relaunched ongoing series All-New X-Men. That same year, he resumed his writing duties on Marvel's Spider-Woman comic, the sixth volume of the character's ongoing series. The series earned Hopeless some of the best reviews of his career, as he and his creative team received praise from feminist critics for showing the realities of motherhood. In 2017, Marvel began publishing a Jean Grey ongoing series, the character's first, with Hopeless and artist Victor Ibanez at the helm.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/16/dennis-hopeless.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/297/"
+        }
+      ],
+      "aliases": [
+        "Dennis Hallum"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "denys-cowan",
+      "name": "Denys Cowan",
+      "description": "Denys B. Cowan is an American comics artist, television producer and one of the co-founders of Milestone Media.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/03/Denys-Cowan.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1075/"
+        }
+      ],
+      "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "diego-lopez",
+      "name": "Diego Lopez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1867/"
+        }
       ]
     },
     {
@@ -322,6 +1726,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/dillon-snook/4040-107654/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9713/"
         }
       ],
       "country": "United States",
@@ -363,6 +1771,115 @@
       ]
     },
     {
+      "id": "drew-gill",
+      "name": "Drew Gill",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/23/d-gill.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1253/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "dylan-todd",
+      "name": "Dylan Todd",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/06/21/8174323-todd.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3986/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "e-m-gist",
+      "name": "E. M. Gist",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/12/05/e-gist.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3167/"
+        }
+      ],
+      "aliases": [
+        "Erik M. Gist"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ed-brubaker",
+      "name": "Ed Brubaker",
+      "description": "Ed Brubaker is an American comic book writer and cartoonist. Brubaker's first early comics work was primarily in the crime fiction genre with works such as Lowlife, The Fall, Sandman Presents: Dead Boy Detectives and Scene of the Crime. He later became known for writing superhero comics such as Batman, Daredevil, Captain America, Catwoman, Uncanny X-Men, and The Authority. He has won an Eisner Award on six separate occasions.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/Ed_Brubaker.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/161/"
+        }
+      ],
+      "birthYear": 1966,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "edgar-delgado",
+      "name": "Edgar Delgado",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/214/"
+        }
+      ]
+    },
+    {
+      "id": "elizabeth-breitweiser",
+      "name": "Elizabeth Breitweiser",
+      "description": "Elizabeth Breitweiser is an American comic book colorist and cover artist. Some of her work includes Outcast by Robert Kirkman and Paul Azaceta, The Amazing Spider-Man, Fatale, Captain America, The Fade Out, Hulk, Legends of the Dark Knight and Wolverine.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/Elizabeth_Breitweiser.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/451/"
+        }
+      ],
+      "aliases": [
+        "Elizabeth Dismang"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ellie-pyle",
+      "name": "Ellie Pyle",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/07/26/e-pyle.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2443/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "enki-bilal",
       "name": "Enki Bilal",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg/500px-Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg",
@@ -390,6 +1907,68 @@
       ]
     },
     {
+      "id": "eric-canete",
+      "name": "Eric Canete",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/21/e-canete.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2173/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eric-harburn",
+      "name": "Eric Harburn",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/08/06/e-harburn.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2510/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eric-kripke",
+      "name": "Eric Kripke",
+      "description": "Creator of \"Supernatural\" the show on CW Network.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/03/03/e-kripke.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17708/"
+        }
+      ],
+      "birthYear": 1974,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "eric-powell",
+      "name": "Eric Powell",
+      "description": "Powell has written and provided artwork for Dark Horse, DC Comics and Marvel Comics, but is most regarded for his original series The Goon, which debuted from the small publisher Avatar Press. Powell quickly switched to self-publishing under the moniker Albatross Exploding Funny Books, before being picked up by Dark Horse after only a handful of issues. The Goon's quality was recognized with an Eisner Award in 2004 for Best Single Issue (Dark Horse The Goon #1) as well as an International Horror Guild award. The following year, Powell won Eisner's Best Humor Publication and Best Continuing Series awards.\r\n\r\nHe is a featured interviewee in the movie Independents.\r\n\r\nPowell co-wrote the first two volumes of IDW's Godzilla: Kingdom of Monsters with Tracy Marsh.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/eric-powell.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/556/"
+        }
+      ],
+      "birthYear": 1975,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "eric-zawadzki",
       "name": "Eric Zawadzki",
       "description": "Eric Zawadzki is a professional comic book artist most well known for co-creating the hit Image comic, Assorted Crisis Events. Prior to that he worked on the House of El trilogy for DC comics and Heart Attack for Skybound, the latter of which was turned into a TV show for Fuji TV in Japan in 2025. He has also received critical acclaim for his work on The Dregs and Eternal from Black Mask Studios. Zawadzki lives in Calgary with his wife and two hairless cats.",
@@ -402,6 +1981,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/eric-zawadzki/4040-73762/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6467/"
         }
       ],
       "country": "Canada",
@@ -410,6 +1993,21 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "erika-schnatz",
+      "name": "Erika Schnatz",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/27/e-schnatz.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2221/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -431,6 +2029,21 @@
       ]
     },
     {
+      "id": "evan-cagle",
+      "name": "Evan Cagle",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4997/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "fernando-blanco",
       "name": "Fernando Blanco",
       "description": "Interview with Fernando Blanco (In Spanish)",
@@ -439,6 +2052,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/fernando-blanco/4040-5627/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/144/"
         }
       ],
       "country": "Spain",
@@ -455,6 +2072,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/filipe-andrade/4040-58923/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1367/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/2753626-filipe_andrade.jpg",
@@ -482,6 +2103,48 @@
       ]
     },
     {
+      "id": "foster-r-kupbens",
+      "name": "Foster R. Kupbens",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12025/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "francesco-segala",
+      "name": "Francesco Segala",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5752/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "francesco-tomaselli",
+      "name": "Francesco Tomaselli",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7026/"
+        }
+      ]
+    },
+    {
       "id": "francis-portela",
       "name": "Francis Portela",
       "description": "Inker",
@@ -489,12 +2152,102 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/francis-portela/4040-41627/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3407/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9980361-francis_portela.jpg",
       "country": "Spain",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "frank-thomas",
+      "name": "Frank Thomas",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4795/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "fred-guardineer",
+      "name": "Fred Guardineer",
+      "description": "An American illustrator and comic book writer-artist best known for his work in the 1930s and 1940s during what historians and fans call the Golden Age of Comic Books, and for his 1950s art on the Western comic-book series The Durango Kid.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/01/31/fred_guardineer.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4472/"
+        }
+      ],
+      "birthYear": 1913,
+      "deathYear": 2002,
+      "aliases": [
+        "Gene Baxter",
+        "Lance Blackwood"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "freddye-miller",
+      "name": "Freddye Miller",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/09/23/Freddye-Miller.webp",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5449/"
+        }
+      ],
+      "aliases": [
+        "Freddye Lins"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "g-m-b-chomichuk",
+      "name": "G. M. B. Chomichuk",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18416/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "gardner-fox",
+      "name": "Gardner Fox",
+      "description": "Gardner Francis Cooper Fox was an American writer known best for creating numerous comic book characters for DC Comics. Comic book historians estimate that he wrote more than 4,000 comics stories, including 1,500 for DC Comics. Gardner was also a science fiction author and wrote many novels and short stories.\r\n\r\nFox is known as the co-creator of DC Comics heroes the Flash, Hawkman, Doctor Fate and the original Sandman, and was the writer who first teamed those and other heroes as the Justice Society of America and later recreated the team as the Justice League of America. Fox introduced the concept of the Multiverse to DC Comics in the 1961 story \"Flash of Two Worlds!\"\r\n\r\n\"Gardner Fox was a prolific comic book writer and novelist, best known today for the many superhero and crime-fighting characters he created for DC Comics and others. He began writing for DC Comics in 1937. By 1940, he was writing for Maxwell C. Gaines's All-American Publications.\r\n\r\nBy 1947, at Gaines's new company, Educational Comics (EC), Fox was writing every feature in International Comics. Shortly before Gaines's death in a boating accident that year, Fox and artist Sheldon Moldoff co-created Moon Girl, an exotic alien princess living on Earth. He also wrote Buckskin Kid and Six-Gun sisters for other titles. Fox wrote for EC's 'New Trend' titles in 1950.\r\n\r\nLater, for DC, Fox co-created Adam Strange, the Atom (second version), and the Justice League of America, and introduced the concept of parallel Earths to DC readers. Fox and other freelancers left DC in 1968 when the company denied them health care and other benefits. Fox wrote novels regularly and also wrote comics for Dell, Marvel, Warren, and others. Fox died in December of 1986.\r\n\r\nFox won four Alley Awards in the 1960s and received the Jules Verne Award 'for life-time achievement' in 1982. He was inducted into the Jack Kirby Hall of Fame in 1998 and the Will Eisner Comic Book Hall of Fame in 1999. He was awarded a Harvey Award in 1998 and the Bill Finger Award for Excellence in Comic Book Writing in 2007.\" -- The Thing From the Grave and Other Stories (Fantagraphics)",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/Gardner_Fox.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/113/"
+        }
+      ],
+      "birthYear": 1911,
+      "deathYear": 1986,
+      "sources": [
         "metron"
       ]
     },
@@ -518,6 +2271,22 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "geoff-johns",
+      "name": "Geoff Johns",
+      "description": "Geoffrey Johns is an American comic book writer, screenwriter and film and television producer. He served as the President and Chief Creative Officer (CCO) of DC Entertainment from 2016 to 2018, after his initial appointment as CCO in 2010. Some of his most notable work has used the DC Comics characters Green Lantern, Aquaman, Flash, and Superman.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/geoff-johns.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/92/"
+        }
+      ],
+      "birthYear": 1973,
+      "sources": [
         "metron"
       ]
     },
@@ -574,6 +2343,52 @@
       ]
     },
     {
+      "id": "giuseppe-camuncoli",
+      "name": "Giuseppe Camuncoli",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/Giuseppe-Camuncoli.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/458/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "glenn-fabry",
+      "name": "Glenn Fabry",
+      "description": "Glenn Fabry is a British comics artist known for his detailed, realistic work in both ink and painted colour.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/23/glenn-fabry.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1250/"
+        }
+      ],
+      "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "gloria-martinelli",
+      "name": "Gloria Martinelli",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5810/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "gmb-chomichuk",
       "name": "Gmb Chomichuk",
       "description": "",
@@ -590,6 +2405,87 @@
       ]
     },
     {
+      "id": "good-old-neon",
+      "name": "Good Old Neon",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7354/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "goodman-yamada",
+      "name": "Goodman Yamada",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18315/"
+        }
+      ]
+    },
+    {
+      "id": "grace-park",
+      "name": "Grace Park",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3943/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "gregory-lockard",
+      "name": "Gregory Lockard",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2547/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "guillem-march",
+      "name": "Guillem March",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/726/"
+        }
+      ]
+    },
+    {
+      "id": "gurihiru",
+      "name": "Gurihiru",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2543/"
+        }
+      ]
+    },
+    {
       "id": "gurihiru-goodman-yamada",
       "name": "Gurihiru & Goodman Yamada",
       "description": "",
@@ -597,6 +2493,36 @@
       "references": [],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "hannah-noble",
+      "name": "Hannah Noble",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2023/07/12/h-noble.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8096/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "hassan-otsmane-elhaou",
+      "name": "Hassan Otsmane-Elhaou",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/30/hassan.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1307/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -612,11 +2538,30 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/hayden-sherman/4040-92544/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5486/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8189816-sherman.jpg",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "homer-fleming",
+      "name": "Homer Fleming",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4784/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -638,6 +2583,65 @@
       ]
     },
     {
+      "id": "in-s-amaro",
+      "name": "In\u00eas Amaro",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7955/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ivan-reis",
+      "name": "Ivan Reis",
+      "description": "Ivan Reis is a Brazilian comics artist. He is known for his work on comic books such as Dark Horse Comics' Ghost, Marvel Comics' Captain Marvel, and DC Comics' Action Comics, Green Lantern and Aquaman series. According to collaborator Geoff Johns, Reis' drawing style resembles a combination of Alan Davis and Neal Adams.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/ivan-reis.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/54/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ivan-tao",
+      "name": "Ivan Tao",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5576/"
+        }
+      ]
+    },
+    {
+      "id": "jack-adler",
+      "name": "Jack Adler",
+      "description": "Jack Adler was an artist who worked as a cover artist and colorist for DC Comics. He was a staff member of DC's production department from 1946 to 1981, rising steadily up the ranks to production manager and vice president of production.",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3498/"
+        }
+      ],
+      "birthYear": 1917,
+      "deathYear": 2011,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "jack-davis",
       "name": "Jack Davis",
       "description": "",
@@ -646,6 +2650,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/jack-davis/4040-3914/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1490/"
         }
       ],
       "birthYear": 1924,
@@ -653,6 +2661,163 @@
       "country": "United States",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jae-lee",
+      "name": "Jae Lee",
+      "description": "Jae Lee is a Korean American comics artist known for his interior illustration and cover work for various publishers, including Marvel Comics, DC Comics, Image Comics, and Dynamite Entertainment.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/14/Jae_Lee.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/769/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jaime-mendoza",
+      "name": "Jaime Mendoza",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/70/"
+        }
+      ]
+    },
+    {
+      "id": "jake-thomas",
+      "name": "Jake Thomas",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/885/"
+        }
+      ]
+    },
+    {
+      "id": "jake-williams",
+      "name": "Jake Williams",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4626/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "james-harren",
+      "name": "James Harren",
+      "description": "James Harren is a cartoonist known for being a tip-top storyteller and his various collaborations with writer John Arcudi, including the Image Comics series RUMBLE.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/james-harren.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/842/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "james-tynion-iv",
+      "name": "James Tynion IV",
+      "description": "James Tynion IV is an American comic book writer. He is best known for his work on the Batman franchise at DC Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/jame-tynion.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/99/"
+        }
+      ],
+      "birthYear": 1987,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jamie-s-rich",
+      "name": "Jamie S. Rich",
+      "description": "Jamie S. Rich is an American comic book editor and writer. He is the Group Editor of Batman-related titles at DC Comics. Previously, he was an editor at DC's Vertigo imprint.\r\n\r\nHe was editor-in-chief at Oni Press from 1998 to 2004, and was an editor for Dark Horse Comics before that. He has written graphic novels including 12 Reasons Why I Love Her and You Have Killed Me, and the prose novel Cut My Hair",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/982861-jrich.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/21/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "janet-jackson",
+      "name": "Janet Jackson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3584/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jasmine-alvarez",
+      "name": "Jasmine Alvarez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6618/"
+        }
+      ]
+    },
+    {
+      "id": "jason-a-hurley",
+      "name": "Jason A. Hurley",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6676/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jason-howard",
+      "name": "Jason Howard",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4819/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -675,6 +2840,21 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "javier-rodr-guez",
+      "name": "Javier Rodr\u00edguez",
+      "description": "Javier Rodr\u00edguez is a Spanish comic book artist working primarily as a colourist for the American market. Among his most notable works are Batgirl: Year One, Daredevil and The Amazing Spider-Man.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/j-rodriguez.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1136/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -737,6 +2917,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/jeff-lemire/4040-57048/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/53/"
         }
       ],
       "birthYear": 1976,
@@ -744,6 +2928,154 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jeffrey-alan-love",
+      "name": "Jeffrey Alan Love",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/18/j-love.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1361/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jemiah-jefferson",
+      "name": "Jemiah Jefferson",
+      "description": "An African-American author of contemporary horror and erotic literature.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/j-jefferson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1122/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jenn-woodall",
+      "name": "Jenn Woodall",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5824/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jeremy-haun",
+      "name": "Jeremy Haun",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/08/j-haun.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2337/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jeremy-wilson",
+      "name": "Jeremy Wilson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3389/"
+        }
+      ]
+    },
+    {
+      "id": "jerry-siegel",
+      "name": "Jerry Siegel",
+      "description": "Jerome Siegel, who also used pseudonyms including Joe Carter and Jerry Ess, was an American comic book writer. His most famous creation was DC Comics character Superman, which he created in collaboration with his friend Joe Shuster.\r\n\r\nHe was inducted (with Shuster posthumously) into the comic book industry's Will Eisner Comic Book Hall of Fame in 1992 and the Jack Kirby Hall of Fame in 1993.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/Jerry_Siegel.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/40/"
+        }
+      ],
+      "birthYear": 1914,
+      "deathYear": 1996,
+      "aliases": [
+        "Joe Carter"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jill-thompson",
+      "name": "Jill Thompson",
+      "description": "Jill Thompson is an American comic book writer and illustrator who has worked for stage, film, and television. Well known for her work on Neil Gaiman's The Sandman characters and her own Scary Godmother series, she has worked on The Invisibles, Swamp Thing, and Wonder Woman as well.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/jill-thompson.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/158/"
+        }
+      ],
+      "birthYear": 1966,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jillian-crab",
+      "name": "Jillian Crab",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3039/"
+        }
+      ]
+    },
+    {
+      "id": "jim-campbell",
+      "name": "Jim Campbell",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/364/"
+        }
+      ]
+    },
+    {
+      "id": "jim-lee",
+      "name": "Jim Lee",
+      "description": "Jim Lee is a Korean American comic-book artist, writer, editor, and publisher. He entered the industry in 1987 as an artist for Marvel Comics, illustrating titles such as Alpha Flight and The Punisher War Journal, before gaining popularity on The Uncanny X-Men. X-Men No. 1, the 1991 spin-off series premiere that Lee penciled and co-wrote with Chris Claremont, remains the best-selling comic book of all time, according to Guinness World Records.\r\n\r\nIn 1992, Lee and several other artists formed their own publishing company, Image Comics, to publish their creator-owned titles, with Lee publishing titles such as WildC.A.T.s and Gen\u00b9\u00b3 through his studio Wildstorm Productions. Eschewing the role of publisher in order to return to illustration, Lee sold Wildstorm in 1998 to DC Comics, where he continued to run it as a DC imprint until 2010, as well as illustrating successful titles set in DC's main fictional universe, such as the year-long \"Batman: Hush\" and \"Superman: For Tomorrow\" story-lines. On February 18, 2010, Jim Lee was announced as the new Co-Publisher of DC Comics with Dan DiDio, both replacing Paul Levitz.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/08/05/j-lee.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/172/"
+        }
+      ],
+      "birthYear": 1964,
+      "sources": [
         "metron"
       ]
     },
@@ -760,6 +3092,22 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jim-sinclair",
+      "name": "Jim Sinclair",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7188/"
+        }
+      ],
+      "birthYear": 1959,
+      "sources": [
         "metron"
       ]
     },
@@ -787,6 +3135,88 @@
       ]
     },
     {
+      "id": "jimmy-palmiotti",
+      "name": "Jimmy Palmiotti",
+      "description": "James Palmiotti is an American writer and inker of comic books, who also does writing for games, television and film.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/jimmy-pamiotti.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/163/"
+        }
+      ],
+      "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "joe-caramagna",
+      "name": "Joe Caramagna",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/296/"
+        }
+      ]
+    },
+    {
+      "id": "joe-jusko",
+      "name": "Joe Jusko",
+      "description": "Joe Jusko is an American artist known for his realistic, highly detailed painted fantasy, pin-up, and cover illustrations, mainly in the comic book industry. Jusko painted the 1992 Marvel Masterpieces trading cards, the popularity of which has been credited with initiating the painted trading card boom of the 1990's.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/23/jusko.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/868/"
+        }
+      ],
+      "birthYear": 1959,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "joe-orlando",
+      "name": "Joe Orlando",
+      "description": "Joseph \"Joe\" Orlando was an Italian American illustrator, writer, editor and cartoonist during a lengthy career spanning six decades. He was the associate publisher of Mad and the vice president of DC Comics, where he edited numerous titles and ran DC's Special Projects department.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/05/19/joe_orlando.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1977/"
+        }
+      ],
+      "birthYear": 1927,
+      "deathYear": 1998,
+      "aliases": [
+        "Joseph Orlando",
+        "Albor",
+        "Cain",
+        "Destiny",
+        "Eve",
+        "J.O.",
+        "J. Orlando"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "joe-sabino",
+      "name": "Joe Sabino",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/365/"
+        }
+      ]
+    },
+    {
       "id": "joe-sacco",
       "name": "Joe Sacco",
       "description": "Writer, artist, nominated for Eisner awards in 1996 and 2001 for his work on Palestine and Safe Area Gorazde respectively.",
@@ -801,6 +3231,23 @@
       "country": "Malta",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "joe-shuster",
+      "name": "Joe Shuster",
+      "description": "Joseph \"Joe\" Shuster was a Canadian-American comic book artist best known for co-creating the DC Comics character Superman, with writer Jerry Siegel, in Action Comics #1 (cover-dated June 1938).\r\n\r\nShuster was involved in a number of legal battles over ownership of the Superman character. His comic book career after Superman was relatively unsuccessful, and by the mid-1970s Shuster had left the field completely due to partial blindness.\r\n\r\nHe and Siegel were inducted into both the comic book industry's Will Eisner Comic Book Hall of Fame in 1992 and the Jack Kirby Hall of Fame in 1993. In 2005, the Canadian Comic Book Creator Awards Association instituted the Joe Shuster Awards, named to honor the Canada-born artist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/joe-shuster.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/39/"
+        }
+      ],
+      "birthYear": 1914,
+      "deathYear": 1992,
+      "sources": [
         "metron"
       ]
     },
@@ -822,6 +3269,34 @@
       ]
     },
     {
+      "id": "john-beatty",
+      "name": "John Beatty",
+      "description": "John R. Beatty is an American illustrator who has worked for Marvel Comics and DC Comics, primarily as an inker.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/09/01/john_beatty.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2696/"
+        }
+      ],
+      "birthYear": 1961,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "john-giang",
+      "name": "John Giang",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3855/"
+        }
+      ]
+    },
+    {
       "id": "john-higgins",
       "name": "John Higgins",
       "description": "John Higgins (born 1949) is an English comic book artist and writer. He did significant work for 2000 AD, and he has frequently worked with writer Alan Moore, most notably as colourist for Watchmen.",
@@ -834,6 +3309,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/john-higgins/4040-7454/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2591/"
         }
       ],
       "birthYear": 1947,
@@ -841,6 +3320,79 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "john-j-pearson",
+      "name": "John J. Pearson",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/05/21/j-pearson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5750/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "john-lewandowski",
+      "name": "John Lewandowski",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3119/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "john-livesay",
+      "name": "John Livesay",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/658/"
+        }
+      ]
+    },
+    {
+      "id": "john-workman",
+      "name": "John Workman",
+      "description": "John Workman is an editor, writer, artist, designer, colorist and letterer in the comic book industry. He is known for his frequent partnerships with writer/artist Walter Simonson and also for lettering the entire run of Grant Morrison/Rachel Pollack's Doom Patrol (DC Comics).\r\n\r\nBorn in Beckley, West Virginia, Workman spent the first eight years of his life in Glen Rogers, West Virginia and Darlington, Maryland. Inspired by the George Reeves Superman TV series, he began writing short stories and drawing pictures. Living in Aberdeen, Washington, he studied art and journalism at Grays Harbor College and Clark College, receiving an Associate in Arts degree from Grays Harbor in 1970.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/25/john_workman.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/371/"
+        }
+      ],
+      "birthYear": 1950,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jonathan-ball",
+      "name": "Jonathan Ball",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/14757/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -877,6 +3429,61 @@
       ]
     },
     {
+      "id": "jordan-d-white",
+      "name": "Jordan D. White",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/217/"
+        }
+      ]
+    },
+    {
+      "id": "jordie-bellaire",
+      "name": "Jordie Bellaire",
+      "description": "Jordie Bellaire is an American comic book colorist who currently lives in Ireland and works for Marvel, Valiant, and Image comic book publishers. She has colored Pretty Deadly, The Manhattan Projects, Moon Knight, The Vision, Magneto, Nowhere Men, Hawkeye, Batman, among other titles.\r\n\r\nBellaire is credited with starting the \"Comics are for everybody\" initiative to make the comic book community more inclusive and compassionate",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/jordie-bellaire.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/13/"
+        }
+      ],
+      "birthYear": 1988,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jorge-corona",
+      "name": "Jorge Corona",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/12/27/4876.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1321/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jorge-forn-s",
+      "name": "Jorge Forn\u00e9s",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1121/"
+        }
+      ]
+    },
+    {
       "id": "jose-martin-sauri",
       "name": "Jose Martin Sauri",
       "description": "",
@@ -896,6 +3503,39 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "joseph-michael-linsner",
+      "name": "Joseph Michael Linsner",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/07/j-linsner.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1334/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "joseph-rybandt",
+      "name": "Joseph Rybandt",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/17/Joe_Rybandt.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2095/"
+        }
+      ],
+      "aliases": [
+        "Joe Rybandt"
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -927,6 +3567,90 @@
       ]
     },
     {
+      "id": "joshua-cassara",
+      "name": "Joshua Cassara",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2660/"
+        }
+      ]
+    },
+    {
+      "id": "joshua-cornillon",
+      "name": "Joshua Cornillon",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11465/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "joshua-middleton",
+      "name": "Joshua Middleton",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/190/"
+        }
+      ]
+    },
+    {
+      "id": "joshua-williamson",
+      "name": "Joshua Williamson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/329/"
+        }
+      ]
+    },
+    {
+      "id": "josie-christensen",
+      "name": "Josie Christensen",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/05/j-christensen.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2062/"
+        }
+      ],
+      "aliases": [
+        "Josie Weaver"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "jo-lle-jones",
+      "name": "Jo\u00eblle Jones",
+      "description": "Jo\u00eblle Jones is an American comic book artist and writer. She is best known for creating Lady Killer, a series published in 2015\u20132017 by Dark Horse Comics.\r\n\r\nJones was born in 1980 in Boise, Idaho and grew up there. She attended the Pacific Northwest College of Art to study oil painting. She left school to pursue comic book illustration. She stayed in the Portland, Oregon area for several years, where she worked as a freelance artist for Dark Horse Comics and Oni Press.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/joelle-jones.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/140/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "juan-samu",
       "name": "Juan Samu",
       "description": "",
@@ -935,11 +3659,27 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/juan-samu/4040-91603/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8901/"
         }
       ],
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "julian-totino-tedesco",
+      "name": "Julian Totino Tedesco",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/219/"
+        }
       ]
     },
     {
@@ -961,6 +3701,24 @@
       ]
     },
     {
+      "id": "june-chung",
+      "name": "June Chung",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/06/June-Chungl.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1101/"
+        }
+      ],
+      "aliases": [
+        "June Lee"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "junko-hosizawa",
       "name": "Junko Hosizawa",
       "description": "",
@@ -977,6 +3735,60 @@
       ]
     },
     {
+      "id": "kaeden-mcgahey",
+      "name": "Kaeden McGahey",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5653/"
+        }
+      ]
+    },
+    {
+      "id": "kat-gregorowicz",
+      "name": "Kat Gregorowicz",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4155/"
+        }
+      ]
+    },
+    {
+      "id": "kat-larson",
+      "name": "Kat Larson",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/10/kat.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1123/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "katie-kubert",
+      "name": "Katie Kubert",
+      "description": "Katie Kubert is an American comic book editor. She is known for her work at DC Comics, where she supervised the reinvention of the Batgirl comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/katie-kubert.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/201/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "keith-giffen",
       "name": "Keith Giffen",
       "description": "Keith Giffen was born in Queens, New York City. Giffen is known for having an unconventional writing style, often taking a new approach when writing a character, and sometimes ignoring past continuity.\r\n\r\nHe is possibly best-known for his long runs illustrating, and later writing the Legion of Super-Heroes in the 80's and 90's. He also created the mercenary, Lobo and the zany Ambush Bug. He has worked on several titles over the years, including All-Star Comics, Doctor Fate, Drax the Destroyer, Heckler, Nick Fury's Howling Commandos, The Defenders, Suicide Squad, Justice League International, Trencher, T.H.U.N.D.E.R. Agents, Magnus Robot Fighter. For a while, he took a break from comics and worked in the television and film industry, including shows as The Real Ghostbusters and Ed, Edd 'n' Eddy.\r\n\r\nKeith Giffen was the breakdown artist on 52 and Countdown to Final Crisis. He was also the lead writer for Marvel's Annihilation event. He currently writes Doom Patrol and Booster Gold for DC, and it has been reported that he will be working on the Legion of Super-Heroes Annual.\r\n\r\nGiffen's art has taken on many styles over the years. His early work tended towards a heavy influence from Jack Kirby. When he returned to comics after a hiatus, his style was more precise and reminiscent of George Perez and Jim Starlin, and helped make the Legion of Super-Heroes DC's second most popular comic. It was his work on the Legion that rocketed him to comic book fame and gave him a creative control with the national companies that few artists achieved. He peppered his artwork with in-jokes such as upside down Superman logos, hidden Marvel characters, eyeball creatures, and scrawled humorous messages on signs in the background of his panels in the alternate futuristic alphabet known as Interlac.\r\n\r\nSoon thereafter he developed a scratchier, more impressionistic style, using a highly stylized method of drawing directly with ink, on titles such as Trencher, Lobo: Infanticide and Images of Shadowhawk. After his lengthy sabbatical from comics work, Giffen returned with a style that some said was influenced by his Justice League artist Kevin Maguire that was mid-way between the tight, controlled pencils of his early Legion days and the freer but less anatomically correct style he had later adopted.\r\n\r\nFor many years, Giffen would co-write comics, but only as a plotter. He relied on others such as Robert Loren Fleming, and Tom and Mary Bierbaum to supply dialogue, even when he was basically the author of the work. Beginning with Trencher, Giffen started writing comics fully by himself, although he still collaborates when the project calls for it.\r\n\r\nGiffen is known for having an unorthodox writing style, often using characters in ways not seen before. His dialogue is usually characterized by a biting wit that is seen as much less zany than dialogue provided by longtime collaborators DeMatteis and Fleming. That approach has brought him both criticism and admiration,as perhaps best illustrated by the mixed (although commercially successful) response to his work in Justice League International.\r\n\r\nHe is also known for his humorous takes on existing characters, often focusing on their personality clashes. He also has a tendency to poke fun at trends in comic books or character archetypes. His Ambush Bug miniseries is especially noted for its in-jokes such as Villian the Villain, Cheeks the Toy Wonder, and the use of DC editor Julius Schwartz as a character.\r\n\r\nGiffen was also added to the writing team for the weekly The New 52: Futures End weekly series alongside other writers such as Brian Azzarello, Jeff Lemire, and Dan Jurgens\r\n\r\nSome Characters Created by Keith Giffen\r\n\r\n- Ambush Bug - Aagog - Aaban Tariq - Aegis - Annihilation Wave - Ariel Masters - Arsenal - Azur Te - Banger - Beefeater - Big Sir - Bleeding Adonis - Blood Rose - Blue Beetle(Reyes) - Botfly - Cammi - Carny - Catherine Cobert - Cheeks - Coeval - Coil - Colonel Rumaan Harjavti - The Convert - Dr. Diehard - Dreamslayer - Elton Kookaburra - Enchanthrax - Errata - Ethan Boyer - Fallen One - Fifty Sue - Firestorm (Payne) - G'Nort - Gorgon - Gray Man - Ice - Ilda - Jack of Hearts - Jacques Foccart - Jediah Caul - Jody Robbins - Justin - Kali - Kevin Kho - L-Ron - Laord of the Hunt - Lobo - Locus - Lord Havok - Manga Khan - Martin Welman - Mash - Maxwell Lord - Mercy - Midas - The Mighty Bruce - Porcelain Doll - Queen Bee - Rocket Raccoon - Rocket Red - Stormguard - Silver Sorceress - Sky Witness - Sweet Leilani - Tenebrous - Teri - Terry - Thumpa - Tracer - Vext - Warwolf - The Wanderer - Wandjina - Woodgod - Xum of All Things",
@@ -985,6 +3797,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/keith-giffen/4040-6536/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/232/"
         }
       ],
       "birthYear": 1952,
@@ -1007,6 +3823,21 @@
       ]
     },
     {
+      "id": "keith-wood",
+      "name": "Keith Wood",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3068/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "kelly-thompson",
       "name": "Kelly Thompson",
       "description": "",
@@ -1015,11 +3846,64 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/kelly-thompson/4040-83841/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1108/"
         }
       ],
       "country": "U.S.A.",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "ken-bruzenak",
+      "name": "Ken Bruzenak",
+      "description": "Ken Bruzenak is an American comic book letterer, primarily known for his work on Howard Chaykin\u2019s American Flagg! Bruzenak's lettering and logowork was integral to the comic's futuristic, trademark-littered ambiance. During the course of his career, Bruzenak has been closely associated with both Chaykin and Jim Steranko.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/21/Ken_Bruzenak.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1216/"
+        }
+      ],
+      "birthYear": 1952,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ken-fitch",
+      "name": "Ken Fitch",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4488/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "kendrick-lim",
+      "name": "Kendrick Lim",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/17/Kunkka.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2100/"
+        }
+      ],
+      "aliases": [
+        "Kunkka"
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1063,19 +3947,149 @@
       ]
     },
     {
-      "id": "leo-fox",
-      "name": "Leo Fox",
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "id": "kevin-maguire",
+      "name": "Kevin Maguire",
+      "description": "Kevin Maguire is an American comics artist, known for his work on series such as Justice League, Batman Confidential, Captain America, and X-Men.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/Kevin_Maguire.jpg",
       "references": [
         {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/leo-fox/4040-133747/"
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/287/"
+        }
+      ],
+      "birthYear": 1960,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "kevin-walker",
+      "name": "Kevin Walker",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2352/"
+        }
+      ]
+    },
+    {
+      "id": "klaus-janson",
+      "name": "Klaus Janson",
+      "description": "Klaus Janson is a German-born American comics artist, working regularly for Marvel Comics and DC Comics and sporadically for independent companies. While he is best known as an inker, Janson has frequently worked as a penciller and colorist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/klaus-janson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/49/"
+        }
+      ],
+      "birthYear": 1952,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "konner-knudsen",
+      "name": "Konner Knudsen",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4780/"
         }
       ],
       "sources": [
-        "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "kyle-hotz",
+      "name": "Kyle Hotz",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/06/kyle-holtz.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/574/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "laura-allred",
+      "name": "Laura Allred",
+      "description": "Laura Allred is an American comics artist who is best known for her work with her husband, Mike Allred, as a colorist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/laura-allred.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/142/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lauren-herda",
+      "name": "Lauren Herda",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5843/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lee-kohse",
+      "name": "Lee Kohse",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16838/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lee-loughridge",
+      "name": "Lee Loughridge",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/24/lee_loughridge.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/892/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lee-weeks",
+      "name": "Lee Weeks",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/450/"
+        }
       ]
     },
     {
@@ -1087,6 +4101,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/leomacs/4040-77060/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3030/"
         }
       ],
       "aliases": [
@@ -1110,6 +4128,10 @@
         {
           "name": "Artist Website",
           "url": "https://kineticcollectibles.com/pages/letizia-cadonici"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6169/"
         }
       ],
       "sources": [
@@ -1135,6 +4157,30 @@
       ]
     },
     {
+      "id": "lindsey-cohick",
+      "name": "Lindsey Cohick",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1557/"
+        }
+      ]
+    },
+    {
+      "id": "lipwei-chang",
+      "name": "Lipwei Chang",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17755/"
+        }
+      ]
+    },
+    {
       "id": "lorenzo-de-felici",
       "name": "Lorenzo De Felici",
       "description": "",
@@ -1143,10 +4189,90 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/lorenzo-de-felici/4040-78734/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3162/"
         }
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "lovern-kindzierski",
+      "name": "Lovern Kindzierski",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/29/lovern.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1015/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "luana-vecchio",
+      "name": "Luana Vecchio",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2023/04/26/l-vecchio.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5282/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lyndon-radchenka",
+      "name": "Lyndon Radchenka",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/14758/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "maggie-howell",
+      "name": "Maggie Howell",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/12/maggie-howell.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/700/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "marguerite-bennett",
+      "name": "Marguerite Bennett",
+      "description": "Marguerite Bennett is an American comic book writer. She has worked on Bombshells, Angela, Josie and the Pussycats, and her creator-owned books InSeXts and Animosity. Her work has been recognized for her depiction of female relationships, and her representation of LGBTQ stories and characters earned nominations for a GLAAD Media Award in 2016 and 2017.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/15/M_Bennett.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1154/"
+        }
+      ],
+      "birthYear": 1988,
+      "sources": [
         "metron"
       ]
     },
@@ -1158,6 +4284,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/maria-llovet/4040-95136/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5283/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8058255-4499185697-Featu.jpg",
@@ -1165,6 +4295,147 @@
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "maria-wolf",
+      "name": "Maria Wolf",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4834/"
+        }
+      ]
+    },
+    {
+      "id": "marie-javins",
+      "name": "Marie Javins",
+      "description": "Marie Javins is an American comic book editor, comic book colorist, and travel writer known for her long association with Marvel Comics and the Teshkeel Media Group. Named Editor in Chief of DC Comics in 2020.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/marie-javins.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/59/"
+        }
+      ],
+      "birthYear": 1966,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "marie-krupina",
+      "name": "Marie Krupina",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/08/10/m-krupina.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3987/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "marie-severin",
+      "name": "Marie Severin",
+      "description": "Marie Severin was an American comics artist and colorist best known for her work for Marvel Comics and the 1950's EC Comics. She was inducted into the Will Eisner Comics Hall of Fame in 2001.\r\n\r\nObituaries found at Comics Beat \"The Obituary Marie Severin Should Have Received\" (http://www.comicsbeat.com/the-obituary-marie-severin-should-have-received/), New York Times \"Marie Severin, Versatile Comic Book Artist, Dies at 89\" (https://www.nytimes.com/2018/09/03/obituaries/marie-severin-versatile-comic-book-artist-dies-at-89.html), The Comics Journal \"Features, Marie Severin: 1929-2018\" (https://www.tcj.com/marie-severin-1929-2018/), Marvel.com \"Remembering Marie Severin, 1929-2018\" (https://www.marvel.com/articles/comics/remembering-marie-severin), and The Atlantic \"Culture, Remembering the Woman Who Changed Marvel Comics\" (https://www.theatlantic.com/entertainment/archive/2018/08/remembering-the-woman-who-changed-marvel-comics/569101/) (amongst many).\r\n\r\nSeverin did support work as a colorist for EC Comics, from 1951 to 1955; Marvel Comics, from 1955 to 1957 and 1961 to 1992; Russ Cochran, from 1978 to 1991; Fantagraphics Books, in 1987; and DC Comics from 1996 to 1998.\r\n\r\nMarie also did further support work for Marvel Comics in production, from 1965 to about 1968; art director, from 1974 to 1979; coloring director, from 1980 to 1992. She was also head colorist from an unknown date to 1972. Severin did pencils and inks comics work around 1988 for use by Marvel Comics licensing and merchandising.\r\n\r\nWorked as a staff artist for the Federal Reserve Bank from 1957 to 1960. Works as artist on some filmstrips for Filmfax Productions in 1960, ones involving mythology is known.\r\n\r\nShe did coloring syndication work for the Sunday comic strip Bat Masterson (Columbia Features, 1959 series), from about 1959 to about 1960.\r\n\r\nSeverin did pencil and ink work for the fanzines, Marvelmania (Marvelmania International, 1970 series) #5 (1970), #6 (1971) [known, probably worked the entire run] and EC Lives (Ron Barlow, 1972 series), the 1972 EC Fan-Addict Convention book.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/10/m-severin.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/675/"
+        }
+      ],
+      "birthYear": 1929,
+      "deathYear": 2018,
+      "aliases": [
+        "M. Hands",
+        "Robert Janeway",
+        "S. M.",
+        "SEV",
+        "Marie Sev",
+        "7",
+        "7-EV",
+        "7EV",
+        "M7",
+        "MS"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "marissa-louise",
+      "name": "Marissa Louise",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/06/Marissa-Louise.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/564/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mark-doyle",
+      "name": "Mark Doyle",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/mark-doyle.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/173/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mark-elijah-rosenberg",
+      "name": "Mark Elijah Rosenberg",
+      "description": "A film director, writer, editor and producer, and is the Founder and former Artistic Director of Rooftop Films.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/05/16/m-e-rosenberg.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18222/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mark-englert",
+      "name": "Mark Englert",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2785/"
+        }
+      ]
+    },
+    {
+      "id": "martin-biro",
+      "name": "Martin Biro",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1617/"
+        }
       ]
     },
     {
@@ -1192,11 +4463,30 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/martin-simmonds/4040-67755/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2875/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883441-martin_simmonds.jpg",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "mart-n-morazzo",
+      "name": "Mart\u00edn Morazzo",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2020/09/04/m-morazzo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3954/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1221,6 +4511,36 @@
       ]
     },
     {
+      "id": "mar-a-lapham",
+      "name": "Mar\u00eda Lapham",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/06/m-lapham.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1329/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "matt-hollingsworth",
+      "name": "Matt Hollingsworth",
+      "description": "Matt Hollingsworth is a comic book colorist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/11/matt-hollingsworth.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/693/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "matt-kindt",
       "name": "Matt Kindt",
       "description": "Kindt's first full graphic novel, Pistolwhip, was released by Top Shelf in 2002. It was critically acclaimed and bagged Kindt two Harvey Award nominations (for \"Best Graphic Album of Original Work\" and \"Best New Talent\"). His webcomic Super Spy was collected by Top Shelf in 2007, and nominated for an Eisner the following year.\r\n\r\nHe started his association with Vertigo in 2010, with the publication of his graphic novel Revolver. Around the same time, he began working with Jeff Lemire on Sweet Tooth. In 2012, his critically acclaimed series Mind MGMT began publication under the Dark Horse banner. He was the writer for several issues of the new 52 Frankenstein, Agent of S.H.A.D.E. series until its cancellation, following which DC's Chief Creative Officer Geoff Johns brought him onboard the Justice League of America series to pen a Martian Manhunter backup feature, which has been received well by both critics as well as fans. His involvement with DC has deepened in 2013; he has written an arc of the digitial comic series Adventures of Superman, been put in charge of the Forever Evil: A.R.G.U.S. spin-off post-Trinity War, as well as being chosen to pen the Harley Quinn, Deadshot, Sinestro and Solomon Grundy villain one-shots of September 2013's DC Villains Month feature. He also wrote 5 issues of Justice League of America (#7-11) focusing on the Martian Manhunter. For Marvel, he will be writing the Infinity spin-off limited series Infinity: The Hunt.\r\n\r\nIn 2013, he began writing the Valiant series Unity, a team-up book in the style of the Avengers and the Justice League. He has since written several more Valiant titles including Rai, the Divinity series, Ninjak, and The Valiant, the latter co-written with Lemire. He was also put in charge of Valiant's 2016 blockbuster event, 4001 A.D., spinning out of Rai.",
@@ -1235,6 +4555,75 @@
       "country": "United States of America",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "matthew-levine",
+      "name": "Matthew Levine",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3988/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "matthew-rosenberg",
+      "name": "Matthew Rosenberg",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/04/25/m-rosenberg.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1707/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "matthew-wilson",
+      "name": "Matthew Wilson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10/"
+        }
+      ]
+    },
+    {
+      "id": "mattia-de-iulis",
+      "name": "Mattia De Iulis",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2355/"
+        }
+      ]
+    },
+    {
+      "id": "maya-bollinger",
+      "name": "Maya Bollinger",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6362/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1268,6 +4657,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/michael-avon-oeming/4040-2994/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/687/"
         }
       ],
       "country": "United States",
@@ -1278,6 +4671,168 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "michael-del-mundo",
+      "name": "Michael Del Mundo",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/mike_del_mundo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/845/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "michael-heisler",
+      "name": "Michael Heisler",
+      "description": "An American comic book writer known for his work on the series DV8 and Union. Heisler got his start in the industry in the late 1980s as a letterer, primarily for Marvel Comics. From there, he moved into writing and editing.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/09/Michael-Heisler.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1111/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "michael-spicer",
+      "name": "Michael Spicer",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/mike-spicer.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/460/"
+        }
+      ],
+      "aliases": [
+        "Mike Spicer"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "michael-walsh",
+      "name": "Michael Walsh",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/419/"
+        }
+      ]
+    },
+    {
+      "id": "michelle-marchese",
+      "name": "Michelle Marchese",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6167/"
+        }
+      ]
+    },
+    {
+      "id": "mike-huddleston",
+      "name": "Mike Huddleston",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/26/Mike_Huddlestone.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2451/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mike-mignola",
+      "name": "Mike Mignola",
+      "description": "Michael Joseph \"Mike\" Mignola is an American comics artist and writer known for creating the \"Mignola-verse\" for Dark Horse Comics, a collection of titles including Hellboy, B.P.R.D. and various spinoffs (Lobster Johnson, Abe Sapien, Sir Edward Grey, Witchfinder, etc.). He has also created similarly themed titles for Dark Horse including Baltimore, The Amazing Screw-On Head, and Joe Golem: Occult Detective.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/mike-mignola.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/47/"
+        }
+      ],
+      "birthYear": 1960,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mike-richardson",
+      "name": "Mike Richardson",
+      "description": "Mike Richardson is an American publisher, writer, and Emmy-winning producer. In 1986, he founded Dark Horse Comics, an award-winning international publishing house located in Milwaukie, Oregon. Richardson is also the founder and President of the Things From Another World retail chain and president of Dark Horse Entertainment, which has developed and produced numerous projects for film and television based on Dark Horse properties or licensed properties.\r\n\r\nIn addition, he has written numerous graphic novels and comics series, including The Secret, Living with the Dead, and Cut as well as co-authoring two non-fiction books: Comics Between the Panels and Blast Off!.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/21/richardson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1227/"
+        }
+      ],
+      "birthYear": 1950,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mike-tisserand",
+      "name": "Mike Tisserand",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11092/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mike-zeck",
+      "name": "Mike Zeck",
+      "description": "Michael J. Zeck, known professionally as Mike Zeck, is an American comics artist. He is best known for his work for Marvel Comics on such series as Captain America, Marvel Super-Heroes Secret Wars, Master of Kung-Fu, and The Punisher as well as the \"Kraven's Last Hunt\" storyline in the Spider-Man titles.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/mike-zeck.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/859/"
+        }
+      ],
+      "birthYear": 1949,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "mirka-andolfo",
+      "name": "Mirka Andolfo",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/480/"
+        }
       ]
     },
     {
@@ -1298,6 +4853,66 @@
       ]
     },
     {
+      "id": "nate-piekos",
+      "name": "Nate Piekos",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/14/Nate-Piekos.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/774/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "nathan-cosby",
+      "name": "Nathan Cosby",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/14/Nathan-Cosby.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/767/"
+        }
+      ],
+      "aliases": [
+        "Nate Cosby"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "nic-klein",
+      "name": "Nic Klein",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/889/"
+        }
+      ]
+    },
+    {
+      "id": "nick-robles",
+      "name": "Nick Robles",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2022/06/26/n-robles.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2027/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "nicole-goux",
       "name": "Nicole Goux",
       "description": "",
@@ -1310,6 +4925,66 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "nimit-malavia",
+      "name": "Nimit Malavia",
+      "description": "Nimit Malavia is an award-winning freelance illustrator from Ottawa, Ontario. He graduated from Sheridan College with a degree in Illustration and has produced art for Marvel Comics, Shopify, 20th Century Fox and National Post. His works have appeared in galleries all over the world, including Toronto, San Francisco, Berlin, and London.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/11/11/n-malavia.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3078/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "olyoptics",
+      "name": "Olyoptics",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7072/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "pat-redding",
+      "name": "Pat Redding",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4070/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "patricio-delpeche",
+      "name": "Patricio Delpeche",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2021/07/14/p-delpeche.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5099/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1394,6 +5069,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/paul-pope/4040-4306/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1116/"
         }
       ],
       "birthYear": 1970,
@@ -1405,6 +5084,18 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "pepe-larraz",
+      "name": "Pepe Larraz",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16/"
+        }
       ]
     },
     {
@@ -1450,6 +5141,126 @@
       ]
     },
     {
+      "id": "phillip-kennedy-johnson",
+      "name": "Phillip Kennedy Johnson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1245/"
+        }
+      ]
+    },
+    {
+      "id": "pip-martin",
+      "name": "Pip Martin",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6246/"
+        }
+      ]
+    },
+    {
+      "id": "rachel-dodson",
+      "name": "Rachel Dodson",
+      "description": "Rachel Dodson is an American comic book inker and colorist, who often works with her husband, Terry Dodson. Her work includes Marvel Knights Spider-Man, Spider-Man/Black Cat: The Evil that Men Do and Avenging Spider-Man for Marvel Comics and Wonder Woman for DC Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/rachel_dodson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/464/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "rachelle-rosenberg",
+      "name": "Rachelle Rosenberg",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/216/"
+        }
+      ]
+    },
+    {
+      "id": "rachta-lin",
+      "name": "Rachta Lin",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5833/"
+        }
+      ]
+    },
+    {
+      "id": "ralph-cabrera",
+      "name": "Ralph Cabrera",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3784/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ram-v",
+      "name": "Ram V",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/13/ram-v.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1484/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ramiro-portnoy",
+      "name": "Ramiro Portnoy",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3386/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "raymond-gay",
+      "name": "Raymond Gay",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5497/"
+        }
+      ]
+    },
+    {
       "id": "reed-waller",
       "name": "Reed Waller",
       "description": "",
@@ -1471,6 +5282,51 @@
       ]
     },
     {
+      "id": "renee-miller",
+      "name": "Renee Miller",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11088/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ren-e-witterstaetter",
+      "name": "Ren\u00e9e Witterstaetter",
+      "description": "Ren\u00e9e Witterstaetter, sometimes credited as Eva Renee Witterstaetter, is an American comic book colorist, editor, producer, and writer. She has worked on comics such as the Avengers, Spider-Man, She-Hulk, and Superman. She is best known for her work as an editor with John Byrne on the Marvel Comics series The Sensational She-Hulk. Witterstaetter was also featured as a fourth wall breaking character in the same series.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/02/r-witterstaetter.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1419/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "reuben-rude",
+      "name": "Reuben Rude",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7070/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "richard-corben",
       "name": "Richard Corben",
       "description": "Richard Corben (November 1, 1940 \u2013 December 2, 2020) was an American illustrator and comic book artist best known for his comics featured in Heavy Metal magazine, especially the Den series which was featured in the magazine's first film adaptation in 1981. He was the winner of the 2009 Spectrum Grand Master Award and the 2018 Grand Prix at Angoul\u00eame. In 2012 he was elected to the Will Eisner Award Hall of Fame.",
@@ -1483,6 +5339,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/richard-corben/4040-1350/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1220/"
         }
       ],
       "birthYear": 1940,
@@ -1498,6 +5358,18 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "richard-mercado",
+      "name": "Richard Mercado",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6918/"
+        }
       ]
     },
     {
@@ -1528,6 +5400,36 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "riley-rossmo",
+      "name": "Riley Rossmo",
+      "description": "Riley Rossmo is an artist who is best known for his work on the Image Comics titles Proof, Cowboy Ninja Viking and Bedlam.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/riley-rossmo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/137/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "rob-leigh",
+      "name": "Rob Leigh",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/08/20/Rob-Leigh.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/107/"
+        }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {
@@ -1562,6 +5464,22 @@
       ]
     },
     {
+      "id": "robert-kirkman",
+      "name": "Robert Kirkman",
+      "description": "Robert Kirkman is an American comic book writer best known for creating The Walking Dead, Invincible, Tech Jacket, Outcast and Oblivion Song for Image Comics, in addition to writing Ultimate X-Men, Irredeemable Ant-Man and Marvel Zombies for Marvel Comics. He has also collaborated with Image Comics co-founder Todd McFarlane on the series Haunt. He is one of the five partners of Image Comics, and the only one of the five who was not one of its co-founders.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/07/r-kirkman.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2334/"
+        }
+      ],
+      "birthYear": 1978,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "roger-langridge",
       "name": "Roger Langridge",
       "description": "He is the creator of \"The Muppet Show: The Comic Book\" for which he received a Eisner Award nomination. He is most currently working on the series Snarked.",
@@ -1570,12 +5488,135 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/roger-langridge/4040-25789/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3515/"
         }
       ],
       "birthYear": 1967,
       "country": "United Kingdom",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "romulo-fajardo-jr",
+      "name": "Romulo Fajardo Jr.",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/89/"
+        }
+      ]
+    },
+    {
+      "id": "ron-lim",
+      "name": "Ron Lim",
+      "description": "Ronald \"Ron\" Lim is an American comic book artist living in Sacramento, California. He is best known for his work for Marvel Comics on their various \"cosmic\" titles, most particularly the Silver Surfer (vol. 3) series.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/14/Ron_Lim.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/221/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ron-marz",
+      "name": "Ron Marz",
+      "description": "Ron Mar is an American comic book writer, known for his work on titles such as Batman/Aliens, DC vs. Marvel, Green Lantern, Silver Surfer, and Witchblade.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/16/Ron-Marz.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/791/"
+        }
+      ],
+      "birthYear": 1965,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ronda-pattison",
+      "name": "Ronda Pattison",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/05/03/r-pattison.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1762/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "rosemary-valero-o-connell",
+      "name": "Rosemary Valero-O'Connell",
+      "description": "An American illustrator and cartoonist. She is known for her work with DC Comics and BOOM! Studios.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2022/06/12/r-v-oconnell.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6280/"
+        }
+      ],
+      "birthYear": 1994,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "rus-wooton",
+      "name": "Rus Wooton",
+      "description": "Rus Wooton is a comics letterer who has worked on hundreds of your favorite comics, from INVINCIBLE to THE WALKING DEAD and beyond",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/06/26/r-wooton.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2215/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "russell-cole",
+      "name": "Russell Cole",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4475/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "ryan-brown",
+      "name": "Ryan Brown",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12288/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1592,6 +5633,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/ryan-ottley/4040-46140/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/593/"
         }
       ],
       "birthYear": 1975,
@@ -1600,6 +5645,18 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "ryan-sook",
+      "name": "Ryan Sook",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/24/"
+        }
       ]
     },
     {
@@ -1625,6 +5682,36 @@
       ]
     },
     {
+      "id": "sabrina-futch",
+      "name": "Sabrina Futch",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/10/29/1737947969194.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11409/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sally-hurst",
+      "name": "Sally Hurst",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9600/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "sam-keith",
       "name": "Sam Keith",
       "description": "Samuel Coleman Kieth (January 11, 1963 \u2013 March 15, 2026) was an American comics artist and writer, best known as the creator of The Maxx and Zero Girl and co- creator of The Sandman.",
@@ -1642,6 +5729,23 @@
       ]
     },
     {
+      "id": "sam-kieth",
+      "name": "Sam Kieth",
+      "description": "Sam Kieth is an American comics artist and writer, best known as the creator of The Maxx and Zero Girl.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/04/19/sam-kieth.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1665/"
+        }
+      ],
+      "birthYear": 1963,
+      "deathYear": 2026,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "sandez-rey",
       "name": "Sandez Rey",
       "description": "",
@@ -1654,6 +5758,33 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "satoshi-shiki",
+      "name": "Satoshi Shiki",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17117/"
+        }
+      ]
+    },
+    {
+      "id": "scott-allie",
+      "name": "Scott Allie",
+      "description": "Scott Allie is an American comics writer and editor, best known as an editor and executive at Dark Horse Comics from 1994 to 2017.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/12/scott_allie.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/709/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1685,6 +5816,51 @@
       ]
     },
     {
+      "id": "scott-newman",
+      "name": "Scott Newman",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/06/20/s-newman.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2509/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "scott-snyder",
+      "name": "Scott Snyder",
+      "description": "Scott Snyder is an American writer. He is known for his 2006 short story collection Voodoo Heart, and his comic book writing, including American Vampire, Detective Comics, Batman, Batman: Gates of Gotham, and Swamp Thing.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/13/scottsnyder.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/148/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sean-mackiewicz",
+      "name": "Sean Mackiewicz",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/01/17/mackiewicz.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1185/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "sean-phillips",
       "name": "Sean Phillips",
       "imageUrl": "https://cdn.imagecomics.com/assets/i/creators/454879/sean-phillips_5ccece50fe_4c8d099e819a7146712525ccb2eb9e7c.jpg",
@@ -1697,6 +5873,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/sean-phillips/4040-3717/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/162/"
         }
       ],
       "birthYear": 1965,
@@ -1704,6 +5884,98 @@
       "sources": [
         "wikipedia",
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "sean-von-gorman",
+      "name": "Sean Von Gorman",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/03/08/1c6b0b80e0254b8bbc875b95987ff784.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/13198/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "shannon-andrews-ballesteros",
+      "name": "Shannon Andrews Ballesteros",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1552/"
+        }
+      ]
+    },
+    {
+      "id": "shantel-larocque",
+      "name": "Shantel LaRocque",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/12/Shantel_LaRocque.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/713/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sheldon-moldoff",
+      "name": "Sheldon Moldoff",
+      "description": "Sheldon \"Shelly\" Moldoff was an American comics artist best known for his early work on the DC Comics characters Hawkman and Hawkgirl, and as one of Bob Kane's primary \"ghost artists\" (uncredited collaborators) on the superhero Batman. He co-created the Batman super-villains Poison Ivy, Mr. Freeze, the second Clayface, and Bat-Mite, as well as the original heroes Bat-Girl, Batwoman, and Ace the Bat-Hound. Moldoff is the sole creator of the Black Pirate. Moldoff is not to be confused with fellow Golden Age comics professional Sheldon Mayer.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/Sheldon_Moldoff.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/43/"
+        }
+      ],
+      "birthYear": 1920,
+      "deathYear": 2012,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "shelly-bond",
+      "name": "Shelly Bond",
+      "description": "Shelly Bond is an American comic book editor, known for her two decades at DC Comics' Vertigo (DC Comics) imprint, for which she was executive editor from 2013 to 2016.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/15/s-bond.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1352/"
+        }
+      ],
+      "aliases": [
+        "Shelly Roeberg"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sierra-hahn",
+      "name": "Sierra Hahn",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/17/s-hahn.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1505/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1716,6 +5988,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/simon-bisley/4040-8849/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/897/"
         }
       ],
       "birthYear": 1962,
@@ -1729,6 +6005,63 @@
       ]
     },
     {
+      "id": "simon-gane",
+      "name": "Simon Gane",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9066/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "skan-srisuwan",
+      "name": "Skan Srisuwan",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1360/"
+        }
+      ]
+    },
+    {
+      "id": "stevan-subi",
+      "name": "Stevan Subi\u0107",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2022/10/22/s-subic.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6695/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-blackwell",
+      "name": "Steve Blackwell",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4778/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "steve-carr",
       "name": "Steve Carr",
       "description": "",
@@ -1737,6 +6070,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/steve-carr/4040-28535/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3694/"
         }
       ],
       "aliases": [
@@ -1744,6 +6081,21 @@
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-foxe",
+      "name": "Steve Foxe",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4001/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1772,6 +6124,36 @@
       ]
     },
     {
+      "id": "steve-oliff",
+      "name": "Steve Oliff",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/05/steve-olif.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/530/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-wands",
+      "name": "Steve Wands",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/03/Steve-Wands.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/512/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "stipan-morian",
       "name": "Stipan Morian",
       "description": "",
@@ -1779,12 +6161,58 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/stipan-morian/4040-124594/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6504/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9808830-stipan_morian.jpg",
       "country": "Croatia",
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "sunghan-yune",
+      "name": "Sunghan Yune",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4991/"
+        }
+      ]
+    },
+    {
+      "id": "sven-elven",
+      "name": "Sven Elven",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4786/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "terry-dodson",
+      "name": "Terry Dodson",
+      "description": "Terrence \"Terry\" Dodson is an American comic book artist and penciller. He is best known for his work on titles such as Harley Quinn, Trouble, Marvel Knights Spider-Man, Wonder Woman and Uncanny X-Men. His pencils are usually inked by his wife Rachel Dodson, who is a comic book inker and colorist.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/28/Terry-Dodson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/463/"
+        }
+      ],
+      "sources": [
         "metron"
       ]
     },
@@ -1826,6 +6254,110 @@
       ]
     },
     {
+      "id": "todd-klein",
+      "name": "Todd Klein",
+      "description": "Todd Klein is an American comic book letterer, logo designer, and occasional writer, primarily for DC Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/28/todd-klein.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1003/"
+        }
+      ],
+      "birthYear": 1951,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "todd-nauck",
+      "name": "Todd Nauck",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/280/"
+        }
+      ]
+    },
+    {
+      "id": "tom-brevoort",
+      "name": "Tom Brevoort",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/537/"
+        }
+      ]
+    },
+    {
+      "id": "tom-defalco",
+      "name": "Tom DeFalco",
+      "description": "Tom DeFalco is an American comic book writer and editor, well known for his association with Marvel Comics and in particular for his work with Spider-Man.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/tom-defalco.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/268/"
+        }
+      ],
+      "birthYear": 1950,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tom-muller",
+      "name": "Tom Muller",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/07/26/t-muller.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2450/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tom-napolitano",
+      "name": "Tom Napolitano",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/tom-napolitano.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/62/"
+        }
+      ],
+      "aliases": [
+        "Thomas Napolitano"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tom-vincent",
+      "name": "Tom Vincent",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3225/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "tone-rodriguez",
       "name": "Tone Rodriguez",
       "description": "Artist. Recently penciled the 7-Eleven exclusive Radioactive Man comic for Bongo Comics.",
@@ -1834,10 +6366,45 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tone-rodriguez/4040-45406/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5840/"
         }
       ],
       "sources": [
         "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "toni-fejzula",
+      "name": "Toni Fejzula",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10332/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tony-fleecs",
+      "name": "Tony Fleecs",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/09/19/t-fleecs.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2839/"
+        }
+      ],
+      "birthYear": 1979,
+      "sources": [
         "metron"
       ]
     },
@@ -1856,6 +6423,66 @@
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "tony-moore",
+      "name": "Tony Moore",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/tony-moore.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/848/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "trish-forstner",
+      "name": "Trish Forstner",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2025/04/07/trish-forstner_7997c37728_4c8d099e819a7146712525ccb2eb9e7c.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6660/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tula-lotay",
+      "name": "Tula Lotay",
+      "description": "Lisa Wood, known by her pen name Tula Lotay, is an English comic book artist. She is best known for illustrating Supreme: Blue Rose, written by Warren Ellis for Image Comics. She was also an artist for Si Spencer's eight-part series Bodies, published by Vertigo.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/02/18/t-lotay.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1364/"
+        }
+      ],
+      "aliases": [
+        "Lisa Wood"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "tyler-boss",
+      "name": "Tyler Boss",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/428/"
+        }
       ]
     },
     {
@@ -1893,6 +6520,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tyler-crook/4040-61923/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1747/"
         }
       ],
       "country": "U.S.",
@@ -1925,6 +6556,199 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "vincent-sullivan",
+      "name": "Vincent Sullivan",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4477/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "w-maxwell-prince",
+      "name": "W. Maxwell Prince",
+      "description": "W. Maxwell Prince writes in Brooklyn and lives with his wife, daughter, and two cats called Mischief and Mayhem. He is the author of ONE WEEK IN THE LIBRARY (Image), The Electric Sublime (IDW), and Judas: The Last Days (ibid). When not writing, he tries to render all of human experience in chart form.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2024/03/05/41a8JhFBQkL.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6186/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "wally-wood",
+      "name": "Wally Wood",
+      "description": "Wallace Allan Wood was an American comic book writer, artist and independent publisher, best known for his work on EC Comics's Mad and Marvel's Daredevil. He was one of Mad's founding cartoonists in 1952. Although much of his early professional artwork is signed Wallace Wood, he became known as Wally Wood, a name he claimed to dislike. Within the comics community, he was also known as Woody, a name he sometimes used as a signature.\r\n\r\nIn addition to Wood's hundreds of comic book pages, he illustrated for books and magazines while also working in a variety of other areas \u2013 advertising; packaging and product illustrations; gag cartoons; record album covers; posters; syndicated comic strips; and trading cards, including work on Topps' landmark Mars Attacks set.\r\n\r\nEC publisher William Gaines once stated, \"Wally may have been our most troubled artist... I'm not suggesting any connection, but he may have been our most brilliant\".\r\n\r\nHe was the inaugural inductee into the comic book industry's Jack Kirby Hall of Fame in 1989, and was inducted into the Will Eisner Comic Book Hall of Fame in 1992.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/18/wood_wallace.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/333/"
+        }
+      ],
+      "birthYear": 1927,
+      "deathYear": 1981,
+      "aliases": [
+        "Wallace Wood",
+        "Woody"
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "walter-pereyra",
+      "name": "Walter Pereyra",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/03/07/w-pereyra.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1465/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "wayne-faucher",
+      "name": "Wayne Faucher",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/751/"
+        }
+      ]
+    },
+    {
+      "id": "werther-dell-edera",
+      "name": "Werther Dell'Edera",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/09/06/werther-dell-edera.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2738/"
+        }
+      ],
+      "birthYear": 1975,
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "wesley-griffith",
+      "name": "Wesley Griffith",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6521/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "wil-shrike",
+      "name": "Wil Shrike",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16672/"
+        }
+      ]
+    },
+    {
+      "id": "will-ely",
+      "name": "Will Ely",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4479/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "will-robson",
+      "name": "Will Robson",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/986/"
+        }
+      ]
+    },
+    {
+      "id": "yasmine-putri",
+      "name": "Yasmine Putri",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/15/yasmine_putri.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/238/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "yuko-shimizu",
+      "name": "Yuko Shimizu",
+      "description": "Japanese-born freelance illustrator and graphical designer who now lives in New York City. She's currently providing cover art to Vertigo's \"The Unwritten\" series.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2026/07/04/1024786-yuko_shimizu.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4471/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "lvaro-mart-nez-bueno",
+      "name": "\u00c1lvaro Mart\u00ednez Bueno",
+      "description": "Spanish comic artist, currently working on Justice League Dark for DC Comics.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/alvaro-martinez.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/100/"
+        }
+      ],
+      "sources": [
+        "metron"
       ]
     }
   ]

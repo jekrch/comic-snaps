@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import type { Artist, Series } from "../types";
+import type { Artist, IssueCredits, Series } from "../types";
 import { loadMetadata } from "../utils/metadata";
 
-export function useMetadata(artistName: string, seriesSlug: string) {
+export function useMetadata(artistName: string, seriesSlug: string, issue?: number | string) {
   const [artist, setArtist] = useState<Artist | null>(null);
   const [series, setSeries] = useState<Series | null>(null);
   const [parentSeries, setParentSeries] = useState<Series | null>(null);
+  const [issueCredits, setIssueCredits] = useState<IssueCredits | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     loadMetadata()
-      .then(({ artists, series: allSeries }) => {
+      .then(({ artists, series: allSeries, issues }) => {
         if (cancelled) return;
 
         setArtist(artists.find((a) => a.name === artistName) ?? null);
@@ -24,13 +25,19 @@ export function useMetadata(artistName: string, seriesSlug: string) {
         } else {
           setParentSeries(null);
         }
+
+        setIssueCredits(
+          issue !== undefined
+            ? issues.find((i) => i.series === seriesSlug && String(i.issue) === String(issue)) ?? null
+            : null,
+        );
       })
       .catch(() => {
         // silently ignore — info flip just won't appear
       });
 
     return () => { cancelled = true; };
-  }, [artistName, seriesSlug]);
+  }, [artistName, seriesSlug, issue]);
 
-  return { artist, series, parentSeries, hasContent: !!(artist || series) };
+  return { artist, series, parentSeries, issueCredits, hasContent: !!(artist || series) };
 }

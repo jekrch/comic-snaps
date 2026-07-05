@@ -30,6 +30,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 from metadata.covers import backfill_cover_images, localize_cover_images
+from metadata.credits import backfill_issue_credits
 from metadata.image_metadata import compute_metadata, needs_update
 from metadata.paths import ARTISTS_PATH, GALLERY_PATH, IMAGE_ROOT, SERIES_PATH
 from metadata.seed import seed_artists, seed_series
@@ -100,6 +101,23 @@ def main():
         print(f"Processed {mt_updated} entr(ies) via Metron.")
     else:
         print("No Metron entries needed processing.")
+
+    # Backfill per-issue creator credits (Metron preferred, Comic Vine
+    # fallback). Runs after the series backfills so reference URLs exist.
+    # Promotes credited creators into artists.json.
+    print("Backfilling issue credits...")
+    credits_updated = backfill_issue_credits(panels)
+    if credits_updated:
+        print(f"Processed {credits_updated} issue(s) for credits.")
+        # Enrich any creators the credits step just promoted into
+        # artists.json — entries already processed are skipped, so these
+        # passes only cost requests for the new creators.
+        print("Enriching newly-credited creators...")
+        backfill_wikipedia_descriptions(ARTISTS_PATH, "artists")
+        backfill_comicvine(ARTISTS_PATH, "artists", "people", tiebreak_key=None)
+        backfill_metron(ARTISTS_PATH, "artists", "creator", tiebreak_key=None)
+    else:
+        print("No issues needed credits backfilling.")
 
     # Backfill from Grand Comics Database (series only)
     if args.skip_gcd:
