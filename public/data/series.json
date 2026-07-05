@@ -1504,6 +1504,26 @@
       ]
     },
     {
+      "id": "my-body-is-unspooling",
+      "name": "My Body is Unspooling",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          0
+        ],
+        "comicvine": [
+          0
+        ]
+      }
+    },
+    {
       "id": "nut",
       "name": "Nut",
       "parentSeries": null,

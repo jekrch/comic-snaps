@@ -1063,6 +1063,22 @@
       ]
     },
     {
+      "id": "leo-fox",
+      "name": "Leo Fox",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/leo-fox/4040-133747/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "leomacs",
       "name": "Leomacs",
       "description": "",
