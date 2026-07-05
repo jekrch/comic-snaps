@@ -62,8 +62,8 @@ def comic_vine_search(resource: str, name: str, api_key: str,
         print(f"    WARN: Comic Vine {resource} fetch timed out for {name!r}", file=sys.stderr)
         return []
     except requests.exceptions.HTTPError as e:
-        if health and e.response is not None and e.response.status_code == 429:
-            health.mark_throttled("rate limited (429)")
+        if health and e.response is not None and e.response.status_code in (420, 429):
+            health.mark_throttled(f"rate limited ({e.response.status_code})")
         print(f"    WARN: Comic Vine {resource} fetch failed for {name!r}: {e}", file=sys.stderr)
         return []
     except Exception as e:
@@ -101,8 +101,8 @@ def comic_vine_get(path: str, params: dict, api_key: str,
         print(f"    WARN: Comic Vine {path} request timed out", file=sys.stderr)
         return None
     except requests.exceptions.HTTPError as e:
-        if health and e.response is not None and e.response.status_code == 429:
-            health.mark_throttled("rate limited (429)")
+        if health and e.response is not None and e.response.status_code in (420, 429):
+            health.mark_throttled(f"rate limited ({e.response.status_code})")
         print(f"    WARN: Comic Vine {path} request failed: {e}", file=sys.stderr)
         return None
     except Exception as e:
@@ -207,6 +207,11 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
         results = comic_vine_search(resource, name, api_key, health=health)
         time.sleep(1.0)  # be polite — Comic Vine rate-limits per resource
 
+        # If the fetch itself was throttled, don't mark this entry as processed —
+        # leave it unmarked so it's retried on the next run.
+        if health.should_bail and not results:
+            break
+
         match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
         if not match:
             print(f"    SKIP: no exact match ({len(results)} candidate(s))")
@@ -292,8 +297,8 @@ def fetch_comicvine_covers(series_entry: dict, gallery_issues: list[int],
         print(f"    WARN: Comic Vine issues fetch timed out for volume {volume_id}", file=sys.stderr)
         return []
     except requests.exceptions.HTTPError as e:
-        if health and e.response is not None and e.response.status_code == 429:
-            health.mark_throttled("rate limited (429)")
+        if health and e.response is not None and e.response.status_code in (420, 429):
+            health.mark_throttled(f"rate limited ({e.response.status_code})")
         print(f"    WARN: Comic Vine issues fetch failed for volume {volume_id}: {e}", file=sys.stderr)
         return []
     except Exception as e:
