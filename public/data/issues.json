@@ -117,7 +117,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodr\u00edguez",
+          "name": "Javier Rodríguez",
           "roles": [
             "Artist",
             "Cover"
@@ -206,7 +206,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodr\u00edguez",
+          "name": "Javier Rodríguez",
           "roles": [
             "Artist",
             "Colorist",
@@ -296,7 +296,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodr\u00edguez",
+          "name": "Javier Rodríguez",
           "roles": [
             "Artist",
             "Cover"
@@ -850,7 +850,7 @@
         },
         {
           "artistId": "javier-rodr-guez",
-          "name": "Javier Rodr\u00edguez",
+          "name": "Javier Rodríguez",
           "roles": [
             "Cover"
           ]
@@ -1314,7 +1314,7 @@
         },
         {
           "artistId": "stevan-subi",
-          "name": "Stevan Subi\u0107",
+          "name": "Stevan Subić",
           "roles": [
             "Cover"
           ]
@@ -1439,7 +1439,7 @@
         },
         {
           "artistId": "jorge-forn-s",
-          "name": "Jorge Forn\u00e9s",
+          "name": "Jorge Fornés",
           "roles": [
             "Cover"
           ]
@@ -1515,102 +1515,8 @@
       "id": "buzzard-1",
       "series": "buzzard",
       "issue": 1,
-      "credits": [
-        {
-          "artistId": "eric-powell",
-          "name": "Eric Powell",
-          "roles": [
-            "Writer",
-            "Artist",
-            "Letterer",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "kyle-hotz",
-          "name": "Kyle Hotz",
-          "roles": [
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "dan-brown",
-          "name": "Dan Brown",
-          "roles": [
-            "Colorist"
-          ]
-        },
-        {
-          "artistId": "dave-stewart",
-          "name": "Dave Stewart",
-          "roles": [
-            "Colorist",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "nate-piekos",
-          "name": "Nate Piekos",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "richard-corben",
-          "name": "Richard Corben",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "scott-allie",
-          "name": "Scott Allie",
-          "roles": [
-            "Editor"
-          ]
-        },
-        {
-          "artistId": "brendan-wright",
-          "name": "Brendan Wright",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "freddye-miller",
-          "name": "Freddye Miller",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "sierra-hahn",
-          "name": "Sierra Hahn",
-          "roles": [
-            "Associate Editor"
-          ]
-        },
-        {
-          "artistId": "amy-arendts",
-          "name": "Amy Arendts",
-          "roles": [
-            "Designer"
-          ]
-        },
-        {
-          "artistId": "mike-richardson",
-          "name": "Mike Richardson",
-          "roles": [
-            "Publisher"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/buzzard-2010-1/"
-        }
-      ],
+      "credits": [],
+      "references": [],
       "sources": [
         "metron"
       ]
@@ -1619,94 +1525,8 @@
       "id": "buzzard-2",
       "series": "buzzard",
       "issue": 2,
-      "credits": [
-        {
-          "artistId": "eric-powell",
-          "name": "Eric Powell",
-          "roles": [
-            "Writer",
-            "Artist",
-            "Letterer",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "kyle-hotz",
-          "name": "Kyle Hotz",
-          "roles": [
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "dan-brown",
-          "name": "Dan Brown",
-          "roles": [
-            "Colorist"
-          ]
-        },
-        {
-          "artistId": "dave-stewart",
-          "name": "Dave Stewart",
-          "roles": [
-            "Colorist"
-          ]
-        },
-        {
-          "artistId": "nate-piekos",
-          "name": "Nate Piekos",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "scott-allie",
-          "name": "Scott Allie",
-          "roles": [
-            "Editor"
-          ]
-        },
-        {
-          "artistId": "brendan-wright",
-          "name": "Brendan Wright",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "freddye-miller",
-          "name": "Freddye Miller",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "sierra-hahn",
-          "name": "Sierra Hahn",
-          "roles": [
-            "Associate Editor"
-          ]
-        },
-        {
-          "artistId": "amy-arendts",
-          "name": "Amy Arendts",
-          "roles": [
-            "Designer"
-          ]
-        },
-        {
-          "artistId": "mike-richardson",
-          "name": "Mike Richardson",
-          "roles": [
-            "Publisher"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/buzzard-2010-2/"
-        }
-      ],
+      "credits": [],
+      "references": [],
       "sources": [
         "metron"
       ]
@@ -2671,7 +2491,7 @@
         },
         {
           "artistId": "mart-n-morazzo",
-          "name": "Mart\u00edn Morazzo",
+          "name": "Martín Morazzo",
           "roles": [
             "Artist",
             "Cover"
@@ -3462,7 +3282,7 @@
         },
         {
           "artistId": "jo-lle-jones",
-          "name": "Jo\u00eblle Jones",
+          "name": "Joëlle Jones",
           "roles": [
             "Writer",
             "Artist",
@@ -4463,7 +4283,7 @@
         },
         {
           "artistId": "ren-e-witterstaetter",
-          "name": "Ren\u00e9e Witterstaetter",
+          "name": "Renée Witterstaetter",
           "roles": [
             "Colorist"
           ]
@@ -4679,7 +4499,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "Mar\u00eda Lapham",
+          "name": "María Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4721,7 +4541,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "Mar\u00eda Lapham",
+          "name": "María Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4762,7 +4582,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "Mar\u00eda Lapham",
+          "name": "María Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -4804,7 +4624,7 @@
         },
         {
           "artistId": "mar-a-lapham",
-          "name": "Mar\u00eda Lapham",
+          "name": "María Lapham",
           "roles": [
             "Editor",
             "Production"
@@ -5028,7 +4848,7 @@
         },
         {
           "artistId": "in-s-amaro",
-          "name": "In\u00eas Amaro",
+          "name": "Inês Amaro",
           "roles": [
             "Colorist"
           ]
@@ -5308,7 +5128,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "name": "Álvaro Martínez Bueno",
           "roles": [
             "Artist",
             "Cover"
@@ -5391,7 +5211,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "name": "Álvaro Martínez Bueno",
           "roles": [
             "Artist",
             "Cover"
@@ -5474,7 +5294,7 @@
         },
         {
           "artistId": "lvaro-mart-nez-bueno",
-          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "name": "Álvaro Martínez Bueno",
           "roles": [
             "Artist",
             "Cover"
