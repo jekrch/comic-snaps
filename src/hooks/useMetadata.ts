@@ -1,6 +1,45 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Artist, IssueCredits, Series } from "../types";
 import { loadMetadata } from "../utils/metadata";
+
+export interface ArtistIndex {
+  byId: Map<string, Artist>;
+  byName: Map<string, Artist>;
+}
+
+const EMPTY_INDEX: ArtistIndex = { byId: new Map(), byName: new Map() };
+
+/**
+ * Lookup table for resolving a credited person (by artistId or name) to their
+ * full Artist record, so credits can link out to a profile. Loaded once from
+ * the shared metadata cache.
+ */
+export function useArtistIndex(): ArtistIndex {
+  const [artists, setArtists] = useState<Artist[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadMetadata()
+      .then(({ artists }) => {
+        if (!cancelled) setArtists(artists);
+      })
+      .catch(() => {
+        // silently ignore — names just won't be clickable
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  return useMemo(() => {
+    if (!artists) return EMPTY_INDEX;
+    const byId = new Map<string, Artist>();
+    const byName = new Map<string, Artist>();
+    for (const a of artists) {
+      byId.set(a.id, a);
+      byName.set(a.name, a);
+    }
+    return { byId, byName };
+  }, [artists]);
+}
 
 export function useMetadata(artistName: string, seriesSlug: string, issue?: number | string) {
   const [artist, setArtist] = useState<Artist | null>(null);

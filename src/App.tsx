@@ -166,6 +166,21 @@ export default function App() {
     [sortedPanels]
   );
 
+  // Jump from a creator's profile to the gallery filtered to their work in a
+  // single role: replace filters with just that facet, close the viewer, and
+  // return to the top of the masonry.
+  const handleBrowseBy = useCallback(
+    (dimension: "artists" | "colorists" | "letterers", value: string) => {
+      const next: Filters = { ...EMPTY_FILTERS, [dimension]: new Set([value]) };
+      handleFiltersChange(next);
+      setOpenPanelId(null);
+      setViewerScope("filtered");
+      setCustomViewerPanels(null);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    },
+    [handleFiltersChange]
+  );
+
   const viewerPanels =
     viewerScope === "custom" && customViewerPanels
       ? customViewerPanels
@@ -280,6 +295,7 @@ export default function App() {
           onClose={handleCloseViewer}
           onNavigate={handleNavigateViewer}
           onSelectPanel={handleSelectPanel}
+          onBrowse={handleBrowseBy}
         />
       )}
     </div>

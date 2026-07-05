@@ -1,7 +1,20 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Panel, Artist, Series, Reference, IssueCredits } from "../types";
+import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits } from "../types";
 import { formatIssue } from "../utils/issueFormat";
+import type { ArtistIndex } from "../hooks/useMetadata";
+import PersonProfile, { type PersonFacets } from "./PersonProfile";
+
+function hasProfileInfo(artist: Artist | null): boolean {
+  return !!(
+    artist &&
+    (artist.description ||
+      artist.imageUrl ||
+      artist.references?.length ||
+      artist.birthYear ||
+      artist.country)
+  );
+}
 
 function refIcon(ref: Reference) {
   const url = ref.url.toLowerCase();
@@ -19,6 +32,8 @@ interface Props {
   series: Series | null;
   parentSeries: Series | null;
   issueCredits: IssueCredits | null;
+  artistIndex: ArtistIndex;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
   searchUrl: string;
   topOffset?: number;
   bottomOffset?: number;
@@ -26,7 +41,7 @@ interface Props {
   slideDir?: "left" | "right" | null;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -42,8 +57,60 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const resolveCover = (url: string) =>
     url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
 
+  const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null; facets: PersonFacets } | null>(null);
+  const [personOpen, setPersonOpen] = useState(false);
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
   const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
+
+  // Count each person's appearances per filterable role across the whole
+  // gallery, so a profile can offer "browse panels" jumps with live counts.
+  const facetCounts = useMemo(() => {
+    const artists = new Map<string, number>();
+    const colorists = new Map<string, number>();
+    const letterers = new Map<string, number>();
+    for (const p of allPanels) {
+      artists.set(p.artist, (artists.get(p.artist) ?? 0) + 1);
+      for (const c of p.colorists ?? []) colorists.set(c, (colorists.get(c) ?? 0) + 1);
+      for (const l of p.letterers ?? []) letterers.set(l, (letterers.get(l) ?? 0) + 1);
+    }
+    return { artists, colorists, letterers };
+  }, [allPanels]);
+
+  const resolvePerson = useCallback(
+    (name: string, artistId?: string | null): Artist | null => {
+      if (artistId && artistIndex.byId.has(artistId)) return artistIndex.byId.get(artistId)!;
+      return artistIndex.byName.get(name) ?? null;
+    },
+    [artistIndex]
+  );
+
+  const personFacets = useCallback(
+    (name: string): PersonFacets => ({
+      artists: facetCounts.artists.get(name) ?? 0,
+      colorists: facetCounts.colorists.get(name) ?? 0,
+      letterers: facetCounts.letterers.get(name) ?? 0,
+    }),
+    [facetCounts]
+  );
+
+  // A name is only clickable when there's something to show: a profile record
+  // with content, or panels to browse in at least one role.
+  const isPersonInteractive = useCallback(
+    (name: string, artistId?: string | null): boolean => {
+      const f = personFacets(name);
+      if (f.artists > 0 || f.colorists > 0 || f.letterers > 0) return true;
+      return hasProfileInfo(resolvePerson(name, artistId));
+    },
+    [personFacets, resolvePerson]
+  );
+
+  const openPerson = useCallback(
+    (name: string, artistId?: string | null) => {
+      setActivePerson({ name, artist: resolvePerson(name, artistId), facets: personFacets(name) });
+      setPersonOpen(true);
+    },
+    [resolvePerson, personFacets]
+  );
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [slideOutSettled, setSlideOutSettled] = useState(false);
   const thumbRectRef = useRef<DOMRect | null>(null);
@@ -70,8 +137,16 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   useEffect(() => {
     setSelectedCoverIdx(null);
     setAnimPhase("idle");
+    setActivePerson(null);
+    setPersonOpen(false);
     thumbRectRef.current = null;
   }, [panel.id]);
+
+  // When the drawer itself closes, dismiss any open profile so it doesn't
+  // reappear the next time the drawer opens.
+  useEffect(() => {
+    if (!open) setPersonOpen(false);
+  }, [open]);
 
   // After the slide-out animation completes, snap the drawer to its closed
   // position (off-screen bottom) without transition. This prevents a diagonal
@@ -349,13 +424,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
 
   // Group credited names by role, preserving the role order the backfill
   // stored (credits arrive sorted by role prominence).
-  const creditGroups: [string, string[]][] = [];
+  const creditGroups: [string, IssueCredit[]][] = [];
   if (issueCredits) {
-    const byRole = new Map<string, string[]>();
+    const byRole = new Map<string, IssueCredit[]>();
     for (const credit of issueCredits.credits) {
       for (const role of credit.roles) {
         if (!byRole.has(role)) byRole.set(role, []);
-        byRole.get(role)!.push(credit.name);
+        byRole.get(role)!.push(credit);
       }
     }
     creditGroups.push(...byRole.entries());
@@ -391,6 +466,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   }
 
   return (
+    <>
     <div
       className="absolute inset-x-0 z-15 overflow-y-auto info-modal-scroll"
       style={{
@@ -475,10 +551,30 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 <span className="text-white/20 normal-case tracking-normal">· {formatIssue(panel.issue)}</span>
               </div>
               <div className="space-y-1.5">
-                {creditGroups.map(([role, names]) => (
+                {creditGroups.map(([role, credits]) => (
                   <div key={role} className="flex gap-3 text-xs leading-relaxed">
                     <span className="w-24 shrink-0 text-white/35">{role}</span>
-                    <span className="text-white/70">{names.join(", ")}</span>
+                    <span className="text-white/70">
+                      {credits.map((c, i) => {
+                        const interactive = isPersonInteractive(c.name, c.artistId);
+                        return (
+                          <Fragment key={`${c.name}-${i}`}>
+                            {i > 0 && ", "}
+                            {interactive ? (
+                              <button
+                                type="button"
+                                onClick={() => openPerson(c.name, c.artistId)}
+                                className="text-white/70 hover:text-accent underline decoration-white/20 decoration-dotted underline-offset-2 hover:decoration-accent transition-colors"
+                              >
+                                {c.name}
+                              </button>
+                            ) : (
+                              c.name
+                            )}
+                          </Fragment>
+                        );
+                      })}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -714,9 +810,19 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           )}
           <div className="relative z-10 px-4 py-3">
             <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1.5">Artist</p>
-            <p className="font-display text-sm text-white/90 leading-snug">
-              {panel.artist}
-            </p>
+            {isPersonInteractive(panel.artist, artist?.id) ? (
+              <button
+                type="button"
+                onClick={() => openPerson(panel.artist, artist?.id)}
+                className="font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
+              >
+                {panel.artist}
+              </button>
+            ) : (
+              <p className="font-display text-sm text-white/90 leading-snug">
+                {panel.artist}
+              </p>
+            )}
             {artistMeta && (
               <p className="text-[10px] text-white/40 mt-0.5">{artistMeta}</p>
             )}
@@ -823,5 +929,17 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
         </div>
       </div>
     </div>
+
+    <PersonProfile
+      open={personOpen}
+      name={activePerson?.name ?? ""}
+      artist={activePerson?.artist ?? null}
+      facets={activePerson?.facets ?? { artists: 0, colorists: 0, letterers: 0 }}
+      onClose={() => setPersonOpen(false)}
+      onBrowse={onBrowse}
+      topOffset={topOffset}
+      bottomOffset={bottomOffset}
+    />
+    </>
   );
 }

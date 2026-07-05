@@ -4,7 +4,7 @@ import { ImageViewer } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { setHatchViewerOpen } from "../hooks/useHatchPause";
-import { useMetadata } from "../hooks/useMetadata";
+import { useArtistIndex, useMetadata } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
 import InfoDrawer from "./InfoDrawer";
 
@@ -16,6 +16,7 @@ interface Props {
   onClose: () => void;
   onNavigate: (index: number) => void;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
 }
 
 /**
@@ -38,6 +39,7 @@ function ViewerOverlay({
   bottomOffset,
   closing,
   onSelectPanel,
+  onBrowse,
   setContentShift,
 }: {
   panel: Panel;
@@ -52,9 +54,11 @@ function ViewerOverlay({
   bottomOffset: number;
   closing: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
+  const artistIndex = useArtistIndex();
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
@@ -82,6 +86,8 @@ function ViewerOverlay({
         series={series}
         parentSeries={parentSeries}
         issueCredits={issueCredits}
+        artistIndex={artistIndex}
+        onBrowse={onBrowse}
         searchUrl={searchUrl}
         topOffset={topOffset}
         bottomOffset={bottomOffset}
@@ -110,6 +116,7 @@ export default function PanelViewer({
   onClose,
   onNavigate,
   onSelectPanel,
+  onBrowse,
 }: Props) {
   const [graphOpen, setGraphOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -322,6 +329,7 @@ export default function PanelViewer({
           bottomOffset={ctx.bottomBarHeight}
           closing={ctx.closing}
           onSelectPanel={onSelectPanel}
+          onBrowse={onBrowse}
           setContentShift={ctx.setContentShift}
         />
       )}
