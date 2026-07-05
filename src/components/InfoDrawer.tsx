@@ -14,7 +14,7 @@ interface Props {
   open: boolean;
   panel: Panel;
   allPanels: Panel[];
-  onSelectPanel: (panel: Panel) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   artist: Artist | null;
   series: Series | null;
   parentSeries: Series | null;
@@ -28,6 +28,10 @@ interface Props {
 export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
+  // Full groups (including the current panel) that scope the viewer's prev/next
+  // when a related thumbnail is clicked, so paging stays within that group.
+  const seriesGroup = allPanels.filter((p) => p.slug === panel.slug);
+  const artistGroup = allPanels.filter((p) => p.artist === panel.artist);
   const seriesDesc = series?.description || parentSeries?.description || "";
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
@@ -630,7 +634,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                   <button
                     key={p.id}
                     type="button"
-                    onClick={() => onSelectPanel(p)}
+                    onClick={() => onSelectPanel(p, seriesGroup)}
                     className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
                     style={{ aspectRatio: `${p.width} / ${p.height}` }}
                     title={`${p.title} ${formatIssue(p.issue)}`}
@@ -716,7 +720,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                   <button
                     key={p.id}
                     type="button"
-                    onClick={() => onSelectPanel(p)}
+                    onClick={() => onSelectPanel(p, artistGroup)}
                     className="relative shrink-0 h-24 rounded-sm overflow-hidden bg-white/5 ring-1 ring-inset ring-white/5 hover:ring-white/25 transition-colors"
                     style={{ aspectRatio: `${p.width} / ${p.height}` }}
                     title={`${p.title} ${formatIssue(p.issue)}`}

@@ -4,10 +4,6 @@ import { Expand } from "lucide-react";
 import { formatIssue } from "../utils/issueFormat";
 import { useNearViewport } from "../hooks/useNearViewport";
 
-const DOUBLE_CLICK_DELAY = 400;
-const MOUSE_TOLERANCE = 20;
-const TOUCH_TOLERANCE = 30;
-
 const BLUR_COPY = {
   ew: "ew! open to view",
   nsfw: "for adult intellectuals only! open to view",
@@ -29,14 +25,15 @@ const HATCH_GRAD_COORDS: Record<string, { x1: string; y1: string; x2: string; y2
 
 interface Props {
   panel: Panel;
+  /** This card is the one currently revealing its details overlay. */
+  selected: boolean;
+  /** Reveal this card's details (and hide any other card's). */
+  onSelect: (panel: Panel) => void;
   onOpen: (panel: Panel) => void;
   isFirstLoad?: boolean;
 }
 
-export default function PanelCard({ panel, onOpen }: Props) {
-  const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
-  const lastClick = useRef<{ time: number; x: number; y: number } | null>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+export default function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
   const imgRef = useRef<HTMLImageElement>(null);
   const hatchPatternId = useId();
   const hatchFadeId = useId();
@@ -63,36 +60,16 @@ export default function PanelCard({ panel, onOpen }: Props) {
     onOpen(panel);
   }, [onOpen, panel]);
 
+  // First tap reveals the details; tapping the already-selected card opens the
+  // full viewer. Selecting one card deselects any other (handled by the parent),
+  // so there is no timing window — the two taps can be arbitrarily far apart.
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
-      const now = Date.now();
-      const isTouch = e.pointerType === "touch";
-
-      if (isTouch && overlayRef.current) {
-        const opacity = window.getComputedStyle(overlayRef.current).opacity;
-        if (opacity === "0") {
-          lastTap.current = null;
-          return;
-        }
-      }
-
-      const ref = isTouch ? lastTap : lastClick;
-      const tolerance = isTouch ? TOUCH_TOLERANCE : MOUSE_TOLERANCE;
-      const prev = ref.current;
-
-      if (
-        prev &&
-        now - prev.time < DOUBLE_CLICK_DELAY &&
-        Math.abs(e.clientX - prev.x) <= tolerance &&
-        Math.abs(e.clientY - prev.y) <= tolerance
-      ) {
-        ref.current = null;
-        openViewer();
-      } else {
-        ref.current = { time: now, x: e.clientX, y: e.clientY };
-      }
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (selected) openViewer();
+      else onSelect(panel);
     },
-    [openViewer]
+    [selected, openViewer, onSelect, panel]
   );
 
   const isBlurred = panel.blur === "ew" || panel.blur === "nsfw";
@@ -116,7 +93,9 @@ export default function PanelCard({ panel, onOpen }: Props) {
       <div
         ref={cardRef}
         data-panel-id={panel.id}
-        className="panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised"
+        className={`panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised ${
+          selected ? "panel-selected" : ""
+        }`}
         onPointerUp={handlePointerUp}
       >
         <div
@@ -211,12 +190,12 @@ export default function PanelCard({ panel, onOpen }: Props) {
         )}
 
         <div
-          ref={overlayRef}
           className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${
             isBlurred ? "z-[2]" : ""
           }`}
         >
           <button
+            onPointerUp={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               openViewer();

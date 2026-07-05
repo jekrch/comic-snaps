@@ -27,7 +27,8 @@ export default function App() {
   const [openPanelId, setOpenPanelId] = useState<string | null>(
     () => new URLSearchParams(window.location.search).get("panel")
   );
-  const [viewerScope, setViewerScope] = useState<"filtered" | "all">("filtered");
+  const [viewerScope, setViewerScope] = useState<"filtered" | "all" | "custom">("filtered");
+  const [customViewerPanels, setCustomViewerPanels] = useState<Panel[] | null>(null);
 
   useEffect(() => {
     if (initialTab) {
@@ -131,10 +132,19 @@ export default function App() {
   const handleCloseViewer = useCallback(() => {
     setOpenPanelId(null);
     setViewerScope("filtered");
+    setCustomViewerPanels(null);
   }, []);
 
   const handleSelectPanel = useCallback(
-    (panel: Panel) => {
+    (panel: Panel, group?: Panel[]) => {
+      // A related-panel group (e.g. a whole series or an artist's panels)
+      // scopes prev/next to just that group via the custom list.
+      if (group && group.length > 0) {
+        setCustomViewerPanels(group);
+        setViewerScope("custom");
+        setOpenPanelId(panel.id);
+        return;
+      }
       const inFiltered = sortedPanels.some((p) => p.id === panel.id);
       setViewerScope(inFiltered ? "filtered" : "all");
       setOpenPanelId(panel.id);
@@ -142,7 +152,12 @@ export default function App() {
     [sortedPanels]
   );
 
-  const viewerPanels = viewerScope === "all" ? panels : sortedPanels;
+  const viewerPanels =
+    viewerScope === "custom" && customViewerPanels
+      ? customViewerPanels
+      : viewerScope === "all"
+        ? panels
+        : sortedPanels;
 
   const handleNavigateViewer = useCallback(
     (idx: number) => {

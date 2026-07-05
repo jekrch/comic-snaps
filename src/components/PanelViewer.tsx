@@ -15,7 +15,7 @@ interface Props {
   currentIndex: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
-  onSelectPanel: (panel: Panel) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[]) => void;
 }
 
 /**
@@ -51,7 +51,7 @@ function ViewerOverlay({
   topOffset: number;
   bottomOffset: number;
   closing: boolean;
-  onSelectPanel: (panel: Panel) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
 }) {
   const { artist, series, parentSeries } = useMetadata(panel.artist, panel.slug);
