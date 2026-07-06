@@ -3,9 +3,9 @@ import type { Filters } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
 
-const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "postedBy", "series"];
+const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "credits", "postedBy", "series"];
 const DEFAULT_SORT: SortMode = "newest";
-const VALID_TABS: InfoTab[] = ["about", "sorts"];
+const VALID_TABS: InfoTab[] = ["about", "sorts", "stats"];
 
 function parseFiltersFromURL(): { filters: Filters; sort: SortMode; tab: InfoTab | null } {
   const params = new URLSearchParams(window.location.search);
@@ -16,6 +16,7 @@ function parseFiltersFromURL(): { filters: Filters; sort: SortMode; tab: InfoTab
     artists: new Set(params.get("artists")?.split(",").filter(Boolean) ?? []),
     colorists: new Set(params.get("colorists")?.split(",").filter(Boolean) ?? []),
     letterers: new Set(params.get("letterers")?.split(",").filter(Boolean) ?? []),
+    credits: new Set(params.get("credits")?.split(",").filter(Boolean) ?? []),
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
     series: new Set(params.get("series")?.split(",").filter(Boolean) ?? []),
   };

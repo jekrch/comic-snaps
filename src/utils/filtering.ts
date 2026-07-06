@@ -6,6 +6,7 @@ export interface Filters {
   artists: Set<string>;
   colorists: Set<string>;
   letterers: Set<string>;
+  credits: Set<string>;
   postedBy: Set<string>;
   series: Set<string>;
 }
@@ -16,6 +17,7 @@ export const EMPTY_FILTERS: Filters = {
   artists: new Set(),
   colorists: new Set(),
   letterers: new Set(),
+  credits: new Set(),
   postedBy: new Set(),
   series: new Set(),
 };
@@ -31,6 +33,7 @@ export function activeFilterCount(filters: Filters): number {
     filters.artists.size +
     filters.colorists.size +
     filters.letterers.size +
+    filters.credits.size +
     filters.postedBy.size +
     filters.series.size
   );
@@ -48,6 +51,7 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
     if (filters.artists.size > 0 && !filters.artists.has(p.artist)) return false;
     if (filters.colorists.size > 0 && !(p.colorists ?? []).some((c) => filters.colorists.has(c))) return false;
     if (filters.letterers.size > 0 && !(p.letterers ?? []).some((l) => filters.letterers.has(l))) return false;
+    if (filters.credits.size > 0 && !(p.credits ?? []).some((c) => filters.credits.has(c))) return false;
     if (filters.postedBy.size > 0 && !filters.postedBy.has(p.postedBy)) return false;
     if (filters.series.size > 0 && !filters.series.has(p.title)) return false;
     if (filters.tags.size > 0) {
@@ -64,6 +68,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
   const artistCounts = new Map<string, number>();
   const coloristCounts = new Map<string, number>();
   const lettererCounts = new Map<string, number>();
+  const creditCounts = new Map<string, number>();
   const postedByCounts = new Map<string, number>();
   const seriesCounts = new Map<string, number>();
 
@@ -76,6 +81,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
       artists: filters.artists.size === 0 || filters.artists.has(p.artist),
       colorists: filters.colorists.size === 0 || (p.colorists ?? []).some((c) => filters.colorists.has(c)),
       letterers: filters.letterers.size === 0 || (p.letterers ?? []).some((l) => filters.letterers.has(l)),
+      credits: filters.credits.size === 0 || (p.credits ?? []).some((c) => filters.credits.has(c)),
       postedBy: filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy),
       series: filters.series.size === 0 || filters.series.has(p.title),
     };
@@ -105,6 +111,11 @@ export function computeFacets(panels: Panel[], filters: Filters) {
         lettererCounts.set(l, (lettererCounts.get(l) ?? 0) + 1);
       }
     }
+    if (passAllExcept("credits")) {
+      for (const c of p.credits ?? []) {
+        creditCounts.set(c, (creditCounts.get(c) ?? 0) + 1);
+      }
+    }
     if (passAllExcept("postedBy")) {
       postedByCounts.set(p.postedBy, (postedByCounts.get(p.postedBy) ?? 0) + 1);
     }
@@ -113,5 +124,5 @@ export function computeFacets(panels: Panel[], filters: Filters) {
     }
   }
 
-  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, postedByCounts, seriesCounts };
+  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts };
 }

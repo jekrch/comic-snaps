@@ -7,6 +7,7 @@ import MasonryGrid from "./components/MasonryGrid";
 import BackgroundEchoes from "./components/BackgroundEchoes";
 import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
+import type { StatsFilterPatch } from "./components/stats/StatsTab";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
 import { loadMetadata } from "./utils/metadata";
@@ -73,6 +74,25 @@ export default function App() {
     syncTab(null);
   }, [syncTab]);
 
+  // A clicked bar in the stats tab replaces the active filters with its own
+  const handleStatsFilter = useCallback(
+    (patch: StatsFilterPatch) => {
+      const next: Filters = {
+        decades: new Set(patch.decades ?? []),
+        tags: new Set(patch.tags ?? []),
+        artists: new Set(patch.artists ?? []),
+        colorists: new Set(patch.colorists ?? []),
+        letterers: new Set(patch.letterers ?? []),
+        credits: new Set(patch.credits ?? []),
+        postedBy: new Set(),
+        series: new Set(patch.series ?? []),
+      };
+      setFilters(next);
+      syncToURL(next, sortMode);
+    },
+    [sortMode, syncToURL]
+  );
+
   useEffect(() => {
     Promise.all([
       fetch(`${import.meta.env.BASE_URL}data/gallery.json`).then((res) => {
@@ -90,12 +110,13 @@ export default function App() {
         for (const a of artists) {
           if (a.tags?.length) artistTagMap.set(a.name, a.tags);
         }
-        const creditMap = new Map<string, { colorists: string[]; letterers: string[] }>();
+        const creditMap = new Map<string, { colorists: string[]; letterers: string[]; names: string[] }>();
         for (const i of issues) {
           const colorists = i.credits.filter((c) => c.roles.includes("Colorist")).map((c) => c.name);
           const letterers = i.credits.filter((c) => c.roles.includes("Letterer")).map((c) => c.name);
-          if (colorists.length || letterers.length) {
-            creditMap.set(`${i.series}|${i.issue}`, { colorists, letterers });
+          const names = Array.from(new Set(i.credits.map((c) => c.name)));
+          if (colorists.length || letterers.length || names.length) {
+            creditMap.set(`${i.series}|${i.issue}`, { colorists, letterers, names });
           }
         }
 
@@ -111,6 +132,7 @@ export default function App() {
             ...(extra.length > 0 && { tags: Array.from(new Set([...(p.tags ?? []), ...extra])) }),
             ...(credits?.colorists.length && { colorists: credits.colorists }),
             ...(credits?.letterers.length && { letterers: credits.letterers }),
+            ...(credits?.names.length && { credits: credits.names }),
           };
         });
 
@@ -170,7 +192,7 @@ export default function App() {
   // single role: replace filters with just that facet, close the viewer, and
   // return to the top of the masonry.
   const handleBrowseBy = useCallback(
-    (dimension: "artists" | "colorists" | "letterers", value: string) => {
+    (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => {
       const next: Filters = { ...EMPTY_FILTERS, [dimension]: new Set([value]) };
       handleFiltersChange(next);
       setOpenPanelId(null);
@@ -283,6 +305,7 @@ export default function App() {
           panels={panels}
           onTabChange={handleTabChange}
           onClose={handleCloseInfo}
+          onApplyFilters={handleStatsFilter}
         />
       )}
 

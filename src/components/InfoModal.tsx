@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { X, Github, ChevronDown, ExternalLink, Info, GitGraph, Bird } from "lucide-react";
 import type { Panel } from "../types";
 import type { MetricKey } from "./graph/similarityConfig";
@@ -8,9 +8,13 @@ import { loadEmbeddings } from "../utils/sorting";
 import type { EmbeddingMap } from "../utils/sorting";
 import MetricExplainerModal from "./explainer/MetricExplainerModal";
 
+// Lazy so the charting library only loads when the Stats tab is opened
+const StatsTab = lazy(() => import("./stats/StatsTab"));
+import type { StatsFilterPatch } from "./stats/StatsTab";
+
 // Tab primitives
 
-export type InfoTab = "about" | "sorts";
+export type InfoTab = "about" | "sorts" | "stats";
 
 interface TabDef {
   key: InfoTab;
@@ -20,6 +24,7 @@ interface TabDef {
 const TABS: TabDef[] = [
   { key: "about", label: "About" },
   { key: "sorts", label: "Sort Modes" },
+  { key: "stats", label: "Stats" },
 ];
 
 function TabBar({
@@ -350,11 +355,14 @@ interface Props {
   initialTab?: InfoTab;
   onTabChange?: (tab: InfoTab) => void;
   panels?: Panel[];
+  onApplyFilters?: (patch: StatsFilterPatch) => void;
 }
 
-export default function InfoModal({ onClose, initialTab = "about", onTabChange, panels }: Props) {
+export default function InfoModal({ onClose, initialTab = "about", onTabChange, panels, onApplyFilters }: Props) {
   const [closing, setClosing] = useState(false);
   const [activeTab, setActiveTab] = useState<InfoTab>(initialTab);
+  // Mount the stats tab (and its lazy chart bundle) only once it's visited
+  const [statsMounted, setStatsMounted] = useState(initialTab === "stats");
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
@@ -424,6 +432,12 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
     setClosing(true);
     setTimeout(onClose, 300);
   }, [onClose, closing]);
+
+  // A clicked stat bar applies its gallery filter, then closes the modal
+  const handleStatsFilter = useCallback((patch: StatsFilterPatch) => {
+    onApplyFilters?.(patch);
+    handleClose();
+  }, [onApplyFilters, handleClose]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -623,6 +637,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
 
           <TabBar activeTab={activeTab} onSelect={(tab) => {
             setActiveTab(tab);
+            if (tab === "stats") setStatsMounted(true);
             onTabChange?.(tab);
           }} />
 
@@ -756,6 +771,27 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                   </p>
                 </div>
               </div>
+            </TabPanel>
+
+            {/* Stats */}
+            <TabPanel active={activeTab === "stats"} className="overflow-y-auto info-modal-scroll">
+              {statsMounted && (
+                <Suspense
+                  fallback={
+                    <p
+                      className="px-6 pt-5 text-[12px]"
+                      style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
+                    >
+                      loading…
+                    </p>
+                  }
+                >
+                  <StatsTab
+                    panels={panels ?? []}
+                    onFilter={onApplyFilters ? handleStatsFilter : undefined}
+                  />
+                </Suspense>
+              )}
             </TabPanel>
 
           </div>

@@ -21,7 +21,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, postedByCounts, seriesCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -72,6 +72,14 @@ export default function FilterControl({
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [lettererCounts]
+  );
+
+  const creditItems = useMemo(
+    () =>
+      Array.from(creditCounts.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [creditCounts]
   );
 
   const seriesItems = useMemo(
@@ -194,6 +202,12 @@ export default function FilterControl({
               items={lettererItems}
               selected={filters.letterers}
               onToggle={(v) => toggleInSet("letterers", v)}
+            />
+            <FacetSection
+              title="CREDITED"
+              items={creditItems}
+              selected={filters.credits}
+              onToggle={(v) => toggleInSet("credits", v)}
             />
             <FacetSection
               title="POSTED BY"

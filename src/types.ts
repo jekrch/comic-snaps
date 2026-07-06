@@ -68,6 +68,8 @@ export interface Panel {
   blurStart: "all" | "top" | "bottom" | "right" | "left" | null;
   colorists?: string[];
   letterers?: string[];
+  /** Every person credited on this panel's issue, in any role. */
+  credits?: string[];
 }
 
 export interface Gallery {

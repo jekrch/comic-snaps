@@ -3,7 +3,14 @@ import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X }
 import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import type { ArtistIndex } from "../hooks/useMetadata";
-import PersonProfile, { type PersonFacets } from "./PersonProfile";
+import PersonProfile from "./PersonProfile";
+
+interface PersonFacets {
+  artists: number;
+  colorists: number;
+  letterers: number;
+  credits: number;
+}
 
 function hasProfileInfo(artist: Artist | null): boolean {
   return !!(
@@ -33,7 +40,7 @@ interface Props {
   parentSeries: Series | null;
   issueCredits: IssueCredits | null;
   artistIndex: ArtistIndex;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   searchUrl: string;
   topOffset?: number;
   bottomOffset?: number;
@@ -57,7 +64,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const resolveCover = (url: string) =>
     url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
 
-  const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null; facets: PersonFacets } | null>(null);
+  const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null } | null>(null);
   const [personOpen, setPersonOpen] = useState(false);
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
   const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
@@ -68,12 +75,14 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     const artists = new Map<string, number>();
     const colorists = new Map<string, number>();
     const letterers = new Map<string, number>();
+    const credits = new Map<string, number>();
     for (const p of allPanels) {
       artists.set(p.artist, (artists.get(p.artist) ?? 0) + 1);
       for (const c of p.colorists ?? []) colorists.set(c, (colorists.get(c) ?? 0) + 1);
       for (const l of p.letterers ?? []) letterers.set(l, (letterers.get(l) ?? 0) + 1);
+      for (const n of p.credits ?? []) credits.set(n, (credits.get(n) ?? 0) + 1);
     }
-    return { artists, colorists, letterers };
+    return { artists, colorists, letterers, credits };
   }, [allPanels]);
 
   const resolvePerson = useCallback(
@@ -89,6 +98,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       artists: facetCounts.artists.get(name) ?? 0,
       colorists: facetCounts.colorists.get(name) ?? 0,
       letterers: facetCounts.letterers.get(name) ?? 0,
+      credits: facetCounts.credits.get(name) ?? 0,
     }),
     [facetCounts]
   );
@@ -98,7 +108,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const isPersonInteractive = useCallback(
     (name: string, artistId?: string | null): boolean => {
       const f = personFacets(name);
-      if (f.artists > 0 || f.colorists > 0 || f.letterers > 0) return true;
+      if (f.artists > 0 || f.colorists > 0 || f.letterers > 0 || f.credits > 0) return true;
       return hasProfileInfo(resolvePerson(name, artistId));
     },
     [personFacets, resolvePerson]
@@ -106,10 +116,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
 
   const openPerson = useCallback(
     (name: string, artistId?: string | null) => {
-      setActivePerson({ name, artist: resolvePerson(name, artistId), facets: personFacets(name) });
+      setActivePerson({ name, artist: resolvePerson(name, artistId) });
       setPersonOpen(true);
     },
-    [resolvePerson, personFacets]
+    [resolvePerson]
   );
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [slideOutSettled, setSlideOutSettled] = useState(false);
@@ -934,7 +944,9 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       open={personOpen}
       name={activePerson?.name ?? ""}
       artist={activePerson?.artist ?? null}
-      facets={activePerson?.facets ?? { artists: 0, colorists: 0, letterers: 0 }}
+      allPanels={allPanels}
+      currentPanelId={panel.id}
+      onSelectPanel={onSelectPanel}
       onClose={() => setPersonOpen(false)}
       onBrowse={onBrowse}
       topOffset={topOffset}

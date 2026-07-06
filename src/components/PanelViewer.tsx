@@ -16,7 +16,7 @@ interface Props {
   onClose: () => void;
   onNavigate: (index: number) => void;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
 }
 
 /**
@@ -54,7 +54,7 @@ function ViewerOverlay({
   bottomOffset: number;
   closing: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers", value: string) => void;
+  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
