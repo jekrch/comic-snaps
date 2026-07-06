@@ -372,6 +372,95 @@
       ]
     },
     {
+      "id": "absolute-martian-manhunter-12",
+      "series": "absolute-martian-manhunter",
+      "issue": 12,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "javier-rodr-guez",
+          "name": "Javier Rodr\u00edguez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "andrew-robinson",
+          "name": "Andrew Robinson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sebasti-n-fiumara",
+          "name": "Sebasti\u00e1n Fiumara",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "werther-dell-edera",
+          "name": "Werther Dell'Edera",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "katie-kubert",
+          "name": "Katie Kubert",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-futch",
+          "name": "Sabrina Futch",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-martian-manhunter-2025-12/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "absolute-wonder-woman-18",
       "series": "absolute-wonder-woman",
       "issue": 18,

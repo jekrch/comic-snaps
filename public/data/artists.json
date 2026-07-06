@@ -473,6 +473,21 @@
       "country": "United States"
     },
     {
+      "id": "andrew-robinson",
+      "name": "Andrew Robinson",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/a-robinson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/851/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "andy-kubert",
       "name": "Andy Kubert",
       "description": "",
@@ -8098,6 +8113,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/13198/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sebasti-n-fiumara",
+      "name": "Sebasti\u00e1n Fiumara",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/12/Sebastian-Fiumara.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/717/"
         }
       ],
       "sources": [
