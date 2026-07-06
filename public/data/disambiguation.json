@@ -1,5 +1,15 @@
 {
-  "metron:creator": {},
+  "metron:creator": {
+    "Ken Brown": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 13710,
+          "name": "Ken Browne"
+        }
+      ]
+    }
+  },
   "metron:series": {
     "Buzz": {
       "id": null,
