@@ -321,3 +321,13 @@ button,
   touch-action: pan-y;
   overscroll-behavior: contain;
 }
+
+/* Recharts leaves a default focus outline on the SVG surface and bar
+   rectangles when clicked, which reads as an awkward white ring on the
+   dark stats surface. Suppress it — the bars aren't keyboard targets. */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-wrapper :focus,
+.recharts-wrapper :focus-visible {
+  outline: none;
+}

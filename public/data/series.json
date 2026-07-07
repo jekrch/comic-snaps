@@ -263,7 +263,8 @@
         "data/covers/bijou-funnies/6df2e87add63.jpg",
         "data/covers/bijou-funnies/580b1e977731.jpg",
         "data/covers/bijou-funnies/6020322d3a3a.jpg"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "bizarre-sex",
@@ -294,7 +295,8 @@
       },
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "bleeding-hearts",
@@ -419,7 +421,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "concrete",
@@ -782,7 +785,8 @@
         "data/covers/eerie/b0323d8fb941.jpg",
         "data/covers/eerie/b4beae02c7d7.jpg",
         "data/covers/eerie/05be9d4635ed.jpg"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "eightball",
@@ -1212,7 +1216,8 @@
           325
         ]
       },
-      "issueCount": 5
+      "issueCount": 5,
+      "anthology": true
     },
     {
       "id": "hup",
@@ -1578,7 +1583,8 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "anthology": true
     },
     {
       "id": "madman",
@@ -1859,7 +1865,8 @@
         "data/covers/pacific-presents/a4e041603dad.jpg",
         "data/covers/pacific-presents/5ef5cde06dd5.jpg",
         "data/covers/pacific-presents/774f519c3b36.jpg"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "panic",
@@ -1889,7 +1896,8 @@
         "data/covers/panic/09b63cb5a502.jpg",
         "data/covers/panic/985ab78cd12b.jpg",
         "data/covers/panic/c0a05e6702b0.jpg"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "phantom-of-the-opera",
@@ -2016,7 +2024,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "seamonsters-and-superheroes",
@@ -2139,7 +2148,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "space-riders",
@@ -2380,7 +2390,8 @@
       },
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "the-beauty",
@@ -2930,7 +2941,8 @@
         "comicvine": [
           10
         ]
-      }
+      },
+      "anthology": true
     },
     {
       "id": "xyz",
@@ -2995,7 +3007,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     },
     {
       "id": "zap-comix",
@@ -3032,7 +3045,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "anthology": true
     }
   ]
 }

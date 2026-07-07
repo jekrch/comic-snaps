@@ -29,6 +29,9 @@ export interface Series {
   aliases?: string[] | null;
   coverImages?: string[] | null;
   tags?: string[] | null;
+  /** Manually marked: a multi-creator anthology, where the panel's assigned
+   *  artist is the only meaningful attribution. Suppresses issue credits. */
+  anthology?: boolean;
 }
 
 export interface IssueCredit {

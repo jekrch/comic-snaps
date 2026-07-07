@@ -25,9 +25,14 @@ const HAIRLINE = "rgba(255,255,255,0.07)";
 // Same threshold the color sort uses to partition chromatic vs achromatic.
 const COLORFULNESS_THRESHOLD = 6;
 
-// The creative roles the "most credited" chart counts; editorial/production
-// credits (Editor, Designer, Publisher, …) are excluded.
-const CREDIT_ROLES = ["Artist", "Writer", "Colorist", "Letterer"];
+// Co-creator roles the "most credited" chart counts from issue credits. Artist
+// is handled separately — every panel carries its own artist (see below), so
+// it's sourced from the panel rather than the issue credits.
+const ISSUE_CREDIT_ROLES = ["Writer", "Colorist", "Letterer"];
+
+// Roles hidden from the "credits by role" breakdown — editorial/production
+// credits rather than authorship of the panel.
+const HIDDEN_ROLES = new Set(["Cover", "Editor", "Designer"]);
 
 /** Gallery filter selections a clicked bar can apply — keys match Filters. */
 export type StatsFilterPatch = Partial<
@@ -118,20 +123,38 @@ function computeMetaStats(
   const publisherCounts = new Map<string, number>();
   const publisherTitles = new Map<string, Set<string>>();
 
+  const addRole = (name: string, role: string) => {
+    let roles = personRoles.get(name);
+    if (!roles) personRoles.set(name, (roles = new Set()));
+    roles.add(role);
+  };
+
   for (const p of panels) {
-    allCreators.add(p.artist);
+    // One panel is one unit of credit per contributor, no matter how many
+    // roles they held on it.
+    const counted = new Set<string>();
+    const credit = (name: string) => {
+      if (counted.has(name)) return;
+      counted.add(name);
+      personPanels.set(name, (personPanels.get(name) ?? 0) + 1);
+    };
+
+    // Every panel has an artist, taken directly from the panel itself.
+    if (p.artist) {
+      allCreators.add(p.artist);
+      credit(p.artist);
+      addRole(p.artist, "Artist");
+    }
 
     const issue = issueByKey.get(`${p.slug}|${p.issue}`);
     if (issue) {
       linkedIssueIds.add(issue.id);
       for (const c of issue.credits) {
         allCreators.add(c.name);
-        const creativeRoles = c.roles.filter((r) => CREDIT_ROLES.includes(r));
+        const creativeRoles = c.roles.filter((r) => ISSUE_CREDIT_ROLES.includes(r));
         if (creativeRoles.length === 0) continue;
-        personPanels.set(c.name, (personPanels.get(c.name) ?? 0) + 1);
-        let roles = personRoles.get(c.name);
-        if (!roles) personRoles.set(c.name, (roles = new Set()));
-        for (const r of creativeRoles) roles.add(r);
+        credit(c.name);
+        for (const r of creativeRoles) addRole(c.name, r);
       }
     }
 
@@ -170,12 +193,20 @@ function computeMetaStats(
       filter: { credits: [name] },
     }));
 
-  // Role frequency across the linked issues (one count per person per issue).
+  // Role frequency. Artist is counted once per panel (every panel has one,
+  // taken directly from the panel); the remaining roles are counted once per
+  // person per linked issue. Editorial/production roles are hidden.
   const roleCounts = new Map<string, number>();
+  for (const p of panels) {
+    if (p.artist) roleCounts.set("Artist", (roleCounts.get("Artist") ?? 0) + 1);
+  }
   for (const i of issues) {
     if (!linkedIssueIds.has(i.id)) continue;
     for (const c of i.credits) {
-      for (const r of c.roles) roleCounts.set(r, (roleCounts.get(r) ?? 0) + 1);
+      for (const r of c.roles) {
+        if (r === "Artist" || HIDDEN_ROLES.has(r)) continue;
+        roleCounts.set(r, (roleCounts.get(r) ?? 0) + 1);
+      }
     }
   }
   const roles = topWithOther(roleCounts, 8);

@@ -433,12 +433,18 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   }, [selectedCoverIdx, len, closeCover, commitSlide]);
 
   // Group credited names by role, preserving the role order the backfill
-  // stored (credits arrive sorted by role prominence).
+  // stored (credits arrive sorted by role prominence). The panel's assigned
+  // artist is the only artist we surface, so issue-level Artist/Cover credits
+  // are dropped. Anthologies suppress issue credits entirely — the panel's
+  // assigned artist is the meaningful attribution there.
+  const isAnthology = !!(series?.anthology || parentSeries?.anthology);
+  const HIDDEN_ROLES = new Set(["Artist", "Cover"]);
   const creditGroups: [string, IssueCredit[]][] = [];
-  if (issueCredits) {
+  if (issueCredits && !isAnthology) {
     const byRole = new Map<string, IssueCredit[]>();
     for (const credit of issueCredits.credits) {
       for (const role of credit.roles) {
+        if (HIDDEN_ROLES.has(role)) continue;
         if (!byRole.has(role)) byRole.set(role, []);
         byRole.get(role)!.push(credit);
       }
