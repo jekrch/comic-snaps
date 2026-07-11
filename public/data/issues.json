@@ -6967,6 +6967,53 @@
       ]
     },
     {
+      "id": "the-twilight-zone-9",
+      "series": "the-twilight-zone",
+      "issue": 9,
+      "credits": [
+        {
+          "artistId": "juni-ba",
+          "name": "Juni Ba",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ellen-boener",
+          "name": "Ellen Boener",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "nicolas-ni-o",
+          "name": "Nicolas Ni\u00f1o",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sandy-tanaka",
+          "name": "Sandy Tanaka",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-twilight-zone-9/4000-1177831/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "trencher-1",
       "series": "trencher",
       "issue": 1,
