@@ -976,6 +976,44 @@
       ]
     },
     {
+      "id": "fire-and-ice-darkwolf",
+      "name": "Fire and Ice: Darkwolf",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10119538-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/fire-and-ice-darkwolf/4050-174205/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16183/"
+        }
+      ],
+      "publisher": "Dynamite Entertainment",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 2026,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/fire-and-ice-darkwolf/0774cdcebee4.jpg",
+        "data/covers/fire-and-ice-darkwolf/9664227332fd.jpg",
+        "data/covers/fire-and-ice-darkwolf/83d89974ba87.jpg",
+        "data/covers/fire-and-ice-darkwolf/fdd44fdf4ee3.jpg"
+      ]
+    },
+    {
       "id": "floating-bunnyhead-bonus-levels-collection",
       "name": "Floating BunnyHead: Bonus Levels Collection",
       "parentSeries": null,

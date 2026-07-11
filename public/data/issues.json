@@ -2866,6 +2866,100 @@
       ]
     },
     {
+      "id": "fire-and-ice-darkwolf-1",
+      "series": "fire-and-ice-darkwolf",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "dan-panosian",
+          "name": "Dan Panosian",
+          "roles": [
+            "Writer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "andrey-lunatik",
+          "name": "Andrey Lunatik",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jorge-fares-maese-ramirez",
+          "name": "Jorge Fares Maese Ramirez",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "carlos-m-mangual",
+          "name": "Carlos M. Mangual",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "cary-nord",
+          "name": "Cary Nord",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joe-jusko",
+          "name": "Joe Jusko",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "robert-hack",
+          "name": "Robert Hack",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sara-frazetta",
+          "name": "Sara Frazetta",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "stjepan-eji",
+          "name": "Stjepan \u0160eji\u0107",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "stuart-sayger",
+          "name": "Stuart Sayger",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "matt-idelson",
+          "name": "Matt Idelson",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/fire-and-ice-darkwolf-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "geiger-22",
       "series": "geiger",
       "issue": 22,

@@ -495,6 +495,26 @@
       "country": "USA"
     },
     {
+      "id": "andrey-lunatik",
+      "name": "Andrey Lunatik",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/andrey-lunatik/4040-103263/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12675/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "andy-kubert",
       "name": "Andy Kubert",
       "description": "",
@@ -1452,6 +1472,28 @@
       ]
     },
     {
+      "id": "carlos-m-mangual",
+      "name": "Carlos M. Mangual",
+      "description": "Carlos M. Mangual was born on a dying planet located in a galaxy far, far way from our own. He was rocketed to Earth by his birth parents to become our greatest hero, but comic books, video games, and science fiction movies distracted him from his original calling. He started drawing at an early age but it wouldn\u2019t be until he saw the Batman movie in 1989 that he would take comics and illustration a little more serious. He decided he wanted to become a comic book artist, but instead joined the C.I.A. where he served our country as a super spy for a little over a decade before being given a burn notice forcing him to rethink his purpose in life.\r\n\r\nHe has a Bachelors degree in graphic design from IADT in Tampa, FL. On his spare time, between saving people from burning buildings or other dire situations, he\u2019s created A Self Portrait Comic, an autobiographical romantic comedy about his search for true love, which he both writes and illustrates. Carlos now lives in Jersey City, NJ and currently letters comic-books for DC Comics!\r\n\r\nHe still watches Saturday morning cartoons, has a vivid imagination and aspires to be the official mattress tester at the Playboy mansion someday.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10092184-carlos_m_mangual.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/731/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/carlos-m-mangual/4040-61317/"
+        }
+      ],
+      "birthYear": 1976,
+      "country": "Puerto Rico",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "carmine-di-giandomenico",
       "name": "Carmine Di Giandomenico",
       "description": "Italian penciler who has worked on acclaimed Marvel Knights miniseries such as Daredevil; Battlin' Jack Murdock and X-Men; Magneto Testament.",
@@ -1472,6 +1514,27 @@
         "comicvine"
       ],
       "country": "Italy"
+    },
+    {
+      "id": "cary-nord",
+      "name": "Cary Nord",
+      "description": "Cary Nord is the award-winning artist of comic books and graphic novels such as Daredevil, X-Men, and Conan The Barbarian. Throughout his career Cary has drawn virtually every major character in comics, having worked on Superman, Wolverine, Mutant X, Ghost Rider, Spider-Man, Thor, and Star Wars.\r\n\r\nHe is currently working on the critically acclaimed series X-O Manowar from Valiant Entertainment.\r\n\r\nIn 2004, Cary was awarded the industry's top honour for his work on Conan the Barbarian, taking home the Will Eisner Comic Industry Award for Best Single Issue.\r\n\r\nBorn in Calgary, Cary spent most of his youth drawing, and after attending the Alberta College of Art and Design he began to submit his work to Marvel and DC Comics. Diligence and hard work paid off, and work on single issues grew into longer fan-favourite stories with beloved characters.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/399559-152322-cary-nord.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/431/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/cary-nord/4040-11312/"
+        }
+      ],
+      "country": "Canada",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "casey-parsons",
@@ -2037,6 +2100,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "dan-panosian",
+      "name": "Dan Panosian",
+      "description": "Now known for his work on the Irredeemables with writer Mark Waid. \u00a0A regular at conventions and very nice guy! \u00a0He has worked on just about every respectable title and with every big name artist in the comic biz. \u00a0And has done work on some of the most memorable covers!",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9496942-panosian.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1183/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dan-panosian/4040-6112/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -5212,6 +5295,26 @@
       ]
     },
     {
+      "id": "jorge-fares-maese-ramirez",
+      "name": "Jorge Fares Maese Ramirez",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/54649/1118677-1063443_question_mark_large_2_.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4099/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jorge-fares-maese-ramirez/4040-57707/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jorge-forn-s",
       "name": "Jorge Forn\u00e9s",
       "description": "",
@@ -6770,6 +6873,27 @@
       ]
     },
     {
+      "id": "matt-idelson",
+      "name": "Matt Idelson",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10092360-matt_idelson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/697/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/matt-idelson/4040-40984/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "matt-kindt",
       "name": "Matt Kindt",
       "description": "Kindt's first full graphic novel, Pistolwhip, was released by Top Shelf in 2002. It was critically acclaimed and bagged Kindt two Harvey Award nominations (for \"Best Graphic Album of Original Work\" and \"Best New Talent\"). His webcomic Super Spy was collected by Top Shelf in 2007, and nominated for an Eisner the following year.\r\n\r\nHe started his association with Vertigo in 2010, with the publication of his graphic novel Revolver. Around the same time, he began working with Jeff Lemire on Sweet Tooth. In 2012, his critically acclaimed series Mind MGMT began publication under the Dark Horse banner. He was the writer for several issues of the new 52 Frankenstein, Agent of S.H.A.D.E. series until its cancellation, following which DC's Chief Creative Officer Geoff Johns brought him onboard the Justice League of America series to pen a Martian Manhunter backup feature, which has been received well by both critics as well as fans. His involvement with DC has deepened in 2013; he has written an arc of the digitial comic series Adventures of Superman, been put in charge of the Forever Evil: A.R.G.U.S. spin-off post-Trinity War, as well as being chosen to pen the Harley Quinn, Deadshot, Sinestro and Solomon Grundy villain one-shots of September 2013's DC Villains Month feature. He also wrote 5 issues of Justice League of America (#7-11) focusing on the Martian Manhunter. For Marvel, he will be writing the Infinity spin-off limited series Infinity: The Hunt.\r\n\r\nIn 2013, he began writing the Valiant series Unity, a team-up book in the style of the Avengers and the Justice League. He has since written several more Valiant titles including Rai, the Divinity series, Ninjak, and The Valiant, the latter co-written with Lemire. He was also put in charge of Valiant's 2016 blockbuster event, 4001 A.D., spinning out of Rai.",
@@ -8203,6 +8327,26 @@
       ]
     },
     {
+      "id": "robert-hack",
+      "name": "Robert Hack",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10059150-robert_hack.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/418/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/robert-hack/4040-56106/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "robert-kirkman",
       "name": "Robert Kirkman",
       "description": "Robert Kirkman is an American comic book writer best known for creating The Walking Dead, Invincible, Tech Jacket, Outcast and Oblivion Song for Image Comics, in addition to writing Ultimate X-Men, Irredeemable Ant-Man and Marvel Zombies for Marvel Comics. He has also collaborated with Image Comics co-founder Todd McFarlane on the series Haunt. He is one of the five partners of Image Comics, and the only one of the five who was not one of its co-founders.",
@@ -8647,6 +8791,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "sara-frazetta",
+      "name": "Sara Frazetta",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/62070/8501880-saraf.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9136/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sara-frazetta/4040-112055/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -9254,6 +9418,53 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9808830-stipan_morian.jpg",
       "country": "Croatia",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "stjepan-eji",
+      "name": "Stjepan \u0160eji\u0107",
+      "description": "Stjepan \u0160eji\u0107 is a Croatian comic book writer and artist, known for his work on the series Witchblade, Aphrodite IX, Sunstone, and The Darkness among others.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973913-stjepan_sejic.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/208/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/stjepan-sejic/4040-44662/"
+        }
+      ],
+      "birthYear": 1981,
+      "country": "Croatia",
+      "aliases": [
+        "Stjepan Sejic",
+        "nebezial"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "stuart-sayger",
+      "name": "Stuart Sayger",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9986480-stuart_sayger.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9199/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/stuart-sayger/4040-58404/"
+        }
+      ],
+      "country": "United States",
       "sources": [
         "comicvine",
         "metron"
