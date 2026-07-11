@@ -7268,6 +7268,94 @@
       ]
     },
     {
+      "id": "white-boat-3",
+      "series": "white-boat",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "scott-snyder",
+          "name": "Scott Snyder",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "francesco-francavilla",
+          "name": "Francesco Francavilla",
+          "roles": [
+            "Artist",
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "giuseppe-camuncoli",
+          "name": "Giuseppe Camuncoli",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jeremy-bastian",
+          "name": "Jeremy Bastian",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "patrick-horvath",
+          "name": "Patrick Horvath",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "werther-dell-edera",
+          "name": "Werther Dell'Edera",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "will-dennis",
+          "name": "Will Dennis",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "tyler-jennes",
+          "name": "Tyler Jennes",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "emma-price",
+          "name": "Emma Price",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/white-boat-2024-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "zap-0",
       "series": "zap",
       "issue": 0,

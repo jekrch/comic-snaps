@@ -3042,6 +3042,26 @@
       ]
     },
     {
+      "id": "emma-price",
+      "name": "Emma Price",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4652/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/emma-price/4040-74686/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "enki-bilal",
       "name": "Enki Bilal",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg/500px-Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg",
@@ -3323,6 +3343,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "francesco-francavilla",
+      "name": "Francesco Francavilla",
+      "description": "Francesco Francavilla is a comic artist who does mostly covers although he has done interiors for Zorro, Detective Comics, and Captain America and Bucky. He is best known for his gritty, pulp noir style.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/2607678-francesco_francavilla_02_576.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/francesco-francavilla/4040-46908/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/417/"
+        }
+      ],
+      "country": "Italy",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -4492,6 +4533,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "jeremy-bastian",
+      "name": "Jeremy Bastian",
+      "description": "Jeremy Bastian\u2019 whole life has led up to Cursed Pirate Girl.\r\n\r\nHe had the perfect childhood, growing up in a small Midwestern town, which afforded him the opportunity to develop his artistic skills early in life. He claims to have started drawing pirates, along with ghosts, knights and other \u201cheroic archetypes\u201d when he was in the 3 grade. Although he didn\u2019t actually play pirate when he was a kid, he did bury a treasure of costume jewelry once. Jeremy\u2019s creativity was also evident in his \u201cmaking potions.\u201d\r\n\r\nWhen asked about his influences, he has credited Mike Mignola, Arthur Adams, Guy Davis (which is abundantly obvious), Travis Charest and Yoshitaka Amano, along with Gustove Dore and Arthur Rackham (Charles Vess\u2019 personal favorite) among others.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9180622-jeremy.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8493/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jeremy-bastian/4040-56903/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -7598,6 +7660,10 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Patrick_Horvath"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7360/"
         }
       ],
       "sources": [
@@ -9946,6 +10012,28 @@
       ]
     },
     {
+      "id": "tyler-jennes",
+      "name": "Tyler Jennes",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11158/111583650/8389081-dsc09276.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3941/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tyler-jennes/4040-111862/"
+        }
+      ],
+      "birthYear": 1999,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "victor-moscoso",
       "name": "Victor Moscoso",
       "description": "Victor Moscoso (born July 28, 1936) is a Spanish\u2013American artist best known for producing psychedelic rock posters, advertisements, and underground comix in San Francisco during the 1960s and 1970s. He was the first of the rock poster artists of the 1960s era with formal academic training and experience. He was the first of the rock poster artists to use photographic collage in many of his posters.",
@@ -10151,6 +10239,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "will-dennis",
+      "name": "Will Dennis",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1812/94449-197003-will-dennis.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/174/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/will-dennis/4040-42327/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
