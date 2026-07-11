@@ -1469,12 +1469,14 @@
       "coverImages": [
         "data/covers/just-brutal/90aafc119c17.jpg",
         "data/covers/just-brutal/abfb661b87c6.jpg",
-        "data/covers/just-brutal/15754eed571a.jpg"
+        "data/covers/just-brutal/15754eed571a.jpg",
+        "data/covers/just-brutal/2833f529766e.jpg"
       ],
       "coverSources": {
         "metron": [
           2,
-          3
+          3,
+          4
         ],
         "comicvine": [
           2,
