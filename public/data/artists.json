@@ -674,6 +674,28 @@
       ]
     },
     {
+      "id": "ariel-olivetti",
+      "name": "Ariel Olivetti",
+      "description": "Ariel Olivetti began working exclusivity with Marvel in 2007. He provided much of the penciling and cover art in the first half of the successful run re-launching the most recent Cable title.\r\n\r\nIn 2010, Olivetti signed a new contract with Marvel for one year, working on titles such as Iron Man 2.0 and the mini Hercules Fall of an Avenger.\r\n\r\nBoth before and after his contracts, Ariel worked for Marvel and DC doing both covers and penciling. Some of his sketches, from 2005 and before, were published by Ancares Editora as the Ariel Olivetti Sketchbook in three volumes.\r\n\r\nHis most recent work includes covers for All Star Western and art for GI Combat, both part of DC\u2019s New 52.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9241/612440-4.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ariel-olivetti/4040-5033/"
+        }
+      ],
+      "birthYear": 1967,
+      "country": "Argentina",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ariela-kristantina",
       "name": "Ariela Kristantina",
       "description": "",

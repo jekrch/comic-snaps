@@ -1638,6 +1638,81 @@
       ]
     },
     {
+      "id": "bleeding-hearts-6",
+      "series": "bleeding-hearts",
+      "issue": 6,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "stipan-morian",
+          "name": "Stipan Morian",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "matt-hollingsworth",
+          "name": "Matt Hollingsworth",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ariel-olivetti",
+          "name": "Ariel Olivetti",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/bleeding-hearts-2026-6/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "blood-of-the-wolf-man-1",
       "series": "blood-of-the-wolf-man",
       "issue": 1,
