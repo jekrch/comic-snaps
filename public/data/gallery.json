@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 189,
+      "id": "white-boat-3-1783798440",
+      "title": "White Boat",
+      "slug": "white-boat",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Francesco Francavilla",
+      "image": "images/white-boat/issue-3-1783798440.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-11T19:34:02.324Z"
+    },
+    {
       "seq": 188,
       "id": "fire-and-ice-darkwolf-1-1783796334",
       "title": "Fire and Ice: Darkwolf",
@@ -18,12 +32,12 @@
       "dominantColors": [
         [
           84.8,
-          1.0,
+          1,
           -0.1
         ],
         [
           58.4,
-          2.0,
+          2,
           5.5
         ],
         [
@@ -1156,7 +1170,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1230,7 +1244,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1452,7 +1466,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
