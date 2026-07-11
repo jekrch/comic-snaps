@@ -740,10 +740,12 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
-          1
+          1,
+          2
         ]
       },
       "coverImages": [

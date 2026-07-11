@@ -2361,6 +2361,59 @@
       ]
     },
     {
+      "id": "dracula-vlad-the-impaler-2",
+      "series": "dracula-vlad-the-impaler",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "roy-thomas",
+          "name": "Roy Thomas",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "esteban-maroto",
+          "name": "Esteban Maroto",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-mounts",
+          "name": "Paul Mounts",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "john-costanza",
+          "name": "John Costanza",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jim-salicrup",
+          "name": "Jim Salicrup",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dracula-vlad-the-impaler-2-dark-legend-a-borning/4000-36992/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "eerie-93",
       "series": "eerie",
       "issue": 93,
