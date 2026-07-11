@@ -7116,6 +7116,31 @@
       ]
     },
     {
+      "id": "zap-0",
+      "series": "zap",
+      "issue": 0,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-0/4000-222940/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "zap-1",
       "series": "zap",
       "issue": 1,
