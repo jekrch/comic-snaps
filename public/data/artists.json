@@ -475,17 +475,24 @@
     {
       "id": "andrew-robinson",
       "name": "Andrew Robinson",
-      "description": "",
+      "description": "The greatest gift ever given to Robinson from his father was the news that Andrew had to pay for his own education. Lacking sufficient funds, he volunteered for Desert Storm, where he served in a water purification unit. Upon his return, he moved from the small country town in Florida where he grew up to Savannah, Georgia, to attend The Savannah College of Art and Design. After that, he lived for a time in Montgomery, Orlando and Macon before relocating to Pasadena, California in 2002.\r\n\r\nHis first published sequential work was a short story called \"The Chairman\" which appeared in Dark Horse Presents. After working on a few independent titles in the early 90's such as the NEGATIVE BURN anthology, he started getting work from DC Comics, doing STARMAN covers. After that series ended, he gained wide recognition for a time doing the covers of HAWKMAN. He's also done covers for BATMAN and DETECTIVE COMICS and numerous covers for STAR WARS.\r\n\r\nRecently, Andrew has produced numerous covers for DC titles. Among them are SUPERMAN, ACTION, BATMAN AND THE OUTSIDERS, SECRET SIX, VIGILANTE and the FACES OF EVIL project. He has also, from the first issue, done the variant covers for IDW's ANGEL AFTER THE FALL.\r\n\r\nBeing an artist above all else, he does have his own \"art & story\" project (originally co-written with Joe Pruett) DUSTY STAR. There have been a few random issues over the years, but the graphic novel compilation, with mostly new material, is now in production.\r\n\r\nAlso now in production is a unique semi-non-fictional graphic novel that Andrew is drawing called THE FIFTH BEATLE. It is the comic adaptation of a film which is currently being cast about the life of Brian Epstein, the original manager of the Fab Four.\r\n\r\nIn addition to comics, Andrew also has a music project called the Spacejunkies. He writes the lyrics and with Suki's permission is allowed to play harmonica. The first song can be heard on his website and there is a video for \"Star Rider\" on youtube.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/a-robinson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/851/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/andrew-robinson/4040-5431/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 2009,
+      "country": "USA"
     },
     {
       "id": "andy-kubert",
@@ -2911,6 +2918,27 @@
       ]
     },
     {
+      "id": "elsa-charretier",
+      "name": "Elsa Charretier",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7380166-6108319286-Ad1GV.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/elsa-charretier/4040-77472/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/754/"
+        }
+      ],
+      "country": "France",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "enki-bilal",
       "name": "Enki Bilal",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg/500px-Enki_Bilal_20100328_Salon_du_livre_de_Paris_5.jpg",
@@ -5159,7 +5187,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5171,11 +5200,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1121/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jorge-fornes/4040-79888/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Spain"
     },
     {
       "id": "jose-martin-sauri",
@@ -5203,17 +5238,24 @@
     {
       "id": "joseph-michael-linsner",
       "name": "Joseph Michael Linsner",
-      "description": "",
+      "description": "It was with the self published, horror anthology series Cry for Dawn that Linsner first came to the wider notice of the comic book community with its bold and shocking story-lines and always stunning cover art by Linsner himself.\r\n\r\nThose covers always featured the mysterious, tear streaked red head known as Dawn. She has since gone on to have 3 of her own series of comics and appeared on covers of the Crypt of Dawn anthology. Dawns story was started in the 6 part volume 'Lucifer's Halo' and carried on in 'Return of the Goddess' and 'Three Tiers' as well as 2010's Dawn one-shot 'Not To Touch The Earth'\r\n\r\nIn 2003 he collaborated with Mike Dubisch on 'A Vampire's Christmas' where he explored another of his older creations the vampire Tobias Esque's views on life and consumerism in modern-day Manhattan. Esque had stories in Crypt of & Cry for Dawn previously.\r\n\r\nMore recently, he has been working on the 6 issue mini-series for Dynamite: Dawn & Vampirella. December 2013 saw the first and long-awaited release of the one-shot for image comics 'Sin Boldly'. Starring his characters Sinful Suzi and Obsidian Stone. He has done covers featuring Conan, Red Sonja, Killraven, and many others. He has created the cover art and interiors for both Wolverine and Black Cat 'Claws' (1 & 2) and his own creation Dark Ivory, a modern vampire tale.\r\n\r\nThe high quality of his artwork means he is often called upon to do cover art for many different publishers, series and authors.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/02/07/j-linsner.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1334/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joseph-michael-linsner/4040-4294/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1968,
+      "country": "United States"
     },
     {
       "id": "joseph-rybandt",
@@ -5224,14 +5266,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2095/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joseph-rybandt/4040-56959/"
         }
       ],
       "aliases": [
         "Joe Rybandt"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America"
     },
     {
       "id": "joseph-shuster",
@@ -5264,30 +5312,40 @@
       "id": "joshua-cassara",
       "name": "Joshua Cassara",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85552/9044624-14351.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2660/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joshua-cassara/4040-71042/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "joshua-cornillon",
       "name": "Joshua Cornillon",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/11465/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joshua-cornillon/4040-132762/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5299,11 +5357,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/190/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joshua-middleton/4040-9844/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "joshua-williamson",
@@ -5314,11 +5378,19 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/329/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joshua-williamson/4040-56513/"
         }
       ],
       "birthYear": 1981,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "aliases": [
+        "Josh Williamson"
       ]
     },
     {
@@ -5330,14 +5402,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2062/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/josie-christensen/4040-100159/"
         }
       ],
       "aliases": [
         "Josie Weaver"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "jo-lle-jones",
@@ -5348,11 +5426,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/140/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joelle-jones/4040-44804/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "juan-samu",
@@ -5383,11 +5467,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/219/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/julian-totino-tedesco/4040-56722/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Argentina"
     },
     {
       "id": "julie-doucet",
@@ -5422,7 +5512,8 @@
         "June Lee"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5444,8 +5535,8 @@
     {
       "id": "justin-green",
       "name": "Justin Green",
-      "description": "",
-      "imageUrl": null,
+      "description": "Cartoonist most known for his influential autobiographical comic Binky Brown.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10065635-justin_green.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -5457,22 +5548,36 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1945,
+      "deathYear": 2022,
+      "country": "United States",
+      "aliases": [
+        "Justin Considine Green",
+        "J. Considine Green",
+        "Justine Green"
       ]
     },
     {
       "id": "kaeden-mcgahey",
       "name": "Kaeden McGahey",
-      "description": "",
+      "description": "Assistant editor for the Spider-Man office of Marvel Comics.",
       "imageUrl": "https://static.metron.cloud/media/creator/2023/05/17/Kaeden_McGahey.webp",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5653/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kaeden-mcgahey/4040-119942/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5490,7 +5595,8 @@
         "Kat Walkington"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5505,7 +5611,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5517,11 +5624,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/201/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/katie-kubert/4040-61095/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "keith-giffen",
@@ -5561,15 +5674,24 @@
       "id": "keith-wood",
       "name": "Keith Wood",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3068/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/keith-wood/4040-23112/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Keith A. Wood"
       ]
     },
     {
@@ -5600,7 +5722,8 @@
       "imageUrl": null,
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5612,27 +5735,43 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1216/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ken-bruzenak/4040-3015/"
         }
       ],
       "birthYear": 1952,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Kenneth Bruzenak",
+        "Kenneth Steven Bruzenak"
       ]
     },
     {
       "id": "ken-fitch",
       "name": "Ken Fitch",
-      "description": "",
-      "imageUrl": null,
+      "description": "Writer and colorist who worked through the early days of the Golden Age.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/69951/3110707-bailyfitchillo1937small.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4488/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ken-fitch/4040-43612/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "kendrick-lim",
@@ -5649,7 +5788,8 @@
         "Kunkka"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5704,7 +5844,8 @@
       ],
       "birthYear": 1960,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5716,10 +5857,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2352/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kevin-walker/4040-43502/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1965,
+      "country": "United Kingdom",
+      "aliases": [
+        "Kev Walker"
       ]
     },
     {
@@ -5731,33 +5882,44 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/49/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/klaus-janson/4040-2069/"
         }
       ],
       "birthYear": 1952,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "konner-knudsen",
       "name": "Konner Knudsen",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9897014-konner_knudsen.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4780/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/konner-knudsen/4040-101571/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "larry-rippee",
       "name": "Larry Rippee",
-      "description": "",
-      "imageUrl": null,
+      "description": "Artist and writer involved in underground comix from the late 1960s to the 1980s",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/50734/5169741-1%20larry.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -5769,8 +5931,10 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America"
     },
     {
       "id": "laura-allred",
@@ -5788,29 +5952,36 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "lauren-herda",
       "name": "Lauren Herda",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8122958-a.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5843/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lauren-herda/4040-115090/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "lee-kohse",
       "name": "Lee Kohse",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
@@ -5822,7 +5993,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5837,7 +6009,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5849,20 +6022,33 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/450/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lee-weeks/4040-3252/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1962,
+      "country": "U.S.A."
     },
     {
       "id": "leo-fox",
       "name": "Leo Fox",
       "description": "",
-      "imageUrl": null,
-      "references": [],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/leo-fox/4040-133747/"
+        }
+      ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5891,8 +6077,8 @@
     {
       "id": "leopoldo-dura-ona",
       "name": "Leopoldo Dura\u00f1ona",
-      "description": "",
-      "imageUrl": null,
+      "description": "Argentine artist who has worked in the comics industry, the film and television industry as a storyboard artist and as a commercial artist. Currently he focuses upon his painting.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/128795/3212974-leopoldo%20duranona%202.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -5904,7 +6090,12 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Argentina",
+      "aliases": [
+        "Leo Duranona"
       ]
     },
     {
@@ -5960,7 +6151,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -5975,14 +6167,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "lloyd-dangle",
       "name": "Lloyd Dangle",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10071270-lloyd_dangle.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -5994,8 +6187,11 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1961,
+      "country": "United States"
     },
     {
       "id": "lorenzo-de-felici",
@@ -6020,8 +6216,8 @@
     {
       "id": "louise-jones-simonson",
       "name": "Louise Jones Simonson",
-      "description": "",
-      "imageUrl": null,
+      "description": "Story Arcs co-written by Louise:\r\n\r\n================================\r\n\r\n- Inferno\r\n\r\n- Fall of the Mutants\r\n\r\n- X-Tinction Agenda\r\n\r\n- Mutant Massacre\r\n\r\n- Death and Return of Superman\r\n\r\nComic Books Louise Worked on: ============================= Power Pack\r\n\r\nX-Factor\r\n\r\nNew Mutants\r\n\r\nSuperman :\u00a0Man of Steel",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/99609-190000-louise-simonson.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -6029,7 +6225,13 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1946,
+      "country": "U.S.A.",
+      "aliases": [
+        "Louise Jones"
       ]
     },
     {
@@ -6041,11 +6243,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1015/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lovern-kindzierski/4040-15114/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "luana-vecchio",
@@ -6059,7 +6267,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6071,6 +6280,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2083/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lucio-parrillo/4040-56294/"
         }
       ],
       "birthYear": 1974,
@@ -6078,22 +6291,29 @@
         "Lucio Parillo"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Italy"
     },
     {
       "id": "lyndon-radchenka",
       "name": "Lyndon Radchenka",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/14758/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lyndon-radchenka/4040-101684/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6108,14 +6328,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "malcolm-bourne",
       "name": "Malcolm Bourne",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -6127,7 +6348,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6139,12 +6361,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1154/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/marguerite-bennett/4040-70282/"
         }
       ],
       "birthYear": 1988,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "maria-llovet",
@@ -6179,7 +6407,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6191,12 +6420,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/59/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/marie-javins/4040-25538/"
         }
       ],
       "birthYear": 1966,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "marie-krupina",
@@ -6210,7 +6445,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6222,6 +6458,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/675/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/marie-severin/4040-3492/"
         }
       ],
       "birthYear": 1929,
@@ -6239,14 +6479,16 @@
         "MS"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "mario-hernandez",
       "name": "Mario Hernandez",
-      "description": "",
-      "imageUrl": null,
+      "description": "Eldest brother of Jaime and Gilbert Hernandez and sporadic contributor to LOVE AND ROCKETS.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/9/99729/2366796-hernandezmario.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -6258,7 +6500,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6273,7 +6516,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6285,11 +6529,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/173/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mark-doyle/4040-46371/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "mark-elijah-rosenberg",
@@ -6303,37 +6553,49 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "mark-englert",
       "name": "Mark Englert",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9986445-mark_englert.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2785/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mark-englert/4040-4711/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "mark-spears",
       "name": "Mark Spears",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9826046-mark_spears.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/7285/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mark-spears/4040-125616/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6348,7 +6610,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6400,7 +6663,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6435,7 +6699,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6447,10 +6712,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/693/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/matt-hollingsworth/4040-5432/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1968,
+      "country": "Croatia",
+      "aliases": [
+        "Matthew Hollingsworth"
       ]
     },
     {
@@ -6475,15 +6750,20 @@
       "id": "matthew-levine",
       "name": "Matthew Levine",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6410764-7671806473-21209.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3988/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/matthew-levine/4040-90774/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6498,22 +6778,33 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "matthew-wilson",
       "name": "Matthew Wilson",
-      "description": "",
+      "description": "External Links\r\n\r\nMatt Wilson at deviantART.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/11/matthew-wilson.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/10/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/matthew-wilson/4040-46064/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "U.S.A.",
+      "aliases": [
+        "Matt Wilson",
+        "Matt D. Wilson"
       ]
     },
     {
@@ -6525,25 +6816,36 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2355/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mattia-de-iulis/4040-101403/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Italy"
     },
     {
       "id": "maya-bollinger",
       "name": "Maya Bollinger",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58790/9168456-1914819112-62280.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6362/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/maya-bollinger/4040-123980/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6595,16 +6897,25 @@
     {
       "id": "michael-del-mundo",
       "name": "Michael Del Mundo",
-      "description": "",
+      "description": "Born in the Philippines, now lives in Toronto, Ontario, Canada.\r\n\r\nMostly known for covers.\r\n\r\nHe also had work featured at the Labyrinth and the Comic Book Lounge in Toronto.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/mike_del_mundo.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/845/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/michael-del-mundo/4040-58273/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada",
+      "aliases": [
+        "Mike Del Mundo"
       ]
     },
     {
@@ -6616,10 +6927,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1111/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/michael-heisler/4040-27472/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "aliases": [
+        "Mike Heisler"
       ]
     },
     {
@@ -6631,14 +6950,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/460/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/michael-spicer/4040-63859/"
         }
       ],
       "aliases": [
         "Mike Spicer"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1976
     },
     {
       "id": "michael-walsh",
@@ -6649,11 +6974,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/419/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/michael-walsh/4040-61959/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "michelle-marchese",
@@ -6667,14 +6998,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "mike-allred",
       "name": "Mike Allred",
-      "description": "",
-      "imageUrl": null,
+      "description": "Mike is married to Laura Allred, the colorist for his books. He's color blind, but does pencils and inkwashes. Laura then adds color.\r\n\r\nMike Allred illustrated FF for Marvel. He is currently illustrating a new Silver Surfer series with Dan Slott as part of All-New Marvel NOW!. They once had their house broken into and their art supplies (and computers) stolen which caused Mike to miss a couple issues of FF.\r\n\r\nMike is an Oregonian and enjoys karaoking with Matt Fraction. His kids are his real-life bandmates. He owns a capsule chair. You can see it in the trailer for his work on the Spirit of Bacardi graphic novel (written by Warren Ellis).\r\n\r\nHe's published his creator-owned title (Madman) at Dark Horse and Image Comics. He's said the lead character of Madman Frank Einstein is written from the perspective of Mike.\r\n\r\nHe's helped create numerous characters in Madman and also in iZombie and X-Statix (born from his run on Marvel's X-Force). The most renowned is likely Doop.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/8535492-ma.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -6686,7 +7018,13 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Michael Allred",
+        "M. Dalton Allred"
       ]
     },
     {
@@ -6701,7 +7039,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6713,12 +7052,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/47/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mike-mignola/4040-1672/"
         }
       ],
       "birthYear": 1960,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "mike-richardson",
@@ -6729,27 +7074,39 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1227/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mike-richardson/4040-45055/"
         }
       ],
       "birthYear": 1950,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "mike-tisserand",
       "name": "Mike Tisserand",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10069919-mike_tisserand.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/11092/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mike-tisserand/4040-79217/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "mike-zeck",
@@ -6760,41 +7117,65 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/859/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mike-zeck/4040-7764/"
         }
       ],
       "birthYear": 1949,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America",
+      "aliases": [
+        "Michael Zeck"
       ]
     },
     {
       "id": "mirka-andolfo",
       "name": "Mirka Andolfo",
-      "description": "",
+      "description": "Italian artist, mainly known for her work at DC Comics (Bombshells, JLA: Killer Frost) and Marvel (Ms. Marvel), and for her creator-owned series (Sacro/Profano, Contronatura), published in many countries.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/01/Mirka-Andolfo.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/480/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mirka-andolfo/4040-65907/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1989,
+      "country": "Italy",
+      "aliases": [
+        "\u30df\u30eb\u30ab\u30fb\u30a2\u30f3\u30c9\u30eb\u30d5\u30a9"
       ]
     },
     {
       "id": "misha-gehr",
       "name": "Misha Gehr",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5912/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/misha-gehr/4040-122321/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6817,18 +7198,24 @@
     {
       "id": "nate-powell",
       "name": "Nate Powell",
-      "description": "",
+      "description": "Nate Powell graduated from the School of Visual Arts in New York City in 2000. He has written and drawn numerous works in short and long form. Some releases include Please Release and Sounds of Your Name, the latter of which collected older stories.\r\n\r\nMost recently, he has been publishing his shorter works and his graphic novels with Top Shelf.\r\n\r\nHis first graphic novel, Swallow Me Whole was released in July of 2008 to critical acclaim, and went on to win Powell several awards. In 2008, he won The Ignatz Award for \"Outstanding Debut,\" and \"Outstanding Artist\" in 2009.\r\n\r\nPowell was nominated for three Eisner Awards in 2009 for the book including \"Best Graphic Novel\" and \"Best Cartoonist,\" and won in the category, \"Outstanding Graphic Novel.\" Swallow Me Whole was a finalist for the LA Times Book Prize, and was the first graphic novel to be nominated for the prize in any category since 1992's Maus by Art Spiegelman.\r\n\r\nHis latest graphic novel, Any Empire, was released by Top Shelf in August 2011, and has been earning strong praise.",
       "imageUrl": "https://static.metron.cloud/media/creator/2025/09/04/n-powell.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/7966/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nate-powell/4040-59068/"
         }
       ],
       "birthYear": 1978,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "nathan-cosby",
@@ -6845,7 +7232,8 @@
         "Nate Cosby"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6857,11 +7245,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/889/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nic-klein/4040-44601/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Germany"
     },
     {
       "id": "nick-robles",
@@ -6875,14 +7269,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "nicola-cuti",
       "name": "Nicola Cuti",
-      "description": "",
-      "imageUrl": null,
+      "description": "Editor, Writer and Creator!\r\n\r\nCreator of E-Man and Moonchild the Starbabe.\r\n\r\nNicola Cuti died on February 21st 2019 at the age of 75. He died of cancer.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58234/1127592-1248391737.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -6894,7 +7289,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1944,
+      "deathYear": 2019,
+      "country": "United States of America",
+      "aliases": [
+        "Chuck Robinson",
+        "Nick Cuti"
       ]
     },
     {
@@ -6922,40 +7325,56 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3078/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nimit-malavia/4040-60571/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "olyoptics",
       "name": "Olyoptics",
-      "description": "",
-      "imageUrl": null,
+      "description": "Members include:\r\n\r\n- Brec Blackford - Chris McHugh - Marie St. Clair - Quinn Supplee - Stacy Cox - Steve Oliff - Tracey Anderson",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15238/1269377-olyoptics.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/7072/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/olyoptics/4040-7355/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "pat-redding",
       "name": "Pat Redding",
-      "description": "",
-      "imageUrl": null,
+      "description": "Pat Redding is an inker who has primarily worked for Marvel Comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/128795/9553227-patredding.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4070/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/pat-redding/4040-42551/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -6970,7 +7389,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7005,15 +7425,20 @@
       "id": "patrick-satterfield",
       "name": "Patrick Satterfield",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/691/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/patrick-satterfield/4040-93905/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7044,16 +7469,21 @@
     {
       "id": "paul-kaminski",
       "name": "Paul Kaminski",
-      "description": "",
+      "description": "Paul Kaminski started his career at NYC HPD as a entry level Graphics Intern from October 2006 to May 2007. He later worked as a Freelance Cartoonist for The South Brunswick Post and as a Site Coordinator for South Brunswick Community Education. Archie Comics from December 2007 to March 2015 as an Editor and Executive Director of Editorial, working with projects like Sonic the Hedgehog, Sonic Universe, Mega Man, Archie Babies, New Crusaders, and Archie Babies. He also worked with editing super hero and video game tites at Archie Comics. Currently Kaminski works for DC Comics as a Group Editor.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/11/12/paul-kaminski.jpeg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/61/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/paul-kaminski/4040-57297/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7083,7 +7513,7 @@
       "id": "paul-mounts",
       "name": "Paul Mounts",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83524/1672998-paulmounts.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7095,7 +7525,11 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "aliases": [
+        "Bongotone"
       ]
     },
     {
@@ -7129,6 +7563,27 @@
       ]
     },
     {
+      "id": "paulina-ganucheau",
+      "name": "Paulina Ganucheau",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10008480-paulina_ganucheau.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1305/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/paulina-ganucheau/4040-71214/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "pepe-larraz",
       "name": "Pepe Larraz",
       "description": "",
@@ -7137,11 +7592,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/pepe-larraz/4040-59182/"
         }
       ],
       "birthYear": 1981,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Spain",
+      "aliases": [
+        "Jos\u00e9 Luis Mart\u00edn Larraz"
       ]
     },
     {
@@ -7190,7 +7654,7 @@
       "id": "peter-loft",
       "name": "Peter Loft",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -7198,14 +7662,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "peter-poplaski",
       "name": "Peter Poplaski",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/114183/5994891-peter_poplaski.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7213,8 +7678,10 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America"
     },
     {
       "id": "phillip-kennedy-johnson",
@@ -7228,7 +7695,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7243,7 +7711,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7255,11 +7724,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/464/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rachel-dodson/4040-4454/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "rachelle-rosenberg",
@@ -7270,11 +7745,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/216/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rachelle-rosenberg/4040-57038/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "rachta-lin",
@@ -7288,59 +7769,84 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "ralph-cabrera",
       "name": "Ralph Cabrera",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/9/99019/2109421-ralph_cabrera.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3784/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ralph-cabrera/4040-6754/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1965,
+      "country": "USA"
     },
     {
       "id": "ram-v",
       "name": "Ram V",
-      "description": "",
+      "description": "Writer. His real name is \"Ramnarayan Venkatesan\", but only goes by his pseudonym, \"Ram V\".",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/03/13/ram-v.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1484/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ram-v/4040-93032/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United Kingdom",
+      "aliases": [
+        "Ramnarayan Venkatesan"
       ]
     },
     {
       "id": "ramiro-portnoy",
       "name": "Ramiro Portnoy",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58790/8607860-ramiroportnoy.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3386/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ramiro-portnoy/4040-107732/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "aliases": [
+        "Ramiro Portnov"
       ]
     },
     {
       "id": "randy-stradley",
       "name": "Randy Stradley",
-      "description": "",
-      "imageUrl": null,
+      "description": "Randy Stradley is an editor that works at Dark Horse Comics. Also writes under the pen name Mick Harrison.\r\n\r\nStradley not only writes but also deals with the publishing at Dark Horse comics (DHC).\r\n\r\nRandy took his first stroll in the Comic Industry in 1984, at 28 years old. Shortly there after he met up with Mike Richardson and formed DHC. The fledgling publishing company acquired the rights to do Star Wars books and they never looked back. With the 10 titles of Star Wars and its movie fan base, DHC became a premiere publishing company. He later became the Senior Editor for Star Wars in 2002.\r\n\r\nRandy continued to do editing and writing for other movie genres which included Aliens and Predators.\r\n\r\n**note worthy**\r\n\r\nIt was Stradley's stroke of genious, or moment of lunacy to bring the idea of killing off Chewbacca in the Star Wars books.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7839200-0827398373-RANDY.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7352,22 +7858,32 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1956,
+      "aliases": [
+        "Mick Harrison"
       ]
     },
     {
       "id": "raymond-gay",
       "name": "Raymond Gay",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8446401-a.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5497/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/raymond-gay/4040-107585/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7394,16 +7910,21 @@
     {
       "id": "renee-miller",
       "name": "Renee Miller",
-      "description": "",
-      "imageUrl": null,
+      "description": "Comic book editor who works on David Lapham's Stray Bullets.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/11088/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/renee-miller/4040-42516/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7418,29 +7939,36 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "reuben-rude",
       "name": "Reuben Rude",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/1052469-powerhouse.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/7070/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/reuben-rude/4040-25108/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America"
     },
     {
       "id": "richard-grass-green",
       "name": "Richard (Grass) Green",
-      "description": "",
-      "imageUrl": null,
+      "description": "Artist and creator of Xalkor the Human Cat.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/69951/1603239-grass1964.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7452,7 +7980,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7493,16 +8022,22 @@
       "id": "richard-mercado",
       "name": "Richard Mercado",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9986461-richard_mercado.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6918/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/richard-mercado/4040-127351/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Philippines"
     },
     {
       "id": "rick-griffin",
@@ -7543,11 +8078,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/137/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/riley-rossmo/4040-48815/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "rob-leigh",
@@ -7565,7 +8106,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7608,12 +8150,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2334/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/robert-kirkman/4040-40977/"
         }
       ],
       "birthYear": 1978,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "roger-langridge",
@@ -7646,10 +8194,19 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/89/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/romulo-fajardo-jr/4040-53766/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Philippines",
+      "aliases": [
+        "Rom Fajardo"
       ]
     },
     {
@@ -7661,11 +8218,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/221/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ron-lim/4040-3258/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "ron-marz",
@@ -7676,12 +8239,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/791/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ron-marz/4040-41799/"
         }
       ],
       "birthYear": 1965,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States of America"
     },
     {
       "id": "ronda-pattison",
@@ -7692,11 +8261,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1762/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ronda-pattison/4040-47517/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Canada"
     },
     {
       "id": "rosemary-valero-o-connell",
@@ -7711,14 +8286,15 @@
       ],
       "birthYear": 1994,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "roy-thomas",
       "name": "Roy Thomas",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9085215-roythomas.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7730,8 +8306,11 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1940,
+      "country": "United States"
     },
     {
       "id": "rus-wooton",
@@ -7742,47 +8321,70 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2215/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rus-wooton/4040-10388/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "russell-cole",
       "name": "Russell Cole",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4475/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/russell-cole/4040-43610/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1889,
+      "country": "United States of America",
+      "aliases": [
+        "Alger"
       ]
     },
     {
       "id": "ryan-brown",
       "name": "Ryan Brown",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11117/111178238/3968357-my%20face.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/12288/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ryan-brown/4040-45053/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1976,
+      "country": "Northern Ireland"
     },
     {
       "id": "ryan-ferrier",
       "name": "Ryan Ferrier",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4218777-3503338773-084d5.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -7794,7 +8396,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7833,11 +8436,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/24/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ryan-sook/4040-4693/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "s-clay-wilson",
@@ -7870,26 +8479,38 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/11409/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sabrina-futch/4040-132895/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "sally-hurst",
       "name": "Sally Hurst",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/10/109303/2066387-question_mark.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/9600/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sally-hurst/4040-62098/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "UK"
     },
     {
       "id": "sam-keith",
@@ -7917,13 +8538,19 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1665/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sam-kieth/4040-5329/"
         }
       ],
       "birthYear": 1963,
       "deathYear": 2026,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "sandez-rey",
@@ -7945,7 +8572,7 @@
       "id": "sandy-tanaka",
       "name": "Sandy Tanaka",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -7957,7 +8584,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7972,7 +8600,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -7984,11 +8613,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/709/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/scott-allie/4040-43074/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "scott-berwanger",
@@ -8005,7 +8640,7 @@
       "id": "scott-henry-berwanger",
       "name": "Scott Henry Berwanger",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -8013,7 +8648,11 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "aliases": [
+        "Scott Berwanger"
       ]
     },
     {
@@ -8044,7 +8683,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8056,26 +8696,39 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/148/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/scott-snyder/4040-58926/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1976,
+      "country": "USA"
     },
     {
       "id": "sean-mackiewicz",
       "name": "Sean Mackiewicz",
-      "description": "",
+      "description": "Prior to becoming Skybound's editor in mid 2012, Mackiewicz previously edited many DC Comics books, mostly those launching with The New 52.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/01/17/mackiewicz.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1185/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sean-mackiewicz/4040-61982/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "sean-phillips",
@@ -8113,11 +8766,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/13198/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sean-von-gorman/4040-66542/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "sebasti-n-fiumara",
@@ -8128,10 +8787,19 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/717/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sebastian-fiumara/4040-51793/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Argentina",
+      "aliases": [
+        "Sebastian Fiumara"
       ]
     },
     {
@@ -8146,7 +8814,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8161,7 +8830,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8173,12 +8843,21 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/43/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sheldon-moldoff/4040-19108/"
         }
       ],
       "birthYear": 1920,
       "deathYear": 2012,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Shelly Moldoff"
       ]
     },
     {
@@ -8190,14 +8869,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1352/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/shelly-bond/4040-41584/"
         }
       ],
       "aliases": [
         "Shelly Roeberg"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "sierra-hahn",
@@ -8211,7 +8896,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8243,16 +8929,22 @@
       "id": "simon-gane",
       "name": "Simon Gane",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/111746/7122683-avt_simon-gane_9326.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/9066/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/simon-gane/4040-49109/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United Kingdom"
     },
     {
       "id": "skan-srisuwan",
@@ -8266,14 +8958,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "skip-williamson",
       "name": "Skip Williamson",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83392/1634927-n561626469_1225609_8177.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -8285,8 +8978,10 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "stevan-subi",
@@ -8300,14 +8995,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "steve-beaupre",
       "name": "Steve Beaupre",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -8315,14 +9011,15 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "steve-blackwell",
       "name": "Steve Blackwell",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
@@ -8334,7 +9031,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8363,8 +9061,8 @@
     {
       "id": "steve-ditko",
       "name": "Steve Ditko",
-      "description": "",
-      "imageUrl": null,
+      "description": "The first published comics work by Steve Ditko (born Stephen J. Ditko, 2 November 1927) was a romance for Gilmor Publishing's Daring Love #1, the 6-page \u201cPaper Romance\u201d in 1953; though this was actually the second work he\u2019d produced. The first, a horror story written by Bruce Hamilton, was titled \u201cStretching Things\u201d and because of some typically convoluted publisher\u2019s hijinks, the story, originally purchased by Stanmor, an imprint of schlock horror publisher Key Publications, traded hands and wasn\u2019t published until 1954, in Ajax-Farrell\u2019s Fantastic Fears #5. Along with work for a slew of second-string publishers like Farrell, Ditko the artist cut his eye teeth on weird and horror titles such as Charlton's The Thing! in the late 1950's.\r\n\r\nDitko\u2019s interest in the comics began and was nurtured by the interest his father, also named Stephen, had in the newspaper funnies of the day, especially the ornate and beautiful Sunday pages of Hal Foster\u2019s Prince Valiant. Ditko became a rabid fan of DC\u2019s Batman, drawn at the time by Jerry Robinson, and of Will Eisner\u2019s Spirit, which ran as an insert in the Philadelphia Record and the Newark Star-Ledger, among many other papers and which might have been circulated to the Ditko household in Johnstown, in the 1940\u2019s. After high-school, Ditko enlisted in the Army in 1945, and while stationed in Germany after WWII ended, he drew strips for an Army paper there.\r\n\r\nUpon his return to the States after his Army stint, Ditko moved to New York City in 1950 and enrolled in the Cartoonists & Illustrators School (founded by Burne Hogarth, which later became the School of Visual Arts) where one of his idols, Jerry Robinson, was teaching the art of comics. Ditko was a prized student of Robinson\u2019s for two years, and it was there, Robinson speculated \u2013 as quoted in Craig Yoe\u2019s 2010 Art of Ditko, Published by IDW\u2014that Atlas editor Stan Lee, a frequent guest-lecturer for Robinson\u2019s class, first saw Ditko\u2019s work. It was also at C&I that Ditko met Eric Stanton, the illustrator of fetish and bondage comics with whom he would later share a studio.\r\n\r\nDitko\u2019s professional career as an artist began at the studio of Joe Simon and Jack Kirby in 1953, where he worked first as an inker, inking background details, and eventually inking the pencils of one of his idols, the Simon & Kirby stalwart Mort Meskin. Ditko has described Meskin as a great teacher and big influence on him. Ditko went on to ink some of the Captain 3D book Simon & Kirby produced for Harvey Comics in 1953, and drew a story in Simon & Kirby\u2019s Black Magic #27 in 1954.\r\n\r\nDitko soon branched out on his own, and did work for Charlton Comics, on some of the most graphic and goriest horror stories of the pre-comics-code era for what was, even then, a strictly low-end publisher. Charlton had long been a commercial printer and began publishing (starting with things like collections of song lyrics of the day) in order to keep their huge presses running through the night. While Charlton was notorious for its low page rates, shoddy production values and all-but-nonexistent attention to quality, they also allowed Ditko a very firm hold over the control of his own work with a minimum of editorial interference. (This insight may be a key to understanding the schism that later developed between Ditko and Stan Lee, as we will see later) Ditko produced covers and stories for Charlton horror & suspense titles like The Thing!, Out of This World, Tales of the Mysterious Traveler, Unusual Tales, Strange Suspense Stories, Sci-Fi titles like Space Adventures, Outer Space, and Mysteries of Unexplored Worlds, as well as various crime and western titles, all showing the developing visual sensibility and compositional skills that were developing into the uniquely Ditko style. Ditko introduced the superhero Captain Atom in Charlton\u2019s Strange Suspense Stories in 1960. And for a short time worked in tandem at Charlton and Atlas/Marvel.\r\n\r\nCharlton's low page rate encouraged Ditko to look elsewhere for work, and his portfolio brought him to the attention of editor Stan Lee at Atlas/Marvel, who allegedly remembered the artist\u2019s work from his exposure at Jerry Robinson\u2019s class. Ditko brought Atlas/Marvel the detailed and moody style he'd developed for stories at Charlton to the numerous short suspense and fantasy stories being cranked out by Lee in titles such as Strange Tales, Journey Into Mystery, World of Fantasy, Tales to Astonish, and Tales of Suspense.\r\n\r\nAs Atlas evolved into Marvel Comics, his creative sensibility was the only one distinct enough to rival that of Jack Kirby, Atlas/Marvel\u2019s top producer and already a world-weary veteran. In fact, where Kirby\u2019s art was filled with raw power and bombast, Ditko\u2019s work was all mood and delicate subtlety, without losing the power to draw in readers and hold them firmly. It is as if Ditko was the Yin to Kirby\u2019s Yang, the other side of the coin, the polar opposite of Kirby his former employer. Ditko\u2019s moody art in the handling of Lee\u2019s stories so impressed Lee that Lee convinced publisher Martin Goodman to do something all but unheard of at the time, build an entire title around a single artist\u2019s work. The \u201cgiant monster\u201d title Amazing Adventures (where Lee and Kirby introduced what was essentially Marvel\u2019s first continuing hero character, Dr. Droom, inked by Ditko in his early outings) was retitled, and Lee and Ditko produced Amazing Adult Fantasy, which was subtitled \u201cThe Magazine That Respects Your Intelligence.\u201d While the stories were more of the same typical O. Henry-type tales Lee had been excreting throughout the pre-hero Marvel era, Ditko put into many of the short tales some of his most distinctive drawing up until that time. This grand experiment failed, however (and not just because the word \u201cAdult\u201d in the title scared away many newsstand dealers) and low sales led to another grand experiment: Lee and Kirby had a hit on their hands with their attempt to go one better than DC with their new superhero title Fantastic Four, and were drawing curious readers with their hybrid monster/superhero title The Hulk, Lee wanted to expand the superhero roster at Marvel, and the final 15 issue of Amazing Fantasy (dropping the troublesome \u201cAdult\u201d) featured a Ditko-drawn superhero tale featuring his best known work at Marvel, The Amazing Spider Man. Joe Simon and Kirby created a spider-character some years before, and Kirby brought the idea of a Spider-Superhero to Lee, but Lee steadfastly maintains that Kirby\u2019s Spiderman was in no way the genesis of what the character became; thanks in no small part to Ditko\u2019s costume design, dynamic art and page design, Spider Man soon became the biggest thing in Comics.\r\n\r\nDitko increasingly took over the plotting of the Spider Man tales he drew \u2013 easily done using the Marvel-style of writing that gave enough elbow room to permit Lee to claim \u201cwriter\u201d credit on the staggering amount of books he did; Lee is quoted in the introduction to the Yoe book as saying \u201cAll I had to do was give Steve a one-line description of the plot and he'd be off and running. He'd take those skeleton outlines I had given him and turn them into classic little works of art that ended up being far cooler than I had any right to expect\u201d which may be as close as Lee ever came to admitting he leeched off the considerable talents of his artists to make the \u201cMarvel Method\u201d work\u2014and also co-created with Lee the freshest variation on a comics magician yet seen, Dr. Strange in Marvel\u2019s Strange Tales. Ditko\u2019s visual inventiveness blasted through the roof on these Dr. Strange stories, and surprisingly for a conservative young artist, the imagery in the Strange stories could seem to have been fueled by chemical hallucinogens, even if all they really needed instead was the visual imagination of Steve Ditko.\r\n\r\nDitko abruptly left Marvel in 1966, and enough has been written elsewhere about the likely causes of his departure to free us from having to speculate at any length here. Ditko, as with almost all subjects, refuses any comment; Stan Lee has droned on at length about how swingin\u2019 great ol\u2019 Steve-O was to have as a collaborator, but will not let out even the barest hint of what acrimony arose between Ditko and himself at the height of their collaboration. It suffices to say that Ditko\u2019s long plunge into the political and philosophical abyss of Ayn Rand\u2019s Objectivism left the artist increasingly dissatisfied with the kinds of stories he was producing at Marvel and with significant aspects of society in general. Ditko returned to Charlton, where he could work in a manner he felt was less intruded upon by editorial control, even at their abysmal page rates and lower-than-that quality control. At Charlton he drew new adventures for Captain Atom, the character he co-created almost a decade earlier, as well as re-imagining the Blue Beetle (picked up by Charlton at what must have been a bargain-filled garage sale of characters from the refuse of Victor Fox's Fox Features Syndicate, The Beetle was worked on decades earlier by a young Kirby under the name Charles Nicholas) and venturing forth with his first foray into comic book characters fermented in the vats of Objectivist theory, The Question. He was able to inject Randian Objectivist ideas into his Blue Beetle stories as well. Ditko simultaneously went looking for a better paycheck and ended up at DC, who was happy to have him, where he was co-creator of the Objectivist influenced comic books The Creeper (first appearing in DC\u2019s try-out book Showcase #75), which only lasted 7 issues including the Showcase issue, and The Hawk and The Dove, one of the most overtly Philosophical titles ever released by a major comic book publisher. As such it also barely lasted half a dozen issues and Ditko took his leave after the first two. One of Ditko\u2019s legacies at DC was to recommend that DC hire then-Charlton staffer Dick Giordano, who would go on to become a distinctive artist in his own right, a landmark collaborator with Neal Adams and then to become the editor-in-chief of the whole DC line.\r\n\r\nIn the late 60\u2019s Ditko produced several astonishingly beautiful stories for Archie Goodwin\u2019s Creepy and Eerie at Warren publications, many showcasing Ditko\u2019s heretofore unseen delicate renderings in wash-shading, in stories whose moodiness rivaled those of his earlier Dr. Strange stories. Ditko returned once more to Charlton in the early 70\u2019s and created or drew several backup features for the popular E-Man comic book, including the distinctive Mocker; he also became a regular presence in the many ghost and horror titles Charlton was turning out, such as The Many Ghosts of Dr. Graves.\r\n\r\nThroughout recent decades Ditko\u2019s mainstream comics work grew scarcer and scarcer, doing jobs for both Marvel and DC with none of the soul or vitality of his earlier work. The last notable mainstream work Ditko is responsible for is arguably DC\u2019s Shade, The Changing Man which he created in 1977 after returning to DC, which has been collected in an overpriced hardcover Omnibus edition, as well as various short-lived titles like Stalker and stints on back-up features or one-shot output for DC\u2019s horror and Sci-Fi titles. At Marvel in the late 70\u2019s he worked on Machine Man after Kirby left Marvel for the last time as well as several unfortunate licensed properties like Micronauts.\r\n\r\nDitko\u2019s increasing obsession with Objectivism and Randian thought led to what some say is his greatest creation, if a challenging read for the average comics fan, Mr. A, who was first done in 1967 for the third issue of Wally Wood\u2019s independent comics anthology Witzend. As Ditko\u2019s apex of Objectivist Comics, Mr. A was defined as having no belief in any grey areas of human behavior, one was either all-black (a bad guy) or all-white (a good guy, being Ditko\u2019s conception of the Hero ideal). Leaving aside the unfortunate racial shadings of that dynamic, this framework would seem to lend itself to the high-contrast sorts of storytelling that \u201csuperhero comics\u201d require: Bad Bad Guys and Good Good Good Guys. Unfortunately for us as readers, Ditko\u2019s work has increasingly slid down the slope away from entertaining and engaging storytelling \u2013 something Ditko excelled at\u2014and toward dry, vehement Polemic, to the point today that the majority of what Ditko produces is well \u2013drawn while being all but unreadable. Ditko's work since he retired from mainstream comics in 1998 has been published by Robin Snyder, who was his editor at Charlton, Archie Comics and elsewhere, and Snyder actively keeps the bulk of Ditko\u2019s distinctive if decidedly oddball independent output available via sales through his web site. Ditko remained active until the end of his life, it remains debatable whether even the term \"retired\" was ever appropriate, given Ditko's continuing political vehemence right up until the last days of his life. Though as of his death there is yet to be any final tally of unpublished pages, but his nominal disgust with the current state of mainstream comics remained unabated into his advancing years.\r\n\r\nDitko was found dead in his studio apartment during the first week of July 2018, and New York City police determined he had passed away the week before, on the 29th of June. He remained reclusive and mostly silent about his earlier days until the end of his life. He was 90 at the time of his passing and had been active creatively right until his death.\r\n\r\nDitko was named to the Jack Kirby Hall of Fame in 1990, and into the Will Eisner Hall of Fame in 1994. Much of his finest work remains in print in various forms. We may hope that Robin Snyder will continue to make his philosophical screeds available to a reading public who deserves to know the man at his best as well as his present state.\r\n\r\nTestimonials to Ditko were issued by, among many others, Neil Gaiman, Guillermo Del Toro, and Edgar Wright. A fine final appraisal by Graeme MacMillan of Ditko's cultural legacy appeared in the Hollywood Reporter on July 6th, 2018.\r\n\r\nCharacters Created by Steve Dikto\r\n\r\n- Blue Beetle: Ted Kord - Blue Leopard - Captain Atom - Creeper - Deathgrip - Destructor - Dove - Dr. Shroud - Hawk - The Huntress - Living Brain - Mr. A - Odd Man - Shade, the Changing Man - Spider-Man - Slaymaster - Stalker - Sunset Bain - Question",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/16281/323221-75276-steve-ditko.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -8376,22 +9074,34 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1927,
+      "deathYear": 2018,
+      "country": "United States of America",
+      "aliases": [
+        "\u30b9\u30c6\u30a3\u30fc\u30f4\u30fb\u30c7\u30a3\u30c3\u30b3"
       ]
     },
     {
       "id": "steve-foxe",
       "name": "Steve Foxe",
-      "description": "",
-      "imageUrl": null,
+      "description": "Comic Book Writer | Children's Book Editor | Contributor to Paste Magazine | Cat Person",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4001/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-foxe/4040-81674/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8427,25 +9137,44 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/530/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-oliff/4040-7359/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1954,
+      "country": "United States of America",
+      "aliases": [
+        "Steve Oliffe"
       ]
     },
     {
       "id": "steve-wands",
       "name": "Steve Wands",
-      "description": "",
+      "description": "Steve Wands is a comic book letterer. He's lettered for DC Comics, Vertigo, Random House, BOOM! Studios and others. He is a graduate of the Kubert School.",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/03/Steve-Wands.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/512/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-wands/4040-47630/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Swands"
       ]
     },
     {
@@ -8473,37 +9202,47 @@
       "id": "sunghan-yune",
       "name": "Sunghan Yune",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4991/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sunghan-yune/4040-105900/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "sven-elven",
       "name": "Sven Elven",
-      "description": "",
-      "imageUrl": null,
+      "description": "Early Golden Age artist who worked on comic books such as Action Comics and Detective Comics for National Periodicals as well as comic books for Fawcett.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/69951/3107212-1118677-1063443_question_mark_large_2_.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4786/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sven-elven/4040-43611/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "ted-richards",
       "name": "Ted Richards",
-      "description": "",
-      "imageUrl": null,
+      "description": "Ted Richards was one of the seminal artist/writers of the underground comix movement in the 1970s and early 1980s.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/9/99019/5177396-tedrichards.jpeg",
       "references": [
         {
           "name": "Comic Vine",
@@ -8511,8 +9250,12 @@
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1946,
+      "deathYear": 2023,
+      "country": "United States"
     },
     {
       "id": "terry-dodson",
@@ -8523,11 +9266,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/463/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/terry-dodson/4040-4453/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "tim-boxell",
@@ -8575,12 +9324,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1003/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/todd-klein/4040-6224/"
         }
       ],
       "birthYear": 1951,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "todd-nauck",
@@ -8591,11 +9346,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/280/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/todd-nauck/4040-9641/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1971,
+      "country": "USA"
     },
     {
       "id": "tom-brevoort",
@@ -8606,11 +9368,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/537/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-brevoort/4040-41609/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "tom-defalco",
@@ -8621,27 +9389,39 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/268/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-defalco/4040-41037/"
         }
       ],
       "birthYear": 1950,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "tom-muller",
       "name": "Tom Muller",
-      "description": "",
+      "description": "Tom Muller is an Eisner-nominated designer who has designed logos and publications for DC/Vertigo Comics, Marvel Comics, Image Comics, IDW Publishing, Ashley Wood, ThreeA Toys, Kent Williams, Mark Millar, and Mam Tor Publishing.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/07/26/t-muller.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2450/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-muller/4040-69064/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "UK"
     },
     {
       "id": "tom-napolitano",
@@ -8658,23 +9438,30 @@
         "Thomas Napolitano"
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "tom-vincent",
       "name": "Tom Vincent",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/3225/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-vincent/4040-9514/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1956
     },
     {
       "id": "tone-rodriguez",
@@ -8700,16 +9487,23 @@
       "id": "toni-fejzula",
       "name": "Toni Fejzula",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7769324-fejzula.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/10332/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/toni-fejzula/4040-73815/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1980,
+      "country": "Serbia"
     },
     {
       "id": "tony-fleecs",
@@ -8728,7 +9522,13 @@
       ],
       "birthYear": 1979,
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States",
+      "aliases": [
+        "Anthony Michael Fleecs",
+        "AMF"
       ]
     },
     {
@@ -8751,17 +9551,23 @@
     {
       "id": "tony-moore",
       "name": "Tony Moore",
-      "description": "",
+      "description": "Along with Robert Kirkman, founded the Funk-O-Tron label in 2000, followed shortly by the release of it's debut comic, Battle Pope. Moore also worked with Kirkman at Image comics, as original artist on The Walking Dead and Brit. Since departing Image, he has co-created two of his own comic series titled The Exterminators (from DC Comics/Vertigo) and Fear Agent (from Dark Horse Comics).",
       "imageUrl": "https://static.metron.cloud/media/creator/2018/12/22/tony-moore.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/848/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tony-moore/4040-42442/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "trish-forstner",
@@ -8775,7 +9581,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8787,14 +9594,20 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1364/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tula-lotay/4040-71764/"
         }
       ],
       "aliases": [
         "Lisa Wood"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "UK"
     },
     {
       "id": "tyler-boss",
@@ -8808,7 +9621,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8887,16 +9701,26 @@
     {
       "id": "vincent-sullivan",
       "name": "Vincent Sullivan",
-      "description": "",
-      "imageUrl": null,
+      "description": "Vincent Sullivan ,in the '30s, '40s, and '50s, worked as a comic book editor. Sullivan was the first editor at what would eventually become DC Comics. Vince gave the green light to many projects including Superman and Batman, he died on February 3, 1999 at the age of 88.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1867/451510-vin_sullivan1940.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4477/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/vincent-sullivan/4040-43614/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1911,
+      "deathYear": 1999,
+      "aliases": [
+        "Don Vincent"
       ]
     },
     {
@@ -8911,7 +9735,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8923,6 +9748,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/333/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/wally-wood/4040-6099/"
         }
       ],
       "birthYear": 1927,
@@ -8932,8 +9761,10 @@
         "Woody"
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "walter-pereyra",
@@ -8947,7 +9778,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8959,17 +9791,23 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/751/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/wayne-faucher/4040-1679/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "USA"
     },
     {
       "id": "wendel-pugh",
       "name": "Wendel Pugh",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -8977,7 +9815,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -8989,63 +9828,94 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/2738/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/werther-delledera/4040-55691/"
         }
       ],
       "birthYear": 1975,
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Italy"
     },
     {
       "id": "wesley-griffith",
       "name": "Wesley Griffith",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/6521/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/wesley-griffith/4040-125234/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "wil-shrike",
       "name": "Wil Shrike",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16672/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/wil-shrike/4040-137614/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
       "id": "will-ely",
       "name": "Will Ely",
-      "description": "",
-      "imageUrl": null,
+      "description": "John William Ely Jr., credited as \"Bill Ely\" or \"Will Ely\" was a pulp magazine artist and comic book artist. He also drew a proposed newspaper strip of The Green Hornet.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/14/148518/2901952-ely_photo3.jpg",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4479/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/will-ely/4040-38882/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1913,
+      "deathYear": 1993,
+      "country": "United States",
+      "aliases": [
+        "Bill Ely",
+        "Will Georgi",
+        "William Ely",
+        "J. William Ely",
+        "John William Ely Jr."
       ]
     },
     {
       "id": "will-meugniot",
       "name": "Will Meugniot",
-      "description": "",
-      "imageUrl": null,
+      "description": "Known as the artist and co-creator of the DNAgents series. He has also worked on Marvel Team-Up, Solomon Kane, Howard the Duck, Vanity, and Marvel Chillers.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/128795/2595945-will_meugniot_3.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -9057,7 +9927,8 @@
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -9069,11 +9940,18 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/986/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/will-robson/4040-73114/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "birthYear": 1990,
+      "country": "England"
     },
     {
       "id": "yasmine-putri",
@@ -9084,11 +9962,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/238/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/yasmine-putri/4040-60704/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "Indonesia"
     },
     {
       "id": "yuko-shimizu",
@@ -9099,11 +9983,17 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/4471/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/yuko-shimizu/4040-56732/"
         }
       ],
       "sources": [
-        "metron"
-      ]
+        "metron",
+        "comicvine"
+      ],
+      "country": "United States"
     },
     {
       "id": "lvaro-mart-nez-bueno",
@@ -9114,10 +10004,19 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/100/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/alvaro-martinez-bueno/4040-68103/"
         }
       ],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
+      ],
+      "country": "Spain",
+      "aliases": [
+        "Alvaro Martinez"
       ]
     }
   ]

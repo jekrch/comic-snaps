@@ -5995,6 +5995,86 @@
       ]
     },
     {
+      "id": "the-city-beneath-her-feet-3",
+      "series": "the-city-beneath-her-feet",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "elsa-charretier",
+          "name": "Elsa Charretier",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "aditya-bidikar",
+          "name": "Aditya Bidikar",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "annie-wu",
+          "name": "Annie Wu",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paulina-ganucheau",
+          "name": "Paulina Ganucheau",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "dylan-todd",
+          "name": "Dylan Todd",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-city-beneath-her-feet-2024-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-deadman-2",
       "series": "the-deadman",
       "issue": 2,
