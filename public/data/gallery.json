@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 183,
+      "id": "the-city-beneath-her-feet-3-1783729702",
+      "title": "The City Beneath Her Feet",
+      "slug": "the-city-beneath-her-feet",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Elsa Charretier",
+      "image": "images/the-city-beneath-her-feet/issue-3-1783729702.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-11T00:28:23.782Z"
+    },
+    {
       "seq": 182,
       "id": "absolute-martian-manhunter-12-1783310215",
       "title": "Absolute Martian Manhunter",
@@ -934,7 +948,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1008,7 +1022,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1230,7 +1244,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
