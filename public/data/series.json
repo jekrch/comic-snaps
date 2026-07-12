@@ -2849,23 +2849,12 @@
     },
     {
       "id": "thrillology",
-      "name": "Thrillology",
+      "name": "Thrillogy",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
       "references": [],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
+      "sources": []
     },
     {
       "id": "thumpn-guts",

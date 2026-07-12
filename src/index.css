@@ -76,16 +76,24 @@ button,
 /* Subtle image scale on hover.
    NOTE: do NOT set `will-change` here — it would permanently promote every
    panel image (~160) to its own GPU layer, blowing iOS's tile/layer budget and
-   causing panels to blink/black-out and repaint late during scroll. Promote
-   only while hovering (never fires on iOS touch), so scrolling stays cheap. */
+   causing panels to blink/black-out and repaint late during scroll. */
 .panel-item img {
   transition: transform 0.3s ease-in-out;
 }
 
 @media (hover: hover) {
+  /* Use a 3D transform (scale3d, not scale) so the image stays on a single
+     GPU-composited layer for the whole transition AND at its resting hovered
+     state. A plain 2D scale lets the browser re-rasterize/re-snap to the pixel
+     grid when the transition settles; on displays with fractional scaling
+     (e.g. Windows Chrome @125%) that final snap lands a subpixel off and the
+     panel appears to "drop" sideways at the end of the zoom. backface-
+     visibility keeps the rasterization crisp. No `will-change` toggle here —
+     toggling it on at hover-start promotes the layer mid-animation, which is
+     itself a source of the jump. This block never applies on touch (iOS). */
   .panel-item:hover img {
-    transform: scale(1.02);
-    will-change: transform;
+    transform: scale3d(1.02, 1.02, 1);
+    backface-visibility: hidden;
   }
 }
 
