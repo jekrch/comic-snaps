@@ -2851,10 +2851,32 @@
       "id": "thrillology",
       "name": "Thrillogy",
       "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": []
+      "description": "A one-shot anthology comic featuring three tales written and illustrated by Tim Conrad.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/128795/2876815-thrillogy_pacific_comics.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/thrillogy/4050-57431/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 1984,
+      "publisher": "Pacific Comics",
+      "issueCount": 1,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/thrillology/ed08873bd933.jpg"
+      ]
     },
     {
       "id": "thumpn-guts",

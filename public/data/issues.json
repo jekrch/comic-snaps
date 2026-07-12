@@ -7194,6 +7194,33 @@
       ]
     },
     {
+      "id": "thrillology-1",
+      "series": "thrillology",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "tim-conrad",
+          "name": "Tim Conrad",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Penciller",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/thrillogy-1-a-conrad-thrillogy/4000-386946/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "trencher-1",
       "series": "trencher",
       "issue": 1,
