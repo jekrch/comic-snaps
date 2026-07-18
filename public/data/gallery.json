@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 194,
+      "id": "battle-beast-11-1784408098",
+      "title": "Battle Beast",
+      "slug": "battle-beast",
+      "issue": 11,
+      "year": 2026,
+      "artist": "Ryan Ottley",
+      "image": "images/battle-beast/issue-11-1784408098.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-18T20:55:00.515Z"
+    },
+    {
       "seq": 193,
       "id": "assorted-crisis-events-9-1784407960",
       "title": "Assorted Crisis Events",
