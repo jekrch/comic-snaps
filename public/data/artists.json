@@ -597,6 +597,27 @@
       "country": "United States"
     },
     {
+      "id": "ann-gray",
+      "name": "Ann Gray",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10039837-ann_gray.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3033/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ann-gray/4040-104361/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "annalisa-leoni",
       "name": "Annalisa Leoni",
       "description": "",
@@ -2477,6 +2498,27 @@
       ]
     },
     {
+      "id": "david-dastmalchian",
+      "name": "David Dastmalchian",
+      "description": "Writer and actor known for his roles in the Ant-Man films and The Suicide Squad.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/124259/8706866-ezgif-5-0320fa1772.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3010/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/david-dastmalchian/4040-107336/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1977
+    },
+    {
       "id": "david-finch",
       "name": "David Finch",
       "description": "David Finch began his career working for Top Cow Productions in titles like Cyberforce, Ascension, The Darkness, etc.\r\n\r\nAfter a hiatus, he returned to the industry in 2003 to work for Marvel in the Ultimate X-Men project along with Brian Michael Bendis. In 2005, he worked on the New Avengers title and has also worked on Moon Knight, Fallen Son, The Death of Captain America, X-Men: Messiah CompleX, and X-Men: Second Coming. Finch signed an exclusive contract with DC Comics and multiple covers for DC's Brightest Day series. Most recently he has taken on his own title Batman: The Dark Knight were he is playing the role of both artist and writer. However with only two issues in DC has announced that Batman: The Dark Knight will begin again at issue #1 with 52 other titles this September <2011>.\r\n\r\nAfter a 15-issue run on Batman: The Dark Knight , David Finch leaves to start start penciling Justice League of America with writer Geoff Johns starting February in 2013. He was also the artist for the Forever Evil miniseries, also with writer Geoff Johns.\r\n\r\nFinch is also a part of the creative team for New 52 Wonder Woman along with his wife Meredith Finch, taking over the reigns from the previous team of Brian Azzarello and Cliff Chiang.\r\n\r\nSome Characters Created:\r\n\r\nDC\r\n\r\n- Traktir - Spidra - The Heretic - Dawn Golden - Aleister Golden - Mira - Jack Forbes - White Rabbit - Natalya Trusevich - Dr. Crane - Derinoe - Clyemne - Nisos - Gotham Girl - Gotham - Oleg Balinoff - Bob Castro",
@@ -3445,6 +3487,26 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9980361-francis_portela.jpg",
       "country": "Spain",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "frank-cvetkovic",
+      "name": "Frank Cvetkovic",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9974613-frank_cvetkovic.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3011/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/frank-cvetkovic/4040-67837/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -6206,6 +6268,26 @@
       ]
     },
     {
+      "id": "leah-kilpatrick",
+      "name": "Leah Kilpatrick",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9231/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/leah-kilpatrick/4040-130687/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "lee-kohse",
       "name": "Lee Kohse",
       "description": "",
@@ -7523,6 +7605,22 @@
       ]
     },
     {
+      "id": "nickolej-villiger",
+      "name": "Nickolej Villiger",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18487/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "nicola-cuti",
       "name": "Nicola Cuti",
       "description": "Editor, Writer and Creator!\r\n\r\nCreator of E-Man and Moonchild the Starbabe.\r\n\r\nNicola Cuti died on February 21st 2019 at the age of 75. He died of cancer.",
@@ -7712,6 +7810,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "patrick-thorpe",
+      "name": "Patrick Thorpe",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10006246-patrick_thorpe.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2264/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/patrick-thorpe/4040-56636/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -8362,6 +8480,27 @@
         "comicvine"
       ],
       "country": "Canada"
+    },
+    {
+      "id": "riley-vandyke",
+      "name": "Riley Vandyke",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9910875-riley_vandyke.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11358/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/riley-vandyke/4040-132890/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "rob-leigh",
@@ -9297,6 +9436,26 @@
       "country": "United States"
     },
     {
+      "id": "soo-lee",
+      "name": "Soo Lee",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8058272-8624203708-Featu.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/soo-lee/4040-81462/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3432/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "stevan-subi",
       "name": "Stevan Subi\u0107",
       "description": "",
@@ -9596,6 +9755,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "tara-mccarron",
+      "name": "Tara McCarron",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10039942-tara_mccarron.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10224/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tara-mccarron/4040-131601/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

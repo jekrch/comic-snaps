@@ -995,6 +995,72 @@
       ]
     },
     {
+      "id": "assorted-crisis-events-9",
+      "series": "assorted-crisis-events",
+      "issue": 9,
+      "credits": [
+        {
+          "artistId": "deniz-camp",
+          "name": "Deniz Camp",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "eric-zawadzki",
+          "name": "Eric Zawadzki",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "nickolej-villiger",
+          "name": "Nickolej Villiger",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tom-muller",
+          "name": "Tom Muller",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "wesley-griffith",
+          "name": "Wesley Griffith",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/assorted-crisis-events-2025-9/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "battle-beast-8",
       "series": "battle-beast",
       "issue": 8,
@@ -1294,6 +1360,16 @@
           "url": "https://metron.cloud/issue/invincible-universe-battle-beast-2025-10/"
         }
       ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "battle-beast-11",
+      "series": "battle-beast",
+      "issue": 11,
+      "credits": [],
+      "references": [],
       "sources": [
         "metron"
       ]
@@ -3653,6 +3729,17 @@
       ]
     },
     {
+      "id": "if-destruction-be-our-lot-3",
+      "series": "if-destruction-be-our-lot",
+      "issue": 3,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "infernal-hulk-5",
       "series": "infernal-hulk",
       "issue": 5,
@@ -4306,6 +4393,79 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "kingdom-of-earth-1",
+      "series": "kingdom-of-earth",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "david-dastmalchian",
+          "name": "David Dastmalchian",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "leah-kilpatrick",
+          "name": "Leah Kilpatrick",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "soo-lee",
+          "name": "Soo Lee",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "frank-cvetkovic",
+          "name": "Frank Cvetkovic",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "patrick-thorpe",
+          "name": "Patrick Thorpe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "tara-mccarron",
+          "name": "Tara McCarron",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "riley-vandyke",
+          "name": "Riley Vandyke",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "ann-gray",
+          "name": "Ann Gray",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/kingdom-of-earth-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
       ]
     },
     {

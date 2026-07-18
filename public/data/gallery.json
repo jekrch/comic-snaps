@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-18T20:57:09.508Z"
+      "addedAt": "2026-07-18T20:57:09.508Z",
+      "width": 1280,
+      "height": 1202,
+      "dominantColors": [
+        [
+          84.1,
+          10.7,
+          -1.2
+        ],
+        [
+          62.6,
+          11.8,
+          1.8
+        ],
+        [
+          25.8,
+          7.4,
+          1.9
+        ]
+      ],
+      "colorfulness": 4.2,
+      "phash": "e19c4a259ed2b966",
+      "ahash": "ffffffff63c3e1e1",
+      "dhash": "f9f59994868a8b8b"
     },
     {
       "seq": 194,
@@ -26,7 +49,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-18T20:55:00.515Z"
+      "addedAt": "2026-07-18T20:55:00.515Z",
+      "width": 802,
+      "height": 1280,
+      "dominantColors": [
+        [
+          53.4,
+          5.7,
+          23.8
+        ],
+        [
+          75.4,
+          1.3,
+          35.0
+        ],
+        [
+          29.5,
+          6.6,
+          15.2
+        ]
+      ],
+      "colorfulness": 11.6,
+      "phash": "854707c1c9b913fd",
+      "ahash": "3a30137fff07030f",
+      "dhash": "c26666d24ade96bb"
     },
     {
       "seq": 193,
@@ -40,7 +86,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-18T20:52:41.864Z"
+      "addedAt": "2026-07-18T20:52:41.864Z",
+      "width": 1280,
+      "height": 482,
+      "dominantColors": [
+        [
+          81.5,
+          20.0,
+          0.6
+        ],
+        [
+          49.5,
+          40.0,
+          -13.1
+        ],
+        [
+          32.3,
+          24.3,
+          7.1
+        ]
+      ],
+      "colorfulness": 13.6,
+      "phash": "b30d2c46c9d87d2e",
+      "ahash": "000787efefc7c7cf",
+      "dhash": "bede1e9a898c8d9b"
     },
     {
       "seq": 192,
@@ -54,7 +123,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-18T20:50:32.779Z"
+      "addedAt": "2026-07-18T20:50:32.779Z",
+      "width": 577,
+      "height": 1280,
+      "dominantColors": [
+        [
+          58.0,
+          -1.3,
+          3.9
+        ],
+        [
+          15.7,
+          2.7,
+          4.6
+        ],
+        [
+          33.5,
+          4.5,
+          -5.1
+        ]
+      ],
+      "colorfulness": 12.1,
+      "phash": "c22736911fd563ca",
+      "ahash": "e4f0f0f0f8fcfcb0",
+      "dhash": "4ca5c120b1808020"
     },
     {
       "seq": 191,
@@ -1323,7 +1415,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1397,7 +1489,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1619,7 +1711,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,

@@ -220,7 +220,8 @@
       "coverSources": {
         "metron": [
           8,
-          10
+          10,
+          11
         ],
         "comicvine": [
           8,
@@ -229,7 +230,13 @@
       },
       "startYear": 2025,
       "publisher": "Image Comics",
-      "issueCount": 12
+      "issueCount": 12,
+      "coverImages": [
+        "data/covers/battle-beast/e689d32306d6.jpg",
+        "data/covers/battle-beast/4477fffc708c.jpg",
+        "data/covers/battle-beast/94faa70da2a1.jpg",
+        "data/covers/battle-beast/9a8405a1cf1f.jpg"
+      ]
     },
     {
       "id": "bijou-funnies",
@@ -1378,14 +1385,18 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          3
         ],
         "comicvine": [
           1
         ]
       },
       "coverImages": [
-        "data/covers/if-destruction-be-our-lot/9ae641fc7206.jpg"
+        "data/covers/if-destruction-be-our-lot/9ae641fc7206.jpg",
+        "data/covers/if-destruction-be-our-lot/36b8212a6198.jpg",
+        "data/covers/if-destruction-be-our-lot/48e883e5a1e1.jpg",
+        "data/covers/if-destruction-be-our-lot/e3f0eda32d15.jpg"
       ]
     },
     {
@@ -1521,6 +1532,44 @@
           3
         ]
       }
+    },
+    {
+      "id": "kingdom-of-earth",
+      "name": "Kingdom Of Earth",
+      "parentSeries": null,
+      "description": "From the critically acclaimed writing duo of David Dastmalchian and Leah Kilpatrick and the Bram Stoker Award\u2013winning artist Soo Lee comes this all-new monstrous miniseries.\r\n\r\n\u2022 Co-written by actor, writer, and producer David Dastmalchian and Leah Kilpatrick!\r\n\r\n\u2022 In the vein of Sweet Tooth, The Mandalorian, and The Last of Us.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10126420-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kingdom-of-earth/4050-174642/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16234/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Dark Horse Comics",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/kingdom-of-earth/15c444d6d78a.jpg",
+        "data/covers/kingdom-of-earth/bd8de7b1c74e.jpg",
+        "data/covers/kingdom-of-earth/c615a032764b.jpg",
+        "data/covers/kingdom-of-earth/31039cf2067c.jpg"
+      ]
     },
     {
       "id": "lady-killer",
