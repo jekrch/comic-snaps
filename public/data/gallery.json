@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 193,
+      "id": "assorted-crisis-events-9-1784407960",
+      "title": "Assorted Crisis Events",
+      "slug": "assorted-crisis-events",
+      "issue": 9,
+      "year": 2026,
+      "artist": "Eric Zawadzki",
+      "image": "images/assorted-crisis-events/issue-9-1784407960.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-18T20:52:41.864Z"
+    },
+    {
       "seq": 192,
       "id": "kingdom-of-earth-1-1784407830",
       "title": "Kingdom Of Earth",
