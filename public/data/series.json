@@ -368,6 +368,22 @@
       "issueCount": 3
     },
     {
+      "id": "boy-island",
+      "name": "Boy Island",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      }
+    },
+    {
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,

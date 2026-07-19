@@ -123,6 +123,15 @@
           "name": "Mr. Mxyzptlk (Villains)"
         }
       ]
+    },
+    "Boy Island": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 353,
+          "name": "Hellboy: The Island"
+        }
+      ]
     }
   }
 }
