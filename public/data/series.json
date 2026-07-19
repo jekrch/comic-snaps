@@ -203,6 +203,26 @@
       ]
     },
     {
+      "id": "avenue-d-comics-and-stories",
+      "name": "Avenue D Comics and Stories",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "battle-beast",
       "name": "Battle Beast",
       "parentSeries": null,
