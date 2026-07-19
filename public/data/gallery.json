@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 198,
+      "id": "avenue-d-comics-and-stories-1-1784499278",
+      "title": "Avenue D Comics and Stories",
+      "slug": "avenue-d-comics-and-stories",
+      "issue": 1,
+      "year": 1986,
+      "artist": "Glenn Head",
+      "image": "images/avenue-d-comics-and-stories/issue-1-1784499278.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-19T22:14:40.150Z"
+    },
+    {
       "seq": 197,
       "id": "boy-island-n-a-1784495425",
       "title": "Boy Island",
@@ -1470,7 +1484,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1544,7 +1558,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1766,7 +1780,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
