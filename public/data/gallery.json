@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 196,
+      "id": "boy-island-n-a-1784495307",
+      "title": "Boy Island",
+      "slug": "boy-island",
+      "issue": "N/A",
+      "year": 2024,
+      "artist": "Leo Fox",
+      "image": "images/boy-island/issue-n-a-1784495307.jpg",
+      "notes": null,
+      "tags": [
+        "oddmart"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-19T21:08:29.222Z"
+    },
+    {
       "seq": 195,
       "id": "if-destruction-be-our-lot-3-1784408227",
       "title": "If Destruction Be Our Lot",
@@ -61,7 +77,7 @@
         [
           75.4,
           1.3,
-          35.0
+          35
         ],
         [
           29.5,
@@ -92,12 +108,12 @@
       "dominantColors": [
         [
           81.5,
-          20.0,
+          20,
           0.6
         ],
         [
           49.5,
-          40.0,
+          40,
           -13.1
         ],
         [
@@ -128,7 +144,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          58.0,
+          58,
           -1.3,
           3.9
         ],
@@ -1415,7 +1431,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1489,7 +1505,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -1711,7 +1727,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
