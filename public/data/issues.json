@@ -2092,6 +2092,30 @@
       ]
     },
     {
+      "id": "buzzard-5",
+      "series": "buzzard",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "krystine-kryttre",
+          "name": "Krystine Kryttre",
+          "roles": [
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/buzzard-5/4000-364055/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "concrete-fragile-creature-1",
       "series": "concrete-fragile-creature",
       "issue": 1,

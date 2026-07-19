@@ -4160,6 +4160,17 @@
       ]
     },
     {
+      "id": "j-c",
+      "name": "J.C.",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jack-adler",
       "name": "Jack Adler",
       "description": "Jack Adler was an artist who worked as a cover artist and colorist for DC Comics. He was a staff member of DC's production department from 1946 to 1981, rising steadily up the ranks to production manager and vice president of production.",
@@ -6223,6 +6234,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "krystine-kryttre",
+      "name": "Krystine Kryttre",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/krystine-kryttre/4040-59891/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16529/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

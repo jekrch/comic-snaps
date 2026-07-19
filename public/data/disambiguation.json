@@ -8,6 +8,23 @@
           "name": "Ken Browne"
         }
       ]
+    },
+    "J.C.": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 13453,
+          "name": "J.C. Barbour"
+        },
+        {
+          "id": 11825,
+          "name": "J.C. Grande"
+        },
+        {
+          "id": 9536,
+          "name": "J.C. Ruiz"
+        }
+      ]
     }
   },
   "metron:series": {
