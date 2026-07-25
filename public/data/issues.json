@@ -4620,6 +4620,38 @@
       ]
     },
     {
+      "id": "madman-picture-exhibition-1",
+      "series": "madman-picture-exhibition",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "mike-allred",
+          "name": "Mike Allred",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "laura-allred",
+          "name": "Laura Allred",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/madman-picture-exhibition-1/4000-183618/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "mind-mgmt-new-improved-1",
       "series": "mind-mgmt-new-improved",
       "issue": 1,
