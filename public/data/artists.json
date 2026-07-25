@@ -5845,6 +5845,30 @@
       "country": "United States"
     },
     {
+      "id": "juan-ferreyra",
+      "name": "Juan Ferreyra",
+      "description": "Juan Ferreyra is a full artist (pencils, inks and colors). He's currently one of the artists on Green Arrow Rebirth.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8742228-juan.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1006/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/juan-ferreyra/4040-44897/"
+        }
+      ],
+      "country": "Argentina",
+      "aliases": [
+        "Juan Ferreira"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "juan-samu",
       "name": "Juan Samu",
       "description": "",
@@ -8323,6 +8347,30 @@
       ]
     },
     {
+      "id": "rahzzah",
+      "name": "Rahzzah",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1344/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rahzzah/4040-66327/"
+        }
+      ],
+      "country": "Panama",
+      "aliases": [
+        "Rahzzah Murdock"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ralph-cabrera",
       "name": "Ralph Cabrera",
       "description": "",
@@ -8587,6 +8635,28 @@
         "comicvine"
       ],
       "country": "Philippines"
+    },
+    {
+      "id": "rick-geary",
+      "name": "Rick Geary",
+      "description": "Rick Geary was born in 1946 in Kansas City and grew up in Wichita. After getting a degree in art and film, he moved to San Diego in 1975. He became known by publishing in Heavy Metal, Epic and National Lampoon. His straightfaced absurd humour stuff published in National Lampoon has been collected in Housebound with Rick Geary. Geary is perhaps best known from his ongoing real crime comics series dedicated to famous homicide cases of 19th century , \"A Treasury of Victorian Murder.\"\r\n\r\nGeary has a very distinctive black and white graphig style. He uses clean black lines on a white background.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/111746/7129075-rickgeary_ape04.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rick-geary/4040-28645/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/961/"
+        }
+      ],
+      "birthYear": 1946,
+      "country": "U.S.A.",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "rick-griffin",

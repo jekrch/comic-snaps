@@ -779,6 +779,116 @@
       ]
     },
     {
+      "id": "absolute-wonder-woman-22",
+      "series": "absolute-wonder-woman",
+      "issue": 22,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "dillon-snook",
+          "name": "Dillon Snook",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "juan-ferreyra",
+          "name": "Juan Ferreyra",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rachel-dodson",
+          "name": "Rachel Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rahzzah",
+          "name": "Rahzzah",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "terry-dodson",
+          "name": "Terry Dodson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-wonder-woman-2024-22/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "action-comics-1",
       "series": "action-comics",
       "issue": 1,
