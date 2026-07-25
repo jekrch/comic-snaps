@@ -1640,6 +1640,28 @@
       ]
     },
     {
+      "id": "charles-vess",
+      "name": "Charles Vess",
+      "description": "Charles Vess has been an artist since he was a small child. After graduating from Virginia Commonwealth University in 1974, took his first professional job as an animator for Candy Apple Productions in Richmond, Virginia. He stayed at this position for about two years before moving to New York in 1976. There, he worked as a freelance illustrator, contributing to publications including HEAVY METAL and THE NATIONAL LAMPOON. It was in this early period of his career that he published The Horns of Elfland\u00a0 for Archival Press in 1977, which Vess both wrote and illustrated. From 1980 to 1982, Charles worked as an instructor at the Parsons School of Art and Design.\r\n\r\nBy the late 80's, Vess had made a mark in the field of fantasy comic art with titles such as The Raven Banner: A Tale of Asgard\u00a0 published by Marvel in 1985 and The Book of Night, published by Dark Horse in 1987. Eventually, his mainstream success was affirmed by his illustration of SPIDER-MAN: SPIRITS OF THE EARTH from Marvel in 1990, and a ten issue run as illustrator of SWAMP THING for DC in 1993.\r\n\r\nIn 1989, Vess began his best-known collaboration to date, with Neil Gaiman, illustrating \"The Land of Summer's Twilight\", one of four episodes in the original BOOKS OF MAGIC, a DC mini-series,and also worked on three issues of Gaiman\u2019s SANDMAN.\u00a0SANDMAN #19, an adaptation of Shakespeare's \"A Midsummer Night's Dream\" won the prestigious World Fantasy Award for Best Short Story in 1991. It was the only comic book to ever hold the honor, as award organizers consequently amended the rules to exclude comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/255247-105863-charles-vess.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/charles-vess/4040-7866/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3578/"
+        }
+      ],
+      "birthYear": 1951,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "chris-bachalo",
       "name": "Chris Bachalo",
       "description": "Chris Bachalo is a Canadian comic book illustrator known for his quirky, cartoon-like style. He became well known for stints on DC Comics' Shade, the Changing Man and Neil Gaiman's two Death series. Chris has also illustrated several of Marvel Comics' X-Men-related series, including Generation X (which he co-created), X-Men Vol. 2, Uncanny X-Men, and Ultimate X-Men. Beginning in April, 2000 Chris illustrated his creator-owned series Steampunk.",
@@ -2890,6 +2912,22 @@
       ]
     },
     {
+      "id": "doug-hansen",
+      "name": "Doug Hansen",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/doug-hansen/4040-30900/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "drew-gill",
       "name": "Drew Gill",
       "description": "Art Director, Designer, Letterer who has worked for Image Comics.",
@@ -3669,6 +3707,26 @@
       ]
     },
     {
+      "id": "george-metzger",
+      "name": "George Metzger",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/1312880-metzger_selfportrait1980.gif",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/george-metzger/4040-59627/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/14051/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
       "description": "Gilberto Hern\u00e1ndez (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [\u02c8beto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
@@ -4055,6 +4113,27 @@
       ],
       "birthYear": 1882,
       "country": "United States"
+    },
+    {
+      "id": "hunt-emerson",
+      "name": "Hunt Emerson",
+      "description": "Writer and artist for The Beano along with many other comics, magazines and fanzines.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/72648/1457478-hunt_emerson.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/hunt-emerson/4040-27920/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/951/"
+        }
+      ],
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "ilias-kyriazis",
@@ -4841,6 +4920,33 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "jim-philips",
+      "name": "Jim Philips",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jim-phillips",
+      "name": "Jim Phillips",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jim-phillips/4040-81491/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

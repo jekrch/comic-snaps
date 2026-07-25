@@ -4273,6 +4273,50 @@
       ]
     },
     {
+      "id": "juice-city-1",
+      "series": "juice-city",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "doug-hansen",
+          "name": "Doug Hansen",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "george-metzger",
+          "name": "George Metzger",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "hunt-emerson",
+          "name": "Hunt Emerson",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jim-phillips",
+          "name": "Jim Phillips",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/juice-city-1/4000-456375/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "just-brutal-2",
       "series": "just-brutal",
       "issue": 2,
