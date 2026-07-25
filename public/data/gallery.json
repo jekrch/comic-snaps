@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 202,
+      "id": "madman-picture-exhibition-1-1785018866",
+      "title": "Madman Picture Exhibition",
+      "slug": "madman-picture-exhibition",
+      "issue": 1,
+      "year": 2002,
+      "artist": "Charles Vess",
+      "image": "images/madman-picture-exhibition/issue-1-1785018866.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-25T22:34:28.363Z"
+    },
+    {
       "seq": 201,
       "id": "madman-picture-exhibition-1-1785018757",
       "title": "Madman Picture Exhibition",
