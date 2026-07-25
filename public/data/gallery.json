@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 206,
+      "id": "madman-picture-exhibition-1-1785019682",
+      "title": "Madman Picture Exhibition",
+      "slug": "madman-picture-exhibition",
+      "issue": 1,
+      "year": 2002,
+      "artist": "Rick Geary",
+      "image": "images/madman-picture-exhibition/issue-1-1785019682.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-25T22:48:04.070Z"
+    },
+    {
       "seq": 205,
       "id": "odin-3-1785019499",
       "title": "Odin",
