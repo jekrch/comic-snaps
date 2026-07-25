@@ -5120,6 +5120,86 @@
       ]
     },
     {
+      "id": "odin-3",
+      "series": "odin",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marguerite-bennett",
+          "name": "Marguerite Bennett",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "letizia-cadonici",
+          "name": "Letizia Cadonici",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "tom-napolitano",
+          "name": "Tom Napolitano",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-foxe",
+          "name": "Steve Foxe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "courtney-menard",
+          "name": "Courtney Menard",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "dylan-todd",
+          "name": "Dylan Todd",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/odin-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "pacific-presents-3",
       "series": "pacific-presents",
       "issue": 3,

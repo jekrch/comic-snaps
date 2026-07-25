@@ -1965,14 +1965,18 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          3
         ],
         "comicvine": [
           1
         ]
       },
       "coverImages": [
-        "data/covers/odin/b6fcfda3c698.jpg"
+        "data/covers/odin/b6fcfda3c698.jpg",
+        "data/covers/odin/15c99ef50389.jpg",
+        "data/covers/odin/57f4c0654b6a.jpg",
+        "data/covers/odin/7547dad6c601.jpg"
       ],
       "issueCount": 4
     },
