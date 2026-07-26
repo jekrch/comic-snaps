@@ -249,6 +249,7 @@ interface MasonryGridProps {
   onLayoutReady?: () => void;
   onPanelPositions?: (positions: { panel: Panel; y: number; h: number }[]) => void;
   onOpenPanel: (panel: Panel) => void;
+  onLaunchViz?: () => void;
   isFirstLoad?: boolean;
 }
 
@@ -263,6 +264,7 @@ export default function MasonryGrid({
   onLayoutReady,
   onPanelPositions,
   onOpenPanel,
+  onLaunchViz,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -439,6 +441,8 @@ export default function MasonryGrid({
             panels={allPanels}
             filters={filters}
             onFiltersChange={onFiltersChange}
+            onLaunchViz={onLaunchViz}
+            vizDisabled={panels.length === 0}
           />
         </div>
 

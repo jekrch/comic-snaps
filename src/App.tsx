@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, lazy, Suspense } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
@@ -13,13 +13,29 @@ import { useFilterParams } from "./hooks/useFilterParams";
 import { loadMetadata } from "./utils/metadata";
 import BirdIcon from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
+import VizLaunchModal from "./components/viz/VizLaunchModal";
+import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
+import { findPreset, initialPresetId, presetConfig } from "./components/viz/vizPresets";
+
+// The visualizer drags in the whole WebGL engine, so it stays out of the
+// gallery's first paint and loads on launch instead.
+const VisualizerOverlay = lazy(() => import("./components/viz/VisualizerOverlay"));
 
 export default function App() {
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const { initialFilters, initialSort, initialTab, syncToURL, syncTab } = useFilterParams();
+  const {
+    initialFilters,
+    initialSort,
+    initialTab,
+    initialViz,
+    initialVizPreset,
+    syncToURL,
+    syncTab,
+    syncViz,
+  } = useFilterParams();
   const [showInfo, setShowInfo] = useState<InfoTab | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
@@ -30,6 +46,34 @@ export default function App() {
   );
   const [viewerScope, setViewerScope] = useState<"filtered" | "all" | "custom">("filtered");
   const [customViewerPanels, setCustomViewerPanels] = useState<Panel[] | null>(null);
+  // The launch button opens a chooser; a `?viz=1` link skips it and runs the
+  // preset the URL names, since the link already carries the choice.
+  const [vizPrompt, setVizPrompt] = useState(false);
+  const [vizRun, setVizRun] = useState<VizLaunchOptions | null>(() => {
+    if (!initialViz) return null;
+    // An unnamed preset still honours prefers-reduced-motion, and a name that
+    // does not resolve falls back rather than being echoed into the run.
+    const preset = findPreset(initialVizPreset ?? initialPresetId());
+    return { presetId: preset.id, config: presetConfig(preset.id), fullscreen: false, custom: false };
+  });
+
+  const handleOpenViz = useCallback(() => setVizPrompt(true), []);
+
+  const handleStartViz = useCallback(
+    (options: VizLaunchOptions) => {
+      setVizPrompt(false);
+      setVizRun(options);
+      // A custom config cannot be reconstructed from the URL, so the preset name
+      // is omitted rather than pointing at something that is not what is running.
+      syncViz(true, options.custom ? null : options.presetId);
+    },
+    [syncViz]
+  );
+
+  const handleCloseViz = useCallback(() => {
+    setVizRun(null);
+    syncViz(false);
+  }, [syncViz]);
 
   useEffect(() => {
     if (initialTab) {
@@ -280,6 +324,7 @@ export default function App() {
               onLayoutReady={handleLayoutReady}
               onPanelPositions={setPanelPositions}
               onOpenPanel={handleOpenPanel}
+              onLaunchViz={handleOpenViz}
               isFirstLoad={isFirstLoad}
             />
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
@@ -320,6 +365,25 @@ export default function App() {
           onSelectPanel={handleSelectPanel}
           onBrowse={handleBrowseBy}
         />
+      )}
+
+      {vizPrompt && status === "ready" && (
+        <VizLaunchModal
+          panelCount={sortedPanels.length}
+          onStart={handleStartViz}
+          onCancel={() => setVizPrompt(false)}
+        />
+      )}
+
+      {vizRun && status === "ready" && (
+        <Suspense fallback={<div className="fixed inset-0 z-100 bg-black" />}>
+          <VisualizerOverlay
+            panels={sortedPanels}
+            config={vizRun.config}
+            fullscreen={vizRun.fullscreen}
+            onClose={handleCloseViz}
+          />
+        </Suspense>
       )}
     </div>
   );

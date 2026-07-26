@@ -66,11 +66,15 @@ export default function BirdIcon() {
       <div
         className={`h-7 flex items-end overflow-visible transition-opacity duration-300 ease-in ${introComplete && !atTop ? 'opacity-0' : 'opacity-100'}`}
       >
+        {/* The 70px glyph overflows this 28px-tall header row, so its empty box
+            was swallowing clicks aimed at the filter control underneath. The
+            peck target is the wrapper div, which stays inside the header. */}
         <Bird
           ref={birdRef}
           size={70}
           strokeWidth={1.5}
           className="ml-6 stroke-[#8d422f] bird-base"
+          style={{ pointerEvents: "none" }}
         />
       </div>
       {/* Masked bird — fades in after intro, always visible once intro is done */}
@@ -92,6 +96,7 @@ export default function BirdIcon() {
           size={70}
           strokeWidth={1.5}
           className="ml-6 stroke-[#8d422f] bird-base"
+          style={{ pointerEvents: "none" }}
           aria-hidden
         />
       </div>

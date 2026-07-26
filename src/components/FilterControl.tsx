@@ -6,17 +6,23 @@ import { comparePersonNames } from "../utils/names";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
 import { ChevronDown, XCircle } from "lucide-react";
+import VizLaunchButton from "./viz/VizLaunchButton";
 
 interface FilterControlProps {
   panels: Panel[];
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
+  onLaunchViz?: () => void;
+  /** Nothing survives the current filters, so there is no run to start. */
+  vizDisabled?: boolean;
 }
 
 export default function FilterControl({
   panels,
   filters,
   onFiltersChange,
+  onLaunchViz,
+  vizDisabled,
 }: FilterControlProps) {
   const [open, setOpen] = useState(false);
   const active = hasActiveFilters(filters);
@@ -216,6 +222,26 @@ export default function FilterControl({
               selected={filters.postedBy}
               onToggle={(v) => toggleInSet("postedBy", v)}
             />
+
+            {/* An action on the narrowed set, so it closes the list */}
+            {onLaunchViz && (
+              <>
+                <div
+                  className="mx-3 my-1"
+                  style={{
+                    height: "1px",
+                    background: "var(--color-border, rgba(74,71,69,0.25))",
+                  }}
+                />
+                <VizLaunchButton
+                  onLaunch={() => {
+                    setOpen(false);
+                    onLaunchViz();
+                  }}
+                  disabled={vizDisabled}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
