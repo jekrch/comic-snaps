@@ -1914,6 +1914,38 @@
       ]
     },
     {
+      "id": "motor-city-comics",
+      "name": "Motor City Comics",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2764727-motor1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/motor-city-comics/4050-54970/"
+        }
+      ],
+      "startYear": 1969,
+      "publisher": "Rip Off Press",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/motor-city-comics/75c9178a97f4.jpg",
+        "data/covers/motor-city-comics/f54420c772ad.jpg"
+      ]
+    },
+    {
       "id": "my-body-is-unspooling",
       "name": "My Body is Unspooling",
       "parentSeries": null,

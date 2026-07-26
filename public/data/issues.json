@@ -5221,6 +5221,33 @@
       ]
     },
     {
+      "id": "motor-city-comics-2",
+      "series": "motor-city-comics",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/motor-city-comics-2/4000-374396/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "nut-3",
       "series": "nut",
       "issue": 3,

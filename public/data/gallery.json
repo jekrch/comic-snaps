@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-26T22:55:41.575Z"
+      "addedAt": "2026-07-26T22:55:41.575Z",
+      "width": 942,
+      "height": 1280,
+      "dominantColors": [
+        [
+          95.1,
+          2.9,
+          -0.5
+        ],
+        [
+          59.0,
+          1.8,
+          -0.2
+        ],
+        [
+          24.9,
+          1.7,
+          -0.6
+        ]
+      ],
+      "colorfulness": 2.8,
+      "phash": "ae8de1d21aa53a69",
+      "ahash": "ffff010100e7e381",
+      "dhash": "a8405763198dce17"
     },
     {
       "seq": 216,
@@ -26,7 +49,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-07-26T22:35:56.793Z"
+      "addedAt": "2026-07-26T22:35:56.793Z",
+      "width": 712,
+      "height": 1280,
+      "dominantColors": [
+        [
+          77.4,
+          11.7,
+          -10.2
+        ],
+        [
+          21.4,
+          13.7,
+          4.7
+        ],
+        [
+          68.0,
+          7.7,
+          43.3
+        ]
+      ],
+      "colorfulness": 22.2,
+      "phash": "dd6d36347093a2c9",
+      "ahash": "00383878babebebe",
+      "dhash": "6672625252647270"
     },
     {
       "seq": 215,
@@ -2188,7 +2234,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2262,7 +2308,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2484,7 +2530,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
