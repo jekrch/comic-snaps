@@ -2699,6 +2699,87 @@
       ]
     },
     {
+      "id": "eerie-90",
+      "series": "eerie",
+      "issue": 90,
+      "credits": [
+        {
+          "artistId": "bill-dubay",
+          "name": "Bill DuBay",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "bruce-jones",
+          "name": "Bruce Jones",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "roger-mckenzie",
+          "name": "Roger McKenzie",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "alex-ni-o",
+          "name": "Alex Ni\u00f1o",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "gonzalo-mayo",
+          "name": "Gonzalo Mayo",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jose-ortiz",
+          "name": "Jose Ortiz",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "leopoldo-dura-ona",
+          "name": "Leopoldo Dura\u00f1ona",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "richard-corben",
+          "name": "Richard Corben",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "james-warren",
+          "name": "James Warren",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/eerie-90/4000-18269/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "eerie-93",
       "series": "eerie",
       "issue": 93,

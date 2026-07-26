@@ -1362,6 +1362,28 @@
       ]
     },
     {
+      "id": "bruce-jones",
+      "name": "Bruce Jones",
+      "description": "Bruce Jones is an American novelist, screenwriter, and comic artist, whose work has been published by Marvel (most notably Ka-Zar the Savage,The Incredible Hulk, and Call of Duty: The Precinct) and DC Comics (Nightwing), as well as for Dark Horse (Creepy) and the now-defunct Pacific and Eclipse (The Twisted Tales of Bruce Jones) companies, among others. Outside of the comic industry, he has screenwritten for television and published novels.\r\n\r\nHe has worked under the pseudonyms Philip Roland and Bruce Elliot.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/19151/649348-brucejones_pic.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bruce-jones/4040-30846/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1430/"
+        }
+      ],
+      "birthYear": 1946,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "bryan-valenza",
       "name": "Bryan Valenza",
       "description": "",
@@ -3881,6 +3903,28 @@
       ]
     },
     {
+      "id": "gonzalo-mayo",
+      "name": "Gonzalo Mayo",
+      "description": "Peruvian comics artist who worked for Warren Publishing Co in the 1970s.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/128795/3212927-gonzalo%20mayo%202a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/gonzalo-mayo/4040-1540/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3786/"
+        }
+      ],
+      "deathYear": 2021,
+      "country": "Peru",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "good-old-neon",
       "name": "Good Old Neon",
       "description": "",
@@ -5635,6 +5679,33 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
       "aliases": [
         "Robert Martin"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "jose-ortiz",
+      "name": "Jose Ortiz",
+      "description": "Jose Ortiz illustrated many classic British comic strips for Eagle and 2000AD in the 1980s, including:\r\n\r\n- The Tower King (Eagle 1-24) - The House of Daemon (Eagle 25-47) - The Fifth Horseman - a Thaddius Thorn story (Eagle 49-69) - News Team (Eagle 100-106 - only the first seven episodes) - The Thirteenth Floor (Scream! 1-15 and then Eagle from issue 128 to 258) - Survival (Eagle 259-319) - Kid Cops (Eagle 329-343) - Kitten Magee (for Wildcat and Eagle) - Rogue Trooper (2000AD)",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/1091377-jos__ortiz.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jose-ortiz/4040-6776/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10397/"
+        }
+      ],
+      "birthYear": 1931,
+      "deathYear": 2013,
+      "country": "Spain",
+      "aliases": [
+        "Jose Ortiz Moya",
+        "Jos\u00e9 Maria Ortiz Moya"
       ],
       "sources": [
         "comicvine",
@@ -8840,6 +8911,26 @@
       ],
       "birthYear": 1967,
       "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "roger-mckenzie",
+      "name": "Roger McKenzie",
+      "description": "Roger McKenzie is a writer that has worked at Marvel Comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9907422-roger_mckenzie.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/roger-mckenzie/4040-44822/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2374/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
