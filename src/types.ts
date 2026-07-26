@@ -73,6 +73,8 @@ export interface Panel {
   letterers?: string[];
   /** Every person credited on this panel's issue, in any role. */
   credits?: string[];
+  /** Manual override for masonry column span; omit to fall back to aspect-ratio detection. */
+  columnSpan?: 1 | 2;
 }
 
 export interface Gallery {

@@ -31,6 +31,8 @@ function getAspect(panel: Panel): number {
 }
 
 function isWide(panel: Panel): boolean {
+  if (panel.columnSpan === 1) return false;
+  if (panel.columnSpan === 2) return true;
   return getAspect(panel) >= WIDE_THRESHOLD;
 }
 

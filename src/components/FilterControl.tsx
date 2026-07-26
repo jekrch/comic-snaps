@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import type { Panel } from "../types";
 import type { Filters } from "../utils/filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
+import { comparePersonNames } from "../utils/names";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
 import { ChevronDown, XCircle } from "lucide-react";
@@ -37,7 +38,7 @@ export default function FilterControl({
   const postedByItems = useMemo(
     () =>
       Array.from(postedByCounts.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => comparePersonNames(a[0], b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [postedByCounts]
   );
@@ -53,7 +54,7 @@ export default function FilterControl({
   const artistItems = useMemo(
     () =>
       Array.from(artistCounts.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => comparePersonNames(a[0], b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [artistCounts]
   );
@@ -61,7 +62,7 @@ export default function FilterControl({
   const coloristItems = useMemo(
     () =>
       Array.from(coloristCounts.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => comparePersonNames(a[0], b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [coloristCounts]
   );
@@ -69,7 +70,7 @@ export default function FilterControl({
   const lettererItems = useMemo(
     () =>
       Array.from(lettererCounts.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => comparePersonNames(a[0], b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [lettererCounts]
   );
@@ -77,7 +78,7 @@ export default function FilterControl({
   const creditItems = useMemo(
     () =>
       Array.from(creditCounts.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => comparePersonNames(a[0], b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [creditCounts]
   );
