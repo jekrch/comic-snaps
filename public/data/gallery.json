@@ -1,6 +1,43 @@
 {
   "panels": [
     {
+      "seq": 213,
+      "id": "heavy-metal-8-1785096993",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 8,
+      "year": 1978,
+      "artist": "Enki Bilal",
+      "image": "images/heavy-metal/issue-8-1785096993.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-26T20:16:35.159Z",
+      "width": 870,
+      "height": 1280,
+      "dominantColors": [
+        [
+          4.0,
+          0.3,
+          0.2
+        ],
+        [
+          92.3,
+          -2.2,
+          5.1
+        ],
+        [
+          55.2,
+          -0.4,
+          1.4
+        ]
+      ],
+      "colorfulness": 4.4,
+      "phash": "c23d3df0c483beb0",
+      "ahash": "8200017cfcfc7d7f",
+      "dhash": "0c347be1849999e5"
+    },
+    {
       "seq": 212,
       "id": "mind-mgmt-new-improved-2-1785094478",
       "title": "Mind MGMT: New & Improved",

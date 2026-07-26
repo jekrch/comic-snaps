@@ -1296,6 +1296,7 @@
         "metron": [
           5,
           6,
+          8,
           12,
           325
         ],
@@ -1307,7 +1308,13 @@
         ]
       },
       "issueCount": 5,
-      "anthology": true
+      "anthology": true,
+      "coverImages": [
+        "data/covers/heavy-metal/f1aed80cc8d3.jpg",
+        "data/covers/heavy-metal/dcc701977f4c.jpg",
+        "data/covers/heavy-metal/af4292162152.jpg",
+        "data/covers/heavy-metal/465e259dbe3f.jpg"
+      ]
     },
     {
       "id": "hup",
