@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 216,
+      "id": "heavy-metal-8-1785105355",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 8,
+      "year": 1978,
+      "artist": "Paul Kirchner",
+      "image": "images/heavy-metal/issue-8-1785105355.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-26T22:35:56.793Z"
+    },
+    {
       "seq": 215,
       "id": "heavy-metal-8-1785105241",
       "title": "Heavy Metal",
