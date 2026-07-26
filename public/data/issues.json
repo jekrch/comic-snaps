@@ -8198,6 +8198,59 @@
       "sources": [
         "comicvine"
       ]
+    },
+    {
+      "id": "zap-comix-5",
+      "series": "zap-comix",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "gilbert-shelton",
+          "name": "Gilbert Shelton",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-williams",
+          "name": "Robert Williams",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "s-clay-wilson",
+          "name": "S. Clay Wilson",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "victor-moscoso",
+          "name": "Victor Moscoso",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zap-comix-5/4000-185256/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
     }
   ]
 }
