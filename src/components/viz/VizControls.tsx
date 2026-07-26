@@ -1,4 +1,4 @@
-import { X, Sliders } from "lucide-react";
+import { X, Sliders, Maximize, Minimize } from "lucide-react";
 import type { Panel } from "../../types";
 import { formatIssue } from "../../utils/issueFormat";
 
@@ -7,7 +7,9 @@ interface VizControlsProps {
   feature: Panel | null;
   seed: string;
   paused: boolean;
+  fullscreen: boolean;
   onClose: () => void;
+  onToggleFullscreen: () => void;
   onToggleDebug?: () => void;
 }
 
@@ -21,7 +23,9 @@ export default function VizControls({
   feature,
   seed,
   paused,
+  fullscreen,
   onClose,
+  onToggleFullscreen,
   onToggleDebug,
 }: VizControlsProps) {
   return (
@@ -34,7 +38,7 @@ export default function VizControls({
         {onToggleDebug && (
           <button
             onClick={onToggleDebug}
-            className="viewer-btn"
+            className="viz-btn"
             title="Tuning panel"
             tabIndex={visible ? 0 : -1}
           >
@@ -42,8 +46,17 @@ export default function VizControls({
           </button>
         )}
         <button
+          onClick={onToggleFullscreen}
+          className="viz-btn"
+          title={fullscreen ? "Exit full screen (F)" : "Full screen (F)"}
+          aria-label={fullscreen ? "Exit full screen" : "Full screen"}
+          tabIndex={visible ? 0 : -1}
+        >
+          {fullscreen ? <Minimize size={15} /> : <Maximize size={15} />}
+        </button>
+        <button
           onClick={onClose}
-          className="viewer-btn"
+          className="viz-btn"
           title="Exit visualizer (Esc)"
           tabIndex={visible ? 0 : -1}
         >

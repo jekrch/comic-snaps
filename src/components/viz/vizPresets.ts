@@ -22,6 +22,26 @@ export interface VizPreset {
  */
 export const VIZ_PRESETS: VizPreset[] = [
   {
+    id: "dissolve",
+    name: "Dissolve",
+    blurb: "Two slow layers, no feedback, no rotation, and reduced motion.",
+    overrides: {
+      layerCount: 2,
+      layerLifetime: 44,
+      crossfade: 0.5,
+      zoomAmount: 1.06,
+      panAmount: 0.04,
+      rotateAmount: 0,
+      layerOpacity: 0.75,
+      beat: 4,
+      post: {
+        feedbackAmount: 0,
+        chroma: 0,
+        grain: 0.03,
+      },
+    },
+  },
+  {
     id: "drift",
     name: "Drift",
     blurb: "Four full-bleed layers on long crossfades. Minimal processing.",
@@ -84,29 +104,10 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
-  {
-    id: "quiet",
-    name: "Quiet",
-    blurb: "Two slow layers, no feedback, no rotation. Used when the system asks for reduced motion.",
-    overrides: {
-      layerCount: 2,
-      layerLifetime: 44,
-      crossfade: 0.5,
-      zoomAmount: 1.06,
-      panAmount: 0.04,
-      rotateAmount: 0,
-      layerOpacity: 0.75,
-      beat: 4,
-      post: {
-        feedbackAmount: 0,
-        chroma: 0,
-        grain: 0.03,
-      },
-    },
-  },
 ];
 
-export const DEFAULT_PRESET_ID = "drift";
+/** Dissolve leads the list and is what an unqualified launch runs. */
+export const DEFAULT_PRESET_ID = "dissolve";
 
 export function findPreset(id: string | null | undefined): VizPreset {
   return VIZ_PRESETS.find((preset) => preset.id === id) ?? VIZ_PRESETS[0];
@@ -123,7 +124,12 @@ export function presetConfig(id: string | null | undefined): VizConfig {
   };
 }
 
-/** Reduced-motion users land on Quiet unless they pick otherwise. */
+/**
+ * Dissolve is now the default for everyone, and it is also the calm option, so
+ * a reduced-motion preference is already satisfied. Pinned explicitly anyway:
+ * if DEFAULT_PRESET_ID is ever pointed at something livelier, that must not
+ * quietly become the reduced-motion default too (§7).
+ */
 export function initialPresetId(): string {
-  return prefersReducedMotion() ? "quiet" : DEFAULT_PRESET_ID;
+  return prefersReducedMotion() ? "dissolve" : DEFAULT_PRESET_ID;
 }

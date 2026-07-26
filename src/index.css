@@ -118,6 +118,12 @@ button,
   @apply flex items-center justify-center h-8 min-w-8 px-2 rounded-md bg-white/10 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/20 transition-all duration-150 ease-out active:scale-95;
 }
 
+/* Same shape as .viewer-btn, but the visualizer sits on top of full-bleed art:
+   the chrome needs its own opaque ground to stay legible over anything. */
+.viz-btn {
+  @apply flex items-center justify-center h-8 min-w-8 px-2 rounded-md border border-white/12 bg-black/55 backdrop-blur-md text-white/75 hover:text-white hover:bg-black/75 hover:border-white/25 transition-all duration-150 ease-out active:scale-95;
+}
+
 .viewer-pill {
   @apply flex items-center gap-1.5 h-7 px-3 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-[11px] tracking-wide text-white/60 hover:text-white/90 hover:bg-white/12 hover:border-white/25 transition-all duration-150 ease-out active:scale-95 cursor-pointer;
 }

@@ -97,15 +97,30 @@ export default function VisualizerOverlay({
     };
   }, []);
 
+  const [isFullscreen, setIsFullscreen] = useState(() => Boolean(document.fullscreenElement));
+
+  useEffect(() => {
+    // Fullscreen can also be left by Esc or the browser's own chrome, so the
+    // button state follows the document rather than our own requests.
+    const onChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
   useEffect(() => {
     if (!fullscreen) return;
     // The request only succeeds while the launch click is still the active user
     // gesture, so a `?viz=1` cold load stays windowed however this is set.
     document.documentElement.requestFullscreen?.({ navigationUI: "hide" })?.catch(() => undefined);
-    return () => {
-      if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
-    };
   }, [fullscreen]);
+
+  // Unconditional: fullscreen may have been entered from the button, not the launch.
+  useEffect(
+    () => () => {
+      if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+    },
+    [],
+  );
 
   useEffect(() => {
     let sentinel: WakeLockSentinel | null = null;
@@ -164,6 +179,15 @@ export default function VisualizerOverlay({
     wakeChrome();
   }, [wakeChrome]);
 
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+    else
+      void document.documentElement
+        .requestFullscreen?.({ navigationUI: "hide" })
+        ?.catch(() => undefined);
+    wakeChrome();
+  }, [wakeChrome]);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape" || event.key === "q") {
@@ -175,13 +199,16 @@ export default function VisualizerOverlay({
       } else if (event.key === "d") {
         setShowDebug((visible) => !visible);
         wakeChrome();
+      } else if (event.key === "f") {
+        event.preventDefault();
+        toggleFullscreen();
       } else {
         wakeChrome();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, togglePause, wakeChrome]);
+  }, [onClose, togglePause, toggleFullscreen, wakeChrome]);
 
   return (
     <div
@@ -205,7 +232,9 @@ export default function VisualizerOverlay({
         feature={feature}
         seed={formatSeed(seed)}
         paused={paused}
+        fullscreen={isFullscreen}
         onClose={onClose}
+        onToggleFullscreen={toggleFullscreen}
         onToggleDebug={() => setShowDebug((visible) => !visible)}
       />
 
