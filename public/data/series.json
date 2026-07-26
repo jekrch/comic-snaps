@@ -377,15 +377,22 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
-          1
+          1,
+          2
         ]
       },
       "startYear": 2026,
       "publisher": "Skybound",
-      "issueCount": 3
+      "issueCount": 3,
+      "coverImages": [
+        "data/covers/blood-of-the-wolf-man/a12ceda907cd.jpg",
+        "data/covers/blood-of-the-wolf-man/363ed4945ea2.jpg",
+        "data/covers/blood-of-the-wolf-man/54a3b18e349b.jpg"
+      ]
     },
     {
       "id": "boy-island",
