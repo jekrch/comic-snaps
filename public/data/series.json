@@ -1861,14 +1861,18 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
           1
         ]
       },
       "coverImages": [
-        "data/covers/mind-mgmt-new-improved/d88427fdbd88.jpg"
+        "data/covers/mind-mgmt-new-improved/d88427fdbd88.jpg",
+        "data/covers/mind-mgmt-new-improved/a96549d6d058.jpg",
+        "data/covers/mind-mgmt-new-improved/252ce7ee89b4.jpg",
+        "data/covers/mind-mgmt-new-improved/65dc04185332.jpg"
       ],
       "startYear": 2026
     },
