@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 219,
+      "id": "heavy-metal-8-1785117226",
+      "title": "Heavy Metal",
+      "slug": "heavy-metal",
+      "issue": 8,
+      "year": 1978,
+      "artist": "Moebius",
+      "image": "images/heavy-metal/issue-8-1785117226.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-07-27T01:53:48.905Z"
+    },
+    {
       "seq": 218,
       "id": "heavy-metal-8-1785107497",
       "title": "Heavy Metal",
@@ -19,7 +33,7 @@
         [
           51.4,
           4.2,
-          4.0
+          4
         ],
         [
           44.6,
@@ -2271,7 +2285,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2345,7 +2359,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2567,7 +2581,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
