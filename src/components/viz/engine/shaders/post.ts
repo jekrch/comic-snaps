@@ -30,6 +30,20 @@ uniform float uVignette;
 uniform float uExposure;
 uniform float uHueShift;
 
+uniform float uKaleido;
+uniform float uKaleidoSegments;
+uniform float uTile;
+uniform float uWarp;
+uniform float uWarpScale;
+uniform float uWarpSpeed;
+uniform float uRipple;
+uniform float uRippleFreq;
+uniform float uTwist;
+uniform float uBulge;
+uniform float uSolarize;
+
+const float TAU = 6.2831853;
+
 float hash21(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
   p += dot(p, p + 45.32);
@@ -61,20 +75,92 @@ vec3 halftone(vec3 c, vec2 uv) {
   return vec3(1.0 - ci, 1.0 - mi, 1.0 - yi);
 }
 
+/** Mirror-repeat into 0..1. Identity for coordinates already in range, so a
+ *  frame with every distortion at zero comes through untouched. */
+vec2 mirrorUv(vec2 p) {
+  p = fract(p * 0.5) * 2.0;
+  return 1.0 - abs(p - 1.0);
+}
+
+/** Screen uv <-> aspect-corrected space centred on the frame, so the radial
+ *  effects stay circular on a wide canvas instead of going elliptical. */
+vec2 toStage(vec2 uv) { return (uv - 0.5) * vec2(uAspect, 1.0); }
+vec2 fromStage(vec2 p) { return p / vec2(uAspect, 1.0) + 0.5; }
+
+/**
+ * The coordinate half of the chain: every geometric and undulating effect is a
+ * remap of where the frame is sampled, so they all live here and compose in
+ * one place.
+ *
+ * Order is deliberate. The symmetry folds run first, which means everything
+ * after them is a function of already-folded coordinates and therefore
+ * *inherits* the symmetry — warping after a kaleidoscope keeps the mirror
+ * intact, warping before it would tear the seams apart.
+ */
+vec2 distort(vec2 uv) {
+  if (uKaleido > 0.0) {
+    vec2 k = toStage(uv);
+    float seg = TAU / max(2.0, uKaleidoSegments);
+    // A slow intrinsic spin: a static kaleidoscope reads as a wallpaper, and
+    // the turn is what makes the fold legible as one.
+    float a = mod(atan(k.y, k.x) + uTime * 0.06, seg);
+    // Mirror within the wedge so neighbouring segments meet without a seam.
+    a = abs(a - seg * 0.5);
+    uv = mix(uv, fromStage(vec2(cos(a), sin(a)) * length(k)), uKaleido);
+  }
+
+  // Tiling is a scale, not a blend: one copy at 0 is the identity, so the grid
+  // grows continuously out of an undisturbed frame rather than cutting in.
+  if (uTile > 0.0) uv = mirrorUv((uv - 0.5) * (1.0 + uTile * 3.0) + 0.5);
+
+  vec2 p = toStage(uv);
+  float r = length(p);
+
+  if (uBulge != 0.0) p *= 1.0 - uBulge * (1.0 - smoothstep(0.0, 0.8, r));
+
+  if (uTwist != 0.0) {
+    // Rotation falls off with radius, which is what shears the frame into a
+    // spiral instead of just turning it.
+    float a = uTwist * (0.6 - r);
+    float c = cos(a);
+    float s = sin(a);
+    p = vec2(p.x * c - p.y * s, p.x * s + p.y * c);
+  }
+
+  if (uRipple > 0.0) {
+    p += (p / max(r, 1e-4)) * sin(r * uRippleFreq - uTime * 1.7) * uRipple * 0.045;
+  }
+  uv = fromStage(p);
+
+  if (uWarp > 0.0) {
+    // Two incommensurate sines per axis: one alone reads as a rolling shutter,
+    // the pair reads as liquid.
+    float t = uTime * uWarpSpeed;
+    vec2 q = uv * uWarpScale;
+    uv += vec2(
+      sin(q.y * 3.1 + t * 1.3) + 0.5 * sin(q.y * 5.7 - t * 0.7),
+      cos(q.x * 2.7 - t * 1.1) + 0.5 * cos(q.x * 6.3 + t * 0.9)
+    ) * uWarp * 0.055;
+  }
+
+  return mirrorUv(uv);
+}
+
 void main() {
   vec2 uv = vUv;
   vec2 radial = uv - 0.5;
+  vec2 suv = distort(uv);
 
   vec3 col;
   if (uChroma > 0.0) {
     vec2 off = radial * uChroma * 0.012;
     col = vec3(
-      texture(uScene, uv + off).r,
-      texture(uScene, uv).g,
-      texture(uScene, uv - off).b
+      texture(uScene, suv + off).r,
+      texture(uScene, suv).g,
+      texture(uScene, suv - off).b
     );
   } else {
-    col = texture(uScene, uv).rgb;
+    col = texture(uScene, suv).rgb;
   }
 
   if (uFeedbackAmount > 0.0) {
@@ -89,6 +175,10 @@ void main() {
 
   if (uHueShift != 0.0) col = hueRotate(col, uHueShift);
   if (uHalftone > 0.0) col = mix(col, halftone(col, uv), uHalftone);
+
+  // Tone fold: highlights invert and mid-tones peak, the darkroom solarisation.
+  // Sits before posterize so the quantiser sees the final tone curve.
+  if (uSolarize > 0.0) col = mix(col, 1.0 - abs(1.0 - 2.0 * col), uSolarize);
 
   if (uPosterize > 0.0) {
     float levels = mix(64.0, 4.0, clamp(uPosterize, 0.0, 1.0));

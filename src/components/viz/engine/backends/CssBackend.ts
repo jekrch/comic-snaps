@@ -14,8 +14,10 @@ interface Slot {
  * backend, so all of the choreography in the director is shared rather than
  * reimplemented — that split is the whole reason the frame is a value type.
  *
- * It cannot do frame feedback, halftone, or displacement. Crossfades, crops,
- * transforms, and blend modes all survive.
+ * It cannot do frame feedback, halftone, or any of the uv-domain effects
+ * (kaleidoscope, tiling, warp, ripple, twist, bulge) — those are all resolved
+ * in the post shader, so a preset built around them degrades to its stack and
+ * motion here. Crossfades, crops, transforms, and blend modes all survive.
  */
 export class CssBackend implements VizBackend {
   private readonly stage: HTMLDivElement;

@@ -3,6 +3,7 @@ import type { VizConfig } from "../vizConfig";
 import { cosineDistance, loadEmbeddings, paletteDistance } from "../../../utils/sorting";
 import type { EmbeddingMap } from "../../../utils/sorting";
 import type { Rng } from "./rng";
+import { EffectCycler } from "./EffectCycler";
 import { SafetyGovernor } from "./safety";
 import type { PostParams, Shard, VizFrame } from "./types";
 import { resolveShard } from "./types";
@@ -48,6 +49,8 @@ export class Director {
   private aspect = 1;
 
   readonly safety = new SafetyGovernor();
+  /** Forked lazily — see the note on EffectCycler about seeds replaying. */
+  private readonly cycler = new EffectCycler(() => this.rng.fork(), this.safety);
 
   constructor(
     panels: Panel[],
@@ -307,11 +310,15 @@ export class Director {
 
   private modulatePost(time: number): PostParams {
     const base = this.config.post;
-    return {
+    const post: PostParams = {
       ...base,
       hueShift: base.hueShift + this.lfo(time, 0) * 0.12,
       feedbackAmount: base.feedbackAmount * (0.85 + 0.15 * this.lfo(time, 1)),
       chroma: base.chroma * (0.7 + 0.3 * this.lfo(time, 2)),
     };
+    // The LFOs breathe around whatever the config asks for; the cycler is the
+    // thing that changes what the config asked for, on its own schedule.
+    this.cycler.apply(post, time, this.config.psychedelia, this.config.cycleInterval);
+    return post;
   }
 }

@@ -4,10 +4,15 @@ import { VizEngine } from "./engine/Engine";
 import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
 import { VIZ_SPEEDS, cloneConfig, nearestSpeed } from "./vizConfig";
 import type { VizConfig } from "./vizConfig";
+import VizAttributionBar, { ATTRIBUTION_BAR_HEIGHT } from "./VizAttributionBar";
 import VizControls from "./VizControls";
 import VizDebugPanel from "./VizDebugPanel";
 
 const CONTROLS_IDLE_MS = 2000;
+
+/** How far back the pinned label can step. Long enough to cover an unattended
+ *  stretch, short enough that the panels stay in the browser's image cache. */
+const TRAIL_MAX = 60;
 
 interface VisualizerOverlayProps {
   panels: Panel[];
@@ -15,9 +20,55 @@ interface VisualizerOverlayProps {
   config: VizConfig;
   /** Only requested when the launch explicitly asked for it. */
   fullscreen: boolean;
+  /** Start with the attribution label pinned, as asked for at launch. */
+  pinLabel?: boolean;
   /** Live speed changes, so the URL keeps describing what is actually running. */
   onSpeedChange?: (speed: number) => void;
+  /** Leaves the run and hands the panel to the image viewer. */
+  onOpenPanel?: (panel: Panel) => void;
   onClose: () => void;
+}
+
+/**
+ * The panels that have been through the frame, newest last, and where the
+ * pinned label is pointing into them.
+ */
+interface Trail {
+  items: Panel[];
+  cursor: number;
+}
+
+type TrailAction =
+  | { type: "feature"; panel: Panel }
+  | { type: "step"; delta: number }
+  | { type: "live" };
+
+const EMPTY_TRAIL: Trail = { items: [], cursor: -1 };
+
+function trailReducer(state: Trail, action: TrailAction): Trail {
+  switch (action.type) {
+    case "feature": {
+      if (state.items[state.items.length - 1]?.id === action.panel.id) return state;
+      // Only a label that was already following the run keeps following it —
+      // a new feature must not yank someone out of the trail mid-read.
+      const following = state.cursor >= state.items.length - 1;
+      let items = [...state.items, action.panel];
+      let cursor = following ? items.length - 1 : state.cursor;
+      if (items.length > TRAIL_MAX) {
+        const dropped = items.length - TRAIL_MAX;
+        items = items.slice(dropped);
+        cursor = Math.max(0, cursor - dropped);
+      }
+      return { items, cursor };
+    }
+    case "step": {
+      if (state.items.length === 0) return state;
+      const cursor = Math.min(state.items.length - 1, Math.max(0, state.cursor + action.delta));
+      return cursor === state.cursor ? state : { ...state, cursor };
+    }
+    case "live":
+      return state.items.length === 0 ? state : { ...state, cursor: state.items.length - 1 };
+  }
 }
 
 /**
@@ -29,7 +80,9 @@ export default function VisualizerOverlay({
   panels,
   config,
   fullscreen,
+  pinLabel = false,
   onSpeedChange,
+  onOpenPanel,
   onClose,
 }: VisualizerOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,6 +93,8 @@ export default function VisualizerOverlay({
   const [feature, setFeature] = useState<Panel | null>(null);
   const [chromeVisible, setChromeVisible] = useState(true);
   const [paused, setPaused] = useState(false);
+  const [pinned, setPinned] = useState(pinLabel);
+  const [trail, dispatchTrail] = useReducer(trailReducer, EMPTY_TRAIL);
 
   const { seed, showDebugDefault } = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
@@ -71,12 +126,20 @@ export default function VisualizerOverlay({
   // wall as it was filtered when the visualizer opened.
   const hasPanels = usable.length > 0;
 
+  // Every feature also lands in the trail, whether or not the label is pinned —
+  // pinning it mid-run should show what has already been on screen, not start
+  // an empty history.
+  const handleFeature = useCallback((panel: Panel | null) => {
+    setFeature(panel);
+    if (panel) dispatchTrail({ type: "feature", panel });
+  }, []);
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container || !hasPanels) return;
 
     const instance = new VizEngine(container, usableRef.current, configRef.current, seed);
-    instance.onFeature = setFeature;
+    instance.onFeature = handleFeature;
     instance.start();
     engineRef.current = instance;
     setEngine(instance);
@@ -86,7 +149,7 @@ export default function VisualizerOverlay({
       engineRef.current = null;
       setEngine(null);
     };
-  }, [hasPanels, seed]);
+  }, [hasPanels, seed, handleFeature]);
 
   // Distinguishes "still loading" from "the filters really do match nothing".
   const [settled, setSettled] = useState(false);
@@ -208,6 +271,35 @@ export default function VisualizerOverlay({
     [setSpeed]
   );
 
+  const togglePinned = useCallback(() => {
+    // Unpinning lets go of the trail as well: the transient credit line the bar
+    // hands back to only ever describes what is on screen now.
+    setPinned((wasPinned) => {
+      if (wasPinned) dispatchTrail({ type: "live" });
+      return !wasPinned;
+    });
+    wakeChrome();
+  }, [wakeChrome]);
+
+  /** Stepping the trail pins the label, so the arrow keys work from a bare run. */
+  const stepTrail = useCallback(
+    (delta: -1 | 1) => {
+      setPinned(true);
+      dispatchTrail({ type: "step", delta });
+      wakeChrome();
+    },
+    [wakeChrome]
+  );
+
+  const openInViewer = useCallback(
+    (panel: Panel) => {
+      // The caller closes the run — a lightbox behind a fullscreen screensaver
+      // would be no use to anyone.
+      onOpenPanel?.(panel);
+    },
+    [onOpenPanel]
+  );
+
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
     else
@@ -237,13 +329,26 @@ export default function VisualizerOverlay({
       } else if (event.key === "]" || event.key === "+" || event.key === "=") {
         event.preventDefault();
         nudgeSpeed(1);
+      } else if (event.key === "l") {
+        togglePinned();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        stepTrail(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        stepTrail(1);
       } else {
         wakeChrome();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, togglePause, toggleFullscreen, nudgeSpeed, wakeChrome]);
+  }, [onClose, togglePause, toggleFullscreen, nudgeSpeed, togglePinned, stepTrail, wakeChrome]);
+
+  // The bar is only worth its band once there is something to name in it.
+  const labelled = trail.items[trail.cursor] ?? null;
+  const barVisible = pinned && labelled !== null;
+  const inset = barVisible ? ATTRIBUTION_BAR_HEIGHT : 0;
 
   return (
     <div
@@ -252,7 +357,10 @@ export default function VisualizerOverlay({
       onPointerMove={wakeChrome}
       onPointerDown={wakeChrome}
     >
-      <div ref={containerRef} className="absolute inset-0" />
+      {/* Inset rather than overlaid: the surface gives up the band so the label
+          never sits on top of the art. The resize observer picks the new size
+          up, so the aspect the director composes to follows it. */}
+      <div ref={containerRef} className="absolute inset-0" style={{ bottom: inset }} />
 
       {usable.length === 0 && settled && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -265,15 +373,32 @@ export default function VisualizerOverlay({
       <VizControls
         visible={chromeVisible}
         feature={feature}
+        /* Pinned, the bar already says it — twice would just be noise. */
+        showFeature={!barVisible}
+        bottomInset={inset}
         seed={formatSeed(seed)}
         paused={paused}
         fullscreen={isFullscreen}
+        pinned={pinned}
         speed={configRef.current.speed}
         onSpeedChange={setSpeed}
+        onTogglePin={togglePinned}
         onClose={onClose}
         onToggleFullscreen={toggleFullscreen}
         onToggleDebug={() => setShowDebug((visible) => !visible)}
       />
+
+      {barVisible && labelled && (
+        <VizAttributionBar
+          panel={labelled}
+          behind={trail.items.length - 1 - trail.cursor}
+          canStepBack={trail.cursor > 0}
+          canStepForward={trail.cursor < trail.items.length - 1}
+          onStep={stepTrail}
+          onOpen={onOpenPanel ? openInViewer : undefined}
+          onUnpin={togglePinned}
+        />
+      )}
 
       {showDebug && (
         <VizDebugPanel

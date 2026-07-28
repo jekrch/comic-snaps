@@ -57,14 +57,15 @@ export default function App() {
     const preset = findPreset(initialVizPreset ?? initialPresetId());
     const config = presetConfig(preset.id);
     if (initialVizSpeed !== null) config.speed = initialVizSpeed;
-    return { presetId: preset.id, config, fullscreen: false, custom: false };
+    return { presetId: preset.id, config, fullscreen: false, pinLabel: false, custom: false };
   });
 
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
 
   const handleStartViz = useCallback(
     (options: VizLaunchOptions) => {
-      setVizPrompt(false);
+      // The chooser is left open behind the run — leaving the run drops the reader
+      // back onto it with their preset, config and speed still selected.
       setVizRun(options);
       // A custom config cannot be reconstructed from the URL, so the preset name
       // is omitted rather than pointing at something that is not what is running.
@@ -248,6 +249,19 @@ export default function App() {
     [sortedPanels]
   );
 
+  // The visualizer's pinned label can hand a panel straight to the viewer. The
+  // run goes with it — a lightbox behind a full-screen screensaver would be no
+  // use — and so does the chooser, which would otherwise resurface on top of
+  // the panel that was just asked for.
+  const handleVizOpenPanel = useCallback(
+    (panel: Panel) => {
+      handleCloseViz();
+      setVizPrompt(false);
+      handleSelectPanel(panel);
+    },
+    [handleCloseViz, handleSelectPanel]
+  );
+
   // Jump from a creator's profile to the gallery filtered to their work in a
   // single role: replace filters with just that facet, close the viewer, and
   // return to the top of the masonry.
@@ -387,6 +401,7 @@ export default function App() {
         <VizLaunchModal
           panelCount={sortedPanels.length}
           initialSpeed={initialVizSpeed}
+          suspended={vizRun !== null}
           onStart={handleStartViz}
           onCancel={() => setVizPrompt(false)}
         />
@@ -398,7 +413,9 @@ export default function App() {
             panels={sortedPanels}
             config={vizRun.config}
             fullscreen={vizRun.fullscreen}
+            pinLabel={vizRun.pinLabel}
             onSpeedChange={handleVizSpeedChange}
+            onOpenPanel={handleVizOpenPanel}
             onClose={handleCloseViz}
           />
         </Suspense>

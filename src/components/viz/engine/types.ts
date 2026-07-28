@@ -122,6 +122,32 @@ export interface PostParams {
   /** Global multiplier, slew-limited by the safety governor. */
   exposure: number;
   hueShift: number;
+
+  // --- Geometric ------------------------------------------------------------
+  /** Radial mirror symmetry, blended in. 0 disables the fold. */
+  kaleido: number;
+  /** Wedges the frame folds into. Only read when `kaleido` > 0. */
+  kaleidoSegments: number;
+  /** Mirror-tiled repetition. Doubles as its own blend: 0 is one copy. */
+  tile: number;
+
+  // --- Undulating -----------------------------------------------------------
+  /** Sinusoidal domain warp — the liquid one. */
+  warp: number;
+  /** Spatial frequency of the warp; low is a swell, high is a boil. */
+  warpScale: number;
+  warpSpeed: number;
+  /** Concentric standing waves out from the centre. */
+  ripple: number;
+  rippleFreq: number;
+  /** Radius-dependent rotation, i.e. a spiral shear. Signed. */
+  twist: number;
+  /** Lens: positive magnifies the centre, negative pinches it. */
+  bulge: number;
+
+  // --- Surreal --------------------------------------------------------------
+  /** Tone fold: highlights invert, mid-tones peak. */
+  solarize: number;
 }
 
 /** Everything a backend needs for one frame. */

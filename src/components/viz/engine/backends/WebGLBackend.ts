@@ -107,6 +107,17 @@ export class WebGLBackend implements VizBackend {
         uVignette: { value: 0 },
         uExposure: { value: 1 },
         uHueShift: { value: 0 },
+        uKaleido: { value: 0 },
+        uKaleidoSegments: { value: 6 },
+        uTile: { value: 0 },
+        uWarp: { value: 0 },
+        uWarpScale: { value: 2.4 },
+        uWarpSpeed: { value: 0.35 },
+        uRipple: { value: 0 },
+        uRippleFreq: { value: 16 },
+        uTwist: { value: 0 },
+        uBulge: { value: 0 },
+        uSolarize: { value: 0 },
       },
     });
     this.postMesh = new Mesh(this.gl, { geometry, program: this.postProgram });
@@ -243,6 +254,17 @@ export class WebGLBackend implements VizBackend {
     post.uVignette.value = frame.post.vignette;
     post.uExposure.value = frame.post.exposure;
     post.uHueShift.value = frame.post.hueShift;
+    post.uKaleido.value = frame.post.kaleido;
+    post.uKaleidoSegments.value = frame.post.kaleidoSegments;
+    post.uTile.value = frame.post.tile;
+    post.uWarp.value = frame.post.warp;
+    post.uWarpScale.value = frame.post.warpScale;
+    post.uWarpSpeed.value = frame.post.warpSpeed;
+    post.uRipple.value = frame.post.ripple;
+    post.uRippleFreq.value = frame.post.rippleFreq;
+    post.uTwist.value = frame.post.twist;
+    post.uBulge.value = frame.post.bulge;
+    post.uSolarize.value = frame.post.solarize;
 
     // No target: straight to the default framebuffer.
     this.renderer.render({ scene: this.postMesh, frustumCull: false });

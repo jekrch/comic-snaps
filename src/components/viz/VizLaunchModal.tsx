@@ -9,6 +9,8 @@ export interface VizLaunchOptions {
   presetId: string;
   config: VizConfig;
   fullscreen: boolean;
+  /** Start with the attribution label pinned in its own letterbox band. */
+  pinLabel: boolean;
   /** True when the config differs from the plain preset, for the URL's sake. */
   custom: boolean;
 }
@@ -17,15 +19,60 @@ interface VizLaunchModalProps {
   panelCount: number;
   /** Carried over from a `?vizspeed=` link, so a shared run opens at its rate. */
   initialSpeed?: number | null;
+  /**
+   * True while the run this modal started is on screen. The modal stays mounted
+   * underneath it — keeping the reader's preset, config and speed — but goes
+   * `display: none` so it costs nothing to draw and cannot answer keys or take
+   * focus from the run.
+   */
+  suspended?: boolean;
   onStart: (options: VizLaunchOptions) => void;
   onCancel: () => void;
 }
 
 const EXIT_MS = 200;
 
+/** The launch options that are a plain on/off, in the modal's own language. */
+function OptionCheck({
+  checked,
+  onToggle,
+  label,
+  hint,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  label: string;
+  hint?: string;
+}) {
+  return (
+    <div>
+      <button
+        onClick={onToggle}
+        role="checkbox"
+        aria-checked={checked}
+        className="flex items-center gap-2 font-display text-[10px] tracking-widest
+                   uppercase text-ink-muted hover:text-ink transition-colors"
+      >
+        <span
+          className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
+            checked ? "border-accent bg-accent/20" : "border-white/25"
+          }`}
+        >
+          {checked && <Check size={10} className="text-accent" strokeWidth={3} />}
+        </span>
+        {label}
+      </button>
+      {hint && (
+        <p className="font-mono text-[10px] leading-snug text-white/35 mt-1 ml-5.5">{hint}</p>
+      )}
+    </div>
+  );
+}
+
 export default function VizLaunchModal({
   panelCount,
   initialSpeed,
+  suspended = false,
   onStart,
   onCancel,
 }: VizLaunchModalProps) {
@@ -34,6 +81,7 @@ export default function VizLaunchModal({
   const [showJson, setShowJson] = useState(false);
   const [json, setJson] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
+  const [pinLabel, setPinLabel] = useState(false);
   const [closing, setClosing] = useState(false);
   const startRef = useRef<HTMLButtonElement>(null);
 
@@ -65,7 +113,16 @@ export default function VizLaunchModal({
   const close = useCallback(
     (run: VizLaunchOptions | null) => {
       setClosing(true);
-      window.setTimeout(() => (run ? onStart(run) : onCancel()), EXIT_MS);
+      window.setTimeout(() => {
+        if (!run) {
+          onCancel();
+          return;
+        }
+        onStart(run);
+        // The run hides this modal rather than unmounting it, so the exit state is
+        // wound back here — leaving the run replays the entrance from the top.
+        setClosing(false);
+      }, EXIT_MS);
     },
     [onStart, onCancel]
   );
@@ -76,15 +133,19 @@ export default function VizLaunchModal({
       presetId,
       config: parsed?.ok ? parsed.parsed.config : base,
       fullscreen,
+      pinLabel,
       custom: parsed?.ok === true,
     });
-  }, [blocked, close, presetId, parsed, base, fullscreen]);
+  }, [blocked, close, presetId, parsed, base, fullscreen, pinLabel]);
+
+  // Also fires when a run ends and the modal comes back, so the reader lands on
+  // start again rather than on whatever the run left focused.
+  useEffect(() => {
+    if (!suspended) startRef.current?.focus();
+  }, [suspended]);
 
   useEffect(() => {
-    startRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
+    if (suspended) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -96,11 +157,12 @@ export default function VizLaunchModal({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [close, start]);
+  }, [close, start, suspended]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
+      style={suspended ? { display: "none" } : undefined}
       role="dialog"
       aria-modal="true"
       aria-label="Start visualizer"
@@ -170,7 +232,7 @@ export default function VizLaunchModal({
       </div>
 
       <div
-        className="relative w-full max-w-[26rem] mx-5 max-h-[88vh] overflow-y-auto info-modal-scroll
+        className="relative w-full max-w-[26rem] mx-5 max-h-[88vh] flex flex-col overflow-hidden
                    rounded-md border border-[var(--color-border,rgba(74,71,69,0.25))]
                    bg-[var(--color-surface-raised)]"
         style={{
@@ -180,7 +242,7 @@ export default function VizLaunchModal({
         }}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-start justify-between px-4 pt-3.5 pb-2">
+        <div className="shrink-0 flex items-start justify-between border-b border-white/8 px-4 pt-3.5 pb-2.5">
           <div>
             <h2 className="font-display text-[11px] tracking-widest uppercase text-accent">
               visualizer
@@ -198,120 +260,126 @@ export default function VizLaunchModal({
           </button>
         </div>
 
-        <div role="radiogroup" aria-label="Preset" className="px-2 pb-1">
-          {VIZ_PRESETS.map((preset) => {
-            const active = preset.id === presetId;
-            return (
-              <button
-                key={preset.id}
-                role="radio"
-                aria-checked={active}
-                onClick={() => setPresetId(preset.id)}
-                className={`w-full text-left px-2.5 py-2 rounded transition-colors duration-100 ${
-                  active ? "bg-white/8" : "hover:bg-white/4"
-                }`}
-              >
-                <span className="flex items-baseline gap-2">
-                  <span
-                    className={`inline-block w-1 h-1 rounded-full shrink-0 translate-y-[-0.15rem] ${
-                      active ? "bg-accent" : "bg-transparent"
-                    }`}
-                  />
-                  <span className="min-w-0">
+        {/* From 640px up only the preset list scrolls, so speed / custom config / fullscreen
+            stay put with the header and footer. On a shorter viewport the list keeps its full
+            height and the body scrolls instead — the sections below are too tall to pin there. */}
+        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto info-modal-scroll">
+          <div
+            role="radiogroup"
+            aria-label="Preset"
+            className="shrink-0 px-2 pt-1 pb-1 info-modal-scroll
+                       [@media(min-height:640px)]:flex-1 [@media(min-height:640px)]:min-h-0
+                       [@media(min-height:640px)]:overflow-y-auto"
+          >
+            {VIZ_PRESETS.map((preset) => {
+              const active = preset.id === presetId;
+              return (
+                <button
+                  key={preset.id}
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => setPresetId(preset.id)}
+                  className={`w-full text-left px-2.5 py-2 rounded transition-colors duration-100 ${
+                    active ? "bg-white/8" : "hover:bg-white/4"
+                  }`}
+                >
+                  <span className="flex items-baseline gap-2">
                     <span
-                      className={`block font-display text-[11px] tracking-wider uppercase ${
-                        active ? "text-ink" : "text-ink-muted"
+                      className={`inline-block w-1 h-1 rounded-full shrink-0 translate-y-[-0.15rem] ${
+                        active ? "bg-accent" : "bg-transparent"
                       }`}
-                    >
-                      {preset.name}
-                    </span>
-                    <span className="block font-mono text-[10px] leading-snug text-white/35 mt-0.5">
-                      {preset.blurb}
+                    />
+                    <span className="min-w-0">
+                      <span
+                        className={`block font-display text-[11px] tracking-wider uppercase ${
+                          active ? "text-ink" : "text-ink-muted"
+                        }`}
+                      >
+                        {preset.name}
+                      </span>
+                      <span className="block font-mono text-[10px] leading-snug text-white/35 mt-0.5">
+                        {preset.blurb}
+                      </span>
                     </span>
                   </span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
 
-        <div className="border-t border-white/8 mt-1 px-4 py-2.5 flex items-center justify-between gap-3">
-          <span className="font-display text-[10px] tracking-widest uppercase text-ink-muted">
-            speed
-          </span>
-          <VizSpeedControl value={speed} onChange={setSpeed} tone="modal" />
-        </div>
-
-        <div className="border-t border-white/8">
-          <button
-            onClick={() => setShowJson((open) => !open)}
-            aria-expanded={showJson}
-            className="w-full flex items-center justify-between px-4 py-2.5
-                       font-display text-[10px] tracking-widest uppercase
-                       text-ink-muted hover:text-ink transition-colors"
-          >
-            custom config
-            <ChevronDown
-              size={13}
-              className={`transition-transform duration-200 ${showJson ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {showJson && (
-            <div className="px-4 pb-3">
-              <p className="font-mono text-[10px] leading-snug text-white/35 mb-2">
-                Overrides the preset. Paste the JSON from the tuning panel
-                (<span className="text-white/55">d</span> while running). Unlisted
-                fields keep the preset's value; every field is clamped to the
-                tuning panel's range.
-              </p>
-              <textarea
-                value={json}
-                onChange={(event) => setJson(event.target.value)}
-                spellCheck={false}
-                rows={7}
-                placeholder={'{\n  "layerCount": 5,\n  "post": { "halftone": 0.6 }\n}'}
-                className="w-full font-mono text-[10.5px] leading-relaxed rounded
-                           bg-black/40 border border-white/10 focus:border-accent/60
-                           outline-none px-2 py-1.5 text-ink resize-y"
-              />
-              {parsed && !parsed.ok && (
-                <p className="font-mono text-[10px] text-accent mt-1.5">{parsed.error}</p>
-              )}
-              {parsed?.ok && parsed.parsed.unknown.length > 0 && (
-                <p className="font-mono text-[10px] text-white/45 mt-1.5">
-                  ignored: {parsed.parsed.unknown.join(", ")}
-                </p>
-              )}
-              {parsed?.ok && parsed.parsed.adjusted.length > 0 && (
-                <p className="font-mono text-[10px] text-white/45 mt-1">
-                  clamped: {parsed.parsed.adjusted.join(", ")}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="border-t border-white/8 px-4 py-2.5">
-          <button
-            onClick={() => setFullscreen((on) => !on)}
-            role="checkbox"
-            aria-checked={fullscreen}
-            className="flex items-center gap-2 font-display text-[10px] tracking-widest
-                       uppercase text-ink-muted hover:text-ink transition-colors"
-          >
-            <span
-              className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
-                fullscreen ? "border-accent bg-accent/20" : "border-white/25"
-              }`}
-            >
-              {fullscreen && <Check size={10} className="text-accent" strokeWidth={3} />}
+          <div className="shrink-0 border-t border-white/8 mt-1 px-4 py-2.5 flex items-center justify-between gap-3">
+            <span className="font-display text-[10px] tracking-widest uppercase text-ink-muted">
+              speed
             </span>
-            open in full screen
-          </button>
+            <VizSpeedControl value={speed} onChange={setSpeed} tone="modal" />
+          </div>
+
+          <div className="shrink-0 border-t border-white/8">
+            <button
+              onClick={() => setShowJson((open) => !open)}
+              aria-expanded={showJson}
+              className="w-full flex items-center justify-between px-4 py-2.5
+                         font-display text-[10px] tracking-widest uppercase
+                         text-ink-muted hover:text-ink transition-colors"
+            >
+              custom config
+              <ChevronDown
+                size={13}
+                className={`transition-transform duration-200 ${showJson ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {showJson && (
+              <div className="px-4 pb-3">
+                <p className="font-mono text-[10px] leading-snug text-white/35 mb-2">
+                  Overrides the preset. Paste the JSON from the tuning panel
+                  (<span className="text-white/55">d</span> while running). Unlisted
+                  fields keep the preset's value; every field is clamped to the
+                  tuning panel's range.
+                </p>
+                <textarea
+                  value={json}
+                  onChange={(event) => setJson(event.target.value)}
+                  spellCheck={false}
+                  rows={7}
+                  placeholder={'{\n  "layerCount": 5,\n  "post": { "halftone": 0.6 }\n}'}
+                  className="w-full font-mono text-[10.5px] leading-relaxed rounded
+                             bg-black/40 border border-white/10 focus:border-accent/60
+                             outline-none px-2 py-1.5 text-ink resize-y"
+                />
+                {parsed && !parsed.ok && (
+                  <p className="font-mono text-[10px] text-accent mt-1.5">{parsed.error}</p>
+                )}
+                {parsed?.ok && parsed.parsed.unknown.length > 0 && (
+                  <p className="font-mono text-[10px] text-white/45 mt-1.5">
+                    ignored: {parsed.parsed.unknown.join(", ")}
+                  </p>
+                )}
+                {parsed?.ok && parsed.parsed.adjusted.length > 0 && (
+                  <p className="font-mono text-[10px] text-white/45 mt-1">
+                    clamped: {parsed.parsed.adjusted.join(", ")}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="shrink-0 border-t border-white/8 px-4 py-2.5 flex flex-col gap-2.5">
+            <OptionCheck
+              checked={fullscreen}
+              onToggle={() => setFullscreen((on) => !on)}
+              label="open in full screen"
+            />
+            <OptionCheck
+              checked={pinLabel}
+              onToggle={() => setPinLabel((on) => !on)}
+              label="pin the panel label"
+              hint="Keeps the credit on screen in a letterboxed strip. Toggle any time with L."
+            />
+          </div>
         </div>
 
-        <div className="border-t border-white/8 px-4 py-3 flex items-center justify-end gap-2">
+        <div className="shrink-0 border-t border-white/8 px-4 py-3 flex items-center justify-end gap-2">
           <button
             onClick={() => close(null)}
             className="font-display text-[10px] tracking-widest uppercase

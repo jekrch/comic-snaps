@@ -1,4 +1,9 @@
-import { MAX_EXPOSURE_SLEW, MIN_FLASH_INTERVAL, MIN_FULLBLEED_FADE_CLOCK } from "../vizConfig";
+import {
+  MAX_EXPOSURE_SLEW,
+  MIN_EFFECT_RAMP_CLOCK,
+  MIN_FLASH_INTERVAL,
+  MIN_FULLBLEED_FADE_CLOCK,
+} from "../vizConfig";
 import type { PostParams } from "./types";
 
 /**
@@ -19,6 +24,11 @@ export class SafetyGovernor {
   /** A full-bleed layer may never fade faster than the floor. */
   clampFade(seconds: number): number {
     return Math.max(MIN_FULLBLEED_FADE_CLOCK, seconds);
+  }
+
+  /** A cycled post effect may never fade in or out faster than the floor. */
+  clampRamp(seconds: number): number {
+    return Math.max(MIN_EFFECT_RAMP_CLOCK, seconds);
   }
 
   /**

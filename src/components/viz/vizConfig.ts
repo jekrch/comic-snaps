@@ -33,6 +33,15 @@ export interface VizConfig {
    * pulling the composition apart.
    */
   speed: number;
+  /**
+   * How strongly the effect cycler runs, 0..1. At 0 it is inert and never even
+   * draws from its rng, so a preset that doesn't want it is exactly the piece
+   * it was before the cycler existed. Above 0 it scales both how many effects
+   * can overlap and how far each one is pushed.
+   */
+  psychedelia: number;
+  /** Mean seconds between one cycled effect starting and the next. */
+  cycleInterval: number;
   post: PostParams;
   /** Director selection weights — see §4 of the plan. */
   weights: {
@@ -57,6 +66,19 @@ export const DEFAULT_POST: PostParams = {
   vignette: 0.35,
   exposure: 1,
   hueShift: 0,
+  // Every distortion is off by default; the scale/frequency values beside them
+  // are the shape each one takes when something turns it on.
+  kaleido: 0,
+  kaleidoSegments: 6,
+  tile: 0,
+  warp: 0,
+  warpScale: 2.4,
+  warpSpeed: 0.35,
+  ripple: 0,
+  rippleFreq: 16,
+  twist: 0,
+  bulge: 0,
+  solarize: 0,
 };
 
 export const DEFAULT_CONFIG: VizConfig = {
@@ -71,6 +93,8 @@ export const DEFAULT_CONFIG: VizConfig = {
   tintAmount: 0.22,
   beat: 2,
   speed: 1,
+  psychedelia: 0,
+  cycleInterval: 14,
   post: { ...DEFAULT_POST },
   weights: { rhyme: 0.5, clash: 0.2, color: 0.2, random: 0.1 },
 };
@@ -101,7 +125,7 @@ export function cloneConfig(config: VizConfig): VizConfig {
 
 // --- Tunable fields ---------------------------------------------------------
 
-export type ConfigGroup = "stack" | "motion" | "post" | "director";
+export type ConfigGroup = "stack" | "motion" | "post" | "shape" | "cycle" | "director";
 
 export interface ConfigField {
   group: ConfigGroup;
@@ -157,6 +181,21 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.vignette", "vignette", 0, 1, 0.01, (c) => c.post.vignette, (c, v) => (c.post.vignette = v)),
   field("post", "post.exposure", "exposure", 0.2, 1.8, 0.01, (c) => c.post.exposure, (c, v) => (c.post.exposure = v)),
   field("post", "post.hueShift", "hue", -1, 1, 0.01, (c) => c.post.hueShift, (c, v) => (c.post.hueShift = v)),
+  field("post", "post.solarize", "solarize", 0, 1, 0.01, (c) => c.post.solarize, (c, v) => (c.post.solarize = v)),
+
+  field("shape", "post.kaleido", "kaleido", 0, 1, 0.01, (c) => c.post.kaleido, (c, v) => (c.post.kaleido = v)),
+  field("shape", "post.kaleidoSegments", "segments", 2, 16, 1, (c) => c.post.kaleidoSegments, (c, v) => (c.post.kaleidoSegments = v)),
+  field("shape", "post.tile", "tile", 0, 1, 0.01, (c) => c.post.tile, (c, v) => (c.post.tile = v)),
+  field("shape", "post.warp", "warp", 0, 1, 0.01, (c) => c.post.warp, (c, v) => (c.post.warp = v)),
+  field("shape", "post.warpScale", "warp scale", 0.5, 8, 0.1, (c) => c.post.warpScale, (c, v) => (c.post.warpScale = v)),
+  field("shape", "post.warpSpeed", "warp rate", 0, 2, 0.01, (c) => c.post.warpSpeed, (c, v) => (c.post.warpSpeed = v)),
+  field("shape", "post.ripple", "ripple", 0, 1, 0.01, (c) => c.post.ripple, (c, v) => (c.post.ripple = v)),
+  field("shape", "post.rippleFreq", "ripple freq", 2, 60, 1, (c) => c.post.rippleFreq, (c, v) => (c.post.rippleFreq = v)),
+  field("shape", "post.twist", "twist", -1, 1, 0.01, (c) => c.post.twist, (c, v) => (c.post.twist = v)),
+  field("shape", "post.bulge", "bulge", -1, 1, 0.01, (c) => c.post.bulge, (c, v) => (c.post.bulge = v)),
+
+  field("cycle", "psychedelia", "psychedelia", 0, 1, 0.01, (c) => c.psychedelia, (c, v) => (c.psychedelia = v)),
+  field("cycle", "cycleInterval", "interval", 3, 60, 1, (c) => c.cycleInterval, (c, v) => (c.cycleInterval = v)),
 
   field("director", "weights.rhyme", "rhyme", 0, 1, 0.01, (c) => c.weights.rhyme, (c, v) => (c.weights.rhyme = v)),
   field("director", "weights.clash", "clash", 0, 1, 0.01, (c) => c.weights.clash, (c, v) => (c.weights.clash = v)),
@@ -298,3 +337,12 @@ export const MIN_FULLBLEED_FADE = 0.6;
  * floor that only held at the speed the shard was born at would not be a floor.
  */
 export const MIN_FULLBLEED_FADE_CLOCK = MIN_FULLBLEED_FADE * VIZ_MAX_SPEED;
+/**
+ * A cycled effect may never ramp in or out faster than this, in *real*
+ * seconds. Several of them (solarize, feedback surges, posterize) move whole
+ * frame luminance, so an effect that snapped on would be a flash by another
+ * name — the rate limit is what keeps them a swell instead. Expressed in clock
+ * seconds against the speed ceiling for the same reason as the fade floor.
+ */
+export const MIN_EFFECT_RAMP = 1.5;
+export const MIN_EFFECT_RAMP_CLOCK = MIN_EFFECT_RAMP * VIZ_MAX_SPEED;

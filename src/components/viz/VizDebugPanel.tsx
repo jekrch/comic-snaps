@@ -3,7 +3,7 @@ import type { ConfigField, ConfigGroup, VizConfig } from "./vizConfig";
 import { CONFIG_FIELDS } from "./vizConfig";
 import type { EngineStats, VizEngine } from "./engine/Engine";
 
-const GROUP_ORDER: ConfigGroup[] = ["stack", "motion", "post", "director"];
+const GROUP_ORDER: ConfigGroup[] = ["stack", "motion", "post", "shape", "cycle", "director"];
 
 interface VizDebugPanelProps {
   /** Mutated in place — the engine reads it every frame, so edits are live. */
