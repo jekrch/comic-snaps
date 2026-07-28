@@ -1,5 +1,6 @@
 import type { BlendMode, Shard } from "../types";
-import { easeInOut } from "../types";
+import { IDENTITY_LEVELS, easeInOut } from "../types";
+import { levelsFor } from "../palette";
 import type { Scene, SceneContext } from "./types";
 import { coverRect, panelAspect } from "./types";
 
@@ -84,6 +85,13 @@ export const driftStack: Scene = {
         ctx.index === 0
           ? "normal"
           : rng.pick(ctx.affinity === "clash" ? CLASH_BLENDS : RHYME_BLENDS),
+      // A white comic page screened onto anything is white, and four of them is
+      // a blank frame — so every layer that blends is levelled to a common key
+      // first. The opening layer is exempt: it is one panel on a normal blend
+      // over black, with nothing to wash out and every reason to look like the
+      // artwork it is.
+      levels:
+        ctx.index === 0 ? IDENTITY_LEVELS : levelsFor(panel.dominantColors, config.keyBalance),
       tint: ctx.tint,
       tintAmount: config.tintAmount * rng.range(0.4, 1),
       opacityCurve: {

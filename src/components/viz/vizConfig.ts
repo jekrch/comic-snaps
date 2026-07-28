@@ -23,6 +23,13 @@ export interface VizConfig {
   layerOpacity: number;
   /** How strongly a layer is pushed toward its complement tint, 0..1. */
   tintAmount: number;
+  /**
+   * How strongly each layer is levelled toward a common key before it blends,
+   * 0..1. At 0 panels composite at the brightness they were drawn at, which is
+   * what lets a wall of white comic pages screen the frame to blank; at 1 a
+   * bright page is brought all the way down to the target key.
+   */
+  keyBalance: number;
   /** Beat grid for discrete events, seconds. */
   beat: number;
   /**
@@ -91,6 +98,7 @@ export const DEFAULT_CONFIG: VizConfig = {
   rotateAmount: 0.05,
   layerOpacity: 0.85,
   tintAmount: 0.22,
+  keyBalance: 0.75,
   beat: 2,
   speed: 1,
   psychedelia: 0,
@@ -163,6 +171,7 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("stack", "crossfade", "crossfade", 0.05, 1, 0.01, (c) => c.crossfade, (c, v) => (c.crossfade = v)),
   field("stack", "layerOpacity", "opacity", 0.1, 1, 0.01, (c) => c.layerOpacity, (c, v) => (c.layerOpacity = v)),
   field("stack", "beat", "beat", 0.25, 8, 0.25, (c) => c.beat, (c, v) => (c.beat = v)),
+  field("stack", "keyBalance", "key balance", 0, 1, 0.01, (c) => c.keyBalance, (c, v) => (c.keyBalance = v)),
 
   field("motion", "speed", "speed", VIZ_MIN_SPEED, VIZ_MAX_SPEED, 0.05, (c) => c.speed, (c, v) => (c.speed = v)),
   field("motion", "zoomAmount", "zoom", 1, 2.5, 0.01, (c) => c.zoomAmount, (c, v) => (c.zoomAmount = v)),

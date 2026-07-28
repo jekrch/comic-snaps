@@ -124,15 +124,28 @@ export class CssBackend implements VizBackend {
     slot.img.style.left = `${-shard.srcRect.x * imgW}px`;
     slot.img.style.top = `${-(1 - shard.srcRect.y - shard.srcRect.h) * imgH}px`;
 
+    const filters: string[] = [];
+
+    const { gain, lift } = shard.levels;
+    if (gain !== 1 || lift !== 0) {
+      // brightness(b) then contrast(k) composes to `c * b * k + 0.5 * (1 - k)`,
+      // which is the same mul-add the composite shader applies — so solve for
+      // the pair rather than approximating it. `lift` is never positive, so the
+      // contrast term can never reach zero and the division is safe.
+      const contrast = 1 - 2 * lift;
+      filters.push(`brightness(${gain / contrast}) contrast(${contrast})`);
+    }
+
     if (shard.tintAmount > 0.01) {
       const [r, g, b] = shard.tint;
-      slot.img.style.filter = `saturate(${1 + shard.tintAmount})`;
+      filters.push(`saturate(${1 + shard.tintAmount})`);
       slot.wrap.style.backgroundColor = `rgba(${r * 255 | 0},${g * 255 | 0},${b * 255 | 0},${shard.tintAmount * 0.5})`;
       slot.wrap.style.backgroundBlendMode = "multiply";
     } else {
-      slot.img.style.filter = "";
       slot.wrap.style.backgroundColor = "";
     }
+
+    slot.img.style.filter = filters.join(" ");
   }
 
   get stats(): { resident: number; pending: number } {

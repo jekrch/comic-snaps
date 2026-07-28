@@ -25,6 +25,10 @@ export function compositeFragment(maxShards: number): string {
       vec4 src = uSrc[${i}];
       vec2 c = clamp(q, 0.0, 1.0);
       vec3 tex = texture(uTex[${i}], sampleUv(src, c)).rgb;
+      // Level toward a common key before tint and blend, so a bright page has
+      // somewhere to climb instead of saturating the frame — see levelsFor().
+      vec2 lvl = uLevels[${i}];
+      tex = clamp(tex * lvl.x + lvl.y, 0.0, 1.0);
       vec4 tint = uTint[${i}];
       tex = mix(tex, tex * tint.rgb, tint.a);
       float a = misc.z * edgeMask(q, misc.w);
@@ -53,6 +57,8 @@ uniform vec4 uRect[${maxShards}];
 uniform vec4 uSrc[${maxShards}];
 // per shard: cos, sin, opacity, feather
 uniform vec4 uMisc[${maxShards}];
+// per shard: tone gain, tone lift
+uniform vec2 uLevels[${maxShards}];
 // per shard: tint.rgb + tint amount
 uniform vec4 uTint[${maxShards}];
 uniform float uMode[${maxShards}];

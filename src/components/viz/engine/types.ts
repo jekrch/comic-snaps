@@ -52,6 +52,21 @@ export const CSS_BLEND: Record<BlendMode, string> = {
 
 export type MaskKind = "hard" | "feather";
 
+/**
+ * A tone level applied to a layer's source before tint and blend: `c * gain +
+ * lift`, clamped. Collapsed to a single mul-add on purpose — the per-panel
+ * decision is made once on the CPU from metadata that is already loaded, so
+ * every backend pays two instructions for it and nothing has to read the frame
+ * back. Built by `levelsFor`.
+ */
+export interface Levels {
+  gain: number;
+  lift: number;
+}
+
+/** The panel composited exactly as it was drawn. */
+export const IDENTITY_LEVELS: Levels = { gain: 1, lift: 0 };
+
 /** Fade in -> hold -> fade out, in seconds, scaled to fit `lifetime`. */
 export interface Curve {
   fadeIn: number;
@@ -80,6 +95,8 @@ export interface Shard {
   rotFrom: number;
   rotTo: number;
   blendMode: BlendMode;
+  /** Levelled toward a common key before tint and blend. Fixed at birth. */
+  levels: Levels;
   tint: [number, number, number];
   tintAmount: number;
   opacityCurve: Curve;
@@ -100,6 +117,7 @@ export interface DrawShard {
   dstRect: Rect;
   rotation: number;
   blendMode: BlendMode;
+  levels: Levels;
   tint: [number, number, number];
   tintAmount: number;
   opacity: number;
@@ -212,6 +230,7 @@ export function resolveShard(shard: Shard, time: number): DrawShard {
     dstRect: lerpRect(shard.dstFrom, shard.dstTo, t),
     rotation: lerp(shard.rotFrom, shard.rotTo, t),
     blendMode: shard.blendMode,
+    levels: shard.levels,
     tint: shard.tint,
     tintAmount: shard.tintAmount,
     opacity: envelope(shard.opacityCurve, age, shard.lifetime),

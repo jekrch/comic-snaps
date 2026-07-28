@@ -9,10 +9,17 @@ import { compositeFragment } from "../shaders/layer";
 import { POST_FRAGMENT } from "../shaders/post";
 import type { DeviceCaps } from "../../vizConfig";
 
+type Vec2 = [number, number];
 type Vec4 = [number, number, number, number];
 
 function vec4(): Vec4 {
   return [0, 0, 0, 0];
+}
+
+/** Identity tone levels, so an untouched slot is a pass-through rather than a
+ *  black one — unlike the vec4 uniforms, zero is not the neutral value here. */
+function unitLevels(): Vec2 {
+  return [1, 0];
 }
 
 /**
@@ -79,6 +86,7 @@ export class WebGLBackend implements VizBackend {
         uRect: { value: Array.from({ length: this.maxShards }, vec4) },
         uSrc: { value: Array.from({ length: this.maxShards }, vec4) },
         uMisc: { value: Array.from({ length: this.maxShards }, vec4) },
+        uLevels: { value: Array.from({ length: this.maxShards }, unitLevels) },
         uTint: { value: Array.from({ length: this.maxShards }, vec4) },
         uMode: { value: new Array(this.maxShards).fill(0) },
       },
@@ -220,6 +228,7 @@ export class WebGLBackend implements VizBackend {
           shard.opacity,
           shard.feather,
         ];
+        uniforms.uLevels.value[i] = [shard.levels.gain, shard.levels.lift];
         uniforms.uTint.value[i] = [...shard.tint, shard.tintAmount];
         uniforms.uMode.value[i] = blendCode(shard.blendMode);
       }
