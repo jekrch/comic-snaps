@@ -1,6 +1,7 @@
 import { X, Sliders, Maximize, Minimize } from "lucide-react";
 import type { Panel } from "../../types";
 import { formatIssue } from "../../utils/issueFormat";
+import VizSpeedControl from "./VizSpeedControl";
 
 interface VizControlsProps {
   visible: boolean;
@@ -8,6 +9,8 @@ interface VizControlsProps {
   seed: string;
   paused: boolean;
   fullscreen: boolean;
+  speed: number;
+  onSpeedChange: (speed: number) => void;
   onClose: () => void;
   onToggleFullscreen: () => void;
   onToggleDebug?: () => void;
@@ -24,6 +27,8 @@ export default function VizControls({
   seed,
   paused,
   fullscreen,
+  speed,
+  onSpeedChange,
   onClose,
   onToggleFullscreen,
   onToggleDebug,
@@ -64,8 +69,15 @@ export default function VizControls({
         </button>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex items-end justify-between gap-4">
-        <div className="min-w-0">
+      {/* Side by side once there is room, stacked before that: the speed pills
+          are a fixed 11rem, and sharing a phone's width with them truncated the
+          credit line down to a few characters. The attribution keeps the full
+          width and the pills take a row of their own. */}
+      <div
+        className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 flex flex-col gap-2.5
+                   sm:flex-row sm:items-end sm:justify-between sm:gap-4"
+      >
+        <div className="min-w-0 order-2 sm:order-1">
           {feature && (
             <div
               key={feature.id}
@@ -81,8 +93,20 @@ export default function VizControls({
             </div>
           )}
         </div>
-        <div className="font-display text-[10px] tracking-widest uppercase text-white/25 shrink-0">
-          {paused ? "paused" : `seed ${seed}`}
+        {/* Bottom right rather than up with the icon buttons: this is the one
+            control worth reaching for mid-run, the chrome is only up for a
+            couple of seconds, and on a phone the corner nearest the thumb is
+            the one to spend on it. */}
+        <div className="shrink-0 order-1 sm:order-2 flex flex-col items-end gap-2 pointer-events-auto">
+          <VizSpeedControl
+            value={speed}
+            onChange={onSpeedChange}
+            tone="overlay"
+            tabIndex={visible ? 0 : -1}
+          />
+          <div className="font-display text-[10px] tracking-widest uppercase text-white/25">
+            {paused ? "paused" : `seed ${seed}`}
+          </div>
         </div>
       </div>
     </div>

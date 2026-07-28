@@ -25,6 +25,14 @@ export interface VizConfig {
   tintAmount: number;
   /** Beat grid for discrete events, seconds. */
   beat: number;
+  /**
+   * Global rate of the composition clock, 1 = as authored. Everything else in
+   * this config is expressed in clock seconds, so this is the one knob that
+   * moves the whole piece — lifetimes, Ken Burns, the beat grid and the post
+   * LFOs all follow it together, which is what keeps a speed change from
+   * pulling the composition apart.
+   */
+  speed: number;
   post: PostParams;
   /** Director selection weights — see §4 of the plan. */
   weights: {
@@ -62,9 +70,30 @@ export const DEFAULT_CONFIG: VizConfig = {
   layerOpacity: 0.85,
   tintAmount: 0.22,
   beat: 2,
+  speed: 1,
   post: { ...DEFAULT_POST },
   weights: { rhyme: 0.5, clash: 0.2, color: 0.2, random: 0.1 },
 };
+
+/**
+ * The ladder the speed control steps through. Discrete rather than a slider on
+ * purpose: it is offered on the launch modal and on auto-hiding chrome that a
+ * finger has to hit, where a tap target beats a drag.
+ */
+export const VIZ_SPEEDS = [0.5, 0.75, 1, 1.5, 2] as const;
+export const VIZ_MIN_SPEED = VIZ_SPEEDS[0];
+export const VIZ_MAX_SPEED = VIZ_SPEEDS[VIZ_SPEEDS.length - 1];
+
+/** Nearest rung to an arbitrary value, for a config that came from JSON. */
+export function nearestSpeed(value: number): number {
+  return VIZ_SPEEDS.reduce((best, rung) =>
+    Math.abs(rung - value) < Math.abs(best - value) ? rung : best
+  );
+}
+
+export function formatSpeed(value: number): string {
+  return `${Number(value.toFixed(2))}×`;
+}
 
 export function cloneConfig(config: VizConfig): VizConfig {
   return { ...config, post: { ...config.post }, weights: { ...config.weights } };
@@ -111,6 +140,7 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("stack", "layerOpacity", "opacity", 0.1, 1, 0.01, (c) => c.layerOpacity, (c, v) => (c.layerOpacity = v)),
   field("stack", "beat", "beat", 0.25, 8, 0.25, (c) => c.beat, (c, v) => (c.beat = v)),
 
+  field("motion", "speed", "speed", VIZ_MIN_SPEED, VIZ_MAX_SPEED, 0.05, (c) => c.speed, (c, v) => (c.speed = v)),
   field("motion", "zoomAmount", "zoom", 1, 2.5, 0.01, (c) => c.zoomAmount, (c, v) => (c.zoomAmount = v)),
   field("motion", "panAmount", "pan", 0, 0.45, 0.005, (c) => c.panAmount, (c, v) => (c.panAmount = v)),
   field("motion", "rotateAmount", "rotate", 0, 0.35, 0.005, (c) => c.rotateAmount, (c, v) => (c.rotateAmount = v)),
@@ -259,5 +289,12 @@ export const MAX_FLASH_HZ = 3;
 export const MIN_FLASH_INTERVAL = 1 / MAX_FLASH_HZ;
 /** Ceiling on how fast global exposure may move, per second. */
 export const MAX_EXPOSURE_SLEW = 1.2;
-/** A full-bleed layer may never fade faster than this, seconds. */
+/** A full-bleed layer may never fade faster than this, in *real* seconds. */
 export const MIN_FULLBLEED_FADE = 0.6;
+/**
+ * The same floor expressed in clock seconds, which is what a scene authors a
+ * fade in. Scaled by the speed ceiling rather than the current speed, because
+ * the speed control can be raised at any moment — including mid-fade — and a
+ * floor that only held at the speed the shard was born at would not be a floor.
+ */
+export const MIN_FULLBLEED_FADE_CLOCK = MIN_FULLBLEED_FADE * VIZ_MAX_SPEED;

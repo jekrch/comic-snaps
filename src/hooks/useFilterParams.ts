@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import type { Filters } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
+import { nearestSpeed } from "../components/viz/vizConfig";
 
 const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "credits", "postedBy", "series"];
 const DEFAULT_SORT: SortMode = "newest";
@@ -13,6 +14,7 @@ function parseFiltersFromURL(): {
   tab: InfoTab | null;
   viz: boolean;
   vizPreset: string | null;
+  vizSpeed: number | null;
 } {
   const params = new URLSearchParams(window.location.search);
 
@@ -32,19 +34,25 @@ function parseFiltersFromURL(): {
   const rawTab = params.get("tab");
   const tab = rawTab && VALID_TABS.includes(rawTab as InfoTab) ? (rawTab as InfoTab) : null;
 
+  // Snapped to a rung rather than rejected: the engine clamps anyway, and a
+  // hand-edited value should land somewhere sane instead of being dropped.
+  const rawSpeed = Number(params.get("vizspeed"));
+  const vizSpeed = Number.isFinite(rawSpeed) && rawSpeed > 0 ? nearestSpeed(rawSpeed) : null;
+
   return {
     filters,
     sort,
     tab,
     viz: params.get("viz") === "1",
     vizPreset: params.get("vizpreset"),
+    vizSpeed,
   };
 }
 
 /** Visualizer params, carried across unrelated URL updates. `vizseed` and
  *  `vizdebug` are read straight off the URL by the overlay, so losing them on a
  *  filter change would silently drop a run someone was replaying. */
-const VIZ_KEYS = ["viz", "vizpreset", "vizseed", "vizdebug"] as const;
+const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizseed", "vizdebug"] as const;
 
 function buildParams(
   filters: Filters,
@@ -112,15 +120,20 @@ export function useFilterParams() {
     []
   );
 
-  const syncViz = useCallback((open: boolean, preset?: string | null) => {
+  const syncViz = useCallback((open: boolean, preset?: string | null, speed?: number) => {
     const params = new URLSearchParams(window.location.search);
     if (open) {
       params.set("viz", "1");
       if (preset) params.set("vizpreset", preset);
       else params.delete("vizpreset");
+      // Only carried when it differs from the authored rate, so the common
+      // case leaves the URL as short as it was before the control existed.
+      if (speed !== undefined && speed !== 1) params.set("vizspeed", String(speed));
+      else params.delete("vizspeed");
     } else {
       params.delete("viz");
       params.delete("vizpreset");
+      params.delete("vizspeed");
     }
     const qs = params.toString();
     const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
@@ -133,6 +146,7 @@ export function useFilterParams() {
     initialTab: initial.tab,
     initialViz: initial.viz,
     initialVizPreset: initial.vizPreset,
+    initialVizSpeed: initial.vizSpeed,
     syncToURL,
     syncTab,
     syncViz,

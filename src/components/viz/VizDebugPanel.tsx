@@ -10,6 +10,8 @@ interface VizDebugPanelProps {
   config: VizConfig;
   engine: VizEngine | null;
   seed: string;
+  /** Lets the overlay chrome re-read fields it also shows, such as speed. */
+  onChange?: () => void;
   onClose: () => void;
 }
 
@@ -18,7 +20,13 @@ interface VizDebugPanelProps {
  * the work on this feature is aesthetic iteration, and a recompile per
  * decay-value tweak would dominate everything else.
  */
-export default function VizDebugPanel({ config, engine, seed, onClose }: VizDebugPanelProps) {
+export default function VizDebugPanel({
+  config,
+  engine,
+  seed,
+  onChange,
+  onClose,
+}: VizDebugPanelProps) {
   const [, bump] = useReducer((n: number) => n + 1, 0);
   const [stats, setStats] = useState<EngineStats | null>(null);
   const [copied, setCopied] = useState(false);
@@ -98,6 +106,7 @@ export default function VizDebugPanel({ config, engine, seed, onClose }: VizDebu
                 onChange={(e) => {
                   entry.set(config, Number(e.target.value));
                   bump();
+                  onChange?.();
                 }}
                 className="w-full accent-accent h-1 cursor-pointer"
               />

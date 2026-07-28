@@ -32,6 +32,7 @@ export default function App() {
     initialTab,
     initialViz,
     initialVizPreset,
+    initialVizSpeed,
     syncToURL,
     syncTab,
     syncViz,
@@ -54,7 +55,9 @@ export default function App() {
     // An unnamed preset still honours prefers-reduced-motion, and a name that
     // does not resolve falls back rather than being echoed into the run.
     const preset = findPreset(initialVizPreset ?? initialPresetId());
-    return { presetId: preset.id, config: presetConfig(preset.id), fullscreen: false, custom: false };
+    const config = presetConfig(preset.id);
+    if (initialVizSpeed !== null) config.speed = initialVizSpeed;
+    return { presetId: preset.id, config, fullscreen: false, custom: false };
   });
 
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
@@ -65,9 +68,22 @@ export default function App() {
       setVizRun(options);
       // A custom config cannot be reconstructed from the URL, so the preset name
       // is omitted rather than pointing at something that is not what is running.
-      syncViz(true, options.custom ? null : options.presetId);
+      syncViz(true, options.custom ? null : options.presetId, options.config.speed);
     },
     [syncViz]
+  );
+
+  // Speed is the one thing that can change mid-run and still be described by the
+  // URL, so it is kept in step rather than going stale the moment it is touched.
+  const handleVizSpeedChange = useCallback(
+    (speed: number) => {
+      if (!vizRun) return;
+      syncViz(true, vizRun.custom ? null : vizRun.presetId, speed);
+      // Also folded back into the run so the rate survives a remount of the
+      // overlay, which rebuilds its working config from this prop.
+      setVizRun({ ...vizRun, config: { ...vizRun.config, speed } });
+    },
+    [syncViz, vizRun]
   );
 
   const handleCloseViz = useCallback(() => {
@@ -370,6 +386,7 @@ export default function App() {
       {vizPrompt && status === "ready" && (
         <VizLaunchModal
           panelCount={sortedPanels.length}
+          initialSpeed={initialVizSpeed}
           onStart={handleStartViz}
           onCancel={() => setVizPrompt(false)}
         />
@@ -381,6 +398,7 @@ export default function App() {
             panels={sortedPanels}
             config={vizRun.config}
             fullscreen={vizRun.fullscreen}
+            onSpeedChange={handleVizSpeedChange}
             onClose={handleCloseViz}
           />
         </Suspense>

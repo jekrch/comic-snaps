@@ -1,6 +1,6 @@
 import type { Panel } from "../../../types";
 import type { VizConfig } from "../vizConfig";
-import { deviceCaps } from "../vizConfig";
+import { deviceCaps, VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../vizConfig";
 import { Director } from "./Director";
 import { Rng } from "./rng";
 import { WebGLBackend } from "./backends/WebGLBackend";
@@ -32,6 +32,9 @@ const MAX_DT = 1 / 20;
  */
 export class VizEngine {
   private readonly container: HTMLElement;
+  /** Held by reference: the overlay mutates it in place, so a speed change
+   *  takes effect on the next frame without touching the engine. */
+  private config: VizConfig;
   private canvas: HTMLCanvasElement | null = null;
   private backend: BackendWithStats | null = null;
   private backendKind: BackendKind = "webgl";
@@ -59,6 +62,7 @@ export class VizEngine {
     forceCss = false
   ) {
     this.container = container;
+    this.config = config;
     this.director = new Director(panels, config, new Rng(seed));
     this.createBackend(forceCss);
     this.observeSize();
@@ -117,6 +121,7 @@ export class VizEngine {
   }
 
   setConfig(config: VizConfig): void {
+    this.config = config;
     this.director.setConfig(config);
   }
 
@@ -141,7 +146,12 @@ export class VizEngine {
     const raw = this.lastFrameTime === 0 ? 1 / 60 : seconds - this.lastFrameTime;
     this.lastFrameTime = seconds;
     const dt = Math.min(Math.max(raw, 0), MAX_DT);
-    this.clock += dt;
+    // The clock is the only thing the speed control touches. Everything
+    // downstream reads clock seconds, so nothing else has to know about it —
+    // and because it scales the rate rather than the absolute time, shards
+    // already in flight carry on from where they are instead of jumping.
+    // `dt` stays real: the safety governor's limits are wall-clock limits.
+    this.clock += dt * this.timeScale;
 
     // Smoothed, so the debug readout is legible rather than a strobe.
     if (raw > 0) this.fps += (1 / raw - this.fps) * 0.08;
@@ -161,6 +171,14 @@ export class VizEngine {
       }
     }
   };
+
+  /** Clamped here as well as in the UI, so a hand-written config cannot push
+   *  the clock past the rate the safety floors were sized for. */
+  private get timeScale(): number {
+    const speed = this.config.speed;
+    if (!Number.isFinite(speed)) return 1;
+    return Math.min(VIZ_MAX_SPEED, Math.max(VIZ_MIN_SPEED, speed));
+  }
 
   get stats(): EngineStats {
     const backendStats = this.backend?.stats ?? { resident: 0, pending: 0 };

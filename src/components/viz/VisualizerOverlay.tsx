@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import type { Panel } from "../../types";
 import { VizEngine } from "./engine/Engine";
 import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
-import { cloneConfig } from "./vizConfig";
+import { VIZ_SPEEDS, cloneConfig, nearestSpeed } from "./vizConfig";
 import type { VizConfig } from "./vizConfig";
 import VizControls from "./VizControls";
 import VizDebugPanel from "./VizDebugPanel";
@@ -15,6 +15,8 @@ interface VisualizerOverlayProps {
   config: VizConfig;
   /** Only requested when the launch explicitly asked for it. */
   fullscreen: boolean;
+  /** Live speed changes, so the URL keeps describing what is actually running. */
+  onSpeedChange?: (speed: number) => void;
   onClose: () => void;
 }
 
@@ -27,6 +29,7 @@ export default function VisualizerOverlay({
   panels,
   config,
   fullscreen,
+  onSpeedChange,
   onClose,
 }: VisualizerOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,6 +53,11 @@ export default function VisualizerOverlay({
   // Cloned, then mutated in place: the engine reads it every frame so the debug
   // sliders take effect without a remount, and the caller's object is left alone.
   const configRef = useRef(cloneConfig(config));
+
+  // The live config is the single source of truth for speed — the chrome and
+  // the tuning panel both write into it — so the chrome renders from it and
+  // this only exists to schedule the repaint.
+  const [, bumpConfig] = useReducer((n: number) => n + 1, 0);
 
   const usable = useMemo(() => panels.filter((panel) => !panel.blur), [panels]);
   const usableRef = useRef(usable);
@@ -179,6 +187,27 @@ export default function VisualizerOverlay({
     wakeChrome();
   }, [wakeChrome]);
 
+  const setSpeed = useCallback(
+    (speed: number) => {
+      configRef.current.speed = speed;
+      bumpConfig();
+      onSpeedChange?.(speed);
+      wakeChrome();
+    },
+    [onSpeedChange, wakeChrome]
+  );
+
+  /** Keyboard equivalent of the pills: step one rung along the ladder. */
+  const nudgeSpeed = useCallback(
+    (direction: 1 | -1) => {
+      const current = nearestSpeed(configRef.current.speed);
+      const index = VIZ_SPEEDS.findIndex((rung) => rung === current);
+      const next = Math.min(VIZ_SPEEDS.length - 1, Math.max(0, index + direction));
+      setSpeed(VIZ_SPEEDS[next]);
+    },
+    [setSpeed]
+  );
+
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
     else
@@ -202,13 +231,19 @@ export default function VisualizerOverlay({
       } else if (event.key === "f") {
         event.preventDefault();
         toggleFullscreen();
+      } else if (event.key === "[" || event.key === "-") {
+        event.preventDefault();
+        nudgeSpeed(-1);
+      } else if (event.key === "]" || event.key === "+" || event.key === "=") {
+        event.preventDefault();
+        nudgeSpeed(1);
       } else {
         wakeChrome();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, togglePause, toggleFullscreen, wakeChrome]);
+  }, [onClose, togglePause, toggleFullscreen, nudgeSpeed, wakeChrome]);
 
   return (
     <div
@@ -233,6 +268,8 @@ export default function VisualizerOverlay({
         seed={formatSeed(seed)}
         paused={paused}
         fullscreen={isFullscreen}
+        speed={configRef.current.speed}
+        onSpeedChange={setSpeed}
         onClose={onClose}
         onToggleFullscreen={toggleFullscreen}
         onToggleDebug={() => setShowDebug((visible) => !visible)}
@@ -243,6 +280,7 @@ export default function VisualizerOverlay({
           config={configRef.current}
           engine={engine}
           seed={formatSeed(seed)}
+          onChange={bumpConfig}
           onClose={() => setShowDebug(false)}
         />
       )}

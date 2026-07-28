@@ -3,6 +3,7 @@ import { X, ChevronDown, Check } from "lucide-react";
 import type { VizConfig } from "./vizConfig";
 import { parseConfigJson } from "./vizConfig";
 import { VIZ_PRESETS, initialPresetId, presetConfig } from "./vizPresets";
+import VizSpeedControl from "./VizSpeedControl";
 
 export interface VizLaunchOptions {
   presetId: string;
@@ -14,14 +15,22 @@ export interface VizLaunchOptions {
 
 interface VizLaunchModalProps {
   panelCount: number;
+  /** Carried over from a `?vizspeed=` link, so a shared run opens at its rate. */
+  initialSpeed?: number | null;
   onStart: (options: VizLaunchOptions) => void;
   onCancel: () => void;
 }
 
 const EXIT_MS = 200;
 
-export default function VizLaunchModal({ panelCount, onStart, onCancel }: VizLaunchModalProps) {
+export default function VizLaunchModal({
+  panelCount,
+  initialSpeed,
+  onStart,
+  onCancel,
+}: VizLaunchModalProps) {
   const [presetId, setPresetId] = useState(initialPresetId);
+  const [speed, setSpeed] = useState(initialSpeed ?? 1);
   const [showJson, setShowJson] = useState(false);
   const [json, setJson] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
@@ -40,7 +49,9 @@ export default function VizLaunchModal({ panelCount, onStart, onCancel }: VizLau
     return { rotation: pick(rotations), color: pick(colors) };
   }, []);
 
-  const base = useMemo(() => presetConfig(presetId), [presetId]);
+  // Speed folds into the base rather than being applied after the JSON, so a
+  // pasted config can still override it like any other field.
+  const base = useMemo(() => ({ ...presetConfig(presetId), speed }), [presetId, speed]);
 
   // Parsed live so the error appears while typing rather than on submit.
   const parsed = useMemo(() => {
@@ -224,7 +235,14 @@ export default function VizLaunchModal({ panelCount, onStart, onCancel }: VizLau
           })}
         </div>
 
-        <div className="border-t border-white/8 mt-1">
+        <div className="border-t border-white/8 mt-1 px-4 py-2.5 flex items-center justify-between gap-3">
+          <span className="font-display text-[10px] tracking-widest uppercase text-ink-muted">
+            speed
+          </span>
+          <VizSpeedControl value={speed} onChange={setSpeed} tone="modal" />
+        </div>
+
+        <div className="border-t border-white/8">
           <button
             onClick={() => setShowJson((open) => !open)}
             aria-expanded={showJson}
