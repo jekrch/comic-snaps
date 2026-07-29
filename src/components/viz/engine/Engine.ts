@@ -5,7 +5,7 @@ import { Director } from "./Director";
 import { Rng } from "./rng";
 import { WebGLBackend } from "./backends/WebGLBackend";
 import { CssBackend } from "./backends/CssBackend";
-import type { VizBackend } from "./types";
+import type { VizBackend, VizFrame } from "./types";
 
 export type BackendKind = "webgl" | "css";
 
@@ -24,6 +24,22 @@ interface BackendWithStats extends VizBackend {
 
 /** Returning to a hidden tab must not lurch the whole composition forward. */
 const MAX_DT = 1 / 20;
+
+/**
+ * What the frame is actually putting on screen, for the debug readout. Shards
+ * on the flat path; on a spatial one the instances of every slot carrying
+ * something, which is the number that matters there — the slot count is a dozen
+ * either way, and it is the hundreds behind it that cost anything.
+ */
+function drawCount(frame: VizFrame): number {
+  const stage = frame.stage;
+  if (!stage) return frame.shards.length;
+  let count = 0;
+  for (let i = 0; i < stage.slots.length; i++) {
+    if (stage.slots[i].opacity > 0.002) count += stage.layout.slots[i]?.count ?? 0;
+  }
+  return count;
+}
 
 /**
  * Owns the clock, the surface, and the backend. The director is deliberately
@@ -63,7 +79,7 @@ export class VizEngine {
   ) {
     this.container = container;
     this.config = config;
-    this.director = new Director(panels, config, new Rng(seed));
+    this.director = new Director(panels, config, new Rng(seed), deviceCaps());
     this.createBackend(forceCss);
     this.observeSize();
   }
@@ -78,8 +94,7 @@ export class VizEngine {
         canvas.addEventListener("webglcontextlost", this.handleContextLost);
         this.canvas = canvas;
         this.backend = new WebGLBackend(canvas, caps);
-        this.backendKind = "webgl";
-        this.onBackend?.("webgl");
+        this.setBackendKind("webgl");
         return;
       } catch {
         this.canvas?.remove();
@@ -87,8 +102,20 @@ export class VizEngine {
       }
     }
     this.backend = new CssBackend(this.container);
-    this.backendKind = "css";
-    this.onBackend?.("css");
+    this.setBackendKind("css");
+  }
+
+  /**
+   * Only the WebGL backend can draw a formation — the fallback positions
+   * `<img>` elements, which have no camera and no depth — so a spatial preset
+   * degrades to the drift stack there. The director is told rather than the
+   * backend left to ignore it, because the choice changes how many panels the
+   * run keeps resident and which one the credit line names.
+   */
+  private setBackendKind(kind: BackendKind): void {
+    this.backendKind = kind;
+    this.director.setSpatialSupported(kind === "webgl");
+    this.onBackend?.(kind);
   }
 
   private handleContextLost = (event: Event): void => {
@@ -159,7 +186,7 @@ export class VizEngine {
     this.backend.requestPanels(this.director.prefetch());
 
     const frame = this.director.update(this.clock, dt);
-    this.lastShardCount = frame.shards.length;
+    this.lastShardCount = drawCount(frame);
     this.backend.render(frame);
 
     if (this.clock >= this.nextFeatureCheck) {

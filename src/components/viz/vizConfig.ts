@@ -1,4 +1,22 @@
-import type { PostParams } from "./engine/types";
+import type { PostParams, StageKind } from "./engine/types";
+
+/**
+ * Which rendering path the piece runs on. "flat" is the drift stack and the
+ * whole engine as it was: shards composited on one quad, everything else done
+ * to the frame afterwards. The others are the spatial scenes, where the
+ * composition is quads in a real projection instead.
+ *
+ * A kind rather than a number because there is nothing in between the two. It
+ * is the one field a mode switch cannot cross-fade, and it is handled
+ * explicitly everywhere the numeric fields are handled generically.
+ */
+export type StageMode = "flat" | StageKind;
+
+const STAGE_MODES: StageMode[] = ["flat", "swarm", "vault"];
+
+export function isStageMode(value: unknown): value is StageMode {
+  return typeof value === "string" && (STAGE_MODES as string[]).includes(value);
+}
 
 /**
  * Every tunable the visualizer has. The debug panel (`?vizdebug=1`) binds
@@ -49,6 +67,53 @@ export interface VizConfig {
   psychedelia: number;
   /** Mean seconds between one cycled effect starting and the next. */
   cycleInterval: number;
+  /**
+   * How far the composition's own parameters wander from the ones authored
+   * here, 0..1. Distinct from `psychedelia`, which adds effects on top of a
+   * piece holding still: this moves the piece itself — fold depth and count,
+   * which way the symmetry turns, how far layers zoom, pan and rotate — so a
+   * mode using it never settles at one appearance. Inert at 0.
+   */
+  wander: number;
+  /** Rate of that drift, 1 = as authored. */
+  wanderRate: number;
+
+  // --- The spatial stage ----------------------------------------------------
+  // Read only when `stageKind` is not "flat". Kept at the top level rather than
+  // nested so the tuning panel and the JSON clamp reach them the same way they
+  // reach everything else.
+  stageKind: StageMode;
+  /** Global multiplier on every quad's size. Above ~1.4 the quads meet and the
+   *  formation reads as a surface rather than as a scatter. */
+  stageScale: number;
+  /** Peak opacity of one slot. The washout governor for this path: the quads
+   *  composite additively, so this multiplies straight into frame luminance. */
+  stageOpacity: number;
+  /** Where the formation sits between its two arrangements, 0..1. The swing
+   *  around it is whatever headroom is left on the nearer side, so 0 and 1 are
+   *  each a formation held still and 0.5 is the full fold. */
+  stageMorph: number;
+  /** Rate of that swing, cycles per clock second. */
+  stageMorphRate: number;
+  /** How strongly quads turn to face the camera. 0 leaves them lying on the
+   *  formation's own surface — wallpaper — and 1 is a swarm of billboards. */
+  stageBillboard: number;
+  /** Rate of the per-instance opacity breath, radians per clock second. */
+  stageBreathe: number;
+  /** Vertical field of view, degrees. Wide is a fisheye flight; narrow
+   *  flattens the formation toward the arrangement the flat path could do. */
+  stageFov: number;
+  /** Turn of the whole formation, radians per clock second. Signed; integrated
+   *  into `VizPhases.orbit` for the same reason as every other spin here. */
+  stageSpin: number;
+  /** Flight through a repeating formation, units per clock second. Signed;
+   *  integrated into `VizPhases.travel`. Does nothing to one that does not
+   *  repeat. */
+  stageFlight: number;
+  /** Solids drifting in the middle distance. Capped by the texture budget as
+   *  well as by this — see `Stage.setScene`. */
+  stageSolids: number;
+
   post: PostParams;
   /** Director selection weights — see §4 of the plan. */
   weights: {
@@ -75,9 +140,28 @@ export const DEFAULT_POST: PostParams = {
   hueShift: 0,
   // Every distortion is off by default; the scale/frequency values beside them
   // are the shape each one takes when something turns it on.
+  droste: 0,
+  drosteInner: 0.06,
+  drostePeriod: 1.9,
+  drosteTwist: 0,
+  // Slow enough that a repeat takes the better part of a minute to arrive.
+  drosteSpin: 0.04,
+  tunnel: 0,
+  tunnelDepth: 0.35,
+  tunnelSpin: 0.05,
   kaleido: 0,
   kaleidoSegments: 6,
+  // The slow intrinsic turn that makes a fold legible as a fold rather than as
+  // wallpaper. Only read when `kaleido` is up.
+  kaleidoSpin: 0.06,
   tile: 0,
+  fold: 0,
+  foldScale: 1.22,
+  foldOffsetX: 0.62,
+  foldOffsetY: 0.34,
+  foldSpin: 0.03,
+  lattice: 0,
+  latticeScale: 3,
   warp: 0,
   warpScale: 2.4,
   warpSpeed: 0.35,
@@ -85,6 +169,14 @@ export const DEFAULT_POST: PostParams = {
   rippleFreq: 16,
   twist: 0,
   bulge: 0,
+  quasi: 0,
+  quasiFreq: 14,
+  turbulence: 0,
+  turbulenceScale: 2.2,
+  turbulenceSpeed: 0.12,
+  disperse: 0,
+  blur: 0,
+  blurSpin: 0,
   solarize: 0,
 };
 
@@ -103,6 +195,22 @@ export const DEFAULT_CONFIG: VizConfig = {
   speed: 1,
   psychedelia: 0,
   cycleInterval: 14,
+  wander: 0,
+  wanderRate: 1,
+  stageKind: "flat",
+  stageScale: 1,
+  stageOpacity: 0.55,
+  stageMorph: 0.5,
+  // A shade over two and a half minutes for the round trip. The formation is
+  // the largest thing on screen, so it is held to the slowest rate in the
+  // engine — this is the piece becoming something else, not an animation.
+  stageMorphRate: 0.006,
+  stageBillboard: 0.75,
+  stageBreathe: 0.08,
+  stageFov: 55,
+  stageSpin: 0.05,
+  stageFlight: 0.9,
+  stageSolids: 2,
   post: { ...DEFAULT_POST },
   weights: { rhyme: 0.5, clash: 0.2, color: 0.2, random: 0.1 },
 };
@@ -133,7 +241,15 @@ export function cloneConfig(config: VizConfig): VizConfig {
 
 // --- Tunable fields ---------------------------------------------------------
 
-export type ConfigGroup = "stack" | "motion" | "post" | "shape" | "cycle" | "director";
+export type ConfigGroup =
+  | "stack"
+  | "motion"
+  | "post"
+  | "shape"
+  | "optics"
+  | "cycle"
+  | "stage"
+  | "director";
 
 export interface ConfigField {
   group: ConfigGroup;
@@ -194,7 +310,26 @@ export const CONFIG_FIELDS: ConfigField[] = [
 
   field("shape", "post.kaleido", "kaleido", 0, 1, 0.01, (c) => c.post.kaleido, (c, v) => (c.post.kaleido = v)),
   field("shape", "post.kaleidoSegments", "segments", 2, 16, 1, (c) => c.post.kaleidoSegments, (c, v) => (c.post.kaleidoSegments = v)),
+  field("shape", "post.kaleidoSpin", "kaleido spin", -0.4, 0.4, 0.005, (c) => c.post.kaleidoSpin, (c, v) => (c.post.kaleidoSpin = v)),
   field("shape", "post.tile", "tile", 0, 1, 0.01, (c) => c.post.tile, (c, v) => (c.post.tile = v)),
+  field("shape", "post.fold", "fold", 0, 1, 0.01, (c) => c.post.fold, (c, v) => (c.post.fold = v)),
+  field("shape", "post.foldScale", "fold zoom", 1, 1.6, 0.01, (c) => c.post.foldScale, (c, v) => (c.post.foldScale = v)),
+  field("shape", "post.foldOffsetX", "fold x", -1.5, 1.5, 0.01, (c) => c.post.foldOffsetX, (c, v) => (c.post.foldOffsetX = v)),
+  field("shape", "post.foldOffsetY", "fold y", -1.5, 1.5, 0.01, (c) => c.post.foldOffsetY, (c, v) => (c.post.foldOffsetY = v)),
+  field("shape", "post.foldSpin", "fold spin", -0.2, 0.2, 0.005, (c) => c.post.foldSpin, (c, v) => (c.post.foldSpin = v)),
+  field("shape", "post.lattice", "lattice", 0, 1, 0.01, (c) => c.post.lattice, (c, v) => (c.post.lattice = v)),
+  field("shape", "post.latticeScale", "lattice cells", 1, 8, 0.1, (c) => c.post.latticeScale, (c, v) => (c.post.latticeScale = v)),
+  field("shape", "post.droste", "droste", 0, 1, 0.01, (c) => c.post.droste, (c, v) => (c.post.droste = v)),
+  field("shape", "post.drosteInner", "droste inner", 0.02, 0.25, 0.005, (c) => c.post.drosteInner, (c, v) => (c.post.drosteInner = v)),
+  field("shape", "post.drostePeriod", "droste period", 0.4, 3, 0.05, (c) => c.post.drostePeriod, (c, v) => (c.post.drostePeriod = v)),
+  field("shape", "post.drosteTwist", "droste twist", -3, 3, 1, (c) => c.post.drosteTwist, (c, v) => (c.post.drosteTwist = v)),
+  field("shape", "post.drosteSpin", "droste rate", -0.25, 0.25, 0.005, (c) => c.post.drosteSpin, (c, v) => (c.post.drosteSpin = v)),
+  field("shape", "post.tunnel", "tunnel", 0, 1, 0.01, (c) => c.post.tunnel, (c, v) => (c.post.tunnel = v)),
+  // Capped well below where the arithmetic breaks: depth over the radius floor
+  // is how many rings deep the tube goes, and past about eight they alias into
+  // a shimmer no ramp can make calm.
+  field("shape", "post.tunnelDepth", "tunnel depth", 0.05, 0.5, 0.01, (c) => c.post.tunnelDepth, (c, v) => (c.post.tunnelDepth = v)),
+  field("shape", "post.tunnelSpin", "tunnel rate", -0.3, 0.3, 0.005, (c) => c.post.tunnelSpin, (c, v) => (c.post.tunnelSpin = v)),
   field("shape", "post.warp", "warp", 0, 1, 0.01, (c) => c.post.warp, (c, v) => (c.post.warp = v)),
   field("shape", "post.warpScale", "warp scale", 0.5, 8, 0.1, (c) => c.post.warpScale, (c, v) => (c.post.warpScale = v)),
   field("shape", "post.warpSpeed", "warp rate", 0, 2, 0.01, (c) => c.post.warpSpeed, (c, v) => (c.post.warpSpeed = v)),
@@ -202,15 +337,68 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("shape", "post.rippleFreq", "ripple freq", 2, 60, 1, (c) => c.post.rippleFreq, (c, v) => (c.post.rippleFreq = v)),
   field("shape", "post.twist", "twist", -1, 1, 0.01, (c) => c.post.twist, (c, v) => (c.post.twist = v)),
   field("shape", "post.bulge", "bulge", -1, 1, 0.01, (c) => c.post.bulge, (c, v) => (c.post.bulge = v)),
+  field("shape", "post.quasi", "quasicrystal", 0, 1, 0.01, (c) => c.post.quasi, (c, v) => (c.post.quasi = v)),
+  field("shape", "post.quasiFreq", "quasi freq", 3, 40, 0.5, (c) => c.post.quasiFreq, (c, v) => (c.post.quasiFreq = v)),
+  field("shape", "post.turbulence", "turbulence", 0, 1, 0.01, (c) => c.post.turbulence, (c, v) => (c.post.turbulence = v)),
+  field("shape", "post.turbulenceScale", "turb scale", 0.5, 6, 0.1, (c) => c.post.turbulenceScale, (c, v) => (c.post.turbulenceScale = v)),
+  field("shape", "post.turbulenceSpeed", "turb rate", 0, 0.6, 0.005, (c) => c.post.turbulenceSpeed, (c, v) => (c.post.turbulenceSpeed = v)),
+
+  field("optics", "post.disperse", "dispersion", 0, 0.6, 0.005, (c) => c.post.disperse, (c, v) => (c.post.disperse = v)),
+  field("optics", "post.blur", "radial blur", 0, 1, 0.01, (c) => c.post.blur, (c, v) => (c.post.blur = v)),
+  field("optics", "post.blurSpin", "blur spin", 0, 1, 0.01, (c) => c.post.blurSpin, (c, v) => (c.post.blurSpin = v)),
 
   field("cycle", "psychedelia", "psychedelia", 0, 1, 0.01, (c) => c.psychedelia, (c, v) => (c.psychedelia = v)),
   field("cycle", "cycleInterval", "interval", 3, 60, 1, (c) => c.cycleInterval, (c, v) => (c.cycleInterval = v)),
+  field("cycle", "wander", "wander", 0, 1, 0.01, (c) => c.wander, (c, v) => (c.wander = v)),
+  field("cycle", "wanderRate", "wander rate", 0.2, 3, 0.05, (c) => c.wanderRate, (c, v) => (c.wanderRate = v)),
+
+  // Inert unless `stageKind` is a spatial one, which is not a slider — see the
+  // note on StageMode. The rest of the stage is tunable exactly like the flat
+  // path, so `?vizdebug=1` reviews a formation the same way it reviews a fold.
+  field("stage", "stageScale", "quad size", 0.3, 2.5, 0.01, (c) => c.stageScale, (c, v) => (c.stageScale = v)),
+  field("stage", "stageOpacity", "quad opacity", 0.05, 1, 0.01, (c) => c.stageOpacity, (c, v) => (c.stageOpacity = v)),
+  field("stage", "stageMorph", "morph", 0, 1, 0.01, (c) => c.stageMorph, (c, v) => (c.stageMorph = v)),
+  field("stage", "stageMorphRate", "morph rate", 0, 0.06, 0.001, (c) => c.stageMorphRate, (c, v) => (c.stageMorphRate = v)),
+  field("stage", "stageBillboard", "billboard", 0, 1, 0.01, (c) => c.stageBillboard, (c, v) => (c.stageBillboard = v)),
+  field("stage", "stageBreathe", "breath", 0, 0.6, 0.005, (c) => c.stageBreathe, (c, v) => (c.stageBreathe = v)),
+  field("stage", "stageFov", "field of view", 25, 95, 1, (c) => c.stageFov, (c, v) => (c.stageFov = v)),
+  field("stage", "stageSpin", "formation spin", -0.4, 0.4, 0.005, (c) => c.stageSpin, (c, v) => (c.stageSpin = v)),
+  field("stage", "stageFlight", "flight", -4, 4, 0.05, (c) => c.stageFlight, (c, v) => (c.stageFlight = v)),
+  field("stage", "stageSolids", "solids", 0, 4, 1, (c) => c.stageSolids, (c, v) => (c.stageSolids = v)),
 
   field("director", "weights.rhyme", "rhyme", 0, 1, 0.01, (c) => c.weights.rhyme, (c, v) => (c.weights.rhyme = v)),
   field("director", "weights.clash", "clash", 0, 1, 0.01, (c) => c.weights.clash, (c, v) => (c.weights.clash = v)),
   field("director", "weights.color", "colour", 0, 1, 0.01, (c) => c.weights.color, (c, v) => (c.weights.color = v)),
   field("director", "weights.random", "random", 0, 1, 0.01, (c) => c.weights.random, (c, v) => (c.weights.random = v)),
 ];
+
+/**
+ * Fields a mode switch interpolates. Speed is deliberately left out: it is the
+ * viewer's own control, and a preset carrying its authored rate back in would
+ * take away a choice they had already made.
+ */
+const RAMP_FIELDS = CONFIG_FIELDS.filter((entry) => entry.path !== "speed");
+
+/**
+ * Write the `from`→`to` crossing at position `t` into `live`, in place. In
+ * place because the engine holds the live config by reference and reads it
+ * every frame, which is what lets a mode change arrive without restarting the
+ * run — the layers already in flight carry on under the new parameters.
+ */
+export function lerpConfigInto(live: VizConfig, from: VizConfig, to: VizConfig, t: number): void {
+  for (const entry of RAMP_FIELDS) {
+    const start = entry.get(from);
+    const value = start + (entry.get(to) - start) * t;
+    // Whole-number fields (layer count, kaleido segments) have no meaningful
+    // value in between, so they step rather than slide.
+    entry.set(live, entry.step >= 1 ? Math.round(value) : value);
+  }
+  // The one field with nothing in between: there is no half-way between a flat
+  // composite and a formation in perspective. Switched at the midpoint of the
+  // ramp rather than at either end, so the cut lands where the crossfade has
+  // both presets at half strength and is the least visible thing happening.
+  live.stageKind = t < 0.5 ? from.stageKind : to.stageKind;
+}
 
 function readPath(source: Record<string, unknown>, path: string): unknown {
   let cursor: unknown = source;
@@ -258,8 +446,17 @@ export function mergeConfig(candidate: unknown, base: VizConfig): ParsedConfig {
     entry.set(config, clamped);
   }
 
+  // The one non-numeric tunable, so it is taken by hand. An unrecognised kind
+  // is reported rather than applied, on the same principle as the rest: a typo
+  // that silently ran the flat path would look like the config worked.
+  if ("stageKind" in source) {
+    if (isStageMode(source.stageKind)) config.stageKind = source.stageKind;
+    else adjusted.push("stageKind");
+  }
+
   // Surface stray top-level keys, and stray keys inside the two nested objects.
   for (const [key, value] of Object.entries(source)) {
+    if (key === "stageKind") continue;
     if (key === "post" || key === "weights") {
       if (typeof value !== "object" || value === null) {
         unknown.push(key);
@@ -315,6 +512,17 @@ export interface DeviceCaps {
   feedbackScale: number;
   /** Shards composited in a single pass; more than this ping-pongs in batches. */
   maxShardsPerPass: number;
+  /**
+   * Panels a spatial formation holds resident at once — its slots and its
+   * solids together. Deliberately under `texturePoolSize`: the panels queued to
+   * replace them have to decode somewhere, and a stage that filled the pool
+   * would evict a slot that is on screen to make room for its own successor.
+   */
+  stagePanels: number;
+  /** Quads bound to each of those panels. The product with `stagePanels` is the
+   *  instance count, and it is a vertex cost rather than a fill one — which is
+   *  why it can be two orders of magnitude over `maxShardsPerPass`. */
+  stagePerSlot: number;
 }
 
 export function deviceCaps(): DeviceCaps {
@@ -326,6 +534,11 @@ export function deviceCaps(): DeviceCaps {
     renderScale: mobile ? 1 : Math.min(dpr, 1.5),
     feedbackScale: 0.75,
     maxShardsPerPass: 12,
+    stagePanels: mobile ? 5 : 13,
+    // ~150 quads on a phone and ~550 on a desktop. The ceiling here is overdraw
+    // — every quad is transparent and none of them occlude — so the phone's cut
+    // is deeper than its pool size alone would suggest.
+    stagePerSlot: mobile ? 30 : 42,
   };
 }
 
@@ -355,3 +568,10 @@ export const MIN_FULLBLEED_FADE_CLOCK = MIN_FULLBLEED_FADE * VIZ_MAX_SPEED;
  */
 export const MIN_EFFECT_RAMP = 1.5;
 export const MIN_EFFECT_RAMP_CLOCK = MIN_EFFECT_RAMP * VIZ_MAX_SPEED;
+/**
+ * How long a mode switch takes to cross from one preset to the next, in real
+ * milliseconds. A mode change moves exactly the parameters MIN_EFFECT_RAMP
+ * exists to govern — feedback, posterize, solarize, kaleido — so it is held to
+ * the same floor instead of snapping the frame over to the new preset.
+ */
+export const MODE_SWITCH_MS = Math.max(1600, MIN_EFFECT_RAMP * 1000);

@@ -4,6 +4,7 @@ import type { Rng } from "../rng";
 import type { SafetyGovernor } from "../safety";
 import type { Rect, Shard } from "../types";
 import type { Rgb } from "../palette";
+import type { DriftBias } from "../Wander";
 
 /** Why the director chose this panel — see the weighted policy in §4. */
 export type Affinity = "rhyme" | "clash" | "color" | "random";
@@ -22,6 +23,9 @@ export interface SceneContext {
   tint: Rgb;
   /** Monotonic spawn counter — lets a preset vary by position in the run. */
   index: number;
+  /** A heading layers should share, when the parameter drift is running.
+   *  Absent means every layer picks its own direction, as before. */
+  drift?: DriftBias;
   safety: SafetyGovernor;
 }
 

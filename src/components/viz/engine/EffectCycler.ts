@@ -13,6 +13,19 @@ interface PsychEffect {
   id: string;
   /** Relative chance of being drawn. */
   weight: number;
+  /**
+   * Multiplier on this effect's attack and release. The floor in `clampRamp`
+   * is a photosensitivity limit and sits well below what reads as calm, so the
+   * effects that move the frame *bodily* rather than merely deform it — the
+   * reparameterisations especially — buy themselves a longer swell here.
+   */
+  ramp?: number;
+  /**
+   * Effects sharing a tag never run at once. Reserved for the pairs that do not
+   * compose: two maps that each redefine what the frame's radius means produce
+   * a frame that reads as neither, at twice the apparent speed.
+   */
+  exclusive?: string;
   /** Per-pulse parameters, drawn once at onset so a pulse holds its own shape
    *  for its whole life instead of shimmering between values every frame. */
   init(rng: Rng): number[];
@@ -58,6 +71,89 @@ const EFFECTS: PsychEffect[] = [
       post.tile = Math.max(post.tile, k * depth);
     },
   },
+  {
+    // The kaleidoscope compounded: four mirrors at four scales rather than one.
+    id: "fold",
+    weight: 0.7,
+    ramp: 2,
+    init: (rng) => [
+      rng.range(0.42, 0.82),
+      rng.range(0.18, 0.55),
+      rng.range(1.1, 1.32),
+      (rng.bool() ? 1 : -1) * rng.range(0.012, 0.05),
+    ],
+    apply: (post, k, _time, [ox, oy, scale, spin]) => {
+      const amount = k * 0.85;
+      if (amount <= post.fold) return;
+      post.fold = amount;
+      post.foldOffsetX = ox;
+      post.foldOffsetY = oy;
+      post.foldScale = scale;
+      // Set at full rate from the first frame rather than ramped with the
+      // amplitude: at k near zero it is invisible, and by the time it is
+      // visible the structure is already turning at speed instead of
+      // accelerating into it.
+      post.foldSpin = spin;
+    },
+  },
+  {
+    id: "lattice",
+    weight: 0.55,
+    ramp: 2,
+    init: (rng) => [rng.range(2, 5.5), rng.range(0.6, 0.9)],
+    apply: (post, k, _time, [scale, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.lattice) return;
+      post.lattice = amount;
+      post.latticeScale = scale;
+    },
+  },
+  // --- reparameterisation ---------------------------------------------------
+  // The two that redefine the frame's radius. Mutually exclusive, and the
+  // slowest ramps in the pool: these are the only effects here that move the
+  // viewer rather than the picture.
+  {
+    id: "droste",
+    weight: 0.5,
+    ramp: 2.5,
+    exclusive: "reparam",
+    init: (rng) => [
+      rng.range(1.3, 2.4),
+      rng.pick([0, 0, 1, -1]),
+      rng.range(0.05, 0.11),
+      // The director scales this by the period, so it is repeats per second
+      // rather than log-radii: at this range one copy arrives every fifteen
+      // seconds at the fastest and closer to two minutes at the slowest.
+      (rng.bool() ? 1 : -1) * rng.range(0.015, 0.035),
+    ],
+    apply: (post, k, _time, [period, twist, inner, spin]) => {
+      const amount = k * 0.85;
+      if (amount <= post.droste) return;
+      post.droste = amount;
+      post.drostePeriod = period;
+      post.drosteTwist = twist;
+      post.drosteInner = inner;
+      post.drosteSpin = spin;
+    },
+  },
+  {
+    id: "tunnel",
+    weight: 0.4,
+    ramp: 2.5,
+    exclusive: "reparam",
+    init: (rng) => [
+      rng.range(0.18, 0.5),
+      (rng.bool() ? 1 : -1) * rng.range(0.025, 0.07),
+      rng.range(0.55, 0.85),
+    ],
+    apply: (post, k, _time, [depth, spin, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.tunnel) return;
+      post.tunnel = amount;
+      post.tunnelDepth = depth;
+      post.tunnelSpin = spin;
+    },
+  },
   // --- undulating -----------------------------------------------------------
   {
     id: "warp",
@@ -99,6 +195,55 @@ const EFFECTS: PsychEffect[] = [
     init: (rng) => [rng.range(0.04, 0.12), rng.range(0, Math.PI * 2)],
     apply: (post, k, time, [rate, phase]) => {
       post.bulge = clamp(post.bulge + k * 0.6 * osc(time, rate, phase), -1, 1);
+    },
+  },
+  {
+    id: "quasi",
+    weight: 0.8,
+    ramp: 1.5,
+    init: (rng) => [rng.range(7, 26), rng.range(0.5, 0.9)],
+    apply: (post, k, _time, [freq, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.quasi) return;
+      post.quasi = amount;
+      post.quasiFreq = freq;
+    },
+  },
+  {
+    id: "turbulence",
+    weight: 0.6,
+    ramp: 1.5,
+    init: (rng) => [rng.range(1.4, 4), rng.range(0.06, 0.18), rng.range(0.45, 0.8)],
+    apply: (post, k, _time, [scale, speed, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.turbulence) return;
+      post.turbulence = amount;
+      post.turbulenceScale = scale;
+      post.turbulenceSpeed = speed;
+    },
+  },
+  // --- optics ---------------------------------------------------------------
+  {
+    // Additive, and deliberately so: dispersion has nothing to act on by
+    // itself, so it is at its best stacked onto whatever warp is already
+    // running rather than competing for a slot with it.
+    id: "disperse",
+    weight: 0.7,
+    init: (rng) => [rng.range(0.12, 0.35)],
+    apply: (post, k, _time, [depth]) => {
+      post.disperse = Math.min(0.55, post.disperse + k * depth);
+    },
+  },
+  {
+    id: "blur",
+    weight: 0.5,
+    ramp: 1.5,
+    init: (rng) => [rng.range(0.2, 0.5), rng.range(0, 1)],
+    apply: (post, k, _time, [depth, spin]) => {
+      const amount = k * depth;
+      if (amount <= post.blur) return;
+      post.blur = amount;
+      post.blurSpin = spin;
     },
   },
   // --- surreal --------------------------------------------------------------
@@ -261,18 +406,25 @@ export class EffectCycler {
   private begin(time: number, amount: number): void {
     const rng = this.rng;
     // Weight out anything already running: two pulses of the same effect would
-    // just be one louder pulse.
+    // just be one louder pulse. Exclusion tags extend that to the effects that
+    // are not the same but still cannot share a frame.
     const running = new Set(this.active.map((pulse) => pulse.effect));
+    const claimed = new Set(
+      this.active.map((pulse) => EFFECTS[pulse.effect].exclusive).filter(Boolean)
+    );
     const effect = rng.weightedIndex(
-      EFFECTS.map((entry, index) => (running.has(index) ? 0 : entry.weight))
+      EFFECTS.map((entry, index) =>
+        running.has(index) || (entry.exclusive && claimed.has(entry.exclusive)) ? 0 : entry.weight
+      )
     );
 
+    const ramp = EFFECTS[effect].ramp ?? 1;
     this.active.push({
       effect,
       start: time,
       // The ramps are the safety-critical part; the governor floors them.
-      attack: this.safety.clampRamp(rng.range(2.5, 7)),
-      release: this.safety.clampRamp(rng.range(3, 9)),
+      attack: this.safety.clampRamp(rng.range(2.5, 7) * ramp),
+      release: this.safety.clampRamp(rng.range(3, 9) * ramp),
       // More psychedelia holds longer as well as stacking deeper, so a high
       // setting reads as a state the piece is in rather than a flicker.
       hold: rng.range(5, 18) * (0.6 + amount * 0.8),

@@ -1,11 +1,13 @@
 import type { Panel } from "../../../types";
-import type { VizConfig } from "../vizConfig";
+import type { DeviceCaps, VizConfig } from "../vizConfig";
 import { cosineDistance, loadEmbeddings, paletteDistance } from "../../../utils/sorting";
 import type { EmbeddingMap } from "../../../utils/sorting";
 import type { Rng } from "./rng";
 import { EffectCycler } from "./EffectCycler";
 import { SafetyGovernor } from "./safety";
-import type { PostParams, Shard, VizFrame } from "./types";
+import { Stage } from "./Stage";
+import { Wander } from "./Wander";
+import type { PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
 import { resolveShard } from "./types";
 import { chromaticDominant, complement, labToRgb, normalizeTint } from "./palette";
 import type { Rgb } from "./palette";
@@ -47,16 +49,39 @@ export class Director {
   private lastBeat = -1;
   private seeded = false;
   private aspect = 1;
+  private lastClock = -1;
+  private readonly phases: VizPhases = {
+    kaleido: 0,
+    droste: 0,
+    fold: 0,
+    tunnel: 0,
+    travel: 0,
+    orbit: 0,
+  };
+  /**
+   * Whether the backend can draw a formation at all. The CSS fallback cannot —
+   * there is no perspective in `mix-blend-mode` — so a spatial preset degrades
+   * to the drift stack there rather than to a blank frame. Gated in the
+   * director, not the backend, because the choice affects *selection*: a stage
+   * holds a dozen panels resident and the flat path holds four.
+   */
+  private spatial = true;
 
   readonly safety = new SafetyGovernor();
   /** Forked lazily — see the note on EffectCycler about seeds replaying. */
   private readonly cycler = new EffectCycler(() => this.rng.fork(), this.safety);
+  /** Same contract: inert, and untouched by the rng, until a preset asks. */
+  private readonly wander = new Wander(() => this.rng.fork());
+  /** Same again: built empty, and only ever draws once a spatial preset runs. */
+  private readonly stage: Stage;
 
   constructor(
     panels: Panel[],
     private config: VizConfig,
-    private readonly rng: Rng
+    private readonly rng: Rng,
+    caps: DeviceCaps
   ) {
+    this.stage = new Stage(caps);
     // Blurred panels are gated behind an explicit tap on the wall and a
     // screensaver has no equivalent gesture, so they never surface here (§7).
     this.panels = panels.filter((panel) => !panel.blur);
@@ -75,22 +100,32 @@ export class Director {
     this.aspect = aspect;
   }
 
+  /** Told by the engine which backend it got. */
+  setSpatialSupported(supported: boolean): void {
+    this.spatial = supported;
+  }
+
   get panelCount(): number {
     return this.panels.length;
   }
 
   get sceneName(): string {
-    return this.scene.name;
+    return this.stage.active ? this.stage.name : this.scene.name;
   }
 
   /** Panels worth having resident soon — the engine hands these to the pool. */
   prefetch(): Panel[] {
     this.fillUpcoming();
-    return this.upcoming.map((pick) => pick.panel);
+    const upcoming = this.upcoming.map((pick) => pick.panel);
+    // A stage's bound panels are wanted every frame it is on screen, not just
+    // when they were chosen: it holds a dozen at once, which is most of the
+    // pool, so leaving them out would let the prefetch evict a live slot.
+    return this.stage.active ? [...this.stage.wants(), ...upcoming] : upcoming;
   }
 
   /** The panel currently carrying the frame, for the attribution line. */
   feature(time: number): Panel | null {
+    if (this.stage.active) return this.stage.feature(time);
     let best: Panel | null = null;
     let bestOpacity = 0.15;
     for (const shard of this.shards) {
@@ -104,12 +139,47 @@ export class Director {
   }
 
   update(time: number, dt: number): VizFrame {
+    // Composition seconds since the last frame, as distinct from `dt`, which is
+    // real time. The drift is part of the piece, so it follows the speed
+    // control; the safety governor is not, so it does not.
+    const clockDt = this.lastClock < 0 ? 0 : Math.max(0, time - this.lastClock);
+    this.lastClock = time;
+    this.wander.update(clockDt, this.config.wander, this.config.wanderRate);
+    this.syncStage();
+
     if (this.panels.length === 0) {
+      const post = this.safety.apply(this.config.post, dt);
       return {
         time,
         shards: [],
+        stage: null,
         background: [0, 0, 0],
-        post: this.safety.apply(this.config.post, dt),
+        post,
+        phases: this.advancePhases(post, clockDt),
+      };
+    }
+
+    if (this.stage.active) {
+      const post = this.safety.apply(this.modulatePost(time, clockDt), dt);
+      // Advanced before the formation is placed, not after — the flight and the
+      // turn are read straight out of these, so a stale phase would draw this
+      // frame at the last one's position.
+      const phases = this.advancePhases(post, clockDt);
+      return {
+        time,
+        shards: [],
+        stage: this.stage.update(
+          time,
+          phases.travel,
+          phases.orbit,
+          this.config,
+          this.currentTint(this.stage.wants()),
+          this.safety,
+          () => this.takeUpcoming()?.panel ?? null
+        ),
+        background: [0, 0, 0],
+        post,
+        phases,
       };
     }
 
@@ -140,12 +210,59 @@ export class Director {
       }
     }
 
+    const post = this.safety.apply(this.modulatePost(time, clockDt), dt);
     return {
       time,
       shards: this.shards.map((shard) => resolveShard(shard, time)),
+      stage: null,
       background: [0, 0, 0],
-      post: this.safety.apply(this.modulatePost(time), dt),
+      post,
+      phases: this.advancePhases(post, clockDt),
     };
+  }
+
+  /**
+   * Bring the stage into line with the config, which a mode switch can change
+   * at the midpoint of its ramp.
+   *
+   * The two paths are exclusive, so whichever is being left is emptied. The
+   * shards in particular have to go: they carry a birth time, and a stack left
+   * standing through a minute of a formation would come back as four layers
+   * that had all silently expired.
+   */
+  private syncStage(): void {
+    const wanted: StageKind | null =
+      !this.spatial || this.config.stageKind === "flat" ? null : this.config.stageKind;
+    if (wanted === this.stage.kind) return;
+
+    this.stage.setScene(wanted, () => this.rng.fork());
+    this.shards = [];
+    this.seeded = false;
+    this.lastBeat = -1;
+  }
+
+  /**
+   * Integrates every rate the post chain is authored in. Integrated rather than
+   * evaluated as `rate * time` so that a rate the drift is moving — or
+   * reversing — bends the motion instead of teleporting it.
+   *
+   * Only the Droste's rate is scaled here. Its phase is a log-radius, and one
+   * repeat of the regress is one `drostePeriod` of it — a stride a preset is
+   * free to choose. Multiplying by that period turns the authored rate from
+   * log-radii per second into *repeats* per second, so widening the stride
+   * spaces the copies out rather than slowing the whole effect down.
+   */
+  private advancePhases(post: PostParams, clockDt: number): VizPhases {
+    this.phases.kaleido += post.kaleidoSpin * clockDt;
+    this.phases.droste += post.drosteSpin * Math.max(0.15, post.drostePeriod) * clockDt;
+    this.phases.fold += post.foldSpin * clockDt;
+    this.phases.tunnel += post.tunnelSpin * clockDt;
+    // The spatial rates live on the config rather than in `post`, because they
+    // move the composition rather than processing it — but they are integrated
+    // here with the rest for exactly the same reason.
+    this.phases.travel += this.config.stageFlight * clockDt;
+    this.phases.orbit += this.config.stageSpin * clockDt;
+    return this.phases;
   }
 
   // --- selection ------------------------------------------------------------
@@ -160,9 +277,12 @@ export class Director {
       affinity: pick.affinity,
       time,
       aspect: this.aspect,
-      config: this.config,
+      // The drift hands back the config untouched when it is off, so a preset
+      // that does not use it builds its layers from exactly what it authored.
+      config: this.wander.spawnConfig(this.config),
+      drift: this.wander.bias(),
       rng: this.rng,
-      tint: this.currentTint(),
+      tint: this.currentTint(this.shardPanels()),
       index: this.spawnCount++,
       safety: this.safety,
     });
@@ -189,20 +309,39 @@ export class Director {
     while (this.recent.length > recentWindow(this.panels.length)) this.recent.shift();
   }
 
+  /** Panels the flat path currently has in flight. */
+  private shardPanels(): Panel[] {
+    const panels: Panel[] = [];
+    for (const shard of this.shards) {
+      const panel = this.byId.get(shard.panelId);
+      if (panel) panels.push(panel);
+    }
+    return panels;
+  }
+
+  /** Panels on screen right now, whichever path is drawing them. */
+  private onScreen(): Panel[] {
+    return this.stage.active ? this.stage.wants() : this.shardPanels();
+  }
+
   private eligible(): Panel[] {
+    const onScreen = this.onScreen();
     const excluded = new Set(this.recent);
-    for (const shard of this.shards) excluded.add(shard.panelId);
+    for (const panel of onScreen) excluded.add(panel.id);
     for (const pick of this.upcoming) excluded.add(pick.panel.id);
     const pool = this.panels.filter((panel) => !excluded.has(panel.id));
     // A heavily filtered wall can exhaust the pool; fall back to everything
-    // except what is literally on screen right now.
+    // except what is literally on screen right now. A stage makes this the
+    // common case rather than the corner one — it holds a dozen panels at once,
+    // so a wall filtered to fifteen is permanently in the relaxed branch.
     if (pool.length > 0) return pool;
-    const onScreen = new Set(this.shards.map((shard) => shard.panelId));
-    const relaxed = this.panels.filter((panel) => !onScreen.has(panel.id));
+    const held = new Set(onScreen.map((panel) => panel.id));
+    const relaxed = this.panels.filter((panel) => !held.has(panel.id));
     return relaxed.length > 0 ? relaxed : this.panels;
   }
 
   private anchor(): Panel | null {
+    if (this.stage.active) return this.stage.anchor();
     if (this.shards.length === 0) return null;
     const shard = this.shards[this.shards.length - 1];
     return this.byId.get(shard.panelId) ?? null;
@@ -287,13 +426,13 @@ export class Director {
    * Bias tints toward the complement of what is currently on screen, so that
    * overlapping layers go chromatic rather than settling into grey.
    */
-  private currentTint(): Rgb {
+  private currentTint(panels: Panel[]): Rgb {
     let L = 0;
     let a = 0;
     let b = 0;
     let n = 0;
-    for (const shard of this.shards) {
-      const lab = chromaticDominant(this.byId.get(shard.panelId)?.dominantColors ?? null);
+    for (const panel of panels) {
+      const lab = chromaticDominant(panel.dominantColors);
       if (!lab) continue;
       L += lab[0];
       a += lab[1];
@@ -308,7 +447,7 @@ export class Director {
     return Math.sin(time * LFO_HZ[index % LFO_HZ.length] * Math.PI * 2);
   }
 
-  private modulatePost(time: number): PostParams {
+  private modulatePost(time: number, clockDt: number): PostParams {
     const base = this.config.post;
     const post: PostParams = {
       ...base,
@@ -316,9 +455,15 @@ export class Director {
       feedbackAmount: base.feedbackAmount * (0.85 + 0.15 * this.lfo(time, 1)),
       chroma: base.chroma * (0.7 + 0.3 * this.lfo(time, 2)),
     };
-    // The LFOs breathe around whatever the config asks for; the cycler is the
-    // thing that changes what the config asked for, on its own schedule.
+    // The LFOs breathe around whatever the config asks for; the drift moves
+    // what the config asked for; the cycler brings separate effects in and out
+    // over the top. In that order, so a mode whose whole character is a drifted
+    // parameter keeps it — the cycler only ever deepens what is already there.
+    this.wander.applyPost(post);
     this.cycler.apply(post, time, this.config.psychedelia, this.config.cycleInterval);
+    // Last, because it governs the frame's trail against its symmetry and both
+    // of the passes above can move either one.
+    this.wander.settle(post, clockDt);
     return post;
   }
 }

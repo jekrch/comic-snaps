@@ -20,6 +20,23 @@ const RHYME_BLENDS: BlendMode[] = ["screen", "screen", "screen", "lighten"];
 const CLASH_BLENDS: BlendMode[] = ["difference", "exclusion", "screen", "lighten"];
 
 /**
+ * The tightest crop a layer is allowed to open or close on. Enough headroom
+ * that the anchor offsets have somewhere to move even under the gentlest
+ * presets, and small enough to stay invisible as a zoom.
+ */
+const MIN_ZOOM = 1.05;
+
+/**
+ * Folds an offset back inside 0..1 by reflecting off the edges rather than
+ * clamping. Clamping would flatten the move for any layer anchored near a
+ * border into a still, which is exactly where the freed-up anchors now land.
+ */
+function reflect01(v: number): number {
+  const m = Math.abs(v % 2);
+  return m > 1 ? 2 - m : m;
+}
+
+/**
  * Drift stack — the hypnotic baseline. A few full-bleed layers with a slow Ken
  * Burns move, crossfading over a large fraction of their lifetime.
  *
@@ -51,23 +68,40 @@ export const driftStack: Scene = {
 
     // Zoom in or out over the layer's life, never both, so the motion reads as
     // one continuous move rather than a wobble.
+    //
+    // Neither end sits at zoom 1. The full cover rect is the one crop every
+    // layer would share, and on the axis where it already spans the image it
+    // pins the offset outright — so a move that touches it drags the whole
+    // stack through the same framing. A little headroom at both ends leaves the
+    // anchor free to place the layer anywhere in the panel.
+    const zoomSpan = Math.max(config.zoomAmount, MIN_ZOOM * 1.02);
+    const zoomLo = Math.max(MIN_ZOOM, 1 + (zoomSpan - 1) * rng.range(0.1, 0.45));
+    const zoomHi = 1 + (zoomSpan - 1) * rng.range(0.85, 1);
     const zoomIn = rng.bool();
-    const zoomA = zoomIn ? 1 : config.zoomAmount;
-    const zoomB = zoomIn ? config.zoomAmount : 1;
+    const zoomA = zoomIn ? zoomLo : zoomHi;
+    const zoomB = zoomIn ? zoomHi : zoomLo;
 
-    const panAngle = rng.range(0, Math.PI * 2);
+    // Without a shared heading every layer drifts its own way and the frame as
+    // a whole goes nowhere; with one, the stack reads as a current — and the
+    // spread keeps it a current rather than a slideshow of parallel moves.
+    const panAngle = ctx.drift
+      ? ctx.drift.angle + rng.range(-Math.PI, Math.PI) * (1 - ctx.drift.coherence)
+      : rng.range(0, Math.PI * 2);
     const pan = config.panAmount;
-    const ox = rng.range(0.5 - pan, 0.5 + pan);
-    const oy = rng.range(0.5 - pan, 0.5 + pan);
-    const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+    // The anchor is *where in the panel* this layer looks; the pan is how far it
+    // travels from there. Deriving the anchor from the pan — one ±pan range
+    // around centre — tied the two together, so a calm preset meant every layer
+    // opened on the same middle slice of the art. They are independent choices.
+    const ox = rng.range(0, 1);
+    const oy = rng.range(0, 1);
 
-    const srcFrom = coverRect(imageAspect, dstAspect, zoomA, clamp01(ox), clamp01(oy));
+    const srcFrom = coverRect(imageAspect, dstAspect, zoomA, ox, oy);
     const srcTo = coverRect(
       imageAspect,
       dstAspect,
       zoomB,
-      clamp01(ox + Math.cos(panAngle) * pan),
-      clamp01(oy + Math.sin(panAngle) * pan)
+      reflect01(ox + Math.cos(panAngle) * pan),
+      reflect01(oy + Math.sin(panAngle) * pan)
     );
 
     const rot = config.rotateAmount === 0 ? 0 : rng.range(-config.rotateAmount, config.rotateAmount);

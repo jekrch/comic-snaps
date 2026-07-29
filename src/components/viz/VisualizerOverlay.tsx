@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "r
 import type { Panel } from "../../types";
 import { VizEngine } from "./engine/Engine";
 import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
-import { VIZ_SPEEDS, cloneConfig, nearestSpeed } from "./vizConfig";
+import { MODE_SWITCH_MS, VIZ_SPEEDS, cloneConfig, lerpConfigInto, nearestSpeed } from "./vizConfig";
 import type { VizConfig } from "./vizConfig";
+import { VIZ_PRESETS, presetConfig } from "./vizPresets";
 import VizAttributionBar, { ATTRIBUTION_BAR_HEIGHT } from "./VizAttributionBar";
 import VizControls from "./VizControls";
 import VizDebugPanel from "./VizDebugPanel";
@@ -18,14 +19,20 @@ interface VisualizerOverlayProps {
   panels: Panel[];
   /** Resolved by the launch modal (preset, possibly with a custom override). */
   config: VizConfig;
+  /** The running preset, or null while `config` is a pasted custom one. */
+  presetId: string | null;
+  /** Mode changes made mid-run, so the URL keeps describing what is running. */
+  onPresetChange?: (presetId: string) => void;
   /** Only requested when the launch explicitly asked for it. */
   fullscreen: boolean;
   /** Start with the attribution label pinned, as asked for at launch. */
   pinLabel?: boolean;
   /** Live speed changes, so the URL keeps describing what is actually running. */
   onSpeedChange?: (speed: number) => void;
-  /** Leaves the run and hands the panel to the image viewer. */
+  /** Hands the panel to the image viewer, which opens on top of the run. */
   onOpenPanel?: (panel: Panel) => void;
+  /** True while that viewer is up: the run carries on, but unattended. */
+  viewerOpen?: boolean;
   onClose: () => void;
 }
 
@@ -79,15 +86,21 @@ function trailReducer(state: Trail, action: TrailAction): Trail {
 export default function VisualizerOverlay({
   panels,
   config,
+  presetId,
   fullscreen,
   pinLabel = false,
+  onPresetChange,
   onSpeedChange,
   onOpenPanel,
+  viewerOpen = false,
   onClose,
 }: VisualizerOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<VizEngine | null>(null);
   const idleTimerRef = useRef<number>(0);
+  const rampRef = useRef<number>(0);
+  /** True while something on the chrome — the mode menu — is open under it. */
+  const chromeHeldRef = useRef(false);
 
   const [engine, setEngine] = useState<VizEngine | null>(null);
   const [feature, setFeature] = useState<Panel | null>(null);
@@ -233,13 +246,34 @@ export default function VisualizerOverlay({
   const wakeChrome = useCallback(() => {
     setChromeVisible(true);
     window.clearTimeout(idleTimerRef.current);
+    // An open menu would otherwise fade out from under the finger that opened it.
+    if (chromeHeldRef.current) return;
     idleTimerRef.current = window.setTimeout(() => setChromeVisible(false), CONTROLS_IDLE_MS);
   }, []);
+
+  /** Closing whatever was held also re-arms the idle timer it suspended. */
+  const holdChrome = useCallback(
+    (held: boolean) => {
+      chromeHeldRef.current = held;
+      wakeChrome();
+    },
+    [wakeChrome]
+  );
 
   useEffect(() => {
     wakeChrome();
     return () => window.clearTimeout(idleTimerRef.current);
   }, [wakeChrome]);
+
+  // The viewer covers the run, so the chrome under it is only in the way: drop
+  // it (and its idle timer) for the duration, then bring it back on the way out
+  // as the cue that the controls are live again.
+  useEffect(() => {
+    if (!viewerOpen) return;
+    window.clearTimeout(idleTimerRef.current);
+    setChromeVisible(false);
+    return () => wakeChrome();
+  }, [viewerOpen, wakeChrome]);
 
   const togglePause = useCallback(() => {
     setPaused((wasPaused) => {
@@ -271,6 +305,49 @@ export default function VisualizerOverlay({
     [setSpeed]
   );
 
+  /**
+   * Switch mode without restarting the run: the working config is eased across
+   * to the new preset in place, so the same seed, the same layers already in
+   * flight and the same trail carry on under the new parameters. A hard cut
+   * would be both a jolt and, for the effects that move whole-frame luminance,
+   * exactly the step change §7 rules out.
+   */
+  const switchMode = useCallback(
+    (id: string) => {
+      const from = cloneConfig(configRef.current);
+      const to = presetConfig(id);
+      window.cancelAnimationFrame(rampRef.current);
+      const started = performance.now();
+      const step = (now: number) => {
+        const t = Math.min(1, (now - started) / MODE_SWITCH_MS);
+        // Smoothstep, so the crossing eases out of the old mode and into the
+        // new one rather than starting and stopping abruptly.
+        lerpConfigInto(configRef.current, from, to, t * t * (3 - 2 * t));
+        bumpConfig();
+        rampRef.current = t < 1 ? window.requestAnimationFrame(step) : 0;
+      };
+      rampRef.current = window.requestAnimationFrame(step);
+      onPresetChange?.(id);
+      wakeChrome();
+    },
+    [onPresetChange, wakeChrome]
+  );
+
+  useEffect(() => () => window.cancelAnimationFrame(rampRef.current), []);
+
+  /** Keyboard equivalent of the menu: step along the preset list. */
+  const cycleMode = useCallback(
+    (direction: 1 | -1) => {
+      const index = VIZ_PRESETS.findIndex((preset) => preset.id === presetId);
+      // A custom config sits at no index, so it steps onto whichever end of the
+      // list the direction is walking toward rather than staying put.
+      const start = index === -1 ? (direction === 1 ? -1 : 0) : index;
+      const next = (start + direction + VIZ_PRESETS.length) % VIZ_PRESETS.length;
+      switchMode(VIZ_PRESETS[next].id);
+    },
+    [presetId, switchMode]
+  );
+
   const togglePinned = useCallback(() => {
     // Unpinning lets go of the trail as well: the transient credit line the bar
     // hands back to only ever describes what is on screen now.
@@ -293,8 +370,9 @@ export default function VisualizerOverlay({
 
   const openInViewer = useCallback(
     (panel: Panel) => {
-      // The caller closes the run — a lightbox behind a fullscreen screensaver
-      // would be no use to anyone.
+      // The viewer opens on top of the run rather than in place of it: the
+      // composition keeps playing behind the lightbox and is still there when
+      // the panel is closed.
       onOpenPanel?.(panel);
     },
     [onOpenPanel]
@@ -309,11 +387,22 @@ export default function VisualizerOverlay({
     wakeChrome();
   }, [wakeChrome]);
 
+  // The viewer on top owns the keyboard while it is open: Escape has to close
+  // the panel rather than the run beneath it, and the arrows have to page the
+  // lightbox rather than walk the trail.
   useEffect(() => {
+    if (viewerOpen) return;
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" || event.key === "q") {
+      // Escape belongs to the open menu first — it closes that, not the run.
+      if (event.key === "Escape" && chromeHeldRef.current) {
+        return;
+      } else if (event.key === "Escape" || event.key === "q") {
         event.preventDefault();
         onClose();
+      } else if (event.key === "m" || event.key === "M") {
+        event.preventDefault();
+        cycleMode(event.shiftKey ? -1 : 1);
       } else if (event.key === " ") {
         event.preventDefault();
         togglePause();
@@ -343,7 +432,17 @@ export default function VisualizerOverlay({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, togglePause, toggleFullscreen, nudgeSpeed, togglePinned, stepTrail, wakeChrome]);
+  }, [
+    onClose,
+    togglePause,
+    toggleFullscreen,
+    nudgeSpeed,
+    cycleMode,
+    togglePinned,
+    stepTrail,
+    wakeChrome,
+    viewerOpen,
+  ]);
 
   // The bar is only worth its band once there is something to name in it.
   const labelled = trail.items[trail.cursor] ?? null;
@@ -381,6 +480,9 @@ export default function VisualizerOverlay({
         fullscreen={isFullscreen}
         pinned={pinned}
         speed={configRef.current.speed}
+        presetId={presetId}
+        onPresetChange={switchMode}
+        onHoldChange={holdChrome}
         onSpeedChange={setSpeed}
         onTogglePin={togglePinned}
         onClose={onClose}

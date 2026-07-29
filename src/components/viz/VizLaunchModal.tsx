@@ -26,6 +26,12 @@ interface VizLaunchModalProps {
    * focus from the run.
    */
   suspended?: boolean;
+  /**
+   * The preset the run underneath is actually on, which is not necessarily the
+   * one it was started with — the overlay can switch modes mid-run. Null while
+   * nothing is running.
+   */
+  runPresetId?: string | null;
   onStart: (options: VizLaunchOptions) => void;
   onCancel: () => void;
 }
@@ -73,6 +79,7 @@ export default function VizLaunchModal({
   panelCount,
   initialSpeed,
   suspended = false,
+  runPresetId = null,
   onStart,
   onCancel,
 }: VizLaunchModalProps) {
@@ -137,6 +144,13 @@ export default function VizLaunchModal({
       custom: parsed?.ok === true,
     });
   }, [blocked, close, presetId, parsed, base, fullscreen, pinLabel]);
+
+  // A mode switched from inside the run is still the reader's choice of preset,
+  // so it is what they come back to here — the selection follows the run rather
+  // than reverting to whatever this modal last started.
+  useEffect(() => {
+    if (runPresetId) setPresetId(runPresetId);
+  }, [runPresetId]);
 
   // Also fires when a run ends and the modal comes back, so the reader lands on
   // start again rather than on whatever the run left focused.

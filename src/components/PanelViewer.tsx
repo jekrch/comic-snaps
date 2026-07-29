@@ -13,6 +13,8 @@ interface Props {
   panels: Panel[];
   allPanels: Panel[];
   currentIndex: number;
+  /** Opened on top of a running visualizer, which keeps playing underneath. */
+  overViz?: boolean;
   onClose: () => void;
   onNavigate: (index: number) => void;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
@@ -113,6 +115,7 @@ export default function PanelViewer({
   panels,
   allPanels,
   currentIndex,
+  overViz = false,
   onClose,
   onNavigate,
   onSelectPanel,
@@ -144,14 +147,17 @@ export default function PanelViewer({
   // and the library falls back to a plain fade, so this is safe after deep nav.
   // While an overlay is open the image stage is shifted off-screen, so its rect
   // no longer matches the thumbnail — return null to fall back to a fade close.
+  // Over the visualizer there is no visible card to fly from either: the run
+  // covers the grid, so flying out of a hidden thumbnail would read as a jump
+  // from nowhere.
   const getOrigin = useCallback(
     (i: number) => {
-      if (overlayOpen) return null;
+      if (overlayOpen || overViz) return null;
       const it = items[i];
       if (!it) return null;
       return document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
     },
-    [items, overlayOpen]
+    [items, overlayOpen, overViz]
   );
 
   // Pause the background hatch animation while the viewer owns the screen.
@@ -247,6 +253,7 @@ export default function PanelViewer({
       showZoomControls={!overlayOpen}
       closeOnBackdropClick={!overlayOpen}
       ariaLabel={`${panel.title} ${formatIssue(panel.issue)} — full view`}
+      classNames={{ root: overViz ? "rvl-over-viz" : undefined }}
       icons={{
         close: <X size={16} strokeWidth={1.5} />,
         zoomIn: <ZoomIn size={16} strokeWidth={1.5} />,

@@ -1,12 +1,13 @@
 import { Renderer, Program, Mesh, Triangle, RenderTarget, Texture } from "ogl";
 import type { OGLRenderingContext } from "ogl";
 import type { Panel } from "../../../../types";
-import type { VizBackend, VizFrame } from "../types";
+import type { StageFrame, Vec3, VizBackend, VizFrame } from "../types";
 import { blendCode } from "../types";
 import { TexturePool } from "../TexturePool";
 import { FULLSCREEN_VERT } from "../shaders/common";
 import { compositeFragment } from "../shaders/layer";
-import { POST_FRAGMENT } from "../shaders/post";
+import { FOLD_ITERS, POST_FRAGMENT } from "../shaders/post";
+import { SpatialPass } from "./SpatialPass";
 import type { DeviceCaps } from "../../vizConfig";
 
 type Vec2 = [number, number];
@@ -32,6 +33,12 @@ function unitLevels(): Vec2 {
  *
  * The feedback capture is a GPU-side copy off the default framebuffer rather
  * than a fourth render pass, which is why there is no separate feedback FBO.
+ *
+ * A frame carrying a `stage` swaps the first line for `SpatialPass` — quads in
+ * a real projection rather than shards on a flat one — and leaves the rest
+ * exactly as it is. That is the point of routing it through a texture: the
+ * whole post chain, feedback included, lands on a formation without knowing
+ * that formations exist.
  */
 export class WebGLBackend implements VizBackend {
   private readonly renderer: Renderer;
@@ -44,6 +51,14 @@ export class WebGLBackend implements VizBackend {
   private targets: [RenderTarget, RenderTarget];
   private feedback: Texture;
   private readonly maxShards: number;
+  /**
+   * Built on the first spatial frame, not in the constructor. Two reasons, and
+   * the second is the important one: a run that never leaves the flat presets
+   * should not pay for two shader compiles it will never use, and a failure to
+   * build the spatial programs must not take the flat path down with it.
+   */
+  private spatial: SpatialPass | null = null;
+  private spatialFailed = false;
 
   private width = 1;
   private height = 1;
@@ -117,6 +132,7 @@ export class WebGLBackend implements VizBackend {
         uHueShift: { value: 0 },
         uKaleido: { value: 0 },
         uKaleidoSegments: { value: 6 },
+        uKaleidoPhase: { value: 0 },
         uTile: { value: 0 },
         uWarp: { value: 0 },
         uWarpScale: { value: 2.4 },
@@ -126,12 +142,48 @@ export class WebGLBackend implements VizBackend {
         uTwist: { value: 0 },
         uBulge: { value: 0 },
         uSolarize: { value: 0 },
+        uDroste: { value: 0 },
+        uDrosteInner: { value: 0.06 },
+        uDrostePeriod: { value: 1.9 },
+        uDrosteTwist: { value: 0 },
+        uDrostePhase: { value: 0 },
+        uTunnel: { value: 0 },
+        uTunnelDepth: { value: 0.35 },
+        uTunnelPhase: { value: 0 },
+        uFold: { value: 0 },
+        uFoldScale: { value: 1.22 },
+        uFoldOffset: { value: [0.62, 0.34] },
+        uFoldPhase: { value: 0 },
+        uFoldNorm: { value: 1 },
+        uLattice: { value: 0 },
+        uLatticeScale: { value: 3 },
+        uQuasi: { value: 0 },
+        uQuasiFreq: { value: 14 },
+        uTurbulence: { value: 0 },
+        uTurbulenceScale: { value: 2.2 },
+        uTurbulenceSpeed: { value: 0.12 },
+        uDisperse: { value: 0 },
+        uBlur: { value: 0 },
+        uBlurSpin: { value: 0 },
       },
     });
     this.postMesh = new Mesh(this.gl, { geometry, program: this.postProgram });
 
     this.targets = [this.makeTarget(1, 1), this.makeTarget(1, 1)];
     this.feedback = this.makeFeedback(1, 1);
+  }
+
+  /** Null once, and null for good, if the spatial programs will not build. */
+  private ensureSpatial(): SpatialPass | null {
+    if (this.spatial || this.spatialFailed) return this.spatial;
+    try {
+      this.spatial = new SpatialPass(this.renderer);
+      this.spatial.resize(this.width, this.height);
+    } catch (error) {
+      this.spatialFailed = true;
+      console.error("viz: spatial pass unavailable", error);
+    }
+    return this.spatial;
   }
 
   private makeTarget(width: number, height: number): RenderTarget {
@@ -171,6 +223,7 @@ export class WebGLBackend implements VizBackend {
     this.height = Math.max(1, Math.round(height * this.caps.renderScale));
     this.aspect = this.width / this.height;
     for (const target of this.targets) target.setSize(this.width, this.height);
+    this.spatial?.resize(this.width, this.height);
     this.gl.deleteTexture(this.feedback.texture);
     this.feedback = this.makeFeedback(this.width, this.height);
   }
@@ -185,7 +238,31 @@ export class WebGLBackend implements VizBackend {
 
   render(frame: VizFrame): void {
     if (this.disposed) return;
+    const spatial = frame.stage ? this.ensureSpatial() : null;
+    // Without the spatial pass the shard path still runs, and a spatial frame
+    // carries no shards — so the degraded result is the background, not a
+    // stalled frame or a half-drawn one.
+    const scene =
+      spatial && frame.stage
+        ? this.renderStage(spatial, frame.stage, frame.background)
+        : this.renderShards(frame);
+    this.renderPost(frame, scene);
+  }
 
+  /** The spatial path. Returns the texture post should read. */
+  private renderStage(spatial: SpatialPass, stage: StageFrame, background: Vec3): Texture {
+    // A slot holds its panel for a whole dwell, so the pin set is simply
+    // everything the formation is bound to — including the panels whose slots
+    // are momentarily faded out, which are about to come back up.
+    this.pool.setPinned([
+      ...stage.slots.map((slot) => slot.panelId),
+      ...stage.solids.map((solid) => solid.panelId),
+    ]);
+    return spatial.render(stage, background, this.pool);
+  }
+
+  /** The flat path, unchanged: N shards blended onto a base, batched. */
+  private renderShards(frame: VizFrame): Texture {
     // Only shards whose texture has finished decoding can be drawn; the rest
     // are simply skipped this frame and appear once they land.
     const drawable = frame.shards.filter(
@@ -243,8 +320,13 @@ export class WebGLBackend implements VizBackend {
       write = this.targets[read === this.targets[0] ? 1 : 0];
     }
 
+    return read!.texture;
+  }
+
+  /** The post chain, over whichever path produced the scene texture. */
+  private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
-    post.uScene.value = read!.texture;
+    post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
     post.uResolution.value = [this.width, this.height];
     post.uAspect.value = this.aspect;
@@ -265,6 +347,7 @@ export class WebGLBackend implements VizBackend {
     post.uHueShift.value = frame.post.hueShift;
     post.uKaleido.value = frame.post.kaleido;
     post.uKaleidoSegments.value = frame.post.kaleidoSegments;
+    post.uKaleidoPhase.value = frame.phases.kaleido;
     post.uTile.value = frame.post.tile;
     post.uWarp.value = frame.post.warp;
     post.uWarpScale.value = frame.post.warpScale;
@@ -274,6 +357,32 @@ export class WebGLBackend implements VizBackend {
     post.uTwist.value = frame.post.twist;
     post.uBulge.value = frame.post.bulge;
     post.uSolarize.value = frame.post.solarize;
+    post.uDroste.value = frame.post.droste;
+    post.uDrosteInner.value = frame.post.drosteInner;
+    post.uDrostePeriod.value = frame.post.drostePeriod;
+    post.uDrosteTwist.value = frame.post.drosteTwist;
+    post.uDrostePhase.value = frame.phases.droste;
+    post.uTunnel.value = frame.post.tunnel;
+    post.uTunnelDepth.value = frame.post.tunnelDepth;
+    post.uTunnelPhase.value = frame.phases.tunnel;
+    post.uFold.value = frame.post.fold;
+    post.uFoldScale.value = frame.post.foldScale;
+    post.uFoldOffset.value = [frame.post.foldOffsetX, frame.post.foldOffsetY];
+    post.uFoldPhase.value = frame.phases.fold;
+    // The iterated zoom compounds, so the point has to be brought back into
+    // the stage by exactly what the loop multiplied it by — derived here rather
+    // than recomputed per pixel, same as uHalftoneFreq.
+    post.uFoldNorm.value = 1 / Math.pow(Math.max(1, frame.post.foldScale), FOLD_ITERS);
+    post.uLattice.value = frame.post.lattice;
+    post.uLatticeScale.value = frame.post.latticeScale;
+    post.uQuasi.value = frame.post.quasi;
+    post.uQuasiFreq.value = frame.post.quasiFreq;
+    post.uTurbulence.value = frame.post.turbulence;
+    post.uTurbulenceScale.value = frame.post.turbulenceScale;
+    post.uTurbulenceSpeed.value = frame.post.turbulenceSpeed;
+    post.uDisperse.value = frame.post.disperse;
+    post.uBlur.value = frame.post.blur;
+    post.uBlurSpin.value = frame.post.blurSpin;
 
     // No target: straight to the default framebuffer.
     this.renderer.render({ scene: this.postMesh, frustumCull: false });
@@ -299,6 +408,7 @@ export class WebGLBackend implements VizBackend {
     if (this.disposed) return;
     this.disposed = true;
     this.pool.dispose();
+    this.spatial?.dispose();
     this.gl.deleteTexture(this.feedback.texture);
     this.compositeProgram.remove();
     this.postProgram.remove();

@@ -87,6 +87,24 @@ export default function App() {
     [syncViz, vizRun]
   );
 
+  // Same deal for the mode: switching mid-run replaces the config the overlay
+  // eases across to, and a run that started from pasted JSON stops claiming to
+  // be custom the moment a preset is chosen over it.
+  const handleVizPresetChange = useCallback(
+    (presetId: string) => {
+      if (!vizRun) return;
+      const { speed } = vizRun.config;
+      setVizRun({
+        ...vizRun,
+        presetId,
+        custom: false,
+        config: { ...presetConfig(presetId), speed },
+      });
+      syncViz(true, presetId, speed);
+    },
+    [syncViz, vizRun]
+  );
+
   const handleCloseViz = useCallback(() => {
     setVizRun(null);
     syncViz(false);
@@ -249,22 +267,10 @@ export default function App() {
     [sortedPanels]
   );
 
-  // The visualizer's pinned label can hand a panel straight to the viewer. The
-  // run goes with it — a lightbox behind a full-screen screensaver would be no
-  // use — and so does the chooser, which would otherwise resurface on top of
-  // the panel that was just asked for.
-  const handleVizOpenPanel = useCallback(
-    (panel: Panel) => {
-      handleCloseViz();
-      setVizPrompt(false);
-      handleSelectPanel(panel);
-    },
-    [handleCloseViz, handleSelectPanel]
-  );
-
   // Jump from a creator's profile to the gallery filtered to their work in a
   // single role: replace filters with just that facet, close the viewer, and
-  // return to the top of the masonry.
+  // return to the top of the masonry. A run is left as well — the destination
+  // is the grid, which a full-screen visualizer would be sitting on top of.
   const handleBrowseBy = useCallback(
     (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => {
       const next: Filters = { ...EMPTY_FILTERS, [dimension]: new Set([value]) };
@@ -272,9 +278,11 @@ export default function App() {
       setOpenPanelId(null);
       setViewerScope("filtered");
       setCustomViewerPanels(null);
+      handleCloseViz();
+      setVizPrompt(false);
       window.scrollTo({ top: 0, behavior: "auto" });
     },
-    [handleFiltersChange]
+    [handleCloseViz, handleFiltersChange]
   );
 
   const viewerPanels =
@@ -390,6 +398,7 @@ export default function App() {
           panels={viewerPanels}
           allPanels={panels}
           currentIndex={openIndex}
+          overViz={vizRun !== null}
           onClose={handleCloseViewer}
           onNavigate={handleNavigateViewer}
           onSelectPanel={handleSelectPanel}
@@ -402,6 +411,7 @@ export default function App() {
           panelCount={sortedPanels.length}
           initialSpeed={initialVizSpeed}
           suspended={vizRun !== null}
+          runPresetId={vizRun?.presetId ?? null}
           onStart={handleStartViz}
           onCancel={() => setVizPrompt(false)}
         />
@@ -412,10 +422,17 @@ export default function App() {
           <VisualizerOverlay
             panels={sortedPanels}
             config={vizRun.config}
+            presetId={vizRun.custom ? null : vizRun.presetId}
             fullscreen={vizRun.fullscreen}
             pinLabel={vizRun.pinLabel}
+            onPresetChange={handleVizPresetChange}
             onSpeedChange={handleVizSpeedChange}
-            onOpenPanel={handleVizOpenPanel}
+            /* The pinned label can hand a panel straight to the viewer, which
+               opens on top of the run rather than in place of it: the
+               composition keeps playing behind the lightbox and is still there
+               when the panel is closed. */
+            onOpenPanel={handleSelectPanel}
+            viewerOpen={openIndex >= 0}
             onClose={handleCloseViz}
           />
         </Suspense>

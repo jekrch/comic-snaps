@@ -1,6 +1,7 @@
 import { X, Sliders, Maximize, Minimize, Captions, CaptionsOff } from "lucide-react";
 import type { Panel } from "../../types";
 import { formatIssue } from "../../utils/issueFormat";
+import VizModeControl from "./VizModeControl";
 import VizSpeedControl from "./VizSpeedControl";
 
 interface VizControlsProps {
@@ -15,6 +16,11 @@ interface VizControlsProps {
   fullscreen: boolean;
   pinned: boolean;
   speed: number;
+  /** The running preset, or null while a pasted config is running. */
+  presetId: string | null;
+  onPresetChange: (presetId: string) => void;
+  /** Raised while the mode menu is open, so the chrome stays up under it. */
+  onHoldChange: (held: boolean) => void;
   onSpeedChange: (speed: number) => void;
   onTogglePin: () => void;
   onClose: () => void;
@@ -37,6 +43,9 @@ export default function VizControls({
   fullscreen,
   pinned,
   speed,
+  presetId,
+  onPresetChange,
+  onHoldChange,
   onSpeedChange,
   onTogglePin,
   onClose,
@@ -117,11 +126,18 @@ export default function VizControls({
             </div>
           )}
         </div>
-        {/* Bottom right rather than up with the icon buttons: this is the one
-            control worth reaching for mid-run, the chrome is only up for a
+        {/* Bottom right rather than up with the icon buttons: these are the
+            controls worth reaching for mid-run, the chrome is only up for a
             couple of seconds, and on a phone the corner nearest the thumb is
-            the one to spend on it. */}
+            the one to spend on it. Mode sits above speed because its menu opens
+            upward — over the art rather than over the speed pills. */}
         <div className="shrink-0 order-1 sm:order-2 flex flex-col items-end gap-2 pointer-events-auto">
+          <VizModeControl
+            presetId={presetId}
+            onChange={onPresetChange}
+            onOpenChange={onHoldChange}
+            tabIndex={visible ? 0 : -1}
+          />
           <VizSpeedControl
             value={speed}
             onChange={onSpeedChange}
