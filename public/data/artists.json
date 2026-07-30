@@ -10830,6 +10830,33 @@
       ]
     },
     {
+      "id": "will-elder",
+      "name": "Will Elder",
+      "description": "William Elder (born Wolf William Eisenberg) was an American illustrator and comic book artist who worked in numerous areas of commercial art but is best known for a frantically funny cartoon style that helped launch Harvey Kurtzman's Mad comic book in 1952.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/118063-63313-william-elder.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1686/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/will-elder/4040-20234/"
+        }
+      ],
+      "birthYear": 1921,
+      "deathYear": 2008,
+      "country": "United States",
+      "aliases": [
+        "William Elder",
+        "Bill Elder"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "will-ely",
       "name": "Will Ely",
       "description": "John William Ely Jr., credited as \"Bill Ely\" or \"Will Ely\" was a pulp magazine artist and comic book artist. He also drew a proposed newspaper strip of The Green Hornet.",

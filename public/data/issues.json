@@ -5559,6 +5559,67 @@
       ]
     },
     {
+      "id": "panic-6",
+      "series": "panic",
+      "issue": 6,
+      "credits": [
+        {
+          "artistId": "albert-feldstein",
+          "name": "Albert Feldstein",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jack-davis",
+          "name": "Jack Davis",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "joe-orlando",
+          "name": "Joe Orlando",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "wally-wood",
+          "name": "Wally Wood",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "will-elder",
+          "name": "Will Elder",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "marie-severin",
+          "name": "Marie Severin",
+          "roles": [
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/panic-1954-6/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "phantom-of-the-opera-2",
       "series": "phantom-of-the-opera",
       "issue": 2,
