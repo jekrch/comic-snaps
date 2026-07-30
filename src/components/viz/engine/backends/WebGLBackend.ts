@@ -8,6 +8,7 @@ import { FULLSCREEN_VERT } from "../shaders/common";
 import { compositeFragment } from "../shaders/layer";
 import { FOLD_ITERS, POST_FRAGMENT } from "../shaders/post";
 import { SpatialPass } from "./SpatialPass";
+import { FieldPass } from "./FieldPass";
 import type { DeviceCaps } from "../../vizConfig";
 
 type Vec2 = [number, number];
@@ -59,6 +60,14 @@ export class WebGLBackend implements VizBackend {
    */
   private spatial: SpatialPass | null = null;
   private spatialFailed = false;
+  /**
+   * The buffers behind bloom, slit-scan, the flow field and the reaction. Built
+   * here rather than lazily like the spatial pass, because it is itself lazy —
+   * the object allocates nothing until a frame asks for one of its four
+   * families, so a run that never leaves the calm presets pays for a class
+   * instance and no GPU memory at all.
+   */
+  private readonly fields: FieldPass;
 
   private width = 1;
   private height = 1;
@@ -116,12 +125,18 @@ export class WebGLBackend implements VizBackend {
       uniforms: {
         uScene: { value: this.pool.blank },
         uFeedback: { value: this.pool.blank },
+        uBloomTex: { value: this.pool.blank },
+        uFlowTex: { value: this.pool.blank },
+        uReactTex: { value: this.pool.blank },
+        uHistory: { value: this.pool.blank },
         uResolution: { value: [1, 1] },
+        uFieldResolution: { value: [1, 1] },
         uAspect: { value: 1 },
         uTime: { value: 0 },
         uFeedbackAmount: { value: 0 },
         uFeedbackScale: { value: 1 },
         uFeedbackRotate: { value: 0 },
+        uFeedbackDroste: { value: 0 },
         uHalftone: { value: 0 },
         uHalftoneFreq: { value: [1, 1] },
         uChroma: { value: 0 },
@@ -165,10 +180,33 @@ export class WebGLBackend implements VizBackend {
         uDisperse: { value: 0 },
         uBlur: { value: 0 },
         uBlurSpin: { value: 0 },
+        uBloom: { value: 0 },
+        uBloomThreshold: { value: 0.68 },
+        uFlow: { value: 0 },
+        uReact: { value: 0 },
+        uSlit: { value: 0 },
+        uSlitAxis: { value: 0 },
+        uSlitLuma: { value: 0 },
+        uSlitDepth: { value: 0.6 },
+        uHistoryGrid: { value: [1, 1] },
+        uHistoryCount: { value: 1 },
+        uHistoryCursor: { value: 0 },
+        uMisreg: { value: 0 },
+        uMisregSpread: { value: 0.006 },
+        uMoire: { value: 0 },
+        uMoireSpread: { value: 0.09 },
+        uBenday: { value: 0 },
+        uKrackle: { value: 0 },
+        uKrackleScale: { value: 26 },
+        uKrackleThreshold: { value: 0.62 },
+        uBleed: { value: 0 },
+        uBleedRadius: { value: 1.6 },
+        uPaper: { value: 0 },
       },
     });
     this.postMesh = new Mesh(this.gl, { geometry, program: this.postProgram });
 
+    this.fields = new FieldPass(this.renderer, geometry, this.pool.blank);
     this.targets = [this.makeTarget(1, 1), this.makeTarget(1, 1)];
     this.feedback = this.makeFeedback(1, 1);
   }
@@ -224,6 +262,7 @@ export class WebGLBackend implements VizBackend {
     this.aspect = this.width / this.height;
     for (const target of this.targets) target.setSize(this.width, this.height);
     this.spatial?.resize(this.width, this.height);
+    this.fields.resize(this.width, this.height);
     this.gl.deleteTexture(this.feedback.texture);
     this.feedback = this.makeFeedback(this.width, this.height);
   }
@@ -246,6 +285,11 @@ export class WebGLBackend implements VizBackend {
       spatial && frame.stage
         ? this.renderStage(spatial, frame.stage, frame.background)
         : this.renderShards(frame);
+    // Between the scene and post, so the buffers post reads are this frame's
+    // rather than the last one's — the reaction in particular is seeded from the
+    // composite, and a frame late would have it chasing a picture that has
+    // already moved on.
+    this.fields.update(frame.post, scene, frame.flowAngle, frame.time);
     this.renderPost(frame, scene);
   }
 
@@ -326,14 +370,21 @@ export class WebGLBackend implements VizBackend {
   /** The post chain, over whichever path produced the scene texture. */
   private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
+    const fields = this.fields.textures;
     post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
+    post.uBloomTex.value = fields.bloom;
+    post.uFlowTex.value = fields.flow;
+    post.uReactTex.value = fields.react;
+    post.uHistory.value = fields.history;
     post.uResolution.value = [this.width, this.height];
+    post.uFieldResolution.value = this.fields.fieldResolution;
     post.uAspect.value = this.aspect;
     post.uTime.value = frame.time;
     post.uFeedbackAmount.value = frame.post.feedbackAmount;
     post.uFeedbackScale.value = frame.post.feedbackScale;
     post.uFeedbackRotate.value = frame.post.feedbackRotate;
+    post.uFeedbackDroste.value = frame.post.feedbackDroste;
     post.uHalftone.value = frame.post.halftone;
     // Screen frequency derives from the render resolution, not from pixels, so
     // dropping the internal resolution on mobile does not introduce moire.
@@ -383,11 +434,40 @@ export class WebGLBackend implements VizBackend {
     post.uDisperse.value = frame.post.disperse;
     post.uBlur.value = frame.post.blur;
     post.uBlurSpin.value = frame.post.blurSpin;
+    post.uBloom.value = frame.post.bloom;
+    post.uBloomThreshold.value = frame.post.bloomThreshold;
+    post.uFlow.value = frame.post.flow;
+    post.uReact.value = frame.post.react;
+    post.uSlit.value = frame.post.slit;
+    post.uSlitAxis.value = frame.post.slitAxis;
+    post.uSlitLuma.value = frame.post.slitLuma;
+    post.uSlitDepth.value = frame.post.slitDepth;
+    post.uHistoryGrid.value = this.fields.historyGrid;
+    post.uHistoryCount.value = this.fields.historyCount;
+    post.uHistoryCursor.value = this.fields.historyCursor;
+    post.uMisreg.value = frame.post.misreg;
+    post.uMisregSpread.value = frame.post.misregSpread;
+    post.uMoire.value = frame.post.moire;
+    post.uMoireSpread.value = frame.post.moireSpread;
+    post.uBenday.value = frame.post.benday;
+    post.uKrackle.value = frame.post.krackle;
+    post.uKrackleScale.value = frame.post.krackleScale;
+    post.uKrackleThreshold.value = frame.post.krackleThreshold;
+    post.uBleed.value = frame.post.bleed;
+    post.uBleedRadius.value = frame.post.bleedRadius;
+    post.uPaper.value = frame.post.paper;
 
     // No target: straight to the default framebuffer.
     this.renderer.render({ scene: this.postMesh, frustumCull: false });
 
     if (frame.post.feedbackAmount > 0) this.captureFeedback();
+    // The ring is fed from the finished frame, like the trail. Unlike the trail
+    // it keeps being fed once it exists at all, even with the effect at zero: a
+    // ring that only filled while slit-scan was running would hand the next
+    // pulse a frame from minutes ago, and old content cutting in is exactly what
+    // the slow ramp is there to prevent. A quarter-scale blit is cheap enough to
+    // pay for that indefinitely.
+    if (frame.post.slit > 0 || this.fields.hasHistory) this.fields.capture();
   }
 
   /** Grab the just-drawn frame off the default framebuffer for next frame. */
@@ -409,6 +489,7 @@ export class WebGLBackend implements VizBackend {
     this.disposed = true;
     this.pool.dispose();
     this.spatial?.dispose();
+    this.fields.dispose();
     this.gl.deleteTexture(this.feedback.texture);
     this.compositeProgram.remove();
     this.postProgram.remove();

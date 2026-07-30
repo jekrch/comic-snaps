@@ -23,6 +23,15 @@ interface Pick {
 /** Incommensurate rates, so the modulations never visibly re-align. */
 const LFO_HZ = [0.037, 0.0611, 0.0893, 0.1307];
 
+/**
+ * Rate the flow field's heading turns when the parameter drift is not supplying
+ * one, cycles per clock second. A minute and a half for the current to come back
+ * round, which is slower than any of the LFOs above: this decides which way the
+ * whole frame smears, and it is the one derived value here that a viewer would
+ * read as the piece changing direction rather than as it breathing.
+ */
+const FLOW_HEADING_HZ = 0.011;
+
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
@@ -57,6 +66,7 @@ export class Director {
     tunnel: 0,
     travel: 0,
     orbit: 0,
+    swell: 0,
   };
   /**
    * Whether the backend can draw a formation at all. The CSS fallback cannot —
@@ -156,6 +166,7 @@ export class Director {
         background: [0, 0, 0],
         post,
         phases: this.advancePhases(post, clockDt),
+        flowAngle: this.flowHeading(time),
       };
     }
 
@@ -172,6 +183,7 @@ export class Director {
           time,
           phases.travel,
           phases.orbit,
+          phases.swell,
           this.config,
           this.currentTint(this.stage.wants()),
           this.safety,
@@ -180,6 +192,7 @@ export class Director {
         background: [0, 0, 0],
         post,
         phases,
+        flowAngle: this.flowHeading(time),
       };
     }
 
@@ -218,7 +231,24 @@ export class Director {
       background: [0, 0, 0],
       post,
       phases: this.advancePhases(post, clockDt),
+      flowAngle: this.flowHeading(time),
     };
+  }
+
+  /**
+   * Which way the flow field is fed.
+   *
+   * The parameter drift's own heading whenever it is running: that channel is
+   * already deciding which way layers pan, so feeding the field from it makes the
+   * smear and the composition one motion instead of two. A preset is allowed to
+   * want the field without wanting the drift, though, and a flow field with no
+   * current is a standing one — so with the drift off this falls back to a curve
+   * slower than anything else derived here.
+   */
+  private flowHeading(time: number): number {
+    const bias = this.wander.bias();
+    if (bias) return bias.angle;
+    return Math.sin(time * FLOW_HEADING_HZ * Math.PI * 2) * Math.PI;
   }
 
   /**
@@ -229,13 +259,17 @@ export class Director {
    * shards in particular have to go: they carry a birth time, and a stack left
    * standing through a minute of a formation would come back as four layers
    * that had all silently expired.
+   *
+   * The stage also re-lays its quads out here when the density knob moves, which
+   * is a rebuild but not a scene change — hence the return value rather than a
+   * comparison of kinds: only a genuine change of path invalidates the shards.
    */
   private syncStage(): void {
     const wanted: StageKind | null =
       !this.spatial || this.config.stageKind === "flat" ? null : this.config.stageKind;
-    if (wanted === this.stage.kind) return;
 
-    this.stage.setScene(wanted, () => this.rng.fork());
+    if (!this.stage.sync(wanted, this.config, () => this.rng.fork())) return;
+
     this.shards = [];
     this.seeded = false;
     this.lastBeat = -1;
@@ -262,6 +296,7 @@ export class Director {
     // here with the rest for exactly the same reason.
     this.phases.travel += this.config.stageFlight * clockDt;
     this.phases.orbit += this.config.stageSpin * clockDt;
+    this.phases.swell += this.config.stageDisplaceRate * clockDt;
     return this.phases;
   }
 

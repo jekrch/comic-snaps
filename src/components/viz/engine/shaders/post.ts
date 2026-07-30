@@ -19,13 +19,25 @@ out vec4 fragColor;
 
 uniform sampler2D uScene;
 uniform sampler2D uFeedback;
+/** Thresholded and blurred copy of the scene, in scene space — so it is indexed
+ *  by the same distorted coordinate the scene is. */
+uniform sampler2D uBloomTex;
+/** Advected flow field and the Gray-Scott chemicals, both 0.5-centred where
+ *  they carry a signed value. */
+uniform sampler2D uFlowTex;
+uniform sampler2D uReactTex;
+/** Ring of recent frames, tiled into one atlas. */
+uniform sampler2D uHistory;
 uniform vec2 uResolution;
+/** Resolution of the flow and reaction fields, which run well below the frame. */
+uniform vec2 uFieldResolution;
 uniform float uAspect;
 uniform float uTime;
 
 uniform float uFeedbackAmount;
 uniform float uFeedbackScale;
 uniform float uFeedbackRotate;
+uniform float uFeedbackDroste;
 uniform float uHalftone;
 uniform vec2 uHalftoneFreq;
 uniform float uChroma;
@@ -73,8 +85,36 @@ uniform float uTurbulenceSpeed;
 uniform float uDisperse;
 uniform float uBlur;
 uniform float uBlurSpin;
+uniform float uBloom;
+uniform float uBloomThreshold;
+
+uniform float uFlow;
+uniform float uReact;
+
+uniform float uSlit;
+uniform float uSlitAxis;
+uniform float uSlitLuma;
+uniform float uSlitDepth;
+/** Tiles across and down the history atlas, and how many of them are live. */
+uniform vec2 uHistoryGrid;
+uniform float uHistoryCount;
+/** Tile holding the most recently captured frame. */
+uniform float uHistoryCursor;
+
+uniform float uMisreg;
+uniform float uMisregSpread;
+uniform float uMoire;
+uniform float uMoireSpread;
+uniform float uBenday;
+uniform float uKrackle;
+uniform float uKrackleScale;
+uniform float uKrackleThreshold;
+uniform float uBleed;
+uniform float uBleedRadius;
+uniform float uPaper;
 
 const float TAU = 6.2831853;
+const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 /** Iterations of the KIFS fold. Constant so the loop unrolls: a uniform bound
  *  would leave the compiler no choice but to keep the whole body live. */
 const int FOLD_ITERS = ${FOLD_ITERS};
@@ -138,13 +178,66 @@ float screenDot(vec2 p, float angle, float value) {
   return 1.0 - smoothstep(r - 0.06, r + 0.06, length(cell));
 }
 
+/**
+ * Coverage of one plate — one screen, or two a few degrees apart.
+ *
+ * Two screens that nearly agree beat against each other at a period far longer
+ * than either of them, which is a rosette the size of a fist rather than of a
+ * dot. Averaged rather than overprinted so the plate carries the same ink either
+ * way, and identity at a delta of zero because both terms are then the same
+ * screen. The delta itself drifts, and that drift is the whole effect: the
+ * rosettes swim, from two things that are each standing still.
+ */
+float plate(vec2 p, float angle, float value) {
+  if (uMoire <= 0.0) return screenDot(p, angle, value);
+  float d = uMoire * uMoireSpread * (0.62 + 0.38 * sin(uTime * 0.011));
+  return 0.5 * (screenDot(p, angle - d, value) + screenDot(p, angle + d, value));
+}
+
 vec3 halftone(vec3 c, vec2 uv) {
   vec2 p = uv * uHalftoneFreq;
   // Classic CMY screen angles: 15deg, 75deg, 0deg.
-  float ci = screenDot(p, 0.2618, 1.0 - c.r);
-  float mi = screenDot(p, 1.3090, 1.0 - c.g);
-  float yi = screenDot(p, 0.0, 1.0 - c.b);
+  float ci = plate(p, 0.2618, 1.0 - c.r);
+  float mi = plate(p, 1.3090, 1.0 - c.g);
+  float yi = plate(p, 0.0, 1.0 - c.b);
   return vec3(1.0 - ci, 1.0 - mi, 1.0 - yi);
+}
+
+/**
+ * Distance to the nearest feature point of a jittered lattice — worley noise.
+ *
+ * The points orbit their cells slowly rather than sitting still, so the
+ * neighbourhood relations change and the cells genuinely reorganise. A static
+ * lattice would read as a texture laid over the frame; a moving one reads as
+ * something happening in it.
+ */
+float worley(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = p - i;
+  float best = 4.0;
+  for (int y = -1; y <= 1; y++) {
+    for (int x = -1; x <= 1; x++) {
+      vec2 g = vec2(float(x), float(y));
+      vec2 h = vec2(hash21(i + g), hash21(i + g + 37.3));
+      vec2 o = 0.5 + 0.42 * sin(uTime * 0.06 + TAU * h);
+      best = min(best, length(g + o - f));
+    }
+  }
+  return best;
+}
+
+/**
+ * Where one plate has drifted to, in frame fractions.
+ *
+ * Each plate takes its own pair of incommensurate rates, so no two of them ever
+ * line back up and the register never returns to true. Divided by the aspect on
+ * x so the drift is the same distance on screen in both directions rather than
+ * being stretched by a wide canvas.
+ */
+vec2 plateDrift(float seed) {
+  float a = uTime * (0.0131 + seed * 0.0041) + seed * 2.39;
+  float b = uTime * (0.0097 + seed * 0.0063) + seed * 1.71;
+  return vec2(sin(a) / uAspect, cos(b)) * uMisregSpread * uMisreg;
 }
 
 /** Mirror-repeat into 0..1. Identity for coordinates already in range, so a
@@ -308,18 +401,90 @@ vec2 distort(vec2 uv, float disp) {
     uv += (v - 0.5) * uTurbulence * disp * 0.14;
   }
 
+  // The two displacements that are read rather than computed. They sit last
+  // among the smooth ones — so dispersion refracts them like everything else
+  // here — and they are the only lines in this function that touch a texture.
+  if (uFlow > 0.0) {
+    // 0.5-centred: the field is signed and there is no universally available
+    // float target to keep it in, so it lives biased in an unsigned one.
+    vec2 v = texture(uFlowTex, uv).rg * 2.0 - 1.0;
+    uv += v * uFlow * disp * 0.075;
+  }
+
+  if (uReact > 0.0) {
+    // Along the chemical's gradient, so the frame refracts *through* the pattern
+    // rather than being masked by it — the reaction is a lens, not a stencil.
+    // Central differences rather than forward: a forward difference has a
+    // half-texel bias, which at zero gradient is a standing displacement of the
+    // whole frame instead of none.
+    vec2 e = 1.4 / uFieldResolution;
+    float gx = texture(uReactTex, uv + vec2(e.x, 0.0)).g - texture(uReactTex, uv - vec2(e.x, 0.0)).g;
+    float gy = texture(uReactTex, uv + vec2(0.0, e.y)).g - texture(uReactTex, uv - vec2(0.0, e.y)).g;
+    uv += vec2(gx, gy) * uReact * disp * 0.9;
+  }
+
   return mirrorUv(uv);
 }
 
-/** One sample of the scene. split false is the fast path: with no channel
- *  separation asked for there is one fetch here rather than three. */
-vec3 fetch(vec2 uvR, vec2 uvG, vec2 uvB, bool split) {
+/**
+ * One tile of the frame ring, in atlas uv.
+ *
+ * Inset by a fraction of the tile because the atlas is one texture with LINEAR
+ * filtering: a tap at a tile's border would otherwise reach into the frame
+ * stored next to it, and the neighbour in the atlas is an unrelated moment.
+ */
+vec3 slice(vec2 uv, float slot) {
+  float wrapped = mod(slot, uHistoryCount);
+  vec2 cell = vec2(mod(wrapped, uHistoryGrid.x), floor(wrapped / uHistoryGrid.x));
+  vec2 tile = 1.0 / uHistoryGrid;
+  vec2 inset = tile * 0.012;
+  return texture(uHistory, cell * tile + mix(inset, tile - inset, clamp(uv, 0.0, 1.0))).rgb;
+}
+
+/**
+ * The frame age back through the ring, 0 being the one just captured.
+ *
+ * Blended between the two nearest slices rather than snapped to one. A discrete
+ * choice would put uHistoryCount hard steps across the frame, which reads as a
+ * fault in the picture; blended, the same ring reads as the picture having
+ * depth in time.
+ */
+vec3 history(vec2 uv, float age) {
+  float back = age * (uHistoryCount - 1.0);
+  float nearest = floor(back);
+  // The cursor holds the newest tile, so walking into the past is subtraction.
+  return mix(
+    slice(uv, uHistoryCursor - nearest),
+    slice(uv, uHistoryCursor - nearest - 1.0),
+    back - nearest
+  );
+}
+
+/**
+ * One sample of the scene. split false is the fast path: with no channel
+ * separation asked for there is one fetch here rather than three.
+ *
+ * Misregistration adds a fourth. Cyan coverage is one minus red, so the three
+ * colour plates *are* the channel split already — what a printed page has that
+ * the split does not is the black. So the grey component is removed from the
+ * three colour plates (undercolour removal, which is what a press actually does)
+ * and printed back from its own sample. That is the difference between an effect
+ * visible only in the colour and one visible on the line art, which is most of
+ * what a comic page is made of.
+ */
+vec3 fetch(vec2 uvR, vec2 uvG, vec2 uvB, vec2 uvK, bool split) {
   if (!split) return texture(uScene, uvG).rgb;
-  return vec3(
+  vec3 c = vec3(
     texture(uScene, uvR).r,
     texture(uScene, uvG).g,
     texture(uScene, uvB).b
   );
+  if (uMisreg <= 0.0) return c;
+  float grey = min(min(c.r, c.g), c.b);
+  vec3 k = texture(uScene, uvK).rgb;
+  // Identity when the plates are in register: the black comes back from the
+  // same place it was lifted from, so the sum is exactly what it was.
+  return clamp(c - grey + min(min(k.r, k.g), k.b), 0.0, 1.0);
 }
 
 void main() {
@@ -329,7 +494,10 @@ void main() {
   vec2 suvG = distort(uv, 1.0);
   vec2 suvR = suvG;
   vec2 suvB = suvG;
-  bool split = uChroma > 0.0 || uDisperse > 0.0;
+  vec2 suvK = suvG;
+  // Misregistration is a per-plate offset, so it needs the split whether or not
+  // anything else asked for one.
+  bool split = uChroma > 0.0 || uDisperse > 0.0 || uMisreg > 0.0;
 
   // Dispersion re-runs the chain at two other refraction strengths. The chain
   // is pure arithmetic — no fetches — so three of it costs far less than the
@@ -344,6 +512,12 @@ void main() {
     suvR += off;
     suvB -= off;
   }
+  if (uMisreg > 0.0) {
+    suvR += plateDrift(0.0);
+    suvG += plateDrift(1.0);
+    suvB += plateDrift(2.0);
+    suvK = suvG + plateDrift(3.0);
+  }
 
   vec3 col;
   if (uBlur > 0.0) {
@@ -355,11 +529,52 @@ void main() {
     for (int i = 0; i < BLUR_TAPS; i++) {
       // Centred on the sample, so the blur has no net displacement of its own.
       vec2 o = dir * (float(i) / float(BLUR_TAPS - 1) - 0.5);
-      col += fetch(suvR + o, suvG + o, suvB + o, split);
+      col += fetch(suvR + o, suvG + o, suvB + o, suvK + o, split);
     }
     col /= float(BLUR_TAPS);
   } else {
-    col = fetch(suvR, suvG, suvB, split);
+    col = fetch(suvR, suvG, suvB, suvK, split);
+  }
+
+  if (uBleed > 0.0) {
+    // Ink spreads *out* of a line into absorbent stock rather than smearing
+    // along it, so this is a min over the neighbourhood and not a mean: the
+    // darks grow and the lights give way, which is the whole asymmetry of the
+    // thing. Four taps, on the green plate's coordinate — bleed is the behaviour
+    // of the paper under all four inks, not of one of them.
+    vec2 e = uBleedRadius / uResolution;
+    vec3 ink = col;
+    ink = min(ink, texture(uScene, suvG + vec2(e.x, 0.0)).rgb);
+    ink = min(ink, texture(uScene, suvG - vec2(e.x, 0.0)).rgb);
+    ink = min(ink, texture(uScene, suvG + vec2(0.0, e.y)).rgb);
+    ink = min(ink, texture(uScene, suvG - vec2(0.0, e.y)).rgb);
+    col = mix(col, ink, uBleed);
+  }
+
+  if (uBloom > 0.0) {
+    // Energy-normalised, and placed here — before the trail and the tone work —
+    // so that col is still the scene at this coordinate and the debit below is
+    // against the same neighbourhood the credit was blurred from.
+    //
+    // The highlight loses exactly what lands around it. A blur preserves its
+    // input's mean, so the two sum to nothing over the frame and this cannot
+    // raise total luminance, which is what lets a bloom coexist with the max()
+    // accumulation in the feedback path at all.
+    vec3 over = max(col - uBloomThreshold, 0.0);
+    vec3 spread = texture(uBloomTex, suvG).rgb;
+    col += (spread - over) * uBloom;
+  }
+
+  if (uSlit > 0.0) {
+    // Where in the ring this pixel reads from. Vertical at one end and radial at
+    // the other: the classic slit-scan and a tunnel through time are the same
+    // construction reading a different coordinate, so they are one knob.
+    float lum = dot(col, LUMA);
+    float axis = mix(uv.y, clamp(length(toStage(uv)) / 0.72, 0.0, 1.0), uSlitAxis);
+    float age = clamp(mix(axis, 1.0 - lum, uSlitLuma), 0.0, 1.0) * uSlitDepth;
+    // Indexed by the distorted coordinate, like the scene: the history is in
+    // scene space, so the folds and the warp land on the past as well as on now.
+    col = mix(col, history(suvG, age), uSlit);
   }
 
   if (uFeedbackAmount > 0.0) {
@@ -367,13 +582,46 @@ void main() {
     float sa = sin(uFeedbackRotate);
     vec2 f = vec2(radial.x * ca - radial.y * sa, radial.x * sa + radial.y * ca);
     f = f / max(uFeedbackScale, 0.001) + 0.5;
+    if (uFeedbackDroste > 0.0) {
+      // The trail read in log-polar with the log radius wrapped. Same cost as
+      // the zoom above, and the difference is everything: a scaled trail recedes
+      // and is gone, where a wrapped one arrives again from the rim forever, so
+      // the smear becomes a corridor. The stride is the frame's own regress
+      // period so that running both has them agree about how far apart copies
+      // sit rather than beating against each other.
+      vec2 d = toStage(uv);
+      float a = atan(d.y, d.x) + uFeedbackRotate;
+      float inner = log(max(uDrosteInner, 1e-3));
+      float period = max(uDrostePeriod, 0.15);
+      // The per-frame zoom is what drives the corridor inward; without it the
+      // wrap is a static remap of the trail rather than a flight down it.
+      float lr = log(max(length(d), 1e-4)) - log(max(uFeedbackScale, 0.001));
+      float ring = mod(lr - inner, period);
+      f = mix(f, fromStage(vec2(cos(a), sin(a)) * exp(inner + ring)), uFeedbackDroste);
+    }
     vec3 prev = texture(uFeedback, clamp(f, 0.0, 1.0)).rgb;
     // max() rather than mix(): trails stay bright instead of greying the frame
     col = max(col, prev * uFeedbackAmount);
   }
 
   if (uHueShift != 0.0) col = hueRotate(col, uHueShift);
-  if (uHalftone > 0.0) col = mix(col, halftone(col, uv), uHalftone);
+  // Living Ben-Day: the screen's cells follow the distorted frame rather than a
+  // grid pinned to the glass, so the dots flow with whatever is bending the
+  // picture instead of the picture sliding underneath a static screen.
+  if (uHalftone > 0.0) col = mix(col, halftone(col, mix(uv, suvG, uBenday)), uHalftone);
+
+  if (uKrackle > 0.0) {
+    // Cells punched out of the highlights with their rims left standing, so what
+    // survives is the lattice's boundary — which is the crackle. Keyed off this
+    // pixel's own tone, so the field is in screen space along with the
+    // luminance it is reading: a lattice that travelled with the geometry would
+    // land its blobs somewhere other than the highlights that summoned them.
+    float lum = dot(col, LUMA);
+    float hot = smoothstep(uKrackleThreshold, min(1.0, uKrackleThreshold + 0.22), lum);
+    float cell = worley(uv * vec2(uAspect, 1.0) * uKrackleScale);
+    float blob = 1.0 - smoothstep(0.26, 0.40, cell);
+    col *= 1.0 - blob * hot * uKrackle;
+  }
 
   // Tone fold: highlights invert and mid-tones peak, the darkroom solarisation.
   // Sits before posterize so the quantiser sees the final tone curve.
@@ -385,6 +633,19 @@ void main() {
   }
 
   col *= uExposure;
+
+  if (uPaper > 0.0) {
+    // Two stretched noises: fibres lie along the web the stock came off, with
+    // some crossing it. Distinct from grain, which is per-pixel and belongs to
+    // the camera — this is the material the ink went onto, so it sits below the
+    // exposure and above nothing.
+    float fibre =
+      vnoise(uv * vec2(180.0 * uAspect, 22.0)) * 0.6 +
+      vnoise(uv * vec2(31.0 * uAspect, 260.0)) * 0.4;
+    col *= 1.0 - uPaper * 0.32 * (1.0 - fibre);
+    // Newsprint was never white, and it holds cyan worst of the three.
+    col = mix(col, col * vec3(1.03, 0.985, 0.91), uPaper);
+  }
 
   if (uVignette > 0.0) {
     float d = length(radial * vec2(uAspect, 1.0)) * 1.05;

@@ -1,137 +1,150 @@
-import type { Vec3 } from "../types";
-import type {
-  SolidPlacement,
-  SpatialFormation,
-  SpatialFrameContext,
-  SpatialScene,
-} from "./spatial";
-import { buildLayout, clamp, nextRevision, tube } from "./spatial";
+import type { ShellDraw, Vec3 } from "../types";
+import type { SpatialFormation, SpatialFrameContext, SpatialScene } from "./spatial";
+import { clamp, nextRevision } from "./spatial";
 
 /**
- * Vault — comic pages papering the inside of a tube, flown down the axis, with
- * solids tumbling through the middle distance.
+ * Vault — the inside of a tube, papered with one comic page wrapped twice around
+ * it, flown down forever.
  *
- * The post chain already has a `tunnel`: it maps screen radius to depth and
- * textures an infinite cylinder in one fullscreen pass. This is the thing that
- * one is an impression of. The pages are separate quads at separate depths seen
- * through a real projection, so they foreshorten individually, the near ones
- * slide past the lens at a different rate from the far ones, and the solids
- * *occlude* — a page behind a torus is gone, which no uv remap can express
- * because a uv remap has nothing to be behind.
+ * This scene was quads on a tube wall twice over: five hundred small ones, and
+ * then a dozen large ones. Both were the same mistake in different sizes. A quad
+ * has a rim; a rim sliding past the eye is an object passing the viewer; and a
+ * corridor made of them is a corridor made of postcards being handed to you at
+ * speed, which is busy however few of them there are and however large each one
+ * gets. The complaint was never really about size.
  *
- * The flight never accumulates a coordinate. The tube is a finite ring of
- * instances wrapped by its own length in the vertex shader, so the camera sits
- * still and the corridor moves through it: endless, and immune to the precision
- * loss a camera flying forever down -z would eventually hit.
+ * So there are no quads here at all. The wall is one continuous surface — see
+ * `ShellDraw` — textured with whichever page is resident, mirrored so the copies
+ * meet without a seam anywhere. What used to be a dozen separate pictures is now
+ * one picture the size of the corridor.
+ *
+ * And nothing in the scene translates. The tube stands still around the camera and
+ * the wallpaper's coordinates scroll along it, so the flight is entirely in the
+ * texture: there is no depth at which anything arrives, nothing crosses the lens,
+ * and the corridor cannot run out. Foreshortening supplies the rest — a pattern
+ * scrolling down a tube in perspective accelerates as it comes, which is the whole
+ * of what reads as speed.
  */
 
-const TUBE_RADIUS = 2.7;
-/** Length the formation repeats over. Also how far ahead the fog reaches, so
- *  the wrap seam always lands well inside the black. */
+/** Radius of the corridor at its widest. Wide enough that the wall beside the
+ *  camera is well outside the frustum, so the frame is filled by the *depth* of
+ *  the tube rather than by whatever happens to be alongside. */
+const TUBE_RADIUS = 2.6;
+/** How far down the axis the tube reaches. Long: the fog has to take the far end
+ *  entirely, or the frame has a bright disc at the vanishing point. */
 const TUBE_LENGTH = 30;
-/** How many solids the formation is laid out for. The config selects how many
- *  of those are actually drawn, so the lanes stay put as the count changes. */
-const MAX_SOLIDS = 4;
-
-/** The barrel the straight corridor morphs into: narrow at both ends, open in
- *  the middle. Bounded away from zero so the walls never cross the axis. */
-function barrel(t: number): number {
-  return 0.5 + 0.85 * Math.sin(t * Math.PI);
-}
-
-interface Lane {
-  shape: "torus" | "box";
-  /** Where in the tube's cross-section the solid rides. */
-  angle: number;
-  radius: number;
-  /** Offset along the repeat, so they do not arrive in a convoy. */
-  offset: number;
-  /** Fraction of the flight speed — under 1, so they drift back as we pass. */
-  speed: number;
-  scale: number;
-  tumble: Vec3;
-}
+/** How far behind the camera the mouth sits, so the open end can never swing into
+ *  frame as the camera sways off the axis. */
+const TUBE_BACK = 2.5;
+/**
+ * Copies of the page around the circumference.
+ *
+ * Two, and this is the number the whole rework turns on. At two, the page is
+ * around seven world units wide on the wall — wider than the frame at any depth
+ * that is not already fogged — so what is on screen is always a *part* of one
+ * page. Raise it and the wall becomes patterned with comic art instead of made of
+ * it; that is precisely the cluttered reading, and it arrives fast.
+ */
+const TUBE_TILES = 2;
 
 export const vault: SpatialScene = {
   name: "vault",
   kind: "vault",
-  solidPanels: MAX_SOLIDS,
+  /**
+   * Two panels, and both of them are the whole wall.
+   *
+   * They exist to hand over to each other rather than to be seen at once — with
+   * the preset's complementary crossfade one is always arriving as the other
+   * leaves, and their sum is one wall of constant brightness. A third would be a
+   * third full-frame additive layer for no picture that is not already there.
+   */
+  panels: 2,
+  // No quads. The corridor is the surface.
+  perPanel: 0,
+  // And because both slots paint that one surface, they take turns rather than
+  // overlapping: a page owns the whole corridor for the whole of its dwell, and
+  // the only moment two are on the wall at once is the dissolve between them.
+  // Concurrent residency here would be two comic pages superimposed forever,
+  // which is the opposite of a wall made of one image.
+  sequential: true,
+  // No solids either, and this one is the user's call rather than a compositional
+  // one: a solid in the middle distance of a tube is a thing the flight closes on,
+  // and either it passes the camera — the thing this scene is now built never to
+  // do — or it stops short and gives the lie to the flight. The occlusion those
+  // objects bought is worth less than the corridor being uninterrupted.
+  solidPanels: 0,
 
-  build(ctx): SpatialFormation {
-    const { rng } = ctx;
-
-    const layout = buildLayout(
-      ctx,
-      nextRevision(),
-      tube(TUBE_RADIUS, TUBE_LENGTH, () => 1),
-      tube(TUBE_RADIUS, TUBE_LENGTH, barrel),
-      // Larger and less tilted than the swarm's: these are wallpaper, and they
-      // have to meet each other to read as a wall rather than as confetti.
-      { size: [0.42, 0.78], tilt: 0.22, crop: [0.45, 1] }
-    );
-
-    const lanes: Lane[] = Array.from({ length: MAX_SOLIDS }, (_, i) => ({
-      shape: rng.bool(0.6) ? "torus" : "box",
-      angle: rng.range(0, Math.PI * 2),
-      // Kept well inside the wall: a solid grazing the pages reads as a
-      // collision, and one near the axis reads as something we fly through.
-      radius: rng.range(0.25, 1.5),
-      offset: ((i + rng.range(0.1, 0.9)) / MAX_SOLIDS) * TUBE_LENGTH,
-      speed: rng.range(0.55, 0.85),
-      scale: rng.range(0.5, 0.95),
-      tumble: [rng.range(-0.09, 0.09), rng.range(-0.09, 0.09), rng.range(-0.06, 0.06)],
-    }));
-
+  build(): SpatialFormation {
     return {
-      layout,
+      // Nothing to lay out: a shell is geometry the pass builds from uniforms, so
+      // there are no instances, no crops, and nothing for a revision to invalidate
+      // beyond the one bump that tells the backend the arrangement changed.
+      layout: { revision: nextRevision(), slots: [] },
 
-      frame({ time, travel, orbit, solidBudget, config }: SpatialFrameContext) {
+      frame({ time, travel, orbit, swell, config }: SpatialFrameContext) {
+        // The corridor's own shape, on the morph knob. Held wherever the preset
+        // parks it and swung by whatever headroom is left, exactly as the quad
+        // formations treat their pair of arrangements — here the two ends are a
+        // straight pipe and a cavern.
         const centre = clamp(config.stageMorph, 0, 1);
         const swing = Math.min(centre, 1 - centre);
-        const morph = centre + swing * Math.sin(time * config.stageMorphRate * Math.PI * 2);
+        const profile = centre + swing * Math.sin(time * config.stageMorphRate * Math.PI * 2);
 
-        const wanted = Math.round(clamp(config.stageSolids, 0, Math.min(MAX_SOLIDS, solidBudget)));
-        const solids: SolidPlacement[] = lanes.slice(0, wanted).map((lane) => {
-          // Same wrap the pages use, at the lane's own fraction of the speed —
-          // which is what makes them read as objects being overtaken rather
-          // than as decoration pinned to the corridor.
-          const z = ((lane.offset + travel * lane.speed) % TUBE_LENGTH) - TUBE_LENGTH;
-          return {
-            shape: lane.shape,
-            position: [
-              Math.cos(lane.angle) * lane.radius,
-              Math.sin(lane.angle) * lane.radius,
-              z,
-            ],
-            rotation: [
-              time * lane.tumble[0],
-              time * lane.tumble[1],
-              time * lane.tumble[2],
-            ],
-            scale: lane.scale,
-            opacity: 1,
-          };
-        });
+        const shell: ShellDraw = {
+          radius: TUBE_RADIUS * clamp(config.stageScale, 0.4, 2),
+          length: TUBE_LENGTH,
+          back: TUBE_BACK,
+          profile,
+          tiles: TUBE_TILES,
+          // The formation's turn, spent as a helical wrap instead of a roll. A
+          // rolled tube is indistinguishable from a rolled camera and fights the
+          // eye's sense of which way is up; a twisted *wallpaper* is the corridor
+          // itself winding away from you, which is the same knob buying a much
+          // stranger picture.
+          twist: orbit,
+          scroll: travel,
+          // The wall breathing in and out along its own radius, on the shared
+          // displacement rate. The one motion here that is geometry rather than
+          // texture — and it moves the wall sideways past the camera, never toward
+          // it, so it cannot deliver anything to the lens either.
+          ripple: config.stageDisplace * 0.6,
+          rippleScale: 0.55,
+          ripplePhase: swell,
+        };
 
         return {
-          morph,
-          billboard: config.stageBillboard,
-          scale: config.stageScale,
-          breathe: config.stageBreathe,
-          // Roll only. Tilting the corridor would swing the walls across the
-          // frame, and the walls are most of the frame.
-          spin: [0, 0, orbit],
-          // The camera holds the axis and only sways off it, because the flight
-          // is the wrap moving past rather than the eye going anywhere.
-          eye: [Math.sin(time * 0.019) * 0.32, Math.sin(time * 0.0143) * 0.26, 0],
-          look: [Math.sin(time * 0.0089) * 0.5, Math.cos(time * 0.0067) * 0.4, -6],
+          // Everything on this half of the contract belongs to the quad program,
+          // and there are no quads. Left at rest rather than at the config's
+          // values so the tuning panel cannot make a shell scene look broken by
+          // moving a slider that has nothing to act on.
+          morph: profile,
+          billboard: 0,
+          align: 0,
+          scale: 1,
+          feather: 0,
+          breathe: 0,
+          displace: 0,
+          displaceScale: 1,
+          displacePhase: swell,
+          swirl: 0,
+          swirlScale: 1,
+          // The tube is drawn in the camera's own frame, so a spin here would
+          // rotate the corridor about the eye — which is the roll the twist above
+          // replaces. Held at zero deliberately.
+          spin: [0, 0, 0] as Vec3,
+          // The camera holds the axis and only sways off it. The flight is the
+          // wallpaper moving past rather than the eye going anywhere, and that is
+          // now literally true rather than an implementation detail.
+          eye: [Math.sin(time * 0.019) * 0.34, Math.sin(time * 0.0143) * 0.28, 0] as Vec3,
+          look: [Math.sin(time * 0.0089) * 0.55, Math.cos(time * 0.0067) * 0.45, -6] as Vec3,
           fov: config.stageFov,
-          wrap: TUBE_LENGTH,
-          // A page arriving at the lens has nowhere left to go, so it is faded
-          // out over the last stretch instead of swelling and vanishing.
-          fogNear: 1.6,
-          fogFar: TUBE_LENGTH * 0.92,
-          solids,
+          wrap: 0,
+          fogNear: 0,
+          // Just short of the tube's own length, so the far end is fully into the
+          // black before the geometry stops.
+          fogFar: TUBE_LENGTH * 0.85,
+          shell,
+          solids: [],
         };
       },
     };

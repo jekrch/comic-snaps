@@ -26,17 +26,21 @@ interface BackendWithStats extends VizBackend {
 const MAX_DT = 1 / 20;
 
 /**
- * What the frame is actually putting on screen, for the debug readout. Shards
- * on the flat path; on a spatial one the instances of every slot carrying
- * something, which is the number that matters there — the slot count is a dozen
- * either way, and it is the hundreds behind it that cost anything.
+ * What the frame is actually putting on screen, for the debug readout. Shards on
+ * the flat path; on a spatial one the quads of every slot carrying something.
+ *
+ * A shell scene has no quads at all — its surface is one tube per resident panel —
+ * so it counts the surfaces instead. Either way the number answers "how many
+ * separate things is the frame made of", which since the formations were thinned
+ * out is the number worth watching.
  */
 function drawCount(frame: VizFrame): number {
   const stage = frame.stage;
   if (!stage) return frame.shards.length;
   let count = 0;
   for (let i = 0; i < stage.slots.length; i++) {
-    if (stage.slots[i].opacity > 0.002) count += stage.layout.slots[i]?.count ?? 0;
+    if (stage.slots[i].opacity <= 0.002) continue;
+    count += stage.shell ? 1 : stage.layout.slots[i]?.count ?? 0;
   }
   return count;
 }

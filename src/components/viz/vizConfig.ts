@@ -12,7 +12,7 @@ import type { PostParams, StageKind } from "./engine/types";
  */
 export type StageMode = "flat" | StageKind;
 
-const STAGE_MODES: StageMode[] = ["flat", "swarm", "vault"];
+const STAGE_MODES: StageMode[] = ["flat", "swarm", "vault", "sheet", "ribbons", "motes"];
 
 export function isStageMode(value: unknown): value is StageMode {
   return typeof value === "string" && (STAGE_MODES as string[]).includes(value);
@@ -83,9 +83,30 @@ export interface VizConfig {
   // nested so the tuning panel and the JSON clamp reach them the same way they
   // reach everything else.
   stageKind: StageMode;
+  /**
+   * Multiplier on how many quads a formation is built from, against the counts
+   * the scene asked for.
+   *
+   * 1 is the scene as authored — a few panels wearing a few large crops each,
+   * which is the whole design of these formations. This exists to be turned
+   * *down* as readily as up: the failure mode it guards against is the frame
+   * filling with small panels until the shape is texture and no single page can
+   * be read. Moving it rebuilds the arrangement, so it is a tuning knob rather
+   * than something to animate.
+   *
+   * Deliberately does not touch how many *panels* are resident. That number is
+   * how many images are on screen at once, every scene has chosen it carefully,
+   * and a slider that multiplied it would undo all of them at the first drag.
+   * A scene with no quads at all — the vault, whose surface is one continuous
+   * tube — is unaffected by this entirely.
+   */
+  stageDensity: number;
   /** Global multiplier on every quad's size. Above ~1.4 the quads meet and the
    *  formation reads as a surface rather than as a scatter. */
   stageScale: number;
+  /** Added to the edge softness each scene asks for, in a quad's own uv. Up is a
+   *  formation of dissolving shapes; 0 leaves every scene at its own choice. */
+  stageFeather: number;
   /** Peak opacity of one slot. The washout governor for this path: the quads
    *  composite additively, so this multiplies straight into frame luminance. */
   stageOpacity: number;
@@ -113,6 +134,19 @@ export interface VizConfig {
   /** Solids drifting in the middle distance. Capped by the texture budget as
    *  well as by this — see `Stage.setScene`. */
   stageSolids: number;
+  /** How strongly a quad's roll follows the formation's own along-direction
+   *  rather than a world up. Only means anything to a formation with a
+   *  direction — a ribbon — and is left at 0 by everything else. */
+  stageAlign: number;
+  /** Vertex displacement along each quad's normal, world units. The knob that
+   *  lets a surface leave its own arrangement and pass through another. */
+  stageDisplace: number;
+  /** Travel of that wave, world units per clock second. Signed; integrated
+   *  into `VizPhases.swell`. */
+  stageDisplaceRate: number;
+  /** Curl-noise scatter, world units. Divergence-free, so it reads as a current
+   *  through the formation rather than as per-quad jitter. */
+  stageSwirl: number;
 
   post: PostParams;
   /** Director selection weights — see §4 of the plan. */
@@ -130,6 +164,7 @@ export const DEFAULT_POST: PostParams = {
   feedbackAmount: 0.42,
   feedbackScale: 1.006,
   feedbackRotate: 0.0012,
+  feedbackDroste: 0,
   halftone: 0,
   halftoneScale: 1.4,
   chroma: 0.15,
@@ -174,9 +209,39 @@ export const DEFAULT_POST: PostParams = {
   turbulence: 0,
   turbulenceScale: 2.2,
   turbulenceSpeed: 0.12,
+  flow: 0,
+  flowScale: 2.6,
+  // High retention. The field is what carries the effect's slowness, and at low
+  // decay it restates itself every second and reads as a boil instead.
+  flowDecay: 0.97,
+  react: 0,
+  // Mitosis: the window where Gray-Scott makes dividing blobs rather than
+  // either dying out or flooding. The interesting values are all within a few
+  // thousandths of these.
+  reactFeed: 0.037,
+  reactKill: 0.062,
+  reactScale: 1.6,
+  slit: 0,
+  slitAxis: 0,
+  slitLuma: 0,
+  slitDepth: 0.6,
   disperse: 0,
   blur: 0,
   blurSpin: 0,
+  bloom: 0,
+  bloomThreshold: 0.68,
+  bloomRadius: 0.02,
+  misreg: 0,
+  misregSpread: 0.006,
+  moire: 0,
+  moireSpread: 0.09,
+  benday: 0,
+  krackle: 0,
+  krackleScale: 26,
+  krackleThreshold: 0.62,
+  bleed: 0,
+  bleedRadius: 1.6,
+  paper: 0,
   solarize: 0,
 };
 
@@ -198,21 +263,38 @@ export const DEFAULT_CONFIG: VizConfig = {
   wander: 0,
   wanderRate: 1,
   stageKind: "flat",
+  stageDensity: 1,
   stageScale: 1,
+  stageFeather: 0,
   stageOpacity: 0.55,
   stageMorph: 0.5,
-  // A shade over two and a half minutes for the round trip. The formation is
-  // the largest thing on screen, so it is held to the slowest rate in the
-  // engine — this is the piece becoming something else, not an animation.
-  stageMorphRate: 0.006,
+  // A little under five minutes for the round trip. The formation is the largest
+  // thing on screen, so it is held to the slowest rate in the engine — this is
+  // the piece becoming something else, not an animation. Halved along with the
+  // spins when the formations became a few large pages: at these sizes there is
+  // something to read in every frame, and the rates that suited a crowd of small
+  // crops hurried all of it past.
+  stageMorphRate: 0.0035,
   stageBillboard: 0.75,
   stageBreathe: 0.08,
   stageFov: 55,
-  stageSpin: 0.05,
-  stageFlight: 0.9,
+  stageSpin: 0.022,
+  stageFlight: 0.8,
   stageSolids: 2,
+  stageAlign: 0,
+  stageDisplace: 0,
+  stageDisplaceRate: 0.12,
+  stageSwirl: 0,
   post: { ...DEFAULT_POST },
-  weights: { rhyme: 0.5, clash: 0.2, color: 0.2, random: 0.1 },
+  // Heavily toward the wildcard. Every preset inherits this, so what a run shows
+  // next is mostly unrelated to what it is showing now — the gallery read wide
+  // rather than as a chain of near-neighbours.
+  //
+  // The other three are held low but deliberately *not* zero. They are the axes
+  // a viewer tunes along, and a weight of 0 is a slider that has to be moved off
+  // its end before it does anything; at 0.1 each the affinities are still
+  // present in the mix and raising one is a change of degree.
+  weights: { rhyme: 0.1, clash: 0.1, color: 0.1, random: 0.7 },
 };
 
 /**
@@ -246,7 +328,9 @@ export type ConfigGroup =
   | "motion"
   | "post"
   | "shape"
+  | "field"
   | "optics"
+  | "print"
   | "cycle"
   | "stage"
   | "director";
@@ -298,6 +382,7 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.feedbackAmount", "feedback", 0, 0.98, 0.01, (c) => c.post.feedbackAmount, (c, v) => (c.post.feedbackAmount = v)),
   field("post", "post.feedbackScale", "fb scale", 0.97, 1.05, 0.001, (c) => c.post.feedbackScale, (c, v) => (c.post.feedbackScale = v)),
   field("post", "post.feedbackRotate", "fb spin", -0.02, 0.02, 0.0005, (c) => c.post.feedbackRotate, (c, v) => (c.post.feedbackRotate = v)),
+  field("post", "post.feedbackDroste", "fb corridor", 0, 1, 0.01, (c) => c.post.feedbackDroste, (c, v) => (c.post.feedbackDroste = v)),
   field("post", "post.halftone", "halftone", 0, 1, 0.01, (c) => c.post.halftone, (c, v) => (c.post.halftone = v)),
   field("post", "post.halftoneScale", "ht scale", 0.3, 4, 0.05, (c) => c.post.halftoneScale, (c, v) => (c.post.halftoneScale = v)),
   field("post", "post.chroma", "chroma", 0, 1.5, 0.01, (c) => c.post.chroma, (c, v) => (c.post.chroma = v)),
@@ -343,9 +428,49 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("shape", "post.turbulenceScale", "turb scale", 0.5, 6, 0.1, (c) => c.post.turbulenceScale, (c, v) => (c.post.turbulenceScale = v)),
   field("shape", "post.turbulenceSpeed", "turb rate", 0, 0.6, 0.005, (c) => c.post.turbulenceSpeed, (c, v) => (c.post.turbulenceSpeed = v)),
 
+  // The buffer-backed displacements. Both are simulations rather than formulas,
+  // so what is tunable here is the field's own character; how fast it moves is
+  // not on offer, because a field carries its own history and there is no rate
+  // in it to raise.
+  field("field", "post.flow", "flow", 0, 1, 0.01, (c) => c.post.flow, (c, v) => (c.post.flow = v)),
+  field("field", "post.flowScale", "flow scale", 0.5, 8, 0.1, (c) => c.post.flowScale, (c, v) => (c.post.flowScale = v)),
+  field("field", "post.flowDecay", "flow hold", 0.8, 0.995, 0.005, (c) => c.post.flowDecay, (c, v) => (c.post.flowDecay = v)),
+  field("field", "post.react", "reaction", 0, 1, 0.01, (c) => c.post.react, (c, v) => (c.post.react = v)),
+  // Narrow on purpose. Outside roughly these bounds Gray-Scott either dies back
+  // to a flat field or floods it, and both are a displacement map that does not
+  // move — so the sliders only reach the range where there is a pattern at all.
+  field("field", "post.reactFeed", "feed", 0.02, 0.06, 0.001, (c) => c.post.reactFeed, (c, v) => (c.post.reactFeed = v)),
+  field("field", "post.reactKill", "kill", 0.05, 0.07, 0.0005, (c) => c.post.reactKill, (c, v) => (c.post.reactKill = v)),
+  // Floored at 1: the stencil is in texels and cannot be narrower than one, so
+  // the shader clamps it there anyway and a slider reaching below would be a
+  // stretch of travel that did nothing.
+  field("field", "post.reactScale", "cell size", 1, 3, 0.05, (c) => c.post.reactScale, (c, v) => (c.post.reactScale = v)),
+  field("field", "post.slit", "slit-scan", 0, 1, 0.01, (c) => c.post.slit, (c, v) => (c.post.slit = v)),
+  field("field", "post.slitAxis", "slit axis", 0, 1, 0.01, (c) => c.post.slitAxis, (c, v) => (c.post.slitAxis = v)),
+  field("field", "post.slitLuma", "slit by tone", 0, 1, 0.01, (c) => c.post.slitLuma, (c, v) => (c.post.slitLuma = v)),
+  field("field", "post.slitDepth", "slit depth", 0.05, 1, 0.01, (c) => c.post.slitDepth, (c, v) => (c.post.slitDepth = v)),
+
   field("optics", "post.disperse", "dispersion", 0, 0.6, 0.005, (c) => c.post.disperse, (c, v) => (c.post.disperse = v)),
   field("optics", "post.blur", "radial blur", 0, 1, 0.01, (c) => c.post.blur, (c, v) => (c.post.blur = v)),
   field("optics", "post.blurSpin", "blur spin", 0, 1, 0.01, (c) => c.post.blurSpin, (c, v) => (c.post.blurSpin = v)),
+  // Capped well under 1. The spread is energy-normalised so it cannot bleach
+  // the frame, but at full strength a highlight is debited its whole self and
+  // the picture reads as a negative of its own glow.
+  field("optics", "post.bloom", "bloom", 0, 0.7, 0.01, (c) => c.post.bloom, (c, v) => (c.post.bloom = v)),
+  field("optics", "post.bloomThreshold", "bloom knee", 0.4, 0.95, 0.01, (c) => c.post.bloomThreshold, (c, v) => (c.post.bloomThreshold = v)),
+  field("optics", "post.bloomRadius", "bloom radius", 0.004, 0.06, 0.002, (c) => c.post.bloomRadius, (c, v) => (c.post.bloomRadius = v)),
+
+  field("print", "post.misreg", "misregister", 0, 1, 0.01, (c) => c.post.misreg, (c, v) => (c.post.misreg = v)),
+  field("print", "post.misregSpread", "plate drift", 0, 0.02, 0.0005, (c) => c.post.misregSpread, (c, v) => (c.post.misregSpread = v)),
+  field("print", "post.moire", "moire", 0, 1, 0.01, (c) => c.post.moire, (c, v) => (c.post.moire = v)),
+  field("print", "post.moireSpread", "screen delta", 0, 0.35, 0.005, (c) => c.post.moireSpread, (c, v) => (c.post.moireSpread = v)),
+  field("print", "post.benday", "living ben-day", 0, 1, 0.01, (c) => c.post.benday, (c, v) => (c.post.benday = v)),
+  field("print", "post.krackle", "krackle", 0, 1, 0.01, (c) => c.post.krackle, (c, v) => (c.post.krackle = v)),
+  field("print", "post.krackleScale", "krackle cells", 6, 70, 1, (c) => c.post.krackleScale, (c, v) => (c.post.krackleScale = v)),
+  field("print", "post.krackleThreshold", "krackle knee", 0.25, 0.95, 0.01, (c) => c.post.krackleThreshold, (c, v) => (c.post.krackleThreshold = v)),
+  field("print", "post.bleed", "ink bleed", 0, 1, 0.01, (c) => c.post.bleed, (c, v) => (c.post.bleed = v)),
+  field("print", "post.bleedRadius", "bleed radius", 0.5, 4, 0.1, (c) => c.post.bleedRadius, (c, v) => (c.post.bleedRadius = v)),
+  field("print", "post.paper", "newsprint", 0, 1, 0.01, (c) => c.post.paper, (c, v) => (c.post.paper = v)),
 
   field("cycle", "psychedelia", "psychedelia", 0, 1, 0.01, (c) => c.psychedelia, (c, v) => (c.psychedelia = v)),
   field("cycle", "cycleInterval", "interval", 3, 60, 1, (c) => c.cycleInterval, (c, v) => (c.cycleInterval = v)),
@@ -355,7 +480,9 @@ export const CONFIG_FIELDS: ConfigField[] = [
   // Inert unless `stageKind` is a spatial one, which is not a slider — see the
   // note on StageMode. The rest of the stage is tunable exactly like the flat
   // path, so `?vizdebug=1` reviews a formation the same way it reviews a fold.
+  field("stage", "stageDensity", "quad count", 0.25, 4, 0.25, (c) => c.stageDensity, (c, v) => (c.stageDensity = v)),
   field("stage", "stageScale", "quad size", 0.3, 2.5, 0.01, (c) => c.stageScale, (c, v) => (c.stageScale = v)),
+  field("stage", "stageFeather", "quad edge", 0, 0.4, 0.01, (c) => c.stageFeather, (c, v) => (c.stageFeather = v)),
   field("stage", "stageOpacity", "quad opacity", 0.05, 1, 0.01, (c) => c.stageOpacity, (c, v) => (c.stageOpacity = v)),
   field("stage", "stageMorph", "morph", 0, 1, 0.01, (c) => c.stageMorph, (c, v) => (c.stageMorph = v)),
   field("stage", "stageMorphRate", "morph rate", 0, 0.06, 0.001, (c) => c.stageMorphRate, (c, v) => (c.stageMorphRate = v)),
@@ -365,6 +492,10 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("stage", "stageSpin", "formation spin", -0.4, 0.4, 0.005, (c) => c.stageSpin, (c, v) => (c.stageSpin = v)),
   field("stage", "stageFlight", "flight", -4, 4, 0.05, (c) => c.stageFlight, (c, v) => (c.stageFlight = v)),
   field("stage", "stageSolids", "solids", 0, 4, 1, (c) => c.stageSolids, (c, v) => (c.stageSolids = v)),
+  field("stage", "stageAlign", "align to curve", 0, 1, 0.01, (c) => c.stageAlign, (c, v) => (c.stageAlign = v)),
+  field("stage", "stageDisplace", "displace", 0, 1.2, 0.01, (c) => c.stageDisplace, (c, v) => (c.stageDisplace = v)),
+  field("stage", "stageDisplaceRate", "displace rate", -0.6, 0.6, 0.01, (c) => c.stageDisplaceRate, (c, v) => (c.stageDisplaceRate = v)),
+  field("stage", "stageSwirl", "swirl", 0, 1.5, 0.01, (c) => c.stageSwirl, (c, v) => (c.stageSwirl = v)),
 
   field("director", "weights.rhyme", "rhyme", 0, 1, 0.01, (c) => c.weights.rhyme, (c, v) => (c.weights.rhyme = v)),
   field("director", "weights.clash", "clash", 0, 1, 0.01, (c) => c.weights.clash, (c, v) => (c.weights.clash = v)),
@@ -513,15 +644,20 @@ export interface DeviceCaps {
   /** Shards composited in a single pass; more than this ping-pongs in batches. */
   maxShardsPerPass: number;
   /**
-   * Panels a spatial formation holds resident at once — its slots and its
-   * solids together. Deliberately under `texturePoolSize`: the panels queued to
-   * replace them have to decode somewhere, and a stage that filled the pool
-   * would evict a slot that is on screen to make room for its own successor.
+   * Ceiling on the panels a spatial formation may hold resident at once — its
+   * slots and its solids together. Deliberately under `texturePoolSize`: the
+   * panels queued to replace them have to decode somewhere, and a stage that
+   * filled the pool would evict a slot that is on screen to make room for its
+   * own successor.
+   *
+   * A ceiling rather than the count: what a formation actually asks for is
+   * `SpatialScene.panels`, which is a compositional decision and comes out well
+   * under this on every device. The cap only bites if the density knob is pushed.
    */
   stagePanels: number;
-  /** Quads bound to each of those panels. The product with `stagePanels` is the
-   *  instance count, and it is a vertex cost rather than a fill one — which is
-   *  why it can be two orders of magnitude over `maxShardsPerPass`. */
+  /** Ceiling on the quads bound to each of those panels. Instances are a vertex
+   *  cost rather than a fill one, so this is generous — but the scenes ask for a
+   *  couple, because the cost that matters is legibility, not throughput. */
   stagePerSlot: number;
 }
 
@@ -535,10 +671,12 @@ export function deviceCaps(): DeviceCaps {
     feedbackScale: 0.75,
     maxShardsPerPass: 12,
     stagePanels: mobile ? 5 : 13,
-    // ~150 quads on a phone and ~550 on a desktop. The ceiling here is overdraw
-    // — every quad is transparent and none of them occlude — so the phone's cut
-    // is deeper than its pool size alone would suggest.
-    stagePerSlot: mobile ? 30 : 42,
+    // Room for the density knob to be pushed a long way past what the scenes ask
+    // for, and no further. The real limit here is overdraw — every quad is
+    // transparent, none of them occlude, and they are now large enough that a few
+    // of them cover the frame — so the phone's ceiling is cut harder than its
+    // pool size alone would suggest.
+    stagePerSlot: mobile ? 10 : 20,
   };
 }
 

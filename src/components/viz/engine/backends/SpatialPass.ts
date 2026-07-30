@@ -1,7 +1,14 @@
 import { Box, Camera, Geometry, Mesh, Program, RenderTarget, Torus, Transform } from "ogl";
 import type { OGLRenderingContext, Renderer, Texture } from "ogl";
 import type { SolidShape, StageFrame, StageLayout, Vec3 } from "../types";
-import { QUAD_FRAGMENT, QUAD_VERTEX, SOLID_FRAGMENT, SOLID_VERTEX } from "../shaders/spatial";
+import {
+  QUAD_FRAGMENT,
+  QUAD_VERTEX,
+  SOLID_FRAGMENT,
+  SOLID_VERTEX,
+  TUBE_FRAGMENT,
+  TUBE_VERTEX,
+} from "../shaders/spatial";
 import type { TexturePool } from "../TexturePool";
 
 /** The unit quad every instance is a transform of. */
@@ -9,12 +16,58 @@ const QUAD_POSITION = new Float32Array([-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0
 const QUAD_UV = new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]);
 const QUAD_INDEX = new Uint16Array([0, 1, 2, 0, 2, 3]);
 
-/** Softness of a quad's border, in its own uv. Small: these are pages, and a
- *  page with no edge is a smudge. Enough only to keep the corners from
- *  aliasing into sparkle as they turn. */
-const QUAD_FEATHER = 0.04;
-
 const NEAR_PLANE = 0.1;
+
+/**
+ * Resolution of the wallpaper tube's grid: segments around, segments along.
+ *
+ * Around has to be high enough that the silhouette of the wall against the frame
+ * edge is a curve rather than a polygon, and along has to be high enough that the
+ * radial ripple — which moves vertices, not texels — is a smooth swell. Both are
+ * cheap: this is one draw of a few thousand vertices, against a post chain that
+ * touches every pixel a dozen times.
+ */
+const TUBE_AROUND = 96;
+const TUBE_ALONG = 64;
+
+/** The tube's parameter grid: one vec2 per vertex, everything else derived in the
+ *  vertex shader from uniforms so the corridor can change shape for free. */
+function tubeGeometry(gl: OGLRenderingContext): Geometry {
+  const cols = TUBE_AROUND + 1;
+  const rows = TUBE_ALONG + 1;
+  const grid = new Float32Array(cols * rows * 2);
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i = (row * cols + col) * 2;
+      grid[i] = col / TUBE_AROUND;
+      grid[i + 1] = row / TUBE_ALONG;
+    }
+  }
+
+  // 16-bit is enough and universally supported: the grid is a few thousand
+  // vertices, an order of magnitude under the limit.
+  const index = new Uint16Array(TUBE_AROUND * TUBE_ALONG * 6);
+  let at = 0;
+  for (let row = 0; row < TUBE_ALONG; row++) {
+    for (let col = 0; col < TUBE_AROUND; col++) {
+      const a = row * cols + col;
+      const b = a + 1;
+      const c = a + cols;
+      const d = c + 1;
+      index[at++] = a;
+      index[at++] = c;
+      index[at++] = d;
+      index[at++] = a;
+      index[at++] = d;
+      index[at++] = b;
+    }
+  }
+
+  return new Geometry(gl, {
+    aGrid: { size: 2, data: grid },
+    index: { data: index },
+  });
+}
 
 /**
  * The 3D half of the WebGL backend.
@@ -28,9 +81,9 @@ const NEAR_PLANE = 0.1;
  * One mesh per panel slot rather than one draw for the whole formation. GLSL ES
  * 3.00 will not index a sampler array by a per-instance attribute, so the
  * alternatives were a texture array — a second decode path, a second pool, and
- * every panel squared off to a common size — or a dozen draw calls. A dozen
- * draw calls for five hundred quads is the cheaper trade by a wide margin, and
- * it leaves `TexturePool` exactly as it was.
+ * every panel squared off to a common size — or one draw per resident panel.
+ * With a formation holding three or four of them that is a handful of draw calls
+ * for the whole scene, and it leaves `TexturePool` exactly as it was.
  */
 export class SpatialPass {
   private readonly gl: OGLRenderingContext;
@@ -39,6 +92,10 @@ export class SpatialPass {
   private readonly quadProgram: Program;
   private readonly solidProgram: Program;
   private readonly solids: Record<SolidShape, Mesh>;
+  /** Built on the first frame that asks for a shell, so a run that only ever
+   *  sees quad formations never pays for the grid. */
+  private tube: Mesh | null = null;
+  private tubeProgram: Program | null = null;
   private slotMeshes: Mesh[] = [];
   private revision = -1;
   private target: RenderTarget | null = null;
@@ -64,15 +121,23 @@ export class SpatialPass {
         uLevels: { value: [1, 0] },
         uTint: { value: [1, 1, 1, 0] },
         uOpacity: { value: 1 },
-        uFeather: { value: QUAD_FEATHER },
+        // Set per frame from the scene — at these quad sizes the border is a
+        // compositional choice rather than an anti-aliasing constant.
+        uFeather: { value: 0.05 },
         uMorph: { value: 0 },
         uBillboard: { value: 0.5 },
+        uAlign: { value: 0 },
         uScale: { value: 1 },
         uPanelAspect: { value: 0.75 },
         uTime: { value: 0 },
         uBreathe: { value: 0.1 },
         uWrap: { value: 0 },
         uTravel: { value: 0 },
+        uDisplace: { value: 0 },
+        uDisplaceScale: { value: 1 },
+        uDisplacePhase: { value: 0 },
+        uSwirl: { value: 0 },
+        uSwirlScale: { value: 0.5 },
         uFogNear: { value: 0 },
         uFogFar: { value: 30 },
       },
@@ -151,8 +216,9 @@ export class SpatialPass {
 
     this.clear(target, background);
 
-    // Opaque first, so the additive quads have something to test against.
+    // Opaque first, so the additive surfaces have something to test against.
     this.drawSolids(stage, pool, target);
+    if (stage.shell) this.drawShell(stage, pool, target);
     this.drawSlots(stage, pool, target);
 
     return target.texture;
@@ -221,15 +287,112 @@ export class SpatialPass {
     }
   }
 
+  /**
+   * Draw the wallpaper tube once per resident panel.
+   *
+   * One geometry, one program, and the slot loop from `drawSlots` — a slot's
+   * opacity envelope is doing the crossfade of an entire wall here rather than of
+   * a hundred small quads, which is why the vault's preset has to make its slots
+   * sum to one. See the note there.
+   */
+  private drawShell(stage: StageFrame, pool: TexturePool, target: RenderTarget): void {
+    const shell = stage.shell;
+    if (!shell) return;
+
+    const mesh = this.ensureTube();
+    const uniforms = mesh.program.uniforms;
+    uniforms.uRadius.value = shell.radius;
+    uniforms.uLength.value = shell.length;
+    uniforms.uBack.value = shell.back;
+    uniforms.uProfile.value = shell.profile;
+    uniforms.uTiles.value = shell.tiles;
+    uniforms.uTwist.value = shell.twist;
+    uniforms.uScroll.value = shell.scroll;
+    uniforms.uRipple.value = shell.ripple;
+    uniforms.uRippleScale.value = shell.rippleScale;
+    uniforms.uRipplePhase.value = shell.ripplePhase;
+    uniforms.uFogFar.value = stage.fogFar;
+
+    for (const slot of stage.slots) {
+      if (slot.opacity <= 0.002) continue;
+      const texture = pool.get(slot.panelId);
+      if (!texture) continue;
+
+      uniforms.uTex.value = texture;
+      uniforms.uLevels.value = [slot.levels.gain, slot.levels.lift];
+      uniforms.uTint.value = [...slot.tint, slot.tintAmount];
+      uniforms.uOpacity.value = slot.opacity;
+      uniforms.uPanelAspect.value = slot.aspect;
+
+      this.renderer.render({
+        scene: mesh,
+        camera: this.camera,
+        target,
+        update: false,
+        sort: false,
+        frustumCull: false,
+      });
+    }
+  }
+
+  private ensureTube(): Mesh {
+    if (!this.tube) {
+      this.tubeProgram = new Program(this.gl, {
+        vertex: TUBE_VERTEX,
+        fragment: TUBE_FRAGMENT,
+        transparent: true,
+        // Seen from the inside, and the ripple can turn a facet inside out.
+        cullFace: null,
+        depthTest: true,
+        depthWrite: false,
+        uniforms: {
+          uTex: { value: null },
+          uLevels: { value: [1, 0] },
+          uTint: { value: [1, 1, 1, 0] },
+          uOpacity: { value: 1 },
+          uRadius: { value: 2.5 },
+          uLength: { value: 26 },
+          uBack: { value: 2 },
+          uProfile: { value: 0 },
+          uTiles: { value: 2 },
+          uTwist: { value: 0 },
+          uScroll: { value: 0 },
+          uRipple: { value: 0 },
+          uRippleScale: { value: 0.5 },
+          uRipplePhase: { value: 0 },
+          uPanelAspect: { value: 0.75 },
+          uFogFar: { value: 30 },
+        },
+      });
+      // Premultiplied additive, exactly as the quads: two slots mid-crossfade
+      // have to add up to one wall rather than compositing one over the other.
+      this.tubeProgram.setBlendFunc(this.gl.ONE, this.gl.ONE);
+      this.tube = new Mesh(this.gl, {
+        geometry: tubeGeometry(this.gl),
+        program: this.tubeProgram,
+        frustumCulled: false,
+      });
+      this.tube.setParent(this.root);
+    }
+    return this.tube;
+  }
+
   private drawSlots(stage: StageFrame, pool: TexturePool, target: RenderTarget): void {
     const uniforms = this.quadProgram.uniforms;
     uniforms.uMorph.value = stage.morph;
     uniforms.uBillboard.value = stage.billboard;
+    uniforms.uAlign.value = stage.align;
     uniforms.uScale.value = stage.scale;
+    uniforms.uFeather.value = stage.feather;
     uniforms.uTime.value = stage.time;
     uniforms.uBreathe.value = stage.breathe;
     uniforms.uWrap.value = stage.wrap;
     uniforms.uTravel.value = stage.travel;
+    uniforms.uDisplace.value = stage.displace;
+    uniforms.uDisplaceScale.value = stage.displaceScale;
+    uniforms.uDisplacePhase.value = stage.displacePhase;
+    uniforms.uSwirl.value = stage.swirl;
+    uniforms.uSwirlScale.value = stage.swirlScale;
     uniforms.uFogNear.value = stage.fogNear;
     uniforms.uFogFar.value = stage.fogFar;
 
@@ -273,6 +436,8 @@ export class SpatialPass {
         aNrmA: { size: 3, data: slot.nrmA, instanced: 1 },
         aPosB: { size: 3, data: slot.posB, instanced: 1 },
         aNrmB: { size: 3, data: slot.nrmB, instanced: 1 },
+        aTanA: { size: 3, data: slot.tanA, instanced: 1 },
+        aTanB: { size: 3, data: slot.tanB, instanced: 1 },
         aQuad: { size: 4, data: slot.quad, instanced: 1 },
         aCrop: { size: 4, data: slot.crop, instanced: 1 },
       });
@@ -297,6 +462,10 @@ export class SpatialPass {
   dispose(): void {
     this.disposeSlots();
     for (const mesh of Object.values(this.solids)) mesh.geometry.remove();
+    this.tube?.geometry.remove();
+    this.tubeProgram?.remove();
+    this.tube = null;
+    this.tubeProgram = null;
     this.quadProgram.remove();
     this.solidProgram.remove();
     this.target = null;
