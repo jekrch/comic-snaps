@@ -6,6 +6,7 @@ import { levelsFor } from "./palette";
 import type { Rgb } from "./palette";
 import type { Curve, SolidDraw, StageFrame, StageKind, StageSlotDraw } from "./types";
 import { envelope } from "./types";
+import { CAST_FLOOR, rankCast } from "./cast";
 import type { SpatialFormation, SpatialScene } from "./scenes/spatial";
 import { clamp } from "./scenes/spatial";
 import { panelAspect } from "./scenes/types";
@@ -40,6 +41,14 @@ interface Occupant {
   bornAt: number;
   lifetime: number;
   curve: Curve;
+  /**
+   * Set when the tenancy was cut short by hand rather than served out — the
+   * reader stepped the run on. Its replacement takes the slot the moment it is
+   * clear, instead of waiting for the slot's turn to come round again: the wait
+   * is what keeps a sequential set spread out, and a step is precisely a
+   * request not to wait.
+   */
+  stepped?: boolean;
 }
 
 /**
@@ -169,22 +178,59 @@ export class Stage {
     return this.lastBound;
   }
 
-  /** The panel carrying the frame, for the credit line. */
-  feature(time: number): Panel | null {
-    let best: Panel | null = null;
-    let bestOpacity = 0.15;
+  /**
+   * The panels carrying the frame, most prominent first — the stack behind the
+   * credit line. Ranked on residency alone: a formation's slots are a fixed
+   * arrangement the scene composed, so unlike a drift of free shards they are
+   * already the sizes they are meant to be, and how far a tenancy has faded up
+   * is the whole of how present its panel is.
+   */
+  cast(time: number, limit: number, incumbents: string[] = []): Panel[] {
+    const scores = new Map<string, number>();
+    const byId = new Map<string, Panel>();
     for (const slot of this.slots) {
       if (!slot.panel) continue;
       const opacity = envelope(slot.curve, time - slot.bornAt, slot.lifetime);
-      if (opacity > bestOpacity) {
-        bestOpacity = opacity;
-        best = slot.panel;
-      }
+      if (opacity <= CAST_FLOOR) continue;
+      byId.set(slot.panel.id, slot.panel);
+      scores.set(slot.panel.id, (scores.get(slot.panel.id) ?? 0) + opacity);
     }
-    // Falls back to a solid only when no slot is carrying anything, which
-    // happens on the opening frames and while a heavily filtered wall decodes.
-    if (best) return best;
-    return this.solidSlots.find((slot) => slot.panel)?.panel ?? null;
+    // Solids join only when no slot is carrying anything, which happens on the
+    // opening frames and while a heavily filtered wall decodes.
+    if (scores.size === 0) {
+      const solid = this.solidSlots.find((slot) => slot.panel)?.panel;
+      if (!solid) return [];
+      byId.set(solid.id, solid);
+      scores.set(solid.id, 1);
+    }
+    return rankCast(scores, incumbents, limit, (id) => byId.get(id) ?? null);
+  }
+
+  /**
+   * Cut every tenancy short, so the formation hands over to whatever the
+   * director offers next instead of serving out its dwell. This is what a step
+   * looks like on a stage: the arrangement never moves, so a panel change is
+   * the only thing a step can be.
+   *
+   * Each occupant is dropped onto the point in its own fade-out where it is
+   * already showing what it is showing, so nothing jumps — it simply starts
+   * leaving. A slot whose tenancy has not opened yet is showing nothing, so it
+   * expires immediately, which makes it the one the incoming panel arrives in
+   * and the outgoing fade something to cross against.
+   */
+  retire(time: number): void {
+    for (const slot of [...this.slots, ...this.solidSlots]) {
+      if (!slot.panel) continue;
+      const remaining = slot.bornAt + slot.lifetime - time;
+      if (remaining <= 0) continue;
+      const { level, fadeOut } = fadeState(slot, time);
+      const target = level * fadeOut;
+      // Already leaving at least this fast — hurrying it would be the jump
+      // this is written to avoid.
+      if (remaining <= target) continue;
+      slot.bornAt = time + target - slot.lifetime;
+      slot.stepped = true;
+    }
   }
 
   /**
@@ -374,12 +420,38 @@ export class Stage {
         // enough to walk a complementary pair out of complement. Snapped to the
         // clock only if the slot is more than half a life overdue, which means
         // the run was suspended rather than merely sampled coarsely.
-        const next = due + (sequential ? wait : 0);
+        const next = due + (sequential && !slot.stepped ? wait : 0);
         slot.bornAt = time - next < lifetime * 0.5 ? next : time;
       }
+      slot.stepped = false;
       this.lastBound = panel;
     }
   }
+}
+
+/**
+ * A tenancy's linear envelope level and the fade-out it will leave by, both
+ * after the same rescaling `envelope` applies when a curve's fades exceed the
+ * lifetime they have to fit in. Retiring a slot needs the pair: the level says
+ * where in the fade-out it already is, and the fade-out says how long the rest
+ * of it takes.
+ */
+function fadeState(slot: Occupant, time: number): { level: number; fadeOut: number } {
+  const total = slot.curve.fadeIn + slot.curve.fadeOut;
+  const scale = total > slot.lifetime ? slot.lifetime / total : 1;
+  const fadeIn = slot.curve.fadeIn * scale;
+  const fadeOut = slot.curve.fadeOut * scale;
+
+  const age = time - slot.bornAt;
+  // Staggered forward and not yet due: showing nothing, and nothing is where
+  // its fade-out would have to start from.
+  if (age <= 0) return { level: 0, fadeOut };
+
+  let level = 1;
+  if (fadeIn > 0 && age < fadeIn) level = age / fadeIn;
+  const remaining = slot.lifetime - age;
+  if (fadeOut > 0 && remaining < fadeOut) level = Math.min(level, remaining / fadeOut);
+  return { level: clamp(level, 0, 1), fadeOut };
 }
 
 function emptyOccupant(): Occupant {

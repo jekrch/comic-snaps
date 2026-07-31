@@ -358,9 +358,151 @@ export interface ConfigField {
   min: number;
   max: number;
   step: number;
+  /** One line of plain English for the tuning panel's tooltip. May be empty. */
+  hint: string;
   get: (config: VizConfig) => number;
   set: (config: VizConfig, value: number) => void;
 }
+
+/**
+ * What each slider does, in the terms someone watching the frame would use
+ * rather than the terms the shader does. Keyed by path and looked up by
+ * `field()` so the table below stays one line per tunable — a hint missing
+ * here is simply a slider with no tooltip, not a broken one.
+ */
+const HINTS: Record<string, string> = {
+  layerCount: "How many full-bleed panels are composited at once.",
+  layerLifetime: "Seconds a panel stays on screen before it is retired.",
+  layerLifetimeJitter: "Spread in those lifetimes, so layers don't all turn over together.",
+  crossfade: "How much of a panel's life is spent fading in and out.",
+  layerOpacity: "Peak strength of the panels stacked over the base one.",
+  beat: "The grid discrete events snap to, in seconds.",
+  keyBalance: "How hard bright pages are levelled toward a common tone. The guard against a white-out.",
+
+  speed: "Rate of the whole composition clock — moves every other timing with it.",
+  zoomAmount: "How far a panel zooms over its life.",
+  panAmount: "How far a panel drifts across the frame.",
+  rotateAmount: "How far a panel is allowed to tilt as it drifts.",
+  tintAmount: "How strongly each layer is pushed toward its complementary colour.",
+
+  "post.feedbackAmount": "How much of the last frame is kept, smearing motion into trails.",
+  "post.feedbackScale": "Zoom on the kept frame each pass — over 1 pushes the trails outward.",
+  "post.feedbackRotate": "Turn on the kept frame each pass, so the trails spiral.",
+  "post.feedbackDroste": "Bends the feedback into a corridor receding into itself.",
+  "post.halftone": "Dot screen over the frame, the way printed ink lays down.",
+  "post.halftoneScale": "Size of those dots.",
+  "post.chroma": "Colour fringing toward the edges, as if the lens split the light.",
+  "post.posterize": "Crushes the tones into flat bands of colour.",
+  "post.grain": "Film grain over the frame.",
+  "post.vignette": "Darkens the corners.",
+  "post.exposure": "Overall brightness.",
+  "post.hueShift": "Rotates every colour around the wheel.",
+  "post.solarize": "Inverts the brightest tones — a burnt, photographic reversal.",
+
+  "post.kaleido": "Mirrors the frame into a kaleidoscope.",
+  "post.kaleidoSegments": "How many mirrored wedges.",
+  "post.kaleidoSpin": "How fast the kaleidoscope turns.",
+  "post.tile": "Repeats the frame as a mirrored grid.",
+  "post.tunnel": "Bends the frame into a tube receding away from you.",
+  "post.tunnelDepth": "How far back the tube goes.",
+  "post.tunnelSpin": "How fast the tube rotates.",
+  "post.fold": "Folds the frame back over itself, again and again.",
+  "post.foldScale": "Zoom applied at each fold.",
+  "post.foldOffsetX": "Where the fold is centred, left to right.",
+  "post.foldOffsetY": "Where the fold is centred, top to bottom.",
+  "post.foldSpin": "How fast the fold turns.",
+  "post.lattice": "Wraps the frame into a repeating grid of cells.",
+  "post.latticeScale": "How many cells across.",
+  "post.droste": "Recursion: the frame inside itself, without end.",
+  "post.drosteInner": "Size of the hole the recursion falls into.",
+  "post.drostePeriod": "How much zoom fits between one repeat and the next.",
+  "post.drosteTwist": "Winds the recursion into a spiral.",
+  "post.drosteSpin": "How fast the recursion drifts inward.",
+  "post.warp": "Pushes the frame around with smooth noise.",
+  "post.warpScale": "Size of the warp — low is broad swells, high is fine churn.",
+  "post.warpSpeed": "How fast the warp moves.",
+  "post.ripple": "Rings rippling out from the centre.",
+  "post.rippleFreq": "How tightly packed those rings are.",
+  "post.twist": "Rotates the frame more the further out you go.",
+  "post.bulge": "Pushes the centre toward you, or away, like a lens.",
+  "post.quasi": "Lays a quasicrystal interference pattern over the frame.",
+  "post.quasiFreq": "How fine that pattern is.",
+  "post.turbulence": "Churns the frame with layered noise.",
+  "post.turbulenceScale": "Size of the churn.",
+  "post.turbulenceSpeed": "How fast it churns.",
+
+  "post.flow": "Drags the frame along a current that remembers where it has been.",
+  "post.flowScale": "Size of the eddies in that current.",
+  "post.flowDecay": "How long the current holds its history. High is slow and smooth.",
+  "post.react": "A dividing, cell-like growth displaces the frame.",
+  "post.reactFeed": "How fast that growth spreads.",
+  "post.reactKill": "How fast it dies back. Works against feed to set the pattern.",
+  "post.reactScale": "Size of the cells.",
+  "post.slit": "Each slice of the frame is taken from a different moment.",
+  "post.slitAxis": "Whether the scan runs down the frame or across it.",
+  "post.slitLuma": "Take the delay from brightness rather than from position.",
+  "post.slitDepth": "How far back in time the oldest slice comes from.",
+
+  "post.disperse": "Splits the frame into its colours, like a prism.",
+  "post.blur": "Blur streaking out from the centre.",
+  "post.blurSpin": "Bends that streak into a spin around the centre.",
+  "post.bloom": "Glow bleeding out of the brightest areas.",
+  "post.bloomThreshold": "How bright an area has to be before it glows.",
+  "post.bloomRadius": "How far the glow spreads.",
+
+  "post.misreg": "Colour plates printed off-register.",
+  "post.misregSpread": "How far the plates drift apart.",
+  "post.moire": "Interference between overlaid print screens.",
+  "post.moireSpread": "How far those screens are turned from each other.",
+  "post.benday": "Ben-Day dots that shift and breathe rather than sit still.",
+  "post.krackle": "Kirby crackle — blots of black energy over the frame.",
+  "post.krackleScale": "Size of the crackle cells.",
+  "post.krackleThreshold": "How much of the frame the crackle covers.",
+  "post.bleed": "Ink spreading into the paper, softening the darks.",
+  "post.bleedRadius": "How far the ink spreads.",
+  "post.paper": "Newsprint texture and warmth over everything.",
+
+  psychedelia: "How eagerly the piece turns effects on and off by itself.",
+  cycleInterval: "Average seconds between one of those effects and the next.",
+  wander: "How far the composition drifts from the settings on this panel.",
+  wanderRate: "How fast that drift moves.",
+
+  stageDensity: "How many pages a formation is built from. Down for fewer, larger crops.",
+  stageScale: "Size of the formation, or of its pages where it has them.",
+  stageFeather: "Softness of each page's edge.",
+  stageOpacity: "Strength of each page. The main guard against a washed-out frame.",
+  stageMorph: "Where the formation sits between its two shapes.",
+  stageMorphRate: "How fast it swings between them.",
+  stageBillboard: "How strongly pages turn to face you instead of lying on the surface.",
+  stageBreathe: "Rate of the slow fade in and out of each page.",
+  stageFov: "Camera field of view. Wide is a fisheye, narrow flattens the formation.",
+  stageSpin: "How fast the whole formation turns.",
+  stageFlight: "How fast the camera flies through it.",
+  stageSolids: "Loose panels drifting in the middle distance.",
+  stageAlign: "How strongly pages follow the direction of a curving formation.",
+  stageDisplace: "Pushes the surface out along its own normal, in waves.",
+  stageDisplaceRate: "How fast that wave travels.",
+  stageSwirl: "A current running through the formation, scattering it.",
+
+  "weights.rhyme": "Favour a next panel that echoes the one on screen.",
+  "weights.clash": "Favour one that cuts against it.",
+  "weights.color": "Favour one close to it in colour.",
+  "weights.random": "Favour a wildcard, unrelated to what is showing.",
+};
+
+/** Section blurbs for the tuning panel, on the same principle as `HINTS`. */
+export const GROUP_HINTS: Record<ConfigGroup, string> = {
+  stack: "The stack of full-bleed panels the flat path composites.",
+  motion: "How panels drift, zoom and turn — and how fast the clock runs.",
+  post: "Treatments over the finished frame: trails, tone and colour.",
+  shape: "Distortions that re-map where the frame is drawn — folds, tunnels, mirrors.",
+  field: "Displacements driven by a simulation that carries its own history.",
+  optics: "Lens behaviour: dispersion, radial blur and bloom.",
+  print: "Comic-press artefacts — plates, screens, ink and paper.",
+  cycle: "How much the piece changes itself while it runs.",
+  stage: "The 3D formations. Ignored while the mode is a flat one.",
+  director: "What the engine looks for when it picks the next panel.",
+};
 
 const field = (
   group: ConfigGroup,
@@ -371,7 +513,7 @@ const field = (
   step: number,
   get: ConfigField["get"],
   set: ConfigField["set"]
-): ConfigField => ({ group, path, label, min, max, step, get, set });
+): ConfigField => ({ group, path, label, min, max, step, hint: HINTS[path] ?? "", get, set });
 
 /**
  * One source of truth for every tunable and its legal range. The tuning panel

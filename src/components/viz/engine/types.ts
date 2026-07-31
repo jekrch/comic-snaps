@@ -108,6 +108,14 @@ export interface Shard {
   feather: number;
   /** Eases the from->to interpolation. Identity when omitted. */
   ease?: (t: number) => number;
+  /**
+   * Clock second the reader stepped the run past this shard, if they did. It
+   * leaves over one fade from wherever it had got to rather than serving out
+   * its lifetime — and it leaves by opacity alone: the trajectory is still read
+   * off `bornAt` and `lifetime`, so a retired layer drifts out of the frame
+   * instead of jumping to a pose it had not reached yet.
+   */
+  retiredAt?: number;
 }
 
 /** Three components, in the same tuple style as `tint`. */
@@ -866,6 +874,26 @@ export function envelope(curve: Curve, age: number, lifetime: number): number {
   return curve.peak * a * a * (3 - 2 * a);
 }
 
+/**
+ * How much of a retired shard is left, 1 while it is still running its own
+ * course. Multiplied into the envelope rather than replacing it, so a shard
+ * retired while it was already fading only fades faster.
+ */
+function retirement(shard: Shard, time: number): number {
+  if (shard.retiredAt === undefined) return 1;
+  const span = shard.opacityCurve.fadeOut;
+  if (span <= 0) return 0;
+  const left = 1 - (time - shard.retiredAt) / span;
+  return left <= 0 ? 0 : left >= 1 ? 1 : easeInOut(left);
+}
+
+/** When a shard is off the frame for good, an early retirement included. */
+export function shardEnd(shard: Shard): number {
+  const natural = shard.bornAt + shard.lifetime;
+  if (shard.retiredAt === undefined) return natural;
+  return Math.min(natural, shard.retiredAt + shard.opacityCurve.fadeOut);
+}
+
 export function resolveShard(shard: Shard, time: number): DrawShard {
   const age = time - shard.bornAt;
   const raw = Math.min(1, Math.max(0, age / shard.lifetime));
@@ -880,7 +908,7 @@ export function resolveShard(shard: Shard, time: number): DrawShard {
     levels: shard.levels,
     tint: shard.tint,
     tintAmount: shard.tintAmount,
-    opacity: envelope(shard.opacityCurve, age, shard.lifetime),
+    opacity: envelope(shard.opacityCurve, age, shard.lifetime) * retirement(shard, time),
     feather: shard.mask === "hard" ? 0 : shard.feather,
   };
 }

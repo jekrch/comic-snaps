@@ -6,6 +6,7 @@ import { Rng } from "./rng";
 import { WebGLBackend } from "./backends/WebGLBackend";
 import { CssBackend } from "./backends/CssBackend";
 import type { VizBackend, VizFrame } from "./types";
+import { CAST_MAX } from "./cast";
 
 export type BackendKind = "webgl" | "css";
 
@@ -67,11 +68,17 @@ export class VizEngine {
   private disposed = false;
   private fps = 60;
   private lastShardCount = 0;
-  private featurePanelId: string | null = null;
+  private castIds: string[] = [];
   private nextFeatureCheck = 0;
+  /** Waiting on the next drawn frame. See `captureStill`. */
+  private stillWaiting: ((blob: Blob | null) => void)[] = [];
+  private stillMaxEdge = 2200;
+  /** True when the capture is what restarted a paused run, and has to stop it. */
+  private stillResumed = false;
 
-  /** Fired when the panel carrying the frame changes, for the credit line. */
-  onFeature: ((panel: Panel | null) => void) | null = null;
+  /** Fired when the panels carrying the frame change — most prominent first,
+   *  for the credit line and the stack behind it. */
+  onCast: ((panels: Panel[]) => void) | null = null;
   onBackend: ((kind: BackendKind) => void) | null = null;
 
   constructor(
@@ -156,6 +163,23 @@ export class VizEngine {
     this.director.setConfig(config);
   }
 
+  /**
+   * Lock the run onto one panel, or let it run on. Held, every layer born from
+   * here carries the same panel: the composition keeps moving, the imagery
+   * stays put. See `Director.setFocus`.
+   */
+  setFocus(panel: Panel | null): void {
+    this.director.setFocus(panel);
+    // The cast is sampled once a clock second, which is fine for a run that
+    // turns over on its own and far too slow to be the answer to a keypress.
+    this.nextFeatureCheck = 0;
+  }
+
+  /** The panel the run would bring up next, for a step past the newest one seen. */
+  nextPanel(): Panel | null {
+    return this.director.nextPick();
+  }
+
   start(): void {
     if (this.running || this.disposed) return;
     this.running = true;
@@ -193,15 +217,76 @@ export class VizEngine {
     this.lastShardCount = drawCount(frame);
     this.backend.render(frame);
 
+    // Read straight off the back of the draw, in the same task: the drawing
+    // buffer is not preserved — asking for it would cost every frame of the run
+    // a copy — so it is only readable before the compositor takes it away.
+    if (this.stillWaiting.length > 0) this.takeStill();
+
     if (this.clock >= this.nextFeatureCheck) {
       this.nextFeatureCheck = this.clock + 1;
-      const panel = this.director.feature(this.clock);
-      if ((panel?.id ?? null) !== this.featurePanelId) {
-        this.featurePanelId = panel?.id ?? null;
-        this.onFeature?.(panel);
+      // The order the stack is already showing is handed back in, so a sample
+      // that finds the same panels at the same weights leaves them where they
+      // are rather than re-sorting them under the reader's eye.
+      const cast = this.director.cast(this.clock, CAST_MAX, this.castIds);
+      const ids = cast.map((panel) => panel.id);
+      if (ids.length !== this.castIds.length || ids.some((id, i) => id !== this.castIds[i])) {
+        this.castIds = ids;
+        this.onCast?.(cast);
       }
     }
   };
+
+  /**
+   * A still of the frame currently on screen, for the page break to cut apart
+   * on the way out. Null on the fallback backend, which has no canvas to read —
+   * the break plays on plain black there.
+   *
+   * Resolved from inside the frame loop rather than here, because the pixels
+   * only exist for the length of the task that drew them.
+   */
+  captureStill(maxEdge = 2200): Promise<Blob | null> {
+    if (this.disposed || !this.canvas || this.backendKind !== "webgl") {
+      return Promise.resolve(null);
+    }
+    this.stillMaxEdge = maxEdge;
+    return new Promise<Blob | null>((resolve) => {
+      this.stillWaiting.push(resolve);
+      // A paused run is not drawing, so there would be nothing in the buffer to
+      // read. One frame puts something there and leaves it paused.
+      if (!this.running) {
+        this.start();
+        this.stillResumed = true;
+      }
+    });
+  }
+
+  private takeStill(): void {
+    const waiting = this.stillWaiting.splice(0);
+    if (this.stillResumed) {
+      this.stillResumed = false;
+      this.stop();
+    }
+
+    const canvas = this.canvas;
+    if (!canvas || canvas.width < 1 || canvas.height < 1) {
+      waiting.forEach((resolve) => resolve(null));
+      return;
+    }
+
+    // Copied down to a flat 2D canvas first: the encode is the expensive half,
+    // and the still is about to be flown off the screen in pieces.
+    const shrink = Math.min(1, this.stillMaxEdge / Math.max(canvas.width, canvas.height));
+    const still = document.createElement("canvas");
+    still.width = Math.max(1, Math.round(canvas.width * shrink));
+    still.height = Math.max(1, Math.round(canvas.height * shrink));
+    const ctx = still.getContext("2d");
+    if (!ctx) {
+      waiting.forEach((resolve) => resolve(null));
+      return;
+    }
+    ctx.drawImage(canvas, 0, 0, still.width, still.height);
+    still.toBlob((blob) => waiting.forEach((resolve) => resolve(blob)), "image/jpeg", 0.9);
+  }
 
   /** Clamped here as well as in the UI, so a hand-written config cannot push
    *  the clock past the rate the safety floors were sized for. */
@@ -238,6 +323,8 @@ export class VizEngine {
   dispose(): void {
     this.disposed = true;
     this.stop();
+    // Anything waiting on a frame that will now never be drawn.
+    this.stillWaiting.splice(0).forEach((resolve) => resolve(null));
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.teardownBackend();

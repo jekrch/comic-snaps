@@ -74,6 +74,9 @@ export default function App() {
     };
   });
 
+  /** True once the run is behind a still of itself and on its way out. */
+  const [vizLeaving, setVizLeaving] = useState(false);
+
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
 
   /**
@@ -94,6 +97,7 @@ export default function App() {
   const handleStartViz = useCallback(
     (options: VizLaunchOptions) => {
       const cfg = syncVizRun(options.presetId, options.config);
+      setVizLeaving(false);
       // The chooser is left open behind the run — leaving the run drops the reader
       // back onto it with their preset, config and speed still selected.
       setVizRun({ ...options, custom: cfg !== null });
@@ -153,6 +157,7 @@ export default function App() {
   const handleCloseViz = useCallback(() => {
     setVizRun(null);
     syncViz(false);
+    setVizLeaving(false);
   }, [syncViz]);
 
   useEffect(() => {
@@ -455,7 +460,7 @@ export default function App() {
         <VizLaunchModal
           panelCount={sortedPanels.length}
           initialSpeed={initialVizSpeed}
-          suspended={vizRun !== null}
+          suspended={vizRun !== null && !vizLeaving}
           runPresetId={vizRun?.presetId ?? null}
           runCustomJson={vizCustomJson}
           onStart={handleStartViz}
@@ -464,7 +469,13 @@ export default function App() {
       )}
 
       {vizRun && status === "ready" && (
-        <Suspense fallback={<div className="fixed inset-0 z-100 bg-black" />}>
+        <Suspense
+          /* Nothing: the run fades up over the wall, and a black sheet thrown up
+             while the engine's chunk lands would be the cut that fade exists to
+             avoid — on the one launch that has to fetch it, which is the launch
+             the reader sees first. */
+          fallback={null}
+        >
           <VisualizerOverlay
             panels={sortedPanels}
             config={vizRun.config}
@@ -480,6 +491,7 @@ export default function App() {
                when the panel is closed. */
             onOpenPanel={handleSelectPanel}
             viewerOpen={openIndex >= 0}
+            onLeaving={() => setVizLeaving(true)}
             onClose={handleCloseViz}
           />
         </Suspense>

@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ChevronRight, ChevronsDownUp, ChevronsUpDown, Info } from "lucide-react";
 import type { ConfigField, ConfigGroup, VizConfig } from "./vizConfig";
-import { CONFIG_FIELDS } from "./vizConfig";
+import { CONFIG_FIELDS, GROUP_HINTS } from "./vizConfig";
 import type { EngineStats, VizEngine } from "./engine/Engine";
 
 const GROUP_ORDER: ConfigGroup[] = [
@@ -16,14 +18,91 @@ const GROUP_ORDER: ConfigGroup[] = [
   "director",
 ];
 
+/**
+ * Which sections were open last time, kept across mounts. The panel is toggled
+ * off and on constantly while tuning, and re-opening it to a wall of collapsed
+ * sections every time would be a chore of its own.
+ */
+let openMemo: ConfigGroup[] = ["stack", "motion"];
+
+/** How long the slide out takes. Matched by `vizTuneOut` in the stylesheet, and
+ *  read by the overlay, which is what holds the panel mounted for it. */
+export const TUNE_PANEL_EXIT_MS = 220;
+
 interface VizDebugPanelProps {
   /** Mutated in place — the engine reads it every frame, so edits are live. */
   config: VizConfig;
   engine: VizEngine | null;
   seed: string;
+  /** Rendered, but on its way out: play the exit rather than the entrance. */
+  leaving?: boolean;
   /** Lets the overlay chrome re-read fields it also shows, such as speed. */
   onChange?: () => void;
   onClose: () => void;
+}
+
+/** Decimals worth showing, from how finely the field can actually be moved. */
+function format(value: number, step: number): string {
+  if (step >= 1) return value.toFixed(0);
+  if (step >= 0.05) return value.toFixed(2);
+  if (step >= 0.005) return value.toFixed(3);
+  return value.toFixed(4);
+}
+
+/**
+ * A tooltip on an info icon, portalled to the body: the panel is a scroll
+ * container, and anything positioned inside it gets clipped at its edge.
+ * Opens on hover for a mouse and on tap for a finger, which has no hover to
+ * give.
+ */
+function Hint({ text, label }: { text: string; label: string }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [at, setAt] = useState<{ left: number; top: number } | null>(null);
+
+  const open = () => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Flipped to the left of the icon only if there is no room to its right,
+    // which on a panel pinned to the left edge is essentially never.
+    const left = rect.right + 8;
+    setAt({
+      left: Math.min(left, window.innerWidth - 248),
+      // Anchored below its own top, then lifted off the bottom edge if the row
+      // is near it.
+      top: Math.min(rect.top - 4, window.innerHeight - 120),
+    });
+  };
+  const close = () => setAt(null);
+
+  return (
+    <>
+      <button
+        ref={ref}
+        type="button"
+        className="viz-hint-icon shrink-0 flex items-center"
+        aria-label={`What ${label} does`}
+        onPointerEnter={(e) => e.pointerType === "mouse" && open()}
+        onPointerLeave={(e) => e.pointerType === "mouse" && close()}
+        onFocus={open}
+        onBlur={close}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (at) close();
+          else open();
+        }}
+      >
+        <Info size={10} />
+      </button>
+      {at &&
+        createPortal(
+          <div className="viz-hint-pop" style={{ left: at.left, top: Math.max(8, at.top) }} role="tooltip">
+            {text}
+          </div>,
+          document.body
+        )}
+    </>
+  );
 }
 
 /**
@@ -35,17 +114,26 @@ export default function VizDebugPanel({
   config,
   engine,
   seed,
+  leaving = false,
   onChange,
   onClose,
 }: VizDebugPanelProps) {
   const [, bump] = useReducer((n: number) => n + 1, 0);
   const [stats, setStats] = useState<EngineStats | null>(null);
   const [copied, setCopied] = useState<"json" | "link" | null>(null);
+  const [open, setOpen] = useState<Set<ConfigGroup>>(() => new Set(openMemo));
 
+  // Stopped for the slide out: the readout re-rendering under a panel already
+  // on its way off screen is work spent on something nobody is reading.
   useEffect(() => {
+    if (leaving) return;
     const id = window.setInterval(() => setStats(engine?.stats ?? null), 250);
     return () => window.clearInterval(id);
-  }, [engine]);
+  }, [engine, leaving]);
+
+  useEffect(() => {
+    openMemo = [...open];
+  }, [open]);
 
   const groups = useMemo(() => {
     const byGroup = new Map<ConfigGroup, ConfigField[]>();
@@ -56,6 +144,15 @@ export default function VizDebugPanel({
     }
     return GROUP_ORDER.map((group) => ({ group, fields: byGroup.get(group) ?? [] }));
   }, []);
+
+  const allOpen = open.size === groups.length;
+  const toggleAll = () => setOpen(allOpen ? new Set() : new Set(GROUP_ORDER));
+  const toggle = (group: ConfigGroup) =>
+    setOpen((current) => {
+      const next = new Set(current);
+      if (!next.delete(group)) next.add(group);
+      return next;
+    });
 
   /**
    * The link to this exact run. The address bar already carries every slider on
@@ -83,74 +180,128 @@ export default function VizDebugPanel({
   };
 
   return (
+    /* A column rather than one long scroll: the readout at the top and the copy
+       buttons at the bottom are wanted at every point in the list, and with a
+       hundred-odd sliders between them both used to be a scroll away. */
     <div
-      className="absolute top-0 left-0 bottom-0 w-62 max-w-[80vw] z-20 overflow-y-auto info-modal-scroll pointer-events-auto"
-      style={{ background: "rgba(10,10,10,0.86)", backdropFilter: "blur(8px)" }}
+      className={`viz-tune-panel absolute top-0 left-0 bottom-0 w-72 max-w-[85vw] z-20
+                  flex flex-col ${leaving ? "viz-tune-out pointer-events-none" : "viz-tune-in pointer-events-auto"}`}
+      aria-hidden={leaving}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <div className="px-3 py-2.5 flex items-center justify-between border-b border-white/10">
+      <div className="viz-tune-band shrink-0 px-3 py-2.5 flex items-center gap-2 border-b border-black/40">
         <span className="font-display text-[10px] tracking-widest uppercase text-accent">
           viz tuning
         </span>
         <button
+          onClick={toggleAll}
+          className="viz-tune-btn ml-auto h-6 px-1.5 flex items-center text-white/55 hover:text-white/90"
+          title={allOpen ? "Collapse every section" : "Expand every section"}
+          aria-label={allOpen ? "Collapse every section" : "Expand every section"}
+        >
+          {allOpen ? <ChevronsDownUp size={12} /> : <ChevronsUpDown size={12} />}
+        </button>
+        <button
           onClick={onClose}
-          className="font-display text-[10px] tracking-widest uppercase text-white/40 hover:text-white/80"
+          className="viz-tune-btn h-6 px-2 font-display text-[9px] tracking-widest uppercase
+                     text-white/50 hover:text-white/90"
         >
           hide
         </button>
       </div>
 
-      <div className="px-3 py-2 font-mono text-[10px] leading-relaxed text-ink-muted border-b border-white/10">
-        <div>
-          {stats ? `${stats.fps.toFixed(0)} fps` : "—"} · {stats?.backend ?? "—"} ·{" "}
-          {stats?.scene ?? "—"}
+      <div className="viz-tune-band shrink-0 px-2.5 py-2.5 border-b border-black/40">
+        <div className="viz-tune-readout px-2 py-1.5 rounded-xs font-mono text-[10px] leading-relaxed tracking-wide">
+          <div>
+            {stats ? `${stats.fps.toFixed(0)} fps` : "—"} · {stats?.backend ?? "—"} ·{" "}
+            {stats?.scene ?? "—"}
+          </div>
+          <div>
+            shards {stats?.shards ?? 0} · tex {stats?.resident ?? 0}
+            {stats?.pending ? ` (+${stats.pending})` : ""}
+          </div>
+          <div className="opacity-55">seed {seed}</div>
         </div>
-        <div>
-          shards {stats?.shards ?? 0} · tex {stats?.resident ?? 0}
-          {stats?.pending ? ` (+${stats.pending})` : ""}
-        </div>
-        <div className="text-white/30">seed {seed}</div>
       </div>
 
-      {groups.map(({ group, fields }) => (
-        <div key={group} className="px-3 py-2 border-b border-white/5">
-          <div className="font-display text-[9px] tracking-widest uppercase text-white/30 mb-1.5">
-            {group}
-          </div>
-          {fields.map((entry) => (
-            <label key={entry.path} className="block mb-1.5">
-              <div className="flex justify-between font-mono text-[10px] text-ink-muted">
-                <span>{entry.label}</span>
-                <span className="text-white/50">{entry.get(config).toFixed(3)}</span>
+      <div className="flex-1 min-h-0 overflow-y-auto info-modal-scroll">
+        {groups.map(({ group, fields }) => {
+          const expanded = open.has(group);
+          return (
+            <div key={group}>
+              <div className="viz-tune-head flex items-center gap-1.5 pr-2">
+                <button
+                  onClick={() => toggle(group)}
+                  className="flex-1 min-w-0 flex items-center gap-1.5 px-2.5 py-2 text-left"
+                  aria-expanded={expanded}
+                >
+                  <ChevronRight
+                    size={11}
+                    className={`shrink-0 text-white/35 transition-transform duration-150 ${
+                      expanded ? "rotate-90" : ""
+                    }`}
+                  />
+                  <span className="font-display text-[9px] tracking-widest uppercase text-white/45">
+                    {group}
+                  </span>
+                  <span className="font-mono text-[9px] text-white/20">{fields.length}</span>
+                </button>
+                <Hint text={GROUP_HINTS[group]} label={group} />
               </div>
-              <input
-                type="range"
-                min={entry.min}
-                max={entry.max}
-                step={entry.step}
-                value={entry.get(config)}
-                onChange={(e) => {
-                  entry.set(config, Number(e.target.value));
-                  bump();
-                  onChange?.();
-                }}
-                className="w-full accent-accent h-1 cursor-pointer"
-              />
-            </label>
-          ))}
-        </div>
-      ))}
 
-      <div className="px-3 py-3 flex flex-col gap-1.5">
+              {expanded && (
+                <div className="viz-tune-section px-3 py-2 border-b border-black/40 bg-black/20">
+                  {fields.map((entry) => {
+                    const value = entry.get(config);
+                    const fill = ((value - entry.min) / (entry.max - entry.min)) * 100;
+                    return (
+                      <div key={entry.path} className="mb-2 last:mb-0.5">
+                        <div className="flex items-center gap-1 font-mono text-[10px] text-ink-muted">
+                          <label htmlFor={`viz-${entry.path}`} className="truncate cursor-pointer">
+                            {entry.label}
+                          </label>
+                          {entry.hint && <Hint text={entry.hint} label={entry.label} />}
+                          <span className="ml-auto shrink-0 text-white/55 tabular-nums">
+                            {format(value, entry.step)}
+                          </span>
+                        </div>
+                        <input
+                          id={`viz-${entry.path}`}
+                          type="range"
+                          min={entry.min}
+                          max={entry.max}
+                          step={entry.step}
+                          value={value}
+                          onChange={(e) => {
+                            entry.set(config, Number(e.target.value));
+                            bump();
+                            onChange?.();
+                          }}
+                          className="viz-slider"
+                          style={{ "--viz-fill": `${fill}%` } as React.CSSProperties}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="viz-tune-band shrink-0 px-3 py-3 flex flex-col gap-1.5 border-t border-white/6">
         <button
           onClick={() => copy("link")}
-          className="w-full font-display text-[10px] tracking-widest uppercase text-white/60 hover:text-accent border border-white/15 rounded py-1.5"
+          className="viz-tune-btn w-full font-display text-[10px] tracking-widest uppercase
+                     text-white/60 hover:text-accent py-1.5"
         >
           {copied === "link" ? "copied" : "copy link to this run"}
         </button>
         <button
           onClick={() => copy("json")}
-          className="w-full font-display text-[10px] tracking-widest uppercase text-white/60 hover:text-accent border border-white/15 rounded py-1.5"
+          className="viz-tune-btn w-full font-display text-[10px] tracking-widest uppercase
+                     text-white/60 hover:text-accent py-1.5"
         >
           {copied === "json" ? "copied" : "copy config json"}
         </button>

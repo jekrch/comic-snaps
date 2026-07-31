@@ -8,7 +8,8 @@ import { SafetyGovernor } from "./safety";
 import { Stage } from "./Stage";
 import { Wander } from "./Wander";
 import type { PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
-import { resolveShard } from "./types";
+import { resolveShard, shardEnd } from "./types";
+import { CAST_FLOOR, rankCast } from "./cast";
 import { chromaticDominant, complement, labToRgb, normalizeTint } from "./palette";
 import type { Rgb } from "./palette";
 import { driftStack } from "./scenes/driftStack";
@@ -57,6 +58,8 @@ export class Director {
   private nextShardId = 1;
   private lastBeat = -1;
   private seeded = false;
+  /** The panel the run is locked onto, or null while it is free-running. */
+  private focus: Panel | null = null;
   private aspect = 1;
   private lastClock = -1;
   private readonly phases: VizPhases = {
@@ -125,27 +128,100 @@ export class Director {
 
   /** Panels worth having resident soon — the engine hands these to the pool. */
   prefetch(): Panel[] {
-    this.fillUpcoming();
-    const upcoming = this.upcoming.map((pick) => pick.panel);
     // A stage's bound panels are wanted every frame it is on screen, not just
     // when they were chosen: it holds a dozen at once, which is most of the
     // pool, so leaving them out would let the prefetch evict a live slot.
-    return this.stage.active ? [...this.stage.wants(), ...upcoming] : upcoming;
+    const resident = this.stage.active ? this.stage.wants() : [];
+    // Held, there is nothing upcoming to fetch — every layer that is born from
+    // here carries the one panel — and asking for a pick would only churn the
+    // recency window against a selection that is not being made.
+    if (this.focus) return [this.focus, ...resident];
+    this.fillUpcoming();
+    return [...resident, ...this.upcoming.map((pick) => pick.panel)];
   }
 
-  /** The panel currently carrying the frame, for the attribution line. */
-  feature(time: number): Panel | null {
-    if (this.stage.active) return this.stage.feature(time);
-    let best: Panel | null = null;
-    let bestOpacity = 0.15;
+  /**
+   * Lock the composition onto one panel, or let it run on.
+   *
+   * A held run is not a stopped one: layers are still born, still drift, and
+   * the post chain still breathes — they all just carry the same panel, so the
+   * frame keeps moving while the imagery stays put. That is the distinction
+   * worth keeping against the speed control's floor and against an outright
+   * pause: a screensaver that freezes is off, and one that will not settle is
+   * no way to look at a panel.
+   *
+   * Locking turns the frame over onto the new panel rather than waiting for the
+   * layers already in flight to expire, which on a slow preset is most of a
+   * minute — far too long to read as the answer to a keypress.
+   */
+  setFocus(panel: Panel | null): void {
+    if (this.focus?.id === panel?.id) return;
+    this.focus = panel;
+    // Picks made against the old anchor describe a composition that is about to
+    // be replaced.
+    this.upcoming.length = 0;
+    if (panel) this.turnOver();
+  }
+
+  /**
+   * The panel the run would bring up next — its own weighted choice, left in
+   * place rather than consumed.
+   *
+   * This is what a step forward past the newest thing seen lands on, so that
+   * stepping ahead is the composition brought forward rather than a jump to
+   * somewhere it was never going: the rhyme and clash policies still choose it,
+   * off the panel being stepped away from.
+   */
+  nextPick(): Panel | null {
+    this.fillUpcoming();
+    return this.upcoming[0]?.panel ?? null;
+  }
+
+  /**
+   * Put everything on screen into its fade and bring the held panel up against
+   * it. Both paths get the same treatment, so a step is one gesture whichever
+   * preset is running — a crossfade, not a cut.
+   */
+  private turnOver(): void {
+    // Nothing has been drawn yet, so there is nothing to turn over: the focus
+    // will be picked up by the first layer born.
+    if (this.lastClock < 0) return;
+    if (this.stage.active) {
+      // The stage takes its panels from `pick` on the frames its slots expire,
+      // which retiring them has just arranged for.
+      this.stage.retire(this.lastClock);
+      return;
+    }
+    for (const shard of this.shards) {
+      if (shard.retiredAt === undefined) shard.retiredAt = this.lastClock;
+    }
+    // One layer now, against the outgoing fade. The rest of the target count
+    // fills in on the beats that follow, which is also what keeps them
+    // staggered rather than turning the whole stack over together later.
+    this.spawn(this.lastClock);
+  }
+
+  /**
+   * The panels currently carrying the frame, most prominent first — the stack
+   * the pinned label shows, and whose head is the attribution line.
+   *
+   * Weight is opacity scaled by how much of the frame the layer covers, summed
+   * per panel: a panel is more present for being large, and more present again
+   * for being on screen twice. The area is rooted so that size informs the
+   * order without deciding it outright — a small, bright, front-and-centre crop
+   * is what a reader is looking at, whatever is spread out behind it.
+   */
+  cast(time: number, limit: number, incumbents: string[] = []): Panel[] {
+    if (this.stage.active) return this.stage.cast(time, limit, incumbents);
+    const scores = new Map<string, number>();
     for (const shard of this.shards) {
       const draw = resolveShard(shard, time);
-      if (draw.opacity > bestOpacity) {
-        bestOpacity = draw.opacity;
-        best = this.byId.get(shard.panelId) ?? null;
-      }
+      if (draw.opacity <= CAST_FLOOR) continue;
+      const area = Math.max(0, draw.dstRect.w * draw.dstRect.h);
+      const weight = draw.opacity * Math.sqrt(area);
+      scores.set(shard.panelId, (scores.get(shard.panelId) ?? 0) + weight);
     }
-    return best;
+    return rankCast(scores, incumbents, limit, (id) => this.byId.get(id) ?? null);
   }
 
   update(time: number, dt: number): VizFrame {
@@ -196,7 +272,7 @@ export class Director {
       };
     }
 
-    this.shards = this.shards.filter((shard) => time < shard.bornAt + shard.lifetime);
+    this.shards = this.shards.filter((shard) => time < shardEnd(shard));
 
     const target = Math.max(1, Math.round(this.config.layerCount));
 
@@ -213,8 +289,12 @@ export class Director {
       const beat = Math.floor(time / Math.max(0.1, this.config.beat));
       if (beat !== this.lastBeat) {
         this.lastBeat = beat;
+        // A retired layer is on its way out however much life it had left, so
+        // it is not one of the layers the frame is being held up by.
         let holding = this.shards.filter(
-          (shard) => time < shard.bornAt + shard.lifetime - shard.opacityCurve.fadeOut
+          (shard) =>
+            shard.retiredAt === undefined &&
+            time < shard.bornAt + shard.lifetime - shard.opacityCurve.fadeOut
         ).length;
         while (holding < target && this.shards.length < target * 2) {
           this.spawn(time);
@@ -326,6 +406,10 @@ export class Director {
   }
 
   private takeUpcoming(): Pick | null {
+    // A held run has one answer to every request for a panel, which is what
+    // makes it hold: the flat path's next shard and the stage's next tenancy
+    // both come through here.
+    if (this.focus) return { panel: this.focus, affinity: "random" };
     this.fillUpcoming();
     return this.upcoming.shift() ?? null;
   }

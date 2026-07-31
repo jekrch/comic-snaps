@@ -5,11 +5,22 @@ import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
 import { MODE_SWITCH_MS, VIZ_SPEEDS, cloneConfig, lerpConfigInto, nearestSpeed } from "./vizConfig";
 import type { VizConfig } from "./vizConfig";
 import { VIZ_PRESETS, presetConfig } from "./vizPresets";
-import VizAttributionBar, { ATTRIBUTION_BAR_HEIGHT } from "./VizAttributionBar";
+import VizPanelStack, {
+  PANEL_STACK_EXIT_MS,
+  PANEL_STACK_ROW_HEIGHT,
+} from "./VizPanelStack";
+import { CAST_MAX } from "./engine/cast";
 import VizControls from "./VizControls";
-import VizDebugPanel from "./VizDebugPanel";
+import VizDebugPanel, { TUNE_PANEL_EXIT_MS } from "./VizDebugPanel";
+import VizPageBreak, { vizBreakMs } from "./VizPageBreak";
+import { useUnmountDelay } from "./useUnmountDelay";
 
 const CONTROLS_IDLE_MS = 2000;
+
+/** Longest the close will wait on a still of the run before going without one.
+ *  The capture is a frame and an encode; this is only here so a wedged tab
+ *  cannot leave the reader holding a run they have asked to leave. */
+const FRAME_CAPTURE_MS = 400;
 
 /** How long the tuning panel has to be still before the run's config is handed
  *  up to the URL. A slider drag is a hundred changes; the address bar wants the
@@ -40,6 +51,13 @@ interface VisualizerOverlayProps {
   onOpenPanel?: (panel: Panel) => void;
   /** True while that viewer is up: the run carries on, but unattended. */
   viewerOpen?: boolean;
+  /**
+   * The run has been asked to leave and the still of it is up. Everything the
+   * reader is being handed back to should come back now, behind the break, so
+   * the wall the shards open onto is the one they will be standing on when the
+   * last of them is gone.
+   */
+  onLeaving?: () => void;
   onClose: () => void;
 }
 
@@ -101,6 +119,7 @@ export default function VisualizerOverlay({
   onConfigChange,
   onOpenPanel,
   viewerOpen = false,
+  onLeaving,
   onClose,
 }: VisualizerOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -112,11 +131,23 @@ export default function VisualizerOverlay({
   const chromeHeldRef = useRef(false);
 
   const [engine, setEngine] = useState<VizEngine | null>(null);
-  const [feature, setFeature] = useState<Panel | null>(null);
+  /** Everything carrying the frame, most prominent first. */
+  const [cast, setCast] = useState<Panel[]>([]);
   const [chromeVisible, setChromeVisible] = useState(true);
   const [paused, setPaused] = useState(false);
   const [pinned, setPinned] = useState(pinLabel);
   const [trail, dispatchTrail] = useReducer(trailReducer, EMPTY_TRAIL);
+  /**
+   * Whether the run is parked on the panel the trail is pointing at, rather
+   * than choosing its own. Distinct from `paused`, which stops the clock: a
+   * held run keeps drifting and cycling, it just stops changing what it is
+   * drifting.
+   */
+  const [held, setHeld] = useState(false);
+  const heldRef = useRef(held);
+  heldRef.current = held;
+  const trailRef = useRef(trail);
+  trailRef.current = trail;
 
   const { seed, showDebugDefault } = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
@@ -126,6 +157,10 @@ export default function VisualizerOverlay({
     };
   }, []);
   const [showDebug, setShowDebug] = useState(showDebugDefault);
+  // The panel is dismissed from three places — its own button, the chrome, and
+  // the `d` key — so the slide out is driven off this flag rather than off any
+  // one of them.
+  const debugPanel = useUnmountDelay(showDebug, TUNE_PANEL_EXIT_MS);
 
   // Cloned, then mutated in place: the engine reads it every frame so the debug
   // sliders take effect without a remount, and the caller's object is left alone.
@@ -148,12 +183,20 @@ export default function VisualizerOverlay({
   // wall as it was filtered when the visualizer opened.
   const hasPanels = usable.length > 0;
 
-  // Every feature also lands in the trail, whether or not the label is pinned —
+  // The head of the cast is the feature — what the credit line has always
+  // named. It also lands in the trail, whether or not the label is pinned:
   // pinning it mid-run should show what has already been on screen, not start
-  // an empty history.
-  const handleFeature = useCallback((panel: Panel | null) => {
-    setFeature(panel);
-    if (panel) dispatchTrail({ type: "feature", panel });
+  // an empty history. The rest of the cast is live only; a panel that has left
+  // the frame is history, and history is what the trail is.
+  //
+  // Held, the run is carrying whatever the trail is already pointing at, so
+  // there is nothing new to record — and recording it would append a panel the
+  // reader had stepped *back* to onto the end of their own history.
+  const handleCast = useCallback((panels: Panel[]) => {
+    setCast(panels);
+    if (!heldRef.current && panels.length > 0) {
+      dispatchTrail({ type: "feature", panel: panels[0] });
+    }
   }, []);
 
   useEffect(() => {
@@ -161,7 +204,7 @@ export default function VisualizerOverlay({
     if (!container || !hasPanels) return;
 
     const instance = new VizEngine(container, usableRef.current, configRef.current, seed);
-    instance.onFeature = handleFeature;
+    instance.onCast = handleCast;
     instance.start();
     engineRef.current = instance;
     setEngine(instance);
@@ -171,7 +214,7 @@ export default function VisualizerOverlay({
       engineRef.current = null;
       setEngine(null);
     };
-  }, [hasPanels, seed, handleFeature]);
+  }, [hasPanels, seed, handleCast]);
 
   // Distinguishes "still loading" from "the filters really do match nothing".
   const [settled, setSettled] = useState(false);
@@ -180,9 +223,78 @@ export default function VisualizerOverlay({
     return () => window.clearTimeout(id);
   }, []);
 
-  // --- screensaver hygiene --------------------------------------------------
+  // --- arrival and departure ------------------------------------------------
+
+  /**
+   * The run fades up over the wall and leaves by breaking apart over it.
+   *
+   * The two are deliberately not symmetrical. Arriving, there is nothing to
+   * take apart yet — the composition has not started and a break would be
+   * cutting up a screen the reader is in the middle of leaving anyway — so it
+   * simply comes up. Leaving, there is a frame worth keeping hold of for a
+   * second longer, and that is what the break is for.
+   */
+  const [closing, setClosing] = useState(false);
+  // Read by the close path, which must not depend on a render having landed.
+  const closingRef = useRef(false);
+
+  /** The run's own last frame, for the break that closes over it. */
+  const [frameStill, setFrameStill] = useState<string | null>(null);
+  const frameStillRef = useRef<string | null>(null);
+  useEffect(
+    () => () => {
+      if (frameStillRef.current) URL.revokeObjectURL(frameStillRef.current);
+      frameStillRef.current = null;
+    },
+    []
+  );
+
+  /**
+   * Every way out of the run goes through here. The run is photographed, the
+   * still goes up over it, and then it breaks apart onto the wall underneath —
+   * so what shatters is the composition the reader was actually watching, down
+   * to the frame they asked to leave on.
+   */
+  const requestClose = useCallback(() => {
+    // Marked here rather than in the effect, so a second Escape while the
+    // capture is in flight is a no-op rather than a second capture.
+    if (closingRef.current) return;
+    closingRef.current = true;
+    setChromeVisible(false);
+    window.clearTimeout(idleTimerRef.current);
+
+    const engine = engineRef.current;
+    void Promise.race([
+      engine?.captureStill() ?? Promise.resolve(null),
+      new Promise<null>((resolve) => window.setTimeout(() => resolve(null), FRAME_CAPTURE_MS)),
+    ]).then((blob) => {
+      const still = blob ? URL.createObjectURL(blob) : null;
+      frameStillRef.current = still;
+      setFrameStill(still);
+      // Stopped only now: the still it hands back has to be a frame it drew.
+      // Nothing is watching the surface after this — the still is standing in
+      // front of it — so the run has no reason to carry on rendering.
+      engine?.stop();
+      setClosing(true);
+      onLeaving?.();
+    });
+  }, [onLeaving]);
 
   useEffect(() => {
+    if (!closing) return;
+    const id = window.setTimeout(onClose, vizBreakMs());
+    return () => window.clearTimeout(id);
+  }, [closing, onClose]);
+
+  // --- screensaver hygiene --------------------------------------------------
+
+  // Given back when the break starts rather than at unmount, which is a second
+  // later: dropping the gutter widens the page under the overlay, and the wall
+  // coming up through the gutters has to be the one the reader is going to be
+  // left standing on. Behind the still, which is whole at that instant, the
+  // reflow is not visible; a second later, through the seams, it would be.
+  useEffect(() => {
+    if (closing) return;
     const root = document.documentElement;
     const previousOverflow = document.body.style.overflow;
     const previousRootOverflow = root.style.overflow;
@@ -198,7 +310,7 @@ export default function VisualizerOverlay({
       root.style.overflow = previousRootOverflow;
       root.style.scrollbarGutter = previousGutter;
     };
-  }, []);
+  }, [closing]);
 
   const [isFullscreen, setIsFullscreen] = useState(() => Boolean(document.fullscreenElement));
 
@@ -388,23 +500,69 @@ export default function VisualizerOverlay({
 
   const togglePinned = useCallback(() => {
     // Unpinning lets go of the trail as well: the transient credit line the bar
-    // hands back to only ever describes what is on screen now.
+    // hands back to only ever describes what is on screen now. Not while the run
+    // is held, though — there the cursor is not a reading position, it is the
+    // panel being held, and dropping the label must not move the composition.
     setPinned((wasPinned) => {
-      if (wasPinned) dispatchTrail({ type: "live" });
+      if (wasPinned && !heldRef.current) dispatchTrail({ type: "live" });
       return !wasPinned;
     });
     wakeChrome();
   }, [wakeChrome]);
 
-  /** Stepping the trail pins the label, so the arrow keys work from a bare run. */
-  const stepTrail = useCallback(
+  /**
+   * Move the run on by a panel.
+   *
+   * Stepping holds it. A step that let the run carry on would be over before
+   * the panel it landed on had finished arriving — the composition would have
+   * chosen its own next layer within a beat — so the arrows and the transport
+   * are one control: they step, and stepping parks.
+   *
+   * Forward from the newest panel seen takes the director's own next choice
+   * rather than a random one, so stepping ahead is the run brought forward
+   * rather than a jump to somewhere it was never going. Backward walks the
+   * trail, which is the history the pinned label was already showing.
+   */
+  const stepPanel = useCallback(
     (delta: -1 | 1) => {
+      const { items, cursor } = trailRef.current;
+      if (delta === 1 && cursor >= items.length - 1) {
+        const panel = engineRef.current?.nextPanel();
+        if (panel) dispatchTrail({ type: "feature", panel });
+      } else {
+        dispatchTrail({ type: "step", delta });
+      }
+      setHeld(true);
       setPinned(true);
-      dispatchTrail({ type: "step", delta });
       wakeChrome();
     },
     [wakeChrome]
   );
+
+  /**
+   * Park the run on the panel it is carrying, or let it go again. Releasing
+   * snaps the label back to the live head, so the trail resumes recording from
+   * the run rather than staying where it was let go.
+   */
+  const toggleHold = useCallback(() => {
+    const next = !heldRef.current;
+    setHeld(next);
+    if (next) setPinned(true);
+    else dispatchTrail({ type: "live" });
+    wakeChrome();
+  }, [wakeChrome]);
+
+  /**
+   * What the run is locked onto: the panel the trail is pointing at while it is
+   * held, and nothing while it is not. Handed down declaratively rather than
+   * stepped imperatively, so holding and walking the trail come out as the same
+   * thing — a panel the composition should be carrying — and there is one place
+   * that says so.
+   */
+  const focusPanel = held ? trail.items[trail.cursor] ?? null : null;
+  useEffect(() => {
+    engine?.setFocus(focusPanel);
+  }, [engine, focusPanel]);
 
   const openInViewer = useCallback(
     (panel: Panel) => {
@@ -428,8 +586,10 @@ export default function VisualizerOverlay({
   // The viewer on top owns the keyboard while it is open: Escape has to close
   // the panel rather than the run beneath it, and the arrows have to page the
   // lightbox rather than walk the trail.
+  // Also dead while the page is sealing: the run is on its way out and the keys
+  // would be acting on something the reader can no longer see.
   useEffect(() => {
-    if (viewerOpen) return;
+    if (viewerOpen || closing) return;
 
     const onKey = (event: KeyboardEvent) => {
       // Escape belongs to the open menu first — it closes that, not the run.
@@ -437,7 +597,7 @@ export default function VisualizerOverlay({
         return;
       } else if (event.key === "Escape" || event.key === "q") {
         event.preventDefault();
-        onClose();
+        requestClose();
       } else if (event.key === "m" || event.key === "M") {
         event.preventDefault();
         cycleMode(event.shiftKey ? -1 : 1);
@@ -458,12 +618,15 @@ export default function VisualizerOverlay({
         nudgeSpeed(1);
       } else if (event.key === "l") {
         togglePinned();
+      } else if (event.key === "h") {
+        event.preventDefault();
+        toggleHold();
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        stepTrail(-1);
+        stepPanel(-1);
       } else if (event.key === "ArrowRight") {
         event.preventDefault();
-        stepTrail(1);
+        stepPanel(1);
       } else {
         wakeChrome();
       }
@@ -471,84 +634,162 @@ export default function VisualizerOverlay({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [
-    onClose,
+    requestClose,
     togglePause,
     toggleFullscreen,
     nudgeSpeed,
     cycleMode,
     togglePinned,
-    stepTrail,
+    stepPanel,
+    toggleHold,
     wakeChrome,
     viewerOpen,
+    closing,
   ]);
 
-  // The bar is only worth its band once there is something to name in it.
+  // The stack is only worth showing once there is something to name in it.
   const labelled = trail.items[trail.cursor] ?? null;
-  const barVisible = pinned && labelled !== null;
-  const inset = barVisible ? ATTRIBUTION_BAR_HEIGHT : 0;
+  const stackVisible = pinned && labelled !== null;
+  const stackMount = useUnmountDelay(stackVisible, PANEL_STACK_EXIT_MS);
+
+  /**
+   * What the stack lists, most prominent first.
+   *
+   * Live, that is the cast: every panel currently carrying the frame, which is
+   * the thing a single credit line could never say. Stepped back into the
+   * trail, there is no live cast to rank — the moment being named has passed —
+   * so it lists what was on screen around it instead, newest first. Either way
+   * the head of the list is the panel the label is naming.
+   */
+  const stack = useMemo<Panel[]>(() => {
+    if (!labelled) return [];
+    // Whatever the cursor says, if the cast's head is the panel being named then
+    // the cast is what is on screen — which is the case for a held run as much
+    // as a live one, since holding is how a stepped-back panel gets back on it.
+    if (cast[0]?.id === labelled.id) return cast;
+    // Walked back rather than sliced: a panel can come round again, and a list
+    // that named it twice would say the wall is smaller than it is.
+    const seen = new Set<string>();
+    const recent: Panel[] = [];
+    for (let i = trail.cursor; i >= 0 && recent.length < CAST_MAX; i--) {
+      const entry = trail.items[i];
+      if (seen.has(entry.id)) continue;
+      seen.add(entry.id);
+      recent.push(entry);
+    }
+    return recent;
+  }, [cast, labelled, trail.cursor, trail.items]);
+
+  // Measured rather than assumed: the stack is a fixed row until it is opened,
+  // and then it is however many panels are on screen. Held for the slide out as
+  // well as the slide in, so the chrome only comes back down once the stack has
+  // finished travelling.
+  const [stackHeight, setStackHeight] = useState(PANEL_STACK_ROW_HEIGHT);
+  useEffect(() => {
+    // The next stack opens collapsed, so it must not be born at the height the
+    // last one was left open at.
+    if (!stackMount.mounted) setStackHeight(PANEL_STACK_ROW_HEIGHT);
+  }, [stackMount.mounted]);
+  const inset = stackMount.mounted ? stackHeight : 0;
+  const lift = stackMount.mounted ? (stackMount.leaving ? "viz-lift-out" : "viz-lift-in") : "";
 
   return (
     <div
-      className="fixed inset-0 z-100 bg-black overflow-hidden"
-      style={{ cursor: chromeVisible ? "default" : "none" }}
+      className={`fixed inset-0 z-100 overflow-hidden ${
+        // Closing, the still of the run is the only thing left standing over the
+        // wall: the overlay stops painting a ground and everything under it is
+        // put away, so what comes up through the widening gutters is the gallery
+        // itself rather than a black field that has to be got rid of afterwards.
+        closing ? "pointer-events-none" : "bg-black viz-page-in"
+      }`}
+      style={
+        {
+          cursor: chromeVisible ? "default" : "none",
+          // How far the stack and the chrome above it travel on their way in
+          // and out. Inherited rather than set per element so the two cannot
+          // disagree about it.
+          "--viz-band": `${inset}px`,
+        } as React.CSSProperties
+      }
       onPointerMove={wakeChrome}
       onPointerDown={wakeChrome}
     >
-      {/* Inset rather than overlaid: the surface gives up the band so the label
-          never sits on top of the art. The resize observer picks the new size
-          up, so the aspect the director composes to follows it. */}
-      <div ref={containerRef} className="absolute inset-0" style={{ bottom: inset }} />
+      {/* The run and everything hung on it, put away in one move once the still
+          is up. Held in the tree rather than unmounted: the engine's teardown
+          belongs to the overlay's own unmount, at the end of the break, not to
+          the first frame of it. */}
+      <div className="absolute inset-0" style={{ visibility: closing ? "hidden" : "visible" }}>
+        {/* The whole frame, always. The label used to be given a letterbox band
+            cut out of this, which kept it off the art at the cost of a black bar
+            across the bottom of every run and a resize of every render target
+            each time it was pinned. It floats over the surface now instead, so
+            the composition is never reframed by a caption. */}
+        <div ref={containerRef} className="absolute inset-0" />
 
-      {usable.length === 0 && settled && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <p className="font-display text-[11px] tracking-widest uppercase text-ink-muted">
-            nothing to show
-          </p>
-        </div>
-      )}
+        {usable.length === 0 && settled && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="font-display text-[11px] tracking-widest uppercase text-ink-muted">
+              nothing to show
+            </p>
+          </div>
+        )}
 
-      <VizControls
-        visible={chromeVisible}
-        feature={feature}
-        /* Pinned, the bar already says it — twice would just be noise. */
-        showFeature={!barVisible}
-        bottomInset={inset}
-        seed={formatSeed(seed)}
-        paused={paused}
-        fullscreen={isFullscreen}
-        pinned={pinned}
-        speed={configRef.current.speed}
-        presetId={presetId}
-        onPresetChange={switchMode}
-        onHoldChange={holdChrome}
-        onSpeedChange={setSpeed}
-        onTogglePin={togglePinned}
-        onClose={onClose}
-        onToggleFullscreen={toggleFullscreen}
-        onToggleDebug={() => setShowDebug((visible) => !visible)}
-      />
-
-      {barVisible && labelled && (
-        <VizAttributionBar
-          panel={labelled}
-          behind={trail.items.length - 1 - trail.cursor}
-          canStepBack={trail.cursor > 0}
-          canStepForward={trail.cursor < trail.items.length - 1}
-          onStep={stepTrail}
-          onOpen={onOpenPanel ? openInViewer : undefined}
-          onUnpin={togglePinned}
-        />
-      )}
-
-      {showDebug && (
-        <VizDebugPanel
-          config={configRef.current}
-          engine={engine}
+        <VizControls
+          visible={chromeVisible}
+          feature={cast[0] ?? null}
+          /* Pinned, the bar already says it — twice would just be noise. Held
+             until the bar has finished leaving, so the two never overlap. */
+          showFeature={!stackMount.mounted}
+          bottomInset={inset}
+          /* Only the bottom cluster takes this. The buttons in the top corner sit
+             where they sat. */
+          lift={lift}
           seed={formatSeed(seed)}
-          onChange={handleTuned}
-          onClose={() => setShowDebug(false)}
+          paused={paused}
+          held={held}
+          fullscreen={isFullscreen}
+          pinned={pinned}
+          speed={configRef.current.speed}
+          presetId={presetId}
+          onPresetChange={switchMode}
+          onHoldChange={holdChrome}
+          onSpeedChange={setSpeed}
+          onStep={stepPanel}
+          onToggleHold={toggleHold}
+          onTogglePin={togglePinned}
+          onClose={requestClose}
+          onToggleFullscreen={toggleFullscreen}
+          onToggleDebug={() => setShowDebug((visible) => !visible)}
         />
-      )}
+
+        {stackMount.mounted && stack.length > 0 && (
+          <VizPanelStack
+            stack={stack}
+            behind={trail.items.length - 1 - trail.cursor}
+            held={held}
+            canStepBack={trail.cursor > 0}
+            leaving={stackMount.leaving}
+            onStep={stepPanel}
+            onOpen={onOpenPanel ? openInViewer : undefined}
+            onUnpin={togglePinned}
+            onHeightChange={setStackHeight}
+          />
+        )}
+
+        {debugPanel.mounted && (
+          <VizDebugPanel
+            config={configRef.current}
+            engine={engine}
+            seed={formatSeed(seed)}
+            leaving={debugPanel.leaving}
+            onChange={handleTuned}
+            onClose={() => setShowDebug(false)}
+          />
+        )}
+      </div>
+
+      {/* Last, and over everything: while the page is up, it is all there is. */}
+      {closing && <VizPageBreak still={frameStill} />}
     </div>
   );
 }

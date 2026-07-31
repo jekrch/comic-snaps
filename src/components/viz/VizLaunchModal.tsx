@@ -104,6 +104,14 @@ export default function VizLaunchModal({
   const [fullscreen, setFullscreen] = useState(false);
   const [pinLabel, setPinLabel] = useState(false);
   const [closing, setClosing] = useState(false);
+  /**
+   * True once a run has hidden this modal. Coming back from `display: none`
+   * restarts every CSS animation on the subtree, so the modal would replay its
+   * entrance when the run ends — reading as if it were opening again, when in
+   * fact it was open the whole time behind the run. From the first suspend on,
+   * the entrance is dropped and the settled state is rendered flat.
+   */
+  const [resumed, setResumed] = useState(false);
   const startRef = useRef<HTMLButtonElement>(null);
 
   const patternId = useId();
@@ -140,8 +148,9 @@ export default function VizLaunchModal({
           return;
         }
         onStart(run);
-        // The run hides this modal rather than unmounting it, so the exit state is
-        // wound back here — leaving the run replays the entrance from the top.
+        // The run hides this modal rather than unmounting it, so the exit state
+        // is wound back here — otherwise it would come back mid-fade. It comes
+        // back with no entrance either; see `resumed`.
         setClosing(false);
       }, EXIT_MS);
     },
@@ -180,6 +189,10 @@ export default function VizLaunchModal({
   // start again rather than on whatever the run left focused.
   useEffect(() => {
     if (!suspended) startRef.current?.focus();
+  }, [suspended]);
+
+  useEffect(() => {
+    if (suspended) setResumed(true);
   }, [suspended]);
 
   useEffect(() => {
@@ -223,7 +236,9 @@ export default function VizLaunchModal({
           backgroundColor: "rgba(0, 0, 0, 0.8)",
           animation: closing
             ? `scrimOut ${EXIT_MS}ms ease-out forwards`
-            : "scrimIn 200ms ease-out forwards",
+            : resumed
+              ? "none"
+              : "scrimIn 200ms ease-out forwards",
         }}
         aria-hidden="true"
       />
@@ -234,10 +249,13 @@ export default function VizLaunchModal({
         aria-hidden="true"
         style={{
           willChange: "opacity",
-          opacity: 0,
+          // Where hatchFadeIn leaves it, for the pass that skips the fade.
+          opacity: resumed ? 0.32 : 0,
           animation: closing
             ? `hatchFadeOut ${EXIT_MS}ms ease-out forwards`
-            : "hatchFadeIn 400ms ease-out forwards, hatchDrift 10s ease-in-out 400ms infinite",
+            : resumed
+              ? "hatchDrift 10s ease-in-out infinite"
+              : "hatchFadeIn 400ms ease-out forwards, hatchDrift 10s ease-in-out 400ms infinite",
           transform: "rotate(-5deg) scale(1.15) translate(-4%, 3%)",
         }}
       >
@@ -287,7 +305,9 @@ export default function VizLaunchModal({
         style={{
           animation: closing
             ? `modalExit ${EXIT_MS}ms ease-out forwards`
-            : "modalEnter 200ms ease-out forwards",
+            : resumed
+              ? "none"
+              : "modalEnter 200ms ease-out forwards",
         }}
         onClick={(event) => event.stopPropagation()}
       >
@@ -424,7 +444,7 @@ export default function VizLaunchModal({
               checked={pinLabel}
               onToggle={() => setPinLabel((on) => !on)}
               label="pin the panel label"
-              hint="Keeps the credit on screen in a letterboxed strip. Toggle any time with L."
+              hint="Keeps the credit on screen, with the rest of what is in frame a click behind it. Toggle any time with L."
             />
           </div>
         </div>

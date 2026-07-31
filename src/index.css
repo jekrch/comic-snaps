@@ -147,6 +147,563 @@ button,
   @apply flex items-center justify-center h-8 min-w-8 px-2 rounded-md border border-white/12 bg-black/55 backdrop-blur-md text-white/75 hover:text-white hover:bg-black/75 hover:border-white/25 transition-all duration-150 ease-out active:scale-95;
 }
 
+/* --- Visualizer panel stack ----------------------------------------------
+   The pinned label sits over the run rather than in a letterbox band cut out
+   of it, so everything here is about staying legible on top of a moving
+   composition while giving as much of it back as possible.
+
+   Two grounds, no third: a soft scrim that fades away upward, and a blurred
+   card under each block of text. Nothing is opaque — over full-bleed art an
+   opaque box is a hole in the picture, which is exactly what this replaced. */
+
+.viz-stack-scrim {
+  position: absolute;
+  inset: -3.5rem 0 0 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.46) 45%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* Text straight on the scrim — the row's own label — carries a shadow rather
+   than a box, so the art reads through the line itself. */
+.viz-stack-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+/* The deck edges behind the row's thumbnail: two card corners, offset up and
+   right, saying there is more under the one being named. Drawn from the
+   pseudo-elements so the thumbnail itself stays a plain image. */
+.viz-stack-deck::before,
+.viz-stack-deck::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 10, 10, 0.75);
+  transition: transform 150ms ease-out;
+}
+
+.viz-stack-deck::before {
+  transform: translate3d(3px, -3px, 0);
+}
+
+.viz-stack-deck::after {
+  transform: translate3d(6px, -6px, 0);
+  opacity: 0.65;
+}
+
+.group:hover > .viz-stack-deck::before {
+  transform: translate3d(4px, -4px, 0);
+}
+
+.group:hover > .viz-stack-deck::after {
+  transform: translate3d(8px, -8px, 0);
+}
+
+/* Capped rather than unbounded — the stack is a glance, not a directory — so
+   on a short window it scrolls, and the scrollbar has to be one more hairline
+   over the art rather than a system-grey slab. */
+.viz-stack-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.viz-stack-card {
+  @apply flex w-full items-center gap-2.5 rounded-md border border-white/10 px-2 py-1.5
+         text-left transition-colors duration-150 cursor-pointer disabled:cursor-default;
+  background: rgba(8, 8, 8, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: vizStackCardIn 220ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.viz-stack-card:hover {
+  background: rgba(8, 8, 8, 0.78);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* The one the label is naming — the front of the deck. A rail rather than a
+   fill: which panel is being credited is worth marking, but not worth another
+   block of tone over the art. */
+/* Inset rather than a left border: the border is already spoken for by the
+   card's own hover, and a rail that changed colour under the pointer would
+   read as a state rather than as which panel is being credited. */
+.viz-stack-card-front {
+  box-shadow: inset 2px 0 0 var(--color-accent);
+}
+
+/* Each card arrives just after the one above it, so the list opens as a deck
+   being fanned rather than as a box appearing. */
+@keyframes vizStackCardIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viz-stack-card {
+    animation: scrimIn 120ms ease-out both;
+  }
+
+  .viz-stack-deck::before,
+  .viz-stack-deck::after {
+    transition: none;
+  }
+}
+
+/* --- Visualizer tuning panel ---------------------------------------------
+   The fascia of a deck rather than a machined console: flat matte plastic,
+   square corners, hairline seams, one lit readout window. The only relief on
+   the whole panel is the ridged grip on the faders, because that is the part a
+   finger is meant to find. */
+
+.viz-tune-panel {
+  background: rgba(20, 19, 18, 0.93);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+/* Slides from the edge it is pinned to. Decelerating on the way in and
+   accelerating on the way out, so it reads as a drawer being pushed rather
+   than thrown; the fade is partial, because a panel that dissolves as it
+   travels stops looking like an object. The 102% clears its own right edge. */
+@keyframes vizTuneIn {
+  from {
+    transform: translate3d(-102%, 0, 0);
+    opacity: 0.3;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes vizTuneOut {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(-102%, 0, 0);
+    opacity: 0.2;
+  }
+}
+
+.viz-tune-in {
+  animation: vizTuneIn 280ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+  will-change: transform;
+}
+
+.viz-tune-out {
+  /* Kept at TUNE_PANEL_EXIT_MS in VizDebugPanel.tsx — the overlay holds the
+     panel mounted for exactly this long. */
+  animation: vizTuneOut 220ms cubic-bezier(0.45, 0, 0.75, 0.35) both;
+  will-change: transform;
+}
+
+/* The pinned stack's arrival, on the same curves as the tuning panel — the two
+   are the only things on the overlay that arrive from an edge, and they should
+   read as one gesture.
+
+   Worn by the stack itself and by the bottom cluster of the chrome, which it
+   pushes up, and by nothing else: the buttons in the top corner are not
+   displaced by anything, so they hold still. --viz-band is the stack's measured
+   height, set on the overlay and inherited, so nothing riding it can disagree
+   about how far it is going; at 0 both keyframes are the identity, and a run
+   with no label pinned never moves. No fade — a card that thins as it travels
+   stops looking like an object. */
+@keyframes vizLiftIn {
+  from {
+    transform: translate3d(0, var(--viz-band, 0px), 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes vizLiftOut {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, var(--viz-band, 0px), 0);
+  }
+}
+
+.viz-lift-in {
+  animation: vizLiftIn 280ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.viz-lift-out {
+  /* Kept at ATTRIBUTION_BAR_EXIT_MS in VizAttributionBar.tsx — the overlay
+     holds the group down here for exactly this long, then takes the band back
+     in the same commit that drops this class. */
+  animation: vizLiftOut 220ms cubic-bezier(0.45, 0, 0.75, 0.35) both;
+}
+
+/* Nothing travels: the label and the chrome take their places outright and
+   only fade. */
+@media (prefers-reduced-motion: reduce) {
+  .viz-lift-in {
+    animation: scrimIn 120ms ease-out both;
+  }
+
+  .viz-lift-out {
+    animation: scrimOut 120ms ease-out both;
+  }
+}
+
+/* --- Visualizer page break -----------------------------------------------
+   The overlay's departure: the run is frozen, cut into comic panels, and they
+   tumble out through the camera, leaving the wall behind it. See VizPageBreak.tsx
+   for the shape of the page, where each panel goes, and how the still is cut
+   across them. The arrival is a plain fade — see .viz-page-in below.
+
+   The whole break is transform and opacity on seven boxes — no filter, no
+   shadow animation, nothing that repaints. */
+
+.viz-break {
+  position: absolute;
+  inset: 0;
+  /* Over everything the overlay holds — the chrome and the tuning panel go
+     behind the page along with the picture. */
+  z-index: 30;
+  pointer-events: none;
+  /* Shallow enough that a panel coming through it stays a panel rather than
+     smearing into a wall. */
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+/* Backface hidden so a panel that turns past edge-on does not flash its
+   underside. Black underneath the still, which is what shows when there was no
+   screen to photograph. */
+.viz-shard {
+  position: absolute;
+  overflow: hidden;
+  background: #000;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* The shard's window onto the still. Sized and offset by VizPageBreak in
+   percentages of the shard, so the seams hold at any window size. */
+.viz-shard-face {
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* The ink the page tears along. Held off while the page is assembled — the
+   still is meant to be indistinguishable from the screen it was cut from, and
+   a grid of hairlines over it would give the whole thing away — then struck as
+   the break starts. Its own element so only opacity animates; a box-shadow on
+   a keyframe would repaint seven near-fullscreen boxes every frame. */
+.viz-shard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  opacity: 0;
+}
+
+@keyframes vizEdgeStrike {
+  from {
+    opacity: 0;
+  }
+
+  14% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* Solid for the first fifth, then a long dissolve the rest of the way out: the
+   shard has to read as a piece of the screen it came off before it is allowed
+   to stop being one, and the reveal behind it should come up through it rather
+   than wait for it to leave. */
+@keyframes vizShardOut {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(var(--dx), var(--dy), var(--dz)) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz));
+    opacity: 0;
+  }
+}
+
+/* The middle panel is the exception: it comes through the camera, so it is over
+   the reveal rather than beside it and has to be gone by the time it is big
+   enough to matter. */
+@keyframes vizShardOutHero {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  62% {
+    opacity: 0;
+  }
+
+  to {
+    transform: translate3d(var(--dx), var(--dy), var(--dz)) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz));
+    opacity: 0;
+  }
+}
+
+/* Accelerating: the page is thrown rather than eased apart. Held at the end —
+   the overlay drops the shards a frame after they land, and on the way out the
+   frame they land on is the last one before it unmounts. Kept at SHARD_MS in
+   VizPageBreak.tsx. */
+.viz-shard-out,
+.viz-shard-out-hero {
+  animation-duration: 1000ms;
+  animation-timing-function: cubic-bezier(0.5, 0.02, 0.86, 0.4);
+  animation-fill-mode: both;
+}
+
+.viz-shard-out {
+  animation-name: vizShardOut;
+}
+
+.viz-shard-out-hero {
+  animation-name: vizShardOutHero;
+}
+
+.viz-shard-out::after,
+.viz-shard-out-hero::after {
+  animation: vizEdgeStrike 1000ms ease-out both;
+  animation-delay: inherit;
+}
+
+/* The run's arrival, and the whole of it: it comes up over the wall rather than
+   cutting it apart, because on the way in there is no frame worth keeping and
+   nothing yet to take apart. Slow enough to read as a house light going down —
+   the composition is already running underneath and comes up with it. */
+.viz-page-in {
+  animation: scrimIn 620ms ease-out both;
+}
+
+/* No page, no break: the screen is simply replaced. The shards still tile the
+   frame exactly, so fading them together is a flat cover. */
+@media (prefers-reduced-motion: reduce) {
+
+  .viz-shard-out,
+  .viz-shard-out-hero {
+    animation-name: scrimOut;
+    animation-duration: 260ms;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms !important;
+  }
+
+  .viz-shard::after {
+    display: none;
+  }
+
+  .viz-page-in {
+    animation-duration: 160ms;
+  }
+}
+
+/* A section's height still snaps — its sliders are only mounted while it is
+   open — but the contents arrive rather than appear. */
+@keyframes vizSectionIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -3px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.viz-tune-section {
+  animation: vizSectionIn 170ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .viz-tune-in,
+  .viz-tune-out,
+  .viz-tune-section {
+    animation-name: scrimIn;
+    animation-duration: 120ms;
+  }
+
+  .viz-tune-out {
+    animation-name: scrimOut;
+  }
+}
+
+/* Header, stats and footer: one flat band a shade up from the body, so the
+   pinned edges read as the fascia around the scrolling middle. */
+.viz-tune-band {
+  background: rgba(255, 255, 255, 0.028);
+}
+
+/* The one part of the panel pretending to be lit: a dark window with the
+   readout in a dimmed accent, the way a deck's display sits in its plastic. */
+.viz-tune-readout {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  color: rgba(214, 122, 90, 0.75);
+}
+
+.viz-tune-head {
+  background: rgba(255, 255, 255, 0.035);
+  border-top: 1px solid rgba(255, 255, 255, 0.045);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  transition: background 120ms ease;
+}
+
+.viz-tune-head:hover {
+  background: rgba(255, 255, 255, 0.062);
+}
+
+.viz-tune-btn {
+  background: #232120;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.viz-tune-btn:hover {
+  background: #2e2b29;
+  border-color: rgba(255, 255, 255, 0.19);
+}
+
+.viz-tune-btn:active {
+  background: #171514;
+}
+
+/* A ridged grip riding a flat slot. The filled part of the slot is a
+   background layer sized off --viz-fill, which the panel sets per slider from
+   that slider's own value. */
+.viz-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 16px;
+  background: transparent;
+  cursor: pointer;
+  /* Vertical still scrolls the list, horizontal is the grip's — otherwise a
+     drag started on a slider is taken by the scroll container. */
+  touch-action: pan-y;
+}
+
+.viz-slider:focus {
+  outline: none;
+}
+
+.viz-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 1px;
+  background:
+    linear-gradient(#c44d2f, #c44d2f) 0 0 / var(--viz-fill, 0%) 100% no-repeat,
+    #0c0b0b;
+}
+
+.viz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  background: repeating-linear-gradient(90deg, #4c4845 0 2px, #373432 2px 3px);
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.viz-slider:hover::-webkit-slider-thumb {
+  background: repeating-linear-gradient(90deg, #615c58 0 2px, #45403d 2px 3px);
+}
+
+.viz-slider:active::-webkit-slider-thumb,
+.viz-slider:focus-visible::-webkit-slider-thumb {
+  border-color: rgba(232, 93, 58, 0.85);
+}
+
+/* Firefox draws the filled part itself, so the track stays plain there. */
+.viz-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 1px;
+  background: #0c0b0b;
+}
+
+.viz-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 1px;
+  background: #c44d2f;
+}
+
+.viz-slider::-moz-range-thumb {
+  width: 10px;
+  height: 14px;
+  border-radius: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  background: repeating-linear-gradient(90deg, #4c4845 0 2px, #373432 2px 3px);
+}
+
+.viz-hint-icon {
+  color: rgba(255, 255, 255, 0.22);
+  transition: color 120ms ease;
+  cursor: help;
+}
+
+.viz-hint-icon:hover,
+.viz-hint-icon:focus-visible {
+  color: var(--color-accent);
+  outline: none;
+}
+
+/* Portalled to the body so the panel's own scroll container cannot clip it. */
+.viz-hint-pop {
+  position: fixed;
+  z-index: 200;
+  max-width: 15rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 2px;
+  background: rgba(26, 25, 24, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+  color: rgba(232, 228, 223, 0.88);
+  font-size: 10px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
 .viewer-pill {
   @apply flex items-center gap-1.5 h-7 px-3 rounded-full border border-white/15 bg-white/5 backdrop-blur-md text-[11px] tracking-wide text-white/60 hover:text-white/90 hover:bg-white/12 hover:border-white/25 transition-all duration-150 ease-out active:scale-95 cursor-pointer;
 }
