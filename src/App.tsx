@@ -16,6 +16,8 @@ import PanelViewer from "./components/PanelViewer";
 import VizLaunchModal from "./components/viz/VizLaunchModal";
 import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
 import { findPreset, initialPresetId, presetConfig } from "./components/viz/vizPresets";
+import { decodeVizConfig, diffConfigJson, encodeVizConfig } from "./components/viz/vizUrl";
+import type { VizConfig } from "./components/viz/vizConfig";
 
 // The visualizer drags in the whole WebGL engine, so it stays out of the
 // gallery's first paint and loads on launch instead.
@@ -33,6 +35,7 @@ export default function App() {
     initialViz,
     initialVizPreset,
     initialVizSpeed,
+    initialVizCfg,
     syncToURL,
     syncTab,
     syncViz,
@@ -55,54 +58,96 @@ export default function App() {
     // An unnamed preset still honours prefers-reduced-motion, and a name that
     // does not resolve falls back rather than being echoed into the run.
     const preset = findPreset(initialVizPreset ?? initialPresetId());
-    const config = presetConfig(preset.id);
+    const base = presetConfig(preset.id);
+    // The delta is read against that preset, so an unreadable one — a truncated
+    // paste, a token from a build that has since retired a tunable — lands on
+    // the plain preset rather than on half a look nobody chose.
+    const tuned = initialVizCfg ? decodeVizConfig(initialVizCfg, base) : null;
+    const config = tuned ?? base;
     if (initialVizSpeed !== null) config.speed = initialVizSpeed;
-    return { presetId: preset.id, config, fullscreen: false, pinLabel: false, custom: false };
+    return {
+      presetId: preset.id,
+      config,
+      fullscreen: false,
+      pinLabel: false,
+      custom: tuned !== null,
+    };
   });
 
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
 
-  const handleStartViz = useCallback(
-    (options: VizLaunchOptions) => {
-      // The chooser is left open behind the run — leaving the run drops the reader
-      // back onto it with their preset, config and speed still selected.
-      setVizRun(options);
-      // A custom config cannot be reconstructed from the URL, so the preset name
-      // is omitted rather than pointing at something that is not what is running.
-      syncViz(true, options.custom ? null : options.presetId, options.config.speed);
+  /**
+   * The URL for a run: the preset by name, plus the delta from it when the
+   * reader has tuned it. Everything that reaches this goes through the same
+   * encode, so what the address bar says is always the run that is on screen —
+   * which is the whole point of `vizcfg`.
+   */
+  const syncVizRun = useCallback(
+    (presetId: string, config: VizConfig) => {
+      const cfg = encodeVizConfig(config, presetConfig(presetId));
+      syncViz(true, { preset: presetId, speed: config.speed, cfg });
+      return cfg;
     },
     [syncViz]
   );
 
-  // Speed is the one thing that can change mid-run and still be described by the
-  // URL, so it is kept in step rather than going stale the moment it is touched.
+  const handleStartViz = useCallback(
+    (options: VizLaunchOptions) => {
+      const cfg = syncVizRun(options.presetId, options.config);
+      // The chooser is left open behind the run — leaving the run drops the reader
+      // back onto it with their preset, config and speed still selected.
+      setVizRun({ ...options, custom: cfg !== null });
+    },
+    [syncVizRun]
+  );
+
+  // Speed can change mid-run from the chrome, so it is kept in step rather than
+  // going stale the moment it is touched.
   const handleVizSpeedChange = useCallback(
     (speed: number) => {
       if (!vizRun) return;
-      syncViz(true, vizRun.custom ? null : vizRun.presetId, speed);
+      const config = { ...vizRun.config, speed };
+      syncVizRun(vizRun.presetId, config);
       // Also folded back into the run so the rate survives a remount of the
       // overlay, which rebuilds its working config from this prop.
-      setVizRun({ ...vizRun, config: { ...vizRun.config, speed } });
+      setVizRun({ ...vizRun, config });
     },
-    [syncViz, vizRun]
+    [syncVizRun, vizRun]
+  );
+
+  // And for everything else, from the tuning panel. Arrives already debounced by
+  // the overlay — a slider drag is a hundred of these — and carries the whole
+  // working config, so the encode below decides on its own whether the run is
+  // still the plain preset.
+  const handleVizConfigChange = useCallback(
+    (config: VizConfig) => {
+      if (!vizRun) return;
+      const cfg = syncVizRun(vizRun.presetId, config);
+      setVizRun({ ...vizRun, config, custom: cfg !== null });
+    },
+    [syncVizRun, vizRun]
   );
 
   // Same deal for the mode: switching mid-run replaces the config the overlay
-  // eases across to, and a run that started from pasted JSON stops claiming to
-  // be custom the moment a preset is chosen over it.
+  // eases across to, and a run that started from a tuned config stops claiming
+  // to be custom the moment a preset is chosen over it.
   const handleVizPresetChange = useCallback(
     (presetId: string) => {
       if (!vizRun) return;
-      const { speed } = vizRun.config;
-      setVizRun({
-        ...vizRun,
-        presetId,
-        custom: false,
-        config: { ...presetConfig(presetId), speed },
-      });
-      syncViz(true, presetId, speed);
+      const config = { ...presetConfig(presetId), speed: vizRun.config.speed };
+      setVizRun({ ...vizRun, presetId, custom: false, config });
+      syncVizRun(presetId, config);
     },
-    [syncViz, vizRun]
+    [syncVizRun, vizRun]
+  );
+
+  // What the running config departs from its preset by, as JSON. Handed to the
+  // chooser so a tuned run — one that arrived on a link, or was tuned in place —
+  // is legible and editable there rather than only encoded in the URL, and so
+  // leaving the run and starting it again keeps the tuning.
+  const vizCustomJson = useMemo(
+    () => (vizRun?.custom ? diffConfigJson(vizRun.config, presetConfig(vizRun.presetId)) : null),
+    [vizRun]
   );
 
   const handleCloseViz = useCallback(() => {
@@ -412,6 +457,7 @@ export default function App() {
           initialSpeed={initialVizSpeed}
           suspended={vizRun !== null}
           runPresetId={vizRun?.presetId ?? null}
+          runCustomJson={vizCustomJson}
           onStart={handleStartViz}
           onCancel={() => setVizPrompt(false)}
         />
@@ -427,6 +473,7 @@ export default function App() {
             pinLabel={vizRun.pinLabel}
             onPresetChange={handleVizPresetChange}
             onSpeedChange={handleVizSpeedChange}
+            onConfigChange={handleVizConfigChange}
             /* The pinned label can hand a panel straight to the viewer, which
                opens on top of the run rather than in place of it: the
                composition keeps playing behind the lightbox and is still there

@@ -1,6 +1,14 @@
 import type { VizConfig } from "../../vizConfig";
 import type { Rng } from "../rng";
-import type { ShellDraw, SlotLayout, SolidShape, StageKind, StageLayout, Vec3 } from "../types";
+import type {
+  ShellDraw,
+  SlotLayout,
+  SolidShape,
+  StageKind,
+  StageLayout,
+  SurfaceDraw,
+  Vec3,
+} from "../types";
 
 /**
  * The spatial scenes and the formation maths they share.
@@ -9,6 +17,13 @@ import type { ShellDraw, SlotLayout, SolidShape, StageKind, StageLayout, Vec3 } 
  * hands back one shard at a time and the director keeps a handful alive, a
  * formation is built once — a few dozen quads, arranged — and then panels flow
  * through it while the arrangement itself only breathes.
+ *
+ * Most of what follows is now history rather than live machinery: four of the
+ * five scenes gave up their quads for one continuous surface (`SurfaceDraw`),
+ * and only `shatter` still builds a layout — for the shards that have broken off
+ * its body, which is the one thing a surface genuinely cannot express. The
+ * argument below is why the quads that remain are so few, and it is the same
+ * argument that eventually took the rest of them away.
  *
  * "A few dozen" is the governing constraint on everything below, and it is a
  * compositional one rather than a budget. These formations are *shapes made of
@@ -94,24 +109,6 @@ function fallbackTangent(nrm: Vec3): Vec3 {
 }
 
 /**
- * A curve's placement, from the curve itself.
- *
- * The tangent is a finite difference rather than an analytic derivative: for a
- * Lissajous or a coil the derivative is no cheaper to write and much easier to
- * get wrong, and this is built once per instance at layout time.
- */
-export function alongCurve(at: (s: number) => Vec3, s: number, step = 0.004): Placement {
-  const pos = at(s);
-  const ahead = at(s + step);
-  const tan = norm([ahead[0] - pos[0], ahead[1] - pos[1], ahead[2] - pos[2]]);
-  // The strip needs a face as well as a direction. Any consistent choice will
-  // do, and the world up is the one that keeps a ribbon lying flat enough to be
-  // read as a surface rather than seen edge-on.
-  const up: Vec3 = Math.abs(tan[1]) > 0.9 ? [0, 0, 1] : [0, 1, 0];
-  return { pos, nrm: norm(cross(tan, up)), tan };
-}
-
-/**
  * One arrangement. `t` runs 0..1 across the whole formation in index order,
  * which is what lets the two arrangements in a pair stay in correspondence:
  * instance `i` is the same instance in both, so the morph moves it rather than
@@ -164,9 +161,12 @@ export interface SpatialFrameParams {
   wrap: number;
   fogNear: number;
   fogFar: number;
-  /** The wallpaper tube, for the scene that is a surface rather than a set of
-   *  quads. Null everywhere else, which is most of them. */
+  /** The wallpaper tube, for the scene that is a corridor. Null everywhere
+   *  else, which is everything but the vault. */
   shell: ShellDraw | null;
+  /** The papered shape, for the scenes that are an object rather than a room.
+   *  Null for the vault and for anything built only of quads. */
+  surface: SurfaceDraw | null;
   solids: SolidPlacement[];
 }
 
@@ -369,34 +369,6 @@ export function buildLayout(
 
 // --- Arrangements -----------------------------------------------------------
 
-/**
- * Phyllotaxis funnel, receding as it opens out. `sqrt(t)` for the radius is what
- * makes the density uniform rather than crowded at the rim, and the golden
- * angle is what stops successive instances — which are successive *slots*, and
- * therefore successive panels — from forming visible spokes of one image.
- *
- * `bowl` turns each quad outward in proportion to how far out it sits, which is
- * the difference between a spiral and a vortex. With hundreds of small quads it
- * would have been a refinement; with six large ones it is most of the shape —
- * flat normals put six pages on a wall facing the lens, and there is no
- * arrangement of a wall that reads as three-dimensional.
- */
-export function phyllotaxis(radius: number, depth: number, bowl: number): Formation {
-  return (t, index) => {
-    const r = Math.sqrt(t) * radius;
-    const a = index * GOLDEN_ANGLE;
-    const lean = bowl * (r / Math.max(radius, 1e-4));
-    return {
-      pos: [Math.cos(a) * r, Math.sin(a) * r, -t * depth],
-      nrm: norm([Math.cos(a) * lean, Math.sin(a) * lean, 1]),
-      // Around the spiral rather than out along it: a quad rolled to follow the
-      // turn lies in the funnel's own surface, which is what makes the funnel a
-      // surface at all. Only read when a frame asks for alignment.
-      tan: [-Math.sin(a), Math.cos(a), 0],
-    };
-  };
-}
-
 /** Fibonacci sphere: the same golden-angle spiral wrapped onto a ball, so the
  *  morph out of the disc is a fold rather than a scramble. */
 export function fibonacciSphere(radius: number): Formation {
@@ -410,119 +382,19 @@ export function fibonacciSphere(radius: number): Formation {
   };
 }
 
-// The tube formation that used to live here — quads scattered over a cylinder
-// wall — is gone rather than merely unused. It was the vault, twice: once with
-// five hundred small crops and once with a dozen large ones, and the second was
-// no better than the first, because a quad on a wall has a rim and a rim sliding
-// past the eye is an object being thrown at the viewer. The corridor is a real
-// surface now (see `ShellDraw`), which has no rim anywhere in it.
-
-/**
- * A stack of leaning planes, each filled by the R2 sequence.
- *
- * `count` strands taken off the instance index modulo, so every sheet is dealt
- * quads from every panel slot rather than one sheet per panel — the same reason
- * the slots themselves are dealt round-robin. No two sheets are parallel, which
- * is what guarantees that displacing them along their normals drives them
- * *through* one another rather than merely past: the intersection is the whole
- * point of this arrangement, and it is the one thing a stack of composited
- * layers can never show.
- */
-export function sheets(
-  count: number,
-  spread: number,
-  size: number,
-  /** Lean added per plane through the stack, radians-ish. A parameter rather
-   *  than a constant because it has to grow as the stack thins: with three
-   *  planes carrying two quads each, a lean tuned for five is barely a crossing
-   *  at all, and the crossing is the entire subject of the arrangement. */
-  tilt: number
-): Formation {
-  return (_t, index) => {
-    const sheet = index % count;
-    const step = Math.floor(index / count);
-    const [rx, ry] = r2(step);
-    const x = (rx - 0.5) * size;
-    const y = (ry - 0.5) * size;
-    const lean = (sheet - (count - 1) / 2) * tilt;
-    const depth = (sheet / Math.max(1, count - 1) - 0.5) * spread;
-    return {
-      pos: [x, y, depth + x * lean - y * lean * 0.6],
-      nrm: norm([-lean, lean * 0.6, 1]),
-      tan: norm([1, 0, lean]),
-    };
-  };
-}
-
-/**
- * The same sheets rolled into concentric cylinder shells — the morph partner.
- *
- * Correspondence is by construction: instance `i` takes the same `sheet` and the
- * same R2 pair in both, so the morph unrolls a plane into a shell rather than
- * dissolving one set of quads into another.
- */
-export function shells(count: number, radius: number, length: number): Formation {
-  return (_t, index) => {
-    const shell = index % count;
-    const step = Math.floor(index / count);
-    const [rx, ry] = r2(step);
-    const a = rx * Math.PI * 2;
-    const r = radius * (0.42 + 0.58 * (shell / Math.max(1, count - 1)));
-    return {
-      pos: [Math.cos(a) * r, (ry - 0.5) * length, Math.sin(a) * r],
-      nrm: [-Math.cos(a), 0, -Math.sin(a)],
-      tan: [-Math.sin(a), 0, Math.cos(a)],
-    };
-  };
-}
-
-/**
- * `count` strands swept along a Lissajous curve, offset from one another in
- * phase so they braid rather than overlap.
- *
- * The frequencies must be mutually irrational-ish for the figure to fill space
- * instead of closing into a loop after one pass — small integers close, and a
- * closed Lissajous is a wire rather than a weave.
- */
-export function lissajous(count: number, scale: number, freq: Vec3): Formation {
-  return (t, index) => {
-    const strand = index % count;
-    const offset = (strand / count) * Math.PI * 2;
-    const at = (s: number): Vec3 => [
-      Math.sin(s * freq[0] + offset) * scale,
-      Math.sin(s * freq[1] + offset * 1.31 + 0.7) * scale * 0.68,
-      Math.sin(s * freq[2] + offset * 0.73 + 1.9) * scale * 0.82,
-    ];
-    return alongCurve(at, t * Math.PI * 2);
-  };
-}
-
-/** The same strands wound onto a torus, `turns` times around the tube for each
- *  circuit of the ring. A knot rather than a braid, and the morph between the
- *  two is the cheapest structural change a ribbon scene has. */
-export function coil(count: number, major: number, minor: number, turns: number): Formation {
-  return (t, index) => {
-    const strand = index % count;
-    const offset = (strand / count) * Math.PI * 2;
-    const at = (s: number): Vec3 => {
-      const small = s * turns + offset;
-      const r = major + minor * Math.cos(small);
-      return [Math.cos(s) * r, minor * Math.sin(small), Math.sin(s) * r];
-    };
-    return alongCurve(at, t * Math.PI * 2);
-  };
-}
-
-/** A block of overlapping crops — the page assembled, before it comes apart. */
-export function slab(width: number, height: number, depth: number): Formation {
-  return (t, index) => {
-    const [rx, ry] = r2(index);
-    return {
-      pos: [(rx - 0.5) * width, (ry - 0.5) * height, (t - 0.5) * depth],
-      nrm: [0, 0, 1],
-    };
-  };
-}
+// The formations that used to live here — a phyllotaxis funnel, a stack of
+// leaning planes and their rolled-up partner, a Lissajous braid and its torus
+// coil, and a slab of overlapping crops — are gone rather than merely unused.
+// They were four scenes' worth of arrangements of *separate quads*, and every
+// one of them lost the same argument: however large a crop is, it has a rim, a
+// frame of rims is a scatter of cards in the dark, and most of the picture is
+// the dark. The corridor settled that for the vault (see `ShellDraw`) and the
+// four scenes that remained have now settled it the same way (`SurfaceDraw`) —
+// they are shapes with no edges in them anywhere.
+//
+// What is left here is the pair `shatter` still needs, because that scene is a
+// body coming apart *and* the pieces already clear of it: a sphere the shards
+// sit on, and the ball they disperse into.
 
 /** A ball of points, uniform through the volume rather than crowded at the rim —
  *  which is what the cube root is for. The art dispersed. */

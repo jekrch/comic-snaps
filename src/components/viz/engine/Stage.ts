@@ -9,18 +9,18 @@ import { envelope } from "./types";
 import type { SpatialFormation, SpatialScene } from "./scenes/spatial";
 import { clamp } from "./scenes/spatial";
 import { panelAspect } from "./scenes/types";
-import { swarm } from "./scenes/swarm";
 import { vault } from "./scenes/vault";
-import { sheet } from "./scenes/sheet";
-import { ribbons } from "./scenes/ribbons";
-import { motes } from "./scenes/motes";
+import { prism } from "./scenes/prism";
+import { drape } from "./scenes/drape";
+import { band } from "./scenes/band";
+import { shatter } from "./scenes/shatter";
 
 const SPATIAL_SCENES: Record<StageKind, SpatialScene> = {
-  swarm,
   vault,
-  sheet,
-  ribbons,
-  motes,
+  prism,
+  drape,
+  band,
+  shatter,
 };
 
 /**
@@ -268,6 +268,7 @@ export class Stage {
       // and the quad has no unfeathered interior left to show a panel in.
       feather: clamp(params.feather, 0, 0.45),
       shell: params.shell,
+      surface: params.surface,
       breathe: params.breathe,
       displace: params.displace,
       displaceScale: params.displaceScale,

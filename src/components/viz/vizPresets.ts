@@ -359,82 +359,76 @@ export const VIZ_PRESETS: VizPreset[] = [
     },
   },
   {
-    id: "swarm",
-    name: "Swarm",
-    blurb: "A few large pages on a spiral that folds into a shell and back.",
+    id: "prism",
+    name: "Prism",
+    blurb: "A turning many-sided body, a different detail of one page on every face.",
     overrides: {
-      stageKind: "swarm",
+      stageKind: "prism",
       /**
-       * The dwell a slot holds its panel for. Long, and long on purpose.
+       * How long one page owns every face of the body.
        *
-       * This was briefly shortened on the theory that with only two panels resident
-       * the turnover was the only thing showing the gallery, so it had to work
-       * harder. Wrong trade: a page in a formation this sparse is the *subject*
-       * rather than one contributor to a texture, and replacing the subject is the
-       * loudest thing that happens in the scene. With two slots the swap comes round
-       * every half a dwell, so this is one page changing somewhere every twenty-odd
-       * seconds — and the turn, the fold and the crossfade are all still running
-       * underneath it, which is plenty of change without it.
+       * The scene's slots are sequential, so unlike the quad scenes this number is
+       * the real interval between changes rather than half of one — a little over a
+       * minute of a page being turned around and read from every side. The handover
+       * repaints the whole object, which is the largest event in the scene and
+       * should therefore be the rarest.
        */
-      layerLifetime: 60,
-      // Full, and paired with no jitter — the two slots are then exact
-      // complements and their opacities sum to a constant, so the frame's total
-      // light does not swing as they trade places. Worth having wherever a scene
-      // runs on two slots: see the long note in the vault preset for why the sum
-      // works out, and `Stage.refill` for the phase discipline that keeps it.
-      crossfade: 1,
+      layerLifetime: 74,
+      /**
+       * Short, and paired with the sequential residency the scene declares.
+       *
+       * A sixth of the dwell is twelve seconds of dissolve at each end of a tenancy,
+       * with the outgoing fade abutting the incoming one so the two are exact
+       * complements and the body's brightness never moves. For the minute between
+       * them there is exactly one page on the object — which is the reason this is
+       * not simply 1, and the same reason the vault's is not.
+       */
+      crossfade: 0.18,
+      // Zero. The alternation only stays exact while both slots run the same
+      // lifetime; any jitter and the fades stop abutting, which puts a notch in the
+      // frame's brightness at every handover.
       layerLifetimeJitter: 0,
-      tintAmount: 0.2,
+      tintAmount: 0.22,
       keyBalance: 0.8,
-      // Slow. This and the spin are the scene's whole clock, and both are set to
-      // let a page be looked at rather than glimpsed.
-      stageMorphRate: 0.0035,
       stageScale: 1,
-      // Additive, and the single most important number in the preset: it is what
-      // stands between the formation and the washout that bd1d4c5 went in to
-      // prevent. What it has to be read against has changed, though. The old
-      // crowd stacked a few hundred small quads into five-ish layers of fill over
-      // most of the frame; six large ones stack two or three deep in the middle
-      // and leave the corners dark, so the same setting now buys a *dimmer* frame
-      // rather than a hotter one, and it is set up accordingly.
-      stageOpacity: 0.55,
-      stageMorph: 0.5,
-      // Part way. Fully billboarded, four large quads are four rectangles squarely
-      // facing the lens; at this value they lean, and the lean is the depth.
-      stageBillboard: 0.4,
-      /**
-       * Under half what it was: a shade under five minutes for one revolution.
-       *
-       * The turn is the only reason a page ever leaves the frame, so it is also the
-       * thing that decides how long you get to look at one. With a formation of a
-       * few large pages there is a great deal to read in each, and the rate that
-       * suited a boiling crowd of small crops is far too quick for it — the whole
-       * point of the sparse formation is defeated if the pages are hurried past.
-       */
-      stageSpin: 0.022,
+      // High, and affordable for the vault's reason: the body is drawn once per
+      // pixel — only its near side, and only one page at a time — so there is never
+      // more than one surface worth of light in the frame.
+      stageOpacity: 0.68,
+      // Held toward the gem. The drum is where it opens out to, not where it lives:
+      // rounded off, the body loses its corners, and a body with no corners has no
+      // faces for the crops to hand over at.
+      stageMorph: 0.32,
+      stageMorphRate: 0.0032,
+      // Wide enough that the near face foreshortens visibly against the two beside
+      // it. That difference is the whole of what says this is a solid.
+      stageFov: 62,
+      // Slow. This is the only thing that brings a new face round, so it is also
+      // what decides how long you get to look at one — about four minutes for a
+      // full revolution, or forty seconds a face.
+      stageSpin: 0.026,
       stageFlight: 0,
       stageSolids: 0,
-      // The formation is already the slowest thing in the engine; a cycler
-      // pulsing the post chain over the top of it would be the second schedule
-      // §6 rules out.
+      // On top of the scene's own standing undulation, which is what keeps the body
+      // from ever settling into the ideal solid it is heading toward.
+      stageDisplace: 0.2,
+      stageDisplaceRate: 0.11,
       psychedelia: 0.15,
       cycleInterval: 24,
       post: {
-        // Low. The trail is a copy of a frame that is mostly dark with a few
-        // bright quads in it, and at the usual retention those quads smear into a
-        // haze that fills the dark back in.
-        feedbackAmount: 0.28,
+        // Low. The body fills the middle of the frame, so the trail is a copy of a
+        // bright frame rather than of a mostly dark one, and the feedback path
+        // accumulates with max().
+        feedbackAmount: 0.24,
         feedbackScale: 1.004,
-        // A six-fold fold, which a sparse formation can carry and a dense one
-        // could not: mirroring a crowd produces a symmetrical crowd, where
-        // mirroring three pages in depth produces a rosette with the parallax
-        // still legible inside each wedge.
-        kaleido: 0.3,
+        // A six-fold fold against a six-sided body. The two agree, so the rosette
+        // lands on the object's own symmetry rather than cutting across it.
+        kaleido: 0.26,
         kaleidoSegments: 6,
-        kaleidoSpin: 0.015,
-        chroma: 0.22,
+        kaleidoSpin: 0.012,
+        chroma: 0.24,
         grain: 0.05,
-        vignette: 0.45,
+        vignette: 0.44,
       },
     },
   },
@@ -523,97 +517,107 @@ export const VIZ_PRESETS: VizPreset[] = [
     },
   },
   {
-    id: "sheets",
-    name: "Sheets",
-    blurb: "Three leaning planes of pages, swelling until they pass through one another.",
+    id: "drape",
+    name: "Drape",
+    blurb: "One page on a vast cloth, thrown into slow folds and curling past every edge.",
     overrides: {
-      stageKind: "sheet",
-      // Three slots rather than two, so a change comes round every *third* of a
-      // dwell — which is why this is the longest dwell of the quad scenes and still
-      // has the shortest interval between swaps. Twenty-six seconds or so.
-      layerLifetime: 78,
-      // Full, and paired with no jitter — the two slots are then exact
-      // complements and their opacities sum to a constant, so the frame's total
-      // light does not swing as they trade places. Worth having wherever a scene
-      // runs on two slots: see the long note in the vault preset for why the sum
-      // works out, and `Stage.refill` for the phase discipline that keeps it.
-      crossfade: 1,
+      stageKind: "drape",
+      // As long as the vault's, and for the same reason: the cloth is the frame,
+      // there is nothing else in the picture to distract from it becoming a
+      // different picture, so the change should be rare.
+      layerLifetime: 82,
+      crossfade: 0.2,
       layerLifetimeJitter: 0,
       tintAmount: 0.2,
       keyBalance: 0.8,
       stageScale: 1,
-      // The lowest in the engine, and it has to be: on every other formation the
-      // quads have dark between them, where here they meet to make a surface and
-      // three of those surfaces stack — three full-bleed layers of additive load
-      // in the middle of the frame, and more wherever two of them cross.
-      stageOpacity: 0.42,
-      // Held near the flat stack. The shells are where it opens out to, not where
-      // it lives — rolled up, the sheets stop being able to intersect, which is
-      // the whole reason for the arrangement.
-      stageMorph: 0.25,
-      stageMorphRate: 0.003,
-      // Flat on the plane. A quad turned to face the camera has left the surface
-      // it was part of, and a sheet whose quads have all left it is not a sheet.
-      stageBillboard: 0,
-      stageFov: 58,
-      // Very slow, and the slowest in the engine on purpose: the moment worth
-      // waiting for here is the stack swinging edge-on, and it comes round twice a
-      // revolution whatever the rate. Better to arrive at it rarely and be able to
-      // watch it than to be swept through it.
-      stageSpin: 0.014,
+      // The highest in the engine. The cloth is full bleed and single-layered — one
+      // page, one surface, no overlap anywhere — so the number that would wash out
+      // a stack of quads is simply how bright the picture is here.
+      stageOpacity: 0.74,
+      // Held nearer the flat sheet. The deep curl is where it swings to; lived in,
+      // it would put the viewer inside a tube of paper and lose the folds, which
+      // are the subject.
+      stageMorph: 0.3,
+      stageMorphRate: 0.0028,
+      // Wide. The folds only read as folds because the near crests foreshorten
+      // hard against the far ones, and that is what field of view means.
+      stageFov: 64,
+      // Spent as a slow rock rather than a turn — see the note in the scene. A
+      // plane rotated a quarter turn is edge-on, which is to say gone.
+      stageSpin: 0.019,
       stageFlight: 0,
       stageSolids: 0,
-      // On top of the scene's own standing displacement, which is what drives the
-      // sheets through each other in the first place.
-      stageDisplace: 0.15,
-      stageDisplaceRate: 0.14,
-      psychedelia: 0.15,
-      cycleInterval: 24,
+      // On top of the scene's own standing folds. This is the knob that takes the
+      // cloth from a sheet with a bow in it to one in a gale.
+      stageDisplace: 0.3,
+      // The one rate that matters here: how fast the folds travel across the cloth.
+      // Slow enough to watch a crest cross the frame.
+      stageDisplaceRate: 0.12,
+      psychedelia: 0.18,
+      cycleInterval: 22,
       post: {
-        feedbackAmount: 0.26,
-        feedbackScale: 1.004,
-        chroma: 0.24,
+        feedbackAmount: 0.2,
+        feedbackScale: 1.005,
+        chroma: 0.26,
         grain: 0.05,
-        vignette: 0.46,
+        // Modest. The curl already darkens the edges of the frame by turning the
+        // cloth away there; a strong vignette on top leaves the picture dim all
+        // round its border.
+        vignette: 0.4,
       },
     },
   },
   {
-    id: "ribbons",
-    name: "Ribbons",
-    blurb: "Two wide bands of pages braided along a Lissajous figure, winding into a knot.",
+    id: "band",
+    name: "Band",
+    blurb: "A broad strip of comic wound on a trefoil knot, rolling as it travels.",
     overrides: {
-      stageKind: "ribbons",
-      // The band alternates between its two panels along its own length, so a swap
-      // repaints every other segment of it — a large event, and a rare one.
-      layerLifetime: 64,
-      // Complementary, as in the swarm: two slots, no jitter, constant total.
-      crossfade: 1,
+      stageKind: "band",
+      layerLifetime: 68,
+      crossfade: 0.22,
       layerLifetimeJitter: 0,
       tintAmount: 0.26,
       keyBalance: 0.78,
       stageScale: 1,
-      // The bands overlap themselves along the curve by design, so a pixel in the
-      // middle of one is already two quads deep before the other band crosses it.
-      stageOpacity: 0.5,
-      stageMorph: 0.4,
-      stageMorphRate: 0.0032,
-      // The scene caps this anyway; set low here so the tuning panel reads the
-      // value the formation is actually using rather than one it is clamping.
-      stageBillboard: 0.12,
-      stageBreathe: 0.05,
-      stageFov: 52,
-      // Slow, as everywhere else on this path — the band's own travel through the
-      // figure is already motion, and the turn on top of it was too much.
-      stageSpin: 0.02,
+      // Lower than the closed bodies', and the difference is the knot: a trefoil
+      // crosses itself, so wherever the band passes in front of its own far side
+      // the frame carries two thicknesses of it rather than one.
+      // The lowest of the spatial presets, and the reason is the figure: a
+      // trefoil crosses itself, and a strip this wide crosses itself several
+      // passes deep wherever it does — so a pixel in the middle of the knot is
+      // carrying three or four thicknesses of additive comic where every other
+      // scene here carries exactly one.
+      stageOpacity: 0.32,
+      // Centred, so the strip runs the full distance in both directions — a ribbon
+      // threading the figure at one end and a folded sheet of comic at the other.
+      // This is the one preset whose morph is a change of *width*.
+      stageMorph: 0.5,
+      stageMorphRate: 0.003,
+      stageFov: 60,
+      // Slow, as everywhere on this path: a stretch of the band is a page and a
+      // half of comic, and hurrying it past defeats the width it was given.
+      stageSpin: 0.022,
       stageFlight: 0,
+      // One, as the core the strip winds around — it occupies the middle of the
+      // knot, which is the one part of the frame the band itself never reaches.
       stageSolids: 1,
-      stageDisplaceRate: 0.2,
+      stageDisplace: 0.25,
+      stageDisplaceRate: 0.16,
       psychedelia: 0.18,
       cycleInterval: 22,
       post: {
-        feedbackAmount: 0.34,
+        // The heaviest of the four, and it is answering the one thing a knot
+        // cannot fix about itself: a band is an open figure, so however wide the
+        // strip gets there is space between its passes and space in the corners
+        // of the frame. A long trail and a six-fold mirror put the figure's own
+        // content in both, which is cheaper and better than winding the knot
+        // tighter until it is a lumpy donut.
+        feedbackAmount: 0.28,
         feedbackScale: 1.005,
+        kaleido: 0.24,
+        kaleidoSegments: 6,
+        kaleidoSpin: 0.01,
         chroma: 0.28,
         grain: 0.05,
         vignette: 0.44,
@@ -621,51 +625,50 @@ export const VIZ_PRESETS: VizPreset[] = [
     },
   },
   {
-    id: "motes",
-    name: "Motes",
-    blurb: "A page torn into a few large shards, stirred apart on a current and back together.",
+    id: "shatter",
+    name: "Shatter",
+    blurb: "A globe of one page that opens along its seams, throws off shards, and closes.",
     overrides: {
-      stageKind: "motes",
-      // Long enough that a page survives a full dispersal and reassembly rather
-      // than being replaced mid-flight, which is the one thing that would break the
-      // reading that these shards were ever one picture.
-      layerLifetime: 70,
-      // Complementary, as in the swarm: two slots, no jitter, constant total.
-      crossfade: 1,
+      stageKind: "shatter",
+      // Long enough that a page survives a full break and reassembly rather than
+      // being replaced mid-flight, which is the one thing that would break the
+      // reading that the shards and the body were ever one picture.
+      layerLifetime: 76,
+      crossfade: 0.2,
       layerLifetimeJitter: 0,
       tintAmount: 0.3,
       keyBalance: 0.82,
       stageScale: 1,
-      // High, but no longer the highest: nine shards leave a lot of dark between
-      // them once dispersed, and they overlap most when the slab is assembled —
-      // which is exactly when the frame has the least dark left to absorb it. So
-      // the setting is governed by one end of the morph and looks generous at the
-      // other, which is the right way round for an additive path.
-      stageOpacity: 0.6,
-      // Centred, so the dissolve runs the full distance in both directions. This
-      // is the one formation whose two arrangements are a *statement* — the art
-      // assembled and the art dispersed — rather than two shapes.
+      // Under the sealed bodies' by a margin, because this one is not only a body:
+      // at the open end of the morph there are four large shards adding over it,
+      // and the shards are brightest exactly where they cross the globe.
+      stageOpacity: 0.58,
+      // Centred, so the break runs the full distance in both directions. This is
+      // the one formation whose two ends are a *statement* — the page sealed and
+      // the page in pieces — rather than two shapes.
       stageMorph: 0.5,
-      stageMorphRate: 0.0028,
-      // Part way, where it used to be pinned at 1. A shard has a legible face, so
-      // seeing it at an angle is information rather than loss.
-      stageBillboard: 0.6,
-      stageBreathe: 0.12,
-      stageFov: 62,
-      stageSpin: 0.018,
+      stageMorphRate: 0.0026,
+      // Part way. A shard has a legible face, so seeing it at an angle is
+      // information rather than loss.
+      stageBillboard: 0.55,
+      stageBreathe: 0.1,
+      stageFov: 66,
+      stageSpin: 0.02,
       stageFlight: 0,
       stageSolids: 0,
-      stageSwirl: 0.25,
+      // The current the loose shards ride, on top of the scene's own standing one.
+      stageSwirl: 0.2,
       stageDisplaceRate: 0.1,
       psychedelia: 0.25,
       cycleInterval: 20,
       post: {
-        feedbackAmount: 0.4,
+        feedbackAmount: 0.34,
         feedbackScale: 1.006,
         chroma: 0.3,
         // Being energy-normalised, the bloom costs a highlight what it spreads
-        // around it rather than adding to the frame — so it survives the shards
-        // being large, where anything that merely added light would not.
+        // around it rather than adding to the frame — so it survives a scene whose
+        // subject fills the middle of the picture, where anything that merely added
+        // light would not.
         bloom: 0.2,
         bloomThreshold: 0.66,
         grain: 0.05,

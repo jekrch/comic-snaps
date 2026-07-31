@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import type { Filters } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
-import { nearestSpeed } from "../components/viz/vizConfig";
+import { VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../components/viz/vizConfig";
 
 const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "credits", "postedBy", "series"];
 const DEFAULT_SORT: SortMode = "newest";
@@ -15,6 +15,7 @@ function parseFiltersFromURL(): {
   viz: boolean;
   vizPreset: string | null;
   vizSpeed: number | null;
+  vizCfg: string | null;
 } {
   const params = new URLSearchParams(window.location.search);
 
@@ -34,10 +35,15 @@ function parseFiltersFromURL(): {
   const rawTab = params.get("tab");
   const tab = rawTab && VALID_TABS.includes(rawTab as InfoTab) ? (rawTab as InfoTab) : null;
 
-  // Snapped to a rung rather than rejected: the engine clamps anyway, and a
-  // hand-edited value should land somewhere sane instead of being dropped.
+  // Clamped rather than snapped to a rung: the pills are the common way in, but
+  // the tuning panel's speed slider is finer than they are and a link has to be
+  // able to say what it is actually running. The control highlights the nearest
+  // pill either way.
   const rawSpeed = Number(params.get("vizspeed"));
-  const vizSpeed = Number.isFinite(rawSpeed) && rawSpeed > 0 ? nearestSpeed(rawSpeed) : null;
+  const vizSpeed =
+    Number.isFinite(rawSpeed) && rawSpeed > 0
+      ? Math.min(VIZ_MAX_SPEED, Math.max(VIZ_MIN_SPEED, rawSpeed))
+      : null;
 
   return {
     filters,
@@ -46,13 +52,14 @@ function parseFiltersFromURL(): {
     viz: params.get("viz") === "1",
     vizPreset: params.get("vizpreset"),
     vizSpeed,
+    vizCfg: params.get("vizcfg"),
   };
 }
 
 /** Visualizer params, carried across unrelated URL updates. `vizseed` and
  *  `vizdebug` are read straight off the URL by the overlay, so losing them on a
  *  filter change would silently drop a run someone was replaying. */
-const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizseed", "vizdebug"] as const;
+const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizcfg", "vizseed", "vizdebug"] as const;
 
 function buildParams(
   filters: Filters,
@@ -85,6 +92,14 @@ function buildParams(
   }
 
   return params.toString();
+}
+
+/** What a running visualizer puts in the URL: the preset by name, the rate, and
+ *  — when the reader has tuned it — everything else, encoded by `vizUrl`. */
+export interface VizRunParams {
+  preset?: string | null;
+  speed?: number;
+  cfg?: string | null;
 }
 
 function pushURL(qs: string) {
@@ -120,20 +135,29 @@ export function useFilterParams() {
     []
   );
 
-  const syncViz = useCallback((open: boolean, preset?: string | null, speed?: number) => {
+  const syncViz = useCallback((open: boolean, run: VizRunParams = {}) => {
     const params = new URLSearchParams(window.location.search);
     if (open) {
       params.set("viz", "1");
-      if (preset) params.set("vizpreset", preset);
+      // Always named, even under a custom config: the preset is the base the
+      // `vizcfg` delta is read against, as well as the readable half of the link.
+      if (run.preset) params.set("vizpreset", run.preset);
       else params.delete("vizpreset");
-      // Only carried when it differs from the authored rate, so the common
-      // case leaves the URL as short as it was before the control existed.
-      if (speed !== undefined && speed !== 1) params.set("vizspeed", String(speed));
-      else params.delete("vizspeed");
+      // Both of the rest are only carried when they say something the preset
+      // does not, so the common case leaves the URL as short as it was before
+      // either existed.
+      if (run.speed !== undefined && run.speed !== 1) {
+        params.set("vizspeed", String(Number(run.speed.toFixed(2))));
+      } else {
+        params.delete("vizspeed");
+      }
+      if (run.cfg) params.set("vizcfg", run.cfg);
+      else params.delete("vizcfg");
     } else {
       params.delete("viz");
       params.delete("vizpreset");
       params.delete("vizspeed");
+      params.delete("vizcfg");
     }
     const qs = params.toString();
     const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
@@ -147,6 +171,7 @@ export function useFilterParams() {
     initialViz: initial.viz,
     initialVizPreset: initial.vizPreset,
     initialVizSpeed: initial.vizSpeed,
+    initialVizCfg: initial.vizCfg,
     syncToURL,
     syncTab,
     syncViz,

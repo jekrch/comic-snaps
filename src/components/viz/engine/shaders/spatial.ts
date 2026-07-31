@@ -390,6 +390,324 @@ void main() {
 `;
 
 /**
+ * The papered surface — the program the reworked scenes are built on.
+ *
+ * One grid, one draw per resident panel, and no per-instance anything, exactly
+ * as the tube. The reasoning is the tube's as well: a quad has a rim, a frame
+ * full of rims is a scatter of cards in the dark, and the only way to make the
+ * picture *be* comic art rather than be sprinkled with it is to give it no edges
+ * at all. What is new is that the surface can be seen from outside, so it is a
+ * shape rather than a room — and a shape can turn, which a corridor cannot.
+ *
+ * Three things share this one program.
+ *
+ * **The geometry is a uniform.** The attribute is only "how far around" and "how
+ * far along"; `surfacePoint` sweeps that pair into a closed body, a drape or a
+ * band, and every dimension of each is a uniform. So a drum can round into a
+ * sphere, a gem can flatten into a plate, and a band can wind up its own twist,
+ * all without a rebuild — the same trade the tube makes, for the same reason.
+ *
+ * **The normal is a difference, not an attribute.** `surfacePoint` is evaluated
+ * three times a vertex and the normal comes out of the cross product. That is
+ * the only way to keep it honest through a shape that is changing every frame,
+ * and it costs three evaluations of some trigonometry at a few thousand
+ * vertices — nothing at all beside a post chain that touches every pixel a dozen
+ * times.
+ *
+ * **The crops are a hash of the cell.** The surface is diced into `uCells`
+ * faces, each of which samples its own sub-rectangle of the one resident page.
+ * A rotating body is therefore a dozen unrelated details of a single comic page
+ * arriving one after another as it turns, which is the whole idea: out of
+ * context, but all of one context.
+ */
+export const SURFACE_VERTEX = `#version 300 es
+precision highp float;
+
+// x: fraction around (or across), y: fraction along.
+in vec2 aGrid;
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+// 0 closed body, 1 drape, 2 band — see SurfaceBody.
+uniform int uBody;
+uniform vec3 uSize;
+uniform float uSides;
+uniform float uRound;
+uniform float uCap;
+uniform float uTwist;
+uniform float uBurst;
+uniform float uRipple;
+uniform float uRippleScale;
+uniform float uRipplePhase;
+uniform vec2 uCells;
+// One grid step, so the normal's finite difference matches the tessellation
+// rather than being an arbitrary epsilon.
+uniform vec2 uStep;
+uniform vec2 uKnot;
+
+out vec2 vGrid;
+out vec3 vWorld;
+out vec3 vNormal;
+
+const float TAU = 6.283185307179586;
+const float PI = 3.141592653589793;
+
+float hash21(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
+
+/**
+ * How far this cell's plate has swollen off the body.
+ *
+ * A bump that is zero on the cell's own boundary, so neighbouring plates part
+ * company in the middle and the surface is still one piece at the seam. That is
+ * what lets the body come apart without the mesh having to be torn into
+ * per-cell geometry: what opens between the plates is a valley rather than a
+ * hole, the gutter darkens the bottom of it, and the reading is the same.
+ */
+float plate(vec2 g) {
+  if (uBurst <= 0.0) return 0.0;
+  vec2 f = fract(g * uCells);
+  float bump = sin(f.x * PI) * sin(f.y * PI);
+  // Squared, so the plate is flat across most of its face and falls away only
+  // near the edges — a segment lifting, rather than a blister.
+  bump *= bump;
+  float amount = 0.35 + 0.65 * hash21(floor(g * uCells) + 3.7);
+  return bump * amount * uBurst;
+}
+
+/** A point on the tube of a torus, and the surface normal there. The band is
+ *  swept in this frame rather than off a finite-difference basis: a curve's own
+ *  normal flips wherever its tangent crosses the world up, and a band that flips
+ *  is a band with a crease across it. The torus normal never does. */
+vec3 torusAt(float s) {
+  float around = uKnot.x * s;
+  float tube = uKnot.y * s;
+  float ring = 2.0 + cos(tube);
+  return vec3(ring * cos(around), sin(tube), ring * sin(around)) * uSize.z;
+}
+
+vec3 torusNormal(float s) {
+  float around = uKnot.x * s;
+  float tube = uKnot.y * s;
+  return vec3(cos(tube) * cos(around), sin(tube), cos(tube) * sin(around));
+}
+
+vec3 surfacePoint(vec2 g) {
+  if (uBody == 1) {
+    // A drape: the grid left flat and thrown into travelling folds. Larger than
+    // the frame by construction, so there is no silhouette anywhere in it and
+    // the picture is full bleed at every moment of the run.
+    float x = (g.x - 0.5) * uSize.x;
+    float y = (g.y - 0.5) * uSize.y;
+    // Three incommensurate waves rather than one. A single sine is a corrugation
+    // and reads as a flag; the beat between three is cloth, because no two
+    // crests ever arrive together twice.
+    float z = sin(x * uRippleScale + uRipplePhase) * uRipple;
+    z += sin(y * uRippleScale * 0.71 - uRipplePhase * 0.83) * uRipple * 0.72;
+    z += sin((x + y * 0.6) * uRippleScale * 1.93 + uRipplePhase * 1.31) * uRipple * 0.33;
+    // And a bowl, so the cloth curls away at its edges instead of ending. With
+    // the camera inside the curl there is no edge to find in any direction.
+    z -= (x * x * 0.6 + y * y) * uTwist;
+    return vec3(x, y, z);
+  }
+
+  if (uBody == 2) {
+    // A band: a wide strip swept along a torus knot, rolling about its own
+    // centre line as it goes. Wide enough that passing the camera fills the
+    // frame — the whole failure of a ribbon of quads was that it never could.
+    float s = g.x * TAU;
+    vec3 centre = torusAt(s);
+    vec3 nrm = torusNormal(s);
+    vec3 along = normalize(torusAt(s + 0.01) - torusAt(s - 0.01));
+    // Perpendicular to the curve and lying in the torus surface. Both terms are
+    // continuous everywhere on the knot, so the frame cannot flip.
+    vec3 across = normalize(cross(along, nrm));
+    float roll = s * uTwist;
+    float w = (g.y - 0.5) * uSize.x;
+    vec3 lie = across * cos(roll) + nrm * sin(roll);
+    // The strip fluttering about its own centre line — one edge lifting as the
+    // other drops, strongest at the edges and zero along the middle.
+    //
+    // Odd in g.y rather than even, and it has to be. The roll is a half-integer
+    // number of turns, so after one circuit the frame has rotated by pi and the
+    // strip meets itself with its two edges swapped — which is what makes this a
+    // Möbius band and what makes it close at all. A displacement that lifted
+    // *both* edges the same way would not survive that swap: it would arrive at
+    // the seam pointing the wrong way and tear the band open by twice its own
+    // amplitude. An odd one flips with the frame and meets itself exactly.
+    float wave = sin(s * uRippleScale + uRipplePhase) * uRipple * (g.y - 0.5) * 2.0;
+    return centre + lie * w + cross(lie, along) * wave;
+  }
+
+  // A closed body of revolution, and the one the crops were designed around.
+  float y = (g.y - 0.5) * 2.0;
+  float ang = g.x * TAU + g.y * uTwist;
+
+  // Regular polygon of circumradius 1, rounded toward a circle. This is what
+  // gives the object *sides* — a face wide enough to carry a whole crop flat,
+  // with a hard corner where it hands over to the next one.
+  float wedge = PI / max(uSides, 3.0);
+  float poly = cos(wedge) / max(cos(mod(ang, 2.0 * wedge) - wedge), 0.2);
+  float section = mix(poly, 1.0, clamp(uRound, 0.0, 1.0));
+
+  // Superellipse along the axis: 1 is a cut gem, 2 a sphere, 5 a drum. The
+  // second half of the shape, and the reason one branch covers all of them.
+  float cap = pow(max(1.0 - pow(abs(y), uCap), 0.0), 1.0 / uCap);
+
+  float r = uSize.x * section * cap;
+  if (uRipple > 0.0) {
+    r += sin(y * uRippleScale * 3.0 + uRipplePhase) * uRipple;
+    r += sin(ang * 3.0 - uRipplePhase * 0.7) * uRipple * 0.45;
+  }
+
+  vec3 p = vec3(cos(ang) * r, y * uSize.y, sin(ang) * r);
+  // Outward, roughly: radial where the body is straight-sided and tipped toward
+  // the poles where it closes. Good enough to lift a plate along, and it costs
+  // nothing beside the exact normal the vertex stage is about to difference.
+  vec3 outward = normalize(vec3(cos(ang) * cap, y * 0.85, sin(ang) * cap) + 1e-5);
+  // Sheared to match the facets, exactly as vGrid is at the end of main() — a
+  // plate that swelled on the raw parameter would part company from the gutter
+  // that is supposed to be falling into the valley it opens.
+  return p + outward * plate(vec2(g.x + g.y * uTwist / TAU, g.y));
+}
+
+void main() {
+  vec3 local = surfacePoint(aGrid);
+  vec3 du = surfacePoint(aGrid + vec2(uStep.x, 0.0)) - local;
+  vec3 dv = surfacePoint(aGrid + vec2(0.0, uStep.y)) - local;
+
+  // Degenerate wherever the parameterisation pinches — the poles of a body, and
+  // any row the ripple happens to flatten. Facing the eye is the harmless answer
+  // there: it is a handful of vertices, and the alternative is a NaN that takes
+  // every triangle touching them with it.
+  vec3 raw = cross(du, dv);
+  float len = length(raw);
+  vec3 n = len > 1e-7 ? raw / len : vec3(0.0, 0.0, 1.0);
+
+  vec4 world = modelMatrix * vec4(local, 1.0);
+  vWorld = world.xyz;
+  vNormal = mat3(modelMatrix) * n;
+
+  // The cell grid follows the facets rather than the parameter.
+  //
+  // A body's shear moves where its corners *are* — see ang above — so a cell
+  // grid left on the raw parameter would slide off them, and every gutter would
+  // end up running down the middle of a face instead of along the edge between
+  // two. Sheared by exactly the same amount, the two stay locked; and because
+  // the shift is exactly one whole turn apart at the seam, whole cells still
+  // wrap into whole cells there.
+  vGrid = uBody == 0 ? vec2(aGrid.x + aGrid.y * uTwist / TAU, aGrid.y) : aGrid;
+
+  gl_Position = projectionMatrix * viewMatrix * world;
+}
+`;
+
+export const SURFACE_FRAGMENT = `#version 300 es
+precision highp float;
+
+in vec2 vGrid;
+in vec3 vWorld;
+in vec3 vNormal;
+out vec4 fragColor;
+
+uniform sampler2D uTex;
+uniform vec3 cameraPosition;
+uniform vec2 uLevels;
+uniform vec4 uTint;
+uniform float uOpacity;
+uniform vec2 uCells;
+uniform float uZoom;
+uniform float uGutter;
+uniform float uSeed;
+uniform float uPanelAspect;
+uniform float uCellAspect;
+uniform float uRim;
+uniform float uSolid;
+uniform float uFogNear;
+uniform float uFogFar;
+
+float hash21(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
+
+void main() {
+  vec3 n = normalize(vNormal);
+  vec3 toEye = normalize(cameraPosition - vWorld);
+  float facing = dot(n, toEye);
+
+  // Only the near side of a closed body, decided here rather than by the cull
+  // state. Winding through surfacePoint depends on which branch built the
+  // grid; which side faces the camera does not, so this is the test that cannot
+  // be got backwards — and it is exact for a convex body, which these are.
+  if (uSolid > 0.5 && facing < 0.0) discard;
+  if (facing < 0.0) n = -n;
+
+  // Which face of the object this is. The seam column belongs to the first cell
+  // rather than to a phantom one past the end.
+  vec2 scaled = vGrid * uCells;
+  vec2 cell = floor(scaled);
+  cell = mod(cell, uCells);
+  vec2 f = clamp(scaled - floor(scaled), 0.0, 1.0);
+
+  // The crop this face wears: a sub-rectangle of the one resident page, its
+  // proportions matched to the cell so nothing is stretched, its position drawn
+  // per cell so no two faces show the same thing. Same page on all of them —
+  // that is the point. A body turning is then one page read as a dozen
+  // unrelated details, none of them where they belong.
+  float ratio = uCellAspect / max(uPanelAspect, 0.05);
+  vec2 size = ratio > 1.0 ? vec2(1.0, 1.0 / ratio) : vec2(ratio, 1.0);
+  size *= clamp(uZoom, 0.05, 1.0);
+  vec2 origin = vec2(hash21(cell + uSeed), hash21(cell.yx * 1.7 + uSeed + 11.3));
+  vec2 uv = origin * (1.0 - size) + f * size;
+
+  // Row 0 of an ImageBitmap sits at v = 0 — same flip as every other program.
+  vec3 col = texture(uTex, vec2(uv.x, 1.0 - uv.y)).rgb;
+  col = clamp(col * uLevels.x + uLevels.y, 0.0, 1.0);
+  col = mix(col, col * uTint.rgb, uTint.a);
+
+  // The gutter between faces. The one edge worth having on a surface built to
+  // have none: it reads as the black between panels rather than as the rim of a
+  // card, and where the plates have lifted it is the bottom of the valley
+  // between them.
+  vec2 edge = min(f, 1.0 - f);
+  float gutter = uGutter > 0.0 ? smoothstep(0.0, uGutter, min(edge.x, edge.y)) : 1.0;
+
+  // One fixed key, as on the solids, plus a grazing rim. The rim is doing most
+  // of the work of saying the object is round: a body lit only by a key reads as
+  // a flat cut-out wherever the key happens to be even.
+  float key = 0.4 + 0.6 * max(dot(n, normalize(vec3(0.42, 0.72, 0.55))), 0.0);
+  float rim = pow(1.0 - clamp(abs(facing), 0.0, 1.0), 3.0) * uRim;
+
+  // Fades at both ends: into the dark down the far side of the object, and back
+  // out at the near one so that nothing ever swells through the lens.
+  //
+  // The near fade is what lets these scenes put the camera as close as they do.
+  // A shape that overflows the frame is the entire correction being made here,
+  // and the price of it is that a lobe of a knot or a plate standing off a body
+  // occasionally comes within a unit of the eye — where without this it would
+  // clip through the near plane and tear a hole in the picture.
+  float d = distance(vWorld, cameraPosition);
+  float fog = 1.0 - smoothstep(uFogFar * 0.55, uFogFar, d);
+  if (uFogNear > 0.0) fog *= smoothstep(uFogNear * 0.2, uFogNear, d);
+
+  // Clamped, and this is the washout governor for the whole path: the surface
+  // fills the frame, the feedback trail accumulates with max(), and a rim that
+  // was allowed to add on top of a full key would re-open exactly what bd1d4c5
+  // closed.
+  float a = uOpacity * fog * gutter * clamp(key + rim, 0.0, 1.0);
+  if (a <= 0.002) discard;
+  fragColor = vec4(col * a, a);
+}
+`;
+
+/**
  * Solids drifting in the middle distance.
  *
  * The only opaque thing in the frame, and therefore the only thing that writes

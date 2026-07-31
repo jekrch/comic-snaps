@@ -13,16 +13,26 @@
 }
 
 /* A viewer opened from the visualizer sits on top of the still-running
-   composition (which owns z-100) rather than replacing it. The backdrop gives
-   up a little of its opacity and blurs harder in exchange, so the run reads as
-   a soft wash of motion behind the panel instead of a flat black field. */
+   composition (which owns z-100) rather than replacing it. The backdrop keeps
+   only enough fill to seat the panel and blurs lightly, so the run stays
+   legible as motion behind the panel instead of a flat black field. */
 .rvl-over-viz {
   --rvl-z: 110;
-  --rvl-overlay-bg: rgba(0, 0, 0, 0.85);
+  --rvl-overlay-bg: rgba(0, 0, 0, 0.5);
 }
 .rvl-over-viz .rvl-backdrop {
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Exception to the above: the drawer and the graph are dense small text, which
+   that backdrop alone can't carry over a moving composition. They take their
+   own local scrim, sized to the content — for the drawer that's the centered
+   text column, so the margins on either side stay clear for the run. */
+.viz-read-scrim {
+  background: rgba(6, 6, 6, 0.88);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 @theme {

@@ -11,6 +11,11 @@ import VizDebugPanel from "./VizDebugPanel";
 
 const CONTROLS_IDLE_MS = 2000;
 
+/** How long the tuning panel has to be still before the run's config is handed
+ *  up to the URL. A slider drag is a hundred changes; the address bar wants the
+ *  value it was let go on. */
+const CONFIG_SYNC_MS = 400;
+
 /** How far back the pinned label can step. Long enough to cover an unattended
  *  stretch, short enough that the panels stay in the browser's image cache. */
 const TRAIL_MAX = 60;
@@ -29,6 +34,8 @@ interface VisualizerOverlayProps {
   pinLabel?: boolean;
   /** Live speed changes, so the URL keeps describing what is actually running. */
   onSpeedChange?: (speed: number) => void;
+  /** Everything the tuning panel moves, debounced, for the same reason. */
+  onConfigChange?: (config: VizConfig) => void;
   /** Hands the panel to the image viewer, which opens on top of the run. */
   onOpenPanel?: (panel: Panel) => void;
   /** True while that viewer is up: the run carries on, but unattended. */
@@ -91,6 +98,7 @@ export default function VisualizerOverlay({
   pinLabel = false,
   onPresetChange,
   onSpeedChange,
+  onConfigChange,
   onOpenPanel,
   viewerOpen = false,
   onClose,
@@ -99,6 +107,7 @@ export default function VisualizerOverlay({
   const engineRef = useRef<VizEngine | null>(null);
   const idleTimerRef = useRef<number>(0);
   const rampRef = useRef<number>(0);
+  const configSyncRef = useRef<number>(0);
   /** True while something on the chrome — the mode menu — is open under it. */
   const chromeHeldRef = useRef(false);
 
@@ -174,10 +183,20 @@ export default function VisualizerOverlay({
   // --- screensaver hygiene --------------------------------------------------
 
   useEffect(() => {
+    const root = document.documentElement;
     const previousOverflow = document.body.style.overflow;
+    const previousRootOverflow = root.style.overflow;
+    // `html { scrollbar-gutter: stable }` reserves a strip outside the layout
+    // viewport that a fixed inset-0 overlay cannot cover, so it shows through as
+    // a light bar down the right edge. Drop the gutter while the viz is up.
+    const previousGutter = root.style.scrollbarGutter;
     document.body.style.overflow = "hidden";
+    root.style.overflow = "hidden";
+    root.style.scrollbarGutter = "auto";
     return () => {
       document.body.style.overflow = previousOverflow;
+      root.style.overflow = previousRootOverflow;
+      root.style.scrollbarGutter = previousGutter;
     };
   }, []);
 
@@ -283,6 +302,25 @@ export default function VisualizerOverlay({
     });
     wakeChrome();
   }, [wakeChrome]);
+
+  /**
+   * The tuning panel moved something. The working config is already live — the
+   * engine reads it every frame — so all this does is repaint the chrome that
+   * shows the same values and, once the hand comes off, hand a copy up for the
+   * URL. Copied rather than passed by reference: what goes in the address bar
+   * has to be the state at that instant, not an object that keeps changing.
+   */
+  const handleTuned = useCallback(() => {
+    bumpConfig();
+    if (!onConfigChange) return;
+    window.clearTimeout(configSyncRef.current);
+    configSyncRef.current = window.setTimeout(
+      () => onConfigChange(cloneConfig(configRef.current)),
+      CONFIG_SYNC_MS
+    );
+  }, [onConfigChange]);
+
+  useEffect(() => () => window.clearTimeout(configSyncRef.current), []);
 
   const setSpeed = useCallback(
     (speed: number) => {
@@ -507,7 +545,7 @@ export default function VisualizerOverlay({
           config={configRef.current}
           engine={engine}
           seed={formatSeed(seed)}
-          onChange={bumpConfig}
+          onChange={handleTuned}
           onClose={() => setShowDebug(false)}
         />
       )}

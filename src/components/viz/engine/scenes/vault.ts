@@ -46,6 +46,24 @@ const TUBE_BACK = 2.5;
  * it; that is precisely the cluttered reading, and it arrives fast.
  */
 const TUBE_TILES = 2;
+/**
+ * Widest helical wrap of the wallpaper, radians end to end.
+ *
+ * Bounded, and that is the whole point of it. `orbit` is an integral — it only
+ * grows — and everywhere else in the engine it is spent as a *rotation*, where
+ * growing forever is invisible because an angle is periodic. Here it was spent
+ * as a shear, which is not: the wrap kept winding, and after twenty minutes the
+ * page was a barber pole, after an hour the tube's own facets were crossing each
+ * other and the far end was aliasing into hash. So the accumulator drives the
+ * wrap's *phase* rather than its depth, and the corridor winds one way, unwinds
+ * through straight, and winds back — the same thing the profile does with the
+ * morph knob, and for the same reason.
+ *
+ * The value is set by where the surface starts to come apart: the tube is 64
+ * rows long, so this is a thirtieth of a radian between rows — a wrap the eye
+ * reads as a spiral while every quad on the wall is still very nearly square.
+ */
+const TWIST_MAX = 1.5;
 
 export const vault: SpatialScene = {
   name: "vault",
@@ -101,7 +119,14 @@ export const vault: SpatialScene = {
           // eye's sense of which way is up; a twisted *wallpaper* is the corridor
           // itself winding away from you, which is the same knob buying a much
           // stranger picture.
-          twist: orbit,
+          //
+          // The turn is the wrap's phase, not the wrap itself — see TWIST_MAX.
+          // `stageSpin` still means exactly what it did, the rate the corridor
+          // winds at; it just winds between two bounds now instead of forever.
+          // Fastest through the straight and at rest at either extreme, so the
+          // wall's angular speed peaks near what the old constant rate ran at
+          // rather than above it.
+          twist: Math.sin(orbit) * TWIST_MAX,
           scroll: travel,
           // The wall breathing in and out along its own radius, on the shared
           // displacement rate. The one motion here that is geometry rather than
@@ -144,6 +169,9 @@ export const vault: SpatialScene = {
           // black before the geometry stops.
           fogFar: TUBE_LENGTH * 0.85,
           shell,
+          // The corridor has its own program. `SurfaceDraw` is for the shapes
+          // that are seen from outside, and a room is not one of them.
+          surface: null,
           solids: [],
         };
       },

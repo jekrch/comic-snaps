@@ -1,11 +1,20 @@
 import { Box, Camera, Geometry, Mesh, Program, RenderTarget, Torus, Transform } from "ogl";
 import type { OGLRenderingContext, Renderer, Texture } from "ogl";
-import type { SolidShape, StageFrame, StageLayout, Vec3 } from "../types";
+import type {
+  ShellDraw,
+  SolidShape,
+  StageFrame,
+  StageLayout,
+  SurfaceBody,
+  Vec3,
+} from "../types";
 import {
   QUAD_FRAGMENT,
   QUAD_VERTEX,
   SOLID_FRAGMENT,
   SOLID_VERTEX,
+  SURFACE_FRAGMENT,
+  SURFACE_VERTEX,
   TUBE_FRAGMENT,
   TUBE_VERTEX,
 } from "../shaders/spatial";
@@ -30,26 +39,50 @@ const NEAR_PLANE = 0.1;
 const TUBE_AROUND = 96;
 const TUBE_ALONG = 64;
 
-/** The tube's parameter grid: one vec2 per vertex, everything else derived in the
- *  vertex shader from uniforms so the corridor can change shape for free. */
-function tubeGeometry(gl: OGLRenderingContext): Geometry {
-  const cols = TUBE_AROUND + 1;
-  const rows = TUBE_ALONG + 1;
+/**
+ * Resolution of the papered surface: segments around, segments along.
+ *
+ * Around is 144 because the bodies want *sides*, and a polygon's corner is only
+ * a corner if a column of the grid lands exactly on it — 144 divides by three,
+ * four, six, eight, nine and twelve, so every face count a scene is likely to
+ * ask for has its corners on vertices instead of shaved off between them.
+ *
+ * Along is set by the undulation, which moves vertices rather than texels, and
+ * by the plate swell, whose falloff has to be a curve rather than a chamfer.
+ * Both are low-frequency, so this is generous. The whole grid is 23k triangles
+ * drawn once or twice a frame, against a post chain that touches every pixel a
+ * dozen times.
+ */
+const SURFACE_AROUND = 144;
+const SURFACE_ALONG = 80;
+
+/**
+ * A parameter-space grid: one vec2 per vertex, and nothing else.
+ *
+ * Everything about where a vertex actually goes is derived in the vertex shader
+ * from uniforms, which is what lets a corridor change profile — or a body round
+ * from a six-sided drum into a sphere — with no rebuild and no upload. Shared by
+ * the tube and the surface because they are the same idea at different
+ * resolutions.
+ */
+function gridGeometry(gl: OGLRenderingContext, around: number, along: number): Geometry {
+  const cols = around + 1;
+  const rows = along + 1;
   const grid = new Float32Array(cols * rows * 2);
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const i = (row * cols + col) * 2;
-      grid[i] = col / TUBE_AROUND;
-      grid[i + 1] = row / TUBE_ALONG;
+      grid[i] = col / around;
+      grid[i + 1] = row / along;
     }
   }
 
-  // 16-bit is enough and universally supported: the grid is a few thousand
-  // vertices, an order of magnitude under the limit.
-  const index = new Uint16Array(TUBE_AROUND * TUBE_ALONG * 6);
+  // 16-bit is enough and universally supported: the largest grid here is a
+  // little over eleven thousand vertices, well under the limit.
+  const index = new Uint16Array(around * along * 6);
   let at = 0;
-  for (let row = 0; row < TUBE_ALONG; row++) {
-    for (let col = 0; col < TUBE_AROUND; col++) {
+  for (let row = 0; row < along; row++) {
+    for (let col = 0; col < around; col++) {
       const a = row * cols + col;
       const b = a + 1;
       const c = a + cols;
@@ -67,6 +100,43 @@ function tubeGeometry(gl: OGLRenderingContext): Geometry {
     aGrid: { size: 2, data: grid },
     index: { data: index },
   });
+}
+
+const SURFACE_BODY_CODE: Record<SurfaceBody, number> = { body: 0, drape: 1, band: 2 };
+
+/**
+ * A stable number per panel, so each page lays its crops out differently.
+ *
+ * The cell hash in the fragment shader is seeded with this, which means a
+ * handover does not merely change the picture on the faces — it deals the faces
+ * a new set of details out of the new page. Derived from the id rather than from
+ * a counter so it survives a panel leaving the pool and coming back.
+ */
+function seedFor(panelId: string): number {
+  let hash = 0;
+  for (let i = 0; i < panelId.length; i++) hash = (hash * 31 + panelId.charCodeAt(i)) | 0;
+  return (Math.abs(hash) % 4096) * 0.37;
+}
+
+/**
+ * The flight distance, folded back into one repeat of the wallpaper.
+ *
+ * `scroll` is an integral and the flight never stops, so left alone it is a
+ * number that grows all night — and it is divided by the tile height and handed
+ * to a `highp float`, where by morning a step of one ulp is a visible step of
+ * the texture. The wall is mirrored every tile, so shifting by *two* tiles is
+ * exactly the identity: this takes that shift as many times as it can and the
+ * corridor cannot tell, at any hour.
+ *
+ * Done here rather than in the shader because it has to happen while the number
+ * is still a double — a float32 that has already lost the low bits cannot get
+ * them back by being wrapped.
+ */
+function wrapScroll(shell: ShellDraw, aspect: number): number {
+  const tileWidth = (Math.PI * 2 * shell.radius) / Math.max(shell.tiles, 0.001);
+  const period = 2 * (tileWidth / Math.max(aspect, 0.05));
+  if (!Number.isFinite(period) || period <= 0) return shell.scroll;
+  return shell.scroll - Math.floor(shell.scroll / period) * period;
 }
 
 /**
@@ -96,6 +166,10 @@ export class SpatialPass {
    *  sees quad formations never pays for the grid. */
   private tube: Mesh | null = null;
   private tubeProgram: Program | null = null;
+  /** Built on the first frame that asks for a surface, for the same reason the
+   *  tube is: a run that only ever sees the vault never pays for this grid. */
+  private surface: Mesh | null = null;
+  private surfaceProgram: Program | null = null;
   private slotMeshes: Mesh[] = [];
   private revision = -1;
   private target: RenderTarget | null = null;
@@ -219,6 +293,7 @@ export class SpatialPass {
     // Opaque first, so the additive surfaces have something to test against.
     this.drawSolids(stage, pool, target);
     if (stage.shell) this.drawShell(stage, pool, target);
+    if (stage.surface) this.drawSurface(stage, pool, target);
     this.drawSlots(stage, pool, target);
 
     return target.texture;
@@ -307,7 +382,6 @@ export class SpatialPass {
     uniforms.uProfile.value = shell.profile;
     uniforms.uTiles.value = shell.tiles;
     uniforms.uTwist.value = shell.twist;
-    uniforms.uScroll.value = shell.scroll;
     uniforms.uRipple.value = shell.ripple;
     uniforms.uRippleScale.value = shell.rippleScale;
     uniforms.uRipplePhase.value = shell.ripplePhase;
@@ -323,6 +397,7 @@ export class SpatialPass {
       uniforms.uTint.value = [...slot.tint, slot.tintAmount];
       uniforms.uOpacity.value = slot.opacity;
       uniforms.uPanelAspect.value = slot.aspect;
+      uniforms.uScroll.value = wrapScroll(shell, slot.aspect);
 
       this.renderer.render({
         scene: mesh,
@@ -333,6 +408,125 @@ export class SpatialPass {
         frustumCull: false,
       });
     }
+  }
+
+  /**
+   * Draw the papered surface once per resident panel.
+   *
+   * The shell's loop exactly: one geometry, one program, and a slot's opacity
+   * envelope crossfading an entire object rather than a hundred small quads —
+   * which is why the scenes on this path declare sequential residency and their
+   * slots sum to one. The only thing per slot beyond the texture is the seed,
+   * so the two pages mid-handover are not merely different pictures but
+   * different *arrangements* of detail across the faces.
+   */
+  private drawSurface(stage: StageFrame, pool: TexturePool, target: RenderTarget): void {
+    const surface = stage.surface;
+    if (!surface) return;
+
+    const mesh = this.ensureSurface();
+    const uniforms = mesh.program.uniforms;
+    mesh.position.set(surface.position[0], surface.position[1], surface.position[2]);
+    mesh.rotation.set(surface.rotation[0], surface.rotation[1], surface.rotation[2]);
+    mesh.updateMatrixWorld();
+
+    uniforms.uBody.value = SURFACE_BODY_CODE[surface.body];
+    uniforms.uSize.value = surface.size;
+    uniforms.uSides.value = surface.sides;
+    uniforms.uRound.value = surface.round;
+    uniforms.uCap.value = surface.cap;
+    uniforms.uTwist.value = surface.twist;
+    uniforms.uBurst.value = surface.burst;
+    uniforms.uRipple.value = surface.ripple;
+    uniforms.uRippleScale.value = surface.rippleScale;
+    uniforms.uRipplePhase.value = surface.ripplePhase;
+    uniforms.uCells.value = surface.cells;
+    uniforms.uKnot.value = surface.knot;
+    uniforms.uZoom.value = surface.zoom;
+    uniforms.uGutter.value = surface.gutter;
+    uniforms.uCellAspect.value = surface.cellAspect;
+    uniforms.uRim.value = surface.rim;
+    uniforms.uSolid.value = surface.solid ? 1 : 0;
+    uniforms.uFogNear.value = stage.fogNear;
+    uniforms.uFogFar.value = stage.fogFar;
+
+    for (const slot of stage.slots) {
+      if (slot.opacity <= 0.002) continue;
+      const texture = pool.get(slot.panelId);
+      if (!texture) continue;
+
+      uniforms.uTex.value = texture;
+      uniforms.uLevels.value = [slot.levels.gain, slot.levels.lift];
+      uniforms.uTint.value = [...slot.tint, slot.tintAmount];
+      uniforms.uOpacity.value = slot.opacity;
+      uniforms.uPanelAspect.value = slot.aspect;
+      uniforms.uSeed.value = seedFor(slot.panelId);
+
+      this.renderer.render({
+        scene: mesh,
+        camera: this.camera,
+        target,
+        update: false,
+        sort: false,
+        frustumCull: false,
+      });
+    }
+  }
+
+  private ensureSurface(): Mesh {
+    if (!this.surface) {
+      this.surfaceProgram = new Program(this.gl, {
+        vertex: SURFACE_VERTEX,
+        fragment: SURFACE_FRAGMENT,
+        transparent: true,
+        // Which side is drawn is the fragment shader's call — see the note on
+        // `uSolid`. A cull state here would depend on the winding each branch of
+        // `surfacePoint` happens to produce, which is precisely the thing that
+        // is not worth having to be right about.
+        cullFace: null,
+        depthTest: true,
+        depthWrite: false,
+        uniforms: {
+          uTex: { value: null },
+          uLevels: { value: [1, 0] },
+          uTint: { value: [1, 1, 1, 0] },
+          uOpacity: { value: 1 },
+          uBody: { value: 0 },
+          uSize: { value: [2, 2, 1] },
+          uSides: { value: 6 },
+          uRound: { value: 0 },
+          uCap: { value: 2 },
+          uTwist: { value: 0 },
+          uBurst: { value: 0 },
+          uRipple: { value: 0 },
+          uRippleScale: { value: 1 },
+          uRipplePhase: { value: 0 },
+          uCells: { value: [6, 2] },
+          uStep: { value: [1 / SURFACE_AROUND, 1 / SURFACE_ALONG] },
+          uKnot: { value: [2, 3] },
+          uZoom: { value: 0.5 },
+          uGutter: { value: 0.03 },
+          uSeed: { value: 0 },
+          uPanelAspect: { value: 0.75 },
+          uCellAspect: { value: 1 },
+          uRim: { value: 0.3 },
+          uSolid: { value: 1 },
+          uFogNear: { value: 0 },
+          uFogFar: { value: 30 },
+        },
+      });
+      // Premultiplied additive, exactly as the tube and the quads: two slots
+      // mid-crossfade have to add up to one object rather than compositing one
+      // over the other.
+      this.surfaceProgram.setBlendFunc(this.gl.ONE, this.gl.ONE);
+      this.surface = new Mesh(this.gl, {
+        geometry: gridGeometry(this.gl, SURFACE_AROUND, SURFACE_ALONG),
+        program: this.surfaceProgram,
+        frustumCulled: false,
+      });
+      this.surface.setParent(this.root);
+    }
+    return this.surface;
   }
 
   private ensureTube(): Mesh {
@@ -368,7 +562,7 @@ export class SpatialPass {
       // have to add up to one wall rather than compositing one over the other.
       this.tubeProgram.setBlendFunc(this.gl.ONE, this.gl.ONE);
       this.tube = new Mesh(this.gl, {
-        geometry: tubeGeometry(this.gl),
+        geometry: gridGeometry(this.gl, TUBE_AROUND, TUBE_ALONG),
         program: this.tubeProgram,
         frustumCulled: false,
       });
@@ -466,6 +660,10 @@ export class SpatialPass {
     this.tubeProgram?.remove();
     this.tube = null;
     this.tubeProgram = null;
+    this.surface?.geometry.remove();
+    this.surfaceProgram?.remove();
+    this.surface = null;
+    this.surfaceProgram = null;
     this.quadProgram.remove();
     this.solidProgram.remove();
     this.target = null;

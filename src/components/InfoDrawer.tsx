@@ -46,9 +46,11 @@ interface Props {
   bottomOffset?: number;
   closing?: boolean;
   slideDir?: "left" | "right" | null;
+  /** Viewer is over a running visualizer, whose backdrop is mostly transparent. */
+  overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -502,7 +504,9 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       onClick={(e) => e.stopPropagation()}
     >
       <div
-        className="px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full"
+        className={`px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full${
+          overViz ? " viz-read-scrim min-h-full" : ""
+        }`}
         style={{
           opacity: show ? 1 : 0,
           transform: show ? "translateY(0)" : "translateY(12px)",

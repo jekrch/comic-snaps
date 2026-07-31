@@ -155,9 +155,23 @@ export interface DrawShard {
 // and no individual image, which is the opposite of the point. So a scene
 // declares the few quads it wants (`SpatialScene.panels` × `perPanel`) and makes
 // each one big enough to be read as a piece of a comic.
+//
+// Taken to its conclusion, that argument ends with no quads at all, and for four
+// of the five scenes it did. A quad has a rim; a rim sliding past the eye is an
+// object being handed to the viewer; and a handful of them placed in a dark
+// frame leaves the frame mostly dark, which is a property of the arrangement
+// that no amount of pacing can fix. `ShellDraw` and `SurfaceDraw` below are what
+// those scenes are built on instead — one continuous surface with no edge in it
+// anywhere, papered with crops of the resident page.
 
-/** Which formation a spatial scene arranges its quads into. */
-export type StageKind = "swarm" | "vault" | "sheet" | "ribbons" | "motes";
+/**
+ * Which spatial scene is running.
+ *
+ * Four of the five are one continuous *surface* — see `SurfaceDraw` — and the
+ * fifth is the corridor, which is one too. Only `shatter` still arranges quads,
+ * and only for the pieces that have genuinely broken off a body.
+ */
+export type StageKind = "vault" | "prism" | "drape" | "band" | "shatter";
 
 /**
  * Static per-instance geometry for the quads bound to one panel slot.
@@ -254,10 +268,18 @@ export interface ShellDraw {
   /** Copies of the image around the circumference. One or two: this is the knob
    *  that decides whether the wall is a page or a pattern. */
   tiles: number;
-  /** Turn of the wallpaper over the tube's length, radians. A helical wrap, so
-   *  the flight has a twist in it without the camera rolling. */
+  /**
+   * Turn of the wallpaper over the tube's length, radians. A helical wrap, so
+   * the flight has a twist in it without the camera rolling.
+   *
+   * A depth, not a heading: this shears the wall rather than rotating it, so an
+   * integrated rate handed straight to it winds without limit and eventually
+   * tears the surface apart. A scene wanting a continuous turn here has to spend
+   * it as the phase of a bounded wrap — see the vault's `TWIST_MAX`.
+   */
   twist: number;
-  /** Distance scrolled along the tube, world units. Integrated `travel`. */
+  /** Distance scrolled along the tube, world units. Integrated `travel`, and
+   *  folded into one mirrored repeat by the pass before it reaches the shader. */
   scroll: number;
   /** Radial ripple amplitude, world units — the corridor breathing. */
   ripple: number;
@@ -265,6 +287,96 @@ export interface ShellDraw {
   rippleScale: number;
   /** Travel of the ripple. Integrated, like every other rate. */
   ripplePhase: number;
+}
+
+/**
+ * Which parameterisation the surface pass sweeps its grid into.
+ *
+ * Three, and they are three *topologies* rather than three shapes — everything
+ * else about a surface is a uniform. A closed body of revolution can be a
+ * six-sided drum, a gem or a sphere without changing branch; a drape is the same
+ * grid left flat; a band is it swept along a curve. Anything expressible as one
+ * of the three is a scene, not a code change.
+ */
+export type SurfaceBody = "body" | "drape" | "band";
+
+/**
+ * One continuous surface, papered with crops of the resident page.
+ *
+ * The generalisation of `ShellDraw`, and it exists for the reason that one does:
+ * a formation of separate quads is a formation of separate *rims*, and however
+ * large the quads are the frame reads as a scatter of cards in the dark with
+ * most of it empty. A surface has no rim in it anywhere, so the frame is made of
+ * comic art rather than sprinkled with it. The vault proved the point on a tube;
+ * this is the same trade taken to shapes that can be seen from outside.
+ *
+ * The other half of it is the crops. The surface is divided into `cells` — the
+ * sides of the drum, the segments of the band — and each cell draws its own
+ * sub-rectangle of the *same* page, chosen by a hash of the cell. So a rotating
+ * body is one page seen as a dozen unrelated details at once, which is the "out
+ * of context" reading the flat path gets from scattering shards, except that
+ * here the pieces are the faces of an object instead of debris around one.
+ *
+ * Textured per slot from `StageFrame.slots`, exactly as the shell is: a panel
+ * handover is a crossfade of the whole object, so the scenes that use it declare
+ * `sequential` residency and their slot opacities sum to one.
+ */
+export interface SurfaceDraw {
+  body: SurfaceBody;
+  /** Where the shape sits, before the formation's own spin. */
+  position: Vec3;
+  /** Its own turn, on top of that spin. */
+  rotation: Vec3;
+  /** x: radius, or half-width for a drape and half-width across a band.
+   *  y: half-height, or the drape's half-height.
+   *  z: the swept curve's own scale. Unread by the other two. */
+  size: Vec3;
+  /** Sides around a closed body — read against `round`. */
+  sides: number;
+  /** Section of a closed body: 0 is a flat-sided polygon, 1 a circle. */
+  round: number;
+  /** Profile along its axis. 1 is a bipyramid — a cut gem — 2 is a sphere, and
+   *  anything above about 4 is a drum with nearly flat ends. */
+  cap: number;
+  /** A helical shear of a body's facets, the Möbius turns of a band, and the
+   *  curl of a drape. One knob because all three are the same gesture: the
+   *  surface twisting away from the shape it would otherwise hold. */
+  twist: number;
+  /**
+   * How far each cell's plate swells off the body, world units.
+   *
+   * Smooth to zero at the cell's own edges rather than a rigid displacement, so
+   * the surface stays continuous while the plates lift — the object opens into
+   * segmented armour with dark valleys between the pieces instead of coming
+   * apart into geometry that has to be torn. The gutter falls in those valleys,
+   * which is what makes them read as gaps.
+   */
+  burst: number;
+  /** Undulation amplitude, world units — travelling waves in the surface. */
+  ripple: number;
+  /** Spatial frequency of those waves, cycles per world unit. */
+  rippleScale: number;
+  /** Their travel. Integrated, like every other rate. */
+  ripplePhase: number;
+  /** Crop cells around and along. Few: a cell is a face of the object, and a
+   *  face too small to be read is the busy grain these scenes exist to avoid. */
+  cells: [number, number];
+  /** Roughly how wide one cell is against how tall, on the surface. The crop's
+   *  proportions are matched to it so the page is never stretched. */
+  cellAspect: number;
+  /** How much of the page one cell shows, 0..1. Low is a tight detail. */
+  zoom: number;
+  /** Dark border around each cell, in cell units. Reads as the gutter between
+   *  panels, which is the one edge worth having on a surface with no rim. */
+  gutter: number;
+  /** Strength of the grazing rim light — the cue that says the shape is round. */
+  rim: number;
+  /** Closed, so only the near side is drawn. False for the open surfaces, which
+   *  are lit from whichever side happens to face the eye. */
+  solid: boolean;
+  /** Torus knot winding for a band: turns around the ring, turns around the
+   *  tube. Unread by the other two. */
+  knot: [number, number];
 }
 
 export type SolidShape = "torus" | "box";
@@ -296,6 +408,16 @@ export interface StageFrame {
    * would already work.
    */
   shell: ShellDraw | null;
+  /**
+   * The papered surface, when the scene is built on one. Null for the vault,
+   * which has its own tube, and null for a scene that is only quads.
+   *
+   * Not exclusive with the quads, and one scene depends on that: `shatter` is a
+   * body coming apart *and* the pieces that have already left it, which is a
+   * surface and a formation drawn from the same slots — the same page on both,
+   * because they were the same page.
+   */
+  surface: SurfaceDraw | null;
   solids: SolidDraw[];
   /** Clock seconds — the per-instance breath is a function of it. */
   time: number;

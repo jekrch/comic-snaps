@@ -11,7 +11,12 @@ export interface VizLaunchOptions {
   fullscreen: boolean;
   /** Start with the attribution label pinned in its own letterbox band. */
   pinLabel: boolean;
-  /** True when the config differs from the plain preset, for the URL's sake. */
+  /**
+   * True when the config differs from the plain preset. Set here from whether
+   * anything was pasted, and settled by the caller against what the config
+   * actually encodes to — a paste that only restates the preset is not a custom
+   * run, whatever it looked like in the box.
+   */
   custom: boolean;
 }
 
@@ -32,6 +37,14 @@ interface VizLaunchModalProps {
    * nothing is running.
    */
   runPresetId?: string | null;
+  /**
+   * How the run underneath departs from that preset, as JSON — from a `vizcfg`
+   * link, or from the tuning panel. Adopted into the custom-config box so the
+   * reader comes back to the run they were watching rather than to the plain
+   * preset it started from. Null while nothing is running, or while the run is
+   * the preset as authored.
+   */
+  runCustomJson?: string | null;
   onStart: (options: VizLaunchOptions) => void;
   onCancel: () => void;
 }
@@ -80,6 +93,7 @@ export default function VizLaunchModal({
   initialSpeed,
   suspended = false,
   runPresetId = null,
+  runCustomJson = null,
   onStart,
   onCancel,
 }: VizLaunchModalProps) {
@@ -152,6 +166,16 @@ export default function VizLaunchModal({
     if (runPresetId) setPresetId(runPresetId);
   }, [runPresetId]);
 
+  // Same for the tuning, which the run can also change under this modal — and
+  // which a `?vizcfg=` link brings in without this modal ever having been used.
+  // Only ever adopted while a run is up, which is exactly when the box is hidden
+  // behind it, so this cannot overwrite something being typed.
+  useEffect(() => {
+    if (!suspended) return;
+    setJson(runCustomJson ?? "");
+    if (runCustomJson) setShowJson(true);
+  }, [runCustomJson, suspended]);
+
   // Also fires when a run ends and the modal comes back, so the reader lands on
   // start again rather than on whatever the run left focused.
   useEffect(() => {
@@ -176,7 +200,18 @@ export default function VizLaunchModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={suspended ? { display: "none" } : undefined}
+      style={{
+        // `vh` on mobile means the *large* viewport, so a vh-sized card runs off
+        // screen while the browser chrome is up. The fixed box already tracks the
+        // visible area; dvh caps it for the engines where it does not, and the
+        // insets keep the card clear of the notch and the home indicator.
+        maxHeight: "100dvh",
+        paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.25rem)",
+        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)",
+        paddingLeft: "calc(env(safe-area-inset-left, 0px) + 1.25rem)",
+        paddingRight: "calc(env(safe-area-inset-right, 0px) + 1.25rem)",
+        ...(suspended ? { display: "none" } : null),
+      }}
       role="dialog"
       aria-modal="true"
       aria-label="Start visualizer"
@@ -246,7 +281,7 @@ export default function VizLaunchModal({
       </div>
 
       <div
-        className="relative w-full max-w-[26rem] mx-5 max-h-[88vh] flex flex-col overflow-hidden
+        className="relative w-full max-w-[26rem] max-h-full flex flex-col overflow-hidden
                    rounded-md border border-[var(--color-border,rgba(74,71,69,0.25))]
                    bg-[var(--color-surface-raised)]"
         style={{
@@ -277,11 +312,11 @@ export default function VizLaunchModal({
         {/* From 640px up only the preset list scrolls, so speed / custom config / fullscreen
             stay put with the header and footer. On a shorter viewport the list keeps its full
             height and the body scrolls instead — the sections below are too tall to pin there. */}
-        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto info-modal-scroll">
+        <div className="flex-1 min-h-0 flex flex-col overflow-y-auto overscroll-contain info-modal-scroll">
           <div
             role="radiogroup"
             aria-label="Preset"
-            className="shrink-0 px-2 pt-1 pb-1 info-modal-scroll
+            className="shrink-0 px-2 pt-1 pb-1 overscroll-contain info-modal-scroll
                        [@media(min-height:640px)]:flex-1 [@media(min-height:640px)]:min-h-0
                        [@media(min-height:640px)]:overflow-y-auto"
           >
@@ -349,7 +384,8 @@ export default function VizLaunchModal({
                   Overrides the preset. Paste the JSON from the tuning panel
                   (<span className="text-white/55">d</span> while running). Unlisted
                   fields keep the preset's value; every field is clamped to the
-                  tuning panel's range.
+                  tuning panel's range. Whatever you set here goes into the
+                  address bar with the run, so the link plays it back.
                 </p>
                 <textarea
                   value={json}

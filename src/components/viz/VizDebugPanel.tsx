@@ -40,7 +40,7 @@ export default function VizDebugPanel({
 }: VizDebugPanelProps) {
   const [, bump] = useReducer((n: number) => n + 1, 0);
   const [stats, setStats] = useState<EngineStats | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<"json" | "link" | null>(null);
 
   useEffect(() => {
     const id = window.setInterval(() => setStats(engine?.stats ?? null), 250);
@@ -57,12 +57,27 @@ export default function VizDebugPanel({
     return GROUP_ORDER.map((group) => ({ group, fields: byGroup.get(group) ?? [] }));
   }, []);
 
-  const copyConfig = () => {
+  /**
+   * The link to this exact run. The address bar already carries every slider on
+   * this panel — but a run is usually watched full screen, where there is no
+   * address bar to reach, and the seed is added on the way out so the copy
+   * replays the same composition rather than only the same look. Only on the
+   * copy: pinning the seed in the address bar would make every later launch a
+   * repeat of this one.
+   */
+  const runLink = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("vizseed", seed);
+    return url.toString();
+  };
+
+  const copy = (what: "json" | "link") => {
+    const text = what === "json" ? JSON.stringify(config, null, 2) : runLink();
     void navigator.clipboard
-      ?.writeText(JSON.stringify(config, null, 2))
+      ?.writeText(text)
       .then(() => {
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 1200);
+        setCopied(what);
+        window.setTimeout(() => setCopied(null), 1200);
       })
       .catch(() => undefined);
   };
@@ -126,12 +141,18 @@ export default function VizDebugPanel({
         </div>
       ))}
 
-      <div className="px-3 py-3">
+      <div className="px-3 py-3 flex flex-col gap-1.5">
         <button
-          onClick={copyConfig}
+          onClick={() => copy("link")}
           className="w-full font-display text-[10px] tracking-widest uppercase text-white/60 hover:text-accent border border-white/15 rounded py-1.5"
         >
-          {copied ? "copied" : "copy config json"}
+          {copied === "link" ? "copied" : "copy link to this run"}
+        </button>
+        <button
+          onClick={() => copy("json")}
+          className="w-full font-display text-[10px] tracking-widest uppercase text-white/60 hover:text-accent border border-white/15 rounded py-1.5"
+        >
+          {copied === "json" ? "copied" : "copy config json"}
         </button>
       </div>
     </div>

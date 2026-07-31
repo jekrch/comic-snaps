@@ -40,6 +40,7 @@ function ViewerOverlay({
   topOffset,
   bottomOffset,
   closing,
+  overViz,
   onSelectPanel,
   onBrowse,
   setContentShift,
@@ -55,6 +56,7 @@ function ViewerOverlay({
   topOffset: number;
   bottomOffset: number;
   closing: boolean;
+  overViz: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
@@ -94,6 +96,7 @@ function ViewerOverlay({
         topOffset={topOffset}
         bottomOffset={bottomOffset}
         slideDir={drawerSlideDir}
+        overViz={overViz}
       />
 
       <SimilarityGraph
@@ -105,6 +108,7 @@ function ViewerOverlay({
         bottomOffset={bottomOffset}
         toolbarContainer={graphToolbarEl}
         slideDir={graphSlideDir}
+        overViz={overViz}
       />
     </>
   );
@@ -335,6 +339,7 @@ export default function PanelViewer({
           topOffset={ctx.topBarHeight}
           bottomOffset={ctx.bottomBarHeight}
           closing={ctx.closing}
+          overViz={overViz}
           onSelectPanel={onSelectPanel}
           onBrowse={onBrowse}
           setContentShift={ctx.setContentShift}

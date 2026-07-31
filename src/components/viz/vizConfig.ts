@@ -12,7 +12,19 @@ import type { PostParams, StageKind } from "./engine/types";
  */
 export type StageMode = "flat" | StageKind;
 
-const STAGE_MODES: StageMode[] = ["flat", "swarm", "vault", "sheet", "ribbons", "motes"];
+/**
+ * Order matters beyond the listing: a mode's index here is its code in an
+ * encoded `vizcfg` token, so this is append-only — see `vizUrl.ts`.
+ *
+ * Four of these were reworked rather than added, and each one took the slot of
+ * the scene it replaced: `prism` where `swarm` was, `drape` where `sheet` was,
+ * `band` where `ribbons` was, `shatter` where `motes` was, and `vault`
+ * untouched at its own index. So a link shared before the rework still decodes
+ * to the scene that now occupies that slot — which is exactly what a reader
+ * following an old `vizcfg` link should get, and the closest thing to
+ * append-only available when the entries themselves were replaced in place.
+ */
+export const STAGE_MODES: StageMode[] = ["flat", "prism", "vault", "drape", "band", "shatter"];
 
 export function isStageMode(value: unknown): value is StageMode {
   return typeof value === "string" && (STAGE_MODES as string[]).includes(value);
@@ -97,12 +109,15 @@ export interface VizConfig {
    * Deliberately does not touch how many *panels* are resident. That number is
    * how many images are on screen at once, every scene has chosen it carefully,
    * and a slider that multiplied it would undo all of them at the first drag.
-   * A scene with no quads at all — the vault, whose surface is one continuous
-   * tube — is unaffected by this entirely.
+   * A scene with no quads at all is unaffected by this entirely, which is now
+   * most of them: only `shatter` arranges instances, and only for the shards
+   * that have broken off its body. Everything else on the spatial path is one
+   * continuous surface, which has no instance count to be a multiple of.
    */
   stageDensity: number;
-  /** Global multiplier on every quad's size. Above ~1.4 the quads meet and the
-   *  formation reads as a surface rather than as a scatter. */
+  /** Global multiplier on size: a quad's, for the one scene that has them, and
+   *  the whole object's for the scenes that are a surface — a wider corridor, a
+   *  larger body, a broader band. */
   stageScale: number;
   /** Added to the edge softness each scene asks for, in a quad's own uv. Up is a
    *  formation of dissolving shapes; 0 leaves every scene at its own choice. */

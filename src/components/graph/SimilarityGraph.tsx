@@ -65,6 +65,8 @@ interface SimilarityGraphProps {
   closing?: boolean;
   toolbarContainer: HTMLElement | null;
   slideDir?: "left" | "right" | null;
+  /** Viewer is over a running visualizer, whose backdrop is mostly transparent. */
+  overViz?: boolean;
 }
 
 export default function SimilarityGraph({
@@ -76,6 +78,7 @@ export default function SimilarityGraph({
   closing = false,
   toolbarContainer,
   slideDir = null,
+  overViz = false,
 }: SimilarityGraphProps) {
   // State
   const [anchorPanel, setAnchorPanel] = useState<Panel>(panel);
@@ -450,7 +453,7 @@ export default function SimilarityGraph({
 
       {/* Graph body — same z-layer as InfoDrawer, slides down from top */}
       <div
-        className="absolute inset-x-0 z-15 overflow-hidden"
+        className={`absolute inset-x-0 z-15 overflow-hidden${overViz ? " viz-read-scrim" : ""}`}
         style={{
           top: topOffset,
           bottom: bottomOffset,
