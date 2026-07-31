@@ -1,43 +1,6 @@
 {
   "panels": [
     {
-      "seq": 221,
-      "id": "mind-mgmt-new-improved-2-1785473000",
-      "title": "Mind MGMT: New & Improved",
-      "slug": "mind-mgmt-new-improved",
-      "issue": 2,
-      "year": 2026,
-      "artist": "Matt Kindt",
-      "image": "images/mind-mgmt-new-improved/issue-2-1785473000.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-07-31T04:43:22.291Z",
-      "width": 447,
-      "height": 1280,
-      "dominantColors": [
-        [
-          76.7,
-          1.5,
-          -2.4
-        ],
-        [
-          53.8,
-          2.5,
-          -4.5
-        ],
-        [
-          23.5,
-          3.9,
-          -8.2
-        ]
-      ],
-      "colorfulness": 7.8,
-      "phash": "bbf08307e626983b",
-      "ahash": "e7ffc985c3990183",
-      "dhash": "4dbb1b2d1b334f57"
-    },
-    {
       "seq": 220,
       "id": "panic-6-1785380129",
       "title": "Panic",
@@ -2382,7 +2345,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2456,7 +2419,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2678,7 +2641,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
