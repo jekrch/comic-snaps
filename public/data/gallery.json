@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 222,
+      "id": "concrete-stars-over-sand-2-1785609082",
+      "title": "Concrete: Stars Over Sand",
+      "slug": "concrete-stars-over-sand",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Paul Chadwick",
+      "image": "images/concrete-stars-over-sand/issue-2-1785609082.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-01T18:31:23.900Z"
+    },
+    {
       "seq": 221,
       "id": "heavy-metal-8-1785599341",
       "title": "Heavy Metal",
