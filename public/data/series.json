@@ -3023,6 +3023,26 @@
       ]
     },
     {
+      "id": "the-shaolin-cowboy-staying-a-i-alive",
+      "name": "The Shaolin Cowboy: Staying A.I. Alive",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "the-twilight-zone",
       "name": "The Twilight Zone",
       "parentSeries": null,
