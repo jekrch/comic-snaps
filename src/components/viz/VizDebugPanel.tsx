@@ -279,34 +279,28 @@ export default function VizDebugPanel({
 
               {expanded && (
                 <div className="viz-tune-section px-3 py-2 border-b border-black/40 bg-black/20">
-                  {fields.map((entry) => {
-                    const value = entry.get(config);
-                    return (
-                      <div key={entry.path} className="mb-2 last:mb-0.5">
-                        <div className="flex items-center gap-1 font-mono text-[10px] text-ink-muted">
-                          <label htmlFor={`viz-${entry.path}`} className="truncate cursor-pointer">
-                            {entry.label}
-                          </label>
-                          {entry.hint && <Hint text={entry.hint} label={entry.label} />}
-                          <span className="ml-auto shrink-0 text-white/55 tabular-nums">
-                            {format(value, entry.step)}
-                          </span>
-                        </div>
-                        <VizSlider
-                          id={`viz-${entry.path}`}
-                          min={entry.min}
-                          max={entry.max}
-                          step={entry.step}
-                          value={value}
-                          onChange={(next) => {
-                            entry.set(config, next);
-                            bump();
-                            onChange?.();
-                          }}
-                        />
-                      </div>
-                    );
-                  })}
+                  {fields.map((entry) => (
+                    <VizSlider
+                      key={entry.path}
+                      id={`viz-${entry.path}`}
+                      label={entry.label}
+                      hint={entry.hint && <Hint text={entry.hint} label={entry.label} />}
+                      display={(v) => format(v, entry.step)}
+                      min={entry.min}
+                      max={entry.max}
+                      step={entry.step}
+                      value={entry.get(config)}
+                      // Mid-drag: the engine reads the config every frame, so
+                      // writing to it is the whole of a live preview. Anything
+                      // that re-renders — this panel, the chrome, the URL —
+                      // waits for the release.
+                      onInput={(next) => entry.set(config, next)}
+                      onCommit={() => {
+                        bump();
+                        onChange?.();
+                      }}
+                    />
+                  ))}
                 </div>
               )}
             </div>

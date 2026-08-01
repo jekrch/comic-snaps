@@ -30,6 +30,15 @@ const CLOUD_DX = 2.5;
 const CLOUD_DY = -1.1;
 
 /**
+ * The balloon and its word sit back a little from the trail — carried as opacity
+ * rather than as a darker ink so it settles toward whatever is behind it, which
+ * is the near-black header in one place and the raised modal surface in the
+ * other. Multiplies with the per-part reveal below, so the arrival still lands
+ * exactly here.
+ */
+const CLOUD_OPACITY = 0.8;
+
+/**
  * The cloud: nine quadratic bumps around a wide oval, each control point thrown
  * well outside the boundary so it bulges hard — the top run peaks around y=2.25
  * against endpoints at 5.5–7.5, so the scallops are about four units deep. The
@@ -136,7 +145,10 @@ export default function ThoughtBalloon({
       {/* Carried on the group so the cloud and its word stay registered to each
           other; the pop each part animates in with is its own transform and
           composes on top of this one. */}
-      <g transform={`translate(${CLOUD_DX} ${CLOUD_DY}) scale(${CLOUD_SCALE})`}>
+      <g
+        transform={`translate(${CLOUD_DX} ${CLOUD_DY}) scale(${CLOUD_SCALE})`}
+        opacity={CLOUD_OPACITY}
+      >
         {/* Divided back out of the scale, so the balloon and the bubbles are
             still inked with one pen — a stroke inherited into a scaled group
             would come out heavier here than out there. */}

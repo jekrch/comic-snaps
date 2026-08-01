@@ -615,9 +615,10 @@ button,
   margin: -6px 0;
   cursor: pointer;
   user-select: none;
-  /* Vertical still scrolls the list, horizontal is the grip's — otherwise a
-     drag started on a slider is taken by the scroll container. */
-  touch-action: pan-y;
+  /* Both axes are VizSlider's to read: `pan-y` would let the list slide under a
+     finger that is only wandering vertically while it drags the grip. It scrolls
+     the panel itself for a touch that means to. */
+  touch-action: none;
 }
 
 /* A thumb has no aim, so it gets a band tall enough to land in without

@@ -40,7 +40,7 @@ export default function VizThought({ onLaunch, onNudge, landed }: VizThoughtProp
          takes the overhang back out of the layout so it spills over the bar
          instead of growing it. `p-1 -m-1` is hit area at the same price, and
          `ml-1` keeps the trail within a thought's reach of the bird. */
-      className="viz-think cursor-pointer p-1 -m-1 -my-2 ml-1 -translate-y-0.5 focus:outline-none"
+      className="viz-think cursor-pointer p-1 -m-1 -my-2 ml-1 -translate-y-0.5 focus:outline-none scale-75"
     >
       <ThoughtBalloon label="viz" shown={!!landed} />
     </button>
