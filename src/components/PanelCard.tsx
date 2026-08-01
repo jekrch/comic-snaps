@@ -1,4 +1,4 @@
-import { useRef, useCallback, useId, useMemo } from "react";
+import { useRef, useCallback, useId, useMemo, memo } from "react";
 import type { Panel } from "../types";
 import { Expand } from "lucide-react";
 import { formatIssue } from "../utils/issueFormat";
@@ -33,7 +33,7 @@ interface Props {
   isFirstLoad?: boolean;
 }
 
-export default function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
+function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
   const imgRef = useRef<HTMLImageElement>(null);
   const hatchPatternId = useId();
   const hatchFadeId = useId();
@@ -244,3 +244,8 @@ export default function PanelCard({ panel, selected, onSelect, onOpen }: Props) 
     </>
   );
 }
+
+// The grid re-renders on every relayout (dropdowns, resize, sort). Cards are
+// expensive — SVG masks, lazy-load observers — and only `selected` ever changes
+// for an already-placed card, so a shallow compare skips nearly all of them.
+export default memo(PanelCard);

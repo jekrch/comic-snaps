@@ -67,6 +67,10 @@ const PINNED_PATHS: readonly string[] = [
   "stageBillboard", "stageBreathe", "stageFov", "stageSpin", "stageFlight", "stageSolids",
   "stageAlign", "stageDisplace", "stageDisplaceRate", "stageSwirl",
   "weights.rhyme", "weights.clash", "weights.color", "weights.random",
+  // Appended, not filed with the other geometric maps above, because this list
+  // is the wire order and only the end of it is free.
+  "post.julia", "post.juliaZoom", "post.juliaShape", "post.juliaSpin", "post.juliaTrap",
+  "post.juliaSpread", "post.juliaFlight", "post.juliaAnchor", "post.juliaBind", "post.juliaDepth", "post.juliaEdge",
 ];
 
 /**

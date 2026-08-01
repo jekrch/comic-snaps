@@ -388,7 +388,7 @@ export default function App() {
                 that happen to be animating. */}
             {status === "ready" && (
               <VizThought
-                landed={birdLanded}
+                landed={birdLanded}             
                 onLaunch={handleOpenViz}
                 onNudge={() => birdRef.current?.peck()}
               />

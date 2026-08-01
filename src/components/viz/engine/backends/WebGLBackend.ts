@@ -10,6 +10,7 @@ import { FOLD_ITERS, POST_FRAGMENT } from "../shaders/post";
 import { SpatialPass } from "./SpatialPass";
 import { FieldPass } from "./FieldPass";
 import type { DeviceCaps } from "../../vizConfig";
+import { juliaFrame } from "../julia";
 
 type Vec2 = [number, number];
 type Vec4 = [number, number, number, number];
@@ -51,6 +52,8 @@ export class WebGLBackend implements VizBackend {
   private readonly postMesh: Mesh;
   private targets: [RenderTarget, RenderTarget];
   private feedback: Texture;
+  /** Scene textures currently carrying a mip chain — see `syncSceneMips`. */
+  private readonly mipped = new Set<Texture>();
   private readonly maxShards: number;
   /**
    * Built on the first spatial frame, not in the constructor. Two reasons, and
@@ -172,6 +175,19 @@ export class WebGLBackend implements VizBackend {
         uFoldNorm: { value: 1 },
         uLattice: { value: 0 },
         uLatticeScale: { value: 3 },
+        uJulia: { value: 0 },
+        uJuliaZoom: { value: 1.1 },
+        uJuliaM: { value: [0, 0] },
+        uJuliaBeta: { value: [1, 0] },
+        uJuliaStep: { value: [1, 0] },
+        uJuliaWarp: { value: [0, 0] },
+        uJuliaWarp3: { value: [0, 0] },
+        uJuliaTrap: { value: 0.5 },
+        uJuliaSpread: { value: 0.8 },
+        uJuliaAnchor: { value: 0 },
+        uJuliaBind: { value: 0 },
+        uJuliaDepth: { value: 0 },
+        uJuliaEdge: { value: 0 },
         uQuasi: { value: 0 },
         uQuasiFreq: { value: 14 },
         uTurbulence: { value: 0 },
@@ -367,10 +383,74 @@ export class WebGLBackend implements VizBackend {
     return read!.texture;
   }
 
+  /**
+   * Whether the scene texture needs a mip chain this frame, and building or
+   * retiring one.
+   *
+   * Only the Julia map asks for it. That map compresses whole regions of the
+   * page into a filament a pixel wide, and a single bilinear tap of a 1080-line
+   * frame at that rate is one arbitrary texel out of thousands — which changes
+   * completely from frame to frame as the figure drifts, so the fractal's own
+   * structure arrives as a boiling sparkle rather than as a picture. A chain
+   * turns that into the *average* of the region, which is what the eye reads as
+   * fine detail resolving.
+   *
+   * Built here rather than at construction because a chain costs a full extra
+   * pass over the frame every time it is regenerated, and only one preset in the
+   * engine has any use for it. It is retired again on the way out, and that part
+   * matters more than it looks: a texture left on a mip filter with a stale chain
+   * is not merely slower, it is *wrong* — the next preset to minify the frame,
+   * `tile` above all, would read levels last written several seconds ago.
+   *
+   * ogl's own texture path cannot do either half of this. Its RenderTarget
+   * hardcodes `generateMipmaps: false`, and asking the Texture to reapply its
+   * filters routes through `update()`, which for a render target re-uploads a
+   * null image — that is, throws away the frame just rendered into it. So the
+   * two GL calls are made directly, with `bind()` used to keep ogl's own idea of
+   * which texture is bound on unit 0 honest.
+   */
+  private syncSceneMips(scene: Texture, wanted: boolean): void {
+    const gl = this.gl;
+    if (wanted) {
+      this.renderer.activeTexture(0);
+      scene.bind();
+      gl.generateMipmap(gl.TEXTURE_2D);
+      if (scene.minFilter !== gl.LINEAR_MIPMAP_LINEAR) {
+        this.setMinFilter(scene, gl.LINEAR_MIPMAP_LINEAR);
+        this.mipped.add(scene);
+      }
+      return;
+    }
+
+    // Every texture that was ever put on a mip filter, not merely the one this
+    // frame happens to be reading. The shard path ping-pongs between two targets
+    // and the spatial path has a third, so which texture arrives here changes
+    // with the batch count and the mode — and a target left behind on a mip
+    // filter is one whose chain stops being regenerated while it is still being
+    // sampled from.
+    if (this.mipped.size === 0) return;
+    for (const texture of this.mipped) {
+      this.renderer.activeTexture(0);
+      texture.bind();
+      this.setMinFilter(texture, gl.LINEAR);
+    }
+    this.mipped.clear();
+  }
+
+  /** Sets the filter through GL and keeps ogl's two copies of it in step, so a
+   *  later `update()` — which a render target never takes, but which is one line
+   *  away from being taken — does not quietly set it back. */
+  private setMinFilter(texture: Texture, filter: number): void {
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, filter);
+    texture.minFilter = filter;
+    texture.state.minFilter = filter;
+  }
+
   /** The post chain, over whichever path produced the scene texture. */
   private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
     const fields = this.fields.textures;
+    this.syncSceneMips(scene, frame.post.julia > 0);
     post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
     post.uBloomTex.value = fields.bloom;
@@ -426,6 +506,20 @@ export class WebGLBackend implements VizBackend {
     post.uFoldNorm.value = 1 / Math.pow(Math.max(1, frame.post.foldScale), FOLD_ITERS);
     post.uLattice.value = frame.post.lattice;
     post.uLatticeScale.value = frame.post.latticeScale;
+    post.uJulia.value = frame.post.julia;
+    post.uJuliaZoom.value = frame.post.juliaZoom;
+    const julia = juliaFrame(frame.post.juliaShape, frame.phases.julia, frame.phases.juliaTravel);
+    post.uJuliaM.value = julia.m;
+    post.uJuliaBeta.value = julia.beta;
+    post.uJuliaStep.value = julia.step;
+    post.uJuliaWarp.value = julia.warp;
+    post.uJuliaWarp3.value = julia.warp3;
+    post.uJuliaTrap.value = frame.post.juliaTrap;
+    post.uJuliaSpread.value = frame.post.juliaSpread;
+    post.uJuliaAnchor.value = frame.post.juliaAnchor;
+    post.uJuliaBind.value = frame.post.juliaBind;
+    post.uJuliaDepth.value = frame.post.juliaDepth;
+    post.uJuliaEdge.value = frame.post.juliaEdge;
     post.uQuasi.value = frame.post.quasi;
     post.uQuasiFreq.value = frame.post.quasiFreq;
     post.uTurbulence.value = frame.post.turbulence;

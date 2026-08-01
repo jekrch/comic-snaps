@@ -598,6 +598,123 @@ export interface PostParams {
   /** How many cells span the frame. */
   latticeScale: number;
 
+  /**
+   * The quadratic Julia set, textured by orbit trap.
+   *
+   * The only genuine fractal in this file. `fold` and `lattice` are finite
+   * symmetries — four folds and one cell, both exhausted at the scale the loop
+   * stops at — where this is an escape-time set whose boundary has structure at
+   * every scale there is, and whose detail is bounded only by float precision
+   * and the iteration count.
+   *
+   * What makes it a picture rather than a plot is the *orbit trap*: each pixel's
+   * orbit is followed and the frame is sampled where that orbit came closest to
+   * a fixed circle. So the filaments are not coloured by an escape count — they
+   * are made of the comic, and two points on the same filament show the same
+   * panel because their orbits pass through the same place.
+   *
+   * Placed last among the geometric maps for a reason the others do not have:
+   * it is not a symmetry and it is not invertible, so a fold applied after it
+   * would mirror a lookup rather than a picture. After the folds, the set
+   * *inherits* whatever symmetry they left.
+   */
+  julia: number;
+  /** How much of the complex plane the frame spans. Low is a magnification of
+   *  the set's centre, high pulls the whole figure into view. */
+  juliaZoom: number;
+  /**
+   * Which set, along the one axis that keeps every member of the family well
+   * behaved: the seed is `c = mu/2 - mu^2/4` with `|mu|` set from here, which
+   * is exactly the parametrisation of the main cardioid of the Mandelbrot set.
+   * So 0 is a fat, round, connected set with a large flat interior, and 1 is
+   * the cardioid's own boundary — filigree with no interior at all.
+   */
+  juliaShape: number;
+  /**
+   * How fast the seed walks around that cardioid, radians per clock second.
+   * Signed; integrated into `VizFrame.phases` like every other rate here.
+   *
+   * This is the mode's whole motion, and it is a motion no other effect in this
+   * file can make: the figure is not being turned or zoomed, it is being
+   * continuously *replaced* by the next set along a one-parameter family, each
+   * one a legitimate Julia set and each one a slightly different shape.
+   */
+  juliaSpin: number;
+  /** Radius of the trap circle, in the same units as the orbit. 0 traps on the
+   *  origin, which reads as a spray of points; opened out, the trap is a ring
+   *  and the frame is drawn along the filaments instead. */
+  juliaTrap: number;
+  /** How much of the frame the trap coordinate spans. Small keeps each filament
+   *  to one region of the page; large runs the whole page through it. */
+  juliaSpread: number;
+  /**
+   * Flight into the set, in e-folds of magnification per clock second. Signed.
+   *
+   * Endless, and endless without accumulating: the frame is centred on the
+   * repelling fixed point, where the set is exactly invariant under the inverse
+   * map, so the picture after one multiplication by the multiplier is the
+   * picture it started from. The phase wraps there with nothing to see, which is
+   * why this can fly for an hour inside a single octave of the plane instead of
+   * running out of float in a couple of minutes. Integrated into
+   * `VizFrame.phases`, like every other rate here.
+   */
+  juliaFlight: number;
+  /**
+   * A floor under how far the page may be enlarged, as a fraction of the frame
+   * added straight to the trap coordinate.
+   *
+   * Zero is the pure orbit trap, which has no such floor: wherever orbits
+   * converge, neighbouring pixels land on the same trap point and one texel of
+   * comic is stretched across the region — the soft grey blob that no amount of
+   * filtering can sharpen, because the map really did throw the detail away. A
+   * third bounds the enlargement at three times, and costs the figure nothing
+   * that is not already flat.
+   */
+  juliaAnchor: number;
+  /**
+   * How strongly the page drives the figure, 0..1.
+   *
+   * The difference between a fractal with comics painted on it and a fractal
+   * made of them. The frame is read at two scales and the structure between them
+   * — a face, a balloon, a panel border, with flat brightness divided out — is
+   * added to the seed and to the trap radius. So the boundary bulges where the
+   * page has a shape in it, and a panel changing moves the edges rather than
+   * just repainting them.
+   *
+   * Bounded hard in the shader, and the bound is a cliff rather than a taste:
+   * the seed is perturbed through the multiplier, which stays inside the unit
+   * disc and therefore inside the connected family. Driven far enough to leave
+   * it, a pixel would not deform — it would shatter into dust.
+   */
+  juliaBind: number;
+  /**
+   * How strongly the escape time itself picks the crop, 0..1.
+   *
+   * The difference between flying into the set and watching it be enlarged.
+   * Where the trap alone leaves whole regions an affine function of the pixel —
+   * which can only ever *scale* under a flight — this reads a different part of
+   * the page in every contour of the escape time, and those contours wrap the
+   * set at every scale. Under the flight they sweep outward and are replaced
+   * from the centre, which is the motion a zoom on its own does not have.
+   *
+   * Free of the wrap by construction: one cycle of the flight is one preimage,
+   * which adds exactly one step to every orbit, so a crop chosen with period one
+   * in the depth comes back to itself.
+   */
+  juliaDepth: number;
+  /**
+   * Shape of the trap set: 0 traps on a circle, 1 on a square, and the values
+   * between interpolate the two norms.
+   *
+   * The one parameter here that decides whether the picture reads as a fractal
+   * or as a fluid. The dynamics are the same either way — what changes is the
+   * curve the page is picked up along, and a circle draws every filament as an
+   * arc. Against the Chebyshev norm the same orbits trap on straight sides
+   * meeting at corners, which is the geometry the eye files under fractal rather
+   * than under liquid.
+   */
+  juliaEdge: number;
+
   // --- Undulating -----------------------------------------------------------
   /** Sinusoidal domain warp — the liquid one. */
   warp: number;
@@ -790,6 +907,12 @@ export interface VizPhases {
   droste: number;
   fold: number;
   tunnel: number;
+  /** Where the Julia seed has walked to around the cardioid, radians. */
+  julia: number;
+  /** How far the flight into the set has travelled, in e-folds. Wrapped against
+   *  the multiplier in the backend rather than here, because which value is a
+   *  whole cycle depends on which set the walk is currently on. */
+  juliaTravel: number;
   /** Flight through the spatial formation, in its own units — depth down a
    *  tube, and nothing at all for a formation that does not repeat. */
   travel: number;

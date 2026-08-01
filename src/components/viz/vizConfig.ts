@@ -212,6 +212,20 @@ export const DEFAULT_POST: PostParams = {
   foldSpin: 0.03,
   lattice: 0,
   latticeScale: 3,
+  julia: 0,
+  juliaZoom: 1.1,
+  // Out where the walk's far side runs near the cardioid's edge, which is where
+  // the sets are filigree rather than a disc with a large flat middle. Only read
+  // when `julia` is up, as are the six below.
+  juliaShape: 0.86,
+  juliaSpin: 0.02,
+  juliaTrap: 0.5,
+  juliaSpread: 0.8,
+  juliaFlight: 0,
+  juliaAnchor: 0.3,
+  juliaBind: 0.5,
+  juliaDepth: 0.5,
+  juliaEdge: 0,
   warp: 0,
   warpScale: 2.4,
   warpSpeed: 0.35,
@@ -413,6 +427,17 @@ const HINTS: Record<string, string> = {
   "post.foldSpin": "How fast the fold turns.",
   "post.lattice": "Wraps the frame into a repeating grid of cells.",
   "post.latticeScale": "How many cells across.",
+  "post.julia": "Draws the page along a Julia set — detail at every scale, forever.",
+  "post.juliaZoom": "How much of the fractal fits in the frame. Low magnifies its centre.",
+  "post.juliaShape": "Which set. Low is round and solid, high is open filigree.",
+  "post.juliaSpin": "How fast one set becomes the next. The mode's whole motion.",
+  "post.juliaTrap": "Where the page is picked up along each orbit — a point, or a ring.",
+  "post.juliaSpread": "How much of the page is run through the fractal's filaments.",
+  "post.juliaFlight": "Flight into the fractal, forever. Negative flies back out.",
+  "post.juliaAnchor": "Holds the page near its own size. The guard against soft, over-blown patches.",
+  "post.juliaBind": "How much the panel's own shapes bend the fractal's edges.",
+  "post.juliaDepth": "Bands the page by escape time — the layers that sweep past as you fly in.",
+  "post.juliaEdge": "Squares off the filaments. Low is arcs and fluid, high is straight lines and corners.",
   "post.droste": "Recursion: the frame inside itself, without end.",
   "post.drosteInner": "Size of the hole the recursion falls into.",
   "post.drostePeriod": "How much zoom fits between one repeat and the next.",
@@ -561,6 +586,28 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("shape", "post.foldSpin", "fold spin", -0.2, 0.2, 0.005, (c) => c.post.foldSpin, (c, v) => (c.post.foldSpin = v)),
   field("shape", "post.lattice", "lattice", 0, 1, 0.01, (c) => c.post.lattice, (c, v) => (c.post.lattice = v)),
   field("shape", "post.latticeScale", "lattice cells", 1, 8, 0.1, (c) => c.post.latticeScale, (c, v) => (c.post.latticeScale = v)),
+  field("shape", "post.julia", "julia set", 0, 1, 0.01, (c) => c.post.julia, (c, v) => (c.post.julia = v)),
+  // Reaches far deeper than a knob on a static figure would need, because this
+  // is also the flight's altitude: the wrap that lets the flight run forever is
+  // a statement about a *neighbourhood* of the fixed point, so a preset that
+  // flies sets this low and one that wants the whole set in frame sets it high.
+  field("shape", "post.juliaZoom", "julia zoom", 0.04, 3, 0.01, (c) => c.post.juliaZoom, (c, v) => (c.post.juliaZoom = v)),
+  field("shape", "post.juliaShape", "julia shape", 0, 1, 0.01, (c) => c.post.juliaShape, (c, v) => (c.post.juliaShape = v)),
+  // Narrow, and the narrowest rate in the file. The seed walking is not a motion
+  // *of* the picture but a replacement of it, so what looks like a slow number
+  // here is already the fastest a set can turn into the next one and still be
+  // read as the same figure changing (§6).
+  field("shape", "post.juliaSpin", "julia walk", -0.12, 0.12, 0.002, (c) => c.post.juliaSpin, (c, v) => (c.post.juliaSpin = v)),
+  field("shape", "post.juliaTrap", "trap radius", 0, 1.4, 0.01, (c) => c.post.juliaTrap, (c, v) => (c.post.juliaTrap = v)),
+  field("shape", "post.juliaSpread", "trap spread", 0.15, 2, 0.01, (c) => c.post.juliaSpread, (c, v) => (c.post.juliaSpread = v)),
+  // Capped at a fifth of an e-fold a second — a doubling every three and a half
+  // seconds, which is a dive rather than a flight. The rate that reads as
+  // travelling into something rather than falling into it is a quarter of that.
+  field("shape", "post.juliaFlight", "julia flight", -0.2, 0.2, 0.005, (c) => c.post.juliaFlight, (c, v) => (c.post.juliaFlight = v)),
+  field("shape", "post.juliaAnchor", "page anchor", 0, 1, 0.01, (c) => c.post.juliaAnchor, (c, v) => (c.post.juliaAnchor = v)),
+  field("shape", "post.juliaBind", "page bind", 0, 1, 0.01, (c) => c.post.juliaBind, (c, v) => (c.post.juliaBind = v)),
+  field("shape", "post.juliaDepth", "depth bands", 0, 1, 0.01, (c) => c.post.juliaDepth, (c, v) => (c.post.juliaDepth = v)),
+  field("shape", "post.juliaEdge", "trap edge", 0, 1, 0.01, (c) => c.post.juliaEdge, (c, v) => (c.post.juliaEdge = v)),
   field("shape", "post.droste", "droste", 0, 1, 0.01, (c) => c.post.droste, (c, v) => (c.post.droste = v)),
   field("shape", "post.drosteInner", "droste inner", 0.02, 0.25, 0.005, (c) => c.post.drosteInner, (c, v) => (c.post.drosteInner = v)),
   field("shape", "post.drostePeriod", "droste period", 0.4, 3, 0.05, (c) => c.post.drostePeriod, (c, v) => (c.post.drostePeriod = v)),

@@ -30,15 +30,6 @@ const CLOUD_DX = 2.5;
 const CLOUD_DY = -1.1;
 
 /**
- * The balloon and its word sit back a little from the trail — carried as opacity
- * rather than as a darker ink so it settles toward whatever is behind it, which
- * is the near-black header in one place and the raised modal surface in the
- * other. Multiplies with the per-part reveal below, so the arrival still lands
- * exactly here.
- */
-const CLOUD_OPACITY = 0.8;
-
-/**
  * The cloud: nine quadratic bumps around a wide oval, each control point thrown
  * well outside the boundary so it bulges hard — the top run peaks around y=2.25
  * against endpoints at 5.5–7.5, so the scallops are about four units deep. The
@@ -92,7 +83,7 @@ const TRAIL = [
 const BEAT_MS = 220;
 
 /** One pen for the whole drawing, matched to the bird's own weight. */
-const PEN = 2.2;
+const PEN = 3.6;
 
 interface ThoughtBalloonProps {
   /** Word inside the balloon. Omit for an empty one. */
@@ -144,11 +135,10 @@ export default function ThoughtBalloon({
       ))}
       {/* Carried on the group so the cloud and its word stay registered to each
           other; the pop each part animates in with is its own transform and
-          composes on top of this one. */}
-      <g
-        transform={`translate(${CLOUD_DX} ${CLOUD_DY}) scale(${CLOUD_SCALE})`}
-        opacity={CLOUD_OPACITY}
-      >
+          composes on top of this one. No opacity here — the balloon inks at the
+          bird's own full strength, so the two read as one drawing rather than as
+          a bird with a faded thought beside it. */}
+      <g transform={`translate(${CLOUD_DX} ${CLOUD_DY}) scale(${CLOUD_SCALE})`}>
         {/* Divided back out of the scale, so the balloon and the bubbles are
             still inked with one pen — a stroke inherited into a scaled group
             would come out heavier here than out there. */}

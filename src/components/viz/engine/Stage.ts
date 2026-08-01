@@ -413,6 +413,21 @@ export class Stage {
         slot.bornAt = sequential
           ? time + i * (lifetime - fade)
           : time - (i / slots.length) * lifetime;
+        // A tenancy opening *now* is the formation arriving, so its fade-in has
+        // nothing to cross against: it is the whole frame coming up out of
+        // black, which the authored crossfade is the wrong length for. These
+        // scenes hand over rarely and dissolve for a fifth of a dwell when they
+        // do — eight seconds of near-nothing on a preset the viewer has just
+        // asked for. Only the opening fade is hurried, and only for the slot
+        // that opens on arrival: one staggered into the future opens against its
+        // predecessor's fade-out and has to stay its exact complement, or the
+        // surface's brightness dips at the seam. The fade-out is untouched
+        // either way, so the handover it hands to is the one the scene authored.
+        //
+        // Floored by the governor rather than cut, because a wall or a corridor
+        // is full-bleed and this is the fastest §7 lets the whole frame's
+        // luminance move.
+        if (slot.bornAt <= time) slot.curve.fadeIn = Math.min(fade, safety.clampFade(0));
       } else {
         // Handovers land on the slot's own cadence rather than on whichever frame
         // happened to notice the expiry. That frame is up to a tick late, and a

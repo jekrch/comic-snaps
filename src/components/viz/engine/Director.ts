@@ -7,6 +7,7 @@ import { EffectCycler } from "./EffectCycler";
 import { SafetyGovernor } from "./safety";
 import { Stage } from "./Stage";
 import { Wander } from "./Wander";
+import { JULIA_WRAP, juliaEfoldsPerTurn } from "./julia";
 import type { PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
 import { resolveShard, shardEnd } from "./types";
 import { CAST_FLOOR, rankCast } from "./cast";
@@ -22,6 +23,8 @@ interface Pick {
 }
 
 /** Incommensurate rates, so the modulations never visibly re-align. */
+const TAU = Math.PI * 2;
+
 const LFO_HZ = [0.037, 0.0611, 0.0893, 0.1307];
 
 /**
@@ -36,6 +39,43 @@ const FLOW_HEADING_HZ = 0.011;
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
+}
+
+/**
+ * Where every integrated rate stands when the run opens.
+ *
+ * Zero for all of them would be defensible and was what this did, but it makes
+ * the first minute of every run the same first minute: the same wedge of the
+ * fold pointing the same way, the same face of the prism toward the camera, the
+ * same stretch of corridor, and — since the seed of the Julia set is read off
+ * one of these — the same fractal every time. None of that is what the seed is
+ * for. A phase is an offset into something that repeats, so starting anywhere in
+ * it is free: nothing here has a preferred origin, and no value is any more
+ * valid than another.
+ *
+ * The ranges are one full repeat of whatever the phase means, which is a turn
+ * for the angles, a stride for the log-radius, and a page or two of travel for
+ * the corridor.
+ */
+function openingPhases(rng: Rng): VizPhases {
+  return {
+    kaleido: rng.range(0, TAU),
+    // Log-radii, and the widest stride a preset can ask for is 3.
+    droste: rng.range(0, 3),
+    fold: rng.range(0, TAU),
+    // Depth down the tube, where a whole ring is 1.
+    tunnel: rng.range(0, 1),
+    // Which set the run opens on. The one phase here that decides what the
+    // picture *is* rather than merely where it is pointing.
+    julia: rng.range(0, TAU),
+    // Preimages into the flight, and the whole span of the wrap is legal: every
+    // value of it is a different point of the same endless descent.
+    juliaTravel: rng.range(0, JULIA_WRAP),
+    // World units. A page on the vault's wall is about eleven of them.
+    travel: rng.range(0, 22),
+    orbit: rng.range(0, TAU),
+    swell: rng.range(0, TAU),
+  };
 }
 
 /**
@@ -62,15 +102,7 @@ export class Director {
   private focus: Panel | null = null;
   private aspect = 1;
   private lastClock = -1;
-  private readonly phases: VizPhases = {
-    kaleido: 0,
-    droste: 0,
-    fold: 0,
-    tunnel: 0,
-    travel: 0,
-    orbit: 0,
-    swell: 0,
-  };
+  private readonly phases: VizPhases;
   /**
    * Whether the backend can draw a formation at all. The CSS fallback cannot —
    * there is no perspective in `mix-blend-mode` — so a spatial preset degrades
@@ -95,6 +127,11 @@ export class Director {
     caps: DeviceCaps
   ) {
     this.stage = new Stage(caps);
+    // Off a forked stream rather than the main one, on the cycler's principle:
+    // one draw here, and everything downstream keeps the sequence it would have
+    // had. The run is still exactly reproducible from its seed — what changes is
+    // that two runs with different seeds no longer open on the same frame.
+    this.phases = openingPhases(rng.fork());
     // Blurred panels are gated behind an explicit tap on the wall and a
     // screensaver has no equivalent gesture, so they never surface here (§7).
     this.panels = panels.filter((panel) => !panel.blur);
@@ -371,6 +408,34 @@ export class Director {
     this.phases.droste += post.drosteSpin * Math.max(0.15, post.drostePeriod) * clockDt;
     this.phases.fold += post.foldSpin * clockDt;
     this.phases.tunnel += post.tunnelSpin * clockDt;
+    // The walk around the Mandelbrot cardioid. Integrated like the rest, which
+    // here means the seed can be slowed, stopped or reversed and the figure
+    // carries on from the set it is currently showing rather than cutting to
+    // whichever one the new rate says it should have reached by now.
+    this.phases.julia += post.juliaSpin * clockDt;
+    /*
+     * The flight, carried in *preimages* rather than in the e-folds it is
+     * authored in, and converted here at the exchange rate of the set the walk
+     * is currently on.
+     *
+     * The conversion has to happen at the point of integration rather than at
+     * the point of use, and this is the whole reason the walk and the flight are
+     * not simply two phases. What the wrap is periodic in is preimages; what the
+     * slider means is e-folds a second; and the number between them drifts by
+     * half again as the seed walks. Integrating e-folds and dividing downstream
+     * would put a *growing* quantity over a moving one, so the drift would
+     * arrive multiplied by however long the run had been going — after a few
+     * minutes the flight would speed up, stall and fly backwards, none of which
+     * is on any slider.
+     *
+     * Wrapped here too, for the same reason in miniature: a phase that grew
+     * without bound would eventually lose its fractional part to float, and the
+     * fractional part is the whole of what this phase is for.
+     */
+    const perTurn = Math.max(0.05, juliaEfoldsPerTurn(post.juliaShape, this.phases.julia));
+    this.phases.juliaTravel += (post.juliaFlight * clockDt) / perTurn;
+    this.phases.juliaTravel -=
+      Math.floor(this.phases.juliaTravel / JULIA_WRAP) * JULIA_WRAP;
     // The spatial rates live on the config rather than in `post`, because they
     // move the composition rather than processing it — but they are integrated
     // here with the rest for exactly the same reason.
@@ -402,6 +467,29 @@ export class Director {
       safety: this.safety,
     });
     shard.bornAt -= ageOffset * shard.lifetime;
+    /*
+     * A layer opening the run comes up over black, and the authored crossfade is
+     * the wrong length for that.
+     *
+     * A crossfade is a length chosen for one picture *replacing* another, where
+     * every second of it has something on screen. Spent instead on an empty
+     * frame filling up, the same number is a wait — and on the presets whose
+     * pages linger longest it is a fifteen-second one, which is the first thing
+     * a viewer sees of the piece.
+     *
+     * Only the opening is hurried, and only where nothing is being crossed
+     * against: a layer given an age offset is already past its fade, and every
+     * later one is answering an outgoing fade it has to stay the complement of.
+     * The floor is the photosensitivity limit, which is the whole of what
+     * decides how fast a full-bleed layer may arrive. The stage path has done
+     * this for its own opening tenancy all along — see `Stage.rotate`.
+     */
+    if (ageOffset === 0 && this.shards.length === 0 && this.spawnCount === 1) {
+      shard.opacityCurve.fadeIn = Math.min(
+        shard.opacityCurve.fadeIn,
+        this.safety.clampFade(0)
+      );
+    }
     this.shards.push(shard);
   }
 

@@ -16,7 +16,12 @@ const LEADER_VERT = 14;
 const LEADER_HORIZ = 16;
 /** Padding from the filler edge to the label (px). */
 const EDGE_PAD = 8;
-/** Estimated character width at our font size for bbox estimation. */
+/**
+ * Per-character advance used for bbox estimation. The badge font is Space Mono
+ * (monospace, 0.6em advance) plus 0.02em letter-spacing => 8.68px at 14px. We
+ * round up so the estimate is never narrower than the rendered badge — an
+ * under-estimate would let two badges collide after passing the overlap test.
+ */
 const CHAR_W = 9;
 /** Badge font size (px). */
 const FONT_SIZE = 14;
@@ -29,7 +34,16 @@ const STROKE_W = 2.5;
 /** Badge height = font size + 2 * vertical padding. */
 const BADGE_H = FONT_SIZE + BADGE_PY * 2;
 /** Minimum gap between label bounding boxes (px). */
-const MIN_GAP = 4;
+const MIN_GAP = 6;
+/** Step size when sliding a label along its edge looking for a free slot (px). */
+const SLIDE_STEP = 6;
+/** Cap on slide positions considered per label, so the placement search stays cheap. */
+const MAX_SLOTS = 11;
+/**
+ * Score weight of keeping one label. Larger than any achievable displacement
+ * sum, so placing an extra name always beats keeping the others centered.
+ */
+const KEEP_WEIGHT = 1e6;
 
 
 // Name helpers
@@ -89,69 +103,110 @@ function rectsOverlap(a: Rect, b: Rect): boolean {
 }
 
 /**
- * Given a list of positioned labels, nudge any that overlap. Labels are
- * processed in priority order (top, bottom, left, right). If a label
- * overlaps a previously placed one, it shifts along its natural axis.
- * If it can't fit within the filler bounds after shifting, it's dropped.
+ * Offsets to try along a label's edge, nearest-to-preferred first, all of them
+ * inside [min, max]. Returns empty when the label is too big for the run, which
+ * is the caller's signal to drop it.
+ */
+function slideCandidates(preferred: number, min: number, max: number): number[] {
+  if (max < min) return [];
+
+  const start = Math.min(Math.max(preferred, min), max);
+  const slots = new Set([start, min, max]);
+  // Widen the step on long edges rather than emitting dozens of near-identical
+  // slots — the search below is exponential in the slot count.
+  const step = Math.max(SLIDE_STEP, (max - min) / (MAX_SLOTS - 1));
+
+  for (let d = step; d <= max - min; d += step) {
+    if (start - d >= min) slots.add(start - d);
+    if (start + d <= max) slots.add(start + d);
+  }
+
+  return [...slots].sort(
+    (a, b) => Math.abs(a - start) - Math.abs(b - start)
+  );
+}
+
+/**
+ * Positions a label can occupy without leaving its edge. A leader points at the
+ * neighbor it names, so a label only ever slides *along* its own edge — top and
+ * bottom labels move horizontally, left and right labels vertically.
+ */
+function candidatePlacements(
+  label: PositionedLabel,
+  fillerW: number,
+  fillerH: number
+): PositionedLabel[] {
+  if (label.edge === "top" || label.edge === "bottom") {
+    return slideCandidates(label.x, EDGE_PAD, fillerW - EDGE_PAD - label.w).map(
+      (x) => ({ ...label, x })
+    );
+  }
+  return slideCandidates(label.y, EDGE_PAD, fillerH - EDGE_PAD - label.h).map(
+    (y) => ({ ...label, y })
+  );
+}
+
+/** How far a placement sits from the label's natural position, in px. */
+function displacement(placement: PositionedLabel, natural: PositionedLabel): number {
+  return placement.edge === "top" || placement.edge === "bottom"
+    ? Math.abs(placement.x - natural.x)
+    : Math.abs(placement.y - natural.y);
+}
+
+/**
+ * Chooses positions for the whole label set at once, maximizing how many names
+ * survive and, among equally full solutions, keeping each one as close to its
+ * natural (centered) position as possible.
+ *
+ * Solving globally rather than greedily is what lets a top and bottom label
+ * slide off-center to open a lane for a left or right label — placing them
+ * centered first would strand the side labels with nowhere to go. A label with
+ * no collision-free slot is dropped rather than drawn over a neighbor.
+ *
+ * Search is depth-first over at most four labels with a handful of slots each,
+ * pruned whenever a partial layout already collides or cannot beat the best
+ * solution so far. The common case — everything fits centered — is the first
+ * branch tried, and the bound then prunes the rest of the tree immediately.
  */
 function resolveOverlaps(
   labels: PositionedLabel[],
   fillerW: number,
   fillerH: number
 ): PositionedLabel[] {
-  const placed: PositionedLabel[] = [];
+  const options = labels.map((l) => candidatePlacements(l, fillerW, fillerH));
 
-  for (const label of labels) {
-    let candidate = { ...label };
-    let fits = true;
+  const chosen: PositionedLabel[] = [];
+  let best: PositionedLabel[] = [];
+  let bestScore = -Infinity;
 
-    // Try to resolve against every already-placed label
-    for (let attempts = 0; attempts < 8; attempts++) {
-      const overlapping = placed.find((p) => rectsOverlap(candidate, p));
-      if (!overlapping) break;
+  const score = (kept: number, spread: number) => kept * KEEP_WEIGHT - spread;
 
-      const isHorizontal =
-        candidate.edge === "top" || candidate.edge === "bottom";
-
-      if (isHorizontal) {
-        // Shift horizontally — move right past the overlapping label
-        candidate.x = overlapping.x + overlapping.w + MIN_GAP;
-        // Check if we've gone out of bounds
-        if (candidate.x + candidate.w > fillerW - EDGE_PAD) {
-          // Try shifting left instead
-          candidate.x = overlapping.x - candidate.w - MIN_GAP;
-          if (candidate.x < EDGE_PAD) {
-            fits = false;
-            break;
-          }
-        }
-      } else {
-        // Shift vertically — move down past the overlapping label
-        candidate.y = overlapping.y + overlapping.h + MIN_GAP;
-        if (candidate.y + candidate.h > fillerH - EDGE_PAD) {
-          // Try shifting up
-          candidate.y = overlapping.y - candidate.h - MIN_GAP;
-          if (candidate.y < EDGE_PAD) {
-            fits = false;
-            break;
-          }
-        }
+  const search = (index: number, spread: number) => {
+    if (index === labels.length) {
+      const total = score(chosen.length, spread);
+      if (total > bestScore) {
+        bestScore = total;
+        best = [...chosen];
       }
+      return;
     }
 
-    // Final bounds check
-    if (
-      fits &&
-      candidate.x >= 0 &&
-      candidate.y >= 0 &&
-      candidate.x + candidate.w <= fillerW &&
-      candidate.y + candidate.h <= fillerH
-    ) {
-      placed.push(candidate);
-    }
-  }
+    // Upper bound: every remaining label placed at zero extra displacement.
+    if (score(chosen.length + labels.length - index, spread) <= bestScore) return;
 
-  return placed;
+    for (const candidate of options[index]) {
+      if (chosen.some((p) => rectsOverlap(candidate, p))) continue;
+      chosen.push(candidate);
+      search(index + 1, spread + displacement(candidate, labels[index]));
+      chosen.pop();
+    }
+
+    // Dropping this label may leave room for the ones after it.
+    search(index + 1, spread);
+  };
+
+  search(0, 0);
+  return best;
 }
 
 

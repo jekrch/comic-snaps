@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, useLayoutEffect, useMemo } from "react";
 import type { Panel } from "../types";
 import type { SortMode } from "../utils/sorting";
 import type { Filters } from "../utils/filtering";
@@ -15,6 +15,18 @@ import type { NeighborMap } from "../adjacency";
 const GAP = 4;
 const DEFAULT_ASPECT = 3 / 4;
 const WIDE_THRESHOLD = 1.4;
+
+// Positions are computed for every panel (masonry is sequential — a panel's
+// column depends on the heights left by all the panels before it, and the full
+// pass is what gives an honest scrollbar). Mounting them is the expensive part,
+// so only items within this band of the viewport are rendered.
+//
+// RENDER_MARGIN sits deliberately above useNearViewport's 1500px PRELOAD_MARGIN
+// so a card mounts before its image is wanted, leaving the existing preload
+// behaviour untouched. SCROLL_BUCKET quantizes scroll so the window is
+// recomputed every ~300px rather than every scroll event.
+const RENDER_MARGIN = 2400;
+const SCROLL_BUCKET = 300;
 
 function getColumnCount() {
   if (typeof window === "undefined") return 3;
@@ -317,14 +329,58 @@ export default function MasonryGrid({
     setPlaced(result.items);
     setTotalHeight(result.totalHeight);
 
-    setPlaced(result.items);
-    setTotalHeight(result.totalHeight);
-    
     // Notify lazy-loading cards that positions have settled
     requestAnimationFrame(() => {
       window.dispatchEvent(new CustomEvent("masonry-layout"));
     });
   }, [panels]);
+
+  // Scroll position expressed in container coordinates, quantized to
+  // SCROLL_BUCKET. Derived from the live rect each time, so it stays correct
+  // even if the content above the grid changes height.
+  const [viewport, setViewport] = useState(() => ({
+    bucket: 0,
+    height: typeof window === "undefined" ? 800 : window.innerHeight,
+  }));
+
+  useLayoutEffect(() => {
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const el = containerRef.current;
+      if (!el) return;
+      const bucket = Math.floor(-el.getBoundingClientRect().top / SCROLL_BUCKET);
+      const height = window.innerHeight;
+      setViewport((prev) =>
+        prev.bucket === bucket && prev.height === height ? prev : { bucket, height }
+      );
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const visible = useMemo(() => {
+    if (placed.length === 0) return placed;
+    const viewTop = viewport.bucket * SCROLL_BUCKET;
+    const min = viewTop - RENDER_MARGIN;
+    const max = viewTop + viewport.height + RENDER_MARGIN;
+    return placed.filter((item) => {
+      const h = item.kind === "filler" ? item.h : getPanelHeight(item.panel, item.w);
+      return item.y + h >= min && item.y <= max;
+    });
+  }, [placed, viewport]);
+
+  const handleSelect = useCallback((panel: Panel) => setSelectedId(panel.id), []);
 
   const prevPanelIdsRef = useRef<string>("");
   useEffect(() => {
@@ -341,6 +397,11 @@ export default function MasonryGrid({
     return () => window.removeEventListener("resize", layout);
   }, [layout]);
 
+  // The disclosure controls grow their box for the whole 200ms of their expand,
+  // so this fires once per frame and the grid re-packs continuously behind them.
+  // That continuity is the point: fillers collapse smoothly and panels flow
+  // between columns in a way no single transition can express. It is affordable
+  // because a pass is now O(n) and only repaints the ~25 windowed items.
   useEffect(() => {
     const observer = new ResizeObserver(() => layout());
     if (filterRef.current) observer.observe(filterRef.current);
@@ -459,7 +520,7 @@ export default function MasonryGrid({
           </div>
         )}
 
-        {placed.map((item) => {
+        {visible.map((item) => {
           if (item.kind === "filler") {
             return (
               <div
@@ -493,7 +554,7 @@ export default function MasonryGrid({
               <PanelCard
                 panel={item.panel}
                 selected={selectedId === item.panel.id}
-                onSelect={(p) => setSelectedId(p.id)}
+                onSelect={handleSelect}
                 onOpen={onOpenPanel}
                 //isFirstLoad={isFirstLoad}
               />

@@ -150,6 +150,31 @@ export default function VizDebugPanel({
   const [stats, setStats] = useState<EngineStats | null>(null);
   const [copied, setCopied] = useState<"json" | "link" | null>(null);
   const [open, setOpen] = useState<Set<ConfigGroup>>(() => new Set(openMemo));
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Pressing away from the panel puts it away — the run is the thing being
+   * tuned, so a click on it is a click back to watching. Two exemptions: the
+   * chrome's own toggle, which would otherwise close the panel on the press and
+   * re-open it on the click that follows, and a hint tooltip, which is the
+   * panel's but lives portalled outside it.
+   */
+  useEffect(() => {
+    if (leaving) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (panelRef.current?.contains(target)) return;
+      if (
+        target instanceof Element &&
+        target.closest("[data-viz-tune-toggle], .viz-hint-pop")
+      ) {
+        return;
+      }
+      onClose();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [leaving, onClose]);
 
   // Stopped for the slide out: the readout re-rendering under a panel already
   // on its way off screen is work spent on something nobody is reading.
@@ -212,6 +237,7 @@ export default function VizDebugPanel({
        buttons at the bottom are wanted at every point in the list, and with a
        hundred-odd sliders between them both used to be a scroll away. */
     <div
+      ref={panelRef}
       className={`viz-tune-panel absolute top-0 left-0 bottom-0 w-72 max-w-[85vw] z-20
                   flex flex-col ${leaving ? "viz-tune-out pointer-events-none" : "viz-tune-in pointer-events-auto"}`}
       aria-hidden={leaving}
@@ -252,7 +278,10 @@ export default function VizDebugPanel({
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto info-modal-scroll">
+      {/* overflow-x is explicit: a box that scrolls on one axis and is `visible`
+          on the other computes that other axis to `auto` too, and the list then
+          creeps sideways under a finger that only meant to scroll it. */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden info-modal-scroll">
         {groups.map(({ group, fields }) => {
           const expanded = open.has(group);
           return (

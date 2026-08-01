@@ -108,6 +108,9 @@ export default function VizControls({
             className="viz-btn"
             title="Tuning panel"
             tabIndex={visible ? 0 : -1}
+            /* The panel closes on a press anywhere outside it; this one is the
+               press that toggles it, so it is read there and skipped. */
+            data-viz-tune-toggle=""
           >
             <Sliders size={15} />
           </button>

@@ -154,6 +154,47 @@ const EFFECTS: PsychEffect[] = [
       post.tunnelSpin = spin;
     },
   },
+  {
+    // The escape-time set. Rarer and slower to arrive than either map above,
+    // because it is the largest single change in the pool: the frame stops being
+    // a picture that has been bent and becomes a picture drawn along a figure of
+    // its own. The seed is drawn well inside the cardioid rather than out at its
+    // filigree end — a pulse is a visit, and a visit wants the legible member of
+    // the family, not the one that takes the whole ramp to resolve.
+    id: "julia",
+    weight: 0.35,
+    ramp: 3,
+    exclusive: "reparam",
+    init: (rng) => [
+      rng.range(0.15, 0.9),
+      rng.range(0.45, 0.8),
+      rng.range(0.2, 0.8),
+      rng.range(0.5, 1.1),
+      (rng.bool() ? 1 : -1) * rng.range(0.01, 0.03),
+      // Always forward, and always some: a visit that did not travel would be a
+      // still shape swelling in and out of a frame that is otherwise moving.
+      rng.range(0.03, 0.07),
+    ],
+    apply: (post, k, _time, [zoom, shape, trap, spread, spin, flight]) => {
+      const amount = k * 0.8;
+      if (amount <= post.julia) return;
+      post.julia = amount;
+      post.juliaZoom = zoom;
+      post.juliaShape = shape;
+      post.juliaTrap = trap;
+      post.juliaSpread = spread;
+      // Both at full value from the first frame, on the fold's reasoning: they
+      // are invisible while the blend is near zero, and by the time they can be
+      // seen the figure should already be moving rather than accelerating.
+      post.juliaSpin = spin;
+      post.juliaFlight = flight;
+      // The defaults, restated. A pulse lands over whatever preset is running,
+      // and both of these are guards rather than decorations — without them a
+      // visit brings soft over-blown patches and a figure that ignores the page.
+      post.juliaAnchor = Math.max(post.juliaAnchor, 0.3);
+      post.juliaBind = Math.max(post.juliaBind, 0.5);
+    },
+  },
   // --- undulating -----------------------------------------------------------
   {
     id: "warp",

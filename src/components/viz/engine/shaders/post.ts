@@ -11,6 +11,25 @@
  *  drifts off the stage. */
 export const FOLD_ITERS = 4;
 
+/**
+ * Iterations of the Julia orbit.
+ *
+ * Two things set this. It is the effect's resolution limit — the set is a
+ * genuine fractal, so every iteration added resolves finer filaments and none of
+ * them ever finishes the figure — and past about thirty the filigree stops
+ * visibly gaining at a screenful of pixels.
+ *
+ * The rest is the flight's. Each preimage it travels adds one step to every
+ * orbit before that orbit exits, so a wrap spanning JULIA_WRAP of them needs
+ * that many iterations in hand or the deepest part of every cycle runs out of
+ * loop and comes back as a flat, unresolved band. The count therefore has to
+ * move with JULIA_WRAP, and the two are only independent-looking.
+ *
+ * The loop exits early on escape or capture, so the cost is only paid in the
+ * region that is actually the set.
+ */
+export const JULIA_ITERS = 40;
+
 export const POST_FRAGMENT = `#version 300 es
 precision highp float;
 
@@ -77,6 +96,23 @@ uniform float uFoldPhase;
 uniform float uFoldNorm;
 uniform float uLattice;
 uniform float uLatticeScale;
+uniform float uJulia;
+uniform float uJuliaZoom;
+/** Half the seed's multiplier, where the walk currently has it. The seed itself
+ *  is c = m - m^2, and it is finished per pixel because the page moves it. */
+uniform vec2 uJuliaM;
+/** The repelling fixed point the flight heads into, and the two coefficients
+ *  that carry the frame toward it — see the note in the backend. All complex. */
+uniform vec2 uJuliaBeta;
+uniform vec2 uJuliaStep;
+uniform vec2 uJuliaWarp;
+uniform vec2 uJuliaWarp3;
+uniform float uJuliaTrap;
+uniform float uJuliaSpread;
+uniform float uJuliaAnchor;
+uniform float uJuliaBind;
+uniform float uJuliaDepth;
+uniform float uJuliaEdge;
 uniform float uQuasi;
 uniform float uQuasiFreq;
 uniform float uTurbulence;
@@ -118,6 +154,17 @@ const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 /** Iterations of the KIFS fold. Constant so the loop unrolls: a uniform bound
  *  would leave the compiler no choice but to keep the whole body live. */
 const int FOLD_ITERS = ${FOLD_ITERS};
+const int JULIA_ITERS = ${JULIA_ITERS};
+/** Widest excursion the page may drive the seed's multiplier through, as a
+ *  fraction of it. The walk is held under 0.45 and the disc's edge is at 0.5, so
+ *  a tenth is the largest value that cannot push a pixel out of the family of
+ *  connected sets — which is a cliff rather than a limit, hence the margin. */
+const float JULIA_DRIVE = 0.1;
+/** How near the attractor an orbit has to get before it counts as finished.
+ *  Coarse on purpose: the multiplier can be as slow as 0.9 a step, and a tighter
+ *  disc would leave most of the interior still travelling when the iteration cap
+ *  arrives — which is the flat region this exists to remove. */
+const float JULIA_CAPTURE = 0.12;
 const int BLUR_TAPS = 6;
 /** Two, not the three this would want on its own. Dispersion re-runs the whole
  *  coordinate chain per channel, so every octave here is paid for three times
@@ -136,6 +183,26 @@ vec2 rot(vec2 p, float a) {
   float s = sin(a);
   return vec2(p.x * c - p.y * s, p.x * s + p.y * c);
 }
+
+/** Complex multiply. The Julia iteration and its derivative are the only things
+ *  here that need one. */
+vec2 cmul(vec2 a, vec2 b) {
+  return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+}
+
+/**
+ * Mip level the scene should be read at, written by the Julia branch of
+ * distort() and left at 0 by everything else.
+ *
+ * A global because distort() returns a coordinate and this is a *rate* — how
+ * hard the map is compressing the frame at this pixel — and the fetch needs
+ * both. It cannot be an implicit derivative: at the boundary of an escape-time
+ * set neighbouring pixels take orbits that separate exponentially, so the
+ * hardware's screen-space difference is not a footprint but noise, and a frame
+ * sampled by it sparkles. The orbit's own derivative is the real footprint, and
+ * the iteration is already carrying it.
+ */
+float gSceneLod = 0.0;
 
 /** Value noise. Cheap on purpose — the fBm below calls it twelve times a
  *  pixel, so a gradient noise here would cost more than everything else in the
@@ -349,6 +416,252 @@ vec2 distort(vec2 uv, float disp) {
   // grows continuously out of an undisturbed frame rather than cutting in.
   if (uTile > 0.0) uv = mirrorUv((uv - 0.5) * (1.0 + uTile * 3.0) + 0.5);
 
+  /*
+   * The Julia set, read by orbit trap. Last of the geometric maps, and the only
+   * one that is a true fractal rather than a symmetry — see the note on the
+   * parameter.
+   *
+   * Each pixel is a starting point in the complex plane. It is iterated under
+   * z -> z^2 + c, and what the frame is sampled at is not where the point ended
+   * up but where its orbit came *closest to a circle* — the orbit trap. Points
+   * whose orbits pass near the same place get the same crop of the page, and
+   * the locus of such points is the set's own filigree, so the picture is drawn
+   * along the fractal's structure rather than merely being distorted by it.
+   *
+   * Two things fall out of the same loop rather than needing work of their own.
+   * The derivative dz/dz0, carried alongside, is exactly how much the map is
+   * compressing the frame at this pixel, which is the mip level the fetch wants.
+   * And the escape test exits the loop for every point outside the set, which is
+   * most of the frame — so the full iteration count is only paid where the set
+   * actually is.
+   */
+  if (uJulia > 0.0) {
+    // Three, because the stage is a unit high — half a unit either side of the
+    // centre — and a Julia set of this family lives inside about a radius of
+    // 1.5. So a zoom of 1 is the whole figure in the frame, and the small values
+    // this mode actually runs at are a neighbourhood of the fixed point the
+    // flight below is heading into.
+    float s = 3.0 * uJuliaZoom;
+    vec2 w = toStage(uv) * s;
+
+    /*
+     * The flight, and the reason it can run forever.
+     *
+     * The frame is centred on the repelling fixed point of the map, and the
+     * approach to it is a scaling by lambda^-u where lambda is that point's
+     * multiplier. That number is not chosen for looks: the set is exactly
+     * invariant under the inverse map, and near the fixed point the inverse map
+     * *is* multiplication by 1/lambda — so after one whole unit of u the picture
+     * is the picture it started from, and the phase can be wrapped there with
+     * nothing to see. Endless magnification out of a bounded number.
+     *
+     * Bounded is the point. A zoom that genuinely accumulated would run out of
+     * float somewhere past a million and have to cut back; this one never leaves
+     * a single octave of the plane, so it can fly for an hour.
+     *
+     * The two curved terms are what make the wrap invisible rather than merely
+     * close. Multiplication by lambda is only the *linearisation* of the inverse
+     * map, and these are the second and third order of the Koenigs chart that
+     * conjugates one to the other — arriving from the CPU already folded into
+     * two coefficients, both exactly zero when the flight is stopped. They are
+     * damped by the radius because a series about the fixed point has no
+     * business being trusted at the rim of a wide view.
+     */
+    vec2 w2 = cmul(w, w);
+    vec2 corr = cmul(uJuliaWarp, w2) + cmul(uJuliaWarp3, cmul(w2, w));
+    float lim = 0.5 * length(w);
+    corr *= min(1.0, lim / max(length(corr), 1e-6));
+    vec2 z = uJuliaBeta + cmul(uJuliaStep, w) + corr;
+    // Seeded at the mapping's own scale rather than at 1: dz is held with
+    // respect to the *frame's* coordinate, which is what makes it a screen-space
+    // footprint rather than a plane-space one. Only its magnitude survives to
+    // the mip level below — the phase cancels out of |dz| — so the flight's
+    // rotation is left out of it.
+    vec2 dz = vec2(s * length(uJuliaStep), 0.0);
+
+    /*
+     * The page, driving the figure.
+     *
+     * Without this the panels are wallpaper: the set has its own shape, the art
+     * is merely what the shape is filled with, and a new panel changes the
+     * colours and nothing else. Here the frame is read at two scales and the
+     * difference between them — the page's own structure, at the size of a
+     * figure or a speech balloon, with its overall brightness divided out — is
+     * added to the seed. So the boundary bulges where the panel has a shape in
+     * it, and when a panel changes the *edges* move.
+     *
+     * Both taps come out of the mip chain the backend is already keeping for the
+     * fetch, so the whole coupling costs two of the cheapest samples available.
+     *
+     * The seed is perturbed through mu rather than through c, which is what
+     * keeps this safe. Every mu inside the unit disc is a connected set; c has
+     * no such easy test, and a seed nudged across the boundary of the Mandelbrot
+     * set would not deform the figure, it would shatter that pixel into dust.
+     * The walk stays inside |mu/2| <= 0.45 and this can move it by a tenth, so
+     * the product cannot reach the edge of the disc.
+     */
+    float drive = 0.0;
+    if (uJuliaBind > 0.0) {
+      // Named around near/far, which some drivers still treat as spoken for.
+      vec3 pageNear = textureLod(uScene, uv, 4.0).rgb;
+      vec3 pageFar = textureLod(uScene, uv, 7.0).rgb;
+      drive = clamp((dot(pageNear, LUMA) - dot(pageFar, LUMA)) * 3.0, -1.0, 1.0)
+        * uJuliaBind * JULIA_DRIVE;
+    }
+    vec2 m = uJuliaM * (1.0 + drive);
+    vec2 c = m - cmul(m, m);
+    // The trap moves with the page too, and off the same field. The seed decides
+    // where the set's edges are; this decides where along each orbit the page is
+    // picked up, so between them a panel change moves both the figure and what
+    // is drawn on it.
+    float trapR = uJuliaTrap * (1.0 + drive * 3.0);
+
+    /*
+     * The guard, and it is what makes the wrap invisible rather than merely
+     * geometrically close.
+     *
+     * The trap is a minimum over the orbit, and one turn of the flight prepends
+     * exactly one point to every orbit — so the minimum is only unchanged if the
+     * prepended point never wins. It is not a harmless point: it lands inside
+     * the frame's own neighbourhood of the fixed point, which for a large part
+     * of the picture is the *nearest* the orbit ever comes to the trap ring. So
+     * for those pixels the sample is the starting point, the map is affine in
+     * the frame, and every wrap snaps it back by a whole factor of lambda. Which
+     * is a picture that zooms and then jerks home.
+     *
+     * Excluding the neighbourhood itself fixes it exactly, rather than closely:
+     * the excluded set is defined by *where a point is*, not by which step it is,
+     * so prepending a point inside it changes nothing at all. Both orbits then
+     * trap over the identical set.
+     */
+    float guard = 0.5 * s * sqrt(1.0 + uAspect * uAspect);
+
+    vec2 trap = z;
+    vec2 trapD = dz;
+    float best = 1e9;
+
+    /*
+     * Depth: how many steps this pixel's orbit survives before it either leaves
+     * or settles. The field that makes the flight read as travel rather than as
+     * a picture being scaled up.
+     *
+     * Without it most of the frame is an *affine* function of the pixel — orbits
+     * that escape at once trap where they started, orbits that converge trap on
+     * the attractor — so flying in moves those regions the only way an affine
+     * map can move, which is to say it enlarges them. That is a zoom, and it is
+     * what a zoom looks like. Depth is not affine anywhere: its level sets are
+     * the escape-time contours, they wrap the set at every scale, and under the
+     * flight they sweep outward through the frame and are replaced from the
+     * centre. That is what moving into something looks like.
+     *
+     * It also costs the wrap nothing, which is the reason this particular field
+     * and not another. One turn of the flight is exactly one preimage, a preimage
+     * is exactly one extra step before the same exit, so depth rises by exactly
+     * one per cycle — and anything read off it with period one comes back to
+     * itself at the wrap.
+     *
+     * Both exits are the same statement about a different destination, and both
+     * are smoothed by how far past the test the orbit landed. Without that they
+     * would be integers, and integer bands crawling outward is a set of hard
+     * rings rather than a structure.
+     */
+    float nu = float(JULIA_ITERS);
+    // Bands per unit of frame at the exit — the depth field's own gradient,
+    // which is the one thing here that the trap's derivative does not already
+    // account for and that the mip level below needs.
+    float grad = 4.0;
+    // Rate the interior converges at, which is |log|mu||: the attracting fixed
+    // point of this family is m itself, and its multiplier is twice it.
+    float muLog = max(0.05, -log(min(0.98, length(2.0 * m))));
+
+    for (int i = 0; i < JULIA_ITERS; i++) {
+      // The derivative of the step about to be taken, so it uses the incoming z:
+      // z' = z^2 + c gives dz' = 2 z dz.
+      dz = 2.0 * cmul(z, dz);
+      z = cmul(z, z) + c;
+      vec2 off = z - uJuliaBeta;
+      if (dot(off, off) > guard * guard) {
+        // Round or square, and everything in between. A circular trap set draws
+        // the page along arcs, which is why the figure reads as fluid however
+        // fractal the geometry under it is; the same construction against the
+        // Chebyshev norm traps on a square, and a square's sides are straight
+        // lines. It is the one knob here that changes what the filaments *are*
+        // rather than where they run.
+        float dist = mix(length(z), max(abs(z.x), abs(z.y)), uJuliaEdge);
+        float d = abs(dist - trapR);
+        if (d < best) {
+          best = d;
+          trap = z;
+          trapD = dz;
+        }
+      }
+      float rr = dot(z, z);
+      // Bailout, at radius 4 rather than the 2 that decides escape. The extra
+      // ring is not caution about the test — past 2 the orbit is certainly
+      // leaving — it is one more step for the trap to be found on the way out,
+      // which the widest trap circle on the slider needs and which costs nothing
+      // for the interior, where the orbit never gets here at all.
+      if (rr > 16.0) {
+        float lz = 0.5 * log(rr);
+        nu = float(i) - log2(lz / 1.3862944);
+        grad = length(dz) / max(1e-3, 0.6931472 * lz * sqrt(rr));
+        break;
+      }
+      // Capture. The orbit has arrived at the attractor and will only spiral
+      // closer, so it is as finished as an escaping one — and counting it means
+      // the interior carries the same structure as the outside rather than being
+      // the one flat region in the frame.
+      float dc = length(z - m);
+      if (dc < JULIA_CAPTURE) {
+        nu = float(i) - log(JULIA_CAPTURE / dc) / muLog;
+        grad = length(dz) / max(1e-3, muLog * dc);
+        break;
+      }
+    }
+    /*
+     * Where the page is read, and the floor under how far it may be enlarged.
+     *
+     * The trap term alone has no lower bound on its derivative: wherever orbits
+     * converge — the whole interior of the set — neighbouring pixels land on the
+     * same trap point, and a region that maps to one point is one texel of comic
+     * blown up to fill it. That is the soft grey blob, and it is a property of
+     * the map rather than of the sampling, so no amount of filtering fixes it.
+     *
+     * The anchor is a fraction of the plain frame added to the trap coordinate.
+     * It cannot be flattened by the dynamics, so the enlargement is bounded by
+     * its reciprocal — at a third, no part of the page is ever shown more than
+     * three times its own size. It is also independent of the flight and of the
+     * seed, which is what keeps the wrap seamless: it is the same field at every
+     * point of the cycle.
+     */
+    // What depth is worth: a different crop of the page in every contour of the
+    // escape time, cycling with period one so that the wrap — which advances
+    // depth by exactly one everywhere — lands back on itself. Under the flight
+    // these contours are what sweeps outward past the eye.
+    vec2 band = vec2(cos(nu * TAU), sin(nu * TAU)) * (uJuliaDepth * 0.5);
+    vec2 target = mirrorUv(fromStage(trap * uJuliaSpread + band + toStage(uv) * uJuliaAnchor));
+    // Mirrored before the blend, not after, on the same reasoning as the tunnel:
+    // both ends of the mix are then in-frame coordinates, so ramping the effect
+    // in is a bounded morph rather than a sweep through however many repeats lie
+    // between here and the trap.
+    uv = mix(uv, target, uJulia);
+    // Every term that moves the sample, summed: the trap's own derivative, the
+    // depth banding through its gradient, and the anchor, which is the one that
+    // cannot vanish. Scaled by the blend as well, because a half-strength mix
+    // compresses the frame half as hard, and floored at 1 because there is no
+    // detail above level 0 to ask for.
+    //
+    // The banding term is the reason this is a sum rather than the trap alone.
+    // Depth runs away to infinity at the boundary of the set — that is what the
+    // boundary *is* — so the contours there are finer than any pixel, and a
+    // frame sampled through them without saying so sparkles exactly where the
+    // structure is most interesting.
+    float bandJac = 3.1415927 * uJuliaDepth * grad;
+    gSceneLod = log2(
+      max(1.0, (length(trapD) * uJuliaSpread + bandJac + uJuliaAnchor) * uJulia)
+    );
+  }
+
   vec2 p = toStage(uv);
   float r = length(p);
 
@@ -464,6 +777,11 @@ vec3 history(vec2 uv, float age) {
  * One sample of the scene. split false is the fast path: with no channel
  * separation asked for there is one fetch here rather than three.
  *
+ * Explicit level of detail rather than the implicit one. At level 0 — which is
+ * what every effect but the Julia map asks for — this is exactly the sample it
+ * was before, because the scene target is filtered LINEAR and has no chain to
+ * walk; the backend only builds one when the fractal is running.
+ *
  * Misregistration adds a fourth. Cyan coverage is one minus red, so the three
  * colour plates *are* the channel split already — what a printed page has that
  * the split does not is the black. So the grey component is removed from the
@@ -472,16 +790,16 @@ vec3 history(vec2 uv, float age) {
  * visible only in the colour and one visible on the line art, which is most of
  * what a comic page is made of.
  */
-vec3 fetch(vec2 uvR, vec2 uvG, vec2 uvB, vec2 uvK, bool split) {
-  if (!split) return texture(uScene, uvG).rgb;
+vec3 fetch(vec2 uvR, vec2 uvG, vec2 uvB, vec2 uvK, bool split, float lod) {
+  if (!split) return textureLod(uScene, uvG, lod).rgb;
   vec3 c = vec3(
-    texture(uScene, uvR).r,
-    texture(uScene, uvG).g,
-    texture(uScene, uvB).b
+    textureLod(uScene, uvR, lod).r,
+    textureLod(uScene, uvG, lod).g,
+    textureLod(uScene, uvB, lod).b
   );
   if (uMisreg <= 0.0) return c;
   float grey = min(min(c.r, c.g), c.b);
-  vec3 k = texture(uScene, uvK).rgb;
+  vec3 k = textureLod(uScene, uvK, lod).rgb;
   // Identity when the plates are in register: the black comes back from the
   // same place it was lifted from, so the sum is exactly what it was.
   return clamp(c - grey + min(min(k.r, k.g), k.b), 0.0, 1.0);
@@ -492,6 +810,11 @@ void main() {
   vec2 radial = uv - 0.5;
 
   vec2 suvG = distort(uv, 1.0);
+  // Captured from the green pass, before the dispersion passes below overwrite
+  // it. The three channels are refracted through the same geometry by
+  // construction, so they compress the frame by the same amount and one level
+  // is the level for all of them.
+  float lod = gSceneLod;
   vec2 suvR = suvG;
   vec2 suvB = suvG;
   vec2 suvK = suvG;
@@ -499,10 +822,11 @@ void main() {
   // anything else asked for one.
   bool split = uChroma > 0.0 || uDisperse > 0.0 || uMisreg > 0.0;
 
-  // Dispersion re-runs the chain at two other refraction strengths. The chain
-  // is pure arithmetic — no fetches — so three of it costs far less than the
-  // texture bandwidth already in flight, and it is the only way to get the
-  // channels genuinely bent apart rather than merely offset.
+  // Dispersion re-runs the chain at two other refraction strengths. The chain is
+  // arithmetic almost throughout — the fields read a buffer and the Julia map
+  // reads two coarse mips, and nothing else in it touches a texture — so three
+  // of it costs far less than the bandwidth already in flight, and it is the
+  // only way to get the channels genuinely bent apart rather than merely offset.
   if (uDisperse > 0.0) {
     suvR = distort(uv, 1.0 + uDisperse);
     suvB = distort(uv, 1.0 - uDisperse);
@@ -529,11 +853,11 @@ void main() {
     for (int i = 0; i < BLUR_TAPS; i++) {
       // Centred on the sample, so the blur has no net displacement of its own.
       vec2 o = dir * (float(i) / float(BLUR_TAPS - 1) - 0.5);
-      col += fetch(suvR + o, suvG + o, suvB + o, suvK + o, split);
+      col += fetch(suvR + o, suvG + o, suvB + o, suvK + o, split, lod);
     }
     col /= float(BLUR_TAPS);
   } else {
-    col = fetch(suvR, suvG, suvB, suvK, split);
+    col = fetch(suvR, suvG, suvB, suvK, split, lod);
   }
 
   if (uBleed > 0.0) {
@@ -544,10 +868,10 @@ void main() {
     // of the paper under all four inks, not of one of them.
     vec2 e = uBleedRadius / uResolution;
     vec3 ink = col;
-    ink = min(ink, texture(uScene, suvG + vec2(e.x, 0.0)).rgb);
-    ink = min(ink, texture(uScene, suvG - vec2(e.x, 0.0)).rgb);
-    ink = min(ink, texture(uScene, suvG + vec2(0.0, e.y)).rgb);
-    ink = min(ink, texture(uScene, suvG - vec2(0.0, e.y)).rgb);
+    ink = min(ink, textureLod(uScene, suvG + vec2(e.x, 0.0), lod).rgb);
+    ink = min(ink, textureLod(uScene, suvG - vec2(e.x, 0.0), lod).rgb);
+    ink = min(ink, textureLod(uScene, suvG + vec2(0.0, e.y), lod).rgb);
+    ink = min(ink, textureLod(uScene, suvG - vec2(0.0, e.y), lod).rgb);
     col = mix(col, ink, uBleed);
   }
 

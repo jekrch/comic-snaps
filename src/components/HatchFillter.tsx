@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef } from "react";
+import { memo, useId, useMemo, useRef } from "react";
 import type { NeighborMap } from "../adjacency";
 import { useHatchViewerOpen } from "../hooks/useHatchPause";
 import FillerLabels from "./FillerLabels";
@@ -38,7 +38,7 @@ interface HatchFillerProps {
   colorOverride?: string | null;
 }
 
-export default function HatchFiller({
+function HatchFiller({
   empty = false,
   assignedStamp = null,
   fillerIndex = 0,
@@ -176,3 +176,28 @@ export default function HatchFiller({
     </div>
   );
 }
+
+/** Neighbor maps are rebuilt object-fresh on every layout; compare by panel identity. */
+function sameNeighbors(a?: NeighborMap | null, b?: NeighborMap | null): boolean {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  return (
+    a.top?.id === b.top?.id &&
+    a.bottom?.id === b.bottom?.id &&
+    a.left?.id === b.left?.id &&
+    a.right?.id === b.right?.id
+  );
+}
+
+// Each filler owns two observers, an injected <style>, an SVG mask stack and a
+// running liquid animation, so re-rendering the full set on every relayout is
+// the dominant cost in the grid. Only a genuine content change warrants it.
+export default memo(
+  HatchFiller,
+  (prev, next) =>
+    prev.empty === next.empty &&
+    prev.assignedStamp === next.assignedStamp &&
+    prev.fillerIndex === next.fillerIndex &&
+    prev.colorOverride === next.colorOverride &&
+    sameNeighbors(prev.neighbors, next.neighbors)
+);

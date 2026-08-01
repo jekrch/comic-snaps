@@ -268,11 +268,26 @@ button,
    the whole panel is the ridged grip on the faders, because that is the part a
    finger is meant to find. */
 
+/* Held well off opaque so the run keeps playing through the fascia. What the
+   legibility rides on is the blur rather than the fill: the panel is a wall of
+   9px type over whatever the piece happens to be doing behind it, and a plate
+   this thin needs the ground under it smeared flat before the text will hold.
+   Saturating with it keeps the colour of the run readable through the grey
+   rather than letting the veil wash it out. */
 .viz-tune-panel {
-  background: rgba(20, 19, 18, 0.93);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(20, 19, 18, 0.62);
+  -webkit-backdrop-filter: blur(22px) saturate(1.3);
+  backdrop-filter: blur(22px) saturate(1.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Without a backdrop filter the fill is the only thing between the type and the
+   run, so it goes back to nearly solid rather than leaving the panel unreadable
+   over a bright frame. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .viz-tune-panel {
+    background: rgba(20, 19, 18, 0.93);
+  }
 }
 
 /* Slides from the edge it is pinned to. Decelerating on the way in and
@@ -591,20 +606,22 @@ button,
   background: rgba(255, 255, 255, 0.062);
 }
 
+/* Translucent along with the fascia they sit in — solid plastic keys on a panel
+   the run shows through would read as cut-outs. */
 .viz-tune-btn {
-  background: #232120;
+  background: rgba(35, 33, 32, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 2px;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 }
 
 .viz-tune-btn:hover {
-  background: #2e2b29;
+  background: rgba(46, 43, 41, 0.75);
   border-color: rgba(255, 255, 255, 0.19);
 }
 
 .viz-tune-btn:active {
-  background: #171514;
+  background: rgba(23, 21, 20, 0.8);
 }
 
 /* The area a pointer actually has to hit, padded out well past the grip and
@@ -617,8 +634,25 @@ button,
   user-select: none;
   /* Both axes are VizSlider's to read: `pan-y` would let the list slide under a
      finger that is only wandering vertically while it drags the grip. It scrolls
-     the panel itself for a touch that means to. */
+     the panel itself for a touch that means to, throw and all. */
   touch-action: none;
+}
+
+/* The row has taken the gesture — either held down or swiped sideways. A finger
+   gets no hover, so without this there is nothing to tell a press that is about
+   to scroll the list from one that is now driving the grip. */
+.viz-slider-grab[data-armed] {
+  background: rgba(232, 93, 58, 0.06);
+}
+
+.viz-slider-grab[data-armed] .viz-slider::-webkit-slider-thumb {
+  background: repeating-linear-gradient(90deg, #7a736e 0 2px, #55504c 2px 3px);
+  border-color: rgba(232, 93, 58, 0.95);
+}
+
+.viz-slider-grab[data-armed] .viz-slider::-moz-range-thumb {
+  background: repeating-linear-gradient(90deg, #7a736e 0 2px, #55504c 2px 3px);
+  border-color: rgba(232, 93, 58, 0.95);
 }
 
 /* A thumb has no aim, so it gets a band tall enough to land in without

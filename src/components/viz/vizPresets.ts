@@ -76,6 +76,10 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  /*
+   * Temporarily withheld from the list. Kept whole, and in place, so they can be
+   * put back by deleting these comment markers.
+   *
   {
     id: "drift",
     name: "Drift",
@@ -141,6 +145,7 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  */
   {
     id: "kaleidoscope",
     name: "Kaleidoscope",
@@ -201,6 +206,224 @@ export const VIZ_PRESETS: VizPreset[] = [
     },
   },
   {
+    id: "fractal",
+    name: "Fractal",
+    blurb: "Endless flight into a Julia set the panels themselves are bending.",
+    overrides: {
+      /*
+       * The one mode here whose figure is not a symmetry of the frame but a set
+       * in its own right: every pixel's orbit is followed under z -> z^2 + c, and
+       * the page is read where that orbit passes closest to a ring. So the
+       * filaments carry detail at every scale rather than at the four a fold
+       * stops at, and what is *in* them is comic art rather than a colour ramp.
+       *
+       * Everything below is in service of two things the fold modes never had to
+       * answer for. The figure is drawn at wildly different magnifications across
+       * one frame, so the frame it is drawn from has to be simple, level and slow
+       * or the detail is noise. And the walk — the seed crossing the Mandelbrot
+       * cardioid — is not a motion of the picture but a *replacement* of it, one
+       * set at a time, so it has to be the only schedule of consequence running.
+       */
+      /*
+       * One, which is the whole stack, and the only preset here that runs the
+       * flat path this way.
+       *
+       * It buys the vault's arrangement on a path that was not built for it: the
+       * director spawns a replacement when the resident layer enters its fade,
+       * so a page holds the frame alone for its whole dwell and the two fades
+       * abut at the handover. That matters more here than anywhere else, because
+       * the page is not what the frame is showing — it is what the figure is
+       * *made of*, and two of them superimposed is a seed field driven by a
+       * mixture of two comics, which is a figure shaped by neither.
+       *
+       * The dwell that falls out of the three numbers below is a little under a
+       * minute of one page, which is the vault's pace.
+       */
+      layerCount: 1,
+      layerLifetime: 76,
+      // A fifth of the dwell at each end. Long, because a handover here is not a
+      // change of what the figure is filled with — the page drives the seed, so
+      // a new panel *bends the boundary* — and slow is what makes that read as
+      // the fractal being reshaped rather than as a cut to a different one.
+      crossfade: 0.45,
+      // Some, but well under the default. There is only one slot, so a jitter
+      // cannot pull two of them out of step here; all it does is keep the
+      // handovers off a metronome.
+      layerLifetimeJitter: 0.2,
+      // Fine, where every other preset leaves this at seconds. Births quantise
+      // to this grid, and with a single resident layer the wait between the
+      // outgoing fade starting and its replacement being born is a dip in the
+      // whole frame rather than in one of four layers. At half a second it is
+      // three percent of the fade and gone.
+      beat: 0.5,
+      // Nearly still, and the strictest budget in the file. The fractal's own
+      // magnification multiplies whatever the layer beneath is doing — a pan of a
+      // few percent arrives in the deep filaments as a sweep — so the stack holds
+      // almost still and every visible motion in this mode comes from the walk.
+      zoomAmount: 1.12,
+      panAmount: 0.03,
+      rotateAmount: 0,
+      // High, and higher than it could be with a stack: nothing is composited
+      // over anything else here except during the handover, so the number that
+      // would wash out four screened layers is simply how bright the page is.
+      layerOpacity: 0.92,
+      // The highest of the flat presets. The trap samples a small region of the
+      // page and spreads it along a filament, so a bright patch is not a bright
+      // patch here — it is a bright *thread*, repeated wherever the orbit passes
+      // near it, and levelling the pages is the only thing that keeps the figure
+      // from being read as a diagram of the brightest thing on screen.
+      keyBalance: 0.9,
+      tintAmount: 0.26,
+      // Zero. The drift's fold channel is the kaleidoscope's — see `Wander` — so
+      // it would lay a second symmetry over a figure that has its own.
+      wander: 0,
+      // Low, and lower than any other mode that has a subject. The walk is
+      // already replacing the picture continuously; an effect swelling on top of
+      // that is a second thing changing everything, which is what §6 rules out.
+      // What is left through is punctuation — a fold or a mirror over the set for
+      // a while — never a competing schedule.
+      psychedelia: 0.18,
+      cycleInterval: 26,
+      post: {
+        // High and standing. Also above the 0.8 the cycler's own julia pulse can
+        // reach, which is deliberate: a pulse would re-seed the set mid-run, and
+        // where a re-rolled fold is a new arrangement of the same picture, a
+        // re-seeded Julia set is a different figure arriving in one step.
+        julia: 0.85,
+        /*
+         * Deep, because this preset flies. The frame is a neighbourhood of the
+         * fixed point rather than a view of the whole set — which is what the
+         * seamless wrap is a statement about, and also the more interesting
+         * picture: at this altitude the boundary is filigree across the frame
+         * instead of a shape with the plane around it.
+         *
+         * Deeper than it needs to be for that, and the extra is bought for
+         * nothing. The chart that makes the wrap invisible is a series about the
+         * fixed point, so its error falls with the *cube* of the frame's radius:
+         * halving this took the worst-case mismatch at a wrap from around two
+         * percent of the frame to under a fifth of one — a couple of pixels.
+         * What it costs is supposed to be a narrower view, except that the thing
+         * being viewed is self-similar, so a frame half as wide around the same
+         * point is the same picture. There is no third side to that trade.
+         */
+        juliaZoom: 0.05,
+        // Out at the filigree end of the walk. Lower is a rounder set with a
+        // large interior, and an interior is the one place orbits converge —
+        // which on screen is a wide flat region the anchor then has to rescue.
+        juliaShape: 0.88,
+        // Forward, at twelve percent a second — the figure doubles about every
+        // six. This is the mode's principal motion and everything else here is
+        // budgeted under it.
+        //
+        // Set from the far end of the speed control rather than the middle of
+        // it: at the rate the flight was first authored at, the ladder's 2x rung
+        // was the one worth watching, so that rung is now what the middle does
+        // and the ladder reaches twice as far again. The general rule in §6 —
+        // that a piece should be slowly becoming something else — still holds,
+        // but it is a rule about the *figure* changing, and this is travel
+        // through a figure that is holding still. Those are not the same clock.
+        juliaFlight: 0.12,
+        // The walk, at a fifth of the flight's rate rather than level with it.
+        // Two schedules changing the figure at once is the thing §6 does rule
+        // out — so the flight travels and the walk merely ages: a full circuit
+        // takes about seven minutes, which reads as the country changing rather
+        // than as a second motion.
+        juliaSpin: 0.014,
+        // A ring rather than a point. A point trap draws the page in a spray of
+        // dots where orbits happen to pass the origin; opened to a ring, the trap
+        // set is a curve, and a curve is what the filaments are drawn along.
+        juliaTrap: 0.55,
+        // Under 1, so each filament carries a region of the page rather than the
+        // whole of it. That is what makes a filament read as being *made of*
+        // something — the crop is coherent along its length instead of being a
+        // whole page compressed into a hair.
+        juliaSpread: 0.72,
+        /*
+         * The escape-time banding, and the answer to a flight that read as the
+         * picture merely getting bigger.
+         *
+         * High, because this is the only term in the map that is not affine
+         * anywhere. Its contours wrap the set at every scale, the flight sweeps
+         * them outward and replaces them from the middle, and each one carries a
+         * different crop — so what passes the eye is layers of comic arriving out
+         * of the centre rather than one image being enlarged.
+         */
+        juliaDepth: 0.62,
+        /*
+         * Half, which is the number that decides how blurry this mode is
+         * allowed to get, and it is worth being explicit about the direction.
+         *
+         * The anchor is a fraction of the plain frame added to the sampling
+         * coordinate, so it is also the floor under the map's derivative — and
+         * the largest enlargement anything can suffer is its reciprocal. At a
+         * fifth that was five times, on a page the compositor has usually
+         * already enlarged once, which is the soft over-blown patch. At a half
+         * it is two, and a crop at two times is still a face or a balloon that
+         * can be read as one. That legibility is the whole reason for the value:
+         * it is what puts recognisable comic in the frame rather than an
+         * ornament made out of comic.
+         *
+         * What it costs is travel. This is the one term that cannot move with
+         * the flight — it would have to jump by a whole factor of lambda at the
+         * wrap — so every part of it is frame that does not fly. The banding
+         * carries the motion instead, and the mirror turns even this slowly.
+         */
+        juliaAnchor: 0.5,
+        /*
+         * Square, nearly. The dynamics decide where the filaments *are*; this
+         * decides what they are made of, because the trap set is the curve the
+         * page is picked up along. Against the round norm every filament is an
+         * arc and the picture reads as something poured; against the Chebyshev
+         * norm the same orbits trap on straight sides meeting at corners.
+         *
+         * Not the whole way: at exactly 1 the corners of the trap square land
+         * hard, and a little of the round norm left in is what keeps the joins
+         * from ringing at the scale the mip chain cannot help with.
+         */
+        juliaEdge: 0.85,
+        // High. This is the whole of what makes the panels the fractal's
+        // material rather than its paint: the page's own shapes go into the seed,
+        // so a change of panel is a change of figure. Not at 1, because the
+        // largest excursion is also the one most likely to drag a region of the
+        // frame into the part of the family where the set is coming apart.
+        juliaBind: 0.7,
+        /*
+         * The mirror, and it is placed *before* the set rather than over it.
+         *
+         * Everything in the coordinate chain ahead of the fractal is inherited by
+         * it, so folding here does not lay a kaleidoscope on top of a finished
+         * picture — the set itself is drawn in folded coordinates and comes out
+         * as six mirrored wedges of genuine fractal, seams and all. Which is also
+         * what stops the figure living in one corner: the flight has a single
+         * centre and the interesting side of the boundary is wherever it is, and
+         * six-fold symmetry puts that side in every sector of the frame at once.
+         *
+         * Deep enough to read as a mirror rather than as a suggestion of one — a
+         * partial fold is a smear, and a smear over a flowing map is exactly the
+         * liquid this is here to firm up.
+         */
+        kaleido: 0.8,
+        kaleidoSegments: 6,
+        // Slow, and the only rotation in the mode. The flight travels straight
+        // out of the centre, so this is what turns that into a spiral and walks
+        // the energy round the frame — a turn every four minutes or so.
+        kaleidoSpin: 0.026,
+        // Modest, and pushed outward. The set is already a thicket of thin bright
+        // lines, and a long trail over that fills the gaps between them with grey.
+        feedbackAmount: 0.32,
+        feedbackScale: 1.005,
+        chroma: 0.26,
+        // A little, where this preset had none. Between the bands and the fold
+        // the frame now has edges in it, and flattening the tones inside each one
+        // is what keeps them reading as edges rather than as a gradient that
+        // happens to turn — which was the liquid look.
+        posterize: 0.16,
+        grain: 0.045,
+        vignette: 0.42,
+      },
+    },
+  },
+  {
     id: "undertow",
     name: "Undertow",
     blurb: "A liquid domain warp with concentric ripples — the frame never sits still.",
@@ -226,6 +449,9 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  /*
+   * Temporarily withheld, as above.
+   *
   {
     id: "press",
     name: "Press",
@@ -270,6 +496,7 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  */
   {
     id: "emulsion",
     name: "Emulsion",
@@ -312,6 +539,9 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  /*
+   * Temporarily withheld, as above.
+   *
   {
     id: "chronoscope",
     name: "Chronoscope",
@@ -358,6 +588,7 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  */
   {
     id: "prism",
     name: "Prism",
