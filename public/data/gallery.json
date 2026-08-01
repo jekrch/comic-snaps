@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 223,
+      "id": "red-roots-4-1785612899",
+      "title": "Red Roots",
+      "slug": "red-roots",
+      "issue": 4,
+      "year": 2026,
+      "artist": "Lorenzo De Felici",
+      "image": "images/red-roots/issue-4-1785612899.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-01T19:35:00.938Z"
+    },
+    {
       "seq": 222,
       "id": "concrete-stars-over-sand-2-1785609082",
       "title": "Concrete: Stars Over Sand",
