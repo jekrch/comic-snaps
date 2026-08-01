@@ -607,19 +607,42 @@ button,
   background: #171514;
 }
 
-/* A ridged grip riding a flat slot. The filled part of the slot is a
-   background layer sized off --viz-fill, which the panel sets per slider from
-   that slider's own value. */
-.viz-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 16px;
-  background: transparent;
+/* The area a pointer actually has to hit, padded out well past the grip and
+   pulled back in with a matching negative margin so the rows stay as tight as
+   they look. VizSlider reads every gesture off this box. */
+.viz-slider-grab {
+  padding: 7px 0;
+  margin: -6px 0;
   cursor: pointer;
+  user-select: none;
   /* Vertical still scrolls the list, horizontal is the grip's — otherwise a
      drag started on a slider is taken by the scroll container. */
   touch-action: pan-y;
+}
+
+/* A thumb has no aim, so it gets a band tall enough to land in without
+   looking. */
+@media (pointer: coarse) {
+  .viz-slider-grab {
+    padding: 15px 0;
+    margin: -12px 0;
+  }
+}
+
+/* A ridged grip riding a flat slot. The filled part of the slot is a
+   background layer sized off --viz-fill, which VizSlider sets from its own
+   value. */
+.viz-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 16px;
+  background: transparent;
+  /* The grab area owns the pointer, so gestures are read the same way on every
+     browser — iOS Safari's native range only answers to a touch that lands on
+     the grip itself. */
+  pointer-events: none;
 }
 
 .viz-slider:focus {
@@ -646,11 +669,13 @@ button,
   transition: background 120ms ease, border-color 120ms ease;
 }
 
-.viz-slider:hover::-webkit-slider-thumb {
+/* Hover and press are read off the grab area now: the input takes no pointer
+   events, so it never sees either. */
+.viz-slider-grab:hover .viz-slider::-webkit-slider-thumb {
   background: repeating-linear-gradient(90deg, #615c58 0 2px, #45403d 2px 3px);
 }
 
-.viz-slider:active::-webkit-slider-thumb,
+.viz-slider-grab:active .viz-slider::-webkit-slider-thumb,
 .viz-slider:focus-visible::-webkit-slider-thumb {
   border-color: rgba(232, 93, 58, 0.85);
 }
@@ -676,10 +701,38 @@ button,
   background: repeating-linear-gradient(90deg, #4c4845 0 2px, #373432 2px 3px);
 }
 
+/* A taller grip for a finger, but the same width — VizSlider maps a pointer
+   against a 10px grip (GRIP_W) to keep it under the finger at the ends. */
+@media (pointer: coarse) {
+  .viz-slider {
+    height: 22px;
+  }
+
+  .viz-slider::-webkit-slider-thumb {
+    height: 20px;
+    margin-top: -8px;
+  }
+
+  .viz-slider::-moz-range-thumb {
+    height: 20px;
+  }
+}
+
+/* 10px of icon, hit as if it were much larger: the padding is taken back out
+   with a negative margin so the rows keep their spacing. */
 .viz-hint-icon {
   color: rgba(255, 255, 255, 0.22);
   transition: color 120ms ease;
   cursor: help;
+  padding: 6px;
+  margin: -6px;
+}
+
+@media (pointer: coarse) {
+  .viz-hint-icon {
+    padding: 11px;
+    margin: -9px;
+  }
 }
 
 .viz-hint-icon:hover,
@@ -787,6 +840,74 @@ button,
   to {
     opacity: 0;
     transform: scale(0.95);
+  }
+}
+
+/* --- The bird's thought balloon -----------------------------------------
+   Each part of it is held at nothing until the bird's intro hop lands, then
+   drawn on in sequence — the bubble at its head, the next one out, then the
+   balloon. The per-part delay is set inline by the component; everything else
+   about the beat lives here. */
+
+.viz-think-el {
+  opacity: 0;
+  /* Without this the scale would run about the SVG user-space origin and throw
+     each part in from the top-left corner instead of popping in place. */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.viz-think-el.viz-think-in {
+  animation: vizThinkIn 320ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+@keyframes vizThinkIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hovering phases the ink around the wheel rather than snapping it to the
+   accent. It is the bird's own rust the whole way — the same colour, rotated —
+   so it never lands on a hue that isn't in the site's register for long. Held
+   on the <svg> so stroke and fill go round together. */
+.viz-think:hover .viz-think-ink,
+.viz-think:focus-visible .viz-think-ink {
+  animation: vizThinkPhase 2.6s linear infinite;
+}
+
+@keyframes vizThinkPhase {
+  from {
+    filter: saturate(1.6) hue-rotate(0deg);
+  }
+  to {
+    filter: saturate(1.6) hue-rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Arrive, but without the pop or the cycling. */
+  .viz-think-el.viz-think-in {
+    animation-name: vizThinkFadeIn;
+  }
+  .viz-think:hover .viz-think-ink,
+  .viz-think:focus-visible .viz-think-ink {
+    animation: none;
+    filter: saturate(1.6) hue-rotate(150deg);
+  }
+}
+
+@keyframes vizThinkFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

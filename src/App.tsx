@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, lazy, Suspense } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
 import type { Gallery, Panel } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
@@ -12,8 +12,10 @@ import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates"
 import { useFilterParams } from "./hooks/useFilterParams";
 import { loadMetadata } from "./utils/metadata";
 import BirdIcon from "./components/BirdIcon";
+import type { BirdHandle } from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
 import VizLaunchModal from "./components/viz/VizLaunchModal";
+import VizThought from "./components/viz/VizThought";
 import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
 import { findPreset, initialPresetId, presetConfig } from "./components/viz/vizPresets";
 import { decodeVizConfig, diffConfigJson, encodeVizConfig } from "./components/viz/vizUrl";
@@ -24,6 +26,9 @@ import type { VizConfig } from "./components/viz/vizConfig";
 const VisualizerOverlay = lazy(() => import("./components/viz/VisualizerOverlay"));
 
 export default function App() {
+  const birdRef = useRef<BirdHandle>(null);
+  /** The bird has finished its intro hop, so its thought can form. */
+  const [birdLanded, setBirdLanded] = useState(false);
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -76,6 +81,13 @@ export default function App() {
 
   /** True once the run is behind a still of itself and on its way out. */
   const [vizLeaving, setVizLeaving] = useState(false);
+  /**
+   * True once the run's arrival fade has landed. The chooser is left standing
+   * through that fade — the run comes up over it rather than replacing it — and
+   * is only taken out of the paint once there is a run in front of it to hide
+   * behind.
+   */
+  const [vizCovered, setVizCovered] = useState(false);
 
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
 
@@ -98,8 +110,10 @@ export default function App() {
     (options: VizLaunchOptions) => {
       const cfg = syncVizRun(options.presetId, options.config);
       setVizLeaving(false);
-      // The chooser is left open behind the run — leaving the run drops the reader
-      // back onto it with their preset, config and speed still selected.
+      setVizCovered(false);
+      // The chooser is left open behind the run — the run fades up over it, and
+      // leaving the run drops the reader back onto it with their preset, config
+      // and speed still selected.
       setVizRun({ ...options, custom: cfg !== null });
     },
     [syncVizRun]
@@ -158,6 +172,7 @@ export default function App() {
     setVizRun(null);
     syncViz(false);
     setVizLeaving(false);
+    setVizCovered(false);
   }, [syncViz]);
 
   useEffect(() => {
@@ -367,28 +382,39 @@ export default function App() {
             >
               C0MIC SNAPS
             </h1>
-            <BirdIcon />
+            <BirdIcon ref={birdRef} onIntroComplete={() => setBirdLanded(true)} />
+            {/* The thought only forms once the bird has settled — a balloon
+                trailing off a bird still mid-hop reads as two unrelated things
+                that happen to be animating. */}
+            {status === "ready" && (
+              <VizThought
+                landed={birdLanded}
+                onLaunch={handleOpenViz}
+                onNudge={() => birdRef.current?.peck()}
+              />
+            )}
           </div>
-          <button
-            onClick={() => handleOpenInfo("about")}
-            className="stroke-ink/80 transition-colors cursor-pointer p-3 -m-2 -mr-1"
-            title="About"
-          >
-            {/* <Menu size={20} strokeWidth={1.5} className="hover:stroke-white/80" /> */}
-            <svg
-             className="hover:stroke-ink/80"  
-              width={20}
-              height={12}
-              viewBox="0 0 22 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              strokeLinecap="round"
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => handleOpenInfo("about")}
+              className="stroke-ink/80 transition-colors cursor-pointer p-3 -m-2 -mr-1"
+              title="About"
             >
-              <line x1="1" y1="3" x2="21" y2="3" />
-              <line x1="1" y1="13" x2="21" y2="13" />
-            </svg>
-          </button>
+              <svg
+                className="hover:stroke-ink/80"
+                width={20}
+                height={12}
+                viewBox="0 0 22 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+              >
+                <line x1="1" y1="3" x2="21" y2="3" />
+                <line x1="1" y1="13" x2="21" y2="13" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -460,7 +486,8 @@ export default function App() {
         <VizLaunchModal
           panelCount={sortedPanels.length}
           initialSpeed={initialVizSpeed}
-          suspended={vizRun !== null && !vizLeaving}
+          behind={vizRun !== null && !vizLeaving}
+          covered={vizRun !== null && !vizLeaving && vizCovered}
           runPresetId={vizRun?.presetId ?? null}
           runCustomJson={vizCustomJson}
           onStart={handleStartViz}
@@ -470,10 +497,12 @@ export default function App() {
 
       {vizRun && status === "ready" && (
         <Suspense
-          /* Nothing: the run fades up over the wall, and a black sheet thrown up
-             while the engine's chunk lands would be the cut that fade exists to
-             avoid — on the one launch that has to fetch it, which is the launch
-             the reader sees first. */
+          /* Nothing: the run fades up over what the reader is already looking at
+             — the chooser, or the wall — and a black sheet thrown up while the
+             engine's chunk lands would be the cut that fade exists to avoid, on
+             the one launch that has to fetch it, which is the launch the reader
+             sees first. Left to itself, the chooser simply stays up a moment
+             longer and the run arrives over it whenever it is ready. */
           fallback={null}
         >
           <VisualizerOverlay
@@ -491,6 +520,7 @@ export default function App() {
                when the panel is closed. */
             onOpenPanel={handleSelectPanel}
             viewerOpen={openIndex >= 0}
+            onCovered={() => setVizCovered(true)}
             onLeaving={() => setVizLeaving(true)}
             onClose={handleCloseViz}
           />

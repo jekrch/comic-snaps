@@ -1,12 +1,30 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useImperativeHandle } from "react";
+import type { Ref } from "react";
 import { Bird } from "lucide-react";
 
-export default function BirdIcon() {
+export interface BirdHandle {
+  /** Peck once, if the intro has finished. */
+  peck: () => void;
+}
+
+interface BirdIconProps {
+  ref?: Ref<BirdHandle>;
+  /** Fires once the intro hop has landed. The thought balloon waits on this. */
+  onIntroComplete?: () => void;
+}
+
+/** Hovering the thought balloon off to its right is a reason to peck too. */
+export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
   const birdRef = useRef<SVGSVGElement>(null);
   const birdMaskedRef = useRef<SVGSVGElement>(null);
   const [introComplete, setIntroComplete] = useState(false);
   const introCompleteRef = useRef(false);
   const [atTop, setAtTop] = useState(true);
+
+  // Held in a ref so the effect below keeps its `[triggerPeck]` deps — taking
+  // the callback as a dependency would re-run it and replay the intro hop.
+  const onIntroCompleteRef = useRef(onIntroComplete);
+  onIntroCompleteRef.current = onIntroComplete;
 
   const triggerPeck = useCallback(() => {
     if (!introCompleteRef.current) return;
@@ -17,6 +35,8 @@ export default function BirdIcon() {
       bird.classList.add("bird-peck-scroll");
     }
   }, []);
+
+  useImperativeHandle(ref, () => ({ peck: triggerPeck }), [triggerPeck]);
 
   useEffect(() => {
     const el = birdRef.current;
@@ -29,6 +49,7 @@ export default function BirdIcon() {
       el.classList.remove("bird-hop-intro");
       introCompleteRef.current = true;
       setIntroComplete(true);
+      onIntroCompleteRef.current?.();
     };
     el.addEventListener("animationend", onIntroEnd, { once: true });
 

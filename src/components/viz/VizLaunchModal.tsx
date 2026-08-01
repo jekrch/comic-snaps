@@ -4,6 +4,7 @@ import type { VizConfig } from "./vizConfig";
 import { parseConfigJson } from "./vizConfig";
 import { VIZ_PRESETS, initialPresetId, presetConfig } from "./vizPresets";
 import VizSpeedControl from "./VizSpeedControl";
+import ThoughtBalloon from "./ThoughtBalloon";
 
 export interface VizLaunchOptions {
   presetId: string;
@@ -25,12 +26,18 @@ interface VizLaunchModalProps {
   /** Carried over from a `?vizspeed=` link, so a shared run opens at its rate. */
   initialSpeed?: number | null;
   /**
-   * True while the run this modal started is on screen. The modal stays mounted
-   * underneath it — keeping the reader's preset, config and speed — but goes
-   * `display: none` so it costs nothing to draw and cannot answer keys or take
-   * focus from the run.
+   * True from the moment the run this modal started is on screen. The modal
+   * stays mounted underneath it — keeping the reader's preset, config and speed
+   * — but stops answering keys, clicks and focus, all of which belong to the run
+   * from here on.
    */
-  suspended?: boolean;
+  behind?: boolean;
+  /**
+   * True once that run's arrival fade has landed on top of this modal, which is
+   * the first moment taking it away is invisible. Then, and only then, it goes
+   * `display: none` so it costs nothing to draw.
+   */
+  covered?: boolean;
   /**
    * The preset the run underneath is actually on, which is not necessarily the
    * one it was started with — the overlay can switch modes mid-run. Null while
@@ -91,7 +98,8 @@ function OptionCheck({
 export default function VizLaunchModal({
   panelCount,
   initialSpeed,
-  suspended = false,
+  behind = false,
+  covered = false,
   runPresetId = null,
   runCustomJson = null,
   onStart,
@@ -108,8 +116,8 @@ export default function VizLaunchModal({
    * True once a run has hidden this modal. Coming back from `display: none`
    * restarts every CSS animation on the subtree, so the modal would replay its
    * entrance when the run ends — reading as if it were opening again, when in
-   * fact it was open the whole time behind the run. From the first suspend on,
-   * the entrance is dropped and the settled state is rendered flat.
+   * fact it was open the whole time behind the run. From the first time it is
+   * hidden on, the entrance is dropped and the settled state is rendered flat.
    */
   const [resumed, setResumed] = useState(false);
   const startRef = useRef<HTMLButtonElement>(null);
@@ -139,34 +147,28 @@ export default function VizLaunchModal({
 
   const blocked = parsed !== null && !parsed.ok;
 
-  const close = useCallback(
-    (run: VizLaunchOptions | null) => {
-      setClosing(true);
-      window.setTimeout(() => {
-        if (!run) {
-          onCancel();
-          return;
-        }
-        onStart(run);
-        // The run hides this modal rather than unmounting it, so the exit state
-        // is wound back here — otherwise it would come back mid-fade. It comes
-        // back with no entrance either; see `resumed`.
-        setClosing(false);
-      }, EXIT_MS);
-    },
-    [onStart, onCancel]
-  );
+  /** Cancelling is the only way out of here that the modal itself plays. */
+  const close = useCallback(() => {
+    setClosing(true);
+    window.setTimeout(onCancel, EXIT_MS);
+  }, [onCancel]);
 
+  /**
+   * Starting is not an exit. The modal is left standing exactly as the reader
+   * left it and the run fades up over it — so pressing start puts something on
+   * screen immediately, rather than first taking away the only thing on it.
+   * What hides the modal afterwards is the run having covered it; see `covered`.
+   */
   const start = useCallback(() => {
     if (blocked) return;
-    close({
+    onStart({
       presetId,
       config: parsed?.ok ? parsed.parsed.config : base,
       fullscreen,
       pinLabel,
       custom: parsed?.ok === true,
     });
-  }, [blocked, close, presetId, parsed, base, fullscreen, pinLabel]);
+  }, [blocked, onStart, presetId, parsed, base, fullscreen, pinLabel]);
 
   // A mode switched from inside the run is still the reader's choice of preset,
   // so it is what they come back to here — the selection follows the run rather
@@ -177,30 +179,34 @@ export default function VizLaunchModal({
 
   // Same for the tuning, which the run can also change under this modal — and
   // which a `?vizcfg=` link brings in without this modal ever having been used.
-  // Only ever adopted while a run is up, which is exactly when the box is hidden
-  // behind it, so this cannot overwrite something being typed.
+  // Held off until the run has covered the modal rather than merely started it:
+  // adopting it any earlier would open the config box, and grow the card, in
+  // full view under the arriving run. By then the box is out of sight, so this
+  // also cannot overwrite something being typed.
   useEffect(() => {
-    if (!suspended) return;
+    if (!covered) return;
     setJson(runCustomJson ?? "");
     if (runCustomJson) setShowJson(true);
-  }, [runCustomJson, suspended]);
+  }, [runCustomJson, covered]);
 
   // Also fires when a run ends and the modal comes back, so the reader lands on
-  // start again rather than on whatever the run left focused.
+  // start again rather than on whatever the run left focused. Keyed off `behind`
+  // rather than `covered`: while the run is fading up it already owns the focus,
+  // even though this is still on screen under it.
   useEffect(() => {
-    if (!suspended) startRef.current?.focus();
-  }, [suspended]);
+    if (!behind) startRef.current?.focus();
+  }, [behind]);
 
   useEffect(() => {
-    if (suspended) setResumed(true);
-  }, [suspended]);
+    if (covered) setResumed(true);
+  }, [covered]);
 
   useEffect(() => {
-    if (suspended) return;
+    if (behind) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        close(null);
+        close();
       } else if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         start();
@@ -208,11 +214,15 @@ export default function VizLaunchModal({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [close, start, suspended]);
+  }, [close, start, behind]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
+      // Everything here belongs to the run the moment one starts — including the
+      // window between start and the run being drawn over this, when the card is
+      // still sitting there in full view and would otherwise take a second click.
+      inert={behind}
       style={{
         // `vh` on mobile means the *large* viewport, so a vh-sized card runs off
         // screen while the browser chrome is up. The fixed box already tracks the
@@ -222,13 +232,20 @@ export default function VizLaunchModal({
         paddingTop: "calc(env(safe-area-inset-top, 0px) + 1.25rem)",
         paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)",
         paddingLeft: "calc(env(safe-area-inset-left, 0px) + 1.25rem)",
-        paddingRight: "calc(env(safe-area-inset-right, 0px) + 1.25rem)",
-        ...(suspended ? { display: "none" } : null),
+        // A run takes the page's scrollbar gutter for itself, which widens the
+        // viewport this is centred in and would walk the card half a scrollbar
+        // to the right as the run fades up over it. The overlay publishes what
+        // it took; matching it on this side holds the card still. Resolved by
+        // the browser the instant the property is set, so the two happen in one
+        // flush and there is no frame where only one of them has landed.
+        paddingRight:
+          "calc(env(safe-area-inset-right, 0px) + 1.25rem + var(--viz-scroll-comp, 0px))",
+        ...(covered ? { display: "none" } : null),
       }}
       role="dialog"
       aria-modal="true"
       aria-label="Start visualizer"
-      onClick={() => close(null)}
+      onClick={() => close()}
     >
       <div
         className="absolute inset-0"
@@ -312,16 +329,22 @@ export default function VizLaunchModal({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="shrink-0 flex items-start justify-between border-b border-white/8 px-4 pt-3.5 pb-2.5">
-          <div>
-            <h2 className="font-display text-[11px] tracking-widest uppercase text-accent">
-              visualizer
-            </h2>
-            <p className="font-mono text-[10px] text-ink-muted mt-0.5">
-              {panelCount} panel{panelCount === 1 ? "" : "s"} in the current view
-            </p>
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="min-w-0">
+              <h2 className="font-display text-[11px] tracking-widest uppercase text-accent">
+                visualizer
+              </h2>
+              <p className="font-mono text-[10px] text-ink-muted mt-0.5">
+                {panelCount} panel{panelCount === 1 ? "" : "s"} in the current view
+              </p>
+            </div>
+            {/* The same balloon the header wears, empty — this is the room the
+                thought was about, so the word would only be repeating itself.
+                Its trail runs back at the title, which is the thing talking. */}
+            <ThoughtBalloon width={88} className="shrink-0 -my-1" />
           </div>
           <button
-            onClick={() => close(null)}
+            onClick={() => close()}
             className="text-white/40 hover:text-white/80 transition-colors -mr-1 -mt-1 p-1"
             aria-label="Cancel"
           >
@@ -451,7 +474,7 @@ export default function VizLaunchModal({
 
         <div className="shrink-0 border-t border-white/8 px-4 py-3 flex items-center justify-end gap-2">
           <button
-            onClick={() => close(null)}
+            onClick={() => close()}
             className="font-display text-[10px] tracking-widest uppercase
                        text-ink-muted hover:text-ink transition-colors px-2.5 py-1.5"
           >

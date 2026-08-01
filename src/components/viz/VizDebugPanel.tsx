@@ -4,6 +4,7 @@ import { ChevronRight, ChevronsDownUp, ChevronsUpDown, Info } from "lucide-react
 import type { ConfigField, ConfigGroup, VizConfig } from "./vizConfig";
 import { CONFIG_FIELDS, GROUP_HINTS } from "./vizConfig";
 import type { EngineStats, VizEngine } from "./engine/Engine";
+import VizSlider from "./VizSlider";
 
 const GROUP_ORDER: ConfigGroup[] = [
   "stack",
@@ -53,7 +54,8 @@ function format(value: number, step: number): string {
  * A tooltip on an info icon, portalled to the body: the panel is a scroll
  * container, and anything positioned inside it gets clipped at its edge.
  * Opens on hover for a mouse and on tap for a finger, which has no hover to
- * give.
+ * give — and closes on the next thing that happens anywhere, so a tapped-open
+ * one cannot be left sitting on the screen.
  */
 function Hint({ text, label }: { text: string; label: string }) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -73,6 +75,32 @@ function Hint({ text, label }: { text: string; label: string }) {
     });
   };
   const close = () => setAt(null);
+
+  // A tapped-open hint has nothing to close it on a phone — there is no pointer
+  // to leave, and the icon is a 10px target to have to find again. So anything
+  // that happens elsewhere dismisses it. Scrolling counts: the popup is fixed to
+  // the viewport and would otherwise drift off its own icon.
+  useEffect(() => {
+    if (!at) return;
+    const dismiss = (e: Event) => {
+      // The icon's own press is its click's to handle, which toggles.
+      if (e.target instanceof Node && ref.current?.contains(e.target)) return;
+      close();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("pointerdown", dismiss, true);
+    document.addEventListener("scroll", dismiss, true);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", dismiss);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss, true);
+      document.removeEventListener("scroll", dismiss, true);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", dismiss);
+    };
+  }, [at]);
 
   return (
     <>
@@ -253,7 +281,6 @@ export default function VizDebugPanel({
                 <div className="viz-tune-section px-3 py-2 border-b border-black/40 bg-black/20">
                   {fields.map((entry) => {
                     const value = entry.get(config);
-                    const fill = ((value - entry.min) / (entry.max - entry.min)) * 100;
                     return (
                       <div key={entry.path} className="mb-2 last:mb-0.5">
                         <div className="flex items-center gap-1 font-mono text-[10px] text-ink-muted">
@@ -265,20 +292,17 @@ export default function VizDebugPanel({
                             {format(value, entry.step)}
                           </span>
                         </div>
-                        <input
+                        <VizSlider
                           id={`viz-${entry.path}`}
-                          type="range"
                           min={entry.min}
                           max={entry.max}
                           step={entry.step}
                           value={value}
-                          onChange={(e) => {
-                            entry.set(config, Number(e.target.value));
+                          onChange={(next) => {
+                            entry.set(config, next);
                             bump();
                             onChange?.();
                           }}
-                          className="viz-slider"
-                          style={{ "--viz-fill": `${fill}%` } as React.CSSProperties}
                         />
                       </div>
                     );

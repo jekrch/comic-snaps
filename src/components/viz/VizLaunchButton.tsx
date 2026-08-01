@@ -15,7 +15,7 @@ export default function VizLaunchButton({ onLaunch, disabled }: VizLaunchButtonP
     <button
       onClick={onLaunch}
       disabled={disabled}
-      title="Full-screen visualizer"
+      title="play with the visualizer"
       className="
         w-full flex items-center gap-1.5
         px-3 py-2

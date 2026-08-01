@@ -22,6 +22,11 @@ const CONTROLS_IDLE_MS = 2000;
  *  cannot leave the reader holding a run they have asked to leave. */
 const FRAME_CAPTURE_MS = 400;
 
+/** Backstop for the arrival fade (.viz-page-in, 620ms) reporting its own end.
+ *  Comfortably past it: this is the deadline for calling the run covered, not
+ *  the length of anything. */
+const VIZ_PAGE_IN_MAX_MS = 1000;
+
 /** How long the tuning panel has to be still before the run's config is handed
  *  up to the URL. A slider drag is a hundred changes; the address bar wants the
  *  value it was let go on. */
@@ -51,6 +56,13 @@ interface VisualizerOverlayProps {
   onOpenPanel?: (panel: Panel) => void;
   /** True while that viewer is up: the run carries on, but unattended. */
   viewerOpen?: boolean;
+  /**
+   * The arrival fade has landed and the run is opaque over whatever it came up
+   * on. Whatever it covered — the chooser it was started from — can stop being
+   * drawn now, and not a frame before: taken away any earlier and the reader
+   * watches it go instead of watching the run come up.
+   */
+  onCovered?: () => void;
   /**
    * The run has been asked to leave and the still of it is up. Everything the
    * reader is being handed back to should come back now, behind the break, so
@@ -119,6 +131,7 @@ export default function VisualizerOverlay({
   onConfigChange,
   onOpenPanel,
   viewerOpen = false,
+  onCovered,
   onLeaving,
   onClose,
 }: VisualizerOverlayProps) {
@@ -238,6 +251,31 @@ export default function VisualizerOverlay({
   // Read by the close path, which must not depend on a render having landed.
   const closingRef = useRef(false);
 
+  /**
+   * The end of the arrival fade, reported once. Taken from the animation itself
+   * rather than from a duration held here, so reduced motion's shorter fade is
+   * answered at its own end and nothing has to know which one ran. The timer
+   * only stands in for the cases where the animation never reports its end — a
+   * tab backgrounded through the fade, or a close that pulls the class off
+   * before it finishes — where the run is over the wall regardless.
+   */
+  const coveredRef = useRef(false);
+  // Through the ref so the deadline below is set once on mount: hung off the
+  // prop, an unmemoised handler would restart the timer on every render the
+  // caller does, and the run syncs its config up there while it plays.
+  const onCoveredRef = useRef(onCovered);
+  onCoveredRef.current = onCovered;
+  const markCovered = useCallback(() => {
+    if (coveredRef.current) return;
+    coveredRef.current = true;
+    onCoveredRef.current?.();
+  }, []);
+
+  useEffect(() => {
+    const id = window.setTimeout(markCovered, VIZ_PAGE_IN_MAX_MS);
+    return () => window.clearTimeout(id);
+  }, [markCovered]);
+
   /** The run's own last frame, for the break that closes over it. */
   const [frameStill, setFrameStill] = useState<string | null>(null);
   const frameStillRef = useRef<string | null>(null);
@@ -288,29 +326,60 @@ export default function VisualizerOverlay({
 
   // --- screensaver hygiene --------------------------------------------------
 
-  // Given back when the break starts rather than at unmount, which is a second
-  // later: dropping the gutter widens the page under the overlay, and the wall
-  // coming up through the gutters has to be the one the reader is going to be
-  // left standing on. Behind the still, which is whole at that instant, the
-  // reflow is not visible; a second later, through the seams, it would be.
+  /**
+   * The run takes the whole window, gutter included: the strip `html {
+   * scrollbar-gutter: stable }` keeps clear is outside the layout viewport, so a
+   * fixed inset-0 overlay stops short of it and it shows down the right edge of
+   * the run — as the page's own background, or as black once the overlay is
+   * stretched over it. Neither belongs in a run, so the gutter is given up for
+   * the duration.
+   *
+   * Giving it up widens the page underneath by a scrollbar, though, and that
+   * reflow is the whole visible cost: the wall, and the chooser the run is
+   * fading up over, both slide sideways as it starts and slide back as it ends.
+   * So everything it moves is moved back by the same amount in the same style
+   * flush — flow content by a padding on the body, and the one fixed thing that
+   * can be behind a run, the chooser, by `--viz-scroll-comp`. Nothing is left
+   * that can be seen to move.
+   *
+   * Held to the end rather than given back when the break starts: the shards
+   * have to tile the frame the run was drawn in, and at the end the wall is
+   * already whole and nothing is going to shift under it anyway.
+   */
   useEffect(() => {
-    if (closing) return;
     const root = document.documentElement;
-    const previousOverflow = document.body.style.overflow;
+    const body = document.body;
+    const previousOverflow = body.style.overflow;
     const previousRootOverflow = root.style.overflow;
-    // `html { scrollbar-gutter: stable }` reserves a strip outside the layout
-    // viewport that a fixed inset-0 overlay cannot cover, so it shows through as
-    // a light bar down the right edge. Drop the gutter while the viz is up.
     const previousGutter = root.style.scrollbarGutter;
-    document.body.style.overflow = "hidden";
+    const previousPadding = body.style.paddingRight;
+
+    // What the page is holding clear on the right now — a reserved gutter, or a
+    // live scrollbar on an engine too old to reserve one.
+    const before = window.innerWidth - root.clientWidth;
+    body.style.overflow = "hidden";
     root.style.overflow = "hidden";
     root.style.scrollbarGutter = "auto";
+    // Whatever is left of it, which should be nothing. Measured rather than
+    // assumed so that a browser which keeps holding something back is answered
+    // with the difference it actually made rather than with a number from here.
+    const after = window.innerWidth - root.clientWidth;
+    const comp = Math.max(0, before - after);
+    if (comp) {
+      body.style.paddingRight = `${comp}px`;
+      // Read by anything positioned against the viewport rather than laid out in
+      // the body, which the padding above cannot reach.
+      root.style.setProperty("--viz-scroll-comp", `${comp}px`);
+    }
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      body.style.overflow = previousOverflow;
       root.style.overflow = previousRootOverflow;
       root.style.scrollbarGutter = previousGutter;
+      body.style.paddingRight = previousPadding;
+      root.style.removeProperty("--viz-scroll-comp");
     };
-  }, [closing]);
+  }, []);
 
   const [isFullscreen, setIsFullscreen] = useState(() => Boolean(document.fullscreenElement));
 
@@ -713,6 +782,11 @@ export default function VisualizerOverlay({
       }
       onPointerMove={wakeChrome}
       onPointerDown={wakeChrome}
+      // Only this element's own animation is the arrival; everything inside it
+      // is running its own and bubbles through here.
+      onAnimationEnd={(event) => {
+        if (event.target === event.currentTarget) markCovered();
+      }}
     >
       {/* The run and everything hung on it, put away in one move once the still
           is up. Held in the tree rather than unmounted: the engine's teardown
