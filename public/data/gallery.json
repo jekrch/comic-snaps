@@ -1,43 +1,6 @@
 {
   "panels": [
     {
-      "seq": 222,
-      "id": "concrete-stars-over-sand-2-1785606866",
-      "title": "Concrete: Stars Over Sand",
-      "slug": "concrete-stars-over-sand",
-      "issue": 2,
-      "year": 2026,
-      "artist": "Paul Chadwick",
-      "image": "images/concrete-stars-over-sand/issue-2-1785606866.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-08-01T17:54:28.129Z",
-      "width": 1279,
-      "height": 827,
-      "dominantColors": [
-        [
-          56.4,
-          2.2,
-          7.3
-        ],
-        [
-          78.2,
-          -5.7,
-          18.2
-        ],
-        [
-          21.4,
-          1.6,
-          6.3
-        ]
-      ],
-      "colorfulness": 12.3,
-      "phash": "c5d63465d8769d60",
-      "ahash": "ccfffffff8000000",
-      "dhash": "9cf2a8e08252c7b3"
-    },
-    {
       "seq": 221,
       "id": "heavy-metal-8-1785599341",
       "title": "Heavy Metal",
@@ -2382,7 +2345,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2456,7 +2419,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2678,7 +2641,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
