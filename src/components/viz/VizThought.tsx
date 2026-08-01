@@ -34,7 +34,7 @@ export default function VizThought({ onLaunch, onNudge, landed }: VizThoughtProp
       onClick={onLaunch}
       onMouseEnter={nudge}
       onFocus={nudge}
-      title="play with the visualizer"
+      title=""
       aria-label="play with the visualizer"
       /* The balloon is taller than the header row and is meant to be — `-my-2`
          takes the overhang back out of the layout so it spills over the bar
