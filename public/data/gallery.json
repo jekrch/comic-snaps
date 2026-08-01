@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 224,
+      "id": "the-shaolin-cowboy-staying-a-i-alive-1-1785616450",
+      "title": "The Shaolin Cowboy: Staying A.I. Alive",
+      "slug": "the-shaolin-cowboy-staying-a-i-alive",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Geof Darrow",
+      "image": "images/the-shaolin-cowboy-staying-a-i-alive/issue-1-1785616450.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-01T20:34:12.552Z"
+    },
+    {
       "seq": 223,
       "id": "red-roots-4-1785612899",
       "title": "Red Roots",
@@ -69,7 +83,7 @@
           28.1
         ]
       ],
-      "colorfulness": 12.0,
+      "colorfulness": 12,
       "phash": "cdd23a25d9629f03",
       "ahash": "7fffffff60000009",
       "dhash": "f0a3e883c2d6c7b2"
@@ -2419,7 +2433,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2493,7 +2507,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2715,7 +2729,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
