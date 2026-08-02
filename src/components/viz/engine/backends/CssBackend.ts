@@ -27,12 +27,15 @@ export class CssBackend implements VizBackend {
   private readonly ready = new Set<string>();
   private height = 1;
   private disposed = false;
+  /** The container's own document — not necessarily this one. See `VizEngine`. */
+  private readonly doc: Document;
 
   constructor(root: HTMLElement) {
-    this.stage = document.createElement("div");
+    this.doc = root.ownerDocument;
+    this.stage = this.doc.createElement("div");
     this.stage.style.cssText =
       "position:absolute;inset:0;overflow:hidden;background:#000;isolation:isolate;";
-    this.vignette = document.createElement("div");
+    this.vignette = this.doc.createElement("div");
     this.vignette.style.cssText =
       "position:absolute;inset:0;pointer-events:none;" +
       "background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.75) 100%);";
@@ -83,9 +86,9 @@ export class CssBackend implements VizBackend {
   }
 
   private addSlot(): void {
-    const wrap = document.createElement("div");
+    const wrap = this.doc.createElement("div");
     wrap.style.cssText = "position:absolute;overflow:hidden;will-change:transform,opacity;";
-    const img = document.createElement("img");
+    const img = this.doc.createElement("img");
     img.style.cssText = "position:absolute;max-width:none;";
     wrap.appendChild(img);
     // Below the vignette, which stays last in the stage.

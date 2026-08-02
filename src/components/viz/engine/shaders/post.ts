@@ -122,6 +122,15 @@ uniform float uJuliaFacet;
 /** Share of the facets cut out as plain windows onto the page. Needs facets to
  *  have a shape, so it does nothing while uJuliaFacet is 0. */
 uniform float uJuliaPlate;
+/** Wedges the plates' own view is mirrored into, before the floor — 0 leaves it
+ *  the plain still frame it was. See plateView. */
+uniform float uJuliaPlateFold;
+/** How much of the page is carried in the set's own cells rather than by the
+ *  displacement — see the note where the cells are cut. */
+uniform float uJuliaChunk;
+/** How finely the page is diced before the cells carry it. Low is a few large
+ *  pieces, high is a mosaic. */
+uniform float uJuliaChunkGrid;
 /** Where the flight's own fixed point sits, in stage units. Drifts, so the
  *  vanishing point is not pinned to the middle of the frame forever. */
 uniform vec2 uJuliaCenter;
@@ -326,6 +335,51 @@ vec2 mirrorUv(vec2 p) {
  *  effects stay circular on a wide canvas instead of going elliptical. */
 vec2 toStage(vec2 uv) { return (uv - 0.5) * vec2(uAspect, 1.0); }
 vec2 fromStage(vec2 p) { return p / vec2(uAspect, 1.0) + 0.5; }
+
+/**
+ * What the plates look through — the frame itself, or a coarse mirror of it
+ * turning about the point the flight is heading into.
+ *
+ * The plates are windows onto an undistorted page and that is their whole
+ * worth, but undistorted also meant *still*: the one part of a mode whose
+ * subject is travel that never moved, and against a frame flying into itself
+ * a still window does not read as a window, it reads as the picture the
+ * fractal is being drawn on. Which is the wrong way round. The figure is
+ * supposed to be the thing that is there.
+ *
+ * So the plates get a motion of their own, and it is a fold rather than a pan
+ * because a fold moves the picture without going anywhere: mirrored into a
+ * handful of wedges and turned slowly, the page sweeps and reflects through
+ * itself continuously and is never anywhere but where it started. A pan would
+ * have to arrive from somewhere and leave for somewhere, at a rate this mode
+ * has no room for.
+ *
+ * Coarse — a handful of wedges, not the dozen a rosette wants. A quarter of the
+ * plane is still a piece of comic with a face's worth of room in it, and the
+ * plates are the one place here that has to stay legible; at a dozen the
+ * windows would be showing the same ornament as the figure around them, which
+ * is the frame having nothing in it that says what it is an ornament *of*.
+ *
+ * Centred on the flight's own vanishing point rather than on the frame, which
+ * is what keeps this from being a second motion competing with the first. The
+ * mirror's focus is the point the fractal is descending onto, so wherever the
+ * drift carries that point the background swings about it — one motion, seen
+ * twice, rather than two.
+ */
+vec2 plateView(vec2 uv) {
+  if (uJuliaPlateFold <= 0.0) return uv;
+  // Three wedges at the bottom of the slider, six at the top.
+  float seg = TAU / floor(uJuliaPlateFold * 4.0 + 2.5);
+  vec2 p = toStage(uv) - uJuliaCenter;
+  // Authored rather than exposed, on the same grounds as the flight's drift:
+  // there is one rate worth having. A turn in five minutes, so the pattern
+  // comes round about once a minute and a half at four wedges — under the
+  // drift it is centred on, which is itself an order under the flight.
+  float a = mod(atan(p.y, p.x) + uTime * 0.021, seg);
+  // Mirror within the wedge so neighbours meet without a seam.
+  a = abs(a - seg * 0.5);
+  return mirrorUv(fromStage(vec2(cos(a), sin(a)) * length(p) + uJuliaCenter));
+}
 
 /**
  * The coordinate half of the chain: every geometric and undulating effect is a
@@ -607,6 +661,28 @@ vec2 distort(vec2 uv, float disp) {
     // point of this family is m itself, and its multiplier is twice it.
     float muLog = max(0.05, -log(min(0.98, length(2.0 * m))));
 
+    /*
+     * Where the orbit left, in polar about whatever it left towards — the
+     * escape circle on the way out, the attractor on the way in.
+     *
+     * The argument is the second coordinate of the set's own grid, and the one
+     * the depth field cannot supply: depth says how far into the figure a pixel
+     * is and says nothing about where *around* it, so a picture cut by depth
+     * alone is rings. Paired with the exit argument it is cells. The radius is
+     * here only to turn the orbit's derivative into that argument's own rate,
+     * which is what the fetch below needs and what nothing else is carrying.
+     *
+     * Zero until an orbit actually finishes. The handful of pixels that neither
+     * escape nor settle inside the iteration cap are the deepest filigree, and
+     * a cell coordinate read off an unfinished orbit is a constant — one flat
+     * chunk over the most structured part of the frame — so they are excluded
+     * outright rather than given a plausible-looking answer.
+     */
+    float exitArg = 0.0;
+    float exitRad = 1.0;
+    float exitD = 0.0;
+    float exited = 0.0;
+
     for (int i = 0; i < JULIA_ITERS; i++) {
       // The derivative of the step about to be taken, so it uses the incoming z:
       // z' = z^2 + c gives dz' = 2 z dz.
@@ -638,16 +714,31 @@ vec2 distort(vec2 uv, float disp) {
         float lz = 0.5 * log(rr);
         nu = float(i) - log2(lz / 1.3862944);
         grad = length(dz) / max(1e-3, 0.6931472 * lz * sqrt(rr));
+        exitArg = atan(z.y, z.x);
+        exitRad = sqrt(rr);
+        exitD = length(dz);
+        exited = 1.0;
         break;
       }
       // Capture. The orbit has arrived at the attractor and will only spiral
       // closer, so it is as finished as an escaping one — and counting it means
       // the interior carries the same structure as the outside rather than being
       // the one flat region in the frame.
-      float dc = length(z - m);
+      vec2 toM = z - m;
+      float dc = length(toM);
       if (dc < JULIA_CAPTURE) {
         nu = float(i) - log(JULIA_CAPTURE / dc) / muLog;
         grad = length(dz) / max(1e-3, muLog * dc);
+        // Same pair, about the attractor instead. The interior is not
+        // self-similar the way the outside is — near an attracting fixed point
+        // the map is a rotation and a shrink, so the cells there are a spiral
+        // of a fixed count per band rather than a count that doubles — but it
+        // is a grid, it is the set's own, and it converges where the interior
+        // converges.
+        exitArg = atan(toM.y, toM.x);
+        exitRad = max(dc, 1e-4);
+        exitD = length(dz);
+        exited = 1.0;
         break;
       }
     }
@@ -856,27 +947,172 @@ vec2 distort(vec2 uv, float disp) {
     }
 
     vec2 target = mirrorUv(fromStage(off + toStage(uv) * uJuliaAnchor));
-    // Mirrored before the blend, not after, on the same reasoning as the tunnel:
-    // both ends of the mix are then in-frame coordinates, so ramping the effect
-    // in is a bounded morph rather than a sweep through however many repeats lie
-    // between here and the trap.
-    uv = mix(uv, target, uJulia);
     // Every term that moves the sample, summed: the fractal displacement at
     // whatever slope it is being carried at, and the anchor, which is the one
-    // that cannot vanish. Scaled by the blend as well, because a half-strength
-    // mix compresses the frame half as hard, and floored at 1 because there is
-    // no detail above level 0 to ask for.
+    // that cannot vanish.
     //
     // The displacement is a sum of two terms for a reason worth keeping: depth
     // runs away to infinity at the boundary of the set — that is what the
     // boundary *is* — so the contours there are finer than any pixel, and a
     // frame sampled through them without saying so sparkles exactly where the
     // structure is most interesting.
-    gSceneLod = log2(max(1.0, (offJac * offSlope + uJuliaAnchor) * uJulia));
-    // Inside a plate the map is the identity, so there is nothing to average and
-    // the page is read at the one level that has all of it.
+    float jac = offJac * offSlope + uJuliaAnchor;
+
+    /*
+     * The chunks, and they are a different proposition from everything above:
+     * not the page displaced along the figure, but the page *cut up and dealt
+     * out to the figure's own cells*.
+     *
+     * Every construction before this one starts from the frame and moves it —
+     * the trap displaces it, the bands re-crop it, the facets flatten the
+     * excursion, the plates give some of it up entirely — and all of them share
+     * a ceiling: the panel is behind the fractal, in pieces the fractal chose
+     * but at a scale that is the frame's, so what the set does to the picture is
+     * always ornament laid over a photograph. What was wanted instead is for the
+     * art to be the material the figure is *built from*, in pieces big enough to
+     * recognise at the rim and finer as the flight goes in.
+     *
+     * The set has a coordinate system for exactly this and it is not the frame's.
+     * Escape time says how deep into the figure a pixel is; the argument of the
+     * orbit where it left says where around it. Together they are a grid whose
+     * lines are the equipotentials and the external rays — the set's own — and
+     * the page is laid straight into its cells, one whole panel to a cell.
+     *
+     * What that buys is the ladder, and it costs nothing to get because it is
+     * how the dynamics are built. Every escape contour doubles the argument's
+     * winding, so one band in holds twice as many cells as the band outside it
+     * and each is half the size: the same panel, whole, recurring at half its
+     * scale one contour deeper and half again the contour after. Where the
+     * contours are wide that is a handful of big legible pieces. Approaching the
+     * boundary they pile up without limit and so does the subdivision, which is
+     * the intricacy — made of panel rather than laid over it.
+     *
+     * Cell by cell it is a hard cut rather than a blend, and it is the one place
+     * in this branch where that is free: the joins are where one copy's edge
+     * meets the next one's, and they lie along equipotentials and external rays,
+     * which are fractal curves. The figure's own edges, drawn by the page
+     * running out.
+     *
+     * Free of the wrap, and more cheaply than anything else here. One turn of
+     * the flight prepends one step to every orbit, so an orbit exits at the same
+     * place having taken one step longer: the exit argument is *unchanged* and
+     * depth rises by exactly one. So the cells are the same cells and the page
+     * has only moved a whole number of bands through them, which a coordinate
+     * wrapped to the band count does not notice. The whole construction is
+     * periodic in a single turn, rather than in the five the flight itself
+     * needs.
+     */
+    if (uJuliaChunk > 0.0) {
+      /*
+       * Cells around one winding of the argument, and bands down.
+       *
+       * Only the ratio between them is a matter of judgement, and it is not a
+       * free one: the map from the frame to (argument, depth) is conformal, so a
+       * cell's shape on screen is exactly the shape it has in those coordinates,
+       * and a cell carries the page. Get the ratio wrong and every copy of the
+       * panel in the frame is stretched or squashed by the same factor, all run.
+       *
+       * The conformal pair is the argument itself against the log of the
+       * potential, and depth is that log over log 2 — so a cell measures
+       * TAU / kx by log2 / ky, and asking those to sit in the frame's own aspect
+       * fixes ky given kx. Which leaves one honest control: how many copies go
+       * round a winding.
+       */
+      float kx = floor(2.0 + 6.0 * uJuliaChunkGrid);
+      float ky = max(1.0, floor(kx * uAspect / 9.0648 + 0.5));
+
+      /*
+       * The cell coordinate, and the page laid straight into it.
+       *
+       * Both factors have to be whole numbers and for the same reason twice
+       * over. The argument comes back to itself after a winding, so kx of them
+       * across a winding closes; depth rises by exactly one a turn of the
+       * flight, so ky bands to the unit closes. Fractions of either would leave
+       * a seam that walked — round the figure in the one case, through the wrap
+       * in the other.
+       *
+       * The page has the same say here that it has over the depth banding, and
+       * on the same terms: it shifts which cell of the set carries which part of
+       * the panel, so the dealing is laid out by the art and not by the
+       * arithmetic alone. Inside the period, so the wrap is untouched.
+       */
+      vec2 chunkUv = fract(vec2(exitArg / TAU * kx, (nu + drive * 0.25) * ky));
+
+      /*
+       * How fast the cells run, per unit of frame. The band's rate is the depth
+       * gradient the loop already had to compute; the argument's is the orbit's
+       * own derivative over where it left, which is the same quantity in polar.
+       * Neither is a screen-space difference, and at the boundary of an
+       * escape-time set that distinction is the whole ballgame.
+       *
+       * It is also the magnification, exactly and without a conversion: one cell
+       * is one whole page, so cells per unit of frame *is* page per unit of
+       * frame. A cell a quarter of the frame across shows the panel at a quarter
+       * of its size.
+       */
+      vec2 cells = vec2(exitD / max(exitRad, 1e-4) / TAU * kx, grad * ky);
+      float chunkJac = max(cells.x, cells.y);
+
+      /*
+       * And the floor under all of it: a cell is a piece of comic only while
+       * there are pixels enough in it to hold one.
+       *
+       * Inward the cells halve at every contour, so this is not an edge case to
+       * be guarded — it is the ladder's own bottom, and it arrives long before
+       * the sampling breaks. A whole panel dealt into forty pixels is not a
+       * small panel, it is a smudge with a panel's colours, and a frame of those
+       * is the texture this mode has spent every other setting trying to stop
+       * being. So the ladder is climbed only as far as it stays legible: cells
+       * above about a sixth of the frame carry a copy, and below that the pixels
+       * go back to the displacement above, which has its own floor under how far
+       * the page may be enlarged and is the better answer down there anyway.
+       *
+       * The handover is one rung of the ladder wide and no wider, which is the
+       * same argument the plates make about their own border and it applies
+       * harder here. What is being crossfaded is two *coordinates*, and a
+       * coordinate halfway between a cell's copy and the far side of a trap
+       * points at neither — so every pixel in the band is a crop of the page
+       * that nothing asked for. Narrow, it is a rim a contour thick, and a
+       * ratio of two either side of the threshold means one band of the set is
+       * ever in transit at a time. Hard would be better still if the ladder
+       * held still, and it does not: the cells grow as they sweep outward, so a
+       * threshold with no width is a whole band popping from one sampling to
+       * another as it crosses.
+       *
+       * Which is also the gradient that was wanted rather than a concession to
+       * get it. Big legible pieces where the contours are wide, halving inward
+       * as they crowd, dissolving into the figure's own filaments where they
+       * crowd past reading — the panel going from chunk to filigree along the
+       * flight, instead of being a picture the fractal sits on.
+       *
+       * Measured as a share of the frame rather than in pixels, which is where
+       * this parts company with the facet cap above. That one asks whether the
+       * sampling can follow, which is a question about pixels and moves with the
+       * device. This one asks whether a whole picture can be read, and a picture
+       * is read at the size it takes up — a panel an eighth of the frame across
+       * is the same panel on a phone and on a wall.
+       */
+      float cellFrac = 1.0 / max(chunkJac, 1e-4);
+      float take = uJuliaChunk * exited * smoothstep(0.11, 0.22, cellFrac);
+      // Both ends of this are in-frame coordinates already, so the mix is a
+      // bounded morph rather than a sweep across the page.
+      target = mix(target, chunkUv, take);
+      jac = mix(jac, chunkJac, take);
+    }
+
+    // Mirrored before the blend, not after, on the same reasoning as the tunnel:
+    // both ends of the mix are then in-frame coordinates, so ramping the effect
+    // in is a bounded morph rather than a sweep through however many repeats lie
+    // between here and the trap.
+    uv = mix(uv, target, uJulia);
+    // Scaled by the blend as well, because a half-strength mix compresses the
+    // frame half as hard, and floored at 1 because there is no detail above
+    // level 0 to ask for.
+    gSceneLod = log2(max(1.0, jac * uJulia));
+    // Inside a plate the map is a rigid motion of the frame, so there is nothing
+    // to average and the page is read at the one level that has all of it.
     if (plate > 0.0) {
-      uv = mix(uv, plain, plate);
+      uv = mix(uv, plateView(plain), plate);
       gSceneLod *= 1.0 - plate;
     }
   }

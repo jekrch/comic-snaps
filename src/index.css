@@ -628,19 +628,34 @@ button,
    pulled back in with a matching negative margin so the rows stay as tight as
    they look. VizSlider reads every gesture off this box. */
 .viz-slider-grab {
+  position: relative;
   padding: 7px 0;
   margin: -6px 0;
   cursor: pointer;
   user-select: none;
-  /* Both axes are VizSlider's to read: `pan-y` would let the list slide under a
-     finger that is only wandering vertically while it drags the grip. It scrolls
-     the panel itself for a touch that means to, throw and all. */
+  /* Vertically this row is the panel's, not the slider's: a finger anywhere but
+     the grip target below scrolls the list, and the browser has nothing to work
+     out mid-gesture. */
+  touch-action: pan-y;
+}
+
+/* The grip's touch target, riding the grip along the same inset travel
+   VizSlider maps a pointer against. Invisible, far larger than what it covers,
+   and the only thing here that takes both axes — once a finger is on the grip,
+   wandering off the horizontal must not hand the gesture back to the list. */
+.viz-slider-grip-hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--viz-frac, 0) * (100% - 10px) + 5px);
+  width: 24px;
+  transform: translateX(-50%);
   touch-action: none;
 }
 
-/* The row has taken the gesture — either held down or swiped sideways. A finger
-   gets no hover, so without this there is nothing to tell a press that is about
-   to scroll the list from one that is now driving the grip. */
+/* The row has the gesture. A finger gets no hover, so without this there is
+   nothing to tell a press that is about to scroll the list from one that is now
+   driving the grip. */
 .viz-slider-grab[data-armed] {
   background: rgba(232, 93, 58, 0.06);
 }
@@ -655,18 +670,23 @@ button,
   border-color: rgba(232, 93, 58, 0.95);
 }
 
-/* A thumb has no aim, so it gets a band tall enough to land in without
-   looking. */
+/* A thumb has no aim, so it gets a band tall enough to land in without looking,
+   and a target around the grip several times the grip's own width — that target
+   is the whole of what a finger can drag, so it has to be findable blind. */
 @media (pointer: coarse) {
   .viz-slider-grab {
     padding: 15px 0;
     margin: -12px 0;
   }
+
+  .viz-slider-grip-hit {
+    width: 56px;
+  }
 }
 
 /* A ridged grip riding a flat slot. The filled part of the slot is a
-   background layer sized off --viz-fill, which VizSlider sets from its own
-   value. */
+   background layer sized off --viz-fill, which VizSlider sets on the grab area
+   from its own value. */
 .viz-slider {
   -webkit-appearance: none;
   appearance: none;

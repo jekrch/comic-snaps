@@ -1,57 +1,23 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 /** Grip width in the stylesheet. The grip's centre only travels between the
  *  half-widths at each end, so a pointer maps against that inset, not the
  *  full width — otherwise the grip lags the finger at the ends. */
 const GRIP_W = 10;
 
-/** A press that stays put this long has claimed the row, whatever it does next. */
-const HOLD_MS = 260;
-/** How far a finger may drift and still count as staying put. */
-const HOLD_SLOP = 8;
-/** Sideways travel that claims the row outright, without the wait. */
-const SLIDE_SLOP = 12;
-/** Vertical travel that hands the touch to the list. Deliberately the lowest of
- *  the three: an ambiguous diagonal should scroll, because a scroll taken by
- *  mistake costs a flick to undo and a slide taken by mistake costs a setting. */
-const SCROLL_SLOP = 6;
-/** Ratio a sideways swipe has to beat to take the row on travel alone. */
-const SLIDE_BIAS = 1.6;
+/** The grip's touch target. Its size and position live in the stylesheet;
+ *  testing a touch against the element itself keeps the area the browser
+ *  scrolls and the area this row drags exactly the same shape, whatever that
+ *  shape turns out to be. */
+const GRIP_HIT = "viz-slider-grip-hit";
 
-/** Below this speed (px/ms) a release is a stop, not a throw. */
-const FLING_MIN = 0.05;
-/** Per-16ms decay of a throw, and how stale the last move may be to count as one. */
-const FLING_DECAY = 0.94;
-const FLING_STALE_MS = 80;
-
-/** The nearest ancestor this row can scroll on a touch's behalf. */
-function scrollerOf(from: HTMLElement | null): HTMLElement | null {
-  for (let el = from?.parentElement ?? null; el; el = el.parentElement) {
-    const overflow = getComputedStyle(el).overflowY;
-    if ((overflow === "auto" || overflow === "scroll") && el.scrollHeight > el.clientHeight) {
-      return el;
-    }
-  }
-  return null;
-}
-
-interface Gesture {
+interface Drag {
   pointerId: number;
-  /** Where the touch landed, which every threshold is measured from. */
-  x: number;
-  y: number;
-  /** "asking" is a touch that has not yet declared itself. */
-  mode: "asking" | "sliding" | "scrolling";
-  scroller: HTMLElement | null;
-  lastX: number;
-  lastY: number;
-  lastT: number;
-  /** Smoothed vertical speed in px/ms, for the throw on release. */
-  vy: number;
-  /** The press landed on a list that was still moving: it stops it and means
-   *  nothing else, so it neither arms the row nor counts as a tap. */
-  arrest: boolean;
-  timer: number | null;
+  /** Where the pointer sat relative to the grip's centre when it took hold.
+   *  Kept for the length of the drag, so a finger that lands on the edge of a
+   *  target much wider than the grip does not drag the value across to meet
+   *  it. */
+  offset: number;
 }
 
 interface VizSliderProps {
@@ -74,23 +40,18 @@ interface VizSliderProps {
 
 /**
  * A labelled range row that owns every pointer gesture over it, with the input
- * itself taking none. Two things make the native control hard to work on a
- * phone: its box is only as tall as the grip, and iOS Safari moves the grip
- * only for a touch that lands on the grip itself — 10px of target on a row that
- * is otherwise dead. Here a press anywhere in the row moves it.
+ * itself taking none — iOS Safari's native range only answers to a touch that
+ * lands on the grip, and its box is only as tall as the grip is.
  *
- * On a phone a press on this row is ambiguous — the row is a control, but it is
- * also most of the surface of a list that has to scroll. Three ways out, and
- * the list gets the benefit of the doubt in all of them:
+ * A mouse gets the whole row: pressing anywhere brings the grip to the cursor
+ * and drags from there.
  *
- *   - a press that stays put for {@link HOLD_MS} takes the row, and from then
- *     on every direction is the grip's;
- *   - a decisive sideways swipe takes the row without the wait;
- *   - anything else scrolls, which this row then does by hand, throw and all.
- *
- * It has to be by hand, because leaving the scrolling to the browser
- * (`touch-action: pan-y`) means the list also slides under a finger that is
- * only wandering while it drags the grip.
+ * A finger gets the grip alone. The row sits in a panel that has to scroll, and
+ * a press that could mean either is a press the browser has to guess at — which
+ * it does late, mid-gesture, and visibly. So the only part of the row a touch
+ * can drag is a target riding the grip ({@link GRIP_HIT}), generously sized and
+ * the only thing here holding `touch-action: none`. Everywhere else the row is
+ * `pan-y` and the panel just scrolls, natively, with nothing to work out.
  *
  * The value is held here while a drag is in flight and handed up on release.
  * The whole row's worth of React — every group, every other slider — is not
@@ -113,50 +74,22 @@ export default function VizSlider({
   const inputRef = useRef<HTMLInputElement>(null);
   /** Set while a drag is in flight, and the value shown until it ends. */
   const [dragValue, setDragValue] = useState<number | null>(null);
-  /** The row has taken the gesture. Touch has no hover, so this is the only
-   *  thing that tells a finger the difference between a press and a drag. */
+  /** The row has the gesture. Touch has no hover, so this is the only thing
+   *  that tells a finger it has hold of the grip. */
   const [armed, setArmed] = useState(false);
-  const gesture = useRef<Gesture | null>(null);
-  const fling = useRef<number | null>(null);
+  const drag = useRef<Drag | null>(null);
+  /** Whether this gesture has moved the value, and so has anything to commit. */
+  const changed = useRef(false);
 
   const shown = dragValue ?? value;
+  const frac = (shown - min) / (max - min);
 
-  /** True if this stopped a throw that was still running. */
-  const stopFling = () => {
-    if (fling.current === null) return false;
-    cancelAnimationFrame(fling.current);
-    fling.current = null;
-    return true;
-  };
-
-  // A throw outlives the gesture that started it, so it has to be called off if
-  // the panel closes under it.
-  useEffect(
-    () => () => {
-      stopFling();
-    },
-    [],
-  );
-
-  const throwScroller = (scroller: HTMLElement, v0: number) => {
-    let v = v0;
-    let last = performance.now();
-    const frame = (now: number) => {
-      // A frame the tab spent in the background is not travel the finger asked
-      // for, so it is capped rather than paid out.
-      const dt = Math.min(32, now - last);
-      last = now;
-      const before = scroller.scrollTop;
-      scroller.scrollTop -= v * dt;
-      v *= Math.pow(FLING_DECAY, dt / 16);
-      // Either end of the list ends it: there is nothing left to carry.
-      if (Math.abs(v) < FLING_MIN || scroller.scrollTop === before) {
-        fling.current = null;
-        return;
-      }
-      fling.current = requestAnimationFrame(frame);
-    };
-    fling.current = requestAnimationFrame(frame);
+  /** The grip's centre in client coordinates — the same inset travel the
+   *  stylesheet places it along. */
+  const gripCentre = () => {
+    const rect = inputRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    return rect.left + GRIP_W / 2 + frac * (rect.width - GRIP_W);
   };
 
   const setFromX = (clientX: number) => {
@@ -171,20 +104,20 @@ export default function VizSlider({
     const decimals = (String(step).split(".")[1] ?? "").length;
     const next = Number(Math.min(max, Math.max(min, stepped)).toFixed(decimals));
     if (next === shown) return;
+    changed.current = true;
     setDragValue(next);
     onInput(next);
   };
 
   const end = (commit: boolean) => {
-    const g = gesture.current;
-    gesture.current = null;
-    if (g && g.timer !== null) window.clearTimeout(g.timer);
+    if (!drag.current) return;
+    drag.current = null;
     setDragValue(null);
     setArmed(false);
-    // A gesture that only ever scrolled — or only ever stopped a scroll — has
-    // changed nothing to commit.
-    if (!commit || !g) return;
-    if (g.mode === "sliding" || (g.mode === "asking" && !g.arrest)) onCommit();
+    // A press that never moved the grip — a tap on the target, a click on the
+    // value it already held — has nothing to commit.
+    if (commit && changed.current) onCommit();
+    changed.current = false;
   };
 
   return (
@@ -199,106 +132,39 @@ export default function VizSlider({
       <div
         className="viz-slider-grab"
         data-armed={armed ? "true" : undefined}
+        style={
+          {
+            "--viz-frac": frac,
+            "--viz-fill": `${frac * 100}%`,
+          } as React.CSSProperties
+        }
         onPointerDown={(e) => {
           // A second finger on the row is not a second gesture.
-          if (gesture.current) return;
-          const arrest = stopFling();
+          if (drag.current) return;
+          const touch = e.pointerType === "touch";
+          let offset = 0;
+          if (touch) {
+            // Off the grip, this touch is the panel's to scroll: leaving it
+            // uncaptured is what lets the browser do that without a fight.
+            if (!(e.target instanceof Element) || !e.target.closest(`.${GRIP_HIT}`)) return;
+            const centre = gripCentre();
+            if (centre === null) return;
+            offset = e.clientX - centre;
+          }
           e.currentTarget.setPointerCapture(e.pointerId);
           inputRef.current?.focus({ preventScroll: true });
-          // A mouse or pen has already said what it means by pressing; a finger
-          // has not, since the same press may turn out to be a scroll.
-          const touch = e.pointerType === "touch";
-          const g: Gesture = {
-            pointerId: e.pointerId,
-            x: e.clientX,
-            y: e.clientY,
-            mode: touch ? "asking" : "sliding",
-            scroller: touch ? scrollerOf(e.currentTarget) : null,
-            lastX: e.clientX,
-            lastY: e.clientY,
-            lastT: e.timeStamp,
-            vy: 0,
-            arrest,
-            timer: null,
-          };
-          gesture.current = g;
-          if (!touch) {
-            setArmed(true);
-            setFromX(e.clientX);
-            return;
-          }
-          if (arrest) return;
-          g.timer = window.setTimeout(() => {
-            if (gesture.current !== g || g.mode !== "asking") return;
-            g.timer = null;
-            g.mode = "sliding";
-            setArmed(true);
-            // The grip comes to the finger on arming rather than on the first
-            // move after it, so the row answers the press that took it.
-            setFromX(g.lastX);
-          }, HOLD_MS);
+          drag.current = { pointerId: e.pointerId, offset };
+          setArmed(true);
+          // A mouse has said where it wants the grip. A finger already has it.
+          if (!touch) setFromX(e.clientX);
         }}
         onPointerMove={(e) => {
-          const g = gesture.current;
-          if (!g || e.pointerId !== g.pointerId) return;
-          const dy = e.clientY - g.lastY;
-          const dt = Math.max(1, e.timeStamp - g.lastT);
-
-          if (g.mode === "asking") {
-            const adx = Math.abs(e.clientX - g.x);
-            const ady = Math.abs(e.clientY - g.y);
-            // A finger that has wandered this far is no longer holding still,
-            // so the hold is off — but the gesture is still undeclared until
-            // one of the thresholds below is met.
-            if (g.timer !== null && Math.max(adx, ady) > HOLD_SLOP) {
-              window.clearTimeout(g.timer);
-              g.timer = null;
-            }
-            if (adx >= SLIDE_SLOP && adx > ady * SLIDE_BIAS) {
-              g.mode = "sliding";
-              setArmed(true);
-            } else if (ady >= SCROLL_SLOP) {
-              g.mode = "scrolling";
-            }
-            // Whichever it turns out to be, it picks up from where the finger
-            // is now, so nothing jumps by the slop at the moment it takes over.
-            g.lastX = e.clientX;
-            g.lastY = e.clientY;
-            g.lastT = e.timeStamp;
-            if (g.mode === "sliding") setFromX(e.clientX);
-            return;
-          }
-
-          g.lastX = e.clientX;
-          g.lastY = e.clientY;
-          g.lastT = e.timeStamp;
-
-          if (g.mode === "scrolling") {
-            if (g.scroller) g.scroller.scrollTop -= dy;
-            // Weighted towards the newest sample: the throw should follow how
-            // the finger was moving as it left, not the whole drag's average.
-            g.vy = 0.7 * (dy / dt) + 0.3 * g.vy;
-            return;
-          }
-          setFromX(e.clientX);
+          const d = drag.current;
+          if (!d || e.pointerId !== d.pointerId) return;
+          setFromX(e.clientX - d.offset);
         }}
         onPointerUp={(e) => {
-          const g = gesture.current;
-          if (!g || e.pointerId !== g.pointerId) return;
-          // A touch that never became either gesture was a tap on the row —
-          // unless it was only ever there to stop the list.
-          if (g.mode === "asking" && !g.arrest) setFromX(e.clientX);
-          if (
-            g.mode === "scrolling" &&
-            g.scroller &&
-            Math.abs(g.vy) > FLING_MIN &&
-            // A finger that came to rest before lifting was placing the list,
-            // not throwing it: no pointermove fires while it sits still, so the
-            // last speed measured would otherwise be paid out on release.
-            e.timeStamp - g.lastT < FLING_STALE_MS
-          ) {
-            throwScroller(g.scroller, g.vy);
-          }
+          if (drag.current?.pointerId !== e.pointerId) return;
           end(true);
         }}
         onPointerCancel={() => end(false)}
@@ -318,8 +184,10 @@ export default function VizSlider({
             onCommit();
           }}
           className="viz-slider"
-          style={{ "--viz-fill": `${((shown - min) / (max - min)) * 100}%` } as React.CSSProperties}
         />
+        {/* Rides the grip, and on a phone is the whole of what a finger can
+            drag. Empty and invisible: it is a hit target, not a part. */}
+        <span className={GRIP_HIT} aria-hidden="true" />
       </div>
     </div>
   );

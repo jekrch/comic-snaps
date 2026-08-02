@@ -53,6 +53,15 @@ function drawCount(frame: VizFrame): number {
  */
 export class VizEngine {
   private readonly container: HTMLElement;
+  /**
+   * The window the container lives in, which is not necessarily the window this
+   * code is running in: the run can be portalled into a second window on
+   * another display (see `useShowWindow`). Everything tied to a surface — the
+   * frame clock, the elements, the size observer — is taken from here rather
+   * than from the globals, so the run is paced by the display it is actually on
+   * and stops when *that* window is hidden rather than when this one is.
+   */
+  private readonly view: Window;
   /** Held by reference: the overlay mutates it in place, so a speed change
    *  takes effect on the next frame without touching the engine. */
   private config: VizConfig;
@@ -89,17 +98,18 @@ export class VizEngine {
     forceCss = false
   ) {
     this.container = container;
+    this.view = container.ownerDocument.defaultView ?? window;
     this.config = config;
-    this.director = new Director(panels, config, new Rng(seed), deviceCaps());
+    this.director = new Director(panels, config, new Rng(seed), deviceCaps(this.view));
     this.createBackend(forceCss);
     this.observeSize();
   }
 
   private createBackend(forceCss: boolean): void {
-    const caps = deviceCaps();
+    const caps = deviceCaps(this.view);
     if (!forceCss) {
       try {
-        const canvas = document.createElement("canvas");
+        const canvas = this.container.ownerDocument.createElement("canvas");
         canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:block;";
         this.container.appendChild(canvas);
         canvas.addEventListener("webglcontextlost", this.handleContextLost);
@@ -137,7 +147,7 @@ export class VizEngine {
     if (this.disposed) return;
     // Come back on a fresh canvas rather than waiting on a restore that iOS
     // often never delivers.
-    setTimeout(() => {
+    this.view.setTimeout(() => {
       if (this.disposed) return;
       this.createBackend(false);
       this.applySize();
@@ -146,8 +156,13 @@ export class VizEngine {
   };
 
   private observeSize(): void {
-    this.resizeObserver = new ResizeObserver(() => this.applySize());
-    this.resizeObserver.observe(this.container);
+    // The container's own realm, so a surface in another window is measured by
+    // the observer that runs with that window's rendering rather than ours.
+    const Observer =
+      (this.view as Partial<Window & typeof globalThis>).ResizeObserver ?? ResizeObserver;
+    const observer = new Observer(() => this.applySize());
+    observer.observe(this.container);
+    this.resizeObserver = observer;
     this.applySize();
   }
 
@@ -184,18 +199,18 @@ export class VizEngine {
     if (this.running || this.disposed) return;
     this.running = true;
     this.lastFrameTime = 0;
-    this.frameHandle = requestAnimationFrame(this.tick);
+    this.frameHandle = this.view.requestAnimationFrame(this.tick);
   }
 
   stop(): void {
     this.running = false;
-    if (this.frameHandle) cancelAnimationFrame(this.frameHandle);
+    if (this.frameHandle) this.view.cancelAnimationFrame(this.frameHandle);
     this.frameHandle = 0;
   }
 
   private tick = (now: number): void => {
     if (!this.running || this.disposed || !this.backend) return;
-    this.frameHandle = requestAnimationFrame(this.tick);
+    this.frameHandle = this.view.requestAnimationFrame(this.tick);
 
     const seconds = now / 1000;
     const raw = this.lastFrameTime === 0 ? 1 / 60 : seconds - this.lastFrameTime;
@@ -275,6 +290,11 @@ export class VizEngine {
 
     // Copied down to a flat 2D canvas first: the encode is the expensive half,
     // and the still is about to be flown off the screen in pieces.
+    //
+    // Deliberately *this* document rather than the surface's. When the run is
+    // being shown in a second window, that window is about to close and the
+    // still is what the page it was driven from breaks apart — so the blob has
+    // to belong to the document that will still be there to look at it.
     const shrink = Math.min(1, this.stillMaxEdge / Math.max(canvas.width, canvas.height));
     const still = document.createElement("canvas");
     still.width = Math.max(1, Math.round(canvas.width * shrink));

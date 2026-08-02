@@ -759,6 +759,67 @@ export interface PostParams {
    */
   juliaPlate: number;
   /**
+   * Wedges the plates' view is mirrored into: 0 leaves it the plain frame, and
+   * from there it steps three, four, five, six.
+   *
+   * Undistorted was the plates' whole worth and it also meant *still* — the one
+   * part of a mode about travel that never moved, which against a frame flying
+   * into itself stops reading as a window and starts reading as the picture the
+   * fractal is drawn on. A fold is motion that does not go anywhere: mirrored
+   * into a few wedges and turned slowly, the page sweeps through itself forever
+   * without arriving from anywhere or leaving for anywhere.
+   *
+   * Coarse or not at all. A quarter of the plane is still a piece of comic with
+   * room for a face in it; a dozen wedges is the same ornament the figure
+   * already is, in the one part of the frame whose job is to say what the
+   * ornament is *of*.
+   *
+   * The turn is authored rather than exposed, and centred on the flight's
+   * vanishing point rather than the frame's — so the background swings about
+   * the point the fractal is descending onto, which is one motion seen twice
+   * rather than two competing.
+   */
+  juliaPlateFold: number;
+  /**
+   * How much of the page is carried in the set's own cells rather than by the
+   * displacement, 0..1.
+   *
+   * Everything else here starts from the frame and moves it, which puts the
+   * panel behind the fractal: in pieces the fractal chose, but at the frame's
+   * scale, so the figure is ornament over a photograph however well it is
+   * sampled. This starts from the set instead. Escape time and the argument of
+   * the orbit at its exit are a grid whose lines are the set's own
+   * equipotentials and external rays, and the page is laid straight into its
+   * cells, one whole panel to a cell.
+   *
+   * The ladder comes free with the dynamics: every escape contour doubles the
+   * winding, so each band inward holds twice as many cells at half the size,
+   * carrying the same panel again smaller. Big legible pieces where the contours
+   * are wide, subdividing without limit as the flight approaches the boundary —
+   * intricacy made of panel rather than laid over it.
+   *
+   * Bounded from below by legibility rather than by taste: cells under about a
+   * tenth of the frame are handed back to the displacement, because a whole
+   * panel dealt into forty pixels is not a small panel, it is a smudge with a
+   * panel's colours, and a frame of those is the texture this was meant to
+   * replace.
+   */
+  juliaChunk: number;
+  /**
+   * How many copies of the page go round one winding of the set — two at the
+   * bottom of the range, eight at the top. The bands down follow from it: the
+   * map to the set's coordinates is conformal, so the ratio between the two is
+   * what decides whether a copy arrives in the frame's aspect or stretched, and
+   * only one of them is left free.
+   *
+   * Low, as everywhere else in this engine that decides a panel scale. This is
+   * the count at the *widest* contours in the frame and every band inward
+   * doubles it, so a setting that looks reasonable standing still is a mosaic
+   * two contours later. A few large pieces is what leaves the subdivision
+   * somewhere to go.
+   */
+  juliaChunkGrid: number;
+  /**
    * How far the flight's vanishing point drifts from the middle of the frame,
    * in half-frames.
    *

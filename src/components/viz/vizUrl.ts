@@ -72,6 +72,7 @@ const PINNED_PATHS: readonly string[] = [
   "post.julia", "post.juliaZoom", "post.juliaShape", "post.juliaSpin", "post.juliaTrap",
   "post.juliaSpread", "post.juliaFlight", "post.juliaAnchor", "post.juliaBind", "post.juliaDepth",
   "post.juliaEdge", "post.juliaFacet", "post.juliaDrift", "post.juliaPlate",
+  "post.juliaChunk", "post.juliaChunkGrid", "post.juliaPlateFold",
 ];
 
 /**

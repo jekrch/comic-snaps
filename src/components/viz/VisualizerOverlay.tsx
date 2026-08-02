@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Panel } from "../../types";
 import { VizEngine } from "./engine/Engine";
 import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
@@ -13,9 +14,19 @@ import { CAST_MAX } from "./engine/cast";
 import VizControls from "./VizControls";
 import VizDebugPanel, { TUNE_PANEL_EXIT_MS } from "./VizDebugPanel";
 import VizPageBreak, { vizBreakMs } from "./VizPageBreak";
+import VizShowConsole from "./VizShowConsole";
 import { useUnmountDelay } from "./useUnmountDelay";
+import { placeOnOtherDisplay, requestShowFullscreen, useShowWindow } from "./useShowWindow";
 
 const CONTROLS_IDLE_MS = 2000;
+
+/** How long a one-line notice stays up before it has said its piece. */
+const NOTICE_MS = 7000;
+
+const POPUP_BLOCKED_NOTICE =
+  "the show window could not be opened — allow pop-ups for this site, then try again";
+const FULLSCREEN_REFUSED_NOTICE =
+  "the browser wants that asked for in the show window itself — press F there, or double-click it";
 
 /** Longest the close will wait on a still of the run before going without one.
  *  The capture is a frame and an encode; this is only here so a wedged tab
@@ -46,6 +57,12 @@ interface VisualizerOverlayProps {
   onPresetChange?: (presetId: string) => void;
   /** Only requested when the launch explicitly asked for it. */
   fullscreen: boolean;
+  /**
+   * Start with the run in a window of its own, leaving this one as the console
+   * that drives it. Asked for at launch; also reachable from the chrome, and
+   * reversible either way mid-run.
+   */
+  showWindow?: boolean;
   /** Start with the attribution label pinned, as asked for at launch. */
   pinLabel?: boolean;
   /** Live speed changes, so the URL keeps describing what is actually running. */
@@ -125,6 +142,7 @@ export default function VisualizerOverlay({
   config,
   presetId,
   fullscreen,
+  showWindow = false,
   pinLabel = false,
   onPresetChange,
   onSpeedChange,
@@ -135,7 +153,13 @@ export default function VisualizerOverlay({
   onLeaving,
   onClose,
 }: VisualizerOverlayProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  /**
+   * The element the engine draws in, held as state rather than a ref because it
+   * can move house: when the run is sent to its own window the surface is
+   * portalled there, which builds a new element in a new document, and the
+   * engine has to be rebuilt around it. See the engine lifecycle below.
+   */
+  const [surfaceEl, setSurfaceEl] = useState<HTMLDivElement | null>(null);
   const engineRef = useRef<VizEngine | null>(null);
   const idleTimerRef = useRef<number>(0);
   const rampRef = useRef<number>(0);
@@ -162,6 +186,69 @@ export default function VisualizerOverlay({
   const trailRef = useRef(trail);
   trailRef.current = trail;
 
+  // --- where the run is being drawn ----------------------------------------
+
+  /**
+   * The run has been sent to a window of its own. What is left here is the
+   * console: the same controls, pinned open instead of fading out, driving a
+   * composition on another screen.
+   *
+   * Two states, not one — the run is only *projecting* once the window is
+   * actually open, and a blocked pop-up has to land back here rather than
+   * leaving the run drawn nowhere. See the blocked handler below.
+   */
+  const [detached, setDetached] = useState(showWindow);
+  const detachedRef = useRef(detached);
+  detachedRef.current = detached;
+
+  /** Anything the run needs to say to whoever is driving it, one line at a time. */
+  const [notice, setNotice] = useState<string | null>(null);
+  const noticeTimerRef = useRef(0);
+  const say = useCallback((message: string | null) => {
+    window.clearTimeout(noticeTimerRef.current);
+    setNotice(message);
+    if (message) {
+      noticeTimerRef.current = window.setTimeout(() => setNotice(null), NOTICE_MS);
+    }
+  }, []);
+  useEffect(() => () => window.clearTimeout(noticeTimerRef.current), []);
+
+  /**
+   * Closed from its own title bar. That is a way of ending the run — it is the
+   * only thing in that window, and the whole point of putting it there was that
+   * closing it takes the run with it and shows the audience nothing else.
+   *
+   * Declared before the close path it calls into, so it is passed by ref.
+   */
+  const showClosedRef = useRef<() => void>(() => undefined);
+  const { show, blocked } = useShowWindow(detached, () => showClosedRef.current());
+  const showWin = show?.win ?? null;
+  const showRef = useRef(show);
+  showRef.current = show;
+
+  /** True only while there is a second window with the run in it. */
+  const projecting = show !== null;
+  const projectingRef = useRef(projecting);
+  projectingRef.current = projecting;
+
+  /**
+   * The window the run is actually in. Everything that belongs to a *surface*
+   * rather than to the page — the frame clock's throttling, fullscreen, the
+   * wake lock — is asked of this rather than of the global.
+   */
+  const hostWin = showWin ?? window;
+  const hostDoc = hostWin.document;
+
+  // A refused pop-up puts the run back in this window rather than leaving it
+  // nowhere. `detached` going false is what re-arms the chrome's own button, so
+  // the reader's next press is a fresh gesture — which is what the browser was
+  // asking for.
+  useEffect(() => {
+    if (!blocked) return;
+    setDetached(false);
+    say(POPUP_BLOCKED_NOTICE);
+  }, [blocked, say]);
+
   const { seed, showDebugDefault } = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -174,6 +261,13 @@ export default function VisualizerOverlay({
   // the `d` key — so the slide out is driven off this flag rather than off any
   // one of them.
   const debugPanel = useUnmountDelay(showDebug, TUNE_PANEL_EXIT_MS);
+
+  // The console exists to be tuned from, so it comes up with the panel already
+  // open. Dismissable from there like any other time — this only fires on the
+  // arrival of a show window, not on every render behind one.
+  useEffect(() => {
+    if (showWin) setShowDebug(true);
+  }, [showWin]);
 
   // Cloned, then mutated in place: the engine reads it every frame so the debug
   // sliders take effect without a remount, and the caller's object is left alone.
@@ -212,11 +306,16 @@ export default function VisualizerOverlay({
     }
   }, []);
 
+  // Rebuilt when the surface moves between windows: a WebGL context belongs to
+  // the canvas it was made on, and that canvas belongs to a document, so there
+  // is no moving one across. The seed and the working config both outlive the
+  // move, so what comes back is the same run from the top rather than a
+  // different one — which is why sending the run to its own window is something
+  // to do before an audience is watching rather than during.
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container || !hasPanels) return;
+    if (!surfaceEl || !hasPanels) return;
 
-    const instance = new VizEngine(container, usableRef.current, configRef.current, seed);
+    const instance = new VizEngine(surfaceEl, usableRef.current, configRef.current, seed);
     instance.onCast = handleCast;
     instance.start();
     engineRef.current = instance;
@@ -227,7 +326,7 @@ export default function VisualizerOverlay({
       engineRef.current = null;
       setEngine(null);
     };
-  }, [hasPanels, seed, handleCast]);
+  }, [surfaceEl, hasPanels, seed, handleCast]);
 
   // Distinguishes "still loading" from "the filters really do match nothing".
   const [settled, setSettled] = useState(false);
@@ -293,7 +392,7 @@ export default function VisualizerOverlay({
    * so what shatters is the composition the reader was actually watching, down
    * to the frame they asked to leave on.
    */
-  const requestClose = useCallback(() => {
+  const requestClose = useCallback((capture = true) => {
     // Marked here rather than in the effect, so a second Escape while the
     // capture is in flight is a no-op rather than a second capture.
     if (closingRef.current) return;
@@ -303,7 +402,7 @@ export default function VisualizerOverlay({
 
     const engine = engineRef.current;
     void Promise.race([
-      engine?.captureStill() ?? Promise.resolve(null),
+      capture ? engine?.captureStill() ?? Promise.resolve(null) : Promise.resolve(null),
       new Promise<null>((resolve) => window.setTimeout(() => resolve(null), FRAME_CAPTURE_MS)),
     ]).then((blob) => {
       const still = blob ? URL.createObjectURL(blob) : null;
@@ -313,6 +412,11 @@ export default function VisualizerOverlay({
       // Nothing is watching the surface after this — the still is standing in
       // front of it — so the run has no reason to carry on rendering.
       engine?.stop();
+      // And the audience's screen goes at the head of the exit rather than the
+      // end of it: the frame worth holding onto has been photographed, and what
+      // that window would hold for the length of the break is a frozen one. The
+      // report this triggers lands on a close already in flight and does nothing.
+      showRef.current?.win.close();
       setClosing(true);
       onLeaving?.();
     });
@@ -323,6 +427,18 @@ export default function VisualizerOverlay({
     const id = window.setTimeout(onClose, vizBreakMs());
     return () => window.clearTimeout(id);
   }, [closing, onClose]);
+
+  /**
+   * The show window went on its own. There is no frame left to photograph — the
+   * canvas closed with the document — so the break plays on a black page, which
+   * is what the console was showing anyway. The run itself is over: that window
+   * held nothing else, and closing it is how you end a show.
+   *
+   * `detached` is deliberately left alone. Clearing it would put the surface
+   * back in this window for the length of the break, which means building a
+   * whole engine to draw one frame nobody is looking at.
+   */
+  showClosedRef.current = useCallback(() => requestClose(false), [requestClose]);
 
   // --- screensaver hygiene --------------------------------------------------
 
@@ -381,24 +497,44 @@ export default function VisualizerOverlay({
     };
   }, []);
 
+  // Whether the *run's* window is filling its screen, which while the run is
+  // being projected is not this one.
   const [isFullscreen, setIsFullscreen] = useState(() => Boolean(document.fullscreenElement));
 
   useEffect(() => {
     // Fullscreen can also be left by Esc or the browser's own chrome, so the
     // button state follows the document rather than our own requests.
-    const onChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", onChange);
-    return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
+    const onChange = () => setIsFullscreen(Boolean(hostDoc.fullscreenElement));
+    onChange();
+    hostDoc.addEventListener("fullscreenchange", onChange);
+    return () => hostDoc.removeEventListener("fullscreenchange", onChange);
+  }, [hostDoc]);
 
   useEffect(() => {
-    if (!fullscreen) return;
+    if (!fullscreen || detached) return;
     // The request only succeeds while the launch click is still the active user
     // gesture, so a `?viz=1` cold load stays windowed however this is set.
     document.documentElement.requestFullscreen?.({ navigationUI: "hide" })?.catch(() => undefined);
-  }, [fullscreen]);
+  }, [fullscreen, detached]);
 
-  // Unconditional: fullscreen may have been entered from the button, not the launch.
+  /**
+   * A launch that asked for both fullscreen and a window of its own: the show
+   * window fills the display it opened on as soon as it exists. Browsers are
+   * entitled to refuse — the press that asked was in this document, not that one
+   * — so a refusal says how to do it by hand rather than failing silently. Once
+   * only, hence the ref: after the first attempt, fullscreen is the button's.
+   */
+  const autoFullscreenRef = useRef(fullscreen && showWindow);
+  useEffect(() => {
+    if (!showWin || !autoFullscreenRef.current) return;
+    autoFullscreenRef.current = false;
+    void requestShowFullscreen(showWin).then((ok) => {
+      if (!ok) say(FULLSCREEN_REFUSED_NOTICE);
+    });
+  }, [showWin, say]);
+
+  // Unconditional: fullscreen may have been entered from the button, not the
+  // launch. Only this window's — the show window takes its own with it.
   useEffect(
     () => () => {
       if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
@@ -406,13 +542,16 @@ export default function VisualizerOverlay({
     [],
   );
 
+  // Held on the window the art is in. A lock taken out here would be released
+  // the moment this one was minimised, which — with the show on another display
+  // — is a perfectly ordinary thing to do to a console.
   useEffect(() => {
     let sentinel: WakeLockSentinel | null = null;
     let released = false;
 
     const acquire = async () => {
       try {
-        sentinel = (await navigator.wakeLock?.request("screen")) ?? null;
+        sentinel = (await hostWin.navigator.wakeLock?.request("screen")) ?? null;
         if (released) void sentinel?.release();
       } catch {
         /* denied or unsupported — the visualizer still runs */
@@ -421,31 +560,43 @@ export default function VisualizerOverlay({
     void acquire();
 
     const onVisibility = () => {
-      if (document.visibilityState === "visible" && !released) void acquire();
+      if (hostDoc.visibilityState === "visible" && !released) void acquire();
     };
-    document.addEventListener("visibilitychange", onVisibility);
+    hostDoc.addEventListener("visibilitychange", onVisibility);
 
     return () => {
       released = true;
-      document.removeEventListener("visibilitychange", onVisibility);
+      hostDoc.removeEventListener("visibilitychange", onVisibility);
       void sentinel?.release().catch(() => undefined);
     };
-  }, []);
+  }, [hostWin, hostDoc]);
 
-  // Pause when the tab is hidden. The engine also clamps dt, so a long absence
-  // resumes smoothly rather than lurching the composition forward.
+  // Pause when the run's own window is hidden. The engine also clamps dt, so a
+  // long absence resumes smoothly rather than lurching the composition forward.
+  // Scoped to that window rather than this one for the same reason as the lock:
+  // a console put behind another app must not stop the show.
   useEffect(() => {
     const onVisibility = () => {
-      if (document.hidden) engineRef.current?.stop();
+      if (hostDoc.hidden) engineRef.current?.stop();
       else if (!paused) engineRef.current?.start();
     };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [paused]);
+    hostDoc.addEventListener("visibilitychange", onVisibility);
+    return () => hostDoc.removeEventListener("visibilitychange", onVisibility);
+  }, [hostDoc, paused]);
 
   const wakeChrome = useCallback(() => {
+    // Nothing wakes a run that is already leaving. The chrome went down with the
+    // first frame of the exit and putting it back up over the break — because a
+    // window closed, or a projection ended — would be answering a control the
+    // reader can no longer use.
+    if (closingRef.current) return;
     setChromeVisible(true);
     window.clearTimeout(idleTimerRef.current);
+    // Nothing fades out on a console. The chrome hides itself because it is
+    // sitting on the art; once the art is on another screen it is not in the
+    // way of anything, and controls that vanish two seconds into a show are the
+    // opposite of what this window is now for.
+    if (projectingRef.current) return;
     // An open menu would otherwise fade out from under the finger that opened it.
     if (chromeHeldRef.current) return;
     idleTimerRef.current = window.setTimeout(() => setChromeVisible(false), CONTROLS_IDLE_MS);
@@ -460,10 +611,12 @@ export default function VisualizerOverlay({
     [wakeChrome]
   );
 
+  // Also on the way into and out of a projection: one direction has to cancel a
+  // timer that would hide a console's controls, the other has to re-arm it.
   useEffect(() => {
     wakeChrome();
     return () => window.clearTimeout(idleTimerRef.current);
-  }, [wakeChrome]);
+  }, [wakeChrome, projecting]);
 
   // The viewer covers the run, so the chrome under it is only in the way: drop
   // it (and its idle timer) for the duration, then bring it back on the way out
@@ -643,24 +796,79 @@ export default function VisualizerOverlay({
     [onOpenPanel]
   );
 
+  /**
+   * Fill the screen the run is on, which while it is being projected is the
+   * other one. Leaving works from anywhere; entering is the browser's call —
+   * the press is in this document and the window being filled is another — so a
+   * refusal is answered with the two ways of doing it from over there.
+   */
   const toggleFullscreen = useCallback(() => {
-    if (document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
-    else
+    const win = showRef.current?.win ?? window;
+    if (win.document.fullscreenElement) {
+      void win.document.exitFullscreen().catch(() => undefined);
+    } else if (win === window) {
       void document.documentElement
         .requestFullscreen?.({ navigationUI: "hide" })
         ?.catch(() => undefined);
+    } else {
+      void requestShowFullscreen(win).then((ok) => {
+        if (!ok) say(FULLSCREEN_REFUSED_NOTICE);
+      });
+    }
     wakeChrome();
-  }, [wakeChrome]);
+  }, [say, wakeChrome]);
+
+  /**
+   * Send the run to a window of its own, or bring it back.
+   *
+   * A console that is itself filling the screen cannot be dragged off it or put
+   * beside anything, and a run about to leave this window has no use for it, so
+   * going out drops fullscreen here on the way.
+   */
+  const toggleDetached = useCallback(() => {
+    const next = !detachedRef.current;
+    if (next && document.fullscreenElement) void document.exitFullscreen().catch(() => undefined);
+    setDetached(next);
+    say(null);
+    wakeChrome();
+  }, [say, wakeChrome]);
+
+  /**
+   * Put the show window on the display this one is not on. Asked for from a
+   * press, never on launch: the first call is what raises the permission prompt
+   * for reading the display layout, and one nobody went looking for is worse
+   * than dragging a window across by hand — which remains the way this works on
+   * every browser that has no such API.
+   */
+  const placeShow = useCallback(() => {
+    const win = showRef.current?.win;
+    if (!win) return;
+    void placeOnOtherDisplay(win).then((ok) => {
+      if (!ok) say("no second display to send it to — drag the window across instead");
+    });
+    wakeChrome();
+  }, [say, wakeChrome]);
 
   // The viewer on top owns the keyboard while it is open: Escape has to close
   // the panel rather than the run beneath it, and the arrows have to page the
   // lightbox rather than walk the trail.
   // Also dead while the page is sealing: the run is on its way out and the keys
   // would be acting on something the reader can no longer see.
+  //
+  // Bound in both windows while the run is projected. The show window has no
+  // controls on it by design, so the keys are all it answers to — and `f` and
+  // Escape pressed *there* are worth more than the same keys here, since a
+  // fullscreen request from the window being filled is one no browser argues
+  // with.
   useEffect(() => {
     if (viewerOpen || closing) return;
 
     const onKey = (event: KeyboardEvent) => {
+      // A held modifier means the press belongs to the browser, not to the run.
+      // Ctrl/Cmd-W is the one that made this worth stating: it closes a window,
+      // and answering it by also moving the run into or out of one would be the
+      // run acting on its own way out.
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       // Escape belongs to the open menu first — it closes that, not the run.
       if (event.key === "Escape" && chromeHeldRef.current) {
         return;
@@ -676,6 +884,9 @@ export default function VisualizerOverlay({
       } else if (event.key === "d") {
         setShowDebug((visible) => !visible);
         wakeChrome();
+      } else if (event.key === "w") {
+        event.preventDefault();
+        toggleDetached();
       } else if (event.key === "f") {
         event.preventDefault();
         toggleFullscreen();
@@ -700,12 +911,16 @@ export default function VisualizerOverlay({
         wakeChrome();
       }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const listeners: Window[] = showWin ? [window, showWin] : [window];
+    for (const target of listeners) target.addEventListener("keydown", onKey);
+    return () => {
+      for (const target of listeners) target.removeEventListener("keydown", onKey);
+    };
   }, [
     requestClose,
     togglePause,
     toggleFullscreen,
+    toggleDetached,
     nudgeSpeed,
     cycleMode,
     togglePinned,
@@ -714,7 +929,25 @@ export default function VisualizerOverlay({
     wakeChrome,
     viewerOpen,
     closing,
+    showWin,
   ]);
+
+  /**
+   * Double-click fills the screen, in the one window where that gesture is not
+   * competing with anything. It is the affordance for a show window someone has
+   * just dragged onto a projector and does not want to walk back to the console
+   * to finish setting up — and the same click brings it out again.
+   */
+  useEffect(() => {
+    if (!showWin) return;
+    const onDoubleClick = () => {
+      const doc = showWin.document;
+      if (doc.fullscreenElement) void doc.exitFullscreen().catch(() => undefined);
+      else void doc.documentElement.requestFullscreen?.({ navigationUI: "hide" })?.catch(() => undefined);
+    };
+    showWin.addEventListener("dblclick", onDoubleClick);
+    return () => showWin.removeEventListener("dblclick", onDoubleClick);
+  }, [showWin]);
 
   // The stack is only worth showing once there is something to name in it.
   const labelled = trail.items[trail.cursor] ?? null;
@@ -762,6 +995,22 @@ export default function VisualizerOverlay({
   const inset = stackMount.mounted ? stackHeight : 0;
   const lift = stackMount.mounted ? (stackMount.leaving ? "viz-lift-out" : "viz-lift-in") : "";
 
+  /**
+   * The engine's surface, wherever it is being drawn.
+   *
+   * Styled inline rather than in classes because the show window is given a
+   * stylesheet of four rules and nothing else — no Tailwind, no site CSS, and
+   * nothing that could put a pixel of this site on a screen an audience is
+   * looking at.
+   */
+  const surface = (
+    <div
+      key="viz-surface"
+      ref={setSurfaceEl}
+      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+    />
+  );
+
   return (
     <div
       className={`fixed inset-0 z-100 overflow-hidden ${
@@ -797,13 +1046,50 @@ export default function VisualizerOverlay({
             cut out of this, which kept it off the art at the cost of a black bar
             across the bottom of every run and a resize of every render target
             each time it was pinned. It floats over the surface now instead, so
-            the composition is never reframed by a caption. */}
-        <div ref={containerRef} className="absolute inset-0" />
+            the composition is never reframed by a caption.
 
-        {usable.length === 0 && settled && (
+            Three places it can be: here, in the show window, or — while a run is
+            detached but its window has gone — nowhere at all, which is the state
+            the console is drawn for. */}
+        {show ? createPortal(surface, show.root) : detached ? null : surface}
+
+        {projecting && (
+          <VizShowConsole
+            /* The tuning panel opens with the console and is the widest thing
+               on this screen; kept in step with `.viz-tune-panel`'s own w-72. */
+            leftInset={debugPanel.mounted && !debugPanel.leaving ? 288 : 0}
+            onFocusShow={() => show?.win.focus()}
+            onFullscreenShow={toggleFullscreen}
+            onPlaceShow={placeShow}
+            onAttach={toggleDetached}
+          />
+        )}
+
+        {usable.length === 0 && settled && !projecting && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="font-display text-[11px] tracking-widest uppercase text-ink-muted">
               nothing to show
+            </p>
+          </div>
+        )}
+
+        {/* One line, top centre, for the handful of things the browser decides
+            rather than we do — a blocked pop-up, a refused fullscreen. Clear of
+            the corner buttons and out of the way of the art, since it can also
+            come up on a run that is still in this window. */}
+        {notice && (
+          <div
+            className="absolute top-0 left-0 right-0 flex justify-center px-16 pt-3.5 z-30
+                       pointer-events-none"
+            role="status"
+          >
+            <p
+              className="max-w-136 text-center rounded-sm px-3 py-1.5 bg-black/70
+                         font-display text-[10px] leading-relaxed tracking-widest uppercase
+                         text-white/70"
+              style={{ animation: "scrimIn 300ms ease-out" }}
+            >
+              {notice}
             </p>
           </div>
         )}
@@ -825,14 +1111,16 @@ export default function VisualizerOverlay({
           pinned={pinned}
           speed={configRef.current.speed}
           presetId={presetId}
+          projecting={projecting}
           onPresetChange={switchMode}
           onHoldChange={holdChrome}
           onSpeedChange={setSpeed}
           onStep={stepPanel}
           onToggleHold={toggleHold}
           onTogglePin={togglePinned}
-          onClose={requestClose}
+          onClose={() => requestClose()}
           onToggleFullscreen={toggleFullscreen}
+          onToggleDetached={toggleDetached}
           onToggleDebug={() => setShowDebug((visible) => !visible)}
         />
 
@@ -856,6 +1144,11 @@ export default function VisualizerOverlay({
             engine={engine}
             seed={formatSeed(seed)}
             leaving={debugPanel.leaving}
+            /* On a console there is no run behind this panel to press back to,
+               so a press outside it is not a press away from tuning — it is a
+               press on an empty black rectangle, and putting the sliders away
+               would be the last thing it should mean. */
+            sticky={projecting}
             onChange={handleTuned}
             onClose={() => setShowDebug(false)}
           />

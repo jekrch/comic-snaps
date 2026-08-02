@@ -10,6 +10,11 @@ export interface VizLaunchOptions {
   presetId: string;
   config: VizConfig;
   fullscreen: boolean;
+  /**
+   * Put the run in a window of its own and leave this one as the console that
+   * drives it — for a show on one screen and a pair of hands on another.
+   */
+  showWindow: boolean;
   /** Start with the attribution label pinned in its own letterbox band. */
   pinLabel: boolean;
   /**
@@ -110,7 +115,7 @@ export default function VizLaunchModal({
   const [showJson, setShowJson] = useState(false);
   const [json, setJson] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
-  const [pinLabel, setPinLabel] = useState(false);
+  const [showWindow, setShowWindow] = useState(false);
   const [closing, setClosing] = useState(false);
   /**
    * True once a run has hidden this modal. Coming back from `display: none`
@@ -165,10 +170,14 @@ export default function VizLaunchModal({
       presetId,
       config: parsed?.ok ? parsed.parsed.config : base,
       fullscreen,
-      pinLabel,
+      showWindow,
+      // Not asked here. Pinning is a decision about what is on screen, which is
+      // a thing to make while looking at it — the chrome's own button and `L`
+      // both do it mid-run, and neither costs a relaunch.
+      pinLabel: false,
       custom: parsed?.ok === true,
     });
-  }, [blocked, onStart, presetId, parsed, base, fullscreen, pinLabel]);
+  }, [blocked, onStart, presetId, parsed, base, fullscreen, showWindow]);
 
   // A mode switched from inside the run is still the reader's choice of preset,
   // so it is what they come back to here — the selection follows the run rather
@@ -464,10 +473,10 @@ export default function VizLaunchModal({
               label="open in full screen"
             />
             <OptionCheck
-              checked={pinLabel}
-              onToggle={() => setPinLabel((on) => !on)}
-              label="pin the panel label"
-              hint="Keeps the credit on screen, with the rest of what is in frame a click behind it. Toggle any time with L."
+              checked={showWindow}
+              onToggle={() => setShowWindow((on) => !on)}
+              label="show in its own window"
+              hint="The run goes to a bare window for another screen. The controls stay here."
             />
           </div>
         </div>

@@ -74,6 +74,10 @@ export default function App() {
       presetId: preset.id,
       config,
       fullscreen: false,
+      // A cold load has no click behind it, so a window opened here would be
+      // blocked. The run starts in this one; the chrome's own button is a
+      // gesture, and can send it out whenever the reader asks.
+      showWindow: false,
       pinLabel: false,
       custom: tuned !== null,
     };
@@ -510,6 +514,7 @@ export default function App() {
             config={vizRun.config}
             presetId={vizRun.custom ? null : vizRun.presetId}
             fullscreen={vizRun.fullscreen}
+            showWindow={vizRun.showWindow}
             pinLabel={vizRun.pinLabel}
             onPresetChange={handleVizPresetChange}
             onSpeedChange={handleVizSpeedChange}

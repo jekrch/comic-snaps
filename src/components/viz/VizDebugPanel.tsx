@@ -37,6 +37,12 @@ interface VizDebugPanelProps {
   seed: string;
   /** Rendered, but on its way out: play the exit rather than the entrance. */
   leaving?: boolean;
+  /**
+   * Stay open on a press outside. Set when the run is being shown in another
+   * window and this one is the console: there is no composition behind the
+   * panel here for a click to mean "back to watching".
+   */
+  sticky?: boolean;
   /** Lets the overlay chrome re-read fields it also shows, such as speed. */
   onChange?: () => void;
   onClose: () => void;
@@ -143,6 +149,7 @@ export default function VizDebugPanel({
   engine,
   seed,
   leaving = false,
+  sticky = false,
   onChange,
   onClose,
 }: VizDebugPanelProps) {
@@ -160,7 +167,7 @@ export default function VizDebugPanel({
    * panel's but lives portalled outside it.
    */
   useEffect(() => {
-    if (leaving) return;
+    if (leaving || sticky) return;
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Node | null;
       if (panelRef.current?.contains(target)) return;
@@ -174,7 +181,7 @@ export default function VizDebugPanel({
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [leaving, onClose]);
+  }, [leaving, sticky, onClose]);
 
   // Stopped for the slide out: the readout re-rendering under a panel already
   // on its way off screen is work spent on something nobody is reading.

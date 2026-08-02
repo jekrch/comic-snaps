@@ -190,6 +190,9 @@ export class WebGLBackend implements VizBackend {
         uJuliaEdge: { value: 0 },
         uJuliaFacet: { value: 0 },
         uJuliaPlate: { value: 0 },
+        uJuliaPlateFold: { value: 0 },
+        uJuliaChunk: { value: 0 },
+        uJuliaChunkGrid: { value: 0 },
         uJuliaCenter: { value: [0, 0] },
         uQuasi: { value: 0 },
         uQuasiFreq: { value: 14 },
@@ -525,6 +528,9 @@ export class WebGLBackend implements VizBackend {
     post.uJuliaEdge.value = frame.post.juliaEdge;
     post.uJuliaFacet.value = frame.post.juliaFacet;
     post.uJuliaPlate.value = frame.post.juliaPlate;
+    post.uJuliaPlateFold.value = frame.post.juliaPlateFold;
+    post.uJuliaChunk.value = frame.post.juliaChunk;
+    post.uJuliaChunkGrid.value = frame.post.juliaChunkGrid;
     /*
      * Where the frame sits over the fixed point, in stage units — half the
      * frame's height at full drift.

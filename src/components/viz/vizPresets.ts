@@ -400,28 +400,84 @@ export const VIZ_PRESETS: VizPreset[] = [
          */
         juliaFacet: 0.85,
         /*
-         * Getting on for a third of the frame, which is a lot, and it is the
-         * number this preset was missing rather than a decoration on it.
+         * A fifth of the frame, down from the third this carried when it was the
+         * only thing here that made the panel plain.
          *
-         * Everything else here works on the figure's own sampling and every bit
-         * of it helps and none of it was enough. The reason is not the sampling.
-         * It is that a crop at twice its size, folded into a wedge of a six-fold
-         * mirror with a trail over it, is an ornament however coherent it is —
-         * the mirror and the magnification *are* the mode, so there is no value
-         * of anything above that gets a face through them intact.
+         * Everything else worked on the figure's own sampling and every bit of it
+         * helped and none of it was enough, because a crop at twice its size,
+         * folded into a wedge of a six-fold mirror with a trail over it, is an
+         * ornament however coherently it is sampled. So the plates stopped
+         * trying: a share of the frame that carries no figure at all, only the
+         * frame's own coordinate, and every one of them carrying the *same*
+         * coordinate — not a scatter of crops but a single image behind a
+         * fractal stencil, which the eye joins up across the figure between them.
          *
-         * These stop trying. A third of the frame carries no figure at all; it
-         * carries the frame's own coordinate, so what is inside them is the panel
-         * where the panel is, the size it is, the way up it is. And because
-         * every one of them carries the *same* coordinate they are not a scatter
-         * of crops but a single image behind a fractal stencil — the eye joins
-         * them up across the figure between them, which is the thing that makes
-         * a run legible as a comic rather than as a texture derived from one.
-         *
-         * A third rather than a half because the plates have to read as windows
-         * cut in a figure. Past about that the figure is what is left over.
+         * They still do that and it is still worth a fifth of the frame. What
+         * has changed is that they are no longer the only place the panel is
+         * legible: the chunks below carry it *through* the figure rather than
+         * beside it, so the plates can go back to being what they read best as,
+         * which is a few windows cut in something, rather than a third of the
+         * picture held back from it.
          */
-        juliaPlate: 0.32,
+        juliaPlate: 0.2,
+        /*
+         * Four wedges, which is the chunkiest fold that is still a fold.
+         *
+         * What the plates were missing was not size or share, it was motion.
+         * Everything else in this preset is travel — the flight, the drift, the
+         * bands sweeping out — and the windows held perfectly still through all
+         * of it, which stopped reading as windows cut in a figure and started
+         * reading as the picture the figure was being drawn on. Exactly the
+         * relation this mode exists to invert.
+         *
+         * A fold is the motion that does not cost anything: the page sweeps and
+         * reflects through itself and never arrives from anywhere, so there is
+         * no second journey competing with the flight. And at four it is still
+         * a quarter of the plane a wedge, which is a face's worth of undistorted
+         * comic — the legibility the plates are here for survives it. At six it
+         * would be the same rosette as the figure around it, which is the whole
+         * frame ornament and nothing left to say what of.
+         */
+        juliaPlateFold: 0.5,
+        /*
+         * High, and it is the answer the two settings above are both working
+         * around rather than a third thing stacked on them.
+         *
+         * The facets make the figure's sampling legible and the plates give a
+         * share of the frame up entirely, and both are concessions to the same
+         * fact: the page was behind the fractal. It arrived at the frame's own
+         * scale, in pieces the fractal chose, so the best either could do was a
+         * readable crop *next to* a figure. The chunks make the page the
+         * material instead. The set's own cells — bounded by its equipotentials
+         * and its external rays — each carry one whole piece of panel, and the
+         * winding doubles at every contour, so the same pieces recur at half
+         * their size one band deeper and half again the band after. Chunky and
+         * legible at the rim, subdividing into filigree at the boundary, all of
+         * it made of comic.
+         *
+         * Not the whole way to 1, because what it is mixed against is the
+         * displacement, and the displacement is what draws the filaments the
+         * cells are cut along. At 1 the frame is cells edge to edge and the
+         * figure is a stained-glass window; a quarter of the old sampling left
+         * in keeps the trap's arcs running through them.
+         */
+        juliaChunk: 0.75,
+        /*
+         * Five copies round a winding, which is the middle of the slider and is
+         * where it is for a reason rather than by taste: at five, a cell's own
+         * conformal proportions — TAU across against log 2 down — come out at
+         * the frame's aspect, so a panel arrives in a cell the shape it already
+         * is. Either side of it every copy in the frame is stretched or squashed
+         * by the same factor for the whole run, which is the sort of error that
+         * is invisible in a still and unmistakable in a minute of one.
+         *
+         * It is not the count on screen in any case — that is set by how wide
+         * the contours are at this altitude, and by the floor under how small a
+         * cell may get before the pixels go back to the displacement. This only
+         * decides how far the ladder starts up, and the dynamics double it at
+         * every contour inward.
+         */
+        juliaChunkGrid: 0.5,
         /*
          * A third of a half-frame, which is as much as this can be without
          * costing the thing it is decorating.

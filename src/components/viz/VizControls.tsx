@@ -7,6 +7,8 @@ import {
   CaptionsOff,
   ChevronLeft,
   ChevronRight,
+  MonitorPlay,
+  MonitorX,
   Pause,
   Play,
 } from "lucide-react";
@@ -35,6 +37,12 @@ interface VizControlsProps {
   speed: number;
   /** The running preset, or null while a pasted config is running. */
   presetId: string | null;
+  /**
+   * The run is in a window of its own and this is the console driving it. The
+   * controls are the same either way — what changes is what they are pointing
+   * at, and that a couple of them stop describing this window.
+   */
+  projecting?: boolean;
   onPresetChange: (presetId: string) => void;
   /** Raised while the mode menu is open, so the chrome stays up under it. */
   onHoldChange: (held: boolean) => void;
@@ -44,6 +52,8 @@ interface VizControlsProps {
   onTogglePin: () => void;
   onClose: () => void;
   onToggleFullscreen: () => void;
+  /** Send the run to its own window, or bring it back. */
+  onToggleDetached?: () => void;
   onToggleDebug?: () => void;
 }
 
@@ -65,6 +75,7 @@ export default function VizControls({
   pinned,
   speed,
   presetId,
+  projecting = false,
   onPresetChange,
   onHoldChange,
   onSpeedChange,
@@ -73,6 +84,7 @@ export default function VizControls({
   onTogglePin,
   onClose,
   onToggleFullscreen,
+  onToggleDetached,
   onToggleDebug,
 }: VizControlsProps) {
   return (
@@ -115,10 +127,42 @@ export default function VizControls({
             <Sliders size={15} />
           </button>
         )}
+        {onToggleDetached && (
+          <button
+            onClick={onToggleDetached}
+            className="viz-btn"
+            title={
+              projecting
+                ? "Bring the run back into this window (W)"
+                : "Show the run in a window of its own (W)"
+            }
+            aria-label={
+              projecting
+                ? "Bring the run back into this window"
+                : "Show the run in a window of its own"
+            }
+            aria-pressed={projecting}
+            tabIndex={visible ? 0 : -1}
+          >
+            {projecting ? (
+              <MonitorX size={15} className="text-accent" />
+            ) : (
+              <MonitorPlay size={15} />
+            )}
+          </button>
+        )}
         <button
           onClick={onToggleFullscreen}
           className="viz-btn"
-          title={fullscreen ? "Exit full screen (F)" : "Full screen (F)"}
+          title={
+            fullscreen
+              ? projecting
+                ? "Take the show window out of full screen (F)"
+                : "Exit full screen (F)"
+              : projecting
+                ? "Fill the screen the show window is on (F)"
+                : "Full screen (F)"
+          }
           aria-label={fullscreen ? "Exit full screen" : "Full screen"}
           tabIndex={visible ? 0 : -1}
         >

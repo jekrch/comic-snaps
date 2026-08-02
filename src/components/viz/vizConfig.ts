@@ -231,6 +231,9 @@ export const DEFAULT_POST: PostParams = {
   // flies into the set is the one that needs them.
   juliaFacet: 0,
   juliaPlate: 0,
+  juliaPlateFold: 0,
+  juliaChunk: 0,
+  juliaChunkGrid: 0.5,
   juliaDrift: 0,
   warp: 0,
   warpScale: 2.4,
@@ -446,6 +449,9 @@ const HINTS: Record<string, string> = {
   "post.juliaEdge": "Squares off the filaments. Low is arcs and fluid, high is straight lines and corners.",
   "post.juliaFacet": "Carries the page in flat facets, so whole pieces of panel stay readable.",
   "post.juliaPlate": "Cuts windows in the figure showing the panel plain, so you can see what it was.",
+  "post.juliaPlateFold": "Sets the windows turning, mirrored into a few big wedges instead of holding still.",
+  "post.juliaChunk": "Builds the figure out of whole panels, halving at every contour as you fly in.",
+  "post.juliaChunkGrid": "How many panels go round the figure. Low is a few large ones — every band inward doubles it.",
   "post.juliaDrift": "Wanders the point the flight is heading into, so new focuses emerge.",
   "post.droste": "Recursion: the frame inside itself, without end.",
   "post.drosteInner": "Size of the hole the recursion falls into.",
@@ -621,6 +627,14 @@ export const CONFIG_FIELDS: ConfigField[] = [
   // Capped at half. Past that the windows outnumber the figure and the mode is
   // a comic with a fractal in it rather than the other way round.
   field("shape", "post.juliaPlate", "page plates", 0, 0.5, 0.01, (c) => c.post.juliaPlate, (c, v) => (c.post.juliaPlate = v)),
+  // Five steps: off, then three wedges through six. Stepped because what it sets
+  // is a count of mirrors, and a fraction of a mirror does not close.
+  field("shape", "post.juliaPlateFold", "plate fold", 0, 1, 0.25, (c) => c.post.juliaPlateFold, (c, v) => (c.post.juliaPlateFold = v)),
+  field("shape", "post.juliaChunk", "page chunks", 0, 1, 0.01, (c) => c.post.juliaChunk, (c, v) => (c.post.juliaChunk = v)),
+  // Seven steps, and stepped rather than continuous because what it sets is a
+  // count of copies round a winding: only whole numbers close, and a fraction of
+  // one is a seam that walks round the figure.
+  field("shape", "post.juliaChunkGrid", "chunk count", 0, 1, 1 / 6, (c) => c.post.juliaChunkGrid, (c, v) => (c.post.juliaChunkGrid = v)),
   // Capped at three quarters of a half-frame. Past that the vanishing point
   // spends most of its circuit off the edge of the picture, and the series that
   // hides the flight's wrap is being asked about a part of the plane it was
@@ -845,9 +859,18 @@ export function parseConfigJson(raw: string, base: VizConfig): ConfigJsonResult 
 
 // --- Device caps (§7) -------------------------------------------------------
 
-export function isMobile(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 620;
+/**
+ * `view` is the window the run is actually being drawn in, which is not always
+ * this one — a run shown on a second display is measured there. Defaults to
+ * this window, so every caller that only has one keeps reading the same answer.
+ */
+export function isMobile(view: Window | null = defaultView()): boolean {
+  if (!view) return false;
+  return view.matchMedia("(pointer: coarse)").matches || view.innerWidth <= 620;
+}
+
+function defaultView(): Window | null {
+  return typeof window === "undefined" ? null : window;
 }
 
 export function prefersReducedMotion(): boolean {
@@ -883,9 +906,9 @@ export interface DeviceCaps {
   stagePerSlot: number;
 }
 
-export function deviceCaps(): DeviceCaps {
-  const mobile = isMobile();
-  const dpr = typeof window === "undefined" ? 1 : window.devicePixelRatio || 1;
+export function deviceCaps(view: Window | null = defaultView()): DeviceCaps {
+  const mobile = isMobile(view);
+  const dpr = view?.devicePixelRatio || 1;
   return {
     texturePoolSize: mobile ? 8 : 16,
     textureMaxEdge: mobile ? 768 : 1024,
