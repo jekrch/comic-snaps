@@ -1,14 +1,22 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { X, ChevronDown, Check } from "lucide-react";
+import { X, ChevronDown, Check, FolderOpen, Images } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { VizConfig } from "./vizConfig";
 import { parseConfigJson } from "./vizConfig";
 import { VIZ_PRESETS, initialPresetId, presetConfig } from "./vizPresets";
+import type { LocalPhotos } from "./localPhotos/useLocalPhotos";
 import VizSpeedControl from "./VizSpeedControl";
 import ThoughtBalloon from "./ThoughtBalloon";
+import VizHint from "./VizHint";
 
 export interface VizLaunchOptions {
   presetId: string;
   config: VizConfig;
+  /**
+   * Run on the reader's own images rather than the gallery. What they picked
+   * lives with the host — this only reports which of the two the run is for.
+   */
+  localPhotos: boolean;
   fullscreen: boolean;
   /**
    * Put the run in a window of its own and leave this one as the console that
@@ -28,6 +36,9 @@ export interface VizLaunchOptions {
 
 interface VizLaunchModalProps {
   panelCount: number;
+  /** The reader's own images, and the controls for choosing them. Owned by the
+   *  host so a run keeps them after this modal is dismissed. */
+  photos: LocalPhotos;
   /** Carried over from a `?vizspeed=` link, so a shared run opens at its rate. */
   initialSpeed?: number | null;
   /**
@@ -63,7 +74,12 @@ interface VizLaunchModalProps {
 
 const EXIT_MS = 200;
 
-/** The launch options that are a plain on/off, in the modal's own language. */
+/**
+ * The launch options that are a plain on/off, in the modal's own language. What
+ * an option does, where it needs saying, goes on an info icon beside it rather
+ * than in a line under it: these are one-line choices, and a paragraph apiece
+ * turns a short list into a page.
+ */
 function OptionCheck({
   checked,
   onToggle,
@@ -76,7 +92,7 @@ function OptionCheck({
   hint?: string;
 }) {
   return (
-    <div>
+    <div className="flex items-center gap-1.5">
       <button
         onClick={onToggle}
         role="checkbox"
@@ -93,15 +109,66 @@ function OptionCheck({
         </span>
         {label}
       </button>
-      {hint && (
-        <p className="font-mono text-[10px] leading-snug text-white/35 mt-1 ml-5.5">{hint}</p>
-      )}
+      {hint && <VizHint text={hint} label={label} />}
     </div>
+  );
+}
+
+/** One of the two ways to hand over images. */
+function PickButton({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: LucideIcon;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-1.5 font-display text-[10px] tracking-widest
+                 uppercase text-ink-muted hover:text-ink transition-colors"
+    >
+      <Icon size={12} />
+      {label}
+    </button>
+  );
+}
+
+/** One end of the gallery/photos switch. */
+function SourceTab({
+  active,
+  onSelect,
+  label,
+  disabled,
+}: {
+  active: boolean;
+  onSelect: () => void;
+  label: string;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      role="radio"
+      aria-checked={active}
+      disabled={disabled}
+      onClick={onSelect}
+      className={`font-display text-[10px] tracking-widest uppercase px-2.5 py-1
+                  transition-colors disabled:opacity-30 disabled:cursor-default ${
+                    active
+                      ? "bg-accent/20 text-accent"
+                      : "text-ink-muted hover:text-ink hover:bg-white/5"
+                  }`}
+    >
+      {label}
+    </button>
   );
 }
 
 export default function VizLaunchModal({
   panelCount,
+  photos,
   initialSpeed,
   behind = false,
   covered = false,
@@ -112,6 +179,8 @@ export default function VizLaunchModal({
 }: VizLaunchModalProps) {
   const [presetId, setPresetId] = useState(initialPresetId);
   const [speed, setSpeed] = useState(initialSpeed ?? 1);
+  /** Which set the run is for. Only ever "photos" while there are some. */
+  const [source, setSource] = useState<"gallery" | "photos">("gallery");
   const [showJson, setShowJson] = useState(false);
   const [json, setJson] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
@@ -152,6 +221,32 @@ export default function VizLaunchModal({
 
   const blocked = parsed !== null && !parsed.ok;
 
+  const photoCount = photos.set?.panels.length ?? 0;
+  const onPhotos = source === "photos";
+  /** How many images the run would actually have to work with. */
+  const runCount = onPhotos ? photoCount : panelCount;
+  const importing = photos.progress !== null;
+
+  /** What the run would be playing, in the header under the title. */
+  const summary = !onPhotos
+    ? `${panelCount} panel${panelCount === 1 ? "" : "s"} in the current view`
+    : photoCount === 0
+      ? "no images chosen yet"
+      : photos.set?.name
+        ? `${photoCount} photo${photoCount === 1 ? "" : "s"} from ${photos.set.name}`
+        : `${photoCount} photo${photoCount === 1 ? "" : "s"} you picked`;
+  /** How far through the folder, 0..1. */
+  const read =
+    photos.progress && photos.progress.total > 0
+      ? photos.progress.done / photos.progress.total
+      : 0;
+
+  // Choosing a folder is choosing to use it — nobody reads a directory in to
+  // then leave it sitting there. Clearing it, equally, is the way back.
+  useEffect(() => {
+    setSource((photos.set?.panels.length ?? 0) > 0 ? "photos" : "gallery");
+  }, [photos.set]);
+
   /** Cancelling is the only way out of here that the modal itself plays. */
   const close = useCallback(() => {
     setClosing(true);
@@ -165,10 +260,13 @@ export default function VizLaunchModal({
    * What hides the modal afterwards is the run having covered it; see `covered`.
    */
   const start = useCallback(() => {
-    if (blocked) return;
+    // Also the keyboard's way in, so the folder still being read has to be
+    // refused here and not only on the button.
+    if (blocked || importing || runCount === 0) return;
     onStart({
       presetId,
       config: parsed?.ok ? parsed.parsed.config : base,
+      localPhotos: onPhotos,
       fullscreen,
       showWindow,
       // Not asked here. Pinning is a decision about what is on screen, which is
@@ -177,7 +275,18 @@ export default function VizLaunchModal({
       pinLabel: false,
       custom: parsed?.ok === true,
     });
-  }, [blocked, onStart, presetId, parsed, base, fullscreen, showWindow]);
+  }, [
+    blocked,
+    importing,
+    runCount,
+    onStart,
+    presetId,
+    parsed,
+    base,
+    onPhotos,
+    fullscreen,
+    showWindow,
+  ]);
 
   // A mode switched from inside the run is still the reader's choice of preset,
   // so it is what they come back to here — the selection follows the run rather
@@ -325,7 +434,7 @@ export default function VizLaunchModal({
       </div>
 
       <div
-        className="relative w-full max-w-[26rem] max-h-full flex flex-col overflow-hidden
+        className="relative w-full max-w-[520px] max-h-full flex flex-col overflow-hidden
                    rounded-md border border-[var(--color-border,rgba(74,71,69,0.25))]
                    bg-[var(--color-surface-raised)]"
         style={{
@@ -343,9 +452,7 @@ export default function VizLaunchModal({
               <h2 className="font-display text-[11px] tracking-widest uppercase text-accent">
                 visualizer
               </h2>
-              <p className="font-mono text-[10px] text-ink-muted mt-0.5">
-                {panelCount} panel{panelCount === 1 ? "" : "s"} in the current view
-              </p>
+              <p className="font-mono text-[10px] text-ink-muted mt-0.5">{summary}</p>
             </div>
             {/* The same balloon the header wears, empty — this is the room the
                 thought was about, so the word would only be repeating itself.
@@ -408,7 +515,103 @@ export default function VizLaunchModal({
             })}
           </div>
 
-          <div className="shrink-0 border-t border-white/8 mt-1 px-4 py-2.5 flex items-center justify-between gap-3">
+          <div className="shrink-0 border-t border-white/8 mt-1 px-4 py-2.5">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-display text-[10px] tracking-widest uppercase text-ink-muted">
+                source
+              </span>
+              <div
+                role="radiogroup"
+                aria-label="Image source"
+                className="flex items-center rounded border border-white/12 overflow-hidden"
+              >
+                <SourceTab
+                  active={!onPhotos}
+                  onSelect={() => setSource("gallery")}
+                  label="gallery"
+                />
+                <SourceTab
+                  active={onPhotos}
+                  onSelect={() => setSource("photos")}
+                  label="my photos"
+                  disabled={importing}
+                />
+              </div>
+            </div>
+
+            {/* Only ever under "my photos": on the gallery there is nothing here
+                to choose, and the picker and its explanation would be offering a
+                second source alongside the one already selected. Importing keeps
+                it open regardless, so a read in progress cannot be hidden by
+                switching tabs out from under it. */}
+            {(onPhotos || importing) &&
+              (importing ? (
+                <div className="mt-2.5">
+                  <p className="font-mono text-[10px] text-ink-muted">
+                    reading {photos.progress?.done ?? 0} / {photos.progress?.total ?? 0}
+                  </p>
+                  <div className="mt-1.5 h-0.5 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full bg-accent transition-[width] duration-150 ease-out"
+                      style={{ width: `${Math.round(read * 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2.5">
+                  {/* Both ways in, always — swapping a folder for a handful of
+                      images is the same decision as choosing them in the first
+                      place, and neither is the other's submenu. */}
+                  <div className="flex items-center gap-3">
+                    <PickButton
+                      icon={FolderOpen}
+                      label="folder"
+                      onClick={() => photos.pick("directory")}
+                    />
+                    <PickButton
+                      icon={Images}
+                      label="images"
+                      onClick={() => photos.pick("files")}
+                    />
+                    {photos.set && (
+                      <button
+                        onClick={photos.clear}
+                        className="ml-auto font-display text-[10px] tracking-widest uppercase
+                                   text-ink-muted hover:text-ink transition-colors"
+                      >
+                        remove
+                      </button>
+                    )}
+                  </div>
+                  {photos.set ? (
+                    <p className="font-mono text-[10px] text-white/45 mt-1.5 truncate">
+                      {/* The count is already in the header; this line is for
+                          which images, which for a hand-picked set is only ever
+                          "the ones you chose". */}
+                      {photos.set.name ?? "picked by hand"}
+                      {photos.set.skipped > 0 && (
+                        <span className="text-white/30"> · {photos.set.skipped} skipped</span>
+                      )}
+                    </p>
+                  ) : (
+                    <p className="font-mono text-[10px] leading-snug text-white/35 mt-1.5">
+                      Play your own images instead of the gallery — a whole folder,
+                      or just the ones you pick. They are read in this browser and
+                      nothing is uploaded, which is also why they have to be chosen
+                      again next visit.
+                    </p>
+                  )}
+                </div>
+              ))}
+
+            {/* Also photos-only: an error here is always from a pick, and would
+                otherwise sit under the gallery tab it has nothing to do with. */}
+            {(onPhotos || importing) && photos.error && (
+              <p className="font-mono text-[10px] text-accent mt-1.5">{photos.error}</p>
+            )}
+          </div>
+
+          <div className="shrink-0 border-t border-white/8 px-4 py-2.5 flex items-center justify-between gap-3">
             <span className="font-display text-[10px] tracking-widest uppercase text-ink-muted">
               speed
             </span>
@@ -492,7 +695,7 @@ export default function VizLaunchModal({
           <button
             ref={startRef}
             onClick={start}
-            disabled={blocked || panelCount === 0}
+            disabled={blocked || runCount === 0 || importing}
             className="font-display text-[10px] tracking-widest uppercase
                        text-accent hover:text-ink border border-accent/40 hover:border-accent
                        rounded px-3.5 py-1.5 transition-colors

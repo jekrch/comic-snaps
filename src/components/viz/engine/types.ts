@@ -1083,6 +1083,9 @@ export interface VizFrame {
 
 export interface VizBackend {
   resize(width: number, height: number, dpr: number): void;
+  /** Move the internal resolution without changing the surface's size. Only the
+   *  WebGL path has one to move; the fallback positions elements. */
+  setRenderScale?(scale: number): void;
   render(frame: VizFrame): void;
   /** True once the panel's texture is resident and drawable. */
   isReady(panelId: string): boolean;

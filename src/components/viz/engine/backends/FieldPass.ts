@@ -51,6 +51,10 @@ const FIELD_MIN_EDGE = 48;
  * pace it — and the pattern Gray–Scott settles into is a function of how many
  * steps it has taken, so a varying count would change what the reaction *is*
  * and not merely how fast it got there.
+ *
+ * Which is also why it comes from the device caps rather than adapting: a phone
+ * runs the reaction at half this and reaches the same patterns half as fast,
+ * where a count that moved with the frame rate would keep changing them.
  */
 const REACT_STEPS = 4;
 /** How hard the frame's edges disturb the reaction, once per frame. */
@@ -103,7 +107,8 @@ export class FieldPass {
     private readonly renderer: Renderer,
     private readonly geometry: Geometry,
     /** Stand-in for a sampler nothing has filled yet. */
-    private readonly blank: Texture
+    private readonly blank: Texture,
+    private readonly reactSteps: number = REACT_STEPS
   ) {
     this.gl = renderer.gl;
   }
@@ -299,7 +304,7 @@ export class FieldPass {
     uniforms.uKill.value = post.reactKill;
     uniforms.uStep.value = Math.max(1, post.reactScale);
 
-    for (let step = 0; step < REACT_STEPS; step++) {
+    for (let step = 0; step < this.reactSteps; step++) {
       uniforms.uPrev.value = pass.targets[pass.read].texture;
       // Only the first step of a frame takes the seed. Applied every step it
       // would be four times the disturbance and the field would flood.
@@ -485,11 +490,27 @@ export class FieldPass {
       (this.gl as unknown as WebGL2RenderingContext).deleteFramebuffer(this.historyFbo);
       this.historyFbo = null;
     }
-    this.historyTarget = null;
+    // The texture, not only the framebuffer over it. ogl's RenderTarget has no
+    // teardown of its own, so dropping the reference leaves the allocation
+    // behind — and at up to 2048² this is the largest texture the engine owns.
+    // Every rebuild stranded one: a rotated phone, a surface sent to a second
+    // window and back, a governor step. On a device with a few hundred MB of
+    // GPU memory to give that is a context loss with a delay on it rather than
+    // a leak you can wait out.
+    if (this.historyTarget) {
+      this.gl.deleteTexture(this.historyTarget.texture.texture);
+      this.historyTarget = null;
+    }
   }
 
   dispose(): void {
     this.disposeHistory();
+    for (const target of this.bloomTargets ?? []) {
+      this.gl.deleteTexture(target.texture.texture);
+    }
+    for (const pass of [this.flow, this.react]) {
+      for (const target of pass?.targets ?? []) this.gl.deleteTexture(target.texture.texture);
+    }
     this.thresholdProgram?.remove();
     this.blurProgram?.remove();
     this.flow?.program.remove();

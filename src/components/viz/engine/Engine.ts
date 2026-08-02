@@ -1,5 +1,5 @@
 import type { Panel } from "../../../types";
-import type { VizConfig } from "../vizConfig";
+import type { DeviceCaps, VizConfig } from "../vizConfig";
 import { deviceCaps, VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../vizConfig";
 import { Director } from "./Director";
 import { Rng } from "./rng";
@@ -17,6 +17,8 @@ export interface EngineStats {
   pending: number;
   scene: string;
   backend: BackendKind;
+  /** Where the quality governor has settled the internal resolution. */
+  renderScale: number;
 }
 
 interface BackendWithStats extends VizBackend {
@@ -25,6 +27,33 @@ interface BackendWithStats extends VizBackend {
 
 /** Returning to a hidden tab must not lurch the whole composition forward. */
 const MAX_DT = 1 / 20;
+
+/**
+ * How long after a run starts — or after the governor last moved — before the
+ * frame rate is worth believing, in real seconds.
+ *
+ * The opening seconds of a run are not representative of it: the shard and post
+ * programs compile on the first frame, the spatial programs on the first
+ * formation, and the first panels upload while all of that is happening. A
+ * governor that sampled through any of it would read a stall as a device that
+ * cannot keep up and cut the resolution of a run that was about to be fine.
+ */
+const GOVERNOR_GRACE = 2.5;
+/** Seconds between governor decisions once it is past the grace period. */
+const GOVERNOR_INTERVAL = 1;
+/** Fraction of the target rate below which the governor gives up resolution. */
+const GOVERNOR_DROP = 0.82;
+/** And above which it starts taking it back. The gap between the two is what
+ *  stops a device sitting exactly on the line from oscillating. */
+const GOVERNOR_RAISE = 0.95;
+/** Consecutive good samples before any is acted on. Asymmetric on purpose: a
+ *  drop is a viewer watching a stutter now, a recovery can afford to be sure. */
+const GOVERNOR_RAISE_SAMPLES = 4;
+/** How far each step moves the scale. Down in bigger strides than up, so the
+ *  governor reaches a rate that works quickly and creeps back rather than
+ *  ping-ponging across the threshold it just crossed. */
+const GOVERNOR_STEP_DOWN = 0.12;
+const GOVERNOR_STEP_UP = 0.05;
 
 /**
  * What the frame is actually putting on screen, for the debug readout. Shards on
@@ -79,6 +108,15 @@ export class VizEngine {
   private lastShardCount = 0;
   private castIds: string[] = [];
   private nextFeatureCheck = 0;
+  private readonly caps: DeviceCaps;
+  /** Live internal resolution, moved by `governQuality`. */
+  private renderScale: number;
+  /** Wall-clock seconds, of the same origin as `lastFrameTime`. */
+  private governorNext = 0;
+  private governorGood = 0;
+  /** Real time of the last *drawn* frame, for the pacing cap. Separate from
+   *  `lastFrameTime`, which a skipped frame deliberately does not advance. */
+  private lastDrawTime = 0;
   /** Waiting on the next drawn frame. See `captureStill`. */
   private stillWaiting: ((blob: Blob | null) => void)[] = [];
   private stillMaxEdge = 2200;
@@ -100,13 +138,15 @@ export class VizEngine {
     this.container = container;
     this.view = container.ownerDocument.defaultView ?? window;
     this.config = config;
-    this.director = new Director(panels, config, new Rng(seed), deviceCaps(this.view));
+    this.caps = deviceCaps(this.view);
+    this.renderScale = this.caps.renderScale;
+    this.director = new Director(panels, config, new Rng(seed), this.caps);
     this.createBackend(forceCss);
     this.observeSize();
   }
 
   private createBackend(forceCss: boolean): void {
-    const caps = deviceCaps(this.view);
+    const caps = this.caps;
     if (!forceCss) {
       try {
         const canvas = this.container.ownerDocument.createElement("canvas");
@@ -114,7 +154,14 @@ export class VizEngine {
         this.container.appendChild(canvas);
         canvas.addEventListener("webglcontextlost", this.handleContextLost);
         this.canvas = canvas;
-        this.backend = new WebGLBackend(canvas, caps);
+        const backend = new WebGLBackend(canvas, caps);
+        this.backend = backend;
+        // A backend rebuilt after a lost context comes up at the device
+        // ceiling. Handing it back the scale the governor had already settled
+        // on means the run does not have to relearn the device — and a context
+        // lost under memory pressure is precisely the moment not to go back to
+        // asking for the most.
+        backend.setRenderScale(this.renderScale);
         this.setBackendKind("webgl");
         return;
       } catch {
@@ -199,6 +246,11 @@ export class VizEngine {
     if (this.running || this.disposed) return;
     this.running = true;
     this.lastFrameTime = 0;
+    this.lastDrawTime = 0;
+    // Nothing measured across a stop is worth carrying over it: a paused run,
+    // a backgrounded tab and a still capture all read as a stalled frame rate.
+    this.governorNext = 0;
+    this.governorGood = 0;
     this.frameHandle = this.view.requestAnimationFrame(this.tick);
   }
 
@@ -213,6 +265,8 @@ export class VizEngine {
     this.frameHandle = this.view.requestAnimationFrame(this.tick);
 
     const seconds = now / 1000;
+    if (!this.shouldDraw(seconds)) return;
+
     const raw = this.lastFrameTime === 0 ? 1 / 60 : seconds - this.lastFrameTime;
     this.lastFrameTime = seconds;
     const dt = Math.min(Math.max(raw, 0), MAX_DT);
@@ -225,6 +279,7 @@ export class VizEngine {
 
     // Smoothed, so the debug readout is legible rather than a strobe.
     if (raw > 0) this.fps += (1 / raw - this.fps) * 0.08;
+    this.governQuality(seconds);
 
     this.backend.requestPanels(this.director.prefetch());
 
@@ -250,6 +305,83 @@ export class VizEngine {
       }
     }
   };
+
+  /**
+   * Frame pacing. See `DeviceCaps.maxFps`.
+   *
+   * A skipped frame leaves `lastFrameTime` alone, so the composition clock
+   * advances by the interval that actually elapsed rather than losing the time
+   * the skip covered — the run is drawn less often, not run slower.
+   *
+   * The 0.9 slack is what keeps a 60fps cap from halving itself on a 60Hz
+   * display: callbacks arrive a fraction under the nominal interval often
+   * enough that an exact comparison would reject every other one.
+   */
+  private shouldDraw(seconds: number): boolean {
+    const maxFps = this.caps.maxFps;
+    if (maxFps <= 0) return true;
+    if (this.lastDrawTime === 0) {
+      this.lastDrawTime = seconds;
+      return true;
+    }
+    if (seconds - this.lastDrawTime < (1 / maxFps) * 0.9) return false;
+    this.lastDrawTime = seconds;
+    return true;
+  }
+
+  /**
+   * Trade internal resolution for frame time, in both directions.
+   *
+   * The post chain is one long fragment program run over every pixel of the
+   * frame, so resolution is the one parameter that buys frame time roughly in
+   * proportion to itself — and the only one that can be moved without changing
+   * what the composition *is*. Cutting effects, panels or motion to hit a rate
+   * would make a phone show a different piece; cutting resolution makes it show
+   * the same piece a little softer, under a filter chain that is already
+   * halftoned and grained.
+   *
+   * Which also makes this the answer to thermal throttling rather than just to
+   * slow devices: an iPhone that has been running the visualiser for five
+   * minutes is not the device that started it, and a fixed scale chosen for
+   * either one is wrong for the other.
+   */
+  private governQuality(seconds: number): void {
+    if (!this.backend?.setRenderScale) return;
+    if (this.governorNext === 0) {
+      this.governorNext = seconds + GOVERNOR_GRACE;
+      return;
+    }
+    if (seconds < this.governorNext) return;
+    this.governorNext = seconds + GOVERNOR_INTERVAL;
+
+    const target = this.caps.maxFps > 0 ? this.caps.maxFps : 60;
+    const floor = this.caps.minRenderScale;
+    const ceiling = this.caps.renderScale;
+
+    if (this.fps < target * GOVERNOR_DROP && this.renderScale > floor) {
+      this.governorGood = 0;
+      this.setRenderScale(Math.max(floor, this.renderScale - GOVERNOR_STEP_DOWN));
+      return;
+    }
+
+    if (this.fps > target * GOVERNOR_RAISE && this.renderScale < ceiling) {
+      if (++this.governorGood < GOVERNOR_RAISE_SAMPLES) return;
+      this.governorGood = 0;
+      this.setRenderScale(Math.min(ceiling, this.renderScale + GOVERNOR_STEP_UP));
+      return;
+    }
+
+    this.governorGood = 0;
+  }
+
+  private setRenderScale(scale: number): void {
+    this.renderScale = scale;
+    this.backend?.setRenderScale?.(scale);
+    // The step itself reallocates every target, which is a stall — and one that
+    // would otherwise be the next sample's evidence that the device is still
+    // too slow. Sit out a grace period rather than reading our own cost back.
+    this.governorNext += GOVERNOR_GRACE - GOVERNOR_INTERVAL;
+  }
 
   /**
    * A still of the frame currently on screen, for the page break to cut apart
@@ -325,6 +457,7 @@ export class VizEngine {
       pending: backendStats.pending,
       scene: this.director.sceneName,
       backend: this.backendKind,
+      renderScale: this.renderScale,
     };
   }
 

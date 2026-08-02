@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Expand, X } from "lucide-react";
 import type { Panel } from "../../types";
-import { formatIssue } from "../../utils/issueFormat";
+import { panelImageUrl } from "../../utils/imageUrl";
+import { panelCredit, panelName } from "./panelLabel";
 
 /** Height of the control row, px. The stack's own resting height, and what the
  *  chrome above it is lifted by until the list is opened. */
@@ -129,7 +130,7 @@ export default function VizPanelStack({
                 many, but the edges are what makes it read as something to open. */}
             <span className={`relative shrink-0 ${stackable ? "viz-stack-deck" : ""}`}>
               <img
-                src={`${import.meta.env.BASE_URL}${panel.image}`}
+                src={panelImageUrl(panel.image)}
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
@@ -142,16 +143,20 @@ export default function VizPanelStack({
             <span className="min-w-0 font-display text-[11px] tracking-wider uppercase leading-relaxed viz-stack-text">
               <span className="flex items-center gap-1.5 min-w-0">
                 <span className="truncate text-white/90 group-hover:text-white transition-colors">
-                  {panel.title} {formatIssue(panel.issue)}
+                  {panelName(panel)}
                 </span>
-                <Expand
-                  size={11}
-                  className="shrink-0 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity"
-                />
+                {/* Only where there is somewhere to open: a local image has no
+                    entry on the wall, so the label is a label and nothing else. */}
+                {onOpen && (
+                  <Expand
+                    size={11}
+                    className="shrink-0 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
+                )}
               </span>
-              <span className="block truncate text-white/50">
-                {panel.artist} · {panel.year}
-              </span>
+              {panelCredit(panel) && (
+                <span className="block truncate text-white/50">{panelCredit(panel)}</span>
+              )}
             </span>
           </button>
         )}
@@ -241,7 +246,7 @@ function StackCard({
       title={onOpen ? "Open this panel in the viewer" : undefined}
     >
       <img
-        src={`${import.meta.env.BASE_URL}${panel.image}`}
+        src={panelImageUrl(panel.image)}
         alt=""
         aria-hidden="true"
         loading="lazy"
@@ -250,16 +255,18 @@ function StackCard({
       />
       <span className="min-w-0 flex-1 font-display text-[11px] tracking-wider uppercase leading-relaxed text-left">
         <span className="block truncate text-white/90 group-hover:text-white transition-colors">
-          {panel.title} {formatIssue(panel.issue)}
+          {panelName(panel)}
         </span>
-        <span className="block truncate text-white/50">
-          {panel.artist} · {panel.year}
-        </span>
+        {panelCredit(panel) && (
+          <span className="block truncate text-white/50">{panelCredit(panel)}</span>
+        )}
       </span>
-      <Expand
-        size={11}
-        className="shrink-0 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity"
-      />
+      {onOpen && (
+        <Expand
+          size={11}
+          className="shrink-0 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity"
+        />
+      )}
     </button>
   );
 }

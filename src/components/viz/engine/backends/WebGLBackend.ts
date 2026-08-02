@@ -76,6 +76,13 @@ export class WebGLBackend implements VizBackend {
   private height = 1;
   private aspect = 1;
   private disposed = false;
+  /** Live internal-resolution multiplier. Starts at `caps.renderScale` and is
+   *  moved by the engine's governor; `caps.renderScale` stays the ceiling. */
+  private renderScale: number;
+  /** Last CSS size seen, so a scale change can re-derive the buffers without
+   *  waiting for the container to move. */
+  private cssWidth = 1;
+  private cssHeight = 1;
 
   constructor(canvas: HTMLCanvasElement, private readonly caps: DeviceCaps) {
     this.renderer = new Renderer({
@@ -94,6 +101,7 @@ export class WebGLBackend implements VizBackend {
     }
 
     this.maxShards = caps.maxShardsPerPass;
+    this.renderScale = caps.renderScale;
     this.pool = new TexturePool(this.gl, caps.texturePoolSize, caps.textureMaxEdge);
 
     const geometry = new Triangle(this.gl);
@@ -228,7 +236,7 @@ export class WebGLBackend implements VizBackend {
     });
     this.postMesh = new Mesh(this.gl, { geometry, program: this.postProgram });
 
-    this.fields = new FieldPass(this.renderer, geometry, this.pool.blank);
+    this.fields = new FieldPass(this.renderer, geometry, this.pool.blank, caps.reactSteps);
     this.targets = [this.makeTarget(1, 1), this.makeTarget(1, 1)];
     this.feedback = this.makeFeedback(1, 1);
   }
@@ -278,15 +286,45 @@ export class WebGLBackend implements VizBackend {
 
   resize(width: number, height: number): void {
     if (this.disposed) return;
+    this.cssWidth = width;
+    this.cssHeight = height;
+    this.renderer.dpr = this.renderScale;
     this.renderer.setSize(width, height);
-    this.width = Math.max(1, Math.round(width * this.caps.renderScale));
-    this.height = Math.max(1, Math.round(height * this.caps.renderScale));
+    // Floored rather than rounded so these agree exactly with the drawing
+    // buffer ogl just sized, which truncates — a one-pixel disagreement would
+    // put `uResolution` and the viewport out of step with the framebuffer.
+    const nextWidth = Math.max(1, Math.floor(width * this.renderScale));
+    const nextHeight = Math.max(1, Math.floor(height * this.renderScale));
+    // A resize that lands on the same buffer size is anything but free — it
+    // reallocates every target and rebuilds the history atlas. The observer
+    // fires on sub-pixel container changes and on every mount of the chrome
+    // around the surface, so the early return is what keeps a layout nudge from
+    // being a dropped frame.
+    if (nextWidth === this.width && nextHeight === this.height) return;
+    this.width = nextWidth;
+    this.height = nextHeight;
     this.aspect = this.width / this.height;
     for (const target of this.targets) target.setSize(this.width, this.height);
     this.spatial?.resize(this.width, this.height);
     this.fields.resize(this.width, this.height);
     this.gl.deleteTexture(this.feedback.texture);
     this.feedback = this.makeFeedback(this.width, this.height);
+  }
+
+  /**
+   * Move the internal resolution without touching the CSS size — the canvas
+   * keeps filling the container and the compositor upscales what it is given.
+   *
+   * Clamped to the device ceiling so a governor cannot supersample a phone past
+   * what its caps allow, and no-ops on a scale that rounds to the same buffer,
+   * so a governor nudging by hundredths does not reallocate on every step.
+   */
+  setRenderScale(scale: number): void {
+    if (this.disposed) return;
+    const next = Math.min(this.caps.renderScale, Math.max(0.25, scale));
+    if (Math.abs(next - this.renderScale) < 1e-4) return;
+    this.renderScale = next;
+    this.resize(this.cssWidth, this.cssHeight);
   }
 
   isReady(panelId: string): boolean {
@@ -299,6 +337,10 @@ export class WebGLBackend implements VizBackend {
 
   render(frame: VizFrame): void {
     if (this.disposed) return;
+    // Ahead of the draw, so a panel that lands this frame is drawable this
+    // frame — and metered, so a burst of decodes finishing together is spread
+    // across frames instead of blocking one of them.
+    this.pool.flush(this.caps.uploadsPerFrame);
     const spatial = frame.stage ? this.ensureSpatial() : null;
     // Without the spatial pass the shard path still runs, and a spatial frame
     // carries no shards — so the degraded result is the background, not a

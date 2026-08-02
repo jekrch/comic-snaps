@@ -1,6 +1,7 @@
 import { Texture } from "ogl";
 import type { OGLRenderingContext } from "ogl";
 import type { Panel } from "../../../types";
+import { panelImageUrl } from "../../../utils/imageUrl";
 
 const MAX_CONCURRENT_DECODES = 2;
 
@@ -22,6 +23,15 @@ interface Entry {
 export class TexturePool {
   private readonly entries = new Map<string, Entry>();
   private readonly pending = new Set<string>();
+  /**
+   * Decoded and waiting for the GPU. The decode itself is off-thread, but the
+   * `texImage2D` that follows it is not — a 768px RGBA panel is two megabytes
+   * pushed across on the main thread, and two of those landing in the same task
+   * is a dropped frame you can see. So the upload is separated from the decode
+   * and metered by the frame loop instead of happening whenever the network
+   * happens to answer.
+   */
+  private readonly staged = new Map<string, ImageBitmap>();
   private readonly queue: Panel[] = [];
   private readonly pinned = new Set<string>();
   private inflight = 0;
@@ -60,9 +70,30 @@ export class TexturePool {
   request(panel: Panel): void {
     if (this.disposed) return;
     if (this.entries.has(panel.id) || this.pending.has(panel.id)) return;
+    if (this.staged.has(panel.id)) return;
     if (this.queue.some((p) => p.id === panel.id)) return;
     this.queue.push(panel);
     this.pump();
+  }
+
+  /**
+   * Upload up to `budget` decoded panels. Called once per frame by the backend,
+   * which is the whole point: the cost lands on a frame that chose to pay it
+   * rather than on whichever frame a fetch happened to resolve under.
+   *
+   * A panel that has decoded but not yet uploaded simply isn't `has()` yet, so
+   * it is skipped by the frame that wanted it and drawn by the next one — the
+   * same one-frame wait the decode queue already imposes.
+   */
+  flush(budget: number): void {
+    if (this.disposed) return;
+    let left = Math.max(0, budget);
+    while (left > 0 && this.staged.size > 0) {
+      const [panelId, bitmap] = this.staged.entries().next().value!;
+      this.staged.delete(panelId);
+      this.insert(panelId, bitmap);
+      left--;
+    }
   }
 
   /**
@@ -79,22 +110,24 @@ export class TexturePool {
   }
 
   get pendingCount(): number {
-    return this.pending.size + this.queue.length;
+    return this.pending.size + this.queue.length + this.staged.size;
   }
 
   private pump(): void {
     while (!this.disposed && this.inflight < MAX_CONCURRENT_DECODES && this.queue.length > 0) {
       const panel = this.queue.shift()!;
       if (this.entries.has(panel.id) || this.pending.has(panel.id)) continue;
+      if (this.staged.has(panel.id)) continue;
       this.pending.add(panel.id);
       this.inflight++;
       void this.decode(panel)
         .then((bitmap) => {
-          if (this.disposed) {
+          if (this.disposed || !bitmap) {
             bitmap?.close?.();
             return;
           }
-          if (bitmap) this.insert(panel.id, bitmap);
+          // Held, not uploaded — `flush` decides which frame pays for it.
+          this.staged.set(panel.id, bitmap);
         })
         .catch(() => {
           /* a panel that will not decode is simply never selected again */
@@ -108,7 +141,7 @@ export class TexturePool {
   }
 
   private async decode(panel: Panel): Promise<ImageBitmap | null> {
-    const url = `${import.meta.env.BASE_URL}${panel.image}`;
+    const url = panelImageUrl(panel.image);
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${res.status} for ${url}`);
     const blob = await res.blob();
@@ -171,6 +204,8 @@ export class TexturePool {
   dispose(): void {
     this.disposed = true;
     this.queue.length = 0;
+    for (const bitmap of this.staged.values()) bitmap.close?.();
+    this.staged.clear();
     for (const entry of this.entries.values()) {
       this.gl.deleteTexture(entry.texture.texture);
     }

@@ -1,4 +1,5 @@
 import type { Panel } from "../../../../types";
+import { panelImageUrl } from "../../../../utils/imageUrl";
 import type { DrawShard, VizBackend, VizFrame } from "../types";
 import { CSS_BLEND } from "../types";
 
@@ -57,7 +58,7 @@ export class CssBackend implements VizBackend {
       if (this.images.has(panel.id)) continue;
       const img = new Image();
       img.decoding = "async";
-      img.src = `${import.meta.env.BASE_URL}${panel.image}`;
+      img.src = panelImageUrl(panel.image);
       img.onload = () => this.ready.add(panel.id);
       this.images.set(panel.id, img);
     }

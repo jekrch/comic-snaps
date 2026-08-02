@@ -18,6 +18,7 @@ import VizLaunchModal from "./components/viz/VizLaunchModal";
 import VizThought from "./components/viz/VizThought";
 import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
 import { findPreset, initialPresetId, presetConfig } from "./components/viz/vizPresets";
+import { useLocalPhotos } from "./components/viz/localPhotos/useLocalPhotos";
 import { decodeVizConfig, diffConfigJson, encodeVizConfig } from "./components/viz/vizUrl";
 import type { VizConfig } from "./components/viz/vizConfig";
 
@@ -73,6 +74,10 @@ export default function App() {
     return {
       presetId: preset.id,
       config,
+      // A link cannot carry somebody's photo folder — nothing about the local
+      // set is written down, by design — so a run started from one is always
+      // the gallery's.
+      localPhotos: false,
       fullscreen: false,
       // A cold load has no click behind it, so a window opened here would be
       // blocked. The run starts in this one; the chrome's own button is a
@@ -92,6 +97,13 @@ export default function App() {
    * behind.
    */
   const [vizCovered, setVizCovered] = useState(false);
+  /**
+   * A folder of the reader's own images, offered to the visualizer as an
+   * alternative to the gallery. Held here rather than in the chooser because
+   * the chooser unmounts on the way out and a run outlives it — and the `blob:`
+   * URLs the run is drawing die the moment they are released.
+   */
+  const localPhotos = useLocalPhotos();
 
   const handleOpenViz = useCallback(() => setVizPrompt(true), []);
 
@@ -489,6 +501,7 @@ export default function App() {
       {vizPrompt && status === "ready" && (
         <VizLaunchModal
           panelCount={sortedPanels.length}
+          photos={localPhotos}
           initialSpeed={initialVizSpeed}
           behind={vizRun !== null && !vizLeaving}
           covered={vizRun !== null && !vizLeaving && vizCovered}
@@ -510,7 +523,7 @@ export default function App() {
           fallback={null}
         >
           <VisualizerOverlay
-            panels={sortedPanels}
+            panels={vizRun.localPhotos ? (localPhotos.set?.panels ?? []) : sortedPanels}
             config={vizRun.config}
             presetId={vizRun.custom ? null : vizRun.presetId}
             fullscreen={vizRun.fullscreen}
@@ -522,8 +535,10 @@ export default function App() {
             /* The pinned label can hand a panel straight to the viewer, which
                opens on top of the run rather than in place of it: the
                composition keeps playing behind the lightbox and is still there
-               when the panel is closed. */
-            onOpenPanel={handleSelectPanel}
+               when the panel is closed. Withheld on a local run — the viewer
+               reads its prev/next off the wall, and the reader's own photos are
+               not on it. */
+            onOpenPanel={vizRun.localPhotos ? undefined : handleSelectPanel}
             viewerOpen={openIndex >= 0}
             onCovered={() => setVizCovered(true)}
             onLeaving={() => setVizLeaving(true)}

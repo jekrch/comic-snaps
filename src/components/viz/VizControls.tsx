@@ -13,7 +13,7 @@ import {
   Play,
 } from "lucide-react";
 import type { Panel } from "../../types";
-import { formatIssue } from "../../utils/issueFormat";
+import { panelCredit, panelName } from "./panelLabel";
 import VizModeControl from "./VizModeControl";
 import VizSpeedControl from "./VizSpeedControl";
 
@@ -193,12 +193,10 @@ export default function VizControls({
               className="font-display text-[11px] tracking-wider uppercase leading-relaxed"
               style={{ animation: "scrimIn 700ms ease-out" }}
             >
-              <div className="text-white/85 truncate">
-                {feature.title} {formatIssue(feature.issue)}
-              </div>
-              <div className="text-white/45 truncate">
-                {feature.artist} · {feature.year}
-              </div>
+              <div className="text-white/85 truncate">{panelName(feature)}</div>
+              {panelCredit(feature) && (
+                <div className="text-white/45 truncate">{panelCredit(feature)}</div>
+              )}
             </div>
           )}
         </div>

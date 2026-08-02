@@ -75,6 +75,14 @@ export interface Panel {
   credits?: string[];
   /** Manual override for masonry column span; omit to fall back to aspect-ratio detection. */
   columnSpan?: 1 | 2;
+  /**
+   * Not from the gallery: an image the reader chose off their own disk to feed
+   * a visualizer run. Its `image` is a `blob:` URL that lives only as long as
+   * the tab, nothing is uploaded, and it never reaches the wall or the viewer —
+   * so everything that would name a panel has nothing to say about it beyond
+   * its filename, and says nothing.
+   */
+  local?: boolean;
 }
 
 export interface Gallery {

@@ -883,7 +883,36 @@ export interface DeviceCaps {
   texturePoolSize: number;
   /** Longest edge of a decoded texture, px. */
   textureMaxEdge: number;
+  /**
+   * Internal resolution multiplier the run *starts* at. Not the one it stays
+   * at: the engine's governor moves the live scale within
+   * `[minRenderScale, renderScale]` from here (see `VizEngine.governQuality`).
+   */
   renderScale: number;
+  /**
+   * How far down the governor may push. The post chain is fill-bound almost
+   * everywhere — one 1400-line fragment over every pixel — so resolution is the
+   * only knob that buys frame time in proportion to itself, and on a phone that
+   * is thermally throttling it is the difference between a slow composition and
+   * a stuttering one. The floor is well above the point where the halftone
+   * screen starts aliasing against the upscale.
+   */
+  minRenderScale: number;
+  /**
+   * Frames per second the loop paces itself to, or 0 for "whatever rAF offers".
+   *
+   * Capped on mobile because a ProMotion iPhone hands out 120Hz callbacks, and
+   * a frame chain that takes 12ms is *comfortable* at 60 and permanently late
+   * at 120 — where the miss pattern alternates rather than settling, which reads
+   * as juddering rather than as slow. Halving the target doubles the budget and
+   * costs nothing a viewer can see at this material's motion rates.
+   */
+  maxFps: number;
+  /** Gray–Scott steps per frame. Four settles the chemistry faster than two;
+   *  two is four quarter-res passes a phone does not spend. */
+  reactSteps: number;
+  /** GPU texture uploads allowed in a single frame — see `TexturePool.flush`. */
+  uploadsPerFrame: number;
   /** Feedback FBO scale relative to the render target — the blur hides it. */
   feedbackScale: number;
   /** Shards composited in a single pass; more than this ping-pongs in batches. */
@@ -912,7 +941,15 @@ export function deviceCaps(view: Window | null = defaultView()): DeviceCaps {
   return {
     texturePoolSize: mobile ? 8 : 16,
     textureMaxEdge: mobile ? 768 : 1024,
-    renderScale: mobile ? 1 : Math.min(dpr, 1.5),
+    // Mobile starts a shade under its own CSS resolution rather than at it. The
+    // governor would find this within a couple of seconds anyway; starting here
+    // means the opening of a run — which is the part a viewer judges it on — is
+    // not the part that stutters.
+    renderScale: mobile ? 0.85 : Math.min(dpr, 1.5),
+    minRenderScale: mobile ? 0.5 : 0.75,
+    maxFps: mobile ? 60 : 0,
+    reactSteps: mobile ? 2 : 4,
+    uploadsPerFrame: 1,
     feedbackScale: 0.75,
     maxShardsPerPass: 12,
     stagePanels: mobile ? 5 : 13,
