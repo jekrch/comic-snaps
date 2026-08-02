@@ -1,3 +1,5 @@
+import { JULIA_WRAP } from "../julia";
+
 /**
  * The post chain. One shader, every effect gated by its own amount uniform,
  * so a zeroed effect costs a uniform branch and nothing else.
@@ -98,8 +100,9 @@ uniform float uLattice;
 uniform float uLatticeScale;
 uniform float uJulia;
 uniform float uJuliaZoom;
-/** Half the seed's multiplier, where the walk currently has it. The seed itself
- *  is c = m - m^2, and it is finished per pixel because the page moves it. */
+/** Half the seed's multiplier, where the walk currently has it — the seed itself
+ *  is c = m - m^2. One map for the whole frame, and see the note in the Julia
+ *  branch for why nothing per-pixel is allowed to move it. */
 uniform vec2 uJuliaM;
 /** The repelling fixed point the flight heads into, and the two coefficients
  *  that carry the frame toward it — see the note in the backend. All complex. */
@@ -113,6 +116,15 @@ uniform float uJuliaAnchor;
 uniform float uJuliaBind;
 uniform float uJuliaDepth;
 uniform float uJuliaEdge;
+/** Side of the facets the page is carried in, before the exponential the Julia
+ *  branch puts it through. 0 lets the displacement run continuously. */
+uniform float uJuliaFacet;
+/** Share of the facets cut out as plain windows onto the page. Needs facets to
+ *  have a shape, so it does nothing while uJuliaFacet is 0. */
+uniform float uJuliaPlate;
+/** Where the flight's own fixed point sits, in stage units. Drifts, so the
+ *  vanishing point is not pinned to the middle of the frame forever. */
+uniform vec2 uJuliaCenter;
 uniform float uQuasi;
 uniform float uQuasiFreq;
 uniform float uTurbulence;
@@ -155,11 +167,7 @@ const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
  *  would leave the compiler no choice but to keep the whole body live. */
 const int FOLD_ITERS = ${FOLD_ITERS};
 const int JULIA_ITERS = ${JULIA_ITERS};
-/** Widest excursion the page may drive the seed's multiplier through, as a
- *  fraction of it. The walk is held under 0.45 and the disc's edge is at 0.5, so
- *  a tenth is the largest value that cannot push a pixel out of the family of
- *  connected sets — which is a cliff rather than a limit, hence the margin. */
-const float JULIA_DRIVE = 0.1;
+const int JULIA_WRAP = ${JULIA_WRAP};
 /** How near the attractor an orbit has to get before it counts as finished.
  *  Coarse on purpose: the multiplier can be as slow as 0.9 a step, and a tighter
  *  disc would leave most of the interior still travelling when the iteration cap
@@ -342,6 +350,10 @@ vec2 fromStage(vec2 p) { return p / vec2(uAspect, 1.0) + 0.5; }
  * geometry, never three different foldings of it.
  */
 vec2 distort(vec2 uv, float disp) {
+  /* The frame as it was composited, before any of this. Kept for the Julia
+   * plates, which are the one thing in the chain whose whole purpose is to be
+   * *undistorted* — see the note where they are cut. */
+  vec2 plain = uv;
   if (uTunnel > 0.0) {
     vec2 t = toStage(uv);
     // The floor on radius matters: 1/r at the vanishing point is an infinite
@@ -442,7 +454,21 @@ vec2 distort(vec2 uv, float disp) {
     // this mode actually runs at are a neighbourhood of the fixed point the
     // flight below is heading into.
     float s = 3.0 * uJuliaZoom;
-    vec2 w = toStage(uv) * s;
+    /*
+     * Offset before scaled, which is what makes the drift a move of the *camera*
+     * rather than of the set: the fixed point stays where it is in the plane and
+     * the frame is placed around it, so the flight is still the same descent
+     * onto the same point and only its position on screen has changed.
+     *
+     * The wrap does not mind. What comes back to itself every JULIA_WRAP turns
+     * is the map from w to the picture, so any coordinate handed to it that is
+     * merely continuous in time is continuous across the seam too. What the
+     * drift does cost is a little of the seam's precision — the two correction
+     * terms are a series about w = 0, and a frame carried off that point is a
+     * frame whose far corner sits further out in it than it used to. The clamp
+     * a few lines down is what keeps that from ever being more than a smudge.
+     */
+    vec2 w = (toStage(uv) - uJuliaCenter) * s;
 
     /*
      * The flight, and the reason it can run forever.
@@ -482,39 +508,43 @@ vec2 distort(vec2 uv, float disp) {
     /*
      * The page, driving the figure.
      *
-     * Without this the panels are wallpaper: the set has its own shape, the art
-     * is merely what the shape is filled with, and a new panel changes the
+     * Without this the panels are wallpaper: the figure has its own shape, the
+     * art is merely what the shape is filled with, and a new panel changes the
      * colours and nothing else. Here the frame is read at two scales and the
      * difference between them — the page's own structure, at the size of a
-     * figure or a speech balloon, with its overall brightness divided out — is
-     * added to the seed. So the boundary bulges where the panel has a shape in
-     * it, and when a panel changes the *edges* move.
+     * figure or a speech balloon, with overall brightness divided out — moves
+     * where the trap sits. So the filaments run differently where the panel has
+     * a shape in it, and a change of panel moves the drawn edges.
      *
      * Both taps come out of the mip chain the backend is already keeping for the
      * fetch, so the whole coupling costs two of the cheapest samples available.
      *
-     * The seed is perturbed through mu rather than through c, which is what
-     * keeps this safe. Every mu inside the unit disc is a connected set; c has
-     * no such easy test, and a seed nudged across the boundary of the Mandelbrot
-     * set would not deform the figure, it would shatter that pixel into dust.
-     * The walk stays inside |mu/2| <= 0.45 and this can move it by a tenth, so
-     * the product cannot reach the edge of the disc.
+     * What the page is deliberately *not* allowed to touch is the seed, and that
+     * restraint is the whole reason this mode can fly at all. Perturbing the
+     * seed per pixel was the obvious way to make the art bend the figure, and it
+     * worked, and it quietly destroyed the wrap: the flight is a descent onto one
+     * map's fixed point, and a pixel given its own map is descending onto a fixed
+     * point that is not there. Measured at the seam, the picture moved by half a
+     * frame at every turn — the loop that no amount of care about the geometry
+     * could account for. Everything driven from here is a *sampling* choice
+     * instead: where along the orbit the page is picked up, and which contour
+     * carries which crop. Both change the drawn figure. Neither moves the set,
+     * so both survive the wrap exactly.
      */
     float drive = 0.0;
     if (uJuliaBind > 0.0) {
       // Named around near/far, which some drivers still treat as spoken for.
       vec3 pageNear = textureLod(uScene, uv, 4.0).rgb;
       vec3 pageFar = textureLod(uScene, uv, 7.0).rgb;
-      drive = clamp((dot(pageNear, LUMA) - dot(pageFar, LUMA)) * 3.0, -1.0, 1.0)
-        * uJuliaBind * JULIA_DRIVE;
+      drive = clamp((dot(pageNear, LUMA) - dot(pageFar, LUMA)) * 3.0, -1.0, 1.0) * uJuliaBind;
     }
-    vec2 m = uJuliaM * (1.0 + drive);
+    vec2 m = uJuliaM;
     vec2 c = m - cmul(m, m);
-    // The trap moves with the page too, and off the same field. The seed decides
-    // where the set's edges are; this decides where along each orbit the page is
-    // picked up, so between them a panel change moves both the figure and what
-    // is drawn on it.
-    float trapR = uJuliaTrap * (1.0 + drive * 3.0);
+    // Where along each orbit the page is picked up. Nearly half either way at
+    // full drive, which is enough to move a filament clear of where it was — the
+    // trap set is what the filaments are *drawn along*, so moving it redraws
+    // them without touching the dynamics that put them there.
+    float trapR = uJuliaTrap * (1.0 + drive * 0.45);
 
     /*
      * The guard, and it is what makes the wrap invisible rather than merely
@@ -534,7 +564,10 @@ vec2 distort(vec2 uv, float disp) {
      * so prepending a point inside it changes nothing at all. Both orbits then
      * trap over the identical set.
      */
-    float guard = 0.5 * s * sqrt(1.0 + uAspect * uAspect);
+    // The drift is in it because this is the radius of the *frame's* own
+    // neighbourhood of the fixed point, and a frame carried off centre reaches
+    // further into the plane than a centred one of the same size.
+    float guard = (0.5 * sqrt(1.0 + uAspect * uAspect) + length(uJuliaCenter)) * s;
 
     vec2 trap = z;
     vec2 trapD = dz;
@@ -634,32 +667,218 @@ vec2 distort(vec2 uv, float disp) {
      * seed, which is what keeps the wrap seamless: it is the same field at every
      * point of the cycle.
      */
-    // What depth is worth: a different crop of the page in every contour of the
-    // escape time, cycling with period one so that the wrap — which advances
-    // depth by exactly one everywhere — lands back on itself. Under the flight
-    // these contours are what sweeps outward past the eye.
-    vec2 band = vec2(cos(nu * TAU), sin(nu * TAU)) * (uJuliaDepth * 0.5);
-    vec2 target = mirrorUv(fromStage(trap * uJuliaSpread + band + toStage(uv) * uJuliaAnchor));
+    /*
+     * What depth is worth: a different crop of the page in every contour of the
+     * escape time, and under the flight these contours are what sweeps outward
+     * past the eye.
+     *
+     * The crop comes back to itself over JULIA_WRAP contours rather than over
+     * one, which is the same span the flight's own wrap uses — anything shorter
+     * would be a pattern repeating inside a picture that does not, and it was
+     * the strongest periodic signal in the frame when it was one.
+     *
+     * The other half of that number is legibility, and it is the larger half. A
+     * crop that turned a full circle between one contour and the next varied as
+     * fast as the contours themselves do, which near the boundary is faster than
+     * the pixels — so the page arrived as an average of everywhere at once. Over
+     * five contours the same excursion is spread across five, and the sampling is
+     * coherent enough over most of the frame for the art to be read as art.
+     */
+    // The page has a second say here, on the same field and the same terms: it
+    // shifts which contour carries which crop, so the banding is laid out by the
+    // panel rather than by the arithmetic alone. Inside the period, so the wrap
+    // is untouched.
+    float bandTurn = (nu + drive * 0.8) * TAU / float(JULIA_WRAP);
+
+    /*
+     * Everything the fractal contributes to where the page is read, gathered
+     * into one displacement — and beside it, how fast that displacement varies,
+     * in texels of page crossed per pixel of frame. The trap's rate is its own
+     * derivative, carried down the orbit; the band's is the depth field's
+     * gradient through the rate the crop turns at.
+     */
+    vec2 band = vec2(cos(bandTurn), sin(bandTurn)) * (uJuliaDepth * 0.5);
+    vec2 off = trap * uJuliaSpread + band;
+    float offJac =
+      length(trapD) * uJuliaSpread + uJuliaDepth * 0.5 * grad * TAU / float(JULIA_WRAP);
+    // How much of the frame's own footprint the sample carries. One while the
+    // displacement runs free; the facets below cut it to nearly nothing inside
+    // a facet and hand the whole of it to the joins.
+    float offSlope = 1.0;
+    // Coverage of the plates cut below, 0 outside them and 1 within.
+    float plate = 0.0;
+
+    /*
+     * The facets, and they are the answer to a mode whose page arrived as colour
+     * and texture and never as comic.
+     *
+     * The obvious suspect was resolution, and measured, it is innocent: the
+     * displacement above moves the sample by well under a texel per pixel across
+     * most of the frame, so the fetch is already reading the page sharp. The
+     * fault is at the other end of the scale. Legibility is not a property of
+     * one pixel, it is a property of a *region* — a face is a face because two
+     * hundred pixels of frame carry two hundred neighbouring texels of page —
+     * and at half a texel per pixel this displacement rewrites the crop by a
+     * tenth of the page across the width of that face, which is more than the
+     * anchor moves in the same span. Every pixel sharp, every feature gone. Turn
+     * the rate down far enough to fix that and the fractal goes with it, because
+     * a displacement too slow to break a face is too slow to be seen.
+     *
+     * So the displacement is *flattened* rather than slowed. A staircase with
+     * rounded risers holds it constant across the tread and spends its whole
+     * excursion in the join: within one facet the map is exactly the anchor, an
+     * affine crop of the page at its own scale, which is a face or a balloon or
+     * a run of lettering and unmistakably one. The excursion between facets is
+     * untouched — the staircase rises by exactly one tread per tread — so the
+     * figure still runs through as much of the page as it ever did, and the
+     * facets themselves are the level sets of the trap and the escape time,
+     * which is to say they are fractal, and their joins are the filaments.
+     *
+     * Rounded rather than square because the flight has to be continuous. A hard
+     * floor is a picture that snaps a whole region onto a new crop the instant
+     * the level set crosses it; the smoothstep spends a fifth of each tread
+     * getting there, so facets flow into their neighbours instead. That fifth is
+     * the one part of the frame that is smeared, and it is exactly the part the
+     * lod below is told about — the riser's own slope, which is analytic, so the
+     * joins are blurred by precisely their own compression and no more.
+     *
+     * Free of the wrap. The staircase is a function of a displacement that
+     * already comes back to itself every JULIA_WRAP turns, and a function of a
+     * periodic thing has its period.
+     */
+    if (uJuliaFacet > 0.0) {
+      // Facet side, in stage units — a fiftieth of the frame at the bottom of
+      // the slider, a quarter of it at the top.
+      float q = 0.02 * exp2(3.6 * uJuliaFacet);
+      /*
+       * The one case the flattening cannot rescue: where the displacement varies
+       * so fast that a whole facet is thinner than a pixel, the staircase is
+       * below the sampling rate and reads as noise rather than as facets. That
+       * is a hundredth of the frame at this preset's altitude — the deepest
+       * filaments — and there the excursion is damped instead, which hands those
+       * pixels back to the anchor's plain crop. Resolution-aware, because
+       * whether a facet is thin is a question about pixels and the internal
+       * resolution moves with the device.
+       */
+      float cap = q * uResolution.y / 3.0;
+      float k = 1.0 / (1.0 + offJac / max(cap, 1e-4));
+      off *= k;
+      offJac *= k;
+
+      /*
+       * The plates, cut from the displacement before it is flattened rather than
+       * from the facets it is flattened into — which is not a detail, it is the
+       * difference between a coverage and a lottery.
+       *
+       * Keyed to the facets, the plates were a hash of the facet's own index,
+       * and the whole frame only holds twenty or thirty facets: the displacement
+       * runs over about one stage unit and a facet is a sixth of one. Thirty
+       * coin flips do not make a coverage. Measured across the flight it came
+       * out at six percent of the frame at one point of the descent and *none*
+       * at another, which for the one feature here whose job is to be reliably
+       * legible is the wrong failure to have.
+       *
+       * Against the displacement itself the coverage is exact and needs no luck:
+       * the triangular wave below is uniform over its period by construction, so
+       * the share of the frame inside the window is the window's own width, and
+       * two axes of it multiply to the coverage asked for. The regions are
+       * bounded by level sets of the trap and the escape time, so they are
+       * fractal curves, and they sit at the facets' own scale because they are
+       * cut with the facets' own quantum — a window in the middle of each cell,
+       * with the figure left standing between them.
+       */
+      if (uJuliaPlate > 0.0) {
+        // Per axis, so the two together cover the fraction asked for.
+        float win = sqrt(uJuliaPlate);
+        // 0 at the middle of a cell, 1 at its edge.
+        vec2 g = abs(fract(off / q) - 0.5) * 2.0;
+        vec2 inWin = 1.0 - smoothstep(win - 0.02, win + 0.02, g);
+        plate = inWin.x * inWin.y;
+      }
+
+      vec2 t = off / q;
+      vec2 base = floor(t);
+      vec2 f = t - base;
+      /*
+       * Riser width, as a fraction of a tread, and narrow rather than gentle.
+       *
+       * A wide riser is a gentler join but it is also a larger part of the frame
+       * spent in transit, and in transit is precisely where the page is being
+       * dragged past the sample faster than the fetch can follow. Measured over
+       * a scanline, widening this from a tenth to a quarter takes the frame that
+       * sits in a run of a hundred coherent pixels or more from two thirds to a
+       * half, and the smeared fraction from a fifth to two fifths. It is the
+       * rare knob where both ends of the trade point the same way, and the only
+       * thing lost by narrowing it is that the joins are harder — which on a
+       * fractal figure reads as an edge, and edges are wanted here.
+       */
+      float rise = 0.12;
+      vec2 e = clamp((f - (1.0 - rise)) / rise, 0.0, 1.0);
+      off = q * (base + e * e * (3.0 - 2.0 * e));
+      // Slope of that riser, which is the smoothstep's own derivative: zero
+      // across the tread, and 1.5 / rise at the middle of the join.
+      vec2 slope = 6.0 * e * (1.0 - e) / rise;
+      offSlope = max(slope.x, slope.y);
+
+      /*
+       * The plates, and they are a different answer to the same question than
+       * everything above — an admission, really, that the question could not be
+       * answered where it was being asked.
+       *
+       * Facets make the fractal's own sampling legible, and measured, they do:
+       * the run of frame carrying one coherent crop goes from a median of thirty
+       * pixels to a median of a hundred and fifty. It is not enough, and the
+       * reason it is not enough is everything the figure is wearing. The crop
+       * arrives at twice its own size, inside a wedge of a six-fold mirror, with
+       * a feedback trail over it — and a hundred and fifty pixels of doubled,
+       * mirrored panel is an ornament made out of a comic, not a comic. There is
+       * no setting of the numbers above that gets past that, because the mirror
+       * and the magnification are the mode.
+       *
+       * So a share of the facets stop carrying the figure at all and become
+       * windows. Inside one the coordinate is the frame's own, untouched by the
+       * fold, the trap, the anchor and the flight alike: the panel, where the
+       * panel actually is, at the size it actually is. Every plate shows the
+       * same coordinate as every other, so the plates are not a scatter of
+       * different crops — they are one image, seen through a stencil the fractal
+       * cut. What the eye does with that is reassemble it, which is the whole
+       * point: the figure can be as strange as it likes as long as something in
+       * the frame says what it is strange *about*.
+       *
+       * The cut itself is a cut and not a blend. A coordinate mixed halfway
+       * between the frame and the far side of a fractal is a coordinate pointing
+       * nowhere, and a wide join is a wide band of that; a narrow one costs a
+       * few pixels of smear at the border and buys an edge, which is what a
+       * plate wants anyway.
+       *
+       * Where they are cut from is the note further down, at the cut itself.
+       */
+    }
+
+    vec2 target = mirrorUv(fromStage(off + toStage(uv) * uJuliaAnchor));
     // Mirrored before the blend, not after, on the same reasoning as the tunnel:
     // both ends of the mix are then in-frame coordinates, so ramping the effect
     // in is a bounded morph rather than a sweep through however many repeats lie
     // between here and the trap.
     uv = mix(uv, target, uJulia);
-    // Every term that moves the sample, summed: the trap's own derivative, the
-    // depth banding through its gradient, and the anchor, which is the one that
-    // cannot vanish. Scaled by the blend as well, because a half-strength mix
-    // compresses the frame half as hard, and floored at 1 because there is no
-    // detail above level 0 to ask for.
+    // Every term that moves the sample, summed: the fractal displacement at
+    // whatever slope it is being carried at, and the anchor, which is the one
+    // that cannot vanish. Scaled by the blend as well, because a half-strength
+    // mix compresses the frame half as hard, and floored at 1 because there is
+    // no detail above level 0 to ask for.
     //
-    // The banding term is the reason this is a sum rather than the trap alone.
-    // Depth runs away to infinity at the boundary of the set — that is what the
+    // The displacement is a sum of two terms for a reason worth keeping: depth
+    // runs away to infinity at the boundary of the set — that is what the
     // boundary *is* — so the contours there are finer than any pixel, and a
     // frame sampled through them without saying so sparkles exactly where the
     // structure is most interesting.
-    float bandJac = 3.1415927 * uJuliaDepth * grad;
-    gSceneLod = log2(
-      max(1.0, (length(trapD) * uJuliaSpread + bandJac + uJuliaAnchor) * uJulia)
-    );
+    gSceneLod = log2(max(1.0, (offJac * offSlope + uJuliaAnchor) * uJulia));
+    // Inside a plate the map is the identity, so there is nothing to average and
+    // the page is read at the one level that has all of it.
+    if (plate > 0.0) {
+      uv = mix(uv, plain, plate);
+      gSceneLod *= 1.0 - plate;
+    }
   }
 
   vec2 p = toStage(uv);

@@ -188,6 +188,9 @@ export class WebGLBackend implements VizBackend {
         uJuliaBind: { value: 0 },
         uJuliaDepth: { value: 0 },
         uJuliaEdge: { value: 0 },
+        uJuliaFacet: { value: 0 },
+        uJuliaPlate: { value: 0 },
+        uJuliaCenter: { value: [0, 0] },
         uQuasi: { value: 0 },
         uQuasiFreq: { value: 14 },
         uTurbulence: { value: 0 },
@@ -520,6 +523,24 @@ export class WebGLBackend implements VizBackend {
     post.uJuliaBind.value = frame.post.juliaBind;
     post.uJuliaDepth.value = frame.post.juliaDepth;
     post.uJuliaEdge.value = frame.post.juliaEdge;
+    post.uJuliaFacet.value = frame.post.juliaFacet;
+    post.uJuliaPlate.value = frame.post.juliaPlate;
+    /*
+     * Where the frame sits over the fixed point, in stage units — half the
+     * frame's height at full drift.
+     *
+     * Two rates in an irrational ratio rather than one, so the path is a figure
+     * that never closes: a circle would bring the frame back to the same place
+     * every circuit, and at three minutes that is a period a viewer can learn.
+     * The phase is integrated by the director, so the speed control bends this
+     * with everything else instead of teleporting it.
+     */
+    const drift = frame.phases.juliaDrift;
+    const driftAmp = frame.post.juliaDrift * 0.5;
+    post.uJuliaCenter.value = [
+      driftAmp * Math.sin(drift),
+      driftAmp * Math.sin(drift * 1.6180339 + 1.1),
+    ];
     post.uQuasi.value = frame.post.quasi;
     post.uQuasiFreq.value = frame.post.quasiFreq;
     post.uTurbulence.value = frame.post.turbulence;

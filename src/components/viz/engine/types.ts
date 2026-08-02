@@ -676,15 +676,16 @@ export interface PostParams {
    *
    * The difference between a fractal with comics painted on it and a fractal
    * made of them. The frame is read at two scales and the structure between them
-   * — a face, a balloon, a panel border, with flat brightness divided out — is
-   * added to the seed and to the trap radius. So the boundary bulges where the
-   * page has a shape in it, and a panel changing moves the edges rather than
-   * just repainting them.
+   * — a face, a balloon, a panel border, with flat brightness divided out — moves
+   * where the trap sits and which contour carries which crop. So a panel
+   * changing moves the drawn edges rather than just repainting them.
    *
-   * Bounded hard in the shader, and the bound is a cliff rather than a taste:
-   * the seed is perturbed through the multiplier, which stays inside the unit
-   * disc and therefore inside the connected family. Driven far enough to leave
-   * it, a pixel would not deform — it would shatter into dust.
+   * Both of those are *sampling* choices, and that is a hard constraint rather
+   * than an implementation detail. Driving the seed from here is the obvious
+   * alternative and it cannot be done: the flight is a descent onto one map's
+   * fixed point, so a pixel given its own map descends onto a fixed point that
+   * is not there, and the wrap it relies on stops landing on itself. Measured at
+   * the seam, that cost half a frame of displacement every turn.
    */
   juliaBind: number;
   /**
@@ -714,6 +715,67 @@ export interface PostParams {
    * than under liquid.
    */
   juliaEdge: number;
+  /**
+   * Size of the facets the page is carried in, 0..1. 0 is no facets at all.
+   *
+   * What this fixes is not sharpness — the fetch was always reading the page
+   * sharp — but *legibility*, which is a property of a region rather than of a
+   * pixel. The trap and the depth band move the crop by around half a texel per
+   * pixel, so across the two hundred pixels a face occupies they have rewritten
+   * the crop by a tenth of the page: further than the anchor moves in the same
+   * span. Every pixel is a true sample of the panel and no feature of the panel
+   * survives. Slowing the displacement enough to fix that would slow it below
+   * what can be seen at all.
+   *
+   * So it is flattened instead. The displacement is put through a staircase with
+   * rounded risers, which holds it constant across each tread and spends the
+   * whole of its excursion in the joins — inside one facet the map is exactly
+   * the anchor, an affine crop of the page at its own scale, and between facets
+   * the figure travels as far through the page as it ever did. The facets are
+   * level sets of the trap and the escape time, so they are fractal, and their
+   * joins are the filaments.
+   *
+   * Low is a fine mosaic, high is a few large plates. The cost of high is that
+   * fewer crops are on screen at once; the cost of low is the original problem
+   * coming back, one facet at a time.
+   */
+  juliaFacet: number;
+  /**
+   * Share of the frame cut out as plain windows onto the page, 0..1. Does
+   * nothing without facets, whose quantum is what sets a plate's size.
+   *
+   * The facets make the figure's own sampling legible and it is still not
+   * enough, because what the figure hands the eye is a doubled crop inside a
+   * wedge of a six-fold mirror under a feedback trail — an ornament made out of
+   * a comic. This is the admission that some of the frame has to stop being the
+   * figure. Inside a plate the coordinate is the frame's own: no fold, no trap,
+   * no anchor, no flight. The panel, where it is, at the size it is.
+   *
+   * Every plate carries the same coordinate, so they are not a scatter of crops
+   * but one image seen through a stencil the fractal cut — which is what lets
+   * the eye put it back together, and the whole reason the plates are worth the
+   * frame they cost. Raised too far they stop being windows in a figure and
+   * become a figure in a window.
+   */
+  juliaPlate: number;
+  /**
+   * How far the flight's vanishing point drifts from the middle of the frame,
+   * in half-frames.
+   *
+   * The flight is a descent onto one fixed point, and with the frame pinned to
+   * it the picture has one still place forever — everything on screen streams
+   * out of the same spot, and a mode whose whole motion is travel reads as a
+   * tunnel with a fixed mouth. Drifting the frame across the point instead
+   * leaves the descent alone and moves only where on screen it is happening,
+   * so the still place wanders and the material being magnified is not the same
+   * material for the whole run. Under a kaleidoscope it wanders in every wedge
+   * at once, which is several focuses rather than one.
+   *
+   * Bounded well under a frame. The two correction terms that hide the flight's
+   * wrap are a series about the fixed point, and every half-frame of drift is
+   * another half-frame of radius for that series to be wrong over.
+   */
+  juliaDrift: number;
 
   // --- Undulating -----------------------------------------------------------
   /** Sinusoidal domain warp — the liquid one. */
@@ -913,6 +975,9 @@ export interface VizPhases {
    *  the multiplier in the backend rather than here, because which value is a
    *  whole cycle depends on which set the walk is currently on. */
   juliaTravel: number;
+  /** Where the flight's frame has drifted to across its own fixed point,
+   *  radians of the slower of the two rates that carry it. */
+  juliaDrift: number;
   /** Flight through the spatial formation, in its own units — depth down a
    *  tube, and nothing at all for a formation that does not repeat. */
   travel: number;

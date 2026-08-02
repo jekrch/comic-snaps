@@ -226,6 +226,12 @@ export const DEFAULT_POST: PostParams = {
   juliaBind: 0.5,
   juliaDepth: 0.5,
   juliaEdge: 0,
+  // Both off, so nothing that merely passes through the fractal — the cycler's
+  // own julia pulse above all — has its picture changed. The one preset that
+  // flies into the set is the one that needs them.
+  juliaFacet: 0,
+  juliaPlate: 0,
+  juliaDrift: 0,
   warp: 0,
   warpScale: 2.4,
   warpSpeed: 0.35,
@@ -438,6 +444,9 @@ const HINTS: Record<string, string> = {
   "post.juliaBind": "How much the panel's own shapes bend the fractal's edges.",
   "post.juliaDepth": "Bands the page by escape time — the layers that sweep past as you fly in.",
   "post.juliaEdge": "Squares off the filaments. Low is arcs and fluid, high is straight lines and corners.",
+  "post.juliaFacet": "Carries the page in flat facets, so whole pieces of panel stay readable.",
+  "post.juliaPlate": "Cuts windows in the figure showing the panel plain, so you can see what it was.",
+  "post.juliaDrift": "Wanders the point the flight is heading into, so new focuses emerge.",
   "post.droste": "Recursion: the frame inside itself, without end.",
   "post.drosteInner": "Size of the hole the recursion falls into.",
   "post.drostePeriod": "How much zoom fits between one repeat and the next.",
@@ -608,6 +617,15 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("shape", "post.juliaBind", "page bind", 0, 1, 0.01, (c) => c.post.juliaBind, (c, v) => (c.post.juliaBind = v)),
   field("shape", "post.juliaDepth", "depth bands", 0, 1, 0.01, (c) => c.post.juliaDepth, (c, v) => (c.post.juliaDepth = v)),
   field("shape", "post.juliaEdge", "trap edge", 0, 1, 0.01, (c) => c.post.juliaEdge, (c, v) => (c.post.juliaEdge = v)),
+  field("shape", "post.juliaFacet", "page facets", 0, 1, 0.01, (c) => c.post.juliaFacet, (c, v) => (c.post.juliaFacet = v)),
+  // Capped at half. Past that the windows outnumber the figure and the mode is
+  // a comic with a fractal in it rather than the other way round.
+  field("shape", "post.juliaPlate", "page plates", 0, 0.5, 0.01, (c) => c.post.juliaPlate, (c, v) => (c.post.juliaPlate = v)),
+  // Capped at three quarters of a half-frame. Past that the vanishing point
+  // spends most of its circuit off the edge of the picture, and the series that
+  // hides the flight's wrap is being asked about a part of the plane it was
+  // never a series about.
+  field("shape", "post.juliaDrift", "flight drift", 0, 0.75, 0.01, (c) => c.post.juliaDrift, (c, v) => (c.post.juliaDrift = v)),
   field("shape", "post.droste", "droste", 0, 1, 0.01, (c) => c.post.droste, (c, v) => (c.post.droste = v)),
   field("shape", "post.drosteInner", "droste inner", 0.02, 0.25, 0.005, (c) => c.post.drosteInner, (c, v) => (c.post.drosteInner = v)),
   field("shape", "post.drostePeriod", "droste period", 0.4, 3, 0.05, (c) => c.post.drostePeriod, (c, v) => (c.post.drostePeriod = v)),

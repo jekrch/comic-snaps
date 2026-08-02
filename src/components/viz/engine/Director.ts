@@ -36,6 +36,14 @@ const LFO_HZ = [0.037, 0.0611, 0.0893, 0.1307];
  */
 const FLOW_HEADING_HZ = 0.011;
 
+/**
+ * Rate the Julia frame drifts across its own fixed point, radians of the slower
+ * of its two components per clock second. A circuit in a little over three
+ * minutes — an order under the flight it is carried on, so the drift reads as
+ * where the travel is happening rather than as a second travel (§6).
+ */
+const JULIA_DRIFT_RATE = 0.031;
+
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
@@ -71,6 +79,9 @@ function openingPhases(rng: Rng): VizPhases {
     // Preimages into the flight, and the whole span of the wrap is legal: every
     // value of it is a different point of the same endless descent.
     juliaTravel: rng.range(0, JULIA_WRAP),
+    // Where across the set the frame opens. Free, like the travel above: every
+    // point of the drift is the same descent seen from somewhere else.
+    juliaDrift: rng.range(0, TAU),
     // World units. A page on the vault's wall is about eleven of them.
     travel: rng.range(0, 22),
     orbit: rng.range(0, TAU),
@@ -412,7 +423,29 @@ export class Director {
     // here means the seed can be slowed, stopped or reversed and the figure
     // carries on from the set it is currently showing rather than cutting to
     // whichever one the new rate says it should have reached by now.
-    this.phases.julia += post.juliaSpin * clockDt;
+    //
+    /*
+     * Slowed, though, by however far the flight has already magnified — and the
+     * seed and the flight are not independent, which is what this admits.
+     *
+     * Moving the seed moves the whole set, and the set is being looked at
+     * through a lens currently making everything `zoom` times larger. So a walk
+     * that is a slow drift at the top of a descent is the same set skidding
+     * sideways at the bottom of one: a part in a hundred of the plane, and a
+     * whole width of the picture. Left alone it reads as the figure churning
+     * itself to pieces as each descent goes on, and then being replaced — which
+     * is a fault of this arithmetic and not of the fractal.
+     *
+     * Divided out, the *apparent* rate is the same at every depth, which is the
+     * only rate anybody can see. What it costs is that the seed covers ground
+     * unevenly in its own coordinates, quickly at the top of a descent and
+     * barely at all at the bottom. Nothing in the frame reports that, because
+     * the frame is measured in the same shrinking units.
+     */
+    const zoom = Math.exp(
+      -this.phases.juliaTravel * juliaEfoldsPerTurn(post.juliaShape, this.phases.julia)
+    );
+    this.phases.julia += post.juliaSpin * clockDt * zoom;
     /*
      * The flight, carried in *preimages* rather than in the e-folds it is
      * authored in, and converted here at the exchange rate of the set the walk
@@ -436,6 +469,18 @@ export class Director {
     this.phases.juliaTravel += (post.juliaFlight * clockDt) / perTurn;
     this.phases.juliaTravel -=
       Math.floor(this.phases.juliaTravel / JULIA_WRAP) * JULIA_WRAP;
+    /*
+     * The drift across the fixed point, and it is authored here rather than on a
+     * slider because there is only one rate worth having.
+     *
+     * Slower than the flight by an order — a circuit takes about three minutes
+     * where a wrap takes one — so what the eye reads is a picture flying into
+     * itself while the place it is flying into wanders, rather than two motions
+     * competing (§6). Unlike the walk it is not divided by the magnification:
+     * the drift is a move of the frame in the frame's own units, so it already
+     * means the same thing at every depth of the descent.
+     */
+    this.phases.juliaDrift += JULIA_DRIFT_RATE * clockDt;
     // The spatial rates live on the config rather than in `post`, because they
     // move the composition rather than processing it — but they are integrated
     // here with the rest for exactly the same reason.

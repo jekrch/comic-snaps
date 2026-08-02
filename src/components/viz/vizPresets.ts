@@ -311,24 +311,23 @@ export const VIZ_PRESETS: VizPreset[] = [
         // large interior, and an interior is the one place orbits converge —
         // which on screen is a wide flat region the anchor then has to rescue.
         juliaShape: 0.88,
-        // Forward, at twelve percent a second — the figure doubles about every
-        // six. This is the mode's principal motion and everything else here is
-        // budgeted under it.
+        // Forward, at six percent a second — the figure doubles about every
+        // twelve. This is the mode's principal motion and everything else here
+        // is budgeted under it.
         //
-        // Set from the far end of the speed control rather than the middle of
-        // it: at the rate the flight was first authored at, the ladder's 2x rung
-        // was the one worth watching, so that rung is now what the middle does
-        // and the ladder reaches twice as far again. The general rule in §6 —
-        // that a piece should be slowly becoming something else — still holds,
-        // but it is a rule about the *figure* changing, and this is travel
-        // through a figure that is holding still. Those are not the same clock.
-        juliaFlight: 0.12,
-        // The walk, at a fifth of the flight's rate rather than level with it.
-        // Two schedules changing the figure at once is the thing §6 does rule
-        // out — so the flight travels and the walk merely ages: a full circuit
-        // takes about seven minutes, which reads as the country changing rather
-        // than as a second motion.
-        juliaSpin: 0.014,
+        // Set from the calm end of the speed control rather than the middle of
+        // it: watched on the ladder, the rung worth staying on was the slowest,
+        // so that rung is what the middle does now and what the ladder's reach
+        // buys is speed rather than calm. Which is the §6 rule arriving where it
+        // always does — a piece slowly becoming something else — by way of a
+        // mode that had to be flown at to find out how slowly.
+        juliaFlight: 0.06,
+        // The walk, at about a tenth of the flight's rate rather than level with
+        // it. Two schedules changing the figure at once is the thing §6 does
+        // rule out — so the flight travels and the walk merely ages: a full
+        // circuit takes a quarter of an hour, which reads as the country
+        // changing rather than as a second motion.
+        juliaSpin: 0.007,
         // A ring rather than a point. A point trap draws the page in a spray of
         // dots where orbits happen to pass the origin; opened to a ring, the trap
         // set is a curve, and a curve is what the filaments are drawn along.
@@ -337,18 +336,25 @@ export const VIZ_PRESETS: VizPreset[] = [
         // whole of it. That is what makes a filament read as being *made of*
         // something — the crop is coherent along its length instead of being a
         // whole page compressed into a hair.
-        juliaSpread: 0.72,
+        juliaSpread: 0.55,
         /*
          * The escape-time banding, and the answer to a flight that read as the
          * picture merely getting bigger.
          *
-         * High, because this is the only term in the map that is not affine
-         * anywhere. Its contours wrap the set at every scale, the flight sweeps
-         * them outward and replaces them from the middle, and each one carries a
-         * different crop — so what passes the eye is layers of comic arriving out
-         * of the centre rather than one image being enlarged.
+         * This is the only term in the map that is not affine anywhere. Its
+         * contours wrap the set at every scale, the flight sweeps them outward
+         * and replaces them from the middle, and each one carries a different
+         * crop — so what passes the eye is layers of comic arriving out of the
+         * centre rather than one image being enlarged.
+         *
+         * Held under what it could be, because it is also the steepest gradient
+         * in the map: depth runs away at the boundary of the set, so a large
+         * excursion here is a sampling rate no pixel can follow and the page
+         * arrives averaged rather than drawn. Surveyed across the frame, a half
+         * is about where a fifth of the picture is still being averaged away and
+         * half of it is legible as artwork.
          */
-        juliaDepth: 0.62,
+        juliaDepth: 0.5,
         /*
          * Half, which is the number that decides how blurry this mode is
          * allowed to get, and it is worth being explicit about the direction.
@@ -370,6 +376,71 @@ export const VIZ_PRESETS: VizPreset[] = [
          */
         juliaAnchor: 0.5,
         /*
+         * Large, and it is the other half of the anchor's argument — the half the
+         * anchor could not make on its own.
+         *
+         * The anchor decides how far the page may be enlarged. What it cannot
+         * decide is whether any of it can be *read*, and that is a question about
+         * regions rather than about pixels: the trap and the band rewrite the
+         * crop by a tenth of the page across the width of a face, so every
+         * sample was a true sample of the panel and no feature of the panel ever
+         * survived. A fractal painted in a comic's colours, which is precisely
+         * the wallpaper the bind exists to prevent, arriving by the other road.
+         *
+         * Flattened into facets this size — a sixth of the frame, so a handful
+         * of them across it rather than a mosaic — each one is an affine crop at
+         * twice its own size, which is a face or a balloon and unmistakably one.
+         * The excursion between facets is untouched, so the figure still runs
+         * through as much of the page as it did; it is only inside a facet that
+         * the page now holds still long enough to be seen.
+         *
+         * Large rather than middling on the same reasoning as the panel scale
+         * everywhere else in this file: a few big crops read as comic, a field
+         * of small ones reads as texture, and texture is what this preset had.
+         */
+        juliaFacet: 0.85,
+        /*
+         * Getting on for a third of the frame, which is a lot, and it is the
+         * number this preset was missing rather than a decoration on it.
+         *
+         * Everything else here works on the figure's own sampling and every bit
+         * of it helps and none of it was enough. The reason is not the sampling.
+         * It is that a crop at twice its size, folded into a wedge of a six-fold
+         * mirror with a trail over it, is an ornament however coherent it is —
+         * the mirror and the magnification *are* the mode, so there is no value
+         * of anything above that gets a face through them intact.
+         *
+         * These stop trying. A third of the frame carries no figure at all; it
+         * carries the frame's own coordinate, so what is inside them is the panel
+         * where the panel is, the size it is, the way up it is. And because
+         * every one of them carries the *same* coordinate they are not a scatter
+         * of crops but a single image behind a fractal stencil — the eye joins
+         * them up across the figure between them, which is the thing that makes
+         * a run legible as a comic rather than as a texture derived from one.
+         *
+         * A third rather than a half because the plates have to read as windows
+         * cut in a figure. Past about that the figure is what is left over.
+         */
+        juliaPlate: 0.32,
+        /*
+         * A third of a half-frame, which is as much as this can be without
+         * costing the thing it is decorating.
+         *
+         * The flight descends onto one point and the frame was pinned to it, so
+         * there was one still place on screen and it was the middle, forever.
+         * Drifting the frame across the point leaves the descent exactly as it
+         * was and moves only where it is happening — the vanishing point wanders,
+         * the material being magnified is not the same material all run, and
+         * under the six-fold mirror above it wanders in every wedge at once.
+         *
+         * Not further, because the two correction terms that make the flight's
+         * wrap invisible are a series about the fixed point, and drift is radius
+         * for that series to be wrong over. At a third the seam's mismatch is
+         * still inside a pixel or two; at the top of the slider it is a smudge
+         * once a minute.
+         */
+        juliaDrift: 0.34,
+        /*
          * Square, nearly. The dynamics decide where the filaments *are*; this
          * decides what they are made of, because the trap set is the curve the
          * page is picked up along. Against the round norm every filament is an
@@ -381,12 +452,13 @@ export const VIZ_PRESETS: VizPreset[] = [
          * from ringing at the scale the mip chain cannot help with.
          */
         juliaEdge: 0.85,
-        // High. This is the whole of what makes the panels the fractal's
-        // material rather than its paint: the page's own shapes go into the seed,
-        // so a change of panel is a change of figure. Not at 1, because the
-        // largest excursion is also the one most likely to drag a region of the
-        // frame into the part of the family where the set is coming apart.
-        juliaBind: 0.7,
+        // High. This is what makes the panels the fractal's material rather than
+        // its paint: the page's own shapes decide where along each orbit it is
+        // picked up and which contour carries which crop, so a change of panel
+        // redraws the figure. It is deliberately barred from the seed — see the
+        // note in the shader — which is the one coupling that would have made the
+        // flight unable to close.
+        juliaBind: 0.75,
         /*
          * The mirror, and it is placed *before* the set rather than over it.
          *
