@@ -7,6 +7,8 @@ import { WebGLBackend } from "./backends/WebGLBackend";
 import { CssBackend } from "./backends/CssBackend";
 import type { VizBackend, VizFrame } from "./types";
 import { CAST_MAX } from "./cast";
+import type { AudioFrame, AudioReactor } from "./AudioReactor";
+import type { AudioProbe } from "./audioTrace";
 
 export type BackendKind = "webgl" | "css";
 
@@ -117,6 +119,16 @@ export class VizEngine {
   /** Real time of the last *drawn* frame, for the pacing cap. Separate from
    *  `lastFrameTime`, which a skipped frame deliberately does not advance. */
   private lastDrawTime = 0;
+  /**
+   * Live audio, or null when the run is not listening.
+   *
+   * Owned by the overlay rather than by this object, and handed in. An
+   * `AudioContext` produces numbers rather than pixels, so it has no reason to
+   * belong to the document the canvas is in — and this engine is rebuilt every
+   * time the run changes windows, which would otherwise mean re-prompting for a
+   * microphone on every `w` keypress.
+   */
+  private reactor: AudioReactor | null = null;
   /** Waiting on the next drawn frame. See `captureStill`. */
   private stillWaiting: ((blob: Blob | null) => void)[] = [];
   private stillMaxEdge = 2200;
@@ -242,6 +254,26 @@ export class VizEngine {
     return this.director.nextPick();
   }
 
+  /** Attach the run to a listener, or detach it. Re-attached after every
+   *  rebuild, since the reactor outlives this object. */
+  setAudioReactor(reactor: AudioReactor | null): void {
+    this.reactor = reactor;
+  }
+
+  /** The last analysed frame, for the tuning panel's meters. Null while the
+   *  run is not listening — which is the default and the common case. */
+  get audio(): AudioFrame | null {
+    return this.reactor?.active ? this.reactor.frame : null;
+  }
+
+  /**
+   * Attach the reach readout, or detach it. Re-attached after every rebuild,
+   * since the panel that owns it outlives this object the way the reactor does.
+   */
+  setAudioProbe(probe: AudioProbe | null): void {
+    this.director.setAudioProbe(probe);
+  }
+
   start(): void {
     if (this.running || this.disposed) return;
     this.running = true;
@@ -280,6 +312,11 @@ export class VizEngine {
     // Smoothed, so the debug readout is legible rather than a strobe.
     if (raw > 0) this.fps += (1 / raw - this.fps) * 0.08;
     this.governQuality(seconds);
+
+    // Pulled here rather than pushed on a timer of its own, so the analysis
+    // advances on exactly the frames the composition is drawn on. `dt` and not
+    // the clock: the music does not follow the speed control.
+    this.director.setAudioFrame(this.reactor?.active ? this.reactor.sample(dt) : null);
 
     this.backend.requestPanels(this.director.prefetch());
 

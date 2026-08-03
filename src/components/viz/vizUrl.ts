@@ -73,6 +73,13 @@ const PINNED_PATHS: readonly string[] = [
   "post.juliaSpread", "post.juliaFlight", "post.juliaAnchor", "post.juliaBind", "post.juliaDepth",
   "post.juliaEdge", "post.juliaFacet", "post.juliaDrift", "post.juliaPlate",
   "post.juliaChunk", "post.juliaChunkGrid", "post.juliaPlateFold",
+  // How far a run follows music. The *source* it listens to is deliberately not
+  // here and never will be: a link must not be able to ask for a stranger's
+  // microphone, so capture is reached only through a gesture on the page.
+  "reactivity",
+  // How far the music may lift the press artefacts from zero. Safe to share:
+  // it decides what a run that is *already* listening does, and grants nothing.
+  "audioLift",
 ];
 
 /**

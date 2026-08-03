@@ -3,7 +3,9 @@ import { ChevronRight, ChevronsDownUp, ChevronsUpDown } from "lucide-react";
 import type { ConfigField, ConfigGroup, VizConfig } from "./vizConfig";
 import { CONFIG_FIELDS, GROUP_HINTS } from "./vizConfig";
 import type { EngineStats, VizEngine } from "./engine/Engine";
+import type { AudioReactor } from "./engine/AudioReactor";
 import VizSlider from "./VizSlider";
+import VizAudioMeters from "./VizAudioMeters";
 import Hint from "./VizHint";
 
 const GROUP_ORDER: ConfigGroup[] = [
@@ -15,6 +17,7 @@ const GROUP_ORDER: ConfigGroup[] = [
   "optics",
   "print",
   "cycle",
+  "audio",
   "stage",
   "director",
 ];
@@ -34,6 +37,8 @@ interface VizDebugPanelProps {
   /** Mutated in place — the engine reads it every frame, so edits are live. */
   config: VizConfig;
   engine: VizEngine | null;
+  /** The run's listener. Owned by the overlay, since it outlives the engine. */
+  reactor?: AudioReactor | null;
   seed: string;
   /** Rendered, but on its way out: play the exit rather than the entrance. */
   leaving?: boolean;
@@ -64,6 +69,7 @@ function format(value: number, step: number): string {
 export default function VizDebugPanel({
   config,
   engine,
+  reactor = null,
   seed,
   leaving = false,
   sticky = false,
@@ -201,6 +207,10 @@ export default function VizDebugPanel({
           </div>
           <div className="opacity-55">seed {seed}</div>
         </div>
+      </div>
+
+      <div className="viz-tune-band shrink-0 px-2.5 pb-2.5 border-b border-black/40">
+        <VizAudioMeters reactor={reactor} engine={engine} paused={leaving} />
       </div>
 
       {/* overflow-x is explicit: a box that scrolls on one axis and is `visible`

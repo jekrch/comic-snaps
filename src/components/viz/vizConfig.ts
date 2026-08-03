@@ -89,6 +89,36 @@ export interface VizConfig {
   wander: number;
   /** Rate of that drift, 1 = as authored. */
   wanderRate: number;
+  /**
+   * How strongly the run follows live audio, 0..1.
+   *
+   * Unlike `psychedelia` and `wander`, this does *not* default to 0, and the
+   * reason is that it is not the gate. Nothing here can do anything until the
+   * run has been given a listener, which only ever happens through an explicit
+   * gesture — so a run that was never asked to listen is bit-identical to the
+   * same seed before this existed whatever this value says, and a run that was
+   * asked to listen almost certainly meant it. Turning it down is for taste,
+   * not for consent.
+   */
+  reactivity: number;
+  /**
+   * How far the music may lift the press artefacts — plate misregistration, ink
+   * bleed, krackle — up from zero, 0..1. Inert at 0.
+   *
+   * The one place audio is allowed to introduce an effect the preset did not
+   * ask for, and it is deliberately the only one. Everywhere else the rule is
+   * that zero means off, which protects a preset from having its geometry
+   * rearranged by a kick drum — but it also leaves the fast half of the
+   * response with almost nothing live to move, since on a default preset only
+   * the trail terms, `chroma`, `grain` and `vignette` are non-zero.
+   *
+   * The press is a different class from the folds. It cannot flash, it cannot
+   * restructure the frame, it does not move the picture, and a comic
+   * visualiser answering music with a press drifting out of register is the
+   * most on-theme response available to it. So it is lifted, under a knob, and
+   * nothing else is.
+   */
+  audioLift: number;
 
   // --- The spatial stage ----------------------------------------------------
   // Read only when `stageKind` is not "flat". Kept at the top level rather than
@@ -300,6 +330,12 @@ export const DEFAULT_CONFIG: VizConfig = {
   cycleInterval: 14,
   wander: 0,
   wanderRate: 1,
+  reactivity: 0.75,
+  // Non-zero for the same reason `reactivity` is: nothing here can happen until
+  // the run has been given a listener, which only ever comes from a gesture, so
+  // this is a taste default rather than a consent gate. Modest — the press
+  // should read as breathing with the music, not as an effect that arrived.
+  audioLift: 0.4,
   stageKind: "flat",
   stageDensity: 1,
   stageScale: 1,
@@ -370,6 +406,7 @@ export type ConfigGroup =
   | "optics"
   | "print"
   | "cycle"
+  | "audio"
   | "stage"
   | "director";
 
@@ -524,6 +561,9 @@ const HINTS: Record<string, string> = {
   stageDisplaceRate: "How fast that wave travels.",
   stageSwirl: "A current running through the formation, scattering it.",
 
+  reactivity: "How far the composition follows the music, once it is listening.",
+  audioLift: "How far the music may push the press out of register on its own.",
+
   "weights.rhyme": "Favour a next panel that echoes the one on screen.",
   "weights.clash": "Favour one that cuts against it.",
   "weights.color": "Favour one close to it in colour.",
@@ -540,6 +580,7 @@ export const GROUP_HINTS: Record<ConfigGroup, string> = {
   optics: "Lens behaviour: dispersion, radial blur and bloom.",
   print: "Comic-press artefacts — plates, screens, ink and paper.",
   cycle: "How much the piece changes itself while it runs.",
+  audio: "How far the run follows music it can hear. Start listening from the readout above.",
   stage: "The 3D formations. Ignored while the mode is a flat one.",
   director: "What the engine looks for when it picks the next panel.",
 };
@@ -712,6 +753,9 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("cycle", "cycleInterval", "interval", 3, 60, 1, (c) => c.cycleInterval, (c, v) => (c.cycleInterval = v)),
   field("cycle", "wander", "wander", 0, 1, 0.01, (c) => c.wander, (c, v) => (c.wander = v)),
   field("cycle", "wanderRate", "wander rate", 0.2, 3, 0.05, (c) => c.wanderRate, (c, v) => (c.wanderRate = v)),
+
+  field("audio", "reactivity", "reactivity", 0, 1, 0.01, (c) => c.reactivity, (c, v) => (c.reactivity = v)),
+  field("audio", "audioLift", "press lift", 0, 1, 0.01, (c) => c.audioLift, (c, v) => (c.audioLift = v)),
 
   // Inert unless `stageKind` is a spatial one, which is not a slider — see the
   // note on StageMode. The rest of the stage is tunable exactly like the flat
@@ -970,6 +1014,12 @@ export const MAX_FLASH_HZ = 3;
 export const MIN_FLASH_INTERVAL = 1 / MAX_FLASH_HZ;
 /** Ceiling on how fast global exposure may move, per second. */
 export const MAX_EXPOSURE_SLEW = 1.2;
+/**
+ * Ceiling on how fast live audio may move anything that reaches frame
+ * luminance, per second. A full swing takes about a third of a second, which is
+ * a swell rather than a flash at any tempo — see `SafetyGovernor.clampAudioDrive`.
+ */
+export const MAX_AUDIO_SLEW = 3;
 /** A full-bleed layer may never fade faster than this, in *real* seconds. */
 export const MIN_FULLBLEED_FADE = 0.6;
 /**

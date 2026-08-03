@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "r
 import { createPortal } from "react-dom";
 import type { Panel } from "../../types";
 import { VizEngine } from "./engine/Engine";
+import { AudioReactor } from "./engine/AudioReactor";
 import { formatSeed, parseSeed, randomSeed } from "./engine/rng";
 import { MODE_SWITCH_MS, VIZ_SPEEDS, cloneConfig, lerpConfigInto, nearestSpeed } from "./vizConfig";
 import type { VizConfig } from "./vizConfig";
@@ -161,6 +162,16 @@ export default function VisualizerOverlay({
    */
   const [surfaceEl, setSurfaceEl] = useState<HTMLDivElement | null>(null);
   const engineRef = useRef<VizEngine | null>(null);
+  /**
+   * The listener, if the run has been asked to listen. Held here rather than in
+   * the engine because it has to outlive one: the engine is rebuilt whenever
+   * the surface changes windows, and a microphone permission that had to be
+   * granted again on every `w` keypress would be intolerable. Constructed at
+   * mount and inert until an explicit gesture reaches `start()` — building it
+   * opens no context and asks for no device.
+   */
+  const reactorRef = useRef<AudioReactor | null>(null);
+  if (reactorRef.current === null) reactorRef.current = new AudioReactor();
   const idleTimerRef = useRef<number>(0);
   const rampRef = useRef<number>(0);
   const configSyncRef = useRef<number>(0);
@@ -317,6 +328,10 @@ export default function VisualizerOverlay({
 
     const instance = new VizEngine(surfaceEl, usableRef.current, configRef.current, seed);
     instance.onCast = handleCast;
+    // Re-attached rather than rebuilt: a run that was listening before the
+    // surface changed windows is still listening after it, and to the same
+    // stream — the analysis state carries across with it.
+    instance.setAudioReactor(reactorRef.current);
     instance.start();
     engineRef.current = instance;
     setEngine(instance);
@@ -327,6 +342,14 @@ export default function VisualizerOverlay({
       setEngine(null);
     };
   }, [surfaceEl, hasPanels, seed, handleCast]);
+
+  // The capture belongs to the overlay's lifetime, not the engine's. Closed
+  // here so leaving the run always releases the device — and the recording
+  // indicator with it.
+  useEffect(() => {
+    const reactor = reactorRef.current;
+    return () => reactor?.dispose();
+  }, []);
 
   // Distinguishes "still loading" from "the filters really do match nothing".
   const [settled, setSettled] = useState(false);
@@ -1142,6 +1165,7 @@ export default function VisualizerOverlay({
           <VizDebugPanel
             config={configRef.current}
             engine={engine}
+            reactor={reactorRef.current}
             seed={formatSeed(seed)}
             leaving={debugPanel.leaving}
             /* On a console there is no run behind this panel to press back to,

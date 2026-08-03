@@ -8,13 +8,17 @@ import { SafetyGovernor } from "./safety";
 import { Stage } from "./Stage";
 import { Wander } from "./Wander";
 import { JULIA_WRAP, juliaEfoldsPerTurn } from "./julia";
-import type { PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
+import type { DrawShard, PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
 import { resolveShard, shardEnd } from "./types";
 import { CAST_FLOOR, rankCast } from "./cast";
 import { chromaticDominant, complement, labToRgb, normalizeTint } from "./palette";
 import type { Rgb } from "./palette";
 import { driftStack } from "./scenes/driftStack";
 import type { Affinity, Scene } from "./scenes/types";
+import type { AudioFrame } from "./AudioReactor";
+import { LOCK_THRESHOLD } from "./AudioReactor";
+import { AudioBinding } from "./audioBind";
+import type { AudioProbe } from "./audioTrace";
 
 /** A panel plus the reason it was chosen, so presets can react to it. */
 interface Pick {
@@ -130,6 +134,14 @@ export class Director {
   private readonly wander = new Wander(() => this.rng.fork());
   /** Same again: built empty, and only ever draws once a spatial preset runs. */
   private readonly stage: Stage;
+  /** Inert until the run is given a listener, like everything else here that
+   *  answers to something outside the seed. */
+  private readonly audio = new AudioBinding();
+  /** The reach readout, when something is watching. See `setAudioProbe`. */
+  private probe: AudioProbe | null = null;
+  /** The last analysed frame, handed down by the engine. Null unless the run is
+   *  listening, which is the default and the common case. */
+  private audioFrame: AudioFrame | null = null;
 
   constructor(
     panels: Panel[],
@@ -159,6 +171,22 @@ export class Director {
 
   setAspect(aspect: number): void {
     this.aspect = aspect;
+  }
+
+  /** Handed the current analysis, or null when the run is not listening. */
+  setAudioFrame(frame: AudioFrame | null): void {
+    this.audioFrame = frame;
+  }
+
+  /**
+   * Attach the reach readout, or detach it.
+   *
+   * Null unless the tuning panel is open, so a run nobody is measuring pays
+   * nothing for this — the same rule the reactor follows about not opening a
+   * device until asked.
+   */
+  setAudioProbe(probe: AudioProbe | null): void {
+    this.probe = probe;
   }
 
   /** Told by the engine which backend it got. */
@@ -279,6 +307,18 @@ export class Director {
     const clockDt = this.lastClock < 0 ? 0 : Math.max(0, time - this.lastClock);
     this.lastClock = time;
     this.wander.update(clockDt, this.config.wander, this.config.wanderRate);
+    // Real `dt`, not the clock: the music does not follow the speed control.
+    this.audio.update(
+      this.audioFrame,
+      this.config.reactivity,
+      this.config.audioLift,
+      dt,
+      this.safety
+    );
+    // Real `dt` for the same reason the update above takes it: the trace is
+    // measured in wall-clock seconds, so a run at 2× speed still reports the
+    // rates the viewer's eye is actually subject to.
+    this.probe?.observe(this.audioFrame, dt);
     this.syncStage();
 
     if (this.panels.length === 0) {
@@ -334,7 +374,7 @@ export class Director {
     } else {
       // Births are discrete events, so they quantise to the beat grid rather
       // than landing wherever a layer happens to expire.
-      const beat = Math.floor(time / Math.max(0.1, this.config.beat));
+      const beat = this.beatIndex(time);
       if (beat !== this.lastBeat) {
         this.lastBeat = beat;
         // A retired layer is on its way out however much life it had left, so
@@ -354,13 +394,91 @@ export class Director {
     const post = this.safety.apply(this.modulatePost(time, clockDt), dt);
     return {
       time,
-      shards: this.shards.map((shard) => resolveShard(shard, time)),
+      // Each layer carries its own id into the pulse, so the stack answers the
+      // music as a wave through it rather than as one sheet moving at once.
+      shards: this.shards.map((shard) => this.pulse(resolveShard(shard, time), shard.id)),
       stage: null,
       background: [0, 0, 0],
       post,
       phases: this.advancePhases(post, clockDt),
       flowAngle: this.flowHeading(time),
     };
+  }
+
+  /**
+   * The grid births quantise to: the music's when it is being followed, the
+   * config's fixed one otherwise.
+   *
+   * Below `LOCK_THRESHOLD` this hands back exactly the grid the engine has
+   * always run on, which is the whole of the graceful fallback — ambient
+   * material, spoken word, a drum solo in 7 and the gap between tracks all
+   * arrive here and all get the composition's own pacing back. A run that never
+   * listens never leaves this branch.
+   *
+   * ## The lead, and why a beat-synced birth needs one
+   *
+   * A crossfade here is a *fraction of a layer lifetime*, and lifetimes run to
+   * ninety seconds; even the floor is `MIN_FULLBLEED_FADE_CLOCK`. A fade that
+   * long cannot land on a beat. Firing the spawn on the downbeat gives a layer
+   * that starts arriving on the beat and finishes arriving somewhere unrelated
+   * to the music, which reads as nothing at all.
+   *
+   * So the index steps one fade *before* the beat it belongs to, and the layer
+   * is fully resolved as the beat lands. This is only possible because the
+   * reactor produces a phase-locked prediction rather than a notification —
+   * and it absorbs the analysis latency for free, since a beat predicted early
+   * does not care that its onset was detected 20ms late.
+   */
+  private beatIndex(time: number): number {
+    const frame = this.audioFrame;
+    if (!frame || frame.confidence < LOCK_THRESHOLD || this.config.reactivity <= 0) {
+      return Math.floor(time / Math.max(0.1, this.config.beat));
+    }
+    // What the next layer's fade will be, by the same arithmetic the scene uses
+    // — it cannot be asked for, because the layer does not exist yet.
+    const fade = this.safety.clampFade(
+      this.config.layerLifetime * this.config.crossfade * 0.5
+    );
+    // Clock seconds into real ones, since the prediction is in real time. A
+    // fade longer than a whole beat is clamped rather than allowed to run the
+    // index a bar ahead: at that point the lead has stopped meaning anything
+    // and firing on the beat is the honest fallback.
+    const lead = Math.min(fade / Math.max(0.05, this.timeScale), frame.nextBeatIn + 1e-6);
+    return frame.nextBeatIn <= lead ? frame.beatCount + 1 : frame.beatCount;
+  }
+
+  /** The speed control, as the director sees it. Mirrors `Engine.timeScale`. */
+  private get timeScale(): number {
+    const speed = this.config.speed;
+    return Number.isFinite(speed) ? Math.max(0.05, speed) : 1;
+  }
+
+  /**
+   * The whole flat composition scaled about the frame centre, on the bar.
+   *
+   * Applied to the resolved draw rather than to the shards themselves, so it is
+   * a property of the frame and not of the layers: nothing accumulates, and a
+   * layer born mid-pump is not permanently a different size from its
+   * neighbours.
+   *
+   * Stage space has y over 0..1 and x over 0..aspect, so the centre is half of
+   * each. Only ever upward — a scale below 1 would pull a full-bleed layer's
+   * own edge into frame, and the whole design of this path is that its layers
+   * overflow.
+   */
+  private pulse(draw: DrawShard, shardId: number): DrawShard {
+    const scale = this.audio.pulse(shardId);
+    if (scale <= 1.0001) return draw;
+    const cx = this.aspect / 2;
+    const cy = 0.5;
+    const rect = draw.dstRect;
+    draw.dstRect = {
+      x: cx + (rect.x - cx) * scale,
+      y: cy + (rect.y - cy) * scale,
+      w: rect.w * scale,
+      h: rect.h * scale,
+    };
+    return draw;
   }
 
   /**
@@ -484,8 +602,14 @@ export class Director {
     // The spatial rates live on the config rather than in `post`, because they
     // move the composition rather than processing it — but they are integrated
     // here with the rest for exactly the same reason.
-    this.phases.travel += this.config.stageFlight * clockDt;
-    this.phases.orbit += this.config.stageSpin * clockDt;
+    /*
+     * The spatial rates take the music as a gain, which is the best-feeling
+     * binding here and comes almost free: these are integrated rather than
+     * evaluated, so a rate the music is moving *bends* the flight instead of
+     * teleporting it — the same property the parameter drift already relies on.
+     */
+    this.phases.travel += this.config.stageFlight * this.audio.flight * clockDt;
+    this.phases.orbit += this.config.stageSpin * this.audio.spin * clockDt;
     this.phases.swell += this.config.stageDisplaceRate * clockDt;
     return this.phases;
   }
@@ -713,6 +837,16 @@ export class Director {
     // parameter keeps it — the cycler only ever deepens what is already there.
     this.wander.applyPost(post);
     this.cycler.apply(post, time, this.config.psychedelia, this.config.cycleInterval);
+    // Fourth pass, after the three that decide what the piece is and before the
+    // governor below: the music deepens whatever they arrived at.
+    //
+    // Measured either side, so what the readout reports is the audio pass alone
+    // — whatever the LFOs, the drift and the cycler arrived at counts as the
+    // authored value. That is the isolation §10's table in
+    // `docs/visualizer-audio-reach.md` was produced under by hand.
+    this.probe?.authored(post);
+    this.audio.applyPost(post);
+    this.probe?.deliver(post, this.audio);
     // Last, because it governs the frame's trail against its symmetry and both
     // of the passes above can move either one.
     this.wander.settle(post, clockDt);
