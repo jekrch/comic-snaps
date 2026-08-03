@@ -47,6 +47,15 @@ export type AudioStatus =
 export interface AudioFrame {
   /** Broadband, normalised against recent history. */
   level: number;
+  /**
+   * How loud the last fifth of a second is against the last twenty-five, as an
+   * amplitude ratio. 1 is "as loud as this run has been"; a chorus reads above
+   * it and a breakdown below.
+   *
+   * The one figure here that is deliberately *not* range-normalised, and see
+   * `trackLoudness` for why everything else is and this must not be.
+   */
+  loudness: number;
   /** Per-band, normalised and envelope-followed. All 0..1. */
   low: number;
   lowMid: number;
@@ -81,6 +90,7 @@ export interface AudioFrame {
 function emptyFrame(): AudioFrame {
   return {
     level: 0,
+    loudness: 1,
     low: 0,
     lowMid: 0,
     mid: 0,
@@ -147,6 +157,34 @@ const SILENCE_HOLD = 0.5;
  *  "responsive"; release slowness is what stops the frame juddering. */
 const ATTACK = 0.03;
 const RELEASE = 0.25;
+
+/**
+ * The two averages relative loudness is the ratio of, in real seconds.
+ *
+ * The long one is the reference: twenty-five seconds means a chorus is measured
+ * against the verse before it and the one before that, and it also means a piece
+ * that never changes level reads 1 throughout — which is correct. This is a
+ * *relative* loudness and its whole content is what the music just did.
+ *
+ * The short one is a passage rather than a moment, and that is a departure from
+ * §3.2 of the reach document, which asks for a fifth of a second. At that length
+ * the ratio is an event detector: a crash with a 1.4s tail dominates a 0.2s
+ * window completely, so the figure swung by ±0.4 once every four bars and the
+ * depth multiplier taken from it pumped on a period a viewer could count. What
+ * this is for is the difference between a verse and a chorus, and a verse is
+ * seconds long.
+ */
+const LOUD_SHORT = 1.2;
+const LOUD_LONG = 25;
+/** Real seconds before the ratio is believed in full. The long average is
+ *  seeded from the short one when sound first arrives, so it starts at parity
+ *  rather than at zero, and this fades the difference in over the first few
+ *  seconds while the reference is still mostly the moment it was seeded in. */
+const LOUD_SETTLE = 6;
+/** How far the ratio may travel. Past these it is a source being switched, a
+ *  track ending or a microphone being picked up, none of which is a dynamic. */
+const LOUD_MIN = 0.35;
+const LOUD_MAX = 2.5;
 
 /** Flux is summed below this. Above it there is mostly hiss, and on the
  *  microphone path a great deal of it. */
@@ -323,6 +361,15 @@ export class AudioReactor {
 
   private quietFor = 0;
   private loudFor = 0;
+  /** The two running levels behind `AudioFrame.loudness`, and how much
+   *  non-silent material the long one has actually heard. */
+  private shortLevel = 0;
+  private longLevel = 0;
+  private heard = 0;
+  /** Decibels the analyser's byte range spans, read off the node rather than
+   *  assumed — `AudioFrame.loudness` is the only figure here in absolute units
+   *  and it is the only one that needs to know. */
+  private dbSpan = 70;
 
   private readonly current = emptyFrame();
 
@@ -431,6 +478,10 @@ export class AudioReactor {
       Math.min(bins - 1, Math.ceil(high / perBin)),
     ]);
     this.fluxBins = Math.min(bins, Math.ceil(FLUX_MAX_HZ / perBin));
+    // Whatever the node's own range is, so `trackLoudness` can turn a byte
+    // difference back into decibels. The defaults are -100 and -30 and nothing
+    // here changes them, but reading is free and assuming is a silent error.
+    this.dbSpan = Math.max(1, analyser.maxDecibels - analyser.minDecibels);
 
     // The stream ending underneath us is a real event on the display path: the
     // user stops the share from the browser's own bar, not from anything here.
@@ -482,6 +533,10 @@ export class AudioReactor {
     this.target = 0;
     this.quietFor = 0;
     this.loudFor = 0;
+    this.shortLevel = 0;
+    this.longLevel = 0;
+    this.heard = 0;
+    this.current.loudness = 1;
   }
 
   /**
@@ -560,6 +615,67 @@ export class AudioReactor {
     else if (this.loudFor > SILENCE_HOLD * 0.4) this.current.silent = false;
 
     this.current.level = this.current.silent ? 0 : this.levelScaler.normalise(broadband, dt);
+    this.trackLoudness(broadband, dt);
+  }
+
+  /**
+   * Relative loudness — the one measurement here that is deliberately not
+   * range-normalised, and the reason it has to exist.
+   *
+   * `BandScaler` maps every band into 0..1 against its own recent range. That is
+   * load-bearing and it is why the detector works at all across a 1960s transfer
+   * and a modern master, and across the listener's distance from the speaker.
+   * It also means a quiet verse and a loud chorus both arrive as 0..1 — so the
+   * single most legible thing music does is deleted in the first stage of the
+   * analysis, and nothing downstream can put it back.
+   *
+   * A *ratio* rather than a subtraction of a running mean, which is what the
+   * binding layer did instead and why it was only ever half-committed to it. A
+   * subtraction is a high-pass: it is the right operation for an event channel,
+   * where "louder than a moment ago" is the whole content, and the wrong one for
+   * a level, because a steady groove has a steady mean and subtracting all of it
+   * leaves nothing exactly where the music is most regular. A ratio holds at 1
+   * through that groove and still reads 1.4 when the chorus arrives.
+   *
+   * Averaged and differenced in *decibels*, then converted to an amplitude
+   * ratio at the end, because that is the scale the numbers arrive on:
+   * `getByteFrequencyData` reports `255 * (dB - min) / (max - min)`, so a bin at
+   * twice the amplitude is about twenty-two byte units higher rather than twice
+   * the value. A ratio taken directly on those bytes is a ratio of decibels,
+   * which is not a ratio of anything — it reads a doubling in level as about
+   * 1.2 and a source with a different noise floor as a different piece of music.
+   */
+  private trackLoudness(broadband: number, dt: number): void {
+    /*
+     * The reference does not learn through a gap between tracks. A long average
+     * left running through one sags toward silence, which would report the
+     * pause as the quietest thing ever played and the next track's first bar as
+     * a chorus — the same failure the silence gate exists to prevent one level
+     * up, for the same reason.
+     */
+    if (this.current.silent) {
+      this.current.loudness = 1;
+      return;
+    }
+    // Both seeded at the level itself on the first frame of sound rather than
+    // from wherever the filters had crept to during the silence before it. Seed
+    // the long one from a short average that is only a fraction risen and the
+    // reference is set below the music for the next twenty-five seconds — which
+    // reads as a run that opens on a permanent chorus.
+    if (this.heard <= 0) {
+      this.shortLevel = broadband;
+      this.longLevel = broadband;
+    }
+    this.shortLevel += (broadband - this.shortLevel) * coefficient(dt, LOUD_SHORT);
+    this.longLevel += (broadband - this.longLevel) * coefficient(dt, LOUD_LONG);
+    this.heard = Math.min(LOUD_SETTLE, this.heard + dt);
+
+    const ratio = Math.pow(10, ((this.shortLevel - this.longLevel) * this.dbSpan) / 20);
+    // Raised to the settle fraction rather than interpolated toward 1: the
+    // quantity is a ratio, so its neutral is 1 and its identity fade is an
+    // exponent.
+    const eased = Math.pow(ratio, this.heard / LOUD_SETTLE);
+    this.current.loudness = Math.min(LOUD_MAX, Math.max(LOUD_MIN, eased));
   }
 
   private readFlux(dt: number): void {

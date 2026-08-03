@@ -161,20 +161,84 @@ const SPREAD_SLOTS = 6;
  *  how far it should travel, so these can stay slow without costing anything. */
 const SWELL_ATTACK = 0.3;
 const SWELL_RELEASE = 0.95;
-/** The baseline the swell is measured against, real seconds, and how much of it
- *  is removed. Kept from the previous version: as an amplitude rather than a
- *  motion this is a well-behaved signal, and the argument for removing some of
- *  the DC — that busy music never rests, so the level is a poor signal and the
- *  deviation is a good one — still holds. §3.2 of the reach document proposes
- *  replacing the subtraction with a ratio, which is a separate change. */
+/**
+ * The baseline the swell's excursion is measured against, real seconds — and it
+ * is now removed in full.
+ *
+ * Only 55% of it used to be, and that compromise was the visible symptom of two
+ * mechanisms doing one job badly. A subtraction of a running mean is a
+ * high-pass, which is the right operation for an *event* channel, where "louder
+ * than a moment ago" is the whole content, and the wrong one for a *level*,
+ * because a steady groove has a steady mean and subtracting all of it leaves
+ * nothing exactly where the music is most regular. Asked to be both, the swell
+ * was mediocre at each and the mix was where the two failures balanced.
+ *
+ * It is now purely the event channel — removed in full, so a rest reads as zero
+ * — and the level it used to half-carry comes from `AudioFrame.loudness`, which
+ * is a ratio and therefore does not go dead on steady material. See `dynamics`.
+ */
 const SWELL_BASELINE = 6;
-const BASELINE_MIX = 0.55;
-const SWELL_GAIN = 3.6;
+/**
+ * The transfer curve the excursion goes through, in place of a gain and a
+ * clamp — §4.4 of the reach document.
+ *
+ * The pair it replaces was a square wave. At a gain of 3.6 everything above the
+ * baseline saturated: measured at 0.01–0.10 between beats and 0.94 on the kick,
+ * whatever size that kick was. That is the same failure the plan's §13 found and
+ * fixed in `onsetStrength`, one level downstream, and it survived here untouched
+ * — a light hit and a heavy one arrived identical, so the channel had two states
+ * and a channel with two states is not a channel.
+ *
+ * `SWELL_GATE` is a soft downward expansion at the bottom, so what is left of a
+ * rest is pushed toward zero rather than amplified along with everything else,
+ * and the curve leaves zero with zero slope rather than with the full gain.
+ * Above `SWELL_KNEE` it asymptotes rather than clamping, so a heavier hit is
+ * always a bigger number than a lighter one however hard either is hit.
+ */
+const SWELL_GATE = 0.012;
+const SWELL_GAIN = 11;
+const SWELL_KNEE = 0.55;
 
 /** Air and melody, each on a time constant of its own and neither on the
  *  beat's. Nothing here should peak when anything else does. */
 const SHIMMER_TAU = 0.5;
 const TIDE_TAU = 1.7;
+
+// --- the depth multiplier ---------------------------------------------------
+
+/**
+ * How the music's own dynamics reach the composition — §3.2 of the reach
+ * document, and the answer to a verse and a chorus looking identical.
+ *
+ * Every other channel here takes its *shape* from bands the reactor normalised
+ * against their own recent range, which is what lets this feature work on any
+ * source at any distance from any speaker and is also what deletes the loudest
+ * thing music does. `AudioFrame.loudness` is the one figure that escapes that
+ * normalisation, and this is where it is spent: not on shape, only on how far
+ * the shapes are allowed to travel.
+ *
+ * Slow, for the reason `AMPLITUDE_TAU` is slow. A depth multiplier with
+ * beat-rate content in it multiplies two signals that both step on the kick, and
+ * the product of those is the flinch the whole hierarchy exists to avoid — the
+ * split only holds if the two are separated in frequency.
+ */
+const DYNAMICS_TAU = 3;
+/**
+ * How much of the ratio is passed through, as an exponent rather than a slope.
+ *
+ * A power law because the quantity is a ratio and its neutral is 1: an exponent
+ * treats a halving and a doubling as the same size of event in opposite
+ * directions, where a linear slope makes the quiet side of the music a much
+ * smaller gesture than the loud side by construction.
+ *
+ * Well under 1, because the change is meant to read as the piece opening up
+ * rather than as a different preset arriving. A 5dB lift into a chorus — about
+ * as much as popular music usually offers — is a ratio of 1.8 and arrives here
+ * as 1.3.
+ */
+const DYNAMICS_EXPONENT = 0.45;
+const DYNAMICS_MIN = 0.45;
+const DYNAMICS_MAX = 1.35;
 
 /**
  * Real seconds of swell history kept for the per-layer spread on the *energy*
@@ -312,6 +376,26 @@ function coefficient(dt: number, tau: number): number {
 }
 
 /**
+ * The swell's excursion above its baseline, expanded into 0..1 — a soft knee in
+ * place of a gain and a clamp. See `SWELL_GATE`.
+ *
+ * Three regions, and each is answering a specific failure of the pair it
+ * replaces. Below the gate a smoothstep pulls the residue of a rest toward zero,
+ * so the channel's floor is silence rather than whatever the baseline filter
+ * happened to leave; between the gate and the knee the response is linear, which
+ * is where nearly every hit lands and where the dynamics have to survive; above
+ * the knee it bends toward 1 without ever reaching it, so the loudest hit in a
+ * passage is still measurably louder than the second loudest.
+ */
+function expand(excursion: number): number {
+  if (excursion <= 0) return 0;
+  const t = Math.min(1, excursion / SWELL_GATE);
+  const gated = excursion * t * t * (3 - 2 * t) * SWELL_GAIN;
+  if (gated <= SWELL_KNEE) return gated;
+  return SWELL_KNEE + (1 - SWELL_KNEE) * Math.tanh((gated - SWELL_KNEE) / (1 - SWELL_KNEE));
+}
+
+/**
  * Every channel, for the trace in `audioTrace.ts`.
  *
  * Exposed because the whole argument of `docs/visualizer-audio-reach.md` §1 is
@@ -322,6 +406,7 @@ function coefficient(dt: number, tau: number): number {
  */
 export interface AudioChannels {
   grid: number;
+  dynamics: number;
   amplitude: number;
   beatPulse: number;
   barBreath: number;
@@ -397,6 +482,9 @@ export class AudioBinding {
   // --- the energy path ------------------------------------------------------
   private swell = 0;
   private baseline = 0;
+  /** The depth multiplier the run's own dynamics buy, around 1. See
+   *  `DYNAMICS_TAU`. */
+  private dynamics = 1;
   private shimmer = 0;
   private tide = 0;
   /** Ring buffer of the swell, for the per-layer spread when unlocked. */
@@ -425,6 +513,7 @@ export class AudioBinding {
    *  produced it, and a per-frame allocation on the hot path buys nothing. */
   private readonly exported: AudioChannels = {
     grid: 0,
+    dynamics: 1,
     amplitude: 0,
     beatPulse: 0,
     barBreath: 0,
@@ -446,6 +535,7 @@ export class AudioBinding {
   get channels(): AudioChannels {
     const out = this.exported;
     out.grid = this.grid;
+    out.dynamics = this.dynamics;
     out.amplitude = this.amplitude;
     out.beatPulse = this.beatPulse;
     out.barBreath = this.barBreath;
@@ -560,12 +650,29 @@ export class AudioBinding {
     // frame must not move where every layer is reading from.
     this.frameDt += (Math.min(0.1, Math.max(1 / 240, dt)) - this.frameDt) * 0.1;
 
+    /*
+     * How far everything below is allowed to travel, before any of it is
+     * shaped. The reactor's loudness is the only unnormalised thing in the
+     * chain, so it is the only place a chorus can differ from a verse — every
+     * band it could have been taken from was mapped into 0..1 against its own
+     * recent range on purpose.
+     */
+    const wantedDynamics = Math.min(
+      DYNAMICS_MAX,
+      Math.max(DYNAMICS_MIN, Math.pow(live ? frame.loudness : 1, DYNAMICS_EXPONENT))
+    );
+    this.dynamics += (wantedDynamics - this.dynamics) * coefficient(dt, DYNAMICS_TAU);
+    const travel = depth * this.dynamics;
+
     // --- the energy path ----------------------------------------------------
     // Bass carries the weight; broadband keeps it from dropping out through a
     // bar with no kick in it.
     const raw = live ? clamp01(frame.low * 0.65 + frame.level * 0.45) : 0;
     this.baseline += (raw - this.baseline) * clamp01(dt / SWELL_BASELINE);
-    const target = clamp01((raw - this.baseline * BASELINE_MIX) * SWELL_GAIN) * depth;
+    // Clamped after the multiplier, not before: `travel` can exceed 1 on a loud
+    // passage at full reactivity, and everything downstream of the swell is a
+    // depth in 0..1.
+    const target = clamp01(expand(raw - this.baseline) * travel);
     const swellTau = target > this.swell ? SWELL_ATTACK : SWELL_RELEASE;
     this.swell += (target - this.swell) * clamp01(dt / swellTau);
 
@@ -573,8 +680,8 @@ export class AudioBinding {
     this.history[this.write] = this.swell;
 
     this.shimmer +=
-      ((live ? frame.high : 0) * depth - this.shimmer) * clamp01(dt / SHIMMER_TAU);
-    this.tide += ((live ? frame.mid : 0) * depth - this.tide) * clamp01(dt / TIDE_TAU);
+      ((live ? frame.high : 0) * travel - this.shimmer) * clamp01(dt / SHIMMER_TAU);
+    this.tide += ((live ? frame.mid : 0) * travel - this.tide) * clamp01(dt / TIDE_TAU);
 
     // --- the synthesised path -----------------------------------------------
     /*
@@ -615,12 +722,20 @@ export class AudioBinding {
      * phrase — so a locked run always breathes, a loud passage breathes harder,
      * and the whole response waxes and wanes on a period nobody can find.
      *
+     * The floor carries `travel` explicitly because the swell already does: both
+     * halves have to move with the dynamics or a chorus would only be able to
+     * lift the part of the amplitude that the beat contributes, and the part
+     * that is there simply for being locked would sit at its verse value
+     * through it.
+     *
      * Depth is applied here and only here on this path, which is what makes
      * `reactivity` a depth control rather than a smoothness control: turning it
      * down shortens the travel and leaves every time constant alone.
      */
     const swing = 1 - PHRASE_SWING + 2 * PHRASE_SWING * this.phrase;
-    const wanted = clamp01((SHAPE_FLOOR + (1 - SHAPE_FLOOR) * this.swell) * swing) * depth;
+    const wanted = clamp01(
+      (SHAPE_FLOOR * travel + (1 - SHAPE_FLOOR) * this.swell) * swing
+    );
     this.amplitude += (wanted - this.amplitude) * coefficient(dt, AMPLITUDE_TAU);
 
     /*
@@ -785,6 +900,7 @@ export class AudioBinding {
     this.fast = 0;
     this.swell = 0;
     this.baseline = 0;
+    this.dynamics = 1;
     this.shimmer = 0;
     this.tide = 0;
     this.history.fill(0);

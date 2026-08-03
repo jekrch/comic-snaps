@@ -198,6 +198,7 @@ class Track {
 /** Channel names dumped to the trace, in the order the binding computes them. */
 const CHANNELS = [
   "grid",
+  "dynamics",
   "amplitude",
   "beatPulse",
   "barBreath",
@@ -216,6 +217,7 @@ const CHANNELS = [
  *  that produced it rather than on its own. */
 const FEATURES = [
   "level",
+  "loudness",
   "low",
   "lowMid",
   "mid",

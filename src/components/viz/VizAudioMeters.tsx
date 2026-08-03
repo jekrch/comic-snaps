@@ -109,6 +109,8 @@ export default function VizAudioMeters({
   const beatRef = useRef<HTMLDivElement>(null);
   const tempoRef = useRef<HTMLSpanElement>(null);
   const lockRef = useRef<HTMLSpanElement>(null);
+  const loudRef = useRef<HTMLDivElement>(null);
+  const loudTextRef = useRef<HTMLSpanElement>(null);
 
   const probeRef = useRef<AudioProbe | null>(null);
   if (probeRef.current === null) probeRef.current = new AudioProbe();
@@ -253,6 +255,23 @@ export default function VizAudioMeters({
       const level = bars.current.get("level");
       if (level) level.style.width = `${(frame.level * 100).toFixed(1)}%`;
 
+      /*
+       * Relative loudness, drawn either side of a centre tick rather than as a
+       * bar from zero — its neutral is 1, not 0, and the only question it
+       * answers is which side of the run's own average this passage is on.
+       * Half a decade either way fills the meter, which is more dynamic range
+       * than most records have.
+       */
+      if (loudRef.current) {
+        const offset = Math.log10(Math.max(0.01, frame.loudness)) / 0.5;
+        const clamped = Math.max(-1, Math.min(1, offset));
+        loudRef.current.style.left = `${(50 + Math.min(0, clamped) * 50).toFixed(1)}%`;
+        loudRef.current.style.width = `${(Math.abs(clamped) * 50).toFixed(1)}%`;
+      }
+      if (loudTextRef.current) {
+        loudTextRef.current.textContent = `${frame.loudness.toFixed(2)}×`;
+      }
+
       if (fluxRef.current) fluxRef.current.style.width = `${(frame.flux * 100).toFixed(1)}%`;
       if (thresholdRef.current) {
         thresholdRef.current.style.left = `${(frame.fluxThreshold * 100).toFixed(1)}%`;
@@ -371,6 +390,29 @@ export default function VizAudioMeters({
               </div>
             )
           )}
+
+          {/* The one figure here that is not range-normalised, and the only
+              place a chorus can look different from a verse. Every band above
+              it is mapped into 0..1 against its own recent range on purpose,
+              which is what makes the detector work on any source and what
+              deletes the loudest thing music does. */}
+          <div
+            className="flex items-center gap-1.5"
+            title="this passage against the run's own average — the depth multiplier"
+          >
+            <span className="w-7 shrink-0 opacity-45">dyn</span>
+            <div className="relative flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+              <div
+                ref={loudRef}
+                className="absolute top-0 bottom-0 bg-accent/50"
+                style={{ left: "50%", width: "0%" }}
+              />
+              <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/30" />
+            </div>
+            <span ref={loudTextRef} className="w-8 shrink-0 text-right opacity-55">
+              1.00×
+            </span>
+          </div>
 
           {/* Flux against the threshold it is tested on: the one view that says
               whether a missed beat is a detector that cannot see the transient
