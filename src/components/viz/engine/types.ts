@@ -530,6 +530,15 @@ export interface PostParams {
   /** Global multiplier, slew-limited by the safety governor. */
   exposure: number;
   hueShift: number;
+  /**
+   * Channel level at which the frame's landing starts rolling off. 1 leaves
+   * only the gamut fit.
+   *
+   * The last thing that touches the picture, and the guard against overlapping
+   * brights reading as one flat white rather than as the pictures that made
+   * them — see `land()` in the post shader.
+   */
+  shoulder: number;
 
   // --- Reparameterisation ---------------------------------------------------
   // The maps that change what the frame's coordinates *mean* before anything

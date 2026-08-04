@@ -2,7 +2,7 @@ import type { Panel } from "../../../types";
 import type { DeviceCaps, VizConfig } from "../vizConfig";
 import type { Rng } from "./rng";
 import type { SafetyGovernor } from "./safety";
-import { levelsFor } from "./palette";
+import { levelsFor, stackKey } from "./palette";
 import type { Rgb } from "./palette";
 import type { Curve, SolidDraw, StageFrame, StageKind, StageSlotDraw } from "./types";
 import { envelope } from "./types";
@@ -234,6 +234,26 @@ export class Stage {
   }
 
   /**
+   * How many of the stage's surfaces a typical pixel sees at once — the depth
+   * the levelling has to solve against, since the quads composite additively.
+   *
+   * Residency is most of the answer and it is usually one: a sequential scene
+   * hands one panel the surface for the whole of its dwell, with the fades
+   * abutting, so the two slots are never both contributing. The scene's own
+   * `overlap` covers the case residency cannot see — quads of a single panel
+   * crossing each other — and the density knob moves it, because multiplying
+   * the quads is exactly what puts more of them over one pixel.
+   */
+  private depth(): number {
+    const scene = this.scene;
+    if (!scene) return 1;
+    const resident = scene.sequential ? 1 : this.slots.length;
+    const declared = Math.max(1, scene.overlap ?? 1);
+    const density = scene.perPanel > 0 ? this.builtPerSlot / scene.perPanel : 1;
+    return resident * (1 + (declared - 1) * density) + this.solidSlots.length;
+  }
+
+  /**
    * Advance residency and produce the frame. `pick` is the director's weighted
    * selection — the stage decides *when* a panel is needed and the director
    * decides which, so the rhyme/clash policy applies here exactly as it does to
@@ -268,13 +288,18 @@ export class Stage {
       config,
     });
 
+    // The same levelling the drift stack applies, and for a sharper version of
+    // the same reason: these composite additively, so a wall of white comic
+    // pages does not merely wash the frame out, it saturates it — and it does so
+    // in the scene buffer, which is eight bits and clips on write, before any
+    // rolloff in post can get to it. Solved once per frame: every surface on the
+    // stage is under the same stack as every other.
+    const key = stackKey(this.depth(), "additive");
+
     const slots: StageSlotDraw[] = this.slots.map((slot) => ({
       panelId: slot.panel?.id ?? "",
       opacity: slot.panel ? envelope(slot.curve, time - slot.bornAt, slot.lifetime) : 0,
-      // The same levelling the drift stack applies, and for a sharper version
-      // of the same reason: these composite additively, so a wall of white
-      // comic pages does not merely wash the frame out, it saturates it.
-      levels: levelsFor(slot.panel?.dominantColors ?? null, config.keyBalance),
+      levels: levelsFor(slot.panel?.dominantColors ?? null, config.keyBalance, key),
       tint,
       tintAmount: config.tintAmount,
       aspect: slot.panel ? panelAspect(slot.panel) : 0.75,
@@ -293,7 +318,7 @@ export class Stage {
         scale: placement.scale,
         opacity:
           placement.opacity * envelope(slot.curve, time - slot.bornAt, slot.lifetime),
-        levels: levelsFor(slot.panel.dominantColors, config.keyBalance),
+        levels: levelsFor(slot.panel.dominantColors, config.keyBalance, key),
         tint,
         tintAmount: config.tintAmount * 0.5,
       });

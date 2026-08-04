@@ -88,6 +88,11 @@ export const shatter: SpatialScene = {
   // pieces that have left, and a cloud of small ones would be the confetti the
   // whole rework is getting away from.
   perPanel: 4,
+  // A shard over the body is the deep case, and at the authored count that is
+  // as deep as it goes — the four are far enough apart to rarely cross each
+  // other. The stage scales this with the density knob, which is the one thing
+  // that can put more of them over the same pixel.
+  overlap: 2,
   sequential: true,
   solidPanels: 0,
 

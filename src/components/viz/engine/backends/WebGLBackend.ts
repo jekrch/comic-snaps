@@ -156,6 +156,7 @@ export class WebGLBackend implements VizBackend {
         uVignette: { value: 0 },
         uExposure: { value: 1 },
         uHueShift: { value: 0 },
+        uShoulder: { value: 1 },
         uPane: { value: 0 },
         uPaneGrid: { value: 2 },
         uPaneBreathe: { value: 0 },
@@ -528,6 +529,7 @@ export class WebGLBackend implements VizBackend {
     post.uVignette.value = frame.post.vignette;
     post.uExposure.value = frame.post.exposure;
     post.uHueShift.value = frame.post.hueShift;
+    post.uShoulder.value = frame.post.shoulder;
     post.uPane.value = frame.post.pane;
     post.uPaneGrid.value = frame.post.paneGrid;
     post.uPaneBreathe.value = frame.post.paneBreathe;

@@ -1,6 +1,6 @@
 import type { BlendMode, Shard } from "../types";
 import { IDENTITY_LEVELS, easeInOut } from "../types";
-import { levelsFor } from "../palette";
+import { levelsFor, stackKey } from "../palette";
 import type { Scene, SceneContext } from "./types";
 import { coverRect, panelAspect } from "./types";
 
@@ -120,12 +120,23 @@ export const driftStack: Scene = {
           ? "normal"
           : rng.pick(ctx.affinity === "clash" ? CLASH_BLENDS : RHYME_BLENDS),
       // A white comic page screened onto anything is white, and four of them is
-      // a blank frame — so every layer that blends is levelled to a common key
-      // first. The opening layer is exempt: it is one panel on a normal blend
-      // over black, with nothing to wash out and every reason to look like the
+      // a blank frame — so every layer that blends is levelled first. The key it
+      // is levelled *to* is solved backwards from how deep the stack this layer
+      // joins will be, because screening compounds: one common key at every
+      // depth held the frame at a mid tone with two layers and blew it out with
+      // four, which is the wash. See `stackKey`.
+      //
+      // The opening layer is exempt: it is one panel on a normal blend over
+      // black, with nothing to wash out and every reason to look like the
       // artwork it is.
       levels:
-        ctx.index === 0 ? IDENTITY_LEVELS : levelsFor(panel.dominantColors, config.keyBalance),
+        ctx.index === 0
+          ? IDENTITY_LEVELS
+          : levelsFor(
+              panel.dominantColors,
+              config.keyBalance,
+              stackKey(config.layerCount, "screen", config.layerOpacity)
+            ),
       tint: ctx.tint,
       tintAmount: config.tintAmount * rng.range(0.4, 1),
       opacityCurve: {

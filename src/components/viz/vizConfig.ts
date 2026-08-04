@@ -257,6 +257,9 @@ export const DEFAULT_POST: PostParams = {
   vignette: 0.35,
   exposure: 1,
   hueShift: 0,
+  // Low enough that the highlights of a busy stack are inside it and get the
+  // rolloff, high enough that an ordinary page's whites are untouched.
+  shoulder: 0.72,
   // Every distortion is off by default; the scale/frequency values beside them
   // are the shape each one takes when something turns it on.
   droste: 0,
@@ -515,6 +518,8 @@ const HINTS: Record<string, string> = {
   "post.grain": "Film grain over the frame.",
   "post.vignette": "Darkens the corners.",
   "post.exposure": "Overall brightness.",
+  "post.shoulder":
+    "Where highlights start rolling off instead of clipping. Lower keeps overlapping brights coloured rather than white.",
   "post.hueShift": "Rotates every colour around the wheel.",
   "post.solarize": "Inverts the brightest tones — a burnt, photographic reversal.",
 
@@ -693,6 +698,7 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.grain", "grain", 0, 0.3, 0.005, (c) => c.post.grain, (c, v) => (c.post.grain = v)),
   field("post", "post.vignette", "vignette", 0, 1, 0.01, (c) => c.post.vignette, (c, v) => (c.post.vignette = v)),
   field("post", "post.exposure", "exposure", 0.2, 1.8, 0.01, (c) => c.post.exposure, (c, v) => (c.post.exposure = v)),
+  field("post", "post.shoulder", "shoulder", 0.4, 1, 0.01, (c) => c.post.shoulder, (c, v) => (c.post.shoulder = v)),
   field("post", "post.hueShift", "hue", -1, 1, 0.01, (c) => c.post.hueShift, (c, v) => (c.post.hueShift = v)),
   field("post", "post.solarize", "solarize", 0, 1, 0.01, (c) => c.post.solarize, (c, v) => (c.post.solarize = v)),
 

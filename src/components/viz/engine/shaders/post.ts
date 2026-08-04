@@ -67,6 +67,8 @@ uniform float uGrain;
 uniform float uVignette;
 uniform float uExposure;
 uniform float uHueShift;
+/** Channel level at which the landing's shoulder starts. 1 disables it. */
+uniform float uShoulder;
 
 uniform float uPane;
 uniform float uPaneGrid;
@@ -1304,6 +1306,40 @@ vec3 fetch(vec2 uvR, vec2 uvG, vec2 uvB, vec2 uvK, bool split, float lod) {
   return clamp(c - grey + min(min(k.r, k.g), k.b), 0.0, 1.0);
 }
 
+/**
+ * The frame's landing, in place of a clamp.
+ *
+ * A per-channel clamp is what turns "bright" into "muddy". It clips each
+ * channel on its own, so it does not merely cap a colour, it *rotates* it:
+ * (1.4, 1.1, 0.6) is an orange, and clipping makes it (1.0, 1.0, 0.6), a
+ * yellow. Every bright colour in the frame is pulled toward whichever corner of
+ * the cube it happened to overshoot, and a stack full of overlaps arrives at
+ * the same few flat, wrong colours at once. What is wanted is not less light
+ * but light that still says which pictures made it.
+ *
+ * So the roll-off is applied to the peak channel and the whole colour is scaled
+ * by the ratio: below the knee nothing moves at all, and above it the remaining
+ * headroom is spent asymptotically, so 1.0 is approached and never reached.
+ * Scaling is the point — every channel moves by the same factor, so the ratios
+ * between them come out exactly as they went in. Hue and saturation both
+ * survive intact, the result is inside the cube by construction rather than by
+ * a second correction, and what an overbright colour spends is its brightness,
+ * which is the thing there was too much of.
+ *
+ * At 1 the shoulder is gone and this is a plain gamut fit — still by ratio, and
+ * still not the per-channel clip.
+ */
+vec3 land(vec3 c) {
+  c = max(c, 0.0);
+  float knee = clamp(uShoulder, 0.0, 1.0);
+  float peak = max(max(c.r, c.g), c.b);
+  if (peak <= knee) return c;
+
+  float head = max(1.0 - knee, 1e-3);
+  float mapped = knee + head * (1.0 - exp(-(peak - knee) / head));
+  return min(c * (mapped / peak), 1.0);
+}
+
 void main() {
   vec2 uv = vUv;
   vec2 radial = uv - 0.5;
@@ -1474,6 +1510,10 @@ void main() {
     float d = length(radial * vec2(uAspect, 1.0)) * 1.05;
     col *= clamp(1.0 - uVignette * d * d, 0.0, 1.0);
   }
+
+  // Ahead of the grain, which belongs to the camera and not to the picture —
+  // rolling it off would only make the noise quieter where the frame is bright.
+  col = land(col);
 
   if (uGrain > 0.0) {
     col += (hash21(uv * uResolution + fract(uTime) * 137.0) - 0.5) * uGrain;

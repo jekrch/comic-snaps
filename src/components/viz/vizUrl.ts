@@ -46,7 +46,7 @@ const PINNED_PATHS: readonly string[] = [
   "keyBalance", "zoomAmount", "panAmount", "rotateAmount", "tintAmount",
   "post.feedbackAmount", "post.feedbackScale", "post.feedbackRotate", "post.feedbackDroste",
   "post.halftone", "post.halftoneScale", "post.chroma", "post.posterize", "post.grain",
-  "post.vignette", "post.exposure", "post.hueShift", "post.solarize",
+  "post.vignette", "post.exposure", "post.shoulder", "post.hueShift", "post.solarize",
   "post.kaleido", "post.kaleidoSegments", "post.kaleidoSpin", "post.tile", "post.fold",
   "post.foldScale", "post.foldOffsetX", "post.foldOffsetY", "post.foldSpin", "post.lattice",
   "post.latticeScale", "post.droste", "post.drosteInner", "post.drostePeriod", "post.drosteTwist",

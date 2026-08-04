@@ -224,6 +224,20 @@ export interface SpatialScene {
    */
   readonly perPanel: number;
   /**
+   * How many of this scene's own surfaces a typical pixel sees stacked, at the
+   * scene's authored density.
+   *
+   * The quads composite additively, so this is what decides how far each one
+   * has to be levelled down to keep the sum off the ceiling — see `stackKey`.
+   * It is the scene's to declare and not something the stage can count: a
+   * formation's quad *count* says nothing about depth, because quads spread
+   * across the frame are one surface each to the pixels under them.
+   *
+   * One — the default — is right for every formation whose surfaces do not
+   * cross, which is all of them but the dispersing one.
+   */
+  readonly overlap?: number;
+  /**
    * Whether the slots take turns instead of overlapping.
    *
    * Concurrent — the default — is right whenever the slots occupy *different*
