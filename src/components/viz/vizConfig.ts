@@ -102,6 +102,27 @@ export interface VizConfig {
    */
   reactivity: number;
   /**
+   * How *sharply* the music moves it — beat-rate detail against bar and section
+   * scale swell, 0..1.
+   *
+   * The second axis of §6 of `docs/visualizer-audio-reach.md`, and the reason
+   * that section exists: one knob conflated depth with sharpness, so the only
+   * search available to somebody who found the result twitchy was to make it
+   * quieter — which is the search that produced a version of this feature that
+   * did nothing at all. Depth and sharpness are separate axes and this is the
+   * other one.
+   *
+   * At 0 the fast row of the hierarchy closes: the colour, the press and the
+   * trail pump still follow the music, but on the bar's shape rather than the
+   * beat's, and the accent never fires. The composition breathes and never
+   * twitches. At 1 the beat and accent channels are fully open. Neither end
+   * changes how far anything travels — the geometry is on the bar row at both,
+   * which is where nearly all of the depth lives.
+   *
+   * Capped, not scaled, under `prefers-reduced-motion` — see `effectiveAttack`.
+   */
+  attack: number;
+  /**
    * How far the music may lift the press artefacts — plate misregistration, ink
    * bleed, krackle — up from zero, 0..1. Inert at 0.
    *
@@ -119,6 +140,24 @@ export interface VizConfig {
    * nothing else is.
    */
   audioLift: number;
+  /**
+   * How far ahead of the analysis the composition runs, in milliseconds — §3.7
+   * of `docs/visualizer-audio-attribution.md`.
+   *
+   * There is latency between the speaker and the analyser that nothing in the
+   * engine can measure: the capture device's buffer, the browser's own, and on
+   * the display path whatever the tab's output stage adds. The beat grid
+   * *predicts*, so analysis latency is absorbed for free — but only if the
+   * prediction is aimed where the viewer hears the beat rather than where the
+   * analyser saw it, and the difference between those is a property of the
+   * machine rather than of the music.
+   *
+   * So it is one number, and it is the one setting here that has a *correct*
+   * value rather than a tasteful one: too low and every hit looks late, too high
+   * and the composition anticipates visibly. Nothing above it in the chain can
+   * compensate for it being wrong.
+   */
+  audioLatency: number;
 
   // --- The spatial stage ----------------------------------------------------
   // Read only when `stageKind` is not "flat". Kept at the top level rather than
@@ -229,6 +268,15 @@ export const DEFAULT_POST: PostParams = {
   tunnel: 0,
   tunnelDepth: 0.35,
   tunnelSpin: 0.05,
+  pane: 0,
+  // Two across, which is the chunkiest grid there is: one whole frame in the
+  // middle and its own reflections closing in at the edges. Only read when the
+  // pull-back is up.
+  paneGrid: 2,
+  paneBreathe: 0,
+  // A cycle a little under a minute, so an opening and a closing are each about
+  // half of one. Only read when `paneBreathe` is up.
+  paneRate: 0.018,
   kaleido: 0,
   kaleidoSegments: 6,
   // The slow intrinsic turn that makes a fold legible as a fold rather than as
@@ -331,11 +379,22 @@ export const DEFAULT_CONFIG: VizConfig = {
   wander: 0,
   wanderRate: 1,
   reactivity: 0.75,
+  // The middle of the three characters — "groove". A little under full, because
+  // the beat row is the half of the response that can read as a flinch and the
+  // half that is worth having is the geometry breathing on the bar; leaving a
+  // third of the fast row's drive on the bar's shape costs no depth and takes
+  // the sharpest edge off the default.
+  attack: 0.7,
   // Non-zero for the same reason `reactivity` is: nothing here can happen until
   // the run has been given a listener, which only ever comes from a gesture, so
   // this is a taste default rather than a consent gate. Modest — the press
   // should read as breathing with the music, not as an effect that arrived.
   audioLift: 0.4,
+  // Milliseconds. A middling figure for a display capture on a desktop browser:
+  // the analysis window is 43ms on its own, and the capture and output stages
+  // either side of it are the same order again. It is a starting point to be
+  // adjusted by ear, not a measurement — see `audioLatency`.
+  audioLatency: 80,
   stageKind: "flat",
   stageDensity: 1,
   stageScale: 1,
@@ -459,6 +518,10 @@ const HINTS: Record<string, string> = {
   "post.hueShift": "Rotates every colour around the wheel.",
   "post.solarize": "Inverts the brightest tones — a burnt, photographic reversal.",
 
+  "post.pane": "Backs the view up until the frame is repeated in mirrored panes.",
+  "post.paneGrid": "How many copies of the frame span the screen when it is fully backed up.",
+  "post.paneBreathe": "Opens the panes out and closes them again, over and over.",
+  "post.paneRate": "How fast that opening and closing cycles.",
   "post.kaleido": "Mirrors the frame into a kaleidoscope.",
   "post.kaleidoSegments": "How many mirrored wedges.",
   "post.kaleidoSpin": "How fast the kaleidoscope turns.",
@@ -562,7 +625,9 @@ const HINTS: Record<string, string> = {
   stageSwirl: "A current running through the formation, scattering it.",
 
   reactivity: "How far the composition follows the music, once it is listening.",
+  attack: "How sharply it follows: down for a breath over each bar, up for the beat.",
   audioLift: "How far the music may push the press out of register on its own.",
+  audioLatency: "Milliseconds the composition runs ahead, to cancel capture delay. Raise until hits land on the beat.",
 
   "weights.rhyme": "Favour a next panel that echoes the one on screen.",
   "weights.clash": "Favour one that cuts against it.",
@@ -631,6 +696,17 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.hueShift", "hue", -1, 1, 0.01, (c) => c.post.hueShift, (c, v) => (c.post.hueShift = v)),
   field("post", "post.solarize", "solarize", 0, 1, 0.01, (c) => c.post.solarize, (c, v) => (c.post.solarize = v)),
 
+  field("shape", "post.pane", "panes", 0, 1, 0.01, (c) => c.post.pane, (c, v) => (c.post.pane = v)),
+  // Whole numbers only. The map is happy with a fraction — mirror-tiling is
+  // defined at every scale — but a partial cell at the frame's edge is a copy
+  // the eye reads as a mistake rather than as a smaller grid.
+  field("shape", "post.paneGrid", "pane grid", 2, 4, 1, (c) => c.post.paneGrid, (c, v) => (c.post.paneGrid = v)),
+  field("shape", "post.paneBreathe", "pane breath", 0, 1, 0.01, (c) => c.post.paneBreathe, (c, v) => (c.post.paneBreathe = v)),
+  // Capped at a cycle every seventeen seconds. This is a zoom of a whole octave
+  // across the entire frame, so it is governed like the reparameterisations
+  // rather than like a knob: past this it stops being the view backing up and
+  // becomes the frame being pumped, which is the §7 limit's territory.
+  field("shape", "post.paneRate", "pane rate", 0, 0.06, 0.002, (c) => c.post.paneRate, (c, v) => (c.post.paneRate = v)),
   field("shape", "post.kaleido", "kaleido", 0, 1, 0.01, (c) => c.post.kaleido, (c, v) => (c.post.kaleido = v)),
   field("shape", "post.kaleidoSegments", "segments", 2, 16, 1, (c) => c.post.kaleidoSegments, (c, v) => (c.post.kaleidoSegments = v)),
   field("shape", "post.kaleidoSpin", "kaleido spin", -0.4, 0.4, 0.005, (c) => c.post.kaleidoSpin, (c, v) => (c.post.kaleidoSpin = v)),
@@ -755,7 +831,9 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("cycle", "wanderRate", "wander rate", 0.2, 3, 0.05, (c) => c.wanderRate, (c, v) => (c.wanderRate = v)),
 
   field("audio", "reactivity", "reactivity", 0, 1, 0.01, (c) => c.reactivity, (c, v) => (c.reactivity = v)),
+  field("audio", "attack", "attack", 0, 1, 0.01, (c) => c.attack, (c, v) => (c.attack = v)),
   field("audio", "audioLift", "press lift", 0, 1, 0.01, (c) => c.audioLift, (c, v) => (c.audioLift = v)),
+  field("audio", "audioLatency", "latency ms", 0, 300, 5, (c) => c.audioLatency, (c, v) => (c.audioLatency = v)),
 
   // Inert unless `stageKind` is a spatial one, which is not a slider — see the
   // note on StageMode. The rest of the stage is tunable exactly like the flat
@@ -917,9 +995,98 @@ function defaultView(): Window | null {
   return typeof window === "undefined" ? null : window;
 }
 
+/**
+ * Memoised, because the audio path asks this every frame. Only the
+ * `MediaQueryList` is kept — `matches` is read live off it, so a preference
+ * changed mid-run is still honoured on the next frame.
+ */
+let motionQuery: MediaQueryList | null | undefined;
+
 export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (motionQuery === undefined) {
+    motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  }
+  return motionQuery?.matches ?? false;
+}
+
+/**
+ * The ceiling `attack` is held under when the reader has asked for reduced
+ * motion — §6 of `docs/visualizer-audio-reach.md`, and the one obligation left
+ * outstanding by §5 of the audio plan.
+ *
+ * That plan asked for `reactivity` to be capped. Capping `attack` instead is
+ * strictly better and is the whole argument for splitting the two: a capped
+ * reactivity is a piece that stops following the music, where a capped attack is
+ * a piece that still follows it and does so on the bar rather than on the beat.
+ * What reduced motion is a request about is velocity, and velocity is exactly
+ * what this axis moves — the fast row's parameters have none on screen, but the
+ * *rate* at which the whole response changes is what makes a composition feel
+ * jumpy, and at this cap nothing in it can change faster than a bar.
+ *
+ * A cap rather than a scale, so a preset that already asked for less keeps it.
+ */
+export const REDUCED_MOTION_ATTACK = 0.15;
+
+/**
+ * The three named points over the `reactivity` × `attack` plane — what §6 of the
+ * reach document expects to actually ship, with the sliders behind them for
+ * anybody who wants the space between.
+ *
+ * Two knobs are the honest description of the mechanism and are a poor thing to
+ * hand somebody who only wants the run to answer the music differently. These
+ * are the corners worth having: a piece that breathes over bars and never
+ * twitches, the middle, and one that takes every hit. They set both fields
+ * together because the interesting moves across this plane are diagonal — a
+ * sharper response is usually also wanted deeper.
+ */
+export interface AudioCharacter {
+  id: string;
+  label: string;
+  hint: string;
+  reactivity: number;
+  attack: number;
+}
+
+export const AUDIO_CHARACTERS: readonly AudioCharacter[] = [
+  {
+    id: "breathe",
+    label: "breathe",
+    hint: "Follows the music over bars and phrases, never on the beat. The calm one, and what a reduced-motion preference gets whichever of these is chosen.",
+    reactivity: 0.65,
+    attack: 0.1,
+  },
+  {
+    id: "groove",
+    label: "groove",
+    hint: "The default. Geometry on the bar, colour and press on the beat.",
+    reactivity: 0.75,
+    attack: 0.7,
+  },
+  {
+    id: "punch",
+    label: "punch",
+    hint: "Every channel fully open, accents included.",
+    reactivity: 0.95,
+    attack: 1,
+  },
+];
+
+/** Which character a config currently sits on, if any. Quantised to the
+ *  sliders' own step, so a value dragged onto one counts as arriving at it. */
+export function audioCharacterOf(config: VizConfig): string | null {
+  return (
+    AUDIO_CHARACTERS.find(
+      (entry) =>
+        Math.abs(entry.reactivity - config.reactivity) < 0.005 &&
+        Math.abs(entry.attack - config.attack) < 0.005
+    )?.id ?? null
+  );
+}
+
+export function effectiveAttack(attack: number): number {
+  const value = Number.isFinite(attack) ? Math.min(1, Math.max(0, attack)) : 0;
+  return prefersReducedMotion() ? Math.min(value, REDUCED_MOTION_ATTACK) : value;
 }
 
 export interface DeviceCaps {

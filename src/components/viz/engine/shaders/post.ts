@@ -68,6 +68,10 @@ uniform float uVignette;
 uniform float uExposure;
 uniform float uHueShift;
 
+uniform float uPane;
+uniform float uPaneGrid;
+uniform float uPaneBreathe;
+uniform float uPanePhase;
 uniform float uKaleido;
 uniform float uKaleidoSegments;
 uniform float uKaleidoPhase;
@@ -386,7 +390,8 @@ vec2 plateView(vec2 uv) {
  * remap of where the frame is sampled, so they all live here and compose in
  * one place.
  *
- * Order is deliberate, in three stages.
+ * Order is deliberate, in three stages — four, counting the panes, which are
+ * ahead of all of it and are described where they are cut.
  *
  * The *reparameterisations* run first, because they decide what the frame's
  * coordinates mean at all — a tunnel turns radius into depth, a Droste turns it
@@ -404,9 +409,48 @@ vec2 plateView(vec2 uv) {
  * geometry, never three different foldings of it.
  */
 vec2 distort(vec2 uv, float disp) {
+  /*
+   * The panes: the view backing up until several mirrored copies of the frame
+   * fit across the screen. First, and deliberately so — everything below is
+   * then computed in pane-local coordinates, so each pane carries a *complete*
+   * copy of whatever the frame is doing rather than a piece of it. Four
+   * quadrants each running their own kaleidoscope is only reachable from here;
+   * the same mirror-tile at the end of the chain -- uTile -- folds the frame
+   * once and then repeats what is inside one wedge.
+   *
+   * That is the one exception to the ordering note above, and it is exact
+   * rather than tolerated: what tears a fold's seams is a map that breaks its
+   * angular periodicity, and this is a mirrored similarity — the rosette is
+   * redrawn whole in every cell, seams closing where they always did.
+   *
+   * The breath is evaluated here rather than on the CPU because what the
+   * director integrates is the *rate*: a phase is a position in the cycle, and
+   * one shaped by a cosine opens and closes with zero velocity at both ends,
+   * which is what keeps a zoom of a whole octave from starting with a lurch.
+   */
+  float pane = clamp(uPane + uPaneBreathe * (0.5 - 0.5 * cos(uPanePhase * TAU)), 0.0, 1.0);
+  if (pane > 0.0) {
+    /*
+     * Geometric in the pull-back, so the view recedes at a constant *rate* of
+     * magnification rather than a constant rate of scale — an octave covered
+     * linearly reads as a zoom that gives up halfway.
+     *
+     * Centred on the frame, which is what makes the identity at zero and is
+     * also why the count only lands exactly on odd grids: mirror-tiling about
+     * the middle of a cell puts one whole copy in the centre of the screen with
+     * its reflections growing in around it. At 2 that is a centre frame and
+     * mirrored halves at the edges; at 3 it is nine copies, aligned. Both read
+     * as the same gesture, which is the frame backing away from the viewer and
+     * finding itself repeated.
+     */
+    uv = mirrorUv((uv - 0.5) * pow(max(1.0, uPaneGrid), pane) + 0.5);
+  }
+
   /* The frame as it was composited, before any of this. Kept for the Julia
    * plates, which are the one thing in the chain whose whole purpose is to be
-   * *undistorted* — see the note where they are cut. */
+   * *undistorted* — and undistorted means per pane, so the panes are already in
+   * it: a window cut in the figure shows the frame its own cell is drawn from,
+   * not one from the cell next door. */
   vec2 plain = uv;
   if (uTunnel > 0.0) {
     vec2 t = toStage(uv);

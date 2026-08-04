@@ -1,5 +1,6 @@
 import type { Panel } from "../../../types";
 import type { DeviceCaps, VizConfig } from "../vizConfig";
+import { effectiveAttack } from "../vizConfig";
 import { cosineDistance, loadEmbeddings, paletteDistance } from "../../../utils/sorting";
 import type { EmbeddingMap } from "../../../utils/sorting";
 import type { Rng } from "./rng";
@@ -16,9 +17,9 @@ import type { Rgb } from "./palette";
 import { driftStack } from "./scenes/driftStack";
 import type { Affinity, Scene } from "./scenes/types";
 import type { AudioFrame } from "./AudioReactor";
-import { LOCK_THRESHOLD } from "./AudioReactor";
 import { AudioBinding } from "./audioBind";
 import type { AudioProbe } from "./audioTrace";
+import { TempoLock } from "./tempoLock";
 
 /** A panel plus the reason it was chosen, so presets can react to it. */
 interface Pick {
@@ -48,6 +49,23 @@ const FLOW_HEADING_HZ = 0.011;
  */
 const JULIA_DRIFT_RATE = 0.031;
 
+/**
+ * How large a section cue turns the whole composition over, 0..1.
+ *
+ * The section row of `docs/visualizer-audio-reach.md` §2 is the only one whose
+ * gestures are discrete, and this is the largest of them: every page on screen
+ * crossing over at once because the music just changed. The bar is high on
+ * purpose — the cue's own floor is one every twenty seconds, and a page turn is
+ * worth rather less than that often — so the small half of every cue is spent on
+ * the cycler alone and only a real arrival moves the panels.
+ *
+ * The cue arrives already scaled by `reactivity`, so this bar is also what makes
+ * depth mean something to a gesture that has no depth: under about 0.6 the
+ * largest move in the feature stops happening at all, and the cycler cue — which
+ * has no threshold — carries the row on its own.
+ */
+const SECTION_TURNOVER = 0.6;
+
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
@@ -71,6 +89,10 @@ function recentWindow(count: number): number {
  */
 function openingPhases(rng: Rng): VizPhases {
   return {
+    // Cycles of the pull-back's breath, and a whole one is the round trip. Free
+    // like the angles below it: a run may open on a closed frame, on the grid
+    // wide open, or anywhere on the way between.
+    pane: rng.range(0, 1),
     kaleido: rng.range(0, TAU),
     // Log-radii, and the widest stride a preset can ask for is 3.
     droste: rng.range(0, 3),
@@ -113,6 +135,10 @@ export class Director {
   private nextShardId = 1;
   private lastBeat = -1;
   private seeded = false;
+  /** Whether the next pick should deliberately cut against what is on screen.
+   *  Armed by a structural cue and consumed by the pick it applies to — see
+   *  `spendSection`. */
+  private contrastNext = false;
   /** The panel the run is locked onto, or null while it is free-running. */
   private focus: Panel | null = null;
   private aspect = 1;
@@ -137,6 +163,8 @@ export class Director {
   /** Inert until the run is given a listener, like everything else here that
    *  answers to something outside the seed. */
   private readonly audio = new AudioBinding();
+  /** The composition's own durations, put in tempo. See `tempoLock.ts`. */
+  private readonly tempo = new TempoLock();
   /** The reach readout, when something is watching. See `setAudioProbe`. */
   private probe: AudioProbe | null = null;
   /** The last analysed frame, handed down by the engine. Null unless the run is
@@ -300,25 +328,115 @@ export class Director {
     return rankCast(scores, incumbents, limit, (id) => this.byId.get(id) ?? null);
   }
 
+  /**
+   * Spend the section cue, if the music raised one this frame — the row §2 of
+   * the reach document lists and nothing has ever driven.
+   *
+   * Both timescales below it move *parameters*, because a parameter is a thing
+   * that can be a little bit moved. A section is not: what the music did was
+   * change, and the composition's answer to that is to change too. So the two
+   * consumers here are the only genuinely discrete gestures the engine has — a
+   * new effect arriving out of turn, and the pages turning over — and neither is
+   * given any say in *what* arrives, only in when.
+   *
+   * A held run is exempt from the turn: every layer it spawns carries the same
+   * panel, so turning it over would be a crossfade from a page to itself.
+   */
+  private spendSection(): void {
+    /*
+     * Two cues, spent the same way and detected on completely different
+     * evidence — see `AudioBinding.arrival`. The section row compares two
+     * averages of the run's dynamics twenty seconds apart; the arrival is the
+     * low end coming back after a break, and it resolves to the frame it happens
+     * on. Whichever is larger decides how much is spent.
+     *
+     * An arrival counts for more than its own size, because what it is is
+     * better evidence: a drop is an event the composition can be *sure* about,
+     * where a section is a slow figure crossing a threshold. So it clears the
+     * turnover bar on its own.
+     */
+    const section = Math.max(this.audio.section, this.audio.arrival);
+    if (section <= 0) return;
+    this.cycler.cue();
+    if (section >= SECTION_TURNOVER || this.audio.arrival > 0) {
+      /*
+       * And the one place the music is allowed a say in *what* arrives — §3.6 of
+       * `docs/visualizer-audio-attribution.md`, and a deliberately narrow
+       * exception to a rule this codebase has now held three times.
+       *
+       * The rule is that audio decides when, never what, and it protects the
+       * director's editorial judgement: a kick drum must not be able to choose a
+       * panel. This does not choose one. It says that the *next* choice should
+       * be a contrast, and leaves the existing weighted selection to make it —
+       * "the music decided this one should be different" rather than "the music
+       * decided which one". That is a much weaker claim and it buys nearly all
+       * of the attribution, because a page visibly changing on the drop is
+       * legible to anyone in the room without their having to attend to it.
+       */
+      // Cleared, or the flag would arm a pick two ahead of the one that is about
+      // to arrive: `fillUpcoming` runs a queue of two, so the layer this cue
+      // spawns is chosen from a decision made before the music changed. A
+      // discarded pick costs a slot in the recency window and nothing else.
+      this.upcoming.length = 0;
+      this.contrastNext = true;
+      if (!this.focus) this.turnOver();
+    }
+  }
+
   update(time: number, dt: number): VizFrame {
     // Composition seconds since the last frame, as distinct from `dt`, which is
     // real time. The drift is part of the piece, so it follows the speed
     // control; the safety governor is not, so it does not.
     const clockDt = this.lastClock < 0 ? 0 : Math.max(0, time - this.lastClock);
     this.lastClock = time;
-    this.wander.update(clockDt, this.config.wander, this.config.wanderRate);
+    /*
+     * The drift, at whatever rate the music has left it — §3.1 of
+     * `docs/visualizer-audio-attribution.md`.
+     *
+     * Attribution is a ratio, and every previous round of this feature has only
+     * ever moved its numerator. The wander, the cycler, the layer churn and the
+     * spatial flight all keep their authored amplitude while the music plays, so
+     * the audio contribution is a minority share of the motion on screen and the
+     * eye attributes causation to whatever dominates. This is the composition
+     * handing over the margin while the music is carrying the frame.
+     *
+     * Read one frame late, which is what letting it read `this.audio` before the
+     * update below would cost anyway and is worth naming: at `HANDOVER_TAU` of
+     * 1.2s a frame of lag is nothing, and the alternative is ordering the two
+     * passes by a dependency that does not otherwise exist.
+     */
+    const autonomy = this.audio.autonomy;
+    this.wander.update(
+      clockDt,
+      this.config.wander,
+      this.config.wanderRate * autonomy,
+      this.tempo
+    );
     // Real `dt`, not the clock: the music does not follow the speed control.
     this.audio.update(
       this.audioFrame,
       this.config.reactivity,
+      // Capped here rather than in the binding, because it is a property of the
+      // reader rather than of the composition: a preset, a link and a slider all
+      // arrive through the config, and none of them may raise this past what
+      // somebody's own machine has asked for.
+      effectiveAttack(this.config.attack),
       this.config.audioLift,
       dt,
       this.safety
     );
+    this.spendSection();
     // Real `dt` for the same reason the update above takes it: the trace is
     // measured in wall-clock seconds, so a run at 2× speed still reports the
     // rates the viewer's eye is actually subject to.
     this.probe?.observe(this.audioFrame, dt);
+    /*
+     * Real `dt` again, but `timeScale` too: what this holds is a *clock*
+     * duration, and the speed control scales every duration in the composition
+     * together. A viewer at 2x covers a bar of music in half a bar of clock, so
+     * the durations that should match the music are half as long.
+     */
+    this.tempo.update(this.audioFrame, this.config.reactivity, this.timeScale, dt);
     this.syncStage();
 
     if (this.panels.length === 0) {
@@ -431,7 +549,7 @@ export class Director {
    */
   private beatIndex(time: number): number {
     const frame = this.audioFrame;
-    if (!frame || frame.confidence < LOCK_THRESHOLD || this.config.reactivity <= 0) {
+    if (!frame || !frame.locked || this.config.reactivity <= 0) {
       return Math.floor(time / Math.max(0.1, this.config.beat));
     }
     // What the next layer's fade will be, by the same arithmetic the scene uses
@@ -533,6 +651,11 @@ export class Director {
    * spaces the copies out rather than slowing the whole effect down.
    */
   private advancePhases(post: PostParams, clockDt: number): VizPhases {
+    // Wrapped, unlike the angles below, because it can be: the shader reads this
+    // through a cosine of one cycle, so every whole turn is discardable — and
+    // discarding them is what keeps a screensaver left running overnight from
+    // slowly losing the fraction that is the whole of what the phase means.
+    this.phases.pane = (this.phases.pane + post.paneRate * clockDt) % 1;
     this.phases.kaleido += post.kaleidoSpin * clockDt;
     this.phases.droste += post.drosteSpin * Math.max(0.15, post.drostePeriod) * clockDt;
     this.phases.fold += post.foldSpin * clockDt;
@@ -608,8 +731,18 @@ export class Director {
      * evaluated, so a rate the music is moving *bends* the flight instead of
      * teleporting it — the same property the parameter drift already relies on.
      */
-    this.phases.travel += this.config.stageFlight * this.audio.flight * clockDt;
-    this.phases.orbit += this.config.stageSpin * this.audio.spin * clockDt;
+    /*
+     * The handover applies to the *authored* half of each rate and not to the
+     * audio gain over it, which is the arithmetic the whole idea turns on:
+     * scaling the product would take the musical contribution down with the
+     * composition's own and leave the ratio exactly where it started. So the
+     * base stands down by `1 - autonomy` and the gain's deviation is added back
+     * at full size.
+     */
+    const autonomy = this.audio.autonomy;
+    this.phases.travel +=
+      this.config.stageFlight * (autonomy + (this.audio.flight - 1)) * clockDt;
+    this.phases.orbit += this.config.stageSpin * (autonomy + (this.audio.spin - 1)) * clockDt;
     this.phases.swell += this.config.stageDisplaceRate * clockDt;
     return this.phases;
   }
@@ -628,7 +761,7 @@ export class Director {
       aspect: this.aspect,
       // The drift hands back the config untouched when it is off, so a preset
       // that does not use it builds its layers from exactly what it authored.
-      config: this.wander.spawnConfig(this.config),
+      config: this.inTempo(this.wander.spawnConfig(this.config)),
       drift: this.wander.bias(),
       rng: this.rng,
       tint: this.currentTint(this.shardPanels()),
@@ -660,6 +793,28 @@ export class Director {
       );
     }
     this.shards.push(shard);
+  }
+
+  /**
+   * A layer's own durations, snapped to the bar — the lifetime it will live and
+   * the fraction of it spent crossfading.
+   *
+   * Applied to the config the layer is *built* from rather than to the config
+   * the run holds, so it is a property of that layer and nothing retunes
+   * underneath a layer already on screen. A lifetime is the longest duration in
+   * the engine and the one a viewer is least able to time, which is exactly why
+   * it is worth locking: births then land on the bar without anything having
+   * been made to move.
+   *
+   * The crossfade is carried as a fraction, so it follows the lifetime for
+   * free — and `driftStack` still puts the result through `safety.clampFade`,
+   * which no snap here may undercut.
+   */
+  private inTempo(config: VizConfig): VizConfig {
+    if (!this.tempo.active) return config;
+    const lifetime = this.tempo.duration(config.layerLifetime);
+    if (lifetime === config.layerLifetime) return config;
+    return { ...config, layerLifetime: lifetime };
   }
 
   private takeUpcoming(): Pick | null {
@@ -735,8 +890,27 @@ export class Director {
     const anchor = this.anchor();
     if (!anchor) return wildcard();
 
+    /*
+     * A structural cue asked for a contrast — §3.6 of the attribution document.
+     *
+     * Expressed as the clash policy rather than as a new mechanism, which is the
+     * whole reason this is defensible: the selection logic still picks, with its
+     * own embeddings and its own fallbacks, and all the music has done is choose
+     * which of the four policies it already has runs this once. Consumed here so
+     * it applies to exactly one pick — an arrival is a moment, not a mode.
+     *
+     * Deliberately not drawn from the rng, and it does not disturb the stream:
+     * the weighted draw is skipped rather than taken and overridden, so a seeded
+     * run that never listens still replays frame for frame.
+     */
     const { rhyme, clash, color, random } = this.config.weights;
-    const policy = this.rng.weightedIndex([rhyme, clash, color, random]);
+    let policy: number;
+    if (this.contrastNext) {
+      this.contrastNext = false;
+      policy = 1;
+    } else {
+      policy = this.rng.weightedIndex([rhyme, clash, color, random]);
+    }
 
     // Each policy degrades to the next-best signal rather than failing: a panel
     // missing an embedding still gets placed by palette, and a panel with no
@@ -819,6 +993,41 @@ export class Director {
     return normalizeTint(labToRgb(complement([L / n, a / n, b / n])));
   }
 
+  /**
+   * Every rate in the post chain that turns or cycles, snapped so a whole number
+   * of them fits a whole number of bars — the quiet row of §5 and probably the
+   * best of them.
+   *
+   * A fold that completes exactly one rotation every eight bars is locked to the
+   * music in a way a viewer feels without being able to name, and it involves no
+   * reactive machinery at all: nothing here responds to anything, and the rate
+   * a snap produces differs from the authored one by at most the gap between
+   * two adjacent musical durations.
+   *
+   * Applied after the drift and before the cycler, so it snaps what the
+   * composition actually intends to run at — the drift moves these rates over
+   * minutes and a snap taken before it would be immediately undone — while a
+   * cycled effect's own ramp, which is a transient rather than a tempo, stays
+   * out of it.
+   *
+   * `feedbackRotate` is deliberately absent: it is a per-frame angle rather than
+   * a rate, `Wander.settle` governs it against the fold, and a snap here would
+   * be arguing with the governor about a number that is not in the same units.
+   */
+  private inTempoRates(post: PostParams): void {
+    if (!this.tempo.active) return;
+    // The one entry here whose units make the snap exact rather than close: the
+    // spins are radians a second and `rate` reads their reciprocal as a period,
+    // where this is already cycles a second, so a pull-back locked to eight bars
+    // really does open and close on the bar.
+    post.paneRate = this.tempo.rate(post.paneRate);
+    post.kaleidoSpin = this.tempo.rate(post.kaleidoSpin);
+    post.drosteSpin = this.tempo.rate(post.drosteSpin);
+    post.tunnelSpin = this.tempo.rate(post.tunnelSpin);
+    post.foldSpin = this.tempo.rate(post.foldSpin);
+    post.juliaSpin = this.tempo.rate(post.juliaSpin);
+  }
+
   private lfo(time: number, index: number): number {
     return Math.sin(time * LFO_HZ[index % LFO_HZ.length] * Math.PI * 2);
   }
@@ -836,7 +1045,21 @@ export class Director {
     // over the top. In that order, so a mode whose whole character is a drifted
     // parameter keeps it — the cycler only ever deepens what is already there.
     this.wander.applyPost(post);
-    this.cycler.apply(post, time, this.config.psychedelia, this.config.cycleInterval);
+    this.inTempoRates(post);
+    /*
+     * The cycler's interval, lengthened by the same handover — a spontaneous
+     * pulse every fourteen seconds is autonomous motion like any other, and while
+     * the music is carrying the frame the piece should be bringing fewer effects
+     * in of its own accord. Note the direction: this is a gap, so dividing by
+     * `autonomy` makes them rarer. The section and arrival cues are untouched by
+     * it, which is the point — what the music asks for still arrives.
+     */
+    this.cycler.apply(
+      post,
+      time,
+      this.config.psychedelia,
+      this.tempo.duration(this.config.cycleInterval) / Math.max(0.2, this.audio.autonomy)
+    );
     // Fourth pass, after the three that decide what the piece is and before the
     // governor below: the music deepens whatever they arrived at.
     //

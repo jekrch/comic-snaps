@@ -210,7 +210,16 @@ export default function VizDebugPanel({
       </div>
 
       <div className="viz-tune-band shrink-0 px-2.5 pb-2.5 border-b border-black/40">
-        <VizAudioMeters reactor={reactor} engine={engine} paused={leaving} />
+        <VizAudioMeters
+          reactor={reactor}
+          engine={engine}
+          config={config}
+          onChange={() => {
+            bump();
+            onChange?.();
+          }}
+          paused={leaving}
+        />
       </div>
 
       {/* overflow-x is explicit: a box that scrolls on one axis and is `visible`

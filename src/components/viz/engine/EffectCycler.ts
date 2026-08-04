@@ -36,6 +36,18 @@ interface PsychEffect {
 /** Most concurrent pulses, at psychedelia 1. */
 const MAX_CONCURRENT = 3;
 
+/**
+ * Fold depth over which a kaleido pulse may no longer bring its own wedge count
+ * — see the effect itself.
+ *
+ * `Wander.REROLL_FOLD` is the same judgement about the same discontinuity, and
+ * this sits under it deliberately: the drift changes the count on a *glide*, and
+ * can afford to start one wherever the fold is shallow enough to hide it, where
+ * this is a step between two frames and has to be sure there was nothing on
+ * screen to step away from.
+ */
+const SEGMENT_CLAIM = 0.35;
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
@@ -58,9 +70,32 @@ const EFFECTS: PsychEffect[] = [
     init: (rng) => [rng.pick([4, 5, 6, 8, 10, 12])],
     apply: (post, k, _time, [segments]) => {
       const amount = k * 0.92;
-      if (amount <= post.kaleido) return;
+      // The fold the frame is already running, read before it is replaced: what
+      // decides whether the count may move is the *incumbent* symmetry, not the
+      // one this pulse is about to install.
+      const incumbent = post.kaleido;
+      if (amount <= incumbent) return;
       post.kaleido = amount;
-      post.kaleidoSegments = segments;
+      /*
+       * The wedge count is only claimed when this pulse is *introducing* the
+       * fold, never when it is deepening one the frame is already running.
+       *
+       * The depth is a blend and arrives over the pulse's ramp; the count is an
+       * integer and arrives between two frames. On a mode with no fold of its
+       * own that is invisible — there is no symmetry on screen yet to be seen
+       * changing. On a mode built around one it is the worst event in the
+       * engine: the envelope crosses the preset's own depth somewhere on the way
+       * up, six wedges become twelve on that frame, and the whole thing happens
+       * again in reverse on the way down. Two hard geometric cuts per pulse,
+       * landing wherever the envelope happened to cross rather than on anything
+       * audible — and the section cue makes them more frequent, not less.
+       *
+       * The threshold is `Wander`'s judgement, which had this right all along
+       * and solved it for the drift alone: a change of wedge count is invisible
+       * at a shallow fold and unmissable at a deep one. Above it the pulse still
+       * swells the mirror the preset chose; it just does not rebuild it.
+       */
+      if (incumbent <= SEGMENT_CLAIM) post.kaleidoSegments = segments;
     },
   },
   {
@@ -588,11 +623,31 @@ export class EffectCycler {
   private stream: Rng | null = null;
   private readonly active: Pulse[] = [];
   private nextOnset = -1;
+  /** A pulse asked for out of turn — see `cue`. */
+  private cued = false;
 
   constructor(
     private readonly forkStream: () => Rng,
     private readonly safety: SafetyGovernor
   ) {}
+
+  /**
+   * Bring the next pulse forward: the music has just changed section, so
+   * something in the piece should change with it.
+   *
+   * The section row of `docs/visualizer-audio-reach.md` §4.3, and the one place
+   * anything outside the seed reaches the cycler. What arrives is still the
+   * cycler's own weighted draw with its own ramps — the music decides *when*,
+   * never *what*, which is the same division the director already keeps between
+   * the beat grid and panel selection.
+   *
+   * Seeded replay is unaffected for the runs that have to have it: a cue is only
+   * ever raised by a run that was given a listener, and a run that never listens
+   * draws exactly the sequence it drew before this existed.
+   */
+  cue(): void {
+    this.cued = true;
+  }
 
   /** Mutates `post` in place with whatever is currently running. */
   apply(post: PostParams, time: number, intensity: number, interval: number): void {
@@ -619,7 +674,19 @@ export class EffectCycler {
         if (this.active.length < concurrent) this.begin(time, amount);
         this.nextOnset += this.gap(amount, interval);
       }
+      /*
+       * And the cue, under the same slot rule and the same interval — a section
+       * change moves the next pulse to now rather than adding one, so a piece
+       * answering the music runs no busier than the same piece ignoring it. A
+       * cue that arrives with every slot full is dropped, on the reasoning
+       * above: the composition is already in the middle of changing.
+       */
+      if (this.cued && this.active.length < concurrent) {
+        this.begin(time, amount);
+        this.nextOnset = time + this.gap(amount, interval);
+      }
     }
+    this.cued = false;
 
     for (const pulse of this.active) {
       const k = envelope(pulse, time);
@@ -630,6 +697,7 @@ export class EffectCycler {
   reset(): void {
     this.active.length = 0;
     this.nextOnset = -1;
+    this.cued = false;
   }
 
   private get rng(): Rng {

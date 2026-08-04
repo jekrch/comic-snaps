@@ -559,6 +559,42 @@ export interface PostParams {
   tunnelSpin: number;
 
   // --- Geometric ------------------------------------------------------------
+  /**
+   * The view backing up until several mirrored copies of the frame fit across
+   * the screen, 0..1. 0 is one frame and the identity.
+   *
+   * The one map in `distort()` that runs *before* everything else rather than
+   * after it, and that placement is the whole of what it is for. Every effect
+   * below is then a function of pane-local coordinates, so each pane carries a
+   * complete copy of whatever the frame is doing — its own kaleidoscope, its own
+   * tunnel — where a mirror-tile placed at the end (`tile`) folds the frame once
+   * and repeats what is *inside* one wedge of it.
+   *
+   * Safe there, despite the ordering note in that function warning that anything
+   * ahead of the folds tears their seams: what tears a seam is a map that breaks
+   * the fold's angular periodicity, and this is a mirrored similarity. The fold
+   * is redrawn intact in every cell.
+   */
+  pane: number;
+  /** Copies of the frame across the screen at full pull-back. Only read when
+   *  the pull-back is up, and whole numbers only — see the note in the shader
+   *  about where the cells land. */
+  paneGrid: number;
+  /**
+   * How much of the pull-back is spent breathing rather than standing, 0..1.
+   *
+   * The mode's principal motion: at 1 the view opens from a single frame all
+   * the way out to the grid and closes again, which is a zoom nothing else in
+   * the post chain can make — the frame is not enlarged, it is *joined* by its
+   * own reflections.
+   */
+  paneBreathe: number;
+  /**
+   * How fast that breath cycles, cycles per clock second. Integrated into
+   * `VizFrame.phases` like every other rate here, so it can be slowed or stopped
+   * without the view jumping to a new opening.
+   */
+  paneRate: number;
   /** Radial mirror symmetry, blended in. 0 disables the fold. */
   kaleido: number;
   /** Wedges the frame folds into. Only read when `kaleido` > 0. */
@@ -1026,6 +1062,9 @@ export interface PostParams {
  * of teleporting it. Derived, never authored: presets set the spins.
  */
 export interface VizPhases {
+  /** Where the pull-back's breath stands, in cycles. Whole values are a closed
+   *  view, halves are the grid wide open. */
+  pane: number;
   kaleido: number;
   droste: number;
   fold: number;

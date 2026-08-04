@@ -316,6 +316,10 @@ export class VizEngine {
     // Pulled here rather than pushed on a timer of its own, so the analysis
     // advances on exactly the frames the composition is drawn on. `dt` and not
     // the clock: the music does not follow the speed control.
+    // Set per frame rather than on `setConfig`: the reactor outlives the engine
+    // across a backend rebuild, so a value pushed once could be lost, and it is
+    // a scalar assignment on a path that is already doing an FFT.
+    this.reactor?.setLatency(this.config.audioLatency / 1000);
     this.director.setAudioFrame(this.reactor?.active ? this.reactor.sample(dt) : null);
 
     this.backend.requestPanels(this.director.prefetch());

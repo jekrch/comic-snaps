@@ -80,6 +80,20 @@ const PINNED_PATHS: readonly string[] = [
   // How far the music may lift the press artefacts from zero. Safe to share:
   // it decides what a run that is *already* listening does, and grants nothing.
   "audioLift",
+  // The other half of the reactivity pair — how sharply a run that is listening
+  // follows. Shareable on the same grounds, and capped independently of the link
+  // under `prefers-reduced-motion`, so a token asking for the whole of it still
+  // arrives calm on a machine that has asked for calm.
+  "attack",
+  // The capture-delay offset. Pinned so a link round-trips cleanly rather than
+  // because it is worth sharing: what it corrects is a property of the machine
+  // doing the listening, so a value tuned on one is very likely wrong on
+  // another. It grants nothing and cannot make a run louder or faster.
+  "audioLatency",
+  // The panes, filed here rather than with the other geometric maps for the same
+  // reason the Julia block is: this list is the wire order, and only its end is
+  // free.
+  "post.pane", "post.paneGrid", "post.paneBreathe", "post.paneRate",
 ];
 
 /**

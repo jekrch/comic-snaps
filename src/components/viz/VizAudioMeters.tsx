@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { AudioReactor, AudioSource, AudioStatus } from "./engine/AudioReactor";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import type { AudioInput, AudioReactor, AudioSource, AudioStatus } from "./engine/AudioReactor";
+import { listAudioInputs } from "./engine/AudioReactor";
 import type { VizEngine } from "./engine/Engine";
 import { AudioProbe } from "./engine/audioTrace";
+import type { VizConfig } from "./vizConfig";
+import { AUDIO_CHARACTERS, audioCharacterOf, prefersReducedMotion } from "./vizConfig";
 
 /**
  * The listening readout: what the detector is hearing and what the composition
@@ -31,6 +34,15 @@ const BANDS = [
   { key: "lowMid", label: "body", hint: "160–800 Hz" },
   { key: "mid", label: "mid", hint: "800 Hz–4 kHz · melody, vocals" },
   { key: "high", label: "air", hint: "4–16 kHz · hats, cymbals" },
+] as const;
+
+/** The three flux streams, each with its own adaptive threshold. Split because
+ *  one sum over the spectrum is dominated by whichever region covers the most
+ *  bins, and a threshold tuned for that one is deaf to the others. */
+const FLUX_BANDS = [
+  { key: "fluxLow", threshold: "fluxLowThreshold", label: "kick", hint: "20–200 Hz flux vs. its adaptive threshold" },
+  { key: "fluxMid", threshold: "fluxMidThreshold", label: "snare", hint: "200 Hz–2 kHz flux vs. its adaptive threshold" },
+  { key: "fluxHigh", threshold: "fluxHighThreshold", label: "hat", hint: "2–10 kHz flux vs. its adaptive threshold" },
 ] as const;
 
 /** What each state should say to someone looking at a stalled meter. */
@@ -91,6 +103,10 @@ interface VizAudioMetersProps {
    *  windows, which is why the probe is owned here and re-attached rather than
    *  held by the engine. */
   engine?: VizEngine | null;
+  /** Mutated in place, exactly as the sliders below this panel do — the named
+   *  characters are two of those sliders moved together. */
+  config?: VizConfig | null;
+  onChange?: () => void;
   /** Stopped while the panel slides out — the meters are the most expensive
    *  thing on it, and nobody is reading them on the way off screen. */
   paused?: boolean;
@@ -99,14 +115,21 @@ interface VizAudioMetersProps {
 export default function VizAudioMeters({
   reactor,
   engine = null,
+  config = null,
+  onChange,
   paused = false,
 }: VizAudioMetersProps) {
+  const [, bump] = useReducer((n: number) => n + 1, 0);
   const [status, setStatus] = useState<AudioStatus>(reactor?.status ?? "off");
+  const [inputs, setInputs] = useState<AudioInput[]>([]);
+  /** Empty is the system default, which is what an unpicked run opens. */
+  const [input, setInput] = useState("");
   const bars = useRef(new Map<string, HTMLDivElement>());
-  const fluxRef = useRef<HTMLDivElement>(null);
-  const thresholdRef = useRef<HTMLDivElement>(null);
+  const fluxRefs = useRef(new Map<string, HTMLDivElement>());
+  const thresholdRefs = useRef(new Map<string, HTMLDivElement>());
   const onsetRef = useRef<HTMLDivElement>(null);
   const beatRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const tempoRef = useRef<HTMLSpanElement>(null);
   const lockRef = useRef<HTMLSpanElement>(null);
   const loudRef = useRef<HTMLDivElement>(null);
@@ -161,6 +184,35 @@ export default function VizAudioMeters({
   }, [reactor]);
 
   /*
+   * The input list, refreshed when a device is plugged in or pulled out and
+   * again on every status change — the browser withholds device *names* until a
+   * capture has been granted, so the list is anonymous and one entry long until
+   * the first successful listen and worth reading again immediately after it.
+   */
+  useEffect(() => {
+    const media = navigator.mediaDevices;
+    if (!media?.enumerateDevices) return;
+    let live = true;
+    const refresh = () => {
+      void listAudioInputs().then((found) => {
+        if (!live) return;
+        setInputs(found);
+        // The chosen input has been unplugged. Fall back rather than hold an id
+        // that would now fail the `exact` constraint on the next listen.
+        setInput((current) =>
+          current && !found.some((entry) => entry.deviceId === current) ? "" : current
+        );
+      });
+    };
+    refresh();
+    media.addEventListener?.("devicechange", refresh);
+    return () => {
+      live = false;
+      media.removeEventListener?.("devicechange", refresh);
+    };
+  }, [status]);
+
+  /*
    * Attached for as long as this panel is mounted, and detached the moment it is
    * not — so a run nobody is tuning measures nothing, which is the same rule the
    * reactor follows about not opening a device until asked. The engine is torn
@@ -199,6 +251,16 @@ export default function VizAudioMeters({
        */
       if (now < next) return;
       next = now + 100;
+
+      if (showReach) {
+        const budget = probe.budget();
+        const fast = reachRows.current.get("budget:fast");
+        if (fast) fast.textContent = `fast ${percent(budget.fast)}`;
+        const bar = reachRows.current.get("budget:bar");
+        if (bar) bar.textContent = `bar ${percent(budget.bar)}`;
+        const geometry = reachRows.current.get("budget:geometry");
+        if (geometry) geometry.textContent = `dist ${percent(budget.geometry)}`;
+      }
 
       for (const reach of showReach ? probe.read() : []) {
         const bar = reachRows.current.get(`${reach.key}:bar`);
@@ -272,9 +334,11 @@ export default function VizAudioMeters({
         loudTextRef.current.textContent = `${frame.loudness.toFixed(2)}×`;
       }
 
-      if (fluxRef.current) fluxRef.current.style.width = `${(frame.flux * 100).toFixed(1)}%`;
-      if (thresholdRef.current) {
-        thresholdRef.current.style.left = `${(frame.fluxThreshold * 100).toFixed(1)}%`;
+      for (const band of FLUX_BANDS) {
+        const bar = fluxRefs.current.get(band.key);
+        if (bar) bar.style.width = `${(frame[band.key] * 100).toFixed(1)}%`;
+        const mark = thresholdRefs.current.get(band.key);
+        if (mark) mark.style.left = `${(frame[band.threshold] * 100).toFixed(1)}%`;
       }
 
       // Off the counter rather than off `onset`, which is true for exactly one
@@ -292,13 +356,23 @@ export default function VizAudioMeters({
         beatRef.current.style.width = `${((1 - frame.beatPhase) * 100).toFixed(1)}%`;
         beatRef.current.style.opacity = (0.25 + frame.confidence * 0.75).toFixed(2);
       }
+      if (barRef.current) {
+        // Runs down the bar rather than the beat, so a downbeat that is landing
+        // in the wrong place is visible as the two disagreeing.
+        barRef.current.style.width = `${((1 - frame.barPhase) * 100).toFixed(1)}%`;
+        barRef.current.style.opacity = (0.2 + frame.downbeatConfidence * 0.8).toFixed(2);
+      }
       if (tempoRef.current) {
         tempoRef.current.textContent = frame.bpm > 0 ? `${frame.bpm.toFixed(1)} bpm` : "— bpm";
       }
       if (lockRef.current) {
+        // Both confidences, because they answer different questions and a run
+        // where one is high and the other is zero is the common case rather
+        // than the odd one: ambient reads clear-0 lock-0, a drum solo in 7
+        // reads clear-100 lock-0, and only one of those is a detector problem.
         lockRef.current.textContent = frame.silent
           ? "silent"
-          : `lock ${(frame.confidence * 100).toFixed(0)}%`;
+          : `lock ${(frame.confidence * 100).toFixed(0)} · clr ${(frame.clarity * 100).toFixed(0)}`;
       }
     };
 
@@ -332,17 +406,38 @@ export default function VizAudioMeters({
     URL.revokeObjectURL(url);
   };
 
+  /**
+   * Switching input under a run that is already listening reopens it on the new
+   * device, which is the only way to hear the change — the constraint is fixed
+   * at capture. Off, it is just a choice for the next listen.
+   */
+  const chooseInput = (deviceId: string) => {
+    setInput(deviceId);
+    if (reactor?.source === "mic") void reactor.start("mic", deviceId || undefined);
+  };
+
   const listen = (source: AudioSource) => {
     if (!reactor) return;
     if (reactor.source === source) {
       reactor.stop();
       return;
     }
-    void reactor.start(source);
+    void reactor.start(source, source === "mic" ? input || undefined : undefined);
   };
 
   const listening = status === "listening";
   const failed = status === "denied" || status === "error" || status === "silent-share";
+  const character = config ? audioCharacterOf(config) : null;
+  const calm = prefersReducedMotion();
+
+  const setCharacter = (id: string) => {
+    const chosen = AUDIO_CHARACTERS.find((entry) => entry.id === id);
+    if (!config || !chosen) return;
+    config.reactivity = chosen.reactivity;
+    config.attack = chosen.attack;
+    bump();
+    onChange?.();
+  };
 
   return (
     <div className="viz-tune-readout px-2 py-1.5 rounded-xs font-mono text-[10px] leading-relaxed tracking-wide">
@@ -414,20 +509,33 @@ export default function VizAudioMeters({
             </span>
           </div>
 
-          {/* Flux against the threshold it is tested on: the one view that says
-              whether a missed beat is a detector that cannot see the transient
-              or a threshold sitting above it. */}
-          <div className="flex items-center gap-1.5" title="spectral flux vs. its adaptive threshold">
-            <span className="w-7 shrink-0 opacity-45">flux</span>
-            <div className="relative flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
-              <div ref={fluxRef} className="h-full bg-white/50 rounded-full" style={{ width: "0%" }} />
-              <div
-                ref={thresholdRef}
-                className="absolute top-0 bottom-0 w-px bg-red-400/80"
-                style={{ left: "0%" }}
-              />
+          {/* Each flux stream against the threshold it is tested on: the one
+              view that says whether a missed beat is a detector that cannot see
+              the transient or a threshold sitting above it — and now which of
+              the three that is true of, which one summed stream could not. */}
+          {FLUX_BANDS.map(({ key, label, hint }) => (
+            <div key={key} className="flex items-center gap-1.5" title={hint}>
+              <span className="w-7 shrink-0 opacity-45">{label}</span>
+              <div className="relative flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                <div
+                  ref={(element) => {
+                    if (element) fluxRefs.current.set(key, element);
+                    else fluxRefs.current.delete(key);
+                  }}
+                  className="h-full bg-white/50 rounded-full"
+                  style={{ width: "0%" }}
+                />
+                <div
+                  ref={(element) => {
+                    if (element) thresholdRefs.current.set(key, element);
+                    else thresholdRefs.current.delete(key);
+                  }}
+                  className="absolute top-0 bottom-0 w-px bg-red-400/80"
+                  style={{ left: "0%" }}
+                />
+              </div>
             </div>
-          </div>
+          ))}
 
           <div className="flex items-center gap-1.5" title="time to the next predicted beat">
             <span className="w-7 shrink-0 opacity-45">beat</span>
@@ -435,13 +543,61 @@ export default function VizAudioMeters({
               <div ref={beatRef} className="h-full bg-accent rounded-full" style={{ width: "0%" }} />
             </div>
           </div>
+
+          {/* The bar under the beat, so the two can be read against each other.
+              Everything on the geometry row of the hierarchy runs off this one,
+              and until the downbeat detector existed it started on whichever
+              beat the lock happened to open on. Dim means it is a valid
+              four-beat cycle that has not been aligned to anything. */}
+          <div className="flex items-center gap-1.5" title="position through the bar · brightness is downbeat confidence">
+            <span className="w-7 shrink-0 opacity-45">bar</span>
+            <div className="flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+              <div ref={barRef} className="h-full bg-accent rounded-full" style={{ width: "0%" }} />
+            </div>
+          </div>
         </div>
+      )}
+
+      {/*
+        Which input `listen` opens. Worth a control of its own because of what
+        a loopback device does here: routed through one, the machine's own
+        output arrives as an ordinary input, and the run hears the music with
+        no capture bar over it — the browser puts one over every window of this
+        origin for a tab share, fullscreen included, and there is no page-side
+        way to be rid of it.
+
+        Hidden until the browser has more than one input to name, which it will
+        not do before a capture has been granted. Nothing is lost by that: the
+        entry worth choosing is never the default, so it is only interesting
+        once it can be read.
+      */}
+      {inputs.length > 1 && (
+        <select
+          value={input}
+          onChange={(event) => chooseInput(event.target.value)}
+          disabled={!reactor || status === "requesting"}
+          title="Which input the mic button opens — pick a loopback device to hear this machine"
+          className="viz-tune-btn mt-2 w-full px-1.5 py-1 appearance-none cursor-pointer
+                     font-display text-[9px] tracking-wider text-white/60 disabled:opacity-40"
+        >
+          {/* The list is drawn by the OS, not by us, and inherits none of the
+              panel's styling — these two are the most that can be asked. */}
+          <option value="" className="bg-[#232120] text-white">
+            system default
+          </option>
+          {inputs.map((entry) => (
+            <option key={entry.deviceId} value={entry.deviceId} className="bg-[#232120] text-white">
+              {entry.label}
+            </option>
+          ))}
+        </select>
       )}
 
       <div className="mt-2 flex gap-1">
         <button
           onClick={() => listen("mic")}
           disabled={!reactor || status === "requesting"}
+          title="Any audio input: a microphone, or a loopback device carrying what this machine is playing"
           className="viz-tune-btn flex-1 py-1 font-display text-[9px] tracking-widest uppercase
                      text-white/60 hover:text-accent disabled:opacity-40"
         >
@@ -457,6 +613,38 @@ export default function VizAudioMeters({
           {reactor?.source === "display" ? "stop" : "tab audio"}
         </button>
       </div>
+
+      {/*
+        The two axes as three points on them. `reactivity` is how far the music
+        moves the composition and `attack` is how sharply, and the pair is the
+        whole of §6 of the reach document — one knob conflated them, so the only
+        cure for a result that twitched was to make it quieter, which is the
+        search that produced a version of this that did nothing.
+
+        The sliders for both are in the `audio` section below; these are the
+        corners worth having without going and finding them.
+      */}
+      {config && (
+        <div className="mt-1 flex gap-1">
+          {AUDIO_CHARACTERS.map((entry) => (
+            <button
+              key={entry.id}
+              onClick={() => setCharacter(entry.id)}
+              title={entry.hint}
+              aria-pressed={character === entry.id}
+              className={`viz-tune-btn flex-1 py-1 font-display text-[9px] tracking-widest uppercase
+                          ${character === entry.id ? "text-accent" : "text-white/45 hover:text-white/80"}`}
+            >
+              {entry.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {config && calm && (
+        <div className="mt-1 opacity-45 leading-snug normal-case">
+          reduced motion: following the music by the bar whichever of these is set
+        </div>
+      )}
 
       {/*
         The reach readout: what the analysis above actually delivers to the
@@ -494,6 +682,34 @@ export default function VizAudioMeters({
 
           {showReach && (
             <div className="mt-1.5 flex flex-col gap-1.5">
+              {/*
+                The budget: how much of each row's motion has a musical cause
+                rather than an authored one — §1 of
+                `docs/visualizer-audio-attribution.md`.
+                Above the rows because it is the question they are all evidence
+                for: reach can be healthy on every line below while the drift and
+                the cycler move the same parameters twice as far, and a viewer
+                reads causation off whichever source dominates.
+              */}
+              <div
+                ref={setReachRow("budget")}
+                className="flex items-center gap-1.5 opacity-75"
+                title="Share of each row's on-screen motion caused by the music rather than by the composition's own drift, over the last ten seconds. Attribution is a ratio; this is the one number here that is one."
+              >
+                <span className="w-14 shrink-0 opacity-60">audio share</span>
+                <span ref={setReachRow("budget:fast")} className="flex-1 text-right tabular-nums">
+                  —
+                </span>
+                <span ref={setReachRow("budget:bar")} className="w-11 text-right tabular-nums">
+                  —
+                </span>
+                <span
+                  ref={setReachRow("budget:geometry")}
+                  className="w-11 text-right tabular-nums opacity-60"
+                >
+                  —
+                </span>
+              </div>
               {layout.map(({ row, label, hint, keys }) => (
                 <div key={row} className="flex flex-col gap-0.5">
                   <div className="opacity-35 tracking-widest uppercase text-[9px]" title={hint}>

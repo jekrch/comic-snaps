@@ -206,6 +206,118 @@ export const VIZ_PRESETS: VizPreset[] = [
     },
   },
   {
+    id: "mirror-mask",
+    name: "Mirror Mask",
+    blurb: "Four broad wedges of comic, the view backing up into a grid of them and closing again.",
+    overrides: {
+      /*
+       * The chunky fold, and the one mode here whose principal motion is neither
+       * a spin nor a flight but the *view* moving: it opens out until the frame
+       * is repeated in mirrored panes, holds there, and closes back onto a
+       * single rosette.
+       *
+       * Everything below is budgeted under that one gesture, and against one
+       * requirement it shares with nothing else in the file. The fold has to
+       * stay chunky. Four wedges is a quarter of the plane apiece — a face, a
+       * balloon, a whole panel border — and every knob that would put more
+       * wedges in the frame, cut them smaller, or magnify what is inside them is
+       * turned down or off, because a mirror this coarse is the only reason the
+       * comic is still legible as comic once the panes have halved it.
+       */
+      // Two, and low for a flat preset. The panes are a mirror rather than a
+      // composite — they repeat the frame, they do not add light to it — so what
+      // decides whether a crop survives being repeated is how much was in it to
+      // begin with, and a stack of four is already mud before the fold sees it.
+      layerCount: 2,
+      layerLifetime: 34,
+      crossfade: 0.5,
+      // Gentle, and the smallest budget of any preset on the flat path bar the
+      // fractal's. The fold copies every motion into four wedges and the panes
+      // copy the fold into four cells, so a pan the eye would barely find in a
+      // plain frame arrives here as sixteen things moving at once (§6).
+      zoomAmount: 1.16,
+      panAmount: 0.05,
+      rotateAmount: 0.02,
+      // High, on the layerCount reasoning: two layers screening over each other
+      // is nearly a single surface, and the mirror does not stack light.
+      layerOpacity: 0.84,
+      tintAmount: 0.24,
+      // Up. A bright page repeated four times is four times as much of the frame
+      // held near white, which is the one way this mode can wash out.
+      keyBalance: 0.85,
+      /*
+       * Off, and this is the mode's defining refusal.
+       *
+       * The drift's fold channel walks the wedge count up a ladder that reaches
+       * sixteen — which is what makes `tumbler` the mode it is, and is exactly
+       * what this one must not do. Four wedges is not a setting here, it is the
+       * subject: at twelve the frame is an ornament made of comic, at four it is
+       * comic arranged by a mirror. So the drift stays off and the panes carry
+       * the change instead.
+       */
+      wander: 0,
+      // Low, and lower than the other fold presets. The pull-back is already a
+      // schedule that moves the whole frame; the cycler is punctuation over it
+      // rather than a second one. What it brings in lands *inside* a pane, which
+      // is worth knowing: a tunnel cued here opens in every cell at once.
+      psychedelia: 0.2,
+      cycleInterval: 24,
+      post: {
+        /*
+         * Deep, and 0.92 rather than 0.9 for a reason that is not about depth.
+         *
+         * The cycler's own kaleido pulse peaks at `k * 0.92` and only overrides
+         * a deeper fold, so at exactly this value it can never take the wedge
+         * count — which would be a pulse re-rolling four wedges into twelve,
+         * the one event this preset exists to rule out. The eight percent of
+         * unfolded coordinate left in is what keeps the mirror from reading as
+         * a decal.
+         */
+        kaleido: 0.92,
+        /*
+         * Four. The chunkiest fold that is still a fold, and it agrees with the
+         * panes: a mirror-tiled grid is a square symmetry, so a four-fold
+         * rosette lands its own axes on the cell's edges instead of cutting
+         * across them, and the grid reads as a window frame rather than as a
+         * second pattern arguing with the first.
+         */
+        kaleidoSegments: 4,
+        // Slow, and well under the breath it shares the frame with — a turn in
+        // five minutes against a pull-back every fifty seconds. Enough that the
+        // wedges are legible as a mirror rather than as a fixed mask, and not so
+        // much that anything is travelling through them.
+        kaleidoSpin: 0.02,
+        // Nothing standing: the view sits on one frame and the breath is the
+        // whole of the excursion, so every run has somewhere to open out *to*.
+        pane: 0,
+        // Two across, which is the pull-back the panel scale can afford — at
+        // three the crops are a third of the size they were, and this preset is
+        // built around crops big enough to see.
+        paneGrid: 2,
+        // The whole of it. Half-open panes are the least interesting frame here:
+        // a mirror lattice that never resolves into either one picture or many.
+        paneBreathe: 1,
+        // A cycle every fifty-five seconds, so an opening is half a minute of
+        // the view receding. Slow enough to read as the camera backing off; it
+        // takes the tempo snap when a lock is held.
+        paneRate: 0.018,
+        // Modest, and pushed outward. A trail over a mirror is the one place a
+        // smear stays coherent — it arrives in every wedge at once — but the
+        // pull-back sweeps the whole frame through it, and at higher retention
+        // that is a grey wash following the panes as they open.
+        feedbackAmount: 0.3,
+        feedbackScale: 1.004,
+        chroma: 0.26,
+        // Some. The fold and the pane edges are the composition, and flattening
+        // the tone inside each region is what keeps them reading as edges rather
+        // than as gradients that happen to turn a corner.
+        posterize: 0.2,
+        grain: 0.05,
+        vignette: 0.42,
+      },
+    },
+  },
+  {
     id: "fractal",
     name: "Fractal",
     blurb: "Endless flight into a Julia set the panels themselves are bending.",

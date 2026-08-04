@@ -143,6 +143,22 @@ class Track {
   private readonly rate = new Float64Array(BUCKETS);
   private slot = 0;
   private previous = Number.NaN;
+  /**
+   * Total travel and audio-caused travel over the window — the budget readout of
+   * §1 of `docs/visualizer-audio-attribution.md`.
+   *
+   * Path length rather than range, and that is the whole point of the pair: what
+   * a viewer attributes causation to is whichever source of motion *dominates*,
+   * and a parameter that the drift walks a long way and the music nudges is
+   * dominated by the drift however wide the music's own excursion happens to be.
+   * Range cannot see that; distance travelled can.
+   *
+   * Decayed rather than bucketed, unlike the extremes above, because a sum has an
+   * exact exponential form and an extremum does not.
+   */
+  private audioTravel = 0;
+  private totalTravel = 0;
+  private previousDeviation = Number.NaN;
 
   constructor() {
     this.clear();
@@ -154,6 +170,21 @@ class Track {
     this.rate.fill(0);
     this.slot = 0;
     this.previous = Number.NaN;
+    this.audioTravel = 0;
+    this.totalTravel = 0;
+    this.previousDeviation = Number.NaN;
+  }
+
+  /**
+   * The share of this parameter's motion that has a musical cause, or null when
+   * it has not moved enough for the question to mean anything.
+   *
+   * Scale-free by construction — a ratio of two path lengths in the same units —
+   * which is what lets `hueShift` and `misreg` be averaged together at all.
+   */
+  share(): number | null {
+    if (this.totalTravel <= 1e-9) return null;
+    return Math.min(1, this.audioTravel / this.totalTravel);
   }
 
   /** Retire the oldest bucket. `previous` deliberately survives, so the rate
@@ -165,14 +196,20 @@ class Track {
     this.rate[this.slot] = 0;
   }
 
-  sample(delivered: number, dt: number): void {
+  sample(delivered: number, deviation: number, dt: number): void {
     if (delivered < this.lo[this.slot]) this.lo[this.slot] = delivered;
     if (delivered > this.hi[this.slot]) this.hi[this.slot] = delivered;
+    const decay = Math.exp(-Math.max(0, dt) / WINDOW);
+    this.audioTravel *= decay;
+    this.totalTravel *= decay;
     if (!Number.isNaN(this.previous) && dt > 0) {
       const per = Math.abs(delivered - this.previous) / dt;
       if (per > this.rate[this.slot]) this.rate[this.slot] = per;
+      this.totalTravel += Math.abs(delivered - this.previous);
+      this.audioTravel += Math.abs(deviation - this.previousDeviation);
     }
     this.previous = delivered;
+    this.previousDeviation = deviation;
   }
 
   /** Extremes across every live bucket, into the row handed to the reader. */
@@ -203,8 +240,19 @@ const CHANNELS = [
   "beatPulse",
   "barBreath",
   "phrase",
+  "sharp",
+  "section",
+  "arrival",
+  "barGain",
+  "wind",
+  "hitLow",
+  "hitMid",
+  "hitHigh",
+  "backbeat",
+  "handover",
   "fast",
   "swell",
+  "tonal",
   "shimmer",
   "tide",
   "accent",
@@ -222,13 +270,27 @@ const FEATURES = [
   "lowMid",
   "mid",
   "high",
-  "flux",
+  "fluxLow",
+  "fluxMid",
+  "fluxHigh",
+  "clarity",
   "onset",
   "onsetStrength",
+  "onsetLow",
+  "onsetMid",
+  "onsetHigh",
+  "backbeat",
+  "backbeatConfidence",
+  "fill",
+  "inBreak",
+  "drop",
   "beatPhase",
   "beatCount",
   "bpm",
   "confidence",
+  "locked",
+  "barPhase",
+  "downbeatConfidence",
   "silent",
 ] as const;
 
@@ -274,6 +336,45 @@ export class AudioProbe {
   read(): readonly Reach[] {
     for (const reach of this.rows) this.tracks.get(reach.key)?.resolve(reach);
     return this.rows;
+  }
+
+  /**
+   * The share of on-screen parameter motion that has a musical cause, per row of
+   * the hierarchy — the budget readout of §1 of
+   * `docs/visualizer-audio-attribution.md`.
+   *
+   * The second half of the instrument that document asks for, and the half that
+   * answers the complaint that produced it. `reach` and `peakRate` above measure
+   * the audio contribution on its own, and it is entirely possible — it was in
+   * fact the case — for both to look healthy while the composition still does not
+   * feel controlled by the music, because the drift, the cycler and the LFOs are
+   * moving the same parameters much further at the same time. Attribution is a
+   * *ratio*, and this is the only number here that is one.
+   *
+   * A mean of per-parameter shares rather than a ratio of sums, so that a
+   * parameter with a wide range does not decide the answer for a row: each is
+   * already scale-free on its own, and each is one voice. Parameters that have
+   * not moved are left out entirely rather than counted as zero — a preset that
+   * does not run `ripple` is not evidence that the music is failing to reach it.
+   */
+  budget(): { fast: number; bar: number; geometry: number; overall: number } {
+    const sums = { fast: 0, bar: 0, geometry: 0 };
+    const counts = { fast: 0, bar: 0, geometry: 0 };
+    for (const key of TRACKED_POST) {
+      const share = this.tracks.get(key)?.share();
+      if (share === null || share === undefined) continue;
+      const row = rowOf(key);
+      sums[row] += share;
+      counts[row]++;
+    }
+    const mean = (row: ReachRow) => (counts[row] > 0 ? sums[row] / counts[row] : 0);
+    const total = counts.fast + counts.bar + counts.geometry;
+    return {
+      fast: mean("fast"),
+      bar: mean("bar"),
+      geometry: mean("geometry"),
+      overall: total > 0 ? (sums.fast + sums.bar + sums.geometry) / total : 0,
+    };
   }
 
   get recording(): boolean {
@@ -338,7 +439,7 @@ export class AudioProbe {
       const reach = this.rowFor(key);
       reach.authored = this.authoredSnapshot.get(key) ?? post[key];
       reach.delivered = post[key];
-      this.tracks.get(key)?.sample(post[key], dt);
+      this.tracks.get(key)?.sample(post[key], post[key] - reach.authored, dt);
     }
 
     const gains: Record<(typeof GEOMETRY_GAINS)[number], number> = {
@@ -350,7 +451,11 @@ export class AudioProbe {
       const reach = this.rowFor(key);
       reach.authored = 1;
       reach.delivered = gains[key];
-      this.tracks.get(key)?.sample(gains[key], dt);
+      // Deviation and delivered motion are the same thing for these three, since
+      // their authored value is the constant 1 — which is why `budget` leaves
+      // them out. A parameter with no autonomous motion at all is trivially 100%
+      // audio and says nothing about the ratio the readout exists to measure.
+      this.tracks.get(key)?.sample(gains[key], gains[key] - 1, dt);
     }
 
     if (!this.tracing) return;

@@ -1,5 +1,6 @@
 import type { VizConfig } from "../vizConfig";
 import type { Rng } from "./rng";
+import type { TempoLock } from "./tempoLock";
 import type { PostParams } from "./types";
 
 const TAU = Math.PI * 2;
@@ -65,6 +66,12 @@ class Channel {
   constructor(rng: Rng) {
     this.rates = [rng.range(0.006, 0.014), rng.range(0.017, 0.033), rng.range(0.04, 0.075)];
     this.phases = [rng.range(0, TAU), rng.range(0, TAU), rng.range(0, TAU)];
+  }
+
+  /** The slowest of the three, which carries most of the amplitude and is
+   *  therefore the period a viewer would name if asked. */
+  get slowest(): number {
+    return this.rates[0];
   }
 
   at(phase: number): number {
@@ -135,16 +142,44 @@ export class Wander {
   constructor(private readonly forkStream: () => Rng) {}
 
   /** Advance the drift. `dtClock` is composition seconds, so the speed control
-   *  carries the wander with it like everything else. */
-  update(dtClock: number, amount: number, rate: number): void {
+   *  carries the wander with it like everything else.
+   *
+   *  `tempo`, when a lock is held, puts the drift's own period in tempo — see
+   *  `tempoRate`, and note that the snap has to happen here rather than at the
+   *  call site because the rate the config carries is a multiplier over
+   *  per-channel rates only this object knows. */
+  update(dtClock: number, amount: number, rate: number, tempo?: TempoLock): void {
     this.amount = clamp(Number.isFinite(amount) ? amount : 0, 0, 1);
     if (this.amount <= 0) return;
 
     const channels = this.ensureChannels();
     const dt = Math.max(0, dtClock);
-    this.phase += dt * Math.max(0, rate);
+    this.phase += dt * Math.max(0, this.tempoRate(rate, tempo));
     for (const name of CHANNELS) this.values[name] = channels[name].at(this.phase);
     this.stepSegments(dt);
+  }
+
+  /**
+   * The drift's rate, put in tempo — §5 of `docs/visualizer-audio-reach.md`
+   * asks for a wander period of eight or sixteen bars.
+   *
+   * Snapped here rather than at the call site, and that is the whole reason this
+   * method exists: `rate` is a multiplier over per-channel rates drawn from the
+   * seed, so the period a viewer actually sees is `rate * slowest`, a number
+   * only this object holds. Snapping the multiplier alone would have been
+   * snapping the wrong quantity — arithmetic that typechecks and locks nothing.
+   *
+   * The three components keep their ratios, so the drift stays the sum of three
+   * incommensurate sines that never repeats; only its overall pace moves, and by
+   * at most the gap between two adjacent musical durations.
+   */
+  private tempoRate(rate: number, tempo?: TempoLock): number {
+    if (!tempo?.active || !(rate > 0)) return rate;
+    const channels = this.channels;
+    if (!channels) return rate;
+    const slowest = channels[CHANNELS[0]].slowest;
+    if (!(slowest > 0)) return rate;
+    return tempo.rate(rate * slowest) / slowest;
   }
 
   reset(): void {
