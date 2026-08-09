@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 227,
+      "id": "the-deadman-3-1786293122",
+      "title": "The Deadman",
+      "slug": "the-deadman",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Martin Morazzo",
+      "image": "images/the-deadman/issue-3-1786293122.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-09T16:32:04.492Z"
+    },
+    {
       "seq": 226,
       "id": "deadman-3-1786292269",
       "title": "The Deadman",
