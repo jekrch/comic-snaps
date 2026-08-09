@@ -735,6 +735,41 @@
       ]
     },
     {
+      "id": "deadman",
+      "name": "Deadman",
+      "parentSeries": null,
+      "description": "An new imagining of a classic DC character.\r\n\r\nCollected Editions\r\n\r\n- Vol. 1: Deadman Walking (#1-5)",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1867/165343-18118-112840-1-deadman.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/deadman/4050-18118/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/6841/"
+        }
+      ],
+      "startYear": 2006,
+      "publisher": "DC Comics",
+      "issueCount": 13,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          3
+        ]
+      },
+      "coverImages": [
+        "data/covers/deadman/de360ebba716.jpg",
+        "data/covers/deadman/f3fd641b1a8a.jpg",
+        "data/covers/deadman/9207be68b4bf.jpg",
+        "data/covers/deadman/1868889eaf9f.jpg"
+      ]
+    },
+    {
       "id": "did-you-hear-about-mimi-green",
       "name": "Did You Hear About Mimi Green?",
       "parentSeries": null,

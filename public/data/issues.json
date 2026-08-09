@@ -2555,6 +2555,31 @@
       ]
     },
     {
+      "id": "deadman-3",
+      "series": "deadman",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "neal-adams",
+          "name": "Neal Adams",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/deadman-1985-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "did-you-hear-about-mimi-green-1",
       "series": "did-you-hear-about-mimi-green",
       "issue": 1,
