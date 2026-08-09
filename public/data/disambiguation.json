@@ -149,6 +149,23 @@
           "name": "Hellboy: The Island"
         }
       ]
+    },
+    "Deadline": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 4193,
+          "name": "Deadline"
+        },
+        {
+          "id": 13319,
+          "name": "Deadline USA"
+        },
+        {
+          "id": 13320,
+          "name": "Deadline USA"
+        }
+      ]
     }
   }
 }
