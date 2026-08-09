@@ -211,7 +211,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -431,7 +432,8 @@
       "issueCount": 103,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverImages": [
         "data/covers/buzz/04f3e710dabf.jpg",
@@ -750,8 +752,14 @@
       "publisher": "Deadline Publications Ltd.",
       "issueCount": 71,
       "sources": [
-        "comicvine"
-      ]
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          20
+        ]
+      }
     },
     {
       "id": "deadman",
@@ -1003,7 +1011,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -1126,7 +1135,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -1155,7 +1165,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -1207,7 +1218,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -1797,7 +1809,8 @@
         "wikipedia",
         "gcd",
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "startYear": 1987,
       "publisher": "https://www.comics.org/api/publisher/543/?format=json",
@@ -1853,7 +1866,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -2008,7 +2022,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -2126,7 +2141,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -2521,7 +2537,8 @@
       "issueCount": 4,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -2675,7 +2692,8 @@
       "issueCount": 2,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverImages": [
         "data/covers/tasty-comix/d4d9e4e2d52e.jpg",
@@ -3037,7 +3055,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3062,7 +3081,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3085,7 +3105,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3165,7 +3186,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3218,7 +3240,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3237,7 +3260,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3267,7 +3291,8 @@
       "issueCount": 1,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3322,7 +3347,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3380,7 +3406,8 @@
       "references": [],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
