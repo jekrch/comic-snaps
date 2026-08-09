@@ -477,6 +477,33 @@
       "anthology": true
     },
     {
+      "id": "clowns",
+      "name": "Clowns",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2481670-clow1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/clowns/4050-50696/"
+        }
+      ],
+      "startYear": 1972,
+      "publisher": "Yahoo Production",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      },
+      "coverImages": [
+        "data/covers/clowns/ca5027137249.jpg"
+      ]
+    },
+    {
       "id": "concrete",
       "name": "Concrete",
       "parentSeries": null,
@@ -758,8 +785,17 @@
       "coverSources": {
         "metron": [
           20
+        ],
+        "comicvine": [
+          20
         ]
-      }
+      },
+      "coverImages": [
+        "data/covers/deadline/8ac2be4d6749.jpg",
+        "data/covers/deadline/4dbeea427e19.jpg",
+        "data/covers/deadline/e42d9407db47.jpg",
+        "data/covers/deadline/ffd94dcfc0e1.jpg"
+      ]
     },
     {
       "id": "deadman",
