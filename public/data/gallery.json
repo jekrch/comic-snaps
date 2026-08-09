@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 228,
+      "id": "deadline-20-1786295442",
+      "title": "Deadline",
+      "slug": "deadline",
+      "issue": 20,
+      "year": 1990,
+      "artist": "Jamie Hewlett",
+      "image": "images/deadline/issue-20-1786295442.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-09T17:10:44.511Z"
+    },
+    {
       "seq": 227,
       "id": "the-deadman-3-1786294631",
       "title": "The Deadman",
