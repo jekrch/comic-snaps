@@ -1,43 +1,6 @@
 {
   "panels": [
     {
-      "seq": 226,
-      "id": "deadman-3-1786292269",
-      "title": "The Deadman",
-      "slug": "deadman",
-      "issue": 3,
-      "year": 2026,
-      "artist": "Martin Morazzo",
-      "image": "images/deadman/issue-3-1786292269.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-08-09T16:17:51.252Z",
-      "width": 551,
-      "height": 1280,
-      "dominantColors": [
-        [
-          50.2,
-          6.7,
-          8.9
-        ],
-        [
-          30.5,
-          6.6,
-          3.8
-        ],
-        [
-          75.1,
-          5.2,
-          26.2
-        ]
-      ],
-      "colorfulness": 11.6,
-      "phash": "bc043ec7679a5a13",
-      "ahash": "12121e17029f8d85",
-      "dhash": "b6b6b6b66e29291d"
-    },
-    {
       "seq": 225,
       "id": "the-shaolin-cowboy-staying-a-i-alive-1-1785620257",
       "title": "The Shaolin Cowboy: Staying A.I. Alive",
