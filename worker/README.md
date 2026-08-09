@@ -26,10 +26,12 @@ The bot also handles text commands:
 ## Caption format
 
 ```
-Title // Issue # // Year // Artist // optional notes // tag1, tag2, tag3
+Title // Issue # // Year // optional artist // optional notes // tag1, tag2, tag3
 ```
 
-A freeform fallback (`Saga #1 2012 Fiona Staples`) is also supported.
+The artist can be dropped (or left empty, to reach the later segments) when the series already has a panel in `gallery.json` — the bot reuses the artist from that series' most recently added panel and says so in its reply. Titles are matched on their slug, so casing and punctuation don't have to line up. If the series is new and no artist is given, the post is rejected before anything is committed.
+
+A freeform fallback (`Saga #1 2012 Fiona Staples`, or `Saga #1 2012`) is also supported.
 
 ## Deployment
 

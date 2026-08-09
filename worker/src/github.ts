@@ -151,6 +151,19 @@ export function nextSeq(gallery: Gallery): number {
   return max + 1;
 }
 
+/**
+ * Find the artist credited on the most recently added panel of a series,
+ * matched by slug. Returns null when the series has no panels yet.
+ */
+export function lastArtistForSlug(gallery: Gallery, slug: string): string | null {
+  let latest: PanelEntry | null = null;
+  for (const p of gallery.panels) {
+    if (p.slug !== slug || !p.artist) continue;
+    if (!latest || (p.seq ?? 0) > (latest.seq ?? 0)) latest = p;
+  }
+  return latest ? latest.artist : null;
+}
+
 /** Read gallery.json, prepend a new entry, and commit the update. */
 export async function updateGalleryJson(
   env: Env,

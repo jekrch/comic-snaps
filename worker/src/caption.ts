@@ -13,9 +13,15 @@ export function parseIssue(raw: string): number | string {
  * Parse a Telegram caption into structured panel metadata.
  *
  * Primary format (// delimited):
- *   Title // Issue // Year // Artist // optional notes // optional tags
+ *   Title // Issue // Year // optional artist // optional notes // optional tags
  *
  * Issue can be a number (1, 42) or free-form text (VOL 1, Annual 2).
+ *
+ * The artist may be omitted entirely, or left empty to reach later segments —
+ * `artist` comes back null and the caller fills it in from the series' last
+ * panel:
+ *   Saga // 1 // 2012
+ *   Saga // 1 // 2012 // // great spread
  *
  * Tags are comma-separated and stored as an array:
  *   Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera, BKV
@@ -23,18 +29,19 @@ export function parseIssue(raw: string): number | string {
  * To include tags without notes, leave the notes segment empty:
  *   Saga // 1 // 2012 // Fiona Staples // // sci-fi, space opera
  *
- * Fallback format (freeform numeric issue only):
+ * Fallback format (freeform numeric issue only, artist optional):
  *   Title #Issue Year Artist
  */
 export function parseCaption(caption: string): PanelMetadata {
   if (caption.includes("//")) {
     const parts = caption.split("//").map((s) => s.trim());
-    if (parts.length >= 4) {
+    if (parts.length >= 3) {
       const issue = parseIssue(parts[1]);
       const year = parseInt(parts[2], 10);
 
       if (isNaN(year)) throw new Error(`Invalid year: "${parts[2]}"`);
 
+      const artist = parts.length > 3 && parts[3] !== "" ? parts[3] : null;
       const notes = parts.length > 4 && parts[4] !== "" ? parts[4] : null;
       const tagBuckets = parts.length > 5 ? parseTags(parts[5]) : { tags: [], seriesTags: [], artistTags: [] };
 
@@ -42,7 +49,7 @@ export function parseCaption(caption: string): PanelMetadata {
         title: parts[0],
         issue,
         year,
-        artist: parts[3],
+        artist,
         notes,
         tags: tagBuckets.tags,
         seriesTags: tagBuckets.seriesTags,
@@ -51,13 +58,13 @@ export function parseCaption(caption: string): PanelMetadata {
     }
   }
 
-  const match = caption.match(/^(.+?)\s*#(\d+)\s+(\d{4})\s+(.+)$/);
+  const match = caption.match(/^(.+?)\s*#(\d+)\s+(\d{4})(?:\s+(.+))?$/);
   if (match) {
     return {
       title: match[1].trim(),
       issue: parseInt(match[2], 10),
       year: parseInt(match[3], 10),
-      artist: match[4].trim(),
+      artist: match[4]?.trim() || null,
       notes: null,
       tags: [],
       seriesTags: [],
@@ -66,7 +73,7 @@ export function parseCaption(caption: string): PanelMetadata {
   }
 
   throw new Error(
-    `Could not parse caption: "${caption}"\n\nExpected format:\nTitle // Issue // Year // Artist`
+    `Could not parse caption: "${caption}"\n\nExpected format:\nTitle // Issue // Year // Artist\n\nThe artist can be left off if the series already has a panel in the gallery.`
   );
 }
 

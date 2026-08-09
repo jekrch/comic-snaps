@@ -89,6 +89,34 @@ def normalize_series_results(results: list) -> list:
     return results
 
 
+def parse_year_began(value) -> int | None:
+    try:
+        return int(value) if value else None
+    except (TypeError, ValueError):
+        return None
+
+
+def filter_series_by_start_year(results: list, start_year: int | None) -> list:
+    """
+    Drop series whose start year contradicts the one we already know.
+
+    Metron's series search matches on title alone, so "Deadline" returns
+    every unrelated series sharing that name. When an earlier source has
+    already established startYear, a differing year_began is proof of a
+    wrong series. Results with no parseable year stay in — a missing year
+    isn't a contradiction.
+
+    Call after normalize_series_results, which lifts year_began out of the
+    "Name (1988)" display string.
+    """
+    if not start_year:
+        return results
+    return [
+        r for r in results
+        if parse_year_began(r.get("year_began")) in (None, start_year)
+    ]
+
+
 def extract_metron_artist_fields(match: dict) -> dict:
     """Pull supplemental fields from a Metron creator result."""
     aliases_raw = match.get("alias") or []
@@ -202,10 +230,18 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
             print(f"  Searching Metron ({resource}) for {name}...")
             results = metron_search(resource, name, username, password, health=health)
             time.sleep(3.0)  # 20 requests/min limit
+            candidates = results
             if resource == "series":
                 results = normalize_series_results(results)
+                # Match only against series that don't contradict the start
+                # year we already have; a same-titled series from another
+                # publisher would otherwise be accepted silently and then
+                # feed wrong covers and credits downstream.
+                candidates = filter_series_by_start_year(
+                    results, entry.get("startYear")
+                )
 
-            match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
+            match = pick_exact_match(candidates, name, tiebreak_key=tiebreak_key)
             if not match and results:
                 print(f"    SKIP: no exact match ({len(results)} candidate(s))")
                 record_disambiguation_candidates(

@@ -54,7 +54,8 @@ export interface PanelMetadata {
   title: string;
   issue: number | string;
   year: number;
-  artist: string;
+  /** Null when the caption omits it — resolved from the series' last panel. */
+  artist: string | null;
   notes: string | null;
   tags: string[];
   seriesTags: string[];

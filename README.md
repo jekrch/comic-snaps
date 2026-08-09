@@ -21,6 +21,11 @@ Optional notes and tags can be appended:
 Saga // 1 // 2012 // Fiona Staples // incredible double-page spread // sci-fi, space opera
 ```
 
+Once a series has a panel in the gallery, the artist can be left off and it carries over from that series' most recent post:
+```
+Saga // 2 // 2012
+```
+
 A freeform fallback (`Saga #1 2012 Fiona Staples`) also works for quick entries.
 
 ## Telegram commands

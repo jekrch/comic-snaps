@@ -9,6 +9,7 @@ import {
   deletePanel,
   formatIssue,
   isUpdatableField,
+  lastArtistForSlug,
   nextSeq,
   readGalleryJson,
   updateGalleryJson,
@@ -18,10 +19,14 @@ import {
 const HELP_TEXT = `Comic Snaps Bot — Commands:
 
 Add a panel:
-  Post a photo with a caption in this format (notes and tags are optional):
+  Post a photo with a caption in this format (artist, notes and tags are optional):
   Title // Issue // Year // Artist // notes // tags
 
   Issue can be a number (1, 42) or text (VOL 1, Annual 2).
+
+  Leave the artist off and it's taken from the last panel posted for
+  that series:
+  Saga // 2 // 2012
 
   Tags accept prefixes:
     tag    → panel tag
@@ -216,7 +221,7 @@ export default {
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera"
+        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera\n\nThe artist can be left off for a series already in the gallery:\nSaga // 2 // 2012"
       );
       return new Response("OK");
     }
@@ -234,11 +239,7 @@ export default {
       const postedBy =
         message.from?.first_name || message.from?.username || "unknown";
 
-      // 3. Download the largest resolution photo from Telegram
-      const photo = message.photo[message.photo.length - 1];
-      const imageBytes = await downloadFile(photo.file_id, env.TELEGRAM_BOT_TOKEN);
-
-      // 4. Generate paths and IDs
+      // 3. Generate paths and IDs
       const timestamp = Math.floor(Date.now() / 1000);
       const slug = slugify(metadata.title);
       const issueSlug = slugify(String(metadata.issue));
@@ -247,7 +248,29 @@ export default {
       const browserImagePath = `images/${slug}/${filename}`;
       const id = `${slug}-${issueSlug}-${timestamp}`;
 
-      // 5. Commit image file to GitHub
+      // 4. Read the gallery up front — a caption with no artist inherits the
+      //    one from the series' most recent panel, and that has to resolve
+      //    before anything is committed.
+      const { gallery } = await readGalleryJson(env);
+      const seq = nextSeq(gallery);
+
+      let artist = metadata.artist;
+      let inheritedArtist = false;
+      if (!artist) {
+        artist = lastArtistForSlug(gallery, slug);
+        if (!artist) {
+          throw new Error(
+            `No artist given and "${metadata.title}" isn't in the gallery yet.\n\nInclude the artist:\n${metadata.title} // ${metadata.issue} // ${metadata.year} // Artist Name`
+          );
+        }
+        inheritedArtist = true;
+      }
+
+      // 5. Download the largest resolution photo from Telegram
+      const photo = message.photo[message.photo.length - 1];
+      const imageBytes = await downloadFile(photo.file_id, env.TELEGRAM_BOT_TOKEN);
+
+      // 6. Commit image file to GitHub
       const base64Image = arrayBufferToBase64(imageBytes);
       await commitFile(
         env,
@@ -256,10 +279,7 @@ export default {
         `Add panel: ${metadata.title} ${formatIssue(metadata.issue)}`
       );
 
-      // 6. Assign sequential ID and append entry to gallery.json
-      const { gallery } = await readGalleryJson(env);
-      const seq = nextSeq(gallery);
-
+      // 7. Append entry to gallery.json
       const entry: PanelEntry = {
         seq,
         id,
@@ -267,7 +287,7 @@ export default {
         slug,
         issue: metadata.issue,
         year: metadata.year,
-        artist: metadata.artist,
+        artist,
         image: browserImagePath,
         notes: metadata.notes,
         tags: metadata.tags,
@@ -276,14 +296,15 @@ export default {
       };
       await updateGalleryJson(env, entry);
 
-      // 7. Confirm via Telegram
+      // 8. Confirm via Telegram
+      const artistLine = `\n  Artist: ${artist}${inheritedArtist ? " (from last post in series)" : ""}`;
       const notesLine = metadata.notes ? `\n  Notes: ${metadata.notes}` : "";
       const tagsLine = metadata.tags.length > 0 ? `\n  Tags: ${metadata.tags.join(", ")}` : "";
       await sendReply(
         env.TELEGRAM_BOT_TOKEN,
         message.chat.id,
         message.message_id,
-        `Added to gallery (ID: ${seq}):\n  ${metadata.title} ${formatIssue(metadata.issue)} (${metadata.year})\n  Artist: ${metadata.artist}${notesLine}${tagsLine}\n  → ${browserImagePath}`
+        `Added to gallery (ID: ${seq}):\n  ${metadata.title} ${formatIssue(metadata.issue)} (${metadata.year})${artistLine}${notesLine}${tagsLine}\n  → ${browserImagePath}`
       );
     } catch (err) {
       const errorMessage =

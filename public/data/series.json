@@ -744,29 +744,13 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/deadline/4050-32862/"
-        },
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/series/4193/"
         }
       ],
       "startYear": 1988,
       "publisher": "Deadline Publications Ltd.",
       "issueCount": 71,
       "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          20
-        ]
-      },
-      "coverImages": [
-        "data/covers/deadline/975c42bb1520.jpg",
-        "data/covers/deadline/f8752de1d7de.jpg",
-        "data/covers/deadline/bbdd6e662c53.jpg",
-        "data/covers/deadline/c7f0c1e61230.jpg"
+        "comicvine"
       ]
     },
     {
