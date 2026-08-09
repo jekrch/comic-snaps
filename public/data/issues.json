@@ -7158,6 +7158,103 @@
       ]
     },
     {
+      "id": "the-deadman-3",
+      "series": "the-deadman",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alex-eckman-lawn",
+          "name": "Alex Eckman-Lawn",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "christian-ward",
+          "name": "Christian Ward",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-kaminski",
+          "name": "Paul Kaminski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "chris-rosa",
+          "name": "Chris Rosa",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-deadman-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-eye-collector-1",
       "series": "the-eye-collector",
       "issue": 1,
