@@ -31,6 +31,7 @@ from .paths import ARTISTS_PATH, ISSUES_PATH, SERIES_PATH
 from .references import (
     SOURCE_COMICVINE,
     SOURCE_METRON,
+    SOURCE_METRON_SERIES_LOOKUP,
     ensure_reference,
     has_source,
     mark_source,
@@ -147,30 +148,47 @@ def _metron_series_display(result: dict) -> str:
 
 
 def resolve_metron_series_id(series_entry: dict, username: str, password: str,
-                             disambig: dict, health: IntegrationHealth) -> tuple[int | None, bool]:
+                             disambig: dict, health: IntegrationHealth) -> tuple[int | None, bool, bool]:
     """
     Find the Metron series ID for a series entry.
 
     Checks the stored Metron reference URL first, then a manually-resolved
     disambiguation ID, then falls back to a name search. When an ID is found
     via disambiguation or search, a Metron reference is persisted on the
-    entry so future runs skip the lookup. Returns (id, disambig_changed).
+    entry so future runs skip the lookup.
+
+    A definite "no match" is persisted too, via SOURCE_METRON_SERIES_LOOKUP —
+    otherwise every run re-pays a request plus a 3s rate-limit gap for each
+    series Metron doesn't carry.  Request *failures* (throttle, timeout) are
+    deliberately left unmarked so they retry next run.
+
+    Returns (id, disambig_changed, series_changed).
     """
     name = series_entry.get("name") or ""
 
     for ref in series_entry.get("references", []):
         m = METRON_SERIES_URL_RE.search(ref.get("url") or "")
         if m:
-            return int(m.group(1)), False
+            return int(m.group(1)), False, False
 
     resolved_id = get_disambiguation_id(disambig, SOURCE_METRON, "series", name)
     if resolved_id:
         ensure_reference(series_entry, "Metron", f"https://metron.cloud/series/{resolved_id}/")
         disambig.get(f"{SOURCE_METRON}:series", {}).pop(name, None)
-        return int(resolved_id), True
+        return int(resolved_id), True, True
 
+    # Already searched by name and came back empty — don't pay for it again.
+    # A manual disambiguation resolution (handled above) still overrides this.
+    if has_source(series_entry, SOURCE_METRON_SERIES_LOOKUP):
+        return None, False, False
+
+    print(f"  Resolving Metron series ID for {name}...")
     data = metron_get_patient("series/", {"name": name}, username, password, health)
-    results = (data or {}).get("results") or []
+    if data is None:
+        # Request failed rather than genuinely not matching — stay unmarked.
+        print(f"    Metron series lookup failed for {name!r} — will retry next run")
+        return None, False, False
+    results = data.get("results") or []
 
     norm = name.strip().lower()
     start_year = series_entry.get("startYear")
@@ -194,11 +212,17 @@ def resolve_metron_series_id(series_entry: dict, username: str, password: str,
     if match:
         mid = int(match["id"])
         ensure_reference(series_entry, "Metron", f"https://metron.cloud/series/{mid}/")
-        return mid, False
+        return mid, False, True
+
+    # Definite answer, just not a usable one — record it so the next run
+    # skips straight past this series.
+    mark_source(series_entry, SOURCE_METRON_SERIES_LOOKUP)
 
     if results:
         # Record candidates (with proper display names — the raw results
         # carry the name under "series") so the user can resolve manually.
+        print(f"    no exact Metron match ({len(results)} candidate(s)) — "
+              f"recorded for disambiguation")
         dkey = f"{SOURCE_METRON}:series"
         bucket = disambig.setdefault(dkey, {})
         existing = bucket.get(name)
@@ -215,8 +239,10 @@ def resolve_metron_series_id(series_entry: dict, username: str, password: str,
                     for r in results[:8]
                 ],
             }
-            return None, True
-    return None, False
+            return None, True, True
+    else:
+        print(f"    not on Metron — future runs will skip this series")
+    return None, False, True
 
 
 def fetch_metron_issue_credits(metron_series_id: int, issue_number: int,
@@ -451,14 +477,14 @@ def backfill_issue_credits(panels: list) -> int:
         if (metron_enabled and not metron_health.should_bail
                 and not has_source(entry, SOURCE_METRON)):
             if slug not in metron_series_cache:
-                mid, dchanged = resolve_metron_series_id(
+                mid, dchanged, schanged = resolve_metron_series_id(
                     series_entry, metron_username, metron_password,
                     disambig, metron_health,
                 )
                 metron_series_cache[slug] = mid
                 if dchanged:
                     disambig_dirty = True
-                if mid:
+                if schanged:
                     series_dirty = True
 
             mid = metron_series_cache[slug]

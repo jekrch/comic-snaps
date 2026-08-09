@@ -4,6 +4,13 @@ SOURCE_COMICVINE = "comicvine"
 SOURCE_METRON = "metron"
 SOURCE_GCD = "gcd"
 
+# Marks a series whose Metron *series ID* lookup came back with a definite
+# "no match" — distinct from SOURCE_METRON, which tracks the field backfill.
+# Without this, every run re-searches Metron by name for series it doesn't
+# carry (small-press/indie titles), paying a request plus a rate-limit gap
+# each time.  A manually-resolved disambiguation entry still overrides it.
+SOURCE_METRON_SERIES_LOOKUP = "metron-series-lookup"
+
 
 def _set_if_missing(entry: dict, field: str, value) -> bool:
     """Set `entry[field] = value` only if missing/empty. Returns True if changed."""
