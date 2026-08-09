@@ -2555,6 +2555,37 @@
       ]
     },
     {
+      "id": "deadline-20",
+      "series": "deadline",
+      "issue": 20,
+      "credits": [
+        {
+          "artistId": "david-elliott",
+          "name": "David Elliott",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-dillon",
+          "name": "Steve Dillon",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/deadline-20/4000-276935/"
+        }
+      ],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "deadman-3",
       "series": "deadman",
       "issue": 3,

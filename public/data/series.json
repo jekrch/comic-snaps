@@ -735,6 +735,41 @@
       ]
     },
     {
+      "id": "deadline",
+      "name": "Deadline",
+      "parentSeries": null,
+      "description": "British anthology magazine featuring the first appearance of Tank Girl, Hugo Tate, Wired World and more.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/65194/1212950-deadline_no_1.gif",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/deadline/4050-32862/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/4193/"
+        }
+      ],
+      "startYear": 1988,
+      "publisher": "Deadline Publications Ltd.",
+      "issueCount": 71,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          20
+        ]
+      },
+      "coverImages": [
+        "data/covers/deadline/975c42bb1520.jpg",
+        "data/covers/deadline/f8752de1d7de.jpg",
+        "data/covers/deadline/bbdd6e662c53.jpg",
+        "data/covers/deadline/c7f0c1e61230.jpg"
+      ]
+    },
+    {
       "id": "deadman",
       "name": "Deadman",
       "parentSeries": null,

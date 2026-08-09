@@ -2563,6 +2563,32 @@
       "birthYear": 1977
     },
     {
+      "id": "david-elliott",
+      "name": "David Elliott",
+      "description": "Worked with Garry Leach, where they used the pseudonym K. Edwards.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/david-elliott/4040-56608/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10956/"
+        }
+      ],
+      "country": "UK",
+      "aliases": [
+        "Dave Elliott",
+        "K. Edwards",
+        "Dave Elliot"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "david-finch",
       "name": "David Finch",
       "description": "David Finch began his career working for Top Cow Productions in titles like Cyberforce, Ascension, The Darkness, etc.\r\n\r\nAfter a hiatus, he returned to the industry in 2003 to work for Marvel in the Ultimate X-Men project along with Brian Michael Bendis. In 2005, he worked on the New Avengers title and has also worked on Moon Knight, Fallen Son, The Death of Captain America, X-Men: Messiah CompleX, and X-Men: Second Coming. Finch signed an exclusive contract with DC Comics and multiple covers for DC's Brightest Day series. Most recently he has taken on his own title Batman: The Dark Knight were he is playing the role of both artist and writer. However with only two issues in DC has announced that Batman: The Dark Knight will begin again at issue #1 with 52 other titles this September <2011>.\r\n\r\nAfter a 15-issue run on Batman: The Dark Knight , David Finch leaves to start start penciling Justice League of America with writer Geoff Johns starting February in 2013. He was also the artist for the Forever Evil miniseries, also with writer Geoff Johns.\r\n\r\nFinch is also a part of the creative team for New 52 Wonder Woman along with his wife Meredith Finch, taking over the reigns from the previous team of Brian Azzarello and Cliff Chiang.\r\n\r\nSome Characters Created:\r\n\r\nDC\r\n\r\n- Traktir - Spidra - The Heretic - Dawn Golden - Aleister Golden - Mira - Jack Forbes - White Rabbit - Natalya Trusevich - Dr. Crane - Derinoe - Clyemne - Nisos - Gotham Girl - Gotham - Oleg Balinoff - Bob Castro",
@@ -4511,6 +4537,28 @@
         "comicvine"
       ],
       "country": "United States of America"
+    },
+    {
+      "id": "jamie-hewlett",
+      "name": "Jamie Hewlett",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/35640/707781-1162048903_80.177.117.97.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jamie-hewlett/4040-27484/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6049/"
+        }
+      ],
+      "birthYear": 1968,
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "jamie-s-rich",
@@ -9936,6 +9984,29 @@
       "aliases": [
         "Steven Carr"
       ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "steve-dillon",
+      "name": "Steve Dillon",
+      "description": "Steve Dillon's first published work was for Marvel UK, at the age of 16, drawing Hulk and Nick Fury strips.\r\n\r\nDuring the 1980s, Dillon's output was phenomenal, drawing strips for all the major UK publishers.\r\n\r\n2000AD:\r\n\r\n- Hap Hazzard (which he also created/scripted) - Mean Arena - Judge Dredd - Rick Fortune (for Diceman, the spin-off gaming comic series) - Rogue Trooper - Tyranny Rex Marvel UK:\r\n\r\n- Abslom Daak - Doctor Who Quality:\r\n\r\n- Laser Eraser and Pressbutton (for Warrior) - Marvelman (also for Warrior) Working for DC in the late eighties and nineties and Marvel in the noughties, Dillon has illustrated many of their iconic characters for lengthy runs.\r\n\r\nDC:\r\n\r\n- Animal Man - Hellblazer - Preacher - Skreemer Marvel:\r\n\r\n- Bullseye - Punisher - Wolverine",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/2163556-dillon_1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-dillon/4040-23694/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4120/"
+        }
+      ],
+      "birthYear": 1962,
+      "deathYear": 2016,
+      "country": "U.K.",
       "sources": [
         "comicvine",
         "metron"
