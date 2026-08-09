@@ -1111,8 +1111,13 @@ export interface DeviceCaps {
    * everywhere — one 1400-line fragment over every pixel — so resolution is the
    * only knob that buys frame time in proportion to itself, and on a phone that
    * is thermally throttling it is the difference between a slow composition and
-   * a stuttering one. The floor is well above the point where the halftone
-   * screen starts aliasing against the upscale.
+   * a stuttering one.
+   *
+   * The floor is where that stops being true. Under about 0.6 the compositor is
+   * resampling by more than 2× to reach the panel's native pixels, and that cost
+   * *rises* as the buffer shrinks — so the last steps down buy less and less
+   * frame time while spending sharpness linearly. A run pinned here is a run
+   * whose bottleneck is not fill, and the answer to it is somewhere else.
    */
   minRenderScale: number;
   /**
@@ -1121,8 +1126,17 @@ export interface DeviceCaps {
    * Capped on mobile because a ProMotion iPhone hands out 120Hz callbacks, and
    * a frame chain that takes 12ms is *comfortable* at 60 and permanently late
    * at 120 — where the miss pattern alternates rather than settling, which reads
-   * as juddering rather than as slow. Halving the target doubles the budget and
-   * costs nothing a viewer can see at this material's motion rates.
+   * as juddering rather than as slow.
+   *
+   * Held at 30 rather than 60 for the same reason one rung further down, and the
+   * evidence is the governor rather than the rate: at a 60 target the raise
+   * threshold is 57fps sustained across four samples, which a phone whose
+   * smoothed rate swings at all can never clear — so it walks to
+   * `minRenderScale` and stays there, and the floor becomes the device's
+   * resolution by default. At 30 the thresholds are 24.6 and 28.5, the budget is
+   * 33ms rather than 16.6, and the governor can settle somewhere in its range
+   * instead of at the bottom of it. The composition drifts at rates that do not
+   * need 60; a steady 30 reads better than an alternating 18-to-60.
    */
   maxFps: number;
   /** Gray–Scott steps per frame. Four settles the chemistry faster than two;
@@ -1163,8 +1177,8 @@ export function deviceCaps(view: Window | null = defaultView()): DeviceCaps {
     // means the opening of a run — which is the part a viewer judges it on — is
     // not the part that stutters.
     renderScale: mobile ? 0.85 : Math.min(dpr, 1.5),
-    minRenderScale: mobile ? 0.5 : 0.75,
-    maxFps: mobile ? 60 : 0,
+    minRenderScale: mobile ? 0.65 : 0.75,
+    maxFps: mobile ? 30 : 0,
     reactSteps: mobile ? 2 : 4,
     uploadsPerFrame: 1,
     feedbackScale: 0.75,
