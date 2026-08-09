@@ -584,8 +584,6 @@ const CHROMA_TIDE = 0.5;
 /** Turns of hue on the beat pulse. Tiny, and free: hue is the one channel where
  *  a fast change cannot read as motion. */
 const HUE_BEAT = 0.004;
-/** Texture crackling on the air. */
-const GRAIN_DEPTH = 1.2;
 /** Turns of hue per bar. Over a few minutes this is the colour of the piece
  *  walking with the music, not a light show. */
 const HUE_PER_BAR = 0.016;
@@ -596,7 +594,7 @@ const HUE_PER_BAR = 0.016;
  * The kick joins the trail pump, which is the fast row's own argument in
  * miniature: a term applied a hundredth at a time to a buffer that accumulates it
  * over hundreds of frames is a large visible change with no on-screen velocity
- * anywhere. The hat crackles the texture. The snare goes to the *press*, and
+ * anywhere. The hat opens the colour. The snare goes to the *press*, and
  * separately the backbeat does — a plate slipping sideways on two and four is
  * both the most on-theme answer this engine has and incapable of flashing.
  *
@@ -608,7 +606,6 @@ const HUE_PER_BAR = 0.016;
 const KICK_SCALE = 0.008;
 const SNARE_SLIP = 0.55;
 const BACKBEAT_SLIP = 0.75;
-const HAT_GRAIN = 0.9;
 const HAT_CHROMA = 0.25;
 
 // --- depths, bar row --------------------------------------------------------
@@ -736,8 +733,8 @@ const SECTION_GAP = 20;
  * the composition already runs — which is right, and protects every preset from
  * having a fold switched on by a kick drum. But the fast row of the hierarchy
  * above needs somewhere to go, and on a default preset the only always-live
- * parameters in the whole of `PostParams` are the trail terms, `chroma`, `grain`
- * and `vignette`. Everything else the fast row wants — `misreg`, `bleed`,
+ * parameters in the whole of `PostParams` are the trail terms, `chroma` and
+ * `vignette`. Everything else the fast row wants — `misreg`, `bleed`,
  * `krackle` — is 0 in `DEFAULT_POST`, so a strictly multiplicative binding is
  * multiplying by zero exactly as §12 of the plan found the first time.
  *
@@ -1764,11 +1761,10 @@ export class AudioBinding {
 
     // Always-on treatments, so multiplicative: a preset that turned one off
     // stays off.
+    // The hat opens the colour: with the grain gone, `chroma` is the only
+    // always-live parameter left that a top-band *event* can reach without
+    // either moving the picture or waiting on `audioLift`.
     post.chroma *= 1 + CHROMA_BEAT * this.fast + CHROMA_TIDE * this.tide + HAT_CHROMA * this.hitHigh;
-    // The hat crackles the texture. Grain is the one always-live parameter in the
-    // press family and the only place a top-band *event* can go without either
-    // moving the picture or waiting on `audioLift`.
-    post.grain *= 1 + GRAIN_DEPTH * this.shimmer + HAT_GRAIN * this.hitHigh;
 
     /*
      * The press, lifted from zero — the one exception to the rule above, and

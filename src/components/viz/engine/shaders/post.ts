@@ -63,7 +63,6 @@ uniform float uHalftone;
 uniform vec2 uHalftoneFreq;
 uniform float uChroma;
 uniform float uPosterize;
-uniform float uGrain;
 uniform float uVignette;
 uniform float uExposure;
 uniform float uHueShift;
@@ -1495,9 +1494,8 @@ void main() {
 
   if (uPaper > 0.0) {
     // Two stretched noises: fibres lie along the web the stock came off, with
-    // some crossing it. Distinct from grain, which is per-pixel and belongs to
-    // the camera — this is the material the ink went onto, so it sits below the
-    // exposure and above nothing.
+    // some crossing it. This is the material the ink went onto rather than
+    // anything the camera did, so it sits below the exposure and above nothing.
     float fibre =
       vnoise(uv * vec2(180.0 * uAspect, 22.0)) * 0.6 +
       vnoise(uv * vec2(31.0 * uAspect, 260.0)) * 0.4;
@@ -1511,13 +1509,7 @@ void main() {
     col *= clamp(1.0 - uVignette * d * d, 0.0, 1.0);
   }
 
-  // Ahead of the grain, which belongs to the camera and not to the picture —
-  // rolling it off would only make the noise quieter where the frame is bright.
   col = land(col);
-
-  if (uGrain > 0.0) {
-    col += (hash21(uv * uResolution + fract(uTime) * 137.0) - 0.5) * uGrain;
-  }
 
   fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }

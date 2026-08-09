@@ -45,6 +45,8 @@ const PINNED_PATHS: readonly string[] = [
   "layerCount", "layerLifetime", "layerLifetimeJitter", "crossfade", "layerOpacity", "beat",
   "keyBalance", "zoomAmount", "panAmount", "rotateAmount", "tintAmount",
   "post.feedbackAmount", "post.feedbackScale", "post.feedbackRotate", "post.feedbackDroste",
+  // `post.grain` is retired — the film grain is gone from the post chain. Its
+  // slot stays so every code after it keeps its number; see `CODEC_FIELDS`.
   "post.halftone", "post.halftoneScale", "post.chroma", "post.posterize", "post.grain",
   "post.vignette", "post.exposure", "post.shoulder", "post.hueShift", "post.solarize",
   "post.kaleido", "post.kaleidoSegments", "post.kaleidoSpin", "post.tile", "post.fold",

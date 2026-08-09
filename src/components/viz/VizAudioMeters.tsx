@@ -67,7 +67,6 @@ const REACH_LABELS: Record<string, string> = {
   feedbackRotate: "fb rot",
   hueShift: "hue",
   chroma: "chroma",
-  grain: "grain",
   misreg: "misreg",
   bleed: "bleed",
   krackle: "krackle",

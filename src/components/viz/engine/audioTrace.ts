@@ -21,7 +21,7 @@ import type { PostParams } from "./types";
  *
  * - **Reach**, the range a parameter covers over the window against the value the
  *   composition authored. This is the "is anything happening at all" question,
- *   and it is what would have shown `grain` moving by 0.03 and the geometry
+ *   and it is what would have shown `chroma` moving by 0.03 and the geometry
  *   moving by nothing.
  * - **Peak rate**, absolute change per second. This is the safety budget, and it
  *   is deliberately *not* normalised by anything: the whole thesis of §2 is that
@@ -83,7 +83,6 @@ const FAST_ROW = [
   "feedbackRotate",
   "hueShift",
   "chroma",
-  "grain",
   "misreg",
   "bleed",
   "krackle",

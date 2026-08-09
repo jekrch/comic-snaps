@@ -520,7 +520,11 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "halftone",
-    weight: 0.5,
+    // The lowest weight in the pool, and lower than the two effects that bring
+    // a screen in as a side effect: a bare dot screen restates every tone in
+    // the frame and says nothing the moire and the benday do not say with
+    // something moving on top of it, so it is the rarest punctuation here.
+    weight: 0.22,
     init: (rng) => [rng.range(0.6, 1.8)],
     apply: (post, k, _time, [scale]) => {
       const amount = k * 0.8;

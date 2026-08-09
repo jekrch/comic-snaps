@@ -379,7 +379,7 @@ export class VizEngine {
    * what the composition *is*. Cutting effects, panels or motion to hit a rate
    * would make a phone show a different piece; cutting resolution makes it show
    * the same piece a little softer, under a filter chain that is already
-   * halftoned and grained.
+   * screening and smearing it.
    *
    * Which also makes this the answer to thermal throttling rather than just to
    * slow devices: an iPhone that has been running the visualiser for five

@@ -152,7 +152,6 @@ export class WebGLBackend implements VizBackend {
         uHalftoneFreq: { value: [1, 1] },
         uChroma: { value: 0 },
         uPosterize: { value: 0 },
-        uGrain: { value: 0 },
         uVignette: { value: 0 },
         uExposure: { value: 1 },
         uHueShift: { value: 0 },
@@ -525,7 +524,6 @@ export class WebGLBackend implements VizBackend {
     post.uHalftoneFreq.value = [cells * this.aspect, cells];
     post.uChroma.value = frame.post.chroma;
     post.uPosterize.value = frame.post.posterize;
-    post.uGrain.value = frame.post.grain;
     post.uVignette.value = frame.post.vignette;
     post.uExposure.value = frame.post.exposure;
     post.uHueShift.value = frame.post.hueShift;

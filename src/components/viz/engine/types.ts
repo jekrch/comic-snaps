@@ -525,7 +525,6 @@ export interface PostParams {
   halftoneScale: number;
   chroma: number;
   posterize: number;
-  grain: number;
   vignette: number;
   /** Global multiplier, slew-limited by the safety governor. */
   exposure: number;

@@ -131,7 +131,7 @@ export interface VizConfig {
    * that zero means off, which protects a preset from having its geometry
    * rearranged by a kick drum — but it also leaves the fast half of the
    * response with almost nothing live to move, since on a default preset only
-   * the trail terms, `chroma`, `grain` and `vignette` are non-zero.
+   * the trail terms, `chroma` and `vignette` are non-zero.
    *
    * The press is a different class from the folds. It cannot flash, it cannot
    * restructure the frame, it does not move the picture, and a comic
@@ -253,7 +253,6 @@ export const DEFAULT_POST: PostParams = {
   halftoneScale: 1.4,
   chroma: 0.15,
   posterize: 0,
-  grain: 0.05,
   vignette: 0.35,
   exposure: 1,
   hueShift: 0,
@@ -515,7 +514,6 @@ const HINTS: Record<string, string> = {
   "post.halftoneScale": "Size of those dots.",
   "post.chroma": "Colour fringing toward the edges, as if the lens split the light.",
   "post.posterize": "Crushes the tones into flat bands of colour.",
-  "post.grain": "Film grain over the frame.",
   "post.vignette": "Darkens the corners.",
   "post.exposure": "Overall brightness.",
   "post.shoulder":
@@ -695,7 +693,6 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.halftoneScale", "ht scale", 0.3, 4, 0.05, (c) => c.post.halftoneScale, (c, v) => (c.post.halftoneScale = v)),
   field("post", "post.chroma", "chroma", 0, 1.5, 0.01, (c) => c.post.chroma, (c, v) => (c.post.chroma = v)),
   field("post", "post.posterize", "posterize", 0, 1, 0.01, (c) => c.post.posterize, (c, v) => (c.post.posterize = v)),
-  field("post", "post.grain", "grain", 0, 0.3, 0.005, (c) => c.post.grain, (c, v) => (c.post.grain = v)),
   field("post", "post.vignette", "vignette", 0, 1, 0.01, (c) => c.post.vignette, (c, v) => (c.post.vignette = v)),
   field("post", "post.exposure", "exposure", 0.2, 1.8, 0.01, (c) => c.post.exposure, (c, v) => (c.post.exposure = v)),
   field("post", "post.shoulder", "shoulder", 0.4, 1, 0.01, (c) => c.post.shoulder, (c, v) => (c.post.shoulder = v)),

@@ -37,7 +37,6 @@ export const VIZ_PRESETS: VizPreset[] = [
       post: {
         feedbackAmount: 0,
         chroma: 0,
-        grain: 0.03,
       },
     },
   },
@@ -71,7 +70,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         // pulse of its own to be worth looking at.
         disperse: 0.18,
         solarize: 0.12,
-        grain: 0.06,
         vignette: 0.42,
       },
     },
@@ -100,7 +98,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         halftoneScale: 1.1,
         posterize: 0.55,
         chroma: 0.05,
-        grain: 0.1,
         vignette: 0.28,
       },
     },
@@ -141,7 +138,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackAmount: 0.35,
         chroma: 0.55,
         posterize: 0.2,
-        grain: 0.07,
       },
     },
   },
@@ -200,7 +196,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackScale: 1.005,
         chroma: 0.3,
         posterize: 0.2,
-        grain: 0.05,
         vignette: 0.42,
       },
     },
@@ -312,7 +307,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         // the tone inside each region is what keeps them reading as edges rather
         // than as gradients that happen to turn a corner.
         posterize: 0.2,
-        grain: 0.05,
         vignette: 0.42,
       },
     },
@@ -658,7 +652,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         // is what keeps them reading as edges rather than as a gradient that
         // happens to turn — which was the liquid look.
         posterize: 0.16,
-        grain: 0.045,
         vignette: 0.42,
       },
     },
@@ -731,7 +724,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         // a dot screen smears the screen into a grey that undoes all of the above.
         feedbackAmount: 0.1,
         chroma: 0.04,
-        grain: 0.06,
         vignette: 0.3,
       },
     },
@@ -774,7 +766,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackAmount: 0.44,
         feedbackScale: 1.005,
         chroma: 0.3,
-        grain: 0.045,
         vignette: 0.42,
       },
     },
@@ -823,7 +814,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         drostePeriod: 1.6,
         drosteInner: 0.07,
         chroma: 0.28,
-        grain: 0.05,
         vignette: 0.45,
       },
     },
@@ -898,7 +888,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         kaleidoSegments: 6,
         kaleidoSpin: 0.012,
         chroma: 0.24,
-        grain: 0.05,
         vignette: 0.44,
       },
     },
@@ -979,7 +968,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackAmount: 0.22,
         feedbackScale: 1.006,
         chroma: 0.3,
-        grain: 0.05,
         // Modest, and lower than the quad scenes'. The tube's own grazing falloff
         // is already darkening the middle of the frame; a strong vignette darkens
         // the outside as well and leaves the whole picture flat and dim.
@@ -1031,7 +1019,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackAmount: 0.2,
         feedbackScale: 1.005,
         chroma: 0.26,
-        grain: 0.05,
         // Modest. The curl already darkens the edges of the frame by turning the
         // cloth away there; a strong vignette on top leaves the picture dim all
         // round its border.
@@ -1090,7 +1077,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         kaleidoSegments: 6,
         kaleidoSpin: 0.01,
         chroma: 0.28,
-        grain: 0.05,
         vignette: 0.44,
       },
     },
@@ -1142,7 +1128,6 @@ export const VIZ_PRESETS: VizPreset[] = [
         // light would not.
         bloom: 0.2,
         bloomThreshold: 0.66,
-        grain: 0.05,
         vignette: 0.42,
       },
     },
