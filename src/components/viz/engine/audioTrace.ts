@@ -408,6 +408,9 @@ export class AudioProbe {
    * needed whether or not a post chain is built — a run with no panels in it
    * still advances every channel.
    */
+  /** The figure named by the last `deliver`. See §20. */
+  figure = "";
+
   observe(frame: AudioFrame | null, dt: number): void {
     this.frame = frame;
     this.dt = dt;
@@ -435,6 +438,11 @@ export class AudioProbe {
    */
   deliver(post: PostParams, binding: AudioBinding): void {
     const dt = this.dt;
+    // Which of §20's figures the beat row is spending itself through. Carried
+    // here rather than read off the binding by the panel, because the panel holds
+    // a probe and never the binding — and this is the one thing about that row
+    // which cannot be read off the picture with any confidence.
+    this.figure = binding.figureName;
     for (const key of TRACKED_POST) {
       const reach = this.rowFor(key);
       reach.authored = this.authoredSnapshot.get(key) ?? post[key];

@@ -129,6 +129,7 @@ export default function VizAudioMeters({
   const onsetRef = useRef<HTMLDivElement>(null);
   const beatRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  const figureRef = useRef<HTMLSpanElement>(null);
   const tempoRef = useRef<HTMLSpanElement>(null);
   const lockRef = useRef<HTMLSpanElement>(null);
   const candidateRef = useRef<HTMLDivElement>(null);
@@ -362,6 +363,13 @@ export default function VizAudioMeters({
         // in the wrong place is visible as the two disagreeing.
         barRef.current.style.width = `${((1 - frame.barPhase) * 100).toFixed(1)}%`;
         barRef.current.style.opacity = (0.2 + frame.downbeatConfidence * 0.8).toFixed(2);
+      }
+      if (figureRef.current) {
+        const figure = probeRef.current?.figure;
+        // Only while the grid is followed. Every routing gain in the figure is
+        // multiplied by `grid` downstream, so an unlocked run is spending none of
+        // them however confidently this row would name one.
+        figureRef.current.textContent = frame.locked && figure ? figure : "—";
       }
       if (tempoRef.current) {
         tempoRef.current.textContent = frame.bpm > 0 ? `${frame.bpm.toFixed(1)} bpm` : "— bpm";
@@ -630,6 +638,17 @@ export default function VizAudioMeters({
             <div className="flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
               <div ref={barRef} className="h-full bg-accent rounded-full" style={{ width: "0%" }} />
             </div>
+          </div>
+
+          {/* Which of the six figures the beat row is currently spending itself
+              through — §20. A name rather than a bar, because it is a choice and
+              not a quantity, and the one thing on this row that cannot be read
+              off the picture: a phrase that has routed the beat into the walk and
+              one that has routed it into a single layer look like different
+              compositions rather than like the same one in a different voice. */}
+          <div className="flex items-center gap-1.5" title="the rhythmic figure this phrase is running">
+            <span className="w-7 shrink-0 opacity-45">fig</span>
+            <span ref={figureRef} className="opacity-70">—</span>
           </div>
         </div>
       )}
