@@ -1,5 +1,6 @@
 import type { Rng } from "./rng";
 import type { SafetyGovernor } from "./safety";
+import type { TempoLock } from "./tempoLock";
 import type { PostParams } from "./types";
 
 /**
@@ -32,6 +33,27 @@ interface PsychEffect {
   /** `k` is the envelope, already scaled by the pulse's peak. */
   apply(post: PostParams, k: number, time: number, args: number[]): void;
 }
+
+/**
+ * The bar boundaries a pulse may begin on, longest first — §16 of
+ * `docs/visualizer-audio-attribution.md`.
+ *
+ * An effect arriving is one of the two or three largest visible changes this
+ * engine makes, and until now it happened on a timer with no relationship to the
+ * music whatsoever. `TempoLock` already put its *length* in tempo, which is the
+ * half of the problem nobody can see: a swell that takes exactly four bars but
+ * begins on an arbitrary sixteenth still peaks nowhere, and a viewer has nothing
+ * to attribute.
+ *
+ * The rung is chosen so that waiting for it costs at most a quarter of the gap
+ * the cycler asked for — see `boundaryBars`. At the default interval and any
+ * ordinary tempo that selects one bar, so effects land on downbeats; a preset
+ * with a very long interval gets two or four, which is a phrase rather than a
+ * bar and reads as the piece changing section.
+ */
+const BOUNDARY_LADDER = [8, 4, 2, 1] as const;
+/** Share of the gap the wait for a boundary may take. */
+const BOUNDARY_SHARE = 0.25;
 
 /** Most concurrent pulses, at psychedelia 1. */
 const MAX_CONCURRENT = 3;
@@ -595,6 +617,21 @@ function duration(pulse: Pulse): number {
   return pulse.attack + pulse.hold + pulse.release;
 }
 
+/**
+ * The largest rung whose wait fits inside `BOUNDARY_SHARE` of the gap.
+ *
+ * Falls back to a single bar rather than to nothing, because the floor under the
+ * gap is already two seconds and a bar is usually shorter than that: at the point
+ * where even one bar is a quarter of the interval the cycler is firing so often
+ * that a bar of quantisation is the least of what is happening.
+ */
+function boundaryBars(gap: number, bar: number): number {
+  if (!(bar > 0)) return 1;
+  const bars = (gap * BOUNDARY_SHARE) / bar;
+  for (const rung of BOUNDARY_LADDER) if (rung <= bars) return rung;
+  return 1;
+}
+
 function smooth(t: number): number {
   return t * t * (3 - 2 * t);
 }
@@ -654,7 +691,13 @@ export class EffectCycler {
   }
 
   /** Mutates `post` in place with whatever is currently running. */
-  apply(post: PostParams, time: number, intensity: number, interval: number): void {
+  apply(
+    post: PostParams,
+    time: number,
+    intensity: number,
+    interval: number,
+    tempo?: TempoLock
+  ): void {
     const amount = clamp(intensity, 0, 1);
 
     for (let i = this.active.length - 1; i >= 0; i--) {
@@ -675,8 +718,8 @@ export class EffectCycler {
         // A slot that is already full drops its turn instead of queueing it,
         // so a busy stretch stays busy rather than building a backlog that
         // all lands at once when the stack clears.
-        if (this.active.length < concurrent) this.begin(time, amount);
-        this.nextOnset += this.gap(amount, interval);
+        if (this.active.length < concurrent) this.begin(time, amount, tempo);
+        this.nextOnset = this.schedule(time, this.nextOnset, amount, interval, tempo);
       }
       /*
        * And the cue, under the same slot rule and the same interval — a section
@@ -686,8 +729,8 @@ export class EffectCycler {
        * above: the composition is already in the middle of changing.
        */
       if (this.cued && this.active.length < concurrent) {
-        this.begin(time, amount);
-        this.nextOnset = time + this.gap(amount, interval);
+        this.begin(time, amount, tempo);
+        this.nextOnset = this.schedule(time, time, amount, interval, tempo);
       }
     }
     this.cued = false;
@@ -708,7 +751,31 @@ export class EffectCycler {
     return (this.stream ??= this.forkStream());
   }
 
-  private begin(time: number, amount: number): void {
+  /**
+   * When the pulse after this one should begin — the composition's own cadence,
+   * then quantised to the grid.
+   *
+   * Measured from the later of the last onset and now, which is both the honest
+   * behaviour when a run has fallen behind and the property that keeps the loop
+   * above terminating: the delay handed to the aligner is then always a positive
+   * one, so the boundary it returns is always in the future. A cycler that had
+   * stalled used to replay the gaps it missed into a single frame; the slot rule
+   * dropped most of them anyway.
+   */
+  private schedule(
+    now: number,
+    from: number,
+    amount: number,
+    interval: number,
+    tempo?: TempoLock
+  ): number {
+    const gap = this.gap(amount, interval);
+    const wanted = Math.max(now, from) + gap;
+    if (!tempo?.active) return wanted;
+    return now + tempo.alignedDelay(wanted - now, boundaryBars(gap, tempo.barSeconds));
+  }
+
+  private begin(time: number, amount: number, tempo?: TempoLock): void {
     const rng = this.rng;
     // Weight out anything already running: two pulses of the same effect would
     // just be one louder pulse. Exclusion tags extend that to the effects that
@@ -724,15 +791,35 @@ export class EffectCycler {
     );
 
     const ramp = EFFECTS[effect].ramp ?? 1;
+    /*
+     * Every segment of the envelope in tempo, so a pulse that begins on a
+     * downbeat also *peaks* on one and is gone on one.
+     *
+     * This is the half of §16 that the onset alignment on its own does not buy.
+     * A four-second attack starting on the bar arrives three-quarters of the way
+     * through the second one, which is the same absence of coincidence the free
+     * onset had, moved four seconds later — and the attack is where the eye is,
+     * because that is when the effect is doing something it was not doing
+     * before. Snapped through `TempoLock.duration`, the segments are musical
+     * multiples of the bar and the sum of two of them is another, so all three
+     * of a pulse's corners land on the grid.
+     *
+     * Snapped before the governor rather than after: `clampRamp` is a safety
+     * floor and must have the last word, and the snap can only ever move a
+     * length by half the gap between adjacent divisions, which never takes a
+     * legal ramp below the floor by more than that.
+     */
+    const musical = (seconds: number): number =>
+      tempo?.active ? tempo.duration(seconds) : seconds;
     this.active.push({
       effect,
       start: time,
       // The ramps are the safety-critical part; the governor floors them.
-      attack: this.safety.clampRamp(rng.range(2.5, 7) * ramp),
-      release: this.safety.clampRamp(rng.range(3, 9) * ramp),
+      attack: this.safety.clampRamp(musical(rng.range(2.5, 7) * ramp)),
+      release: this.safety.clampRamp(musical(rng.range(3, 9) * ramp)),
       // More psychedelia holds longer as well as stacking deeper, so a high
       // setting reads as a state the piece is in rather than a flicker.
-      hold: rng.range(5, 18) * (0.6 + amount * 0.8),
+      hold: musical(rng.range(5, 18) * (0.6 + amount * 0.8)),
       peak: amount * rng.range(0.55, 1),
       args: EFFECTS[effect].init(rng),
     });

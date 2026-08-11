@@ -25,6 +25,9 @@
 
 /** Where the audio is coming from. Never serialised into a URL or a config —
  *  see the note on `start()`. */
+import { TAP_BUFFER, TAP_HOP, TAP_NAME, TAP_PROCESSOR } from "./audioTap";
+import { Tempogram } from "./tempogram";
+
 export type AudioSource = "mic" | "display";
 
 /** One capturable input, as offered to the picker. */
@@ -399,6 +402,19 @@ const ONSET_FLOOR = 0.0035;
  */
 const REFRACTORY = 0.1;
 
+/**
+ * Longest step the filters and the beat loop will take, real seconds.
+ *
+ * A backgrounded tab stops `requestAnimationFrame` and does not stop the audio
+ * clock, so the first frame after one comes back can be a minute wide.
+ * `AudioReactor.elapsed` is deliberately *not* clamped by this — an onset
+ * timeline that quietly loses time is the bug this constant sits next to — but
+ * every time constant here, and the `while (phase >= 1)` loop in `trackTempo`,
+ * would rather see a tenth of a second than the truth. The grid is meaningless
+ * across a gap that long in any case, and `stale` drops the lock a frame later.
+ */
+const MAX_STEP = 0.1;
+
 /** The tempo range considered, in seconds per beat: 60–180 BPM. */
 const MIN_PERIOD = 60 / 180;
 const MAX_PERIOD = 60 / 60;
@@ -408,6 +424,119 @@ const IOI_WINDOW = 8;
 const IOI_BINS = 64;
 /** Onsets needed in the window before any tempo is claimed at all. */
 const MIN_ONSETS = 6;
+/**
+ * Which tempi are preferred when the evidence cannot choose, as a log-normal over
+ * the period — and it is a tie-break far more often than it sounds.
+ *
+ * ## The evidence really is tied
+ *
+ * `FOLD` credits an interval's ×2 and ×4 readings equally, because from one gap
+ * between two onsets there is genuinely no way to tell a beat from a half-beat, and
+ * the original loop that only doubled did the same. So a hi-hat on the eighths — the
+ * commonest thing in popular music — deposits identical mass at the beat and at
+ * half-time, and the histogram comes out with two peaks of exactly the same height.
+ * Measured on the bench at a true 128BPM: peaks at **129 and 64, both 1.00**.
+ *
+ * The right answer was being picked by the argmax scanning upward with a strict
+ * `>`, so the lower bin won ties — that is, the faster tempo won, by an accident of
+ * loop direction with nothing behind it. It happens to be right at 128 and it is
+ * one asymmetry away from reading any ordinary track at half speed, which is not a
+ * near miss: a grid at half time is wrong in a way a viewer names immediately.
+ *
+ * ## Centred at 125 rather than 120
+ *
+ * A little above the usual 120 for the arithmetic reason that the pairs this has to
+ * separate are ×2 apart and a prior centred *between* them cannot separate anything.
+ * 129 against 64 is decided well by either. What moves with the centre is the
+ * harder pair — 172 against 86, whose geometric mean is 121.6, almost exactly on a
+ * 120 centre and therefore almost exactly a tie again.
+ *
+ * One octave of spread, which is broad: at the edges of the tracked range this is
+ * still worth 0.6, so it settles ties and reorders nothing that the evidence is
+ * clear about. A tighter prior starts inventing tempi, which is the failure mode
+ * `@audio/beat`'s autocorrelation estimator shows when its own 120BPM weighting
+ * meets sparse material — it reports 122 for everything.
+ *
+ * ## Applied to the choice, not to the confidence
+ *
+ * The weighted histogram picks the bin; every figure that leaves this function —
+ * the peak ratio behind `target`, the shoulders, the parabolic interpolation — is
+ * read off the *raw* histogram at that bin. The prior is a statement about which
+ * tempo is more likely a priori and not about how good the evidence is, and folding
+ * it into the confidence would quietly rescale a gate that is tuned, making every
+ * slow track read as less certain than a fast one.
+ */
+const TEMPO_CENTRE = 60 / 125;
+const TEMPO_SPREAD = 1;
+/** The prior per histogram bin, precomputed — the bins are fixed by `IOI_BINS` and
+ *  the range, so this costs nothing per frame. */
+const TEMPO_PRIOR = (() => {
+  const width = (MAX_PERIOD - MIN_PERIOD) / IOI_BINS;
+  const table = new Float32Array(IOI_BINS);
+  for (let i = 0; i < IOI_BINS; i++) {
+    const period = MIN_PERIOD + (i + 0.5) * width;
+    const octaves = Math.log2(period / TEMPO_CENTRE) / TEMPO_SPREAD;
+    table[i] = Math.exp(-0.5 * octaves * octaves);
+  }
+  return table;
+})();
+/**
+ * How an inter-onset interval may relate to the beat, as `period = interval ×
+ * ratio`, and how far each relation is believed.
+ *
+ * This replaces a loop that doubled the interval until it left the range, which
+ * had two holes in it — and the first is a hole in the *evidence* rather than a
+ * matter of degree:
+ *
+ * - **It could only multiply.** An interval longer than `MAX_PERIOD` failed the
+ *   loop's condition on the first test and contributed nothing at all, so a
+ *   1.2-second gap — a half note at 100BPM, a kick on one and three at 100, a
+ *   bar of anything slow — was not weak evidence for a tempo, it was silently
+ *   discarded. Everything sparse fell in that hole: the histogram was built
+ *   entirely from material that plays *faster* than a beat, and material that
+ *   plays slower than one could not reach `MIN_ONSETS` worth of usable
+ *   intervals however long it ran. The divisors below are the fix.
+ * A three-family — 1/3, 2/3, 4/3, 3/2 and 3, for triplets, swing and dotted
+ * subdivisions — was added here at half weight and then removed, and the reason is
+ * worth keeping. It made no difference to anything the bench can measure: every
+ * pattern reads identically without it, *including* the one named for triplets. And
+ * it had a measurable cost, letting the off-grid pattern take a false lock at 60fps
+ * that it does not take without them. Three-based ratios deposit their mass exactly
+ * between the duple multiples, which is a large region of the tracked range to
+ * populate with votes for tempi nothing is playing, in exchange for a benefit no
+ * measurement here could demonstrate.
+ *
+ * That is not a claim that triplets do not exist. It is that the bench's "triplet"
+ * pattern puts its hats on the second and fourth sixteenth, which is duple, so
+ * genuine triplet material has never been tested. Anyone re-adding these should
+ * build the pattern first.
+ *
+ * Ordered slow-to-fast, which is only for reading. Nothing depends on it.
+ */
+const FOLD: readonly (readonly [number, number])[] = [
+  /** The interval spans a whole bar of four. */
+  [1 / 4, 0.5],
+  /** Three beats. */
+  [1 / 3, 0.5],
+  /** Two beats — half-time, or a kick on one and three. */
+  [1 / 2, 1],
+  /** A beat and a half: a dotted beat. */
+  [2 / 3, 0.5],
+  /** The interval is the beat. */
+  [1, 1],
+  /** Three quarters of one: a dotted eighth. */
+  [4 / 3, 0.5],
+  /** Two thirds: one of a triplet pair. */
+  [3 / 2, 0.5],
+  /** An eighth. */
+  [2, 1],
+  /** A triplet eighth. */
+  [3, 0.5],
+  /** A sixteenth. */
+  [4, 1],
+  /** A thirty-second, which `REFRACTORY` only leaves reachable below 75BPM. */
+  [8, 0.5],
+];
 /** Weak coupling: one spurious onset in a quiet passage should bend the grid
  *  slightly, not derail it. */
 const PLL_PHASE_GAIN = 0.12;
@@ -415,12 +544,238 @@ const PLL_PERIOD_GAIN = 0.04;
 /** How far the histogram has to disagree with the running period before the
  *  lock is abandoned and re-taken rather than nudged. */
 const RELOCK_RATIO = 0.15;
+/**
+ * Tempogram confidence above which it owns the period outright, and the seconds the
+ * running period takes to converge on it.
+ *
+ * The division of labour this settles is the one this file spent a long time not
+ * making. A comb filter over a continuous onset function is the right instrument for
+ * *how far apart* beats are: it is a windowed vote, it cannot have a spurious event
+ * invent a periodicity, and on real music it is right where the inter-onset histogram
+ * is not. A phase-locked loop is the right instrument for *where* a beat is, and a
+ * poor one for the period — it integrates whatever the arrangement did on each onset,
+ * and on a track with a syncopated bass line that bias walked the grid to 149.6
+ * against a true 125 while a correct estimate sat unused.
+ *
+ * So above this threshold the tempogram sets the period, `lockPhase` stops touching
+ * it, and the histogram's relock is left alone; below it everything falls back to what
+ * it was, which is what keeps material the tempogram cannot read — and it says so, its
+ * confidence is well calibrated — no worse off than before.
+ *
+ * ## The threshold was calibrated on material the tempogram finds easy
+ *
+ * This read 0.5 — a z of five — chosen across synthetic drum patterns, where every
+ * correct reading scored 5.2 to 7.2 and the failures scored under 4.6. Real music
+ * does not score like that. On the four reference tracks in `.claude/songs` the
+ * tempogram is right, to within 0.3%, at z of 3.6 to 5.4, so the threshold rejected
+ * three of the four and the grid was left to the phase loop and the histogram.
+ *
+ * That is the whole of the bug this constant is named in. `103bpm.wav` reported a
+ * median **144.6BPM** — the "forty over" the meter was being blamed for — with a
+ * tempogram sitting at 102.9 all the way through, correct and disbelieved.
+ *
+ * So the threshold is now set from the reference tracks rather than from the
+ * patterns. `Tempogram`'s own `PEAK_FLOOR` has been recalibrated with it; against
+ * those figures 0.3 is a z of about 3.5, which admits all four references and still
+ * excludes a held pad by a wide margin. `COMB_RELEASE` is the hysteresis: a track
+ * that hovers at the threshold must not hand the period back and forth, since every
+ * handover is six seconds of `TempoLock` re-engaging.
+ */
+const COMB_TRUST = 0.3;
+const COMB_RELEASE = 0.18;
+const COMB_TAU = 1;
+/**
+ * How many seconds of disagreement it takes before the grid is handed to a
+ * challenger — accumulated, not consecutive, and that distinction is the whole of
+ * this constant's history.
+ *
+ * `RELOCK_RATIO` on its own makes any large disagreement an *instant* hard jump of
+ * the period, which is right for a track change and wrong for everything else. A
+ * histogram whose two octave peaks are near-tied — which `TEMPO_PRIOR` describes as
+ * the ordinary case rather than the exceptional one — flips between them on the
+ * evidence of a single onset, and each flip is a hard jump. Measured on the bench at
+ * 12fps before the prior: 56 relocks across the run, 17 of them on one pattern.
+ * `TempoLock` takes six seconds to engage, so a run relocking every second or two is
+ * never in tempo whatever its mean BPM says.
+ *
+ * So a challenger must persist before it is believed. The first version of this
+ * asked it to persist *consecutively* — a challenger had to keep agreeing with
+ * itself, and any estimate that happened to agree with the running period wiped it
+ * and restarted the clock. That deadlocks, and it deadlocked on the first real track
+ * it saw. Reported from a 125BPM song: the histogram's own winner was **124 at full
+ * score**, with 150 behind it at 0.76, and the grid was running at 149.6 and stayed
+ * there. Because the two candidates are close, the peak alternates; every estimate
+ * that landed on 150 agreed with the stuck period, cleared the challenger, and reset
+ * the hold. The correct answer was in the histogram the whole time and the loop could
+ * not reach it.
+ *
+ * A leaky integrator has no such state to lose. Disagreement adds seconds, agreement
+ * subtracts them, and a challenger that is right more often than not accumulates
+ * whatever the ordering — while a single spurious peak decays away without ever
+ * getting close. It is also less code and one fewer constant: `RELOCK_AGREE`, the
+ * self-agreement tolerance, measured inert on the bench and turned out to be the
+ * mechanism of the bug.
+ *
+ * Measured in `elapsed` rather than in calls to `estimateTempo`, which runs on
+ * onsets: a threshold counted in calls is four times stricter on a busy track than a
+ * sparse one, which is the same trap `CONFIDENCE_TAU` fell into and the note in
+ * `trackTempo` records.
+ */
+const RELOCK_HOLD = 1.5;
+/**
+ * How much of the phase loop's gain an onset gets for free, before the low band
+ * has any say — the fix for §15's phase bias, and the floor that keeps it from
+ * becoming a new failure of its own.
+ *
+ * ## The bias is arithmetic, not noise
+ *
+ * `lockPhase` corrects toward the nearest beat, so with hi-hats on the eighths
+ * there are two onsets per beat, at grid phases δ and δ+0.5, and their
+ * corrections are −δ and −(δ−0.5). The loop settles where those cancel:
+ *
+ *     −2δ + 0.5 = 0   →   δ = 0.25
+ *
+ * A quarter beat, every beat, on the commonest pattern in popular music — and
+ * measured exactly there on the bench, which reports the music sitting on
+ * sixteenth slots 0 and 8 while the detector reads 4 and 12. §15 of
+ * `docs/visualizer-audio-attribution.md` describes this and defers it as not
+ * worth trading tempo accuracy for. It is worth more than that section thought:
+ * every bar-phase-dependent binding in the engine has been landing a sixteenth
+ * off the beat, and a viewer reads sync from coincidence.
+ *
+ * ## Timing cannot break the tie, so it must not be asked to
+ *
+ * The reason the two attempts §15 records both failed — weighting by proximity to
+ * the beat, in one term and then in both — is that they are attempts to extract
+ * from the onset *times* an answer the times do not contain. Onsets at δ and δ+0.5
+ * are symmetric; nothing about when they happened says which is the beat, and any
+ * estimator built only on timing must either pick arbitrarily or sit between them,
+ * which is what the 0.25 equilibrium is.
+ *
+ * What does say which is the beat is that one of them is a *kick*. So the phase
+ * correction is weighted by how much low-band energy the onset carries, which is
+ * the same cue `creditBeat` already finds the downbeat with, and the equilibrium
+ * moves to
+ *
+ *     δ = 0.5 · w_hat / (w_kick + w_hat)
+ *
+ * — a tenth of a beat at the weights this floor produces, against a quarter.
+ *
+ * ## Why there is a floor at all
+ *
+ * Material with no kick in it would otherwise get no phase correction whatsoever
+ * and never lock its phase to anything: a jazz trio, a solo piano, anything where
+ * the low band is doing something other than marking the beat. The floor buys
+ * those the loop they have today — the old equilibrium included, since with equal
+ * weights this reduces to exactly the old behaviour — while material with a kick
+ * gets the disambiguation. Low, because it is the *ratio* of the two weights that
+ * moves the equilibrium and a generous floor flattens it back toward 0.25.
+ */
+const PHASE_LOW_FLOOR = 0.05;
+/**
+ * Real seconds without a low-band onset after which the material is treated as
+ * having no kick, and the merged stream gets the phase loop back at full gain.
+ *
+ * A couple of beats at the slow end of the tempo range. Long enough that a bar
+ * with the kick left out of it does not count as kickless — that is a fill, not a
+ * change of instrumentation — and short enough that a passage which genuinely
+ * drops the drums is followed rather than abandoned.
+ */
+const LOW_STALE = 2;
 /** Seconds over which confidence follows the histogram, so it neither flickers
  *  nor holds a lock through a whole quiet passage. */
 const CONFIDENCE_TAU = 1.5;
 /** Where the histogram's peak ratio saturates. Below this it is noise. */
 const PEAK_FLOOR = 0.12;
 const PEAK_CEILING = 0.45;
+
+/**
+ * The other half of confidence: whether the grid *predicts the audio*.
+ *
+ * ## What the histogram cannot say
+ *
+ * `PEAK_FLOOR` and its ceiling measure how peaked the inter-onset histogram is,
+ * which is a statement about the evidence and not about the grid built from it.
+ * The two come apart exactly where it matters. Measured on the bench at a 30fps
+ * cap with ±35% jitter on the frame length — an ordinary loaded post chain — the
+ * patterns that still lock report their tempo to **0.05%** while the share of
+ * frames past `LOCK_THRESHOLD` falls to 23%. The period is right the whole time.
+ * Timing jitter smears one tempo's evidence across five histogram bins instead of
+ * two, the peak ratio collapses, and the detector throws away an answer it has.
+ *
+ * So this asks the direct question: is there novelty where the grid says a beat is?
+ *
+ * ## One position per beat, because the null absorbs the subdivisions
+ *
+ * A plain share of novelty near the grid does not work, and the failure is
+ * instructive enough to record: it is dominated by how *dense* the material is
+ * rather than by whether the grid is right, because dense material has novelty
+ * everywhere and a fixed share of it is always somewhere else. Measured across 1, 2
+ * and 4 subdivisions per beat, the two best-locked patterns on the bench scored
+ * lowest of everything at every setting.
+ *
+ * `PREDICT_PARTS` is 1, so what is compared is novelty near the beat against
+ * novelty near the *off*-beat, and the subdivisions look after themselves: a hat on
+ * a sixteenth is equally far from both and contributes to neither. Measured against
+ * 2 and 4, one separates best — 0.27 against 0.05 for beat and non-beat material,
+ * where four parts gives 0.12 against 0.06. The semantics are also the ones worth
+ * having, since what it now asks is whether the beat carries more than the off-beat,
+ * which is what makes a beat a beat.
+ *
+ * The anti-phase null fixes the density problem because whatever inflates one
+ * inflates the other. A
+ * transient is smeared over about 70ms by the analyser's own 2048-sample window —
+ * over half the gap between sixteenths at 128BPM — so every blob bleeds past its
+ * own subdivision, but it bleeds into the null equally and the difference keeps
+ * only what is genuinely concentrated. Same argument as the shift test in
+ * `scripts/audio-attribution.mjs`: the question is never how large a correlation
+ * is, it is how much larger than the same correlation against a reference that
+ * cannot be right.
+ *
+ * ## On the excess, and why this could not have been built before §18's phase fix
+ *
+ * The novelty is each band's flux *above its own threshold*, not the flux. Raw flux
+ * is two or three frames of transient against thirty frames of floor — sustained
+ * notes, decay tails, room — and that floor is uniform in phase, so it drags any
+ * score back to chance: a locked four-on-the-floor measured 0.05 against 0.33 for a
+ * held pad with no beat in it, which is not a weak signal but an inverted one.
+ *
+ * Even with that fixed, this read near zero on the material it should have scored
+ * highest, and the reason was not this measure. The phase loop settled a quarter
+ * beat early on anything with hats on the eighths, so at two subdivisions per beat
+ * the grid was *maximally anti-aligned* and a score asking whether the grid
+ * predicted the audio correctly answered no. Fixing the loop is what made this
+ * measurable at all — worth remembering as a case where an honest instrument read
+ * zero and the instrument was right.
+ *
+ * ## Why it is combined with `max` and cannot deadlock
+ *
+ * This score is meaningless until a grid exists — before a lock the period is
+ * `DEFAULT_PERIOD` and arbitrary, so the score is near zero, and a confidence gated
+ * on it alone could never rise far enough to acquire the lock that would make it
+ * rise. The histogram has the opposite shape: it needs no grid and is fragile once
+ * running. So the histogram *acquires* and this *holds*, and the larger of the two
+ * wins — the same division `LOCK_THRESHOLD` and `LOCK_RELEASE` already make
+ * between taking a lock and keeping one.
+ */
+const PREDICT_PARTS = 1;
+/** Seconds of novelty the prediction is scored over. Long enough to span a bar at
+ *  any tempo in range, so one empty beat does not read as a lost grid. */
+const PREDICT_TAU = 4;
+/**
+ * Where the raw score is taken to mean nothing and where it saturates.
+ *
+ * The difference below cannot reach 1 and does not try to: a transient smeared over
+ * 70ms bleeds into the null however well the grid is placed, so a well-locked grid
+ * measures 0.2–0.6 rather than 0.9. Measured across the bench: material with a beat
+ * in it scores 0.18–0.59 and material without one scores 0.00–0.06, at 60fps and
+ * under ±35% frame jitter alike. The floor sits clear of the top of that second
+ * range and the ceiling inside the first, for the same reason `PEAK_FLOOR` and
+ * `PEAK_CEILING` exist — the useful range of a measure is not 0 to 1 just because
+ * it is a ratio.
+ */
+const PREDICT_FLOOR = 0.1;
+const PREDICT_CEILING = 0.3;
 
 /**
  * Confidence above which the beat grid is worth following — the threshold §4.1
@@ -723,6 +1078,19 @@ class FluxBand {
     return clamp01(this.threshold / Math.max(1e-5, this.scale));
   }
 
+  /**
+   * How big this band is right now against its own recent peaks, 0..1 —
+   * `strength` without the requirement that this frame crossed a threshold.
+   *
+   * `strength` is only written on frames the band fired on, which makes it the
+   * wrong question for a caller asking "how much of what is happening right now is
+   * *this* band". See `lockPhase`, which needs that on every onset in the merged
+   * stream and not only on the ones this band claimed for itself.
+   */
+  get level(): number {
+    return clamp01(this.value / Math.max(ONSET_FLOOR * 2, this.ceiling));
+  }
+
   reset(): void {
     this.history = [];
     this.countdown = 0;
@@ -739,6 +1107,30 @@ class FluxBand {
 
 export class AudioReactor {
   private context: AudioContext | null = null;
+  /** The fixed-hop tap and the silent sink that keeps it pulled. See `startTap`. */
+  private tap: AudioWorkletNode | null = null;
+  private tapSink: GainNode | null = null;
+  /**
+   * A second, independent tempo estimate, for comparison only — see `startTap`.
+   *
+   * `aubio_tempo` is a comb-filter tempogram over a continuous onset detection
+   * function at a fixed hop: a different algorithm class from the inter-onset
+   * histogram here, mature, and designed for live streams. It is here to answer one
+   * question that no amount of synthetic material could — which of the two is right
+   * on real music — and it is **evaluation only**. aubio is GPL-3.0 and this project
+   * is MIT, so it cannot ship; the import below is dynamic and optional so that
+   * removing the dependency degrades to an empty readout rather than a build error.
+   */
+  aubioBpm = 0;
+  aubioConfidence = 0;
+  /**
+   * The comb-filter tempogram, and what is meant to become the tempo source — see
+   * `tempogram.ts` for why the inter-onset histogram cannot be repaired.
+   *
+   * Fed from the same fixed hops as the comparison tracker, so the two are looking
+   * at identical audio and the readout is a fair test.
+   */
+  private tempogram: Tempogram | null = null;
   private analyser: AnalyserNode | null = null;
   private stream: MediaStream | null = null;
   private node: MediaStreamAudioSourceNode | null = null;
@@ -762,12 +1154,16 @@ export class AudioReactor {
    *  transient often enough that three streams would otherwise report one hit
    *  as three, which the tempo histogram would read as a triplet. */
   private sinceOnset = REFRACTORY;
+  /** Real seconds since the low band last fired. See `LOW_STALE`. */
+  private sinceLow = LOW_STALE;
   private clarity = 0;
   /** How much the published grid runs ahead of the analysed one, real seconds.
    *  See `setLatency`. */
   private latency = 0;
   /** The lock, with hysteresis. See `LOCK_RELEASE`. */
   private locked = false;
+  /** Whether the tempogram is currently trusted with the period. See `COMB_TRUST`. */
+  private trusted = false;
   /** Backbeat evidence: mid-band weight per residue, which of them the snare is
    *  on, and how far that pair leads the other. See `BACKBEAT_MEMORY`. */
   private readonly snareWeight = new Float32Array(BEATS_PER_BAR);
@@ -785,7 +1181,49 @@ export class AudioReactor {
   private breakLength = 0;
 
   private onsetTimes: number[] = [];
+  /**
+   * The low band's own onset times, and the stream the tempo histogram prefers.
+   *
+   * The merged stream is everything that crossed a threshold in any band: kicks,
+   * snares, hats, guitar attacks, vocal consonants, a delay line's repeats. Their
+   * intervals are a mixture of the beat, its subdivisions and whatever the
+   * arrangement is doing off the grid, and the fold then credits multiples of all of
+   * it — so the histogram can end up with more mass at some combination of the
+   * clutter than at the beat itself. On a real 100BPM track the tracker reported
+   * 136–140, which is not a multiple of 100 by anything simple.
+   *
+   * The kick is different, and it is the one stream that is *about* the beat. It was
+   * already the cue `creditBeat` finds the downbeat with and `lockPhase` now takes
+   * its phase from, both for the same reason, and the report that prompted this said
+   * the low-band meter was visibly following the beat while the tempo readout was
+   * not. Its intervals are whole multiples of the beat almost by definition.
+   *
+   * Preferred rather than required: below `MIN_ONSETS` in the window this falls back
+   * to the merged stream, so material with no kick keeps exactly the tracker it had.
+   */
+  private lowOnsetTimes: number[] = [];
+  /**
+   * The onset timeline, real seconds since the capture opened — and the one
+   * clock here that is read off the audio hardware rather than accumulated from
+   * render frames.
+   *
+   * Every interval the tempo histogram measures is a difference of two values of
+   * this, so a clock that runs slow reads as music that runs fast. Accumulating
+   * `dt` did exactly that: the engine hands over a delta already clamped to its
+   * own `MAX_DT` of a twentieth, and this clamped it again, so every frame
+   * longer than 50ms threw the excess away. A run at a genuine 20fps on a loaded
+   * post chain lost a few percent of every second, and a few percent of 128BPM
+   * is four BPM — biased *upward*, and worst exactly when the scene is busiest.
+   *
+   * `AudioContext.currentTime` has none of that. It advances with the samples
+   * the analyser is reading, so it cannot drift against them however the frame
+   * pacing behaves, and taking it as an absolute rather than summing deltas
+   * means a skipped or stretched frame moves the timeline by exactly the music
+   * that went past it. See `advance`.
+   */
   private elapsed = 0;
+  /** `currentTime` when the capture opened, so `elapsed` starts from zero. */
+  private clockOrigin = 0;
   private period = DEFAULT_PERIOD;
   private phase = 0;
   private beats = 0;
@@ -805,6 +1243,14 @@ export class AudioReactor {
   /** Where the histogram says confidence should settle. Integrated toward on
    *  every frame by `trackTempo`, not here — see the note there. */
   private target = 0;
+  /** Accumulated seconds of disagreement with the running period, and when the
+   *  histogram was last consulted. See `RELOCK_HOLD`. */
+  private relockPressure = 0;
+  private relockAt = 0;
+  /** Novelty landing near a predicted subdivision, and near a grid half a
+   *  subdivision out — the null. See `PREDICT_PARTS`. */
+  private predictNear = 0;
+  private predictAway = 0;
 
   private quietFor = 0;
   private loudFor = 0;
@@ -817,6 +1263,29 @@ export class AudioReactor {
    *  assumed — `AudioFrame.loudness` is the only figure here in absolute units
    *  and it is the only one that needs to know. */
   private dbSpan = 70;
+
+  /**
+   * The strongest tempo candidates the histogram is currently holding, and which
+   * onset stream it was built from — a diagnostic, and the one this file has needed
+   * all along.
+   *
+   * Every wrong tempo this detector has produced looked identical from outside: a
+   * number that is not the tempo. Whether the histogram held a near-tie between two
+   * octaves, or a single confident peak on a periodicity in the arrangement, or no
+   * peak at all with the prior choosing, are three completely different faults with
+   * three different fixes, and `bpm` cannot distinguish them. Two of the three were
+   * diagnosed this round only by rebuilding the same measurement offline.
+   *
+   * Scores are relative to the winner and *after* `TEMPO_PRIOR`, because what is
+   * worth seeing is the contest as the argmax saw it.
+   *
+   * Cost: one pass over `IOI_BINS` per onset, so a few hundred comparisons a second
+   * at a busy tempo. Unlike `audioTrace` this is not gated on the panel being open,
+   * because that is genuinely too little to be worth the plumbing.
+   */
+  readonly candidates: { bpm: number; score: number }[] = [];
+  /** Which stream `estimateTempo` last used, and how many onsets it had. */
+  tempoSource = "none";
 
   private readonly current = emptyFrame();
 
@@ -915,6 +1384,14 @@ export class AudioReactor {
       return;
     }
 
+    if (source === "display" && !displayCaptureSupported()) {
+      this.setStatus(
+        "unsupported",
+        "No tab sharing on this browser — phones don't have it. Use mic instead."
+      );
+      return;
+    }
+
     this.setStatus("requesting");
     let stream: MediaStream;
     try {
@@ -976,6 +1453,15 @@ export class AudioReactor {
     // here changes them, but reading is free and assuming is a silent error.
     this.dbSpan = Math.max(1, analyser.maxDecibels - analyser.minDecibels);
 
+    /*
+     * Built here rather than alongside the worklet that feeds it, because it depends
+     * on nothing but the sample rate and because the two failures are separate: a
+     * browser with no `audioWorklet` should lose its source of hops, not its
+     * estimator, and the offline bench drives `pushHop` directly with no worklet at
+     * all.
+     */
+    this.tempogram = new Tempogram(context.sampleRate, TAP_HOP);
+
     // The stream ending underneath us is a real event on the display path: the
     // user stops the share from the browser's own bar, not from anything here.
     stream.getAudioTracks().forEach((track) => {
@@ -986,11 +1472,122 @@ export class AudioReactor {
     // inside one, but resuming is free and the failure is silent otherwise.
     if (context.state === "suspended") await context.resume().catch(() => undefined);
 
+    // Not awaited: the analysis must start on this frame whether or not a worklet
+    // and a WASM module are ready, and everything it feeds is diagnostic.
+    void this.startTap(context, node);
+
     this.resetAnalysis();
     this.setStatus("listening");
   }
 
+  /**
+   * Start the fixed-hop tap and the comparison tracker behind it.
+   *
+   * Every failure here is swallowed. A browser without `audioWorklet`, a blocked
+   * blob URL, an absent `aubiojs` — none of them may stop the reactor, because none
+   * of what this feeds reaches the composition. The readout simply stays empty.
+   */
+  private async startTap(context: AudioContext, source: AudioNode): Promise<void> {
+    try {
+      const url = URL.createObjectURL(
+        new Blob([TAP_PROCESSOR], { type: "application/javascript" })
+      );
+      try {
+        await context.audioWorklet.addModule(url);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+      if (this.context !== context) return;
+
+      const tap = new AudioWorkletNode(context, TAP_NAME, {
+        numberOfInputs: 1,
+        numberOfOutputs: 1,
+        outputChannelCount: [1],
+        processorOptions: { hop: TAP_HOP },
+      });
+
+      // Optional and comparison-only: aubio is GPL-3.0 against this project's MIT,
+      // so a build without it must lose the second opinion and nothing else.
+      let rival: { do(buffer: Float32Array): number; getBpm(): number; getConfidence(): number } | null =
+        null;
+      try {
+        const aubio = await (await import("aubiojs")).default();
+        if (this.context !== context) return;
+        rival = new aubio.Tempo(TAP_BUFFER, TAP_HOP, context.sampleRate);
+      } catch {
+        rival = null;
+      }
+
+      tap.port.onmessage = (event: MessageEvent<Float32Array>) => {
+        this.pushHop(event.data);
+        if (!rival) return;
+        rival.do(event.data);
+        this.aubioBpm = rival.getBpm();
+        this.aubioConfidence = rival.getConfidence();
+      };
+
+      source.connect(tap);
+      /*
+       * Through a silenced gain to the destination, because a worklet is only
+       * guaranteed to be pulled if it reaches one — a node with no route to output
+       * may never have `process` called at all. At a gain of exactly zero this adds
+       * no sound, so the rule the analyser path follows (never route a microphone
+       * to the speakers it is listening to) is not being broken: nothing is audible
+       * and there is no loop to close.
+       */
+      const sink = context.createGain();
+      sink.gain.value = 0;
+      tap.connect(sink);
+      sink.connect(context.destination);
+
+      this.tap = tap;
+      this.tapSink = sink;
+    } catch {
+      this.tap = null;
+      this.tapSink = null;
+    }
+  }
+
+  /**
+   * One fixed hop of mono audio, from `audioTap`.
+   *
+   * Public so the offline bench can drive exactly the path the worklet drives — the
+   * alternative is a bench that tests something adjacent to what ships, which is how
+   * four plausible changes came to be measured as improvements this round and then
+   * reverted.
+   */
+  pushHop(hop: Float32Array): void {
+    this.tempogram?.push(hop);
+  }
+
+  /** The tempogram's reading, for the panel. Zero before it has one. */
+  get combBpm(): number {
+    return this.tempogram?.bpm ?? 0;
+  }
+
+  get combConfidence(): number {
+    return this.tempogram?.confidence ?? 0;
+  }
+
+  /** Whether the tempogram is currently supplying the period. See `COMB_TRUST`. */
+  get combTrusted(): boolean {
+    return this.trusted;
+  }
+
+  /** The tempogram's peak prominence in standard deviations, for the readout. */
+  get combZ(): number {
+    return this.tempogram?.peakZ ?? 0;
+  }
+
   stop(): void {
+    if (this.tap) this.tap.port.onmessage = null;
+    this.tap?.disconnect();
+    this.tapSink?.disconnect();
+    this.tap = null;
+    this.tapSink = null;
+    this.tempogram = null;
+    this.aubioBpm = 0;
+    this.aubioConfidence = 0;
     this.node?.disconnect();
     this.stream?.getTracks().forEach((track) => track.stop());
     void this.context?.close().catch(() => undefined);
@@ -1015,8 +1612,10 @@ export class AudioReactor {
     this.levelScaler.reset();
     this.flux.forEach((band) => band.reset());
     this.sinceOnset = REFRACTORY;
+    this.sinceLow = LOW_STALE;
     this.clarity = 0;
     this.locked = false;
+    this.trusted = false;
     this.snareWeight.fill(0);
     this.snarePeak = 0;
     this.snareSlot = 1;
@@ -1037,12 +1636,21 @@ export class AudioReactor {
     this.downbeatConfidence = 0;
     this.credited = 0;
     this.onsetTimes = [];
+    this.lowOnsetTimes = [];
     this.elapsed = 0;
+    // Read where the clock happens to be rather than assumed to be zero: a
+    // context outlives nothing here, but `currentTime` counts from the
+    // context's own creation and `stop()` clears the context before this runs.
+    this.clockOrigin = this.context?.currentTime ?? 0;
     this.period = DEFAULT_PERIOD;
     this.phase = 0;
     this.beats = 0;
     this.confidence = 0;
     this.target = 0;
+    this.predictNear = 0;
+    this.predictAway = 0;
+    this.relockPressure = 0;
+    this.relockAt = 0;
     this.quietFor = 0;
     this.loudFor = 0;
     this.shortLevel = 0;
@@ -1060,8 +1668,10 @@ export class AudioReactor {
    * features on frames the composition never sees, on a clock nothing else in
    * the run shares.
    *
-   * `dt` is real seconds. The caller passes the engine's unscaled frame delta,
-   * not the composition clock's.
+   * `dt` is real seconds — the engine's unscaled frame delta, not the
+   * composition clock's. It is only the fallback the filters run on if the
+   * context has gone away; the analysis paces itself off the audio clock. See
+   * `advance`.
    */
   sample(dt: number): AudioFrame {
     const frame = this.current;
@@ -1079,8 +1689,7 @@ export class AudioReactor {
     const analyser = this.analyser;
     if (!analyser || this.state !== "listening") return frame;
 
-    const step = Math.min(Math.max(dt, 1 / 240), 0.1);
-    this.elapsed += step;
+    const step = this.advance(dt);
     analyser.getByteFrequencyData(this.spectrum);
 
     this.readBands(step);
@@ -1132,6 +1741,29 @@ export class AudioReactor {
     // been taken off it.
     this.previous.set(this.spectrum);
     return frame;
+  }
+
+  /**
+   * Move `elapsed` onto the audio clock and return the step the filters and the
+   * beat loop should take. See `elapsed` for why the two are not the same number
+   * and `MAX_STEP` for what separates them.
+   *
+   * `dt` is the fallback for a context that has gone away underneath us, which
+   * `sample`'s own guard makes unreachable — the analyser and the context are
+   * created and cleared together — but the analysis must not stop dead on a
+   * null, and a clamped render delta is what all of this used to run on.
+   */
+  private advance(dt: number): number {
+    const context = this.context;
+    if (!context) return Math.min(Math.max(dt, 1 / 240), MAX_STEP);
+    const now = context.currentTime - this.clockOrigin;
+    // Floored as well as capped, and the floor is reachable: `currentTime`
+    // advances a render quantum at a time, so two samples inside one 128-frame
+    // block read the same value — which a 240Hz display makes ordinary — and a
+    // step of zero is a division by nothing in every follower downstream.
+    const step = Math.min(Math.max(now - this.elapsed, 1 / 240), MAX_STEP);
+    this.elapsed = now;
+    return step;
   }
 
   private readBands(dt: number): void {
@@ -1310,6 +1942,43 @@ export class AudioReactor {
     const cue = this.flux[0].value + this.flux[2].value * DOWNBEAT_AIR;
     if (cue > this.beatPeak) this.beatPeak = cue;
 
+    /*
+     * The phase loop, driven by the low band's *own* onset stream — the fix for
+     * §15's quarter-beat bias, and it has to live here rather than inside the
+     * merged gate below.
+     *
+     * The merged stream cannot carry this. A kick and a hi-hat on the same eighth
+     * are one merged onset, fired on whichever crossed its threshold first, and
+     * that is always the hat: a hat's attack is two frames and a kick's low-band
+     * flux ramps over four or five. So on the merged stream's own frame the low
+     * band has not fired and often has barely moved, and the global `REFRACTORY`
+     * then swallows the kick's own crossing when it arrives a frame or two later.
+     * Measured: weighting the merged onset by instantaneous low-band level gave
+     * *every* onset a low weight, which left the equilibrium where it was and made
+     * the loop six times sloppier — the phase distribution smeared across all
+     * sixteen slots instead of sitting tight on the wrong two.
+     *
+     * Outside the refractory is therefore the point, not an oversight. The low
+     * band has a refractory of its own, so this cannot run faster than 10Hz, and
+     * what it contributes is one strong correction per kick at the instant the
+     * kick actually happened.
+     */
+    if (!frame.silent) {
+      if (this.flux[0].fired) {
+        this.sinceLow = 0;
+        this.lowOnsetTimes.push(this.elapsed);
+        while (
+          this.lowOnsetTimes.length > 0 &&
+          this.elapsed - this.lowOnsetTimes[0] > IOI_WINDOW
+        ) {
+          this.lowOnsetTimes.shift();
+        }
+        this.lockPhase(1);
+      } else {
+        this.sinceLow += dt;
+      }
+    }
+
     if (frame.silent || this.sinceOnset < REFRACTORY) return;
     let strength = 0;
     for (const band of this.flux) if (band.fired) strength = Math.max(strength, band.strength);
@@ -1323,7 +1992,16 @@ export class AudioReactor {
     while (this.onsetTimes.length > 0 && this.elapsed - this.onsetTimes[0] > IOI_WINDOW) {
       this.onsetTimes.shift();
     }
-    this.lockPhase();
+    /*
+     * The merged stream's own contribution to the phase, at a fraction of the
+     * gain — see `PHASE_LOW_FLOOR` for why it is small and why it is not zero.
+     *
+     * Full gain when the low band has gone quiet for a couple of beats, because
+     * then there is no kick to defer to and this is the only phase evidence there
+     * is. A jazz trio must not be left with a sixth of the loop it had.
+     */
+    const kickless = this.sinceLow > LOW_STALE;
+    this.lockPhase(kickless ? 1 : PHASE_LOW_FLOOR);
     this.estimateTempo();
   }
 
@@ -1555,57 +2233,50 @@ export class AudioReactor {
    * long. Both are corrected a little each time, so a lock builds over several
    * beats and one spurious onset in a quiet passage bends the grid slightly
    * instead of derailing it.
+   *
+   * `weight` is how much this particular onset is believed to be *on the beat*
+   * rather than on a subdivision, and it is what fixes the quarter-beat
+   * equilibrium §15 recorded. The argument for it, and the arithmetic showing
+   * where the old equilibrium came from, is on `PHASE_LOW_FLOOR`. Both gains are
+   * scaled by it and not just the phase one: §15's second attempt weighted the
+   * phase alone and the unweighted period term then re-imported the same
+   * tie-break bias through the other side of the loop.
    */
-  private lockPhase(): void {
+  private lockPhase(weight: number): void {
     let error = this.phase;
     if (error > 0.5) error -= 1;
-    /*
-     * A known bias, left in place deliberately — see §15 of
-     * `docs/visualizer-audio-attribution.md`.
-     *
-     * An onset exactly between two beats has an error of ±0.5 and no way to say
-     * which. The wrap above resolves that tie the same way every time, so a
-     * subdivision that lands there by construction — a hi-hat on eighths, which
-     * is most popular music — pushes the phase one direction on every second
-     * onset. Measured on synthetic 128BPM material with eighth hats: the period
-     * is exact to a tenth of a BPM and the *phase* settles about a quarter of a
-     * beat early, which puts every bar-phase-dependent binding a sixteenth out.
-     *
-     * The obvious fix is to weight each correction by how near a beat the onset
-     * was, so the ambiguous case contributes nothing. Built and measured, it
-     * moves the phase where it should be and costs the tempo: weighting both
-     * terms reads 119.2 BPM against a true 128, because a drifted period puts
-     * every onset far from a beat and the weight then discards the evidence that
-     * would pull it back; weighting the phase alone reads 121.3, because the
-     * unweighted period gain then takes the same tie-break bias in the other
-     * term. What the loop has today is a stable equilibrium in which the two
-     * biases cancel and the tempo is right.
-     *
-     * So this stays as it is until there is real material to tune it against.
-     * Trading an exact tempo for a correct phase is not obviously the right
-     * trade, and it is certainly not one to make against a generator.
-     */
-    this.phase -= error * PLL_PHASE_GAIN;
+    this.phase -= error * PLL_PHASE_GAIN * weight;
     if (this.phase < 0) this.phase += 1;
-    this.period = clampPeriod(this.period * (1 + error * PLL_PERIOD_GAIN));
+    // Phase only while the comb owns the period, per `COMB_TRUST`. This term is what
+    // walked the grid a fifth away from a correct estimate on real music, and there is
+    // nothing for it to add once a better instrument is supplying the answer.
+    if (this.trusted) return;
+    this.period = clampPeriod(this.period * (1 + error * PLL_PERIOD_GAIN * weight));
   }
 
   /**
    * The tempo histogram: every interval between consecutive onsets in the
    * window, folded into the plausible range and smeared across its neighbours.
    *
-   * Folded by doubling and halving because a run of onsets is usually not a run
-   * of *beats* — it is beats plus their subdivisions, and a quarter-second gap
-   * between two sixteenths is evidence for a half-second beat rather than
-   * evidence against it. Where a value has more than one representation in
-   * range, every one of them is credited: octave ambiguity is real, and the
-   * histogram is a better place to resolve it than the fold is.
+   * Folded because a run of onsets is usually not a run of *beats* — it is beats
+   * plus their subdivisions, and a quarter-second gap between two sixteenths is
+   * evidence for a half-second beat rather than evidence against it. Where a
+   * value has more than one reading in range, every one of them is credited:
+   * octave ambiguity is real, and the histogram is a better place to resolve it
+   * than the fold is. `FOLD` is the set of readings and carries the argument for
+   * which ones — this comment claimed "doubling and halving" for a long time
+   * while the loop under it could only double, which is why everything slower
+   * than a beat used to be dropped on the floor.
    *
    * The smear is what tolerates a drummer. Two intervals 15ms apart are the
    * same tempo, and binned exactly they would be evidence for two.
    */
   private estimateTempo(): void {
-    if (this.onsetTimes.length < MIN_ONSETS) {
+    // The kick where there is one, everything otherwise. See `lowOnsetTimes`.
+    const low = this.lowOnsetTimes.length >= MIN_ONSETS;
+    const times = low ? this.lowOnsetTimes : this.onsetTimes;
+    this.tempoSource = `${low ? "low" : "mrg"} ${times.length}`;
+    if (times.length < MIN_ONSETS) {
       this.target = 0;
       return;
     }
@@ -1614,16 +2285,16 @@ export class AudioReactor {
     const width = (MAX_PERIOD - MIN_PERIOD) / IOI_BINS;
     let total = 0;
 
-    for (let i = 1; i < this.onsetTimes.length; i++) {
-      const interval = this.onsetTimes[i] - this.onsetTimes[i - 1];
+    for (let i = 1; i < times.length; i++) {
+      const interval = times[i] - times[i - 1];
       if (interval <= 0) continue;
       // More recent evidence counts for more: a tempo change mid-window should
       // move the estimate rather than be outvoted by the tempo it replaced.
-      const age = this.elapsed - this.onsetTimes[i];
+      const age = this.elapsed - times[i];
       const recency = Math.exp(-age / IOI_WINDOW);
 
       /*
-       * The interval counts as one piece of evidence however many octaves of it
+       * The interval counts as one piece of evidence however many readings of it
        * are in range, which is why `total` is outside this loop.
        *
        * Inside it, the eighth-note gap in a 120bpm track is credited to both
@@ -1632,13 +2303,25 @@ export class AudioReactor {
        * candidate instead, every track with subdivisions in it would score half
        * the confidence of one without — the split is inherent to tempo, not
        * evidence of an unclear tempo, and it must not read as doubt.
+       *
+       * Which also means `total` is a count of intervals and not the mass this
+       * loop deposits, so the ratio below is a share of the former measured
+       * against the latter and saturates well before 1 — a steady pulse has read
+       * 100% since the first version of this. Widening the fold does not change
+       * that scale, because the readings it adds land in bins away from the peak
+       * and the peak is all the ratio looks at. It is still the wrong
+       * denominator, and the honest fix is a confidence that asks whether the
+       * grid predicts the audio rather than whether this histogram has a point
+       * on it. That wants measuring against real material, not adjusting here.
        */
-      for (let candidate = interval; candidate <= MAX_PERIOD; candidate *= 2) {
-        if (candidate < MIN_PERIOD) continue;
+      for (const [ratio, weight] of FOLD) {
+        const candidate = interval * ratio;
+        if (candidate < MIN_PERIOD || candidate > MAX_PERIOD) continue;
+        const credit = recency * weight;
         const bin = Math.min(IOI_BINS - 1, Math.floor((candidate - MIN_PERIOD) / width));
-        histogram[bin] += recency;
-        if (bin > 0) histogram[bin - 1] += recency * 0.5;
-        if (bin < IOI_BINS - 1) histogram[bin + 1] += recency * 0.5;
+        histogram[bin] += credit;
+        if (bin > 0) histogram[bin - 1] += credit * 0.5;
+        if (bin < IOI_BINS - 1) histogram[bin + 1] += credit * 0.5;
       }
       total += recency * 2;
     }
@@ -1648,14 +2331,34 @@ export class AudioReactor {
       return;
     }
 
-    let peak = 0;
+    /*
+     * The bin is chosen on the histogram weighted by `TEMPO_PRIOR`, and everything
+     * below then reads the raw histogram at that bin — see the constant for why the
+     * two are deliberately kept apart.
+     */
+    let best = 0;
     let peakBin = 0;
     for (let i = 0; i < IOI_BINS; i++) {
-      if (histogram[i] > peak) {
-        peak = histogram[i];
+      const score = histogram[i] * TEMPO_PRIOR[i];
+      if (score > best) {
+        best = score;
         peakBin = i;
       }
     }
+    const peak = histogram[peakBin];
+
+    // The contest, for the readout. See `candidates`.
+    this.candidates.length = 0;
+    for (let i = 1; i < IOI_BINS - 1; i++) {
+      const score = histogram[i] * TEMPO_PRIOR[i];
+      if (score <= 0) continue;
+      if (score < histogram[i - 1] * TEMPO_PRIOR[i - 1]) continue;
+      if (score < histogram[i + 1] * TEMPO_PRIOR[i + 1]) continue;
+      this.candidates.push({ bpm: 60 / (MIN_PERIOD + (i + 0.5) * width), score });
+    }
+    this.candidates.sort((a, b) => b.score - a.score);
+    this.candidates.length = Math.min(3, this.candidates.length);
+    for (const candidate of this.candidates) candidate.score /= Math.max(1e-9, best);
 
     const left = peakBin > 0 ? histogram[peakBin - 1] : 0;
     const right = peakBin < IOI_BINS - 1 ? histogram[peakBin + 1] : 0;
@@ -1675,12 +2378,76 @@ export class AudioReactor {
     const offset = denominator !== 0 ? Math.max(-0.5, Math.min(0.5, (0.5 * (left - right)) / denominator)) : 0;
     const estimate = clampPeriod(MIN_PERIOD + (peakBin + 0.5 + offset) * width);
 
-    // A disagreement this large is not something the loop should be nudged
-    // through a beat at a time — the music changed, or the lock was on a
-    // subdivision. Re-take it outright and let the loop fine-tune from there.
-    if (Math.abs(estimate - this.period) / this.period > RELOCK_RATIO) {
-      this.period = estimate;
+    /*
+     * A disagreement this large is not something the loop should be nudged through
+     * a beat at a time — the music changed, or the lock was on a subdivision. But
+     * it is not taken on sight either: see `RELOCK_HOLD`.
+     */
+    // Seconds since the last estimate, capped so a gap in the music does not hand
+    // the next onset a whole window's worth of pressure.
+    const since = this.relockAt > 0 ? Math.min(this.elapsed - this.relockAt, IOI_WINDOW) : 0;
+    this.relockAt = this.elapsed;
+    /*
+     * The period belongs to the comb while the comb is sure of it, exactly as in
+     * `lockPhase` — and this was the last writer left fighting it. With the trust
+     * gate opened, `103bpm.wav` had a tempogram parked on 103.0 for the whole track
+     * and a histogram hard-setting the period off it every second or so; the two
+     * pulled against each other through `COMB_TAU` and the run reported a median
+     * 111.6BPM with **102 relocks**, which is worse than either instrument alone.
+     * The histogram is still computed — `target` is the confidence that gets the
+     * lock in the first place — it simply no longer writes the answer.
+     */
+    if (this.trusted) {
+      this.relockPressure = 0;
+      return;
     }
+    if (Math.abs(estimate - this.period) / this.period > RELOCK_RATIO) {
+      this.relockPressure += since;
+      if (this.relockPressure >= RELOCK_HOLD) {
+        this.period = estimate;
+        this.relockPressure = 0;
+      }
+    } else {
+      // Decayed rather than cleared — see `RELOCK_HOLD`.
+      this.relockPressure = Math.max(0, this.relockPressure - since);
+    }
+  }
+
+  /**
+   * Score the grid against the audio it is supposed to be predicting. See
+   * `PREDICT_PARTS` for the whole argument.
+   *
+   * Weighted by `dt` on both sides, which is not decoration: the point of this is
+   * to survive an uneven frame rate, and an accumulator counting frames rather
+   * than seconds would let a burst of short frames outvote the music.
+   */
+  private trackPrediction(dt: number): void {
+    let novelty = 0;
+    for (const band of this.flux) novelty += Math.max(0, band.value - band.threshold);
+
+    // 1 on a subdivision and 0 midway between two, and the same measure against a
+    // grid offset by half a subdivision.
+    const parts = this.phase * PREDICT_PARTS;
+    const weight = 1 - Math.abs(parts - Math.round(parts)) * 2;
+    const anti = parts + 0.5;
+    const antiWeight = 1 - Math.abs(anti - Math.round(anti)) * 2;
+
+    const fall = Math.exp(-dt / PREDICT_TAU);
+    this.predictNear = this.predictNear * fall + novelty * weight * dt;
+    this.predictAway = this.predictAway * fall + novelty * antiWeight * dt;
+  }
+
+  /**
+   * How far the grid predicts the audio better than a grid half a subdivision
+   * out, 0..1. Zero with no novelty to predict — a held pad has nothing to be
+   * right or wrong about — and zero for a grid that is actively anti-aligned,
+   * which the clamp folds in with merely being wrong.
+   */
+  private get predicted(): number {
+    const total = this.predictNear + this.predictAway;
+    if (total <= 1e-9) return 0;
+    const lead = (this.predictNear - this.predictAway) / total;
+    return clamp01((lead - PREDICT_FLOOR) / (PREDICT_CEILING - PREDICT_FLOOR));
   }
 
   /** Free-run the grid between onsets, and decay the lock when they stop. */
@@ -1692,13 +2459,31 @@ export class AudioReactor {
       this.creditBeat();
     }
     this.trackBar(dt);
+    this.trackPrediction(dt);
+
+    /*
+     * The period, from the comb filter where it is sure of itself — see `COMB_TRUST`.
+     * Followed rather than taken so a re-estimate four times a second does not step
+     * the grid, and clamped by `clampPeriod` like every other writer of it.
+     */
+    const comb = this.tempogram;
+    // Hysteresis rather than a threshold: see `COMB_RELEASE`.
+    this.trusted =
+      comb !== null &&
+      comb.bpm > 0 &&
+      comb.confidence >= (this.trusted ? COMB_RELEASE : COMB_TRUST);
+    if (this.trusted && comb) {
+      const wanted = clampPeriod(60 / comb.bpm);
+      this.period = clampPeriod(this.period + (wanted - this.period) * coefficient(dt, COMB_TAU));
+    }
     // Nothing has been heard for a while: let go rather than keep a grid
     // running against music that is no longer there. Everything downstream
     // reads `confidence`, so this is the whole of the graceful fallback —
     // ambient, spoken word, a drum solo in 7 and the gap between tracks all
     // arrive here and all get the composition's own fixed grid back.
     const stale = this.elapsed - (this.onsetTimes[this.onsetTimes.length - 1] ?? -IOI_WINDOW);
-    if (stale > IOI_WINDOW / 2 || this.current.silent) this.target = 0;
+    const quiet = stale > IOI_WINDOW / 2 || this.current.silent;
+    if (quiet) this.target = 0;
     /*
      * Integrated here rather than where the target is computed, and the
      * difference is not cosmetic: `estimateTempo` runs on onsets, so filtering
@@ -1707,7 +2492,15 @@ export class AudioReactor {
      * twenty, and a perfectly steady pulse never got past half confidence — so
      * the fallback in §4.1 would have held the fixed grid forever.
      */
-    this.confidence += (this.target - this.confidence) * coefficient(dt, CONFIDENCE_TAU);
+    /*
+     * The larger of the two evidences, and nothing at all through silence — see
+     * `PREDICT_PARTS` for why `max` is the right combination and why it cannot
+     * deadlock. The histogram gets the lock, the prediction keeps it.
+     */
+    const want = quiet
+      ? 0
+      : Math.max(this.target, this.predicted, comb?.confidence ?? 0);
+    this.confidence += (want - this.confidence) * coefficient(dt, CONFIDENCE_TAU);
   }
 
   /**
@@ -1908,6 +2701,19 @@ export async function listAudioInputs(): Promise<AudioInput[]> {
       deviceId: device.deviceId,
       label: device.label || `input ${index + 1}`,
     }));
+}
+
+/**
+ * Whether this browser can share a tab at all.
+ *
+ * Mobile has no screen capture: `getDisplayMedia` is absent outright on iOS
+ * Safari and on Android Chrome rather than present-and-refusing, so a call
+ * there is a `TypeError` and not a `DOMException` the capture path would know
+ * how to describe. The check is for the function, not for a phone — a user
+ * agent string would be guessing at the same thing less reliably.
+ */
+export function displayCaptureSupported(): boolean {
+  return typeof navigator?.mediaDevices?.getDisplayMedia === "function";
 }
 
 /**

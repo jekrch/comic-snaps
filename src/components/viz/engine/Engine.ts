@@ -1,5 +1,5 @@
 import type { Panel } from "../../../types";
-import type { DeviceCaps, VizConfig } from "../vizConfig";
+import type { DeviceCaps, StageMode, VizConfig } from "../vizConfig";
 import { deviceCaps, VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../vizConfig";
 import { Director } from "./Director";
 import { Rng } from "./rng";
@@ -235,6 +235,15 @@ export class VizEngine {
   setConfig(config: VizConfig): void {
     this.config = config;
     this.director.setConfig(config);
+  }
+
+  /**
+   * Tell the run which path a switch is heading for, at the moment the reader
+   * asks rather than when the config ramp delivers it — see
+   * `Director.expectStage`. Purely a prefetch hint: nothing is drawn from it.
+   */
+  expectStage(kind: StageMode): void {
+    this.director.expectStage(kind);
   }
 
   /**

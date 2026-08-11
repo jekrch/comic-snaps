@@ -118,6 +118,18 @@ export class TempoLock {
   private bar = 0;
   /** How far the snap is applied, 0..1. */
   private engaged = 0;
+  /**
+   * Absolute position in bars, fractional — the reactor's own bar count and
+   * phase, carried here so the composition can ask *when* as well as *how long*.
+   *
+   * The gap this closes is the whole of §16. Everything above puts a duration in
+   * tempo and nothing puts a *phase* in it, so an effect that swells over exactly
+   * four bars still begins on an arbitrary sixteenth and peaks nowhere in
+   * particular. A viewer reads sync from coincidence — a visible change landing
+   * at the same instant as a beat — and a correct length with a free phase
+   * produces no coincidences at all. See `alignedDelay` and `mark`.
+   */
+  private position = 0;
 
   /**
    * Fold in one analysed frame. `timeScale` converts the reactor's real seconds
@@ -144,6 +156,30 @@ export class TempoLock {
       // Followed rather than taken, so a tempo estimate that wobbles by a BPM
       // does not retune every duration in the engine several times a second.
       this.bar = this.bar > 0 ? this.bar + (wanted - this.bar) * coefficient(dt, ENGAGE_TAU) : wanted;
+      /*
+       * Taken from the reactor rather than integrated here, and that is the same
+       * decision `AudioBinding` makes about `barPhase` for the same reason: only
+       * the reactor knows where beat one is, and a bar position accumulated
+       * downstream starts on whichever beat the lock happened to open on. The
+       * reactor's own `trackBar` already slides this onto the detected downbeat
+       * over several bars, so what arrives here is continuous — a consumer that
+       * quantises against it never sees the correction as a skipped boundary.
+       */
+      this.position = frame.barCount + frame.barPhase;
+    } else if (this.bar > 0) {
+      /*
+       * Free-run through the six seconds `engaged` takes to fade, rather than
+       * holding the last position the reactor gave.
+       *
+       * A frozen position is a stopped clock, and `mark` is an edge detector
+       * over it — so every consumer that quantises would silently stop firing
+       * for the whole of a fade-out and then be handed a jump when the lock came
+       * back. Free-running is what the reactor's own grid does between onsets and
+       * for the same reason: a bar with nothing in it is still a bar.
+       */
+      // `this.bar` is already a clock duration, so the real `dt` has to become
+      // one too before the two can be divided.
+      this.position += (dt * Math.max(0.05, timeScale)) / this.bar;
     }
     this.engaged += ((live ? 1 : 0) - this.engaged) * coefficient(dt, ENGAGE_TAU);
   }
@@ -204,8 +240,51 @@ export class TempoLock {
     return Math.sign(perSecond) / period;
   }
 
+  /**
+   * Clock seconds from now to the first `everyBars` boundary at or after
+   * `delay` — the scheduling half of §16, and the primitive every discrete
+   * gesture in the composition should be going through.
+   *
+   * The caller keeps its own timing. It says "in about nine seconds" and gets
+   * back "in ten and a bit, which is a downbeat", so what the boundary size
+   * costs is bounded by that size and nothing else: the composition's own pace
+   * survives, and the *instant* it acts on is one the music also acts on.
+   *
+   * Never returns a delay in the past, and never zero when `delay` is zero and
+   * the boundary has just gone by — `ceil` takes the boundary at or after the
+   * requested moment, so a caller that asks for "now" and happens to be exactly
+   * on one fires immediately rather than waiting a whole period.
+   *
+   * Unlocked, the argument comes straight back. That is the same graceful
+   * fallback `duration` has and it means a caller can route through this
+   * unconditionally.
+   */
+  alignedDelay(delay: number, everyBars: number): number {
+    const wanted = Math.max(0, delay);
+    if (!this.active) return wanted;
+    const every = Math.max(1, Math.round(everyBars));
+    const at = this.position + wanted / this.bar;
+    const next = Math.ceil(at / every) * every;
+    return (next - this.position) * this.bar;
+  }
+
+  /**
+   * Which `everyBars` period the composition is currently in, or -1 with no
+   * lock — the *edge* half of §16.
+   *
+   * A counter rather than a predicate, so a consumer that stores the last value
+   * it saw fires exactly once per boundary however long a frame runs and
+   * whatever the frame rate is. `alignedDelay` is for something that wants to be
+   * scheduled; this is for something that wants to be told.
+   */
+  mark(everyBars: number): number {
+    if (!this.active) return -1;
+    return Math.floor(this.position / Math.max(1, Math.round(everyBars)));
+  }
+
   reset(): void {
     this.bar = 0;
     this.engaged = 0;
+    this.position = 0;
   }
 }

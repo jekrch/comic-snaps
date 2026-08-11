@@ -36,6 +36,46 @@ const TRAIL_FOLLOW = 0.5;
 const TRAIL_FLOOR = 0.0003;
 /** Fold depth below which there is no symmetry on screen to be judged against. */
 const TRAIL_GOVERNED_FOLD = 0.25;
+/**
+ * The drift's heading, quantised — §16 of
+ * `docs/visualizer-audio-attribution.md`, and the composition's answer to
+ * "change direction on a beat".
+ *
+ * `heading` is one of the slow sines above, so on its own it turns the current
+ * through the frame by a couple of degrees a second and *nothing about it is
+ * ever an event*. Holding it and re-latching it on a downbeat changes nothing
+ * either, for the arithmetic reason worth recording: over two bars the sine has
+ * moved by well under a degree, so the latch would deliver a step nobody could
+ * see.
+ *
+ * What makes it legible is quantising the *value* rather than the moment. The
+ * heading is rounded to one of eight compass points, so the drift holds a
+ * direction for the tens of seconds the sine takes to cross a sector and then
+ * changes by a whole eighth of a turn — and that change is held back to the next
+ * downbeat. The result is a current through the frame that turns 45° at once, on
+ * the beat, a few times a minute.
+ *
+ * It keeps the rule the rest of this feature holds to: the drift still decides
+ * which way, the music only decides when. A run with no lock quantises nothing
+ * and gets the continuous sine back exactly as before.
+ */
+const HEADING_POINTS = 8;
+/** Bars the boundary is taken on. One: a direction change is a downbeat event,
+ *  and waiting for a phrase would put most of them a bar or more after the sine
+ *  actually crossed. */
+const HEADING_BARS = 1;
+/**
+ * Fraction of a bar the turn takes, and the reason this is a glide rather than
+ * a cut.
+ *
+ * An eighth of a turn arriving between two frames is a step in a direction that
+ * every panning layer is integrating, which reads as the whole stack being
+ * kicked. Over 0.6 of a bar the peak angular rate is `1.5 × (τ/8) / (0.6 × bar)`
+ * — at 120BPM about 1 radian a second, which is under the rate the fold already
+ * turns at on a preset that runs one.
+ */
+const HEADING_GLIDE = 0.6;
+
 const TILE_MAX = 0.38;
 /** Channel value below which tiling is simply off, so it is absent as often
  *  as it is present rather than always faintly on. */
@@ -138,6 +178,15 @@ export class Wander {
   /** Which way along the ladder the next step goes. */
   private stepDirection = 1;
   private armed = true;
+  /** The quantised heading in turns, the one it is turning away from, and how
+   *  far through the turn it is. See `HEADING_POINTS`. */
+  private heading = 0;
+  private headingFrom = 0;
+  private headingBlend = 1;
+  /** The bar boundary the last turn was taken on, and the sector the drift is
+   *  waiting to move to. */
+  private headingMark = -1;
+  private headingWanted = 0;
 
   constructor(private readonly forkStream: () => Rng) {}
 
@@ -157,6 +206,61 @@ export class Wander {
     this.phase += dt * Math.max(0, this.tempoRate(rate, tempo));
     for (const name of CHANNELS) this.values[name] = channels[name].at(this.phase);
     this.stepSegments(dt);
+    this.steerHeading(dt, tempo);
+  }
+
+  /**
+   * The drift's direction, quantised and held to the downbeat. See
+   * `HEADING_POINTS`.
+   *
+   * Two separate things, and they have to be separate: the sine is rounded to a
+   * sector *continuously*, so the composition always knows which way it wants to
+   * go, and the move to a new sector is *deferred* to the next boundary. A turn
+   * therefore lands on a downbeat without the boundary ever being what decides
+   * that a turn should happen — the boundary that fires is simply the first one
+   * after the drift changed its mind, which is why this can be a once-a-bar test
+   * and still not put a turn on every bar.
+   */
+  private steerHeading(dt: number, tempo?: TempoLock): void {
+    const sector = Math.round(this.values.heading * HEADING_POINTS) / HEADING_POINTS;
+    const mark = tempo?.mark(HEADING_BARS) ?? -1;
+
+    if (mark < 0) {
+      // No lock: the continuous sine, exactly as it was before this existed.
+      // Kept up to date rather than frozen so that a lock arriving mid-run finds
+      // the heading where the drift left it and turns from there.
+      this.heading = this.values.heading;
+      this.headingFrom = this.heading;
+      this.headingWanted = sector;
+      this.headingMark = -1;
+      this.headingBlend = 1;
+      return;
+    }
+
+    if (this.headingMark < 0) {
+      // First frame under a lock. Snap to the sector rather than gliding to it:
+      // there is nothing on screen yet that came from the old value, and a
+      // six-second `TempoLock` engagement has already hidden the difference.
+      this.headingMark = mark;
+      this.headingWanted = sector;
+      this.headingFrom = sector;
+      this.heading = sector;
+      this.headingBlend = 1;
+    } else if (mark !== this.headingMark) {
+      this.headingMark = mark;
+      if (sector !== this.headingWanted) {
+        this.headingFrom = this.heading;
+        this.headingWanted = sector;
+        this.headingBlend = 0;
+      }
+    }
+
+    const bar = tempo?.barSeconds ?? 0;
+    const glide = bar > 0 ? bar * HEADING_GLIDE : 1;
+    this.headingBlend = clamp(this.headingBlend + dt / glide, 0, 1);
+    const t = this.headingBlend;
+    this.heading =
+      this.headingFrom + (this.headingWanted - this.headingFrom) * (t * t * (3 - 2 * t));
   }
 
   /**
@@ -187,6 +291,11 @@ export class Wander {
     this.values = zeroValues();
     this.segments = 0;
     this.armed = true;
+    this.heading = 0;
+    this.headingFrom = 0;
+    this.headingWanted = 0;
+    this.headingBlend = 1;
+    this.headingMark = -1;
   }
 
   /** Mutates `post` toward wherever the drift currently is. */
@@ -282,7 +391,9 @@ export class Wander {
   bias(): DriftBias | undefined {
     if (this.amount <= 0) return undefined;
     return {
-      angle: this.values.heading * TAU,
+      // The quantised heading rather than the raw channel — see `steerHeading`.
+      // Identical to `values.heading` whenever there is no lock.
+      angle: this.heading * TAU,
       coherence: this.amount * (0.3 + 0.5 * (0.5 + 0.5 * this.values.pan)),
     };
   }

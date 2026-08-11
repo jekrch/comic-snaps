@@ -1,15 +1,23 @@
 import type { Panel } from "../../../types";
-import type { DeviceCaps, VizConfig } from "../vizConfig";
-import { effectiveAttack } from "../vizConfig";
+import type { DeviceCaps, StageMode, VizConfig } from "../vizConfig";
+import { MODE_HANDOVER_CLOCK, effectiveAttack } from "../vizConfig";
 import { cosineDistance, loadEmbeddings, paletteDistance } from "../../../utils/sorting";
 import type { EmbeddingMap } from "../../../utils/sorting";
 import type { Rng } from "./rng";
 import { EffectCycler } from "./EffectCycler";
 import { SafetyGovernor } from "./safety";
-import { Stage } from "./Stage";
+import { Stage, stageResidency } from "./Stage";
 import { Wander } from "./Wander";
 import { JULIA_WRAP, juliaEfoldsPerTurn } from "./julia";
-import type { DrawShard, PostParams, Shard, StageKind, VizFrame, VizPhases } from "./types";
+import type {
+  DrawShard,
+  PostParams,
+  Shard,
+  StageKind,
+  VizFrame,
+  VizHandover,
+  VizPhases,
+} from "./types";
 import { resolveShard, shardEnd } from "./types";
 import { CAST_FLOOR, rankCast } from "./cast";
 import { chromaticDominant, complement, labToRgb, normalizeTint } from "./palette";
@@ -152,6 +160,25 @@ export class Director {
    * holds a dozen panels resident and the flat path holds four.
    */
   private spatial = true;
+  /**
+   * The crossing between the two paths — see `syncStage` and `VizHandover`.
+   *
+   * `swapArmed` is the one frame the outgoing path is held for so the backend
+   * can take its still; `swapAt` is the clock time the swap then happened, and
+   * -1 while nothing is crossing. `coveredSeed` says the flat stack about to be
+   * seeded is the incoming side of one, and is spent by that seeding.
+   */
+  private swapArmed = false;
+  private swapAt = -1;
+  private coveredSeed = false;
+  /**
+   * A path the run has been told it is about to switch to, ahead of the config
+   * arriving. Only the queue depth reads it — see `fillUpcoming`.
+   */
+  private expecting: StageKind | null = null;
+  /** Kept for `stageResidency`, which is how deep the queue has to be for an
+   *  arriving formation to be decoded by the time it is built. */
+  private readonly caps: DeviceCaps;
 
   readonly safety = new SafetyGovernor();
   /** Forked lazily — see the note on EffectCycler about seeds replaying. */
@@ -178,6 +205,7 @@ export class Director {
     caps: DeviceCaps
   ) {
     this.stage = new Stage(caps);
+    this.caps = caps;
     // Off a forked stream rather than the main one, on the cycler's principle:
     // one draw here, and everything downstream keeps the sequence it would have
     // had. The run is still exactly reproducible from its seed — what changes is
@@ -220,6 +248,22 @@ export class Director {
   /** Told by the engine which backend it got. */
   setSpatialSupported(supported: boolean): void {
     this.spatial = supported;
+  }
+
+  /**
+   * A path the run is about to be switched to, told at the moment the reader
+   * asks rather than when the ramp delivers it.
+   *
+   * The config crosses over its midpoint, so the director would otherwise learn
+   * that a formation is wanted on the same frame it has to build one — and a
+   * formation needs its whole residency decoded at once. This is the only thing
+   * in the engine that gets to know about a switch early, and all it is allowed
+   * to do with the knowledge is fetch: what arrives, and when, is still decided
+   * by the config crossing like everything else.
+   */
+  expectStage(kind: StageMode): void {
+    const wanted = kind === "flat" ? null : kind;
+    this.expecting = wanted === this.stage.kind ? null : wanted;
   }
 
   get panelCount(): number {
@@ -445,6 +489,7 @@ export class Director {
         time,
         shards: [],
         stage: null,
+        handover: this.handover(time),
         background: [0, 0, 0],
         post,
         phases: this.advancePhases(post, clockDt),
@@ -471,6 +516,7 @@ export class Director {
           this.safety,
           () => this.takeUpcoming()?.panel ?? null
         ),
+        handover: this.handover(time),
         background: [0, 0, 0],
         post,
         phases,
@@ -489,6 +535,9 @@ export class Director {
       for (let i = 0; i < target; i++) {
         this.spawn(time, ((target - 1 - i) / target) * 0.9);
       }
+      // Spent by the stack it described, so the layers born on every beat after
+      // this one open the way they were authored to.
+      this.coveredSeed = false;
     } else {
       // Births are discrete events, so they quantise to the beat grid rather
       // than landing wherever a layer happens to expire.
@@ -516,6 +565,7 @@ export class Director {
       // music as a wave through it rather than as one sheet moving at once.
       shards: this.shards.map((shard) => this.pulse(resolveShard(shard, time), shard.id)),
       stage: null,
+      handover: this.handover(time),
       background: [0, 0, 0],
       post,
       phases: this.advancePhases(post, clockDt),
@@ -585,14 +635,29 @@ export class Director {
    * overflow.
    */
   private pulse(draw: DrawShard, shardId: number): DrawShard {
-    const scale = this.audio.pulse(shardId);
-    if (scale <= 1.0001) return draw;
+    /*
+     * And the walk over the top of it — §16 of
+     * `docs/visualizer-audio-attribution.md`.
+     *
+     * The two belong in one transform because the overscan is what pays for the
+     * offset: a translation on its own would pull a full-bleed layer's own edge
+     * into shot on the beat, which is the loudest possible way to fail at being
+     * subtle. See `AudioBinding.stride`.
+     *
+     * Deliberately only the flat path. The formations have a flight of their own
+     * that already moves the whole frame, and a second whole-frame translation
+     * over the top of it is two motions the eye has to separate rather than one
+     * it can attribute.
+     */
+    const stride = this.audio.stride;
+    const scale = this.audio.pulse(shardId) * stride.overscan;
+    if (scale <= 1.0001 && stride.x === 0 && stride.y === 0) return draw;
     const cx = this.aspect / 2;
     const cy = 0.5;
     const rect = draw.dstRect;
     draw.dstRect = {
-      x: cx + (rect.x - cx) * scale,
-      y: cy + (rect.y - cy) * scale,
+      x: cx + (rect.x - cx) * scale + stride.x,
+      y: cy + (rect.y - cy) * scale + stride.y,
       w: rect.w * scale,
       h: rect.h * scale,
     };
@@ -627,16 +692,85 @@ export class Director {
    * The stage also re-lays its quads out here when the density knob moves, which
    * is a rebuild but not a scene change — hence the return value rather than a
    * comparison of kinds: only a genuine change of path invalidates the shards.
+   *
+   * Whatever is emptied here is *cut*, and no ramp around it changes that. The
+   * mode switch crossfades every parameter in the config, but a parameter is not
+   * what a viewer is watching: they are watching four layers drift, and those
+   * layers do not fade out, they cease. So the swap is held back a frame first,
+   * to give the backend a still of the outgoing path to dissolve the incoming
+   * one over — see `VizHandover`. The frame's own arithmetic is the reason the
+   * hold is a whole frame rather than a flag: the still has to be taken *after*
+   * the last outgoing frame is drawn and *before* the first incoming one is, and
+   * those are consecutive.
    */
   private syncStage(): void {
     const wanted: StageKind | null =
       !this.spatial || this.config.stageKind === "flat" ? null : this.config.stageKind;
 
+    // Spent once the config has caught up with the hint — on the frame after the
+    // swap, or on whichever frame a switch the reader stepped straight back out
+    // of stops being pending.
+    if (wanted === this.stage.kind) this.expecting = null;
+
+    // Nothing on screen to cross against: the run is opening, and an opening has
+    // its own hurried fade for exactly that case. Held panels are not a path, so
+    // a formation arriving over an empty flat stack is still an opening.
+    const drawn = this.stage.active || this.shards.length > 0;
+    if (wanted !== this.stage.kind && !this.swapArmed && drawn) {
+      this.swapArmed = true;
+      // The density rebuild below is skipped for this one frame with it. That is
+      // a frame of a slider drag landing late, against a cut this is here to
+      // remove.
+      return;
+    }
+
+    /*
+     * The arm is spent either way. It is normally spent on the swap it was armed
+     * for, but a reader stepping through the presets faster than the ramp can
+     * cross can put the config back on the path it started from while it is
+     * armed — and then there is nothing to swap, nothing to cross, and a still
+     * that would sit waiting for a crossing that never comes.
+     */
+    const covered = this.swapArmed && wanted !== this.stage.kind;
+    this.swapArmed = false;
+
     if (!this.stage.sync(wanted, this.config, () => this.rng.fork())) return;
 
+    if (covered) {
+      this.swapAt = this.lastClock;
+      // Told to whichever path is arriving, so its opening does not fade under
+      // the dissolve that is already crossing it.
+      if (wanted !== null) this.stage.coverArrival();
+      else this.coveredSeed = true;
+    }
     this.shards = [];
     this.seeded = false;
     this.lastBeat = -1;
+  }
+
+  /**
+   * What the backend should do about the crossing this frame, if anything.
+   *
+   * On the composition clock rather than in real seconds, so the dissolve and the
+   * arriving path's own durations stay complements of each other at every speed —
+   * and the clock length is the fade floor, so at the speed ceiling the crossing
+   * still takes the longest §7 allows the whole frame to move in.
+   */
+  private handover(time: number): VizHandover | null {
+    const elapsed = this.swapAt < 0 ? Infinity : time - this.swapAt;
+    const mix = Math.max(0, 1 - elapsed / MODE_HANDOVER_CLOCK);
+    if (mix <= 0) this.swapAt = -1;
+    /*
+     * A capture carries whatever crossing is already running rather than
+     * cancelling it, which is what makes stepping through the presets faster
+     * than they can cross survive: the still is taken of the frame as the viewer
+     * is actually seeing it, half of one path over half of another, and the next
+     * crossing starts from that. Read the other way round — capture first, then
+     * mix — a second switch inside the first would snap to the incoming path for
+     * one frame and then dissolve out of it, which is a flash.
+     */
+    if (this.swapArmed) return { capture: true, mix };
+    return mix > 0 ? { capture: false, mix } : null;
   }
 
   /**
@@ -786,7 +920,20 @@ export class Director {
      * decides how fast a full-bleed layer may arrive. The stage path has done
      * this for its own opening tenancy all along — see `Stage.rotate`.
      */
-    if (ageOffset === 0 && this.shards.length === 0 && this.spawnCount === 1) {
+    if (this.coveredSeed) {
+      /*
+       * Except where the stack is not opening over black at all, but over a
+       * still of the formation it replaced.
+       *
+       * Then the argument above inverts. Every layer of this seeding arrives
+       * under a dissolve that is already carrying the crossing, and a fade
+       * underneath it would multiply against it — so the layers arrive at their
+       * full authored strength and the dissolve does the work, which is also
+       * what keeps the stack from still filling up after the crossing has ended.
+       * See `Stage.coverArrival`, which says the same thing on the other path.
+       */
+      shard.opacityCurve.fadeIn = 0;
+    } else if (ageOffset === 0 && this.shards.length === 0 && this.spawnCount === 1) {
       shard.opacityCurve.fadeIn = Math.min(
         shard.opacityCurve.fadeIn,
         this.safety.clampFade(0)
@@ -827,7 +974,29 @@ export class Director {
   }
 
   private fillUpcoming(): void {
-    while (this.upcoming.length < 2) {
+    /*
+     * Two picks ahead, which is what the flat path consumes: one layer per beat,
+     * and a decode has a whole beat to land in.
+     *
+     * A formation does not arrive one panel at a time. It takes its entire
+     * residency on the frame it is built, and a slot whose panel has not decoded
+     * is not drawn at all — so a switch into a spatial preset queued two deep
+     * arrives as a corridor with most of its pages missing, which is precisely
+     * the frames the crossing is there to cover. Queued to the residency instead,
+     * from the moment the reader asks for the switch, the decodes run under the
+     * ramp and the formation arrives whole.
+     *
+     * The scene's own residency, and not the device's ceiling on it — which is
+     * thirteen, where every scene in the engine asks for two or three. A queue is
+     * filled in one pass against one anchor, so queueing the ceiling would turn
+     * the rhyme walk into a star: thirteen panels all chosen off the same page,
+     * the last of them used ten minutes later. Only while the switch is in
+     * flight, and back to two the moment it lands, for the same reason.
+     */
+    const depth = this.expecting
+      ? Math.max(2, stageResidency(this.expecting, this.caps))
+      : 2;
+    while (this.upcoming.length < depth) {
       const pick = this.pickPanel();
       if (!pick) return;
       this.upcoming.push(pick);
@@ -1058,7 +1227,10 @@ export class Director {
       post,
       time,
       this.config.psychedelia,
-      this.tempo.duration(this.config.cycleInterval) / Math.max(0.2, this.audio.autonomy)
+      this.tempo.duration(this.config.cycleInterval) / Math.max(0.2, this.audio.autonomy),
+      // And the grid it should arrive on — §16. The interval above is how often
+      // an effect comes in; this is the far more visible question of when.
+      this.tempo
     );
     // Fourth pass, after the three that decide what the piece is and before the
     // governor below: the music deepens whatever they arrived at.

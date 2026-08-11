@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import type { AudioInput, AudioReactor, AudioSource, AudioStatus } from "./engine/AudioReactor";
-import { listAudioInputs } from "./engine/AudioReactor";
+import { displayCaptureSupported, listAudioInputs } from "./engine/AudioReactor";
 import type { VizEngine } from "./engine/Engine";
 import { AudioProbe } from "./engine/audioTrace";
 import type { VizConfig } from "./vizConfig";
@@ -52,7 +52,7 @@ const STATUS_TEXT: Record<AudioStatus, string> = {
   listening: "listening",
   denied: "permission refused",
   "silent-share": "that share carried no audio",
-  unsupported: "no audio capture in this browser",
+  unsupported: "capture unavailable",
   error: "capture failed",
 };
 
@@ -131,6 +131,8 @@ export default function VizAudioMeters({
   const barRef = useRef<HTMLDivElement>(null);
   const tempoRef = useRef<HTMLSpanElement>(null);
   const lockRef = useRef<HTMLSpanElement>(null);
+  const candidateRef = useRef<HTMLDivElement>(null);
+  const rivalRef = useRef<HTMLDivElement>(null);
   const loudRef = useRef<HTMLDivElement>(null);
   const loudTextRef = useRef<HTMLSpanElement>(null);
 
@@ -364,6 +366,48 @@ export default function VizAudioMeters({
       if (tempoRef.current) {
         tempoRef.current.textContent = frame.bpm > 0 ? `${frame.bpm.toFixed(1)} bpm` : "— bpm";
       }
+      if (candidateRef.current) {
+        // Which stream the histogram was built from, then the candidates it is
+        // choosing between, strongest first. A near-tie between two of these is a
+        // different fault from one confident peak in the wrong place.
+        candidateRef.current.textContent =
+          reactor.candidates.length > 0
+            ? `${reactor.tempoSource} · ` +
+              reactor.candidates
+                .map((c) => `${c.bpm.toFixed(0)}@${c.score.toFixed(2)}`)
+                .join("  ")
+            : reactor.tempoSource;
+      }
+      if (rivalRef.current) {
+        /*
+         * The comparison tracker, beside ours — see `AudioReactor.aubioBpm`.
+         *
+         * Two independent estimates of the same quantity is the only instrument that
+         * settles which one to trust on material a synthetic bench cannot reproduce,
+         * and its confidence is shown because aubio's is well calibrated: measured
+         * across the bench, 0.14 on a pad with no beat, 0.45 on off-grid hits, and
+         * 1.5-3.3 on anything with a real pulse.
+         */
+        /*
+         * Three estimates of the same quantity, which is the only instrument that can
+         * settle this on material a synthetic bench cannot reproduce.
+         *
+         * `comb` is the tempogram and is the one that now owns the period whenever it
+         * is sure — `*` marks that it is being trusted. `aubio` is the reference it was
+         * built to match and cannot ship, being GPL-3.0 against this project's MIT.
+         * The candidate line above is the old inter-onset histogram, kept because it is
+         * still the fallback and still a witness.
+         */
+        const comb =
+          reactor.combBpm > 0
+            ? `comb ${reactor.combBpm.toFixed(1)}${reactor.combTrusted ? "*" : ""} (z ${reactor.combZ.toFixed(1)})`
+            : "comb —";
+        const rival =
+          reactor.aubioBpm > 0
+            ? `aubio ${reactor.aubioBpm.toFixed(1)} (${reactor.aubioConfidence.toFixed(2)})`
+            : "aubio —";
+        rivalRef.current.textContent = `${comb} · ${rival}`;
+      }
       if (lockRef.current) {
         // Both confidences, because they answer different questions and a run
         // where one is high and the other is zero is the common case rather
@@ -425,9 +469,16 @@ export default function VizAudioMeters({
   };
 
   const listening = status === "listening";
-  const failed = status === "denied" || status === "error" || status === "silent-share";
+  const failed =
+    status === "denied" ||
+    status === "error" ||
+    status === "silent-share" ||
+    status === "unsupported";
   const character = config ? audioCharacterOf(config) : null;
   const calm = prefersReducedMotion();
+  // A capability of the browser, not of this run: it cannot change between
+  // renders, so it is read once rather than tracked as state.
+  const canShareTab = useMemo(() => displayCaptureSupported(), []);
 
   const setCharacter = (id: string) => {
     const chosen = AUDIO_CHARACTERS.find((entry) => entry.id === id);
@@ -464,6 +515,32 @@ export default function VizAudioMeters({
 
       {reactor?.error && failed && (
         <div className="mt-1 opacity-55 leading-snug normal-case">{reactor.error}</div>
+      )}
+
+      {listening && (
+        // The tempo contest, per `AudioReactor.candidates`: which onset stream the
+        // histogram was built from and how many onsets were in it, then the tempi it
+        // is choosing between with their scores relative to the winner. A wrong BPM
+        // on its own says nothing about why; this says whether two octaves are tied,
+        // whether one confident peak is in the wrong place, or whether there is no
+        // peak at all and the prior is deciding.
+        <div
+          ref={candidateRef}
+          className="mt-1 font-mono text-[10px] opacity-45 normal-case tabular-nums"
+        >
+          —
+        </div>
+      )}
+
+      {listening && (
+        // The second opinion. See `AudioReactor.aubioBpm` — diagnostic only, and it
+        // cannot ship: aubio is GPL-3.0 against this project's MIT.
+        <div
+          ref={rivalRef}
+          className="font-mono text-[10px] opacity-45 normal-case tabular-nums"
+        >
+          aubio —
+        </div>
       )}
 
       {listening && (
@@ -602,15 +679,21 @@ export default function VizAudioMeters({
         >
           {reactor?.source === "mic" ? "stop" : "mic"}
         </button>
-        <button
-          onClick={() => listen("display")}
-          disabled={!reactor || status === "requesting"}
-          className="viz-tune-btn flex-1 py-1 font-display text-[9px] tracking-widest uppercase
-                     text-white/60 hover:text-accent disabled:opacity-40"
-          title="Share a tab or your screen with “share audio” ticked"
-        >
-          {reactor?.source === "display" ? "stop" : "tab audio"}
-        </button>
+        {/* Absent rather than disabled where the browser has no screen capture
+            at all — a phone, in practice. A dead control invites the tap that
+            used to end in a raw `TypeError`, and there is nothing the user
+            could do to make it live. The mic button takes the row. */}
+        {canShareTab && (
+          <button
+            onClick={() => listen("display")}
+            disabled={!reactor || status === "requesting"}
+            className="viz-tune-btn flex-1 py-1 font-display text-[9px] tracking-widest uppercase
+                       text-white/60 hover:text-accent disabled:opacity-40"
+            title="Share a tab or your screen with “share audio” ticked"
+          >
+            {reactor?.source === "display" ? "stop" : "tab audio"}
+          </button>
+        )}
       </div>
 
       {/*

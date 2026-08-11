@@ -5,6 +5,7 @@ import type { StageFrame, Vec3, VizBackend, VizFrame } from "../types";
 import { blendCode } from "../types";
 import { TexturePool } from "../TexturePool";
 import { FULLSCREEN_VERT } from "../shaders/common";
+import { HANDOVER_FRAGMENT } from "../shaders/handover";
 import { compositeFragment } from "../shaders/layer";
 import { FOLD_ITERS, POST_FRAGMENT } from "../shaders/post";
 import { SpatialPass } from "./SpatialPass";
@@ -41,6 +42,12 @@ function unitLevels(): Vec2 {
  * exactly as it is. That is the point of routing it through a texture: the
  * whole post chain, feedback included, lands on a formation without knowing
  * that formations exist.
+ *
+ * The one thing that texture cannot hide is the moment the frame changes which
+ * of the two produced it, since neither path has any idea the other exists. A
+ * frame carrying a `handover` therefore inserts one more line before post,
+ * dissolving the still of the outgoing path over the incoming one — see
+ * `applyHandover`.
  */
 export class WebGLBackend implements VizBackend {
   private readonly renderer: Renderer;
@@ -52,6 +59,22 @@ export class WebGLBackend implements VizBackend {
   private readonly postMesh: Mesh;
   private targets: [RenderTarget, RenderTarget];
   private feedback: Texture;
+  /** Which of `targets` the shard path last composited into, so the crossing can
+   *  pick the other one to write its mix into. Null on a spatial frame, whose
+   *  scene texture belongs to the spatial pass and leaves both free. */
+  private sceneTarget: RenderTarget | null = null;
+  /**
+   * The crossing between paths: a still of the outgoing one, and the program
+   * that both takes it and reads it back. All three are built on the first
+   * switch and never on a run that stays on one preset, which is the same
+   * bargain the spatial pass makes one field down.
+   */
+  private handoverProgram: Program | null = null;
+  private handoverMesh: Mesh | null = null;
+  private snapshot: RenderTarget | null = null;
+  /** Whether `snapshot` holds a frame rather than the black it was born with. */
+  private captured = false;
+  private readonly geometry: Triangle;
   /** Scene textures currently carrying a mip chain — see `syncSceneMips`. */
   private readonly mipped = new Set<Texture>();
   private readonly maxShards: number;
@@ -105,6 +128,7 @@ export class WebGLBackend implements VizBackend {
     this.pool = new TexturePool(this.gl, caps.texturePoolSize, caps.textureMaxEdge);
 
     const geometry = new Triangle(this.gl);
+    this.geometry = geometry;
 
     this.compositeProgram = new Program(this.gl, {
       vertex: FULLSCREEN_VERT,
@@ -309,6 +333,12 @@ export class WebGLBackend implements VizBackend {
     this.height = nextHeight;
     this.aspect = this.width / this.height;
     for (const target of this.targets) target.setSize(this.width, this.height);
+    // Resized with the rest, and its contents dropped: a still of the frame at
+    // the old size is not a still of this one, and a crossing that has lost what
+    // it was crossing against should fall back to the cut rather than dissolve
+    // out of a black buffer.
+    this.snapshot?.setSize(this.width, this.height);
+    this.captured = false;
     this.spatial?.resize(this.width, this.height);
     this.fields.resize(this.width, this.height);
     this.gl.deleteTexture(this.feedback.texture);
@@ -353,12 +383,97 @@ export class WebGLBackend implements VizBackend {
       spatial && frame.stage
         ? this.renderStage(spatial, frame.stage, frame.background)
         : this.renderShards(frame);
+    // Ahead of the fields, not after them: the trail, the bloom and the reaction
+    // are all seeded from the composite, and seeding them from the incoming path
+    // alone would put a hard cut through every one of them under a crossing that
+    // has none.
+    const composed = this.applyHandover(frame, scene);
     // Between the scene and post, so the buffers post reads are this frame's
     // rather than the last one's — the reaction in particular is seeded from the
     // composite, and a frame late would have it chasing a picture that has
     // already moved on.
-    this.fields.update(frame.post, scene, frame.flowAngle, frame.time);
-    this.renderPost(frame, scene);
+    this.fields.update(frame.post, composed, frame.flowAngle, frame.time);
+    this.renderPost(frame, composed);
+  }
+
+  /**
+   * Cross the frame against the path it replaced.
+   *
+   * Two jobs on one program. On the capture frame a still is taken of the last
+   * frame the outgoing path drew; on every frame after it that still is mixed
+   * back over the incoming scene at a weight the director decays to nothing.
+   *
+   * Before post rather than after it, so the crossing happens in the frame's own
+   * colours and every effect in the chain then lands on the result. Post is
+   * still ramping between the two presets while this runs, and a crossing done
+   * downstream of it would be two pictures that had each been through a
+   * different half of that ramp.
+   */
+  private applyHandover(frame: VizFrame, scene: Texture): Texture {
+    const handover = frame.handover;
+    if (!handover) return scene;
+    const program = this.ensureHandover();
+    const mesh = this.handoverMesh;
+    const snapshot = this.ensureSnapshot();
+    // Nothing to cross with. The cut is what the run had before this existed, so
+    // it is also the right thing to degrade to.
+    if (!program || !mesh || !snapshot) return scene;
+
+    // Whichever of the pair the shard path did not just composite into. On a
+    // spatial frame it never touched either.
+    const write = this.targets[this.sceneTarget === this.targets[0] ? 1 : 0];
+
+    // The crossing already running, if there is one. Done before the capture
+    // below rather than after it, so a switch made inside another switch is
+    // stilled as the viewer is seeing it — see `Director.handover`.
+    let composed = scene;
+    if (this.captured && handover.mix > 0) {
+      program.uniforms.uScene.value = scene;
+      program.uniforms.uPrev.value = snapshot.texture;
+      program.uniforms.uMix.value = handover.mix;
+      this.renderer.render({ scene: mesh, target: write, frustumCull: false });
+      composed = write.texture;
+    }
+
+    if (handover.capture) {
+      // Through the same program at a mix of nothing, which is a copy: the still
+      // is written by exactly the path it will be read back through, so a
+      // crossing that has run a full cycle is reading its own output format
+      // rather than something a second code path produced.
+      program.uniforms.uScene.value = composed;
+      program.uniforms.uPrev.value = composed;
+      program.uniforms.uMix.value = 0;
+      this.renderer.render({ scene: mesh, target: snapshot, frustumCull: false });
+      this.captured = true;
+    }
+
+    return composed;
+  }
+
+  private ensureHandover(): Program | null {
+    if (!this.handoverProgram) {
+      this.handoverProgram = new Program(this.gl, {
+        vertex: FULLSCREEN_VERT,
+        fragment: HANDOVER_FRAGMENT,
+        depthTest: false,
+        depthWrite: false,
+        uniforms: {
+          uScene: { value: this.pool.blank },
+          uPrev: { value: this.pool.blank },
+          uMix: { value: 0 },
+        },
+      });
+      this.handoverMesh = new Mesh(this.gl, {
+        geometry: this.geometry,
+        program: this.handoverProgram,
+      });
+    }
+    return this.handoverProgram;
+  }
+
+  private ensureSnapshot(): RenderTarget | null {
+    if (!this.snapshot) this.snapshot = this.makeTarget(this.width, this.height);
+    return this.snapshot;
   }
 
   /** The spatial path. Returns the texture post should read. */
@@ -370,6 +485,9 @@ export class WebGLBackend implements VizBackend {
       ...stage.slots.map((slot) => slot.panelId),
       ...stage.solids.map((solid) => solid.panelId),
     ]);
+    // The formation renders into the spatial pass's own target, so both of the
+    // composite targets are free for a crossing to mix into.
+    this.sceneTarget = null;
     return spatial.render(stage, background, this.pool);
   }
 
@@ -432,6 +550,7 @@ export class WebGLBackend implements VizBackend {
       write = this.targets[read === this.targets[0] ? 1 : 0];
     }
 
+    this.sceneTarget = read;
     return read!.texture;
   }
 
@@ -664,6 +783,7 @@ export class WebGLBackend implements VizBackend {
     this.gl.deleteTexture(this.feedback.texture);
     this.compositeProgram.remove();
     this.postProgram.remove();
+    this.handoverProgram?.remove();
     const lose = this.gl.getExtension("WEBGL_lose_context");
     lose?.loseContext();
   }

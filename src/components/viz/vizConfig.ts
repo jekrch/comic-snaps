@@ -868,8 +868,16 @@ export const CONFIG_FIELDS: ConfigField[] = [
  * Fields a mode switch interpolates. Speed is deliberately left out: it is the
  * viewer's own control, and a preset carrying its authored rate back in would
  * take away a choice they had already made.
+ *
+ * So is the whole stage group, for the reason `lerpConfigInto` gives below.
  */
-const RAMP_FIELDS = CONFIG_FIELDS.filter((entry) => entry.path !== "speed");
+const RAMP_FIELDS = CONFIG_FIELDS.filter(
+  (entry) => entry.path !== "speed" && entry.group !== "stage"
+);
+
+/** The formation's own parameters, which step with the path rather than
+ *  crossing it. See `lerpConfigInto`. */
+const STAGE_FIELDS = CONFIG_FIELDS.filter((entry) => entry.group === "stage");
 
 /**
  * Write the `from`→`to` crossing at position `t` into `live`, in place. In
@@ -890,6 +898,23 @@ export function lerpConfigInto(live: VizConfig, from: VizConfig, to: VizConfig, 
   // ramp rather than at either end, so the cut lands where the crossfade has
   // both presets at half strength and is the least visible thing happening.
   live.stageKind = t < 0.5 ? from.stageKind : to.stageKind;
+  /*
+   * And the whole group that describes the formation steps with it, rather than
+   * crossing the ramp like everything else here.
+   *
+   * These parameters only mean anything while a formation is on screen, and the
+   * formation is on screen for exactly one side of the switch. Interpolated,
+   * they spend the half of the ramp before the swap warping an outgoing
+   * formation toward numbers authored for a scene it is not, and the half after
+   * it sliding an arriving one out of numbers that were never authored for
+   * anything — a corridor that appears at a field of view halfway between flat's
+   * 55° and the vault's 74° and then keeps opening for another half-second,
+   * which reads as the scene rubber-banding into place. Stepped, each formation
+   * is drawn at its own authored values for every frame it exists, and the step
+   * itself lands where nothing is drawing them.
+   */
+  const stage = t < 0.5 ? from : to;
+  for (const entry of STAGE_FIELDS) entry.set(live, entry.get(stage));
 }
 
 function readPath(source: Record<string, unknown>, path: string): unknown {
@@ -1229,3 +1254,15 @@ export const MIN_EFFECT_RAMP_CLOCK = MIN_EFFECT_RAMP * VIZ_MAX_SPEED;
  * the same floor instead of snapping the frame over to the new preset.
  */
 export const MODE_SWITCH_MS = Math.max(1600, MIN_EFFECT_RAMP * 1000);
+/**
+ * How long the crossing between the two composition paths takes, in clock
+ * seconds — see `VizHandover`.
+ *
+ * The fade floor exactly, and not a length chosen for how it looks. What this
+ * dissolve moves is the whole frame from one picture to a different one, which
+ * is the single largest luminance excursion the engine can make, so it runs at
+ * the slowest rate §7 asks for and no faster. In clock seconds for the fade
+ * floor's own reason: the incoming path's opening is authored on the same clock,
+ * and the two have to stay complements of each other at every speed.
+ */
+export const MODE_HANDOVER_CLOCK = MIN_FULLBLEED_FADE_CLOCK;

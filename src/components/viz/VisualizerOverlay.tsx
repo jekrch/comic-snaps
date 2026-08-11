@@ -711,6 +711,10 @@ export default function VisualizerOverlay({
     (id: string) => {
       const from = cloneConfig(configRef.current);
       const to = presetConfig(id);
+      // Ahead of the ramp, and the only thing told ahead of it: a formation takes
+      // its whole residency the frame it is built, so the decodes need the length
+      // of the crossing to land in. See `Engine.expectStage`.
+      engineRef.current?.expectStage(to.stageKind);
       window.cancelAnimationFrame(rampRef.current);
       const started = performance.now();
       const step = (now: number) => {

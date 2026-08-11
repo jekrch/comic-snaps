@@ -31,6 +31,39 @@ const SPATIAL_SCENES: Record<StageKind, SpatialScene> = {
  */
 const SOLID_DWELL = 2.5;
 
+/**
+ * How many panels a formation of this scene holds resident, split into the slots
+ * that carry the surface and the solids tumbling in front of it.
+ *
+ * Solids come out of the same residency budget as the slots, and are capped well
+ * under it: a formation that spent most of its panels on tumbling objects would
+ * be a scene about the objects.
+ *
+ * How many slots is the scene's decision alone — the device only caps it. The
+ * density knob deliberately does *not* reach it: panels resident is how many
+ * images are on screen at once, which is a compositional decision the scenes have
+ * already made carefully, and a slider that quietly multiplied it would undo
+ * every one of them at the first drag.
+ */
+function residency(
+  scene: SpatialScene,
+  caps: DeviceCaps
+): { slots: number; solids: number } {
+  const solids = Math.min(scene.solidPanels, Math.floor(caps.stagePanels / 4));
+  const slots = clamp(scene.panels, 1, Math.max(1, caps.stagePanels - solids));
+  return { slots, solids };
+}
+
+/**
+ * The whole of that, as one number: what a formation of this kind asks for on
+ * the frame it is built, and therefore what has to be decoded by then for it to
+ * arrive whole. See `Director.expectStage`.
+ */
+export function stageResidency(kind: StageKind, caps: DeviceCaps): number {
+  const { slots, solids } = residency(SPATIAL_SCENES[kind], caps);
+  return slots + solids;
+}
+
 /** One panel's tenancy of a slot. */
 interface Occupant {
   panel: Panel | null;
@@ -81,6 +114,8 @@ export class Stage {
    *  told from the config being reapplied unchanged sixty times a second. */
   private builtSlots = 0;
   private builtPerSlot = 0;
+  /** Set by `coverArrival`, spent by the first `update` after it. */
+  private covered = false;
 
   constructor(private readonly caps: DeviceCaps) {}
 
@@ -105,6 +140,21 @@ export class Stage {
    * unchanged resolves to the same counts and returns immediately, and a
    * formation that is merely morphing is never rebuilt.
    */
+  /**
+   * Open the arriving formation at full strength instead of fading it up.
+   *
+   * The hurried opening fade in `refill` exists because a formation coming up on
+   * a frame with nothing else in it has nothing to cross against. When the
+   * director is crossing this arrival against a still of the path it replaced,
+   * that is no longer true — and the fade then becomes actively wrong, because
+   * the two curves multiply: a dissolve at half and a formation at half is a
+   * quarter of a frame, and the crossing sags in the middle instead of holding
+   * level. So the dissolve does the crossing, and the formation simply arrives.
+   */
+  coverArrival(): void {
+    this.covered = true;
+  }
+
   sync(kind: StageKind | null, config: VizConfig, forkRng: () => Rng): boolean {
     const changed = kind !== this.kind;
 
@@ -120,16 +170,7 @@ export class Stage {
     }
 
     const scene = SPATIAL_SCENES[kind];
-    // Solids come out of the same residency budget as the slots, and they are
-    // capped well under it: a formation that spent most of its panels on
-    // tumbling objects would be a scene about the objects.
-    const solids = Math.min(scene.solidPanels, Math.floor(this.caps.stagePanels / 4));
-    // How many panels is the scene's alone — the device only caps it. The density
-    // knob deliberately does *not* reach it: panels resident is how many images
-    // are on screen at once, which is a compositional decision the scenes have
-    // already made carefully, and a slider that quietly multiplied it would undo
-    // every one of them at the first drag.
-    const slots = clamp(scene.panels, 1, Math.max(1, this.caps.stagePanels - solids));
+    const { slots, solids } = residency(scene, this.caps);
     // Quads per panel is what the knob moves, and the floor is 1 — except for a
     // scene that asked for none, which means its surface is a shell and there is
     // nothing here for the density of quads to be the density of.
@@ -278,6 +319,10 @@ export class Stage {
     // Solids are separate objects in the middle distance, never the same surface
     // twice, so they overlap like the quads do whatever the slots are doing.
     this.refill(this.solidSlots, time, dwell * SOLID_DWELL, config, safety, pick, false);
+    // Spent across both sets, and only here: an arrival is the frame the
+    // formation is built on, and every tenancy opened after it is a handover
+    // inside a scene that is already running.
+    this.covered = false;
 
     const params = formation.frame({
       time,
@@ -451,8 +496,12 @@ export class Stage {
         //
         // Floored by the governor rather than cut, because a wall or a corridor
         // is full-bleed and this is the fastest §7 lets the whole frame's
-        // luminance move.
-        if (slot.bornAt <= time) slot.curve.fadeIn = Math.min(fade, safety.clampFade(0));
+        // luminance move — unless the arrival is being crossed against the path
+        // it replaced, in which case there is no fade at all and the dissolve
+        // carries the whole crossing. See `coverArrival`.
+        if (slot.bornAt <= time) {
+          slot.curve.fadeIn = this.covered ? 0 : Math.min(fade, safety.clampFade(0));
+        }
       } else {
         // Handovers land on the slot's own cadence rather than on whichever frame
         // happened to notice the expiry. That frame is up to a tick late, and a

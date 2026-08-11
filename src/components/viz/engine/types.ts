@@ -1095,6 +1095,30 @@ export interface VizPhases {
   swell: number;
 }
 
+/**
+ * The crossing between the two composition paths, while one is running.
+ *
+ * The paths are exclusive, so a change of path empties one and starts the other
+ * from nothing — a cut, however smoothly every parameter around it is being
+ * ramped. This is what the backend crosses that cut against: a still of the last
+ * frame the outgoing path drew, dissolved out over the incoming one. See
+ * `shaders/handover.ts` for why a still and not a live second render.
+ *
+ * Produced by the director, which is the only object that knows a path change is
+ * coming — it holds the outgoing path for one extra frame so there is something
+ * to take the still *of*.
+ */
+export interface VizHandover {
+  /**
+   * Take the still now: this frame is the last the outgoing path will draw, and
+   * the swap happens on the next one. True for exactly one frame per crossing,
+   * and `mix` is zero while it is.
+   */
+  capture: boolean;
+  /** How much of the still is still over the frame, 1 → 0 across the crossing. */
+  mix: number;
+}
+
 /** Everything a backend needs for one frame. */
 export interface VizFrame {
   time: number;
@@ -1109,6 +1133,9 @@ export interface VizFrame {
    * lands on the 3D render exactly as it lands on the flat one.
    */
   stage: StageFrame | null;
+  /** The crossing between the paths, or null — which is every frame of a run
+   *  that is not changing path this second. */
+  handover: VizHandover | null;
   post: PostParams;
   /** Integrals of the `*Spin` rates in `post`. Live reference, not a copy —
    *  a frame is consumed by its backend within the tick that produced it. */

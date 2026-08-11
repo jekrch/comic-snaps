@@ -249,6 +249,7 @@ const CHANNELS = [
   "hitHigh",
   "backbeat",
   "handover",
+  "stride",
   "fast",
   "swell",
   "tonal",

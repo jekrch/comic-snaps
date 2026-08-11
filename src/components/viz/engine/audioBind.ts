@@ -306,6 +306,33 @@ const BAR_MEMORY = 0.3;
 const BAR_GLIDE = 0.4;
 /** How far apart in the bar successive layers read the breath. See `spread`. */
 const SPREAD_BARS = 0.085;
+/**
+ * How much of that spread is *removed* once the grid is locked — §17, and the
+ * single largest cause of the composition reading as a wobble rather than as a
+ * beat.
+ *
+ * The spread exists for a good reason: four full-bleed layers all scaling on the
+ * same frame move as one sheet, and a sheet is not a composition. But at four
+ * layers and 0.085 of a bar it puts 170ms at 120BPM between the first layer's
+ * breath and the last's, over a shape that already fills 98% of the bar. Four
+ * overlapping images each swelling 5.5% on a slightly different clock is a
+ * literal description of jelly, and — this is the part that matters — it means
+ * **there is no instant in the geometry at all**. Whatever the music does, some
+ * layer is always part-way through doing it, so nothing on screen ever coincides
+ * with anything.
+ *
+ * Rhythm is coincidence. What makes a stack read as being on the beat is that
+ * its members arrive *together*, and the spread is the mechanism that guarantees
+ * they cannot. So it stands down as the lock takes: off the grid it stays at
+ * full strength, where it is carrying a delayed energy envelope that has no
+ * phase in it and smearing genuinely helps; on the grid the stack converges
+ * toward unison.
+ *
+ * Not all the way to it — a fifth of the spread survives, so the stack is a
+ * stack rather than a sheet, and 34ms is inside the window in which the eye
+ * reads two events as simultaneous anyway.
+ */
+const SPREAD_UNISON = 0.8;
 /** Layers before the spread wraps. Six was the old tap count and reads well —
  *  far enough that the stack is legibly a wave, near enough that the two ends
  *  of it are still the same gesture. */
@@ -622,6 +649,54 @@ const HAT_CHROMA = 0.25;
  * measured at and considered smooth.
  */
 const PULSE_BAR = 0.055;
+/**
+ * Scale of the whole composition on the *beat* — §17, and the rule this feature
+ * has held for three rounds, now relaxed on purpose.
+ *
+ * The hierarchy at the top of this file says beat rate gets colour, tone and the
+ * trail, and that geometry belongs to the bar, "because geometric velocity is
+ * what the eye reads as a flinch". Three rounds of building against that rule
+ * have produced a composition that provably follows the music and does not read
+ * as being *on* it — and the reason is now visible in the rule's own wording.
+ * The premise is that beat-rate motion flinches. What actually flinched, in v1,
+ * was a **filtered energy signal**: a transient smoothed until it was safe still
+ * has a corner where the transient arrived, and a corner at beat rate is a
+ * flinch at any amplitude.
+ *
+ * `beatPulse` is not that. It is a raised cosine over predicted phase —
+ * continuous in value and in derivative by construction, flat at both ends of
+ * its window, and with a genuine rest between pulses because `BEAT_RISE` plus
+ * `BEAT_FALL` is 0.78. There is no corner in it to flinch on. The rule was
+ * written against the wrong object and it has been costing the feature the one
+ * channel that could ever have read as rhythm: the whole frame, moving, at the
+ * moment of the beat.
+ *
+ * What makes it affordable is that the shape *rests*. The bar breath fills 98%
+ * of the bar, so its velocity is spread thinly across the whole of it and the
+ * eye integrates it into a wobble; this spends a comparable budget in 78% of a
+ * beat and then holds still. Same travel, concentrated — which is the difference
+ * between a wiggle and a pulse, and it is the correction §16's stride was
+ * reaching for and got only half of.
+ *
+ * The velocity is `π × PULSE_BEAT / (2 × BEAT_FALL × beat)`, and the **fall** is
+ * what sets it rather than the rise — the shape is deliberately asymmetric, so
+ * the steep side is the short one on the way out of the pulse, not the long
+ * anticipating one on the way in. Getting that backwards understates the figure
+ * by 1.8× and is worth recording because it is the same slip that put 43.8%/s on
+ * the `late` gesture: in this family, the number to check is always the fall.
+ *
+ * Measured at 1/60s: 10%/s at 90BPM, 13%/s at 120, 20%/s at 174. That is over
+ * the 9.5%/s the bar row runs at, knowingly, and the trade is the whole thesis
+ * of §17 — the bar row spends its budget evenly across 98% of the bar, which
+ * integrates into a wobble, and this spends a comparable one inside 78% of a
+ * beat and then holds still. The *excursion* is 1.2% of frame either way. What
+ * changed is when it happens, not how far it goes.
+ *
+ * Scaled by `sharp`, so this is exactly what the `attack` slider has always
+ * claimed to do and until now could not: "down for a breath over each bar, up
+ * for the beat" — and it is the knob to reach for if this is too much.
+ */
+const PULSE_BEAT = 0.012;
 /** And the accent on top, undelayed and on every layer at once. Being rare, it
  *  is allowed to be the one thing that moves together. */
 const PULSE_ACCENT = 0.011;
@@ -639,6 +714,77 @@ const BLOOM_DEPTH = 0.4;
 /** Additive, and small: the vignette is the frame's own edge and a viewer reads
  *  a change in it as the picture breathing rather than as an effect. */
 const VIGNETTE_DEPTH = 0.1;
+
+// --- the stride -------------------------------------------------------------
+
+/**
+ * The frame's beat-locked walk — §16 of
+ * `docs/visualizer-audio-attribution.md`, and the answer to a complaint neither
+ * of the previous two rounds could have addressed.
+ *
+ * Every channel above is an *amplitude*: the music decides how far something
+ * travels and the grid decides the shape it travels on. That arrangement is
+ * correct and measurable and it still cannot produce the one thing a viewer
+ * uses to decide whether a picture is following music, which is a **change
+ * arriving at the same instant as a beat**. A raised cosine at bar rate has no
+ * instant in it — it is at its maximum for a tenth of a bar and its own peak is
+ * not an event. What the eye can find is a thing that was going one way and is
+ * now going another, at the moment the beat lands.
+ *
+ * So this is not a level at all. Each beat, the whole flat composition commits
+ * to a new position on a small circle and glides there, arriving before the next
+ * beat is due. Nothing about it follows loudness — the size is a slow scalar and
+ * the *timing* carries the whole content — which is precisely the property the
+ * complaint asked for: it moves *on* the beat rather than popping *with* a
+ * harder note.
+ *
+ * It also costs almost nothing in the currency this feature is budgeted in. A
+ * translation has no velocity contribution beyond its own, the step is bounded
+ * by `2 × STRIDE_REACH × sin(π × STRIDE_TURN)`, and it arrives over most of a
+ * beat: at 128BPM the peak is about 6%/s, against the 9.5%/s the geometry row
+ * already runs at, and unlike the frame scale it cannot compound.
+ */
+const STRIDE_REACH = 0.012;
+/**
+ * Turns of the circle taken per beat.
+ *
+ * Not a quarter and not a third: those close after four or three beats and the
+ * walk becomes a visible little box or triangle repeating every bar, which reads
+ * as a mechanism rather than as motion. At 0.17 the figure closes after about
+ * six beats and is never in phase with a four-beat bar, so successive bars trace
+ * the circle from different places and the pattern has no period a viewer can
+ * find — the same argument `BARS_PER_PHRASE_ALT` makes one row up.
+ *
+ * The step between two positions is the chord, `2 × sin(π × 0.17)` of the
+ * radius, so a smaller turn is also a smaller and slower move. This is the
+ * largest value that keeps the step inside the velocity budget at the top of the
+ * tempo range.
+ */
+const STRIDE_TURN = 0.17;
+/**
+ * Fraction of a beat the step takes to arrive.
+ *
+ * Under 1, so the frame is *settled* when the next beat lands rather than still
+ * travelling — a walk that never stops moving is a drift, and a drift is what
+ * the composition already had. The rest between steps is what makes each
+ * arrival readable as an arrival, and it is the same argument `BEAT_RISE` plus
+ * `BEAT_FALL` under 1 makes about the pulse.
+ *
+ * It is also the *lead*: the step is launched this far before the beat so that
+ * it lands on it. See `trackStride`, which had this the wrong way round.
+ */
+const STRIDE_GLIDE = 0.55;
+/**
+ * How much of the stride survives at `attack` 0.
+ *
+ * Scaled rather than rerouted, which is the exception to §6's rule and worth
+ * naming. Everything else on the beat row has a bar-rate shape it can be
+ * expressed as instead; a step has no slow form — a walk taken once a bar is a
+ * different gesture, not a gentler one. So `attack` sets how far it walks, and
+ * the floor is high enough that a viewer who has asked for no beat-rate detail
+ * still gets a composition that is visibly on the grid.
+ */
+const STRIDE_FLOOR = 0.45;
 
 // --- depths, phrase row -----------------------------------------------------
 
@@ -816,6 +962,8 @@ export interface AudioChannels {
   /** How much of the composition's own motion is standing down, 0..1 — the
    *  complement of what the director multiplies its autonomous rates by. */
   handover: number;
+  /** How far the beat-locked walk is currently reaching. See `STRIDE_REACH`. */
+  stride: number;
   fast: number;
   swell: number;
   tonal: number;
@@ -954,6 +1102,23 @@ export class AudioBinding {
   private barGain = 1;
   private barMark = -1;
 
+  // --- the stride -----------------------------------------------------------
+  /** Where on the circle the walk is heading, in turns, and the beat the last
+   *  step was taken on. See `STRIDE_REACH`. */
+  private strideAngle = 0;
+  private strideMark = -1;
+  /** The step in progress: where it came from, where it is going, and how far
+   *  through it is. Unit vectors — the reach is applied at the point of use, so
+   *  a reach that moves while a step is in flight bends it rather than
+   *  restarting it. */
+  private strideFromX = 0;
+  private strideFromY = 0;
+  private strideToX = 1;
+  private strideToY = 0;
+  private strideBlend = 1;
+  /** Filled by `stride`, on `channels`' convention. */
+  private readonly strideOut = { x: 0, y: 0, overscan: 1 };
+
   // --- the section row ------------------------------------------------------
   /** The cue for this frame, 0 on nearly all of them. Cleared at the top of
    *  every `update`, so a consumer reads it within the frame that raised it. */
@@ -1027,6 +1192,7 @@ export class AudioBinding {
     hitHigh: 0,
     backbeat: 0,
     handover: 0,
+    stride: 0,
     fast: 0,
     swell: 0,
     tonal: 0,
@@ -1060,6 +1226,7 @@ export class AudioBinding {
     out.hitHigh = this.hitHigh;
     out.backbeat = this.backbeat;
     out.handover = this.handover;
+    out.stride = this.strideReach;
     out.fast = this.fast;
     out.swell = this.swell;
     out.tonal = this.tonal;
@@ -1085,7 +1252,31 @@ export class AudioBinding {
    * The accent is added undelayed and to every layer at once.
    */
   pulse(shardId: number): number {
-    return 1 + PULSE_BAR * this.spread(shardId) + PULSE_ACCENT * this.accent;
+    return (
+      1 +
+      PULSE_BAR * this.spread(shardId) +
+      // Undelayed and identical on every layer, which is the whole point — see
+      // `PULSE_BEAT` and `SPREAD_UNISON`. A beat term handed out at a per-layer
+      // offset would be the same smear the bar row was suffering from, one
+      // octave faster and therefore worse.
+      PULSE_BEAT * this.beat +
+      PULSE_ACCENT * this.accent
+    );
+  }
+
+  /**
+   * The beat shape as the geometry sees it: on the grid only, at the amplitude
+   * everything else travels at, and open as far as `attack` asks.
+   *
+   * No energy fallback, deliberately, and for the reason the press family and
+   * the fold already make the same call. The energy path is a delayed envelope
+   * with no phase in it; a frame pulsing off *that* is the composition moving
+   * near the music without ever landing on it, which is precisely the reading
+   * this channel exists to replace. Where there is no beat, there is no beat
+   * pulse.
+   */
+  private get beat(): number {
+    return this.beatPulse * this.amplitude * this.grid * this.sharp;
   }
 
   /**
@@ -1133,6 +1324,39 @@ export class AudioBinding {
    */
   get autonomy(): number {
     return 1 - HANDOVER * this.handover;
+  }
+
+  /**
+   * The frame's beat-locked offset, in fractions of the frame height, with the
+   * overscan that keeps it from pulling a full-bleed layer's own edge into
+   * shot — see `STRIDE_REACH`.
+   *
+   * The overscan is why this is one object rather than two getters. A
+   * translation of `r` in any direction is covered by a scale of `1 + 2r` about
+   * the frame centre, since the nearer half-dimension is 0.5 in stage units; the
+   * two therefore have to be applied together or the gesture is a border
+   * appearing on the beat. It is also under three percent at full reach and
+   * moves on the amplitude's own time constant, so it contributes nothing to
+   * velocity and nothing to the picture.
+   *
+   * Mutated in place and handed out by reference, the same convention as
+   * `channels`.
+   */
+  get stride(): { x: number; y: number; overscan: number } {
+    const reach = this.strideReach;
+    const out = this.strideOut;
+    if (reach <= 0) {
+      out.x = 0;
+      out.y = 0;
+      out.overscan = 1;
+      return out;
+    }
+    const t = this.strideBlend;
+    const eased = t * t * (3 - 2 * t);
+    out.x = reach * (this.strideFromX + (this.strideToX - this.strideFromX) * eased);
+    out.y = reach * (this.strideFromY + (this.strideToY - this.strideFromY) * eased);
+    out.overscan = 1 + 2 * reach;
+    return out;
   }
 
   /** Gain on the spatial flight and turn rates. Read at different offsets, so
@@ -1199,7 +1423,11 @@ export class AudioBinding {
    * picture rearranging itself near the music but never with it.
    */
   private onGrid(slot: number): number {
-    const offset = (Math.abs(slot) % SPREAD_SLOTS) * SPREAD_BARS;
+    // Closed toward unison as the lock takes — see `SPREAD_UNISON`. Continuous
+    // in `grid`, so a lock arriving or leaving draws the stack together or lets
+    // it fan out over `LOCK_FADE` rather than restacking it on one frame.
+    const offset =
+      (Math.abs(slot) % SPREAD_SLOTS) * SPREAD_BARS * (1 - SPREAD_UNISON * this.grid);
     let phase = (this.barPhase - offset) % 1;
     if (phase < 0) phase += 1;
     return this.barShape(phase) * this.amplitude * this.grid;
@@ -1221,6 +1449,73 @@ export class AudioBinding {
     if (this.gestureBlend >= 1) return next;
     const previous = gestureAt(GESTURES[this.previousGesture], phase);
     return previous + (next - previous) * this.gestureBlend;
+  }
+
+  /**
+   * The walk, advanced by a frame. See `STRIDE_REACH`.
+   *
+   * The step fires on `beatCount` rather than on a phase test, for the reason
+   * `TempoLock.mark` exists: a counter fires exactly once per beat however long
+   * a frame runs, where a phase test either misses a beat on a slow frame or
+   * fires twice on a fast one. And the beat count comes from the grid, which
+   * *predicts* — so the position the frame is gliding to was chosen before the
+   * beat it belongs to arrived, and the analysis latency is spent inside the
+   * glide rather than after it.
+   */
+  private trackStride(frame: AudioFrame, dt: number): void {
+    const beatSeconds = frame.bpm > 0 ? 60 / frame.bpm : 0.5;
+    const glide = beatSeconds * STRIDE_GLIDE;
+
+    /*
+     * The step is launched so that it *finishes* on the beat, not so that it
+     * starts there — §17, and a correction to §16 rather than an addition.
+     *
+     * Fired on the beat with a smoothstep, this channel had its peak velocity at
+     * the midpoint of the glide, which is halfway *between* two beats, and was
+     * at its slowest at the two instants the music was actually marking. It was
+     * a textbook description of the complaint that produced this section: motion
+     * loosely near a beat, never on one. The shape was right and it was pointing
+     * the wrong way round.
+     *
+     * Led instead, which is the same anticipation `BEAT_PEAK` uses and the same
+     * one `Director.beatIndex` uses for a layer birth: the walk moves through the
+     * last half of the beat, is settled at the instant the next one lands, and
+     * rests until the lead for the one after. It also absorbs the analysis
+     * latency for free, because the grid predicts.
+     */
+    const target = frame.nextBeatIn <= glide ? frame.beatCount + 1 : frame.beatCount;
+
+    if (target !== this.strideMark) {
+      if (this.strideMark >= 0) {
+        // Where the walk actually is right now, which on a glide that finished
+        // is the last target and on one still in flight is somewhere between —
+        // taken before the target moves, so a step interrupted by the next beat
+        // continues from where it got to instead of snapping back.
+        const t = this.strideBlend;
+        const eased = t * t * (3 - 2 * t);
+        this.strideFromX = this.strideFromX + (this.strideToX - this.strideFromX) * eased;
+        this.strideFromY = this.strideFromY + (this.strideToY - this.strideFromY) * eased;
+        this.strideAngle = wrap01(this.strideAngle + STRIDE_TURN);
+        this.strideToX = Math.cos(this.strideAngle * 2 * Math.PI);
+        this.strideToY = Math.sin(this.strideAngle * 2 * Math.PI);
+        this.strideBlend = 0;
+      }
+      this.strideMark = target;
+    }
+
+    this.strideBlend = Math.min(1, this.strideBlend + dt / glide);
+  }
+
+  /** How far the walk is currently allowed to reach, in fractions of the frame
+   *  height. Gated on the grid: a walk with no beat under it is exactly the
+   *  arbitrary motion this whole row exists to replace. */
+  private get strideReach(): number {
+    return (
+      STRIDE_REACH *
+      this.amplitude *
+      this.grid *
+      (STRIDE_FLOOR + (1 - STRIDE_FLOOR) * this.sharp)
+    );
   }
 
   /**
@@ -1529,6 +1824,7 @@ export class AudioBinding {
        * composition on an arbitrary quarter of the bar.
        */
       this.barPhase = frame.barPhase;
+      this.trackStride(frame, dt);
       const position = frame.barCount + frame.barPhase;
       const beat = pulseShape(frame.beatPhase, BEAT_PEAK, BEAT_RISE, BEAT_FALL);
       const bar = this.barShape(this.barPhase);
@@ -1886,6 +2182,13 @@ export class AudioBinding {
     this.barBreath = 0;
     this.phrase = 0.5;
     this.barPhase = 0;
+    this.strideAngle = 0;
+    this.strideMark = -1;
+    this.strideFromX = 0;
+    this.strideFromY = 0;
+    this.strideToX = 1;
+    this.strideToY = 0;
+    this.strideBlend = 1;
     this.amplitudeBase = 0;
     this.amplitude = 0;
     this.fast = 0;
