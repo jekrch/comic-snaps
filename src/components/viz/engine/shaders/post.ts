@@ -214,9 +214,9 @@ vec2 cmul(vec2 a, vec2 b) {
 
 /**
  * Mip level the scene should be read at, written by the Julia branch of
- * distort() and left at 0 by everything else.
+ * distortFold() and left at 0 by everything else.
  *
- * A global because distort() returns a coordinate and this is a *rate* — how
+ * A global because distortFold() returns a coordinate and this is a *rate* — how
  * hard the map is compressing the frame at this pixel — and the fetch needs
  * both. It cannot be an implicit derivative: at the boundary of an escape-time
  * set neighbouring pixels take orbits that separate exponentially, so the
@@ -392,7 +392,8 @@ vec2 plateView(vec2 uv) {
  * one place.
  *
  * Order is deliberate, in three stages — four, counting the panes, which are
- * ahead of all of it and are described where they are cut.
+ * ahead of all of it and are described where they are cut. The first two are
+ * this function; the third is distortDisplace below.
  *
  * The *reparameterisations* run first, because they decide what the frame's
  * coordinates mean at all — a tunnel turns radius into depth, a Droste turns it
@@ -405,11 +406,21 @@ vec2 plateView(vec2 uv) {
  * — warping after a kaleidoscope keeps the mirror intact, warping before it
  * would tear the seams apart.
  *
- * The smooth *displacements* run last, and they alone are scaled by disp.
- * That is what dispersion moves: three refraction strengths through the same
- * geometry, never three different foldings of it.
+ * Nothing here reads the refraction strength, and that is why it is a function
+ * of its own rather than the top of one long chain: dispersion moves three
+ * strengths through the *same* geometry, never three foldings of it, so under a
+ * dispersing preset this ran three times and returned the same coordinate three
+ * times. With the fractal below that is not a rounding error — it is the Julia
+ * orbit, forty iterations of complex arithmetic a pixel, paid for twice over to
+ * arrive back where it started. Split, it is computed once and the three
+ * channels part company at distortDisplace, which is the only stage that ever
+ * distinguished them.
+ *
+ * Also the one that writes gSceneLod, which the split makes honest: the mip
+ * level belongs to the fold, so there is now exactly one place it is set and
+ * exactly one value it can have.
  */
-vec2 distort(vec2 uv, float disp) {
+vec2 distortFold(vec2 uv) {
   /*
    * The panes: the view backing up until several mirrored copies of the frame
    * fit across the screen. First, and deliberately so — everything below is
@@ -1162,6 +1173,22 @@ vec2 distort(vec2 uv, float disp) {
     }
   }
 
+  return uv;
+}
+
+/**
+ * The third stage: the smooth displacements, and they alone are scaled by disp.
+ *
+ * That is what dispersion moves — three refraction strengths through the one
+ * geometry distortFold already established, which is why this takes the folded
+ * coordinate rather than the screen's and is the only part of the chain run per
+ * channel.
+ *
+ * The two field reads at the end are the only lines in either half that touch a
+ * texture, and they sit last so that dispersion refracts them like everything
+ * else here.
+ */
+vec2 distortDisplace(vec2 uv, float disp) {
   vec2 p = toStage(uv);
   float r = length(p);
 
@@ -1343,12 +1370,16 @@ void main() {
   vec2 uv = vUv;
   vec2 radial = uv - 0.5;
 
-  vec2 suvG = distort(uv, 1.0);
-  // Captured from the green pass, before the dispersion passes below overwrite
-  // it. The three channels are refracted through the same geometry by
-  // construction, so they compress the frame by the same amount and one level
-  // is the level for all of them.
+  // The geometry, once. Everything the three channels share — the panes, the
+  // reparameterisations, the folds and the fractal — lives here, so the fold is
+  // computed one time however many refraction strengths are asked for below.
+  vec2 folded = distortFold(uv);
+  // Written by the fold and by nothing else, so it is the level for all three
+  // channels by construction: they are refracted through the same geometry, so
+  // they compress the frame by the same amount.
   float lod = gSceneLod;
+
+  vec2 suvG = distortDisplace(folded, 1.0);
   vec2 suvR = suvG;
   vec2 suvB = suvG;
   vec2 suvK = suvG;
@@ -1356,14 +1387,15 @@ void main() {
   // anything else asked for one.
   bool split = uChroma > 0.0 || uDisperse > 0.0 || uMisreg > 0.0;
 
-  // Dispersion re-runs the chain at two other refraction strengths. The chain is
-  // arithmetic almost throughout — the fields read a buffer and the Julia map
-  // reads two coarse mips, and nothing else in it touches a texture — so three
-  // of it costs far less than the bandwidth already in flight, and it is the
-  // only way to get the channels genuinely bent apart rather than merely offset.
+  // Dispersion re-runs the displacements at two other refraction strengths, and
+  // only the displacements: they are the whole of what a refraction strength
+  // means, and they are the cheap end of the chain — smooth arithmetic plus at
+  // most two field reads, against a fold that may be carrying a forty-iteration
+  // orbit. Bending the channels apart here rather than merely offsetting them is
+  // what makes this dispersion instead of chromatic aberration.
   if (uDisperse > 0.0) {
-    suvR = distort(uv, 1.0 + uDisperse);
-    suvB = distort(uv, 1.0 - uDisperse);
+    suvR = distortDisplace(folded, 1.0 + uDisperse);
+    suvB = distortDisplace(folded, 1.0 - uDisperse);
   }
   if (uChroma > 0.0) {
     vec2 off = radial * uChroma * 0.012;

@@ -74,6 +74,23 @@ const JULIA_DRIFT_RATE = 0.031;
  */
 const SECTION_TURNOVER = 0.6;
 
+/**
+ * How long a turnover waits for the page it is turning to, in clock seconds.
+ *
+ * Everything else the composition brings up has lead time by construction: a
+ * queued pick has been sitting in the prefetch since the handover before it, and
+ * a stage slot is bound most of a dwell before its fade-in starts. A turnover is
+ * the one gesture with none — it retires the whole frame *now* and asks for a
+ * panel chosen on the same frame — so it is the one that has to be told to hold
+ * on. See `settleTurnOver`.
+ *
+ * Bounded, because a panel that will not decode must not be able to stop the
+ * composition turning over at all. Past this the turn happens regardless and the
+ * incoming page arrives when it arrives, which is exactly what every turnover
+ * did before this existed.
+ */
+const TURNOVER_WAIT = 3;
+
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
@@ -149,6 +166,23 @@ export class Director {
   private contrastNext = false;
   /** The panel the run is locked onto, or null while it is free-running. */
   private focus: Panel | null = null;
+  /**
+   * Whether a panel's texture is on the GPU and would draw if it were asked
+   * for — the backend's own answer, handed down by the engine.
+   *
+   * The composition is otherwise entirely indifferent to decoding, and that is
+   * the right default: a layer that is not drawable yet is simply skipped and
+   * appears a frame or two later, and every path that brings one up has enough
+   * lead time for that to be invisible. The one exception is `turnOver`, which
+   * has no lead at all — hence this. Optimistic until the engine says otherwise,
+   * so a director tested without a backend behaves exactly as it used to.
+   */
+  private drawable: (panelId: string) => boolean = () => true;
+  /**
+   * Clock time a turnover was asked for and has not been able to happen yet, or
+   * -1 while none is waiting. See `TURNOVER_WAIT`.
+   */
+  private turnArmedAt = -1;
   private aspect = 1;
   private lastClock = -1;
   private readonly phases: VizPhases;
@@ -250,6 +284,11 @@ export class Director {
     this.spatial = supported;
   }
 
+  /** Attach the backend's readiness answer. See `drawable`. */
+  setDrawableProbe(probe: (panelId: string) => boolean): void {
+    this.drawable = probe;
+  }
+
   /**
    * A path the run is about to be switched to, told at the moment the reader
    * asks rather than when the ramp delivers it.
@@ -308,7 +347,10 @@ export class Director {
     // Picks made against the old anchor describe a composition that is about to
     // be replaced.
     this.upcoming.length = 0;
-    if (panel) this.turnOver();
+    // Whatever the music had asked for is answered by this — the reader has just
+    // said what the frame is turning to.
+    this.turnArmedAt = -1;
+    if (panel) this.armTurnOver();
   }
 
   /**
@@ -323,6 +365,51 @@ export class Director {
   nextPick(): Panel | null {
     this.fillUpcoming();
     return this.upcoming[0]?.panel ?? null;
+  }
+
+  /**
+   * Ask for a turnover, and take it as soon as the page it turns to can be
+   * drawn.
+   *
+   * Nothing else in the engine has to care whether a panel has decoded, because
+   * nothing else brings one up without lead time — a queued pick has been in the
+   * prefetch since the handover before it, and a stage slot is bound most of a
+   * dwell before its fade-in begins. A turnover has none: it retires everything
+   * on screen *on this frame* and hands the frame to a panel chosen on the same
+   * one, which by construction has not been fetched yet.
+   *
+   * So the frame emptied on the cue and the incoming page arrived whenever the
+   * network answered — a second of black on a fast preset, where the outgoing
+   * fade is the `MIN_FULLBLEED_FADE_CLOCK` floor and a cold panel is a round trip
+   * away. What the viewer saw was the composition dropping out at exactly the
+   * moment the music changed, which is the one moment it is most obviously
+   * *about* the music.
+   *
+   * The wait is the whole fix. The pick is made now — so it is queued, requested
+   * and decoding now — and the retirement it triggers is held until there is
+   * something to cross to.
+   */
+  private armTurnOver(): void {
+    // Already waiting on one, or nothing has been drawn for one to turn over —
+    // the same case `turnOver` itself no-ops on, and the first layer born picks
+    // the composition up.
+    if (this.turnArmedAt >= 0 || this.lastClock < 0) return;
+    this.turnArmedAt = this.lastClock;
+    this.settleTurnOver();
+  }
+
+  /** Take an armed turnover once its page is drawable, or once it has waited
+   *  long enough that waiting further is worse than arriving late. */
+  private settleTurnOver(): void {
+    if (this.turnArmedAt < 0) return;
+    // What the frame is about to be handed to: the held panel, or the pick the
+    // retirement will be crossed against. Null is a wall with nothing eligible
+    // in it, which is not something waiting can fix.
+    const next = this.focus ?? this.nextPick();
+    const waited = this.lastClock - this.turnArmedAt;
+    if (next && !this.drawable(next.id) && waited < TURNOVER_WAIT) return;
+    this.turnArmedAt = -1;
+    this.turnOver();
   }
 
   /**
@@ -421,9 +508,16 @@ export class Director {
       // to arrive: `fillUpcoming` runs a queue of two, so the layer this cue
       // spawns is chosen from a decision made before the music changed. A
       // discarded pick costs a slot in the recency window and nothing else.
-      this.upcoming.length = 0;
-      this.contrastNext = true;
-      if (!this.focus) this.turnOver();
+      //
+      // Except while a turnover is already waiting on its page to decode, where
+      // clearing would throw away the very panel the wait is for and start its
+      // fetch again from nothing — the cue this cleared for has already been
+      // answered, and the answer is in flight.
+      if (this.turnArmedAt < 0) {
+        this.upcoming.length = 0;
+        this.contrastNext = true;
+      }
+      if (!this.focus) this.armTurnOver();
     }
   }
 
@@ -470,6 +564,10 @@ export class Director {
       this.safety
     );
     this.spendSection();
+    // Whatever is waiting on a page to decode, taken on the first frame it can
+    // be. Every frame rather than only on the cue: what the wait is for is the
+    // decode landing, and that lands on a frame of its own.
+    this.settleTurnOver();
     // Real `dt` for the same reason the update above takes it: the trace is
     // measured in wall-clock seconds, so a run at 2× speed still reports the
     // rates the viewer's eye is actually subject to.
@@ -746,6 +844,9 @@ export class Director {
     this.shards = [];
     this.seeded = false;
     this.lastBeat = -1;
+    // A turnover waiting on its page described a composition that no longer
+    // exists — the path it was going to turn over has just been emptied.
+    this.turnArmedAt = -1;
   }
 
   /**

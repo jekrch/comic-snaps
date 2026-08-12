@@ -1,7 +1,7 @@
 import { Renderer, Program, Mesh, Triangle, RenderTarget, Texture } from "ogl";
 import type { OGLRenderingContext } from "ogl";
 import type { Panel } from "../../../../types";
-import type { StageFrame, Vec3, VizBackend, VizFrame } from "../types";
+import type { DrawShard, StageFrame, Vec3, VizBackend, VizFrame } from "../types";
 import { blendCode } from "../types";
 import { TexturePool } from "../TexturePool";
 import { FULLSCREEN_VERT } from "../shaders/common";
@@ -19,6 +19,10 @@ type Vec4 = [number, number, number, number];
 function vec4(): Vec4 {
   return [0, 0, 0, 0];
 }
+
+/** Frames between ring captures while slit-scan is *not* running — see
+ *  `captureHistory`. One means every frame, which is what it was. */
+const HISTORY_IDLE_STRIDE = 3;
 
 /** Identity tone levels, so an untouched slot is a pass-through rather than a
  *  black one — unlike the vec4 uniforms, zero is not the neutral value here. */
@@ -77,6 +81,22 @@ export class WebGLBackend implements VizBackend {
   private readonly geometry: Triangle;
   /** Scene textures currently carrying a mip chain — see `syncSceneMips`. */
   private readonly mipped = new Set<Texture>();
+  /** Frames since the last ring capture — see `captureHistory`. */
+  private historyIdle = 0;
+  /**
+   * Reused across frames by `renderShards` and `renderStage`.
+   *
+   * The draw itself allocated nothing, but assembling it allocated a great deal:
+   * a filter, a map and a slice per batch, and then five fresh arrays for every
+   * shard — sixty-odd objects a frame, which at thirty frames a second is a
+   * couple of thousand a second of pure garbage. None of it is a spike big
+   * enough to drop a frame on its own; together it is a steady minor-GC pressure
+   * that on a phone's small nursery arrives as periodic jitter — and jitter is
+   * the one thing the quality governor cannot see, since it reads a smoothed
+   * rate that a brief collection barely moves.
+   */
+  private readonly drawable: DrawShard[] = [];
+  private readonly pinnedIds: string[] = [];
   private readonly maxShards: number;
   /**
    * Built on the first spatial frame, not in the constructor. Two reasons, and
@@ -480,25 +500,41 @@ export class WebGLBackend implements VizBackend {
   private renderStage(spatial: SpatialPass, stage: StageFrame, background: Vec3): Texture {
     // A slot holds its panel for a whole dwell, so the pin set is simply
     // everything the formation is bound to — including the panels whose slots
-    // are momentarily faded out, which are about to come back up.
-    this.pool.setPinned([
-      ...stage.slots.map((slot) => slot.panelId),
-      ...stage.solids.map((solid) => solid.panelId),
-    ]);
+    // are momentarily faded out, which are about to come back up. Gathered into
+    // the same reused buffer the flat path uses; only one of the two runs on any
+    // given frame.
+    const pinned = this.pinnedIds;
+    pinned.length = 0;
+    for (const slot of stage.slots) pinned.push(slot.panelId);
+    for (const solid of stage.solids) pinned.push(solid.panelId);
+    this.pool.setPinned(pinned);
     // The formation renders into the spatial pass's own target, so both of the
     // composite targets are free for a crossing to mix into.
     this.sceneTarget = null;
     return spatial.render(stage, background, this.pool);
   }
 
-  /** The flat path, unchanged: N shards blended onto a base, batched. */
+  /**
+   * The flat path: N shards blended onto a base, batched.
+   *
+   * Every array here is reused across frames — see `drawable`. ogl's own
+   * redundancy cache clones what it is handed rather than holding a reference to
+   * it, so mutating the uniform values in place is seen as a change and uploaded
+   * exactly as a fresh array was.
+   */
   private renderShards(frame: VizFrame): Texture {
     // Only shards whose texture has finished decoding can be drawn; the rest
     // are simply skipped this frame and appear once they land.
-    const drawable = frame.shards.filter(
-      (shard) => shard.opacity > 0.001 && this.pool.has(shard.panelId)
-    );
-    this.pool.setPinned(drawable.map((shard) => shard.panelId));
+    const drawable = this.drawable;
+    const pinned = this.pinnedIds;
+    drawable.length = 0;
+    pinned.length = 0;
+    for (const shard of frame.shards) {
+      if (shard.opacity <= 0.001 || !this.pool.has(shard.panelId)) continue;
+      drawable.push(shard);
+      pinned.push(shard.panelId);
+    }
+    this.pool.setPinned(pinned);
 
     const uniforms = this.compositeProgram.uniforms;
     uniforms.uAspect.value = this.aspect;
@@ -509,38 +545,52 @@ export class WebGLBackend implements VizBackend {
 
     const batches = Math.max(1, Math.ceil(drawable.length / this.maxShards));
     for (let batch = 0; batch < batches; batch++) {
-      const slice = drawable.slice(batch * this.maxShards, (batch + 1) * this.maxShards);
+      const start = batch * this.maxShards;
+      const count = Math.max(0, Math.min(this.maxShards, drawable.length - start));
 
       for (let i = 0; i < this.maxShards; i++) {
-        const shard = slice[i];
-        if (!shard) {
+        if (i >= count) {
           uniforms.uMisc.value[i][2] = 0;
           uniforms.uTex.value[i] = this.pool.blank;
           continue;
         }
+        const shard = drawable[start + i];
         const texture = this.pool.get(shard.panelId) ?? this.pool.blank;
         const { dstRect, srcRect } = shard;
 
         uniforms.uTex.value[i] = texture;
-        uniforms.uRect.value[i] = [
-          dstRect.x + dstRect.w / 2,
-          dstRect.y + dstRect.h / 2,
-          dstRect.w,
-          dstRect.h,
-        ];
-        uniforms.uSrc.value[i] = [srcRect.x, srcRect.y, srcRect.w, srcRect.h];
-        uniforms.uMisc.value[i] = [
-          Math.cos(shard.rotation),
-          Math.sin(shard.rotation),
-          shard.opacity,
-          shard.feather,
-        ];
-        uniforms.uLevels.value[i] = [shard.levels.gain, shard.levels.lift];
-        uniforms.uTint.value[i] = [...shard.tint, shard.tintAmount];
+        const rect = uniforms.uRect.value[i];
+        rect[0] = dstRect.x + dstRect.w / 2;
+        rect[1] = dstRect.y + dstRect.h / 2;
+        rect[2] = dstRect.w;
+        rect[3] = dstRect.h;
+
+        const src = uniforms.uSrc.value[i];
+        src[0] = srcRect.x;
+        src[1] = srcRect.y;
+        src[2] = srcRect.w;
+        src[3] = srcRect.h;
+
+        const misc = uniforms.uMisc.value[i];
+        misc[0] = Math.cos(shard.rotation);
+        misc[1] = Math.sin(shard.rotation);
+        misc[2] = shard.opacity;
+        misc[3] = shard.feather;
+
+        const levels = uniforms.uLevels.value[i];
+        levels[0] = shard.levels.gain;
+        levels[1] = shard.levels.lift;
+
+        const tint = uniforms.uTint.value[i];
+        tint[0] = shard.tint[0];
+        tint[1] = shard.tint[1];
+        tint[2] = shard.tint[2];
+        tint[3] = shard.tintAmount;
+
         uniforms.uMode.value[i] = blendCode(shard.blendMode);
       }
 
-      uniforms.uCount.value = Math.min(slice.length, this.maxShards);
+      uniforms.uCount.value = count;
       uniforms.uBase.value = read ? read.texture : this.pool.blank;
       uniforms.uUseBase.value = read ? 1 : 0;
 
@@ -751,13 +801,39 @@ export class WebGLBackend implements VizBackend {
     this.renderer.render({ scene: this.postMesh, frustumCull: false });
 
     if (frame.post.feedbackAmount > 0) this.captureFeedback();
-    // The ring is fed from the finished frame, like the trail. Unlike the trail
-    // it keeps being fed once it exists at all, even with the effect at zero: a
-    // ring that only filled while slit-scan was running would hand the next
-    // pulse a frame from minutes ago, and old content cutting in is exactly what
-    // the slow ramp is there to prevent. A quarter-scale blit is cheap enough to
-    // pay for that indefinitely.
-    if (frame.post.slit > 0 || this.fields.hasHistory) this.fields.capture();
+    this.captureHistory(frame.post.slit > 0);
+  }
+
+  /**
+   * Feed the frame ring — every frame while slit-scan is running, and at a
+   * stride once it stops.
+   *
+   * The ring has to keep being fed with the effect at zero: one that only filled
+   * while slit-scan was running would hand the next pulse a frame from minutes
+   * ago, and old content cutting in is exactly what the slow ramp exists to
+   * prevent. But that argument is about the *age* of what is in the ring, not
+   * about the rate it is filled at, and paying a full-frame read plus a blit on
+   * every frame for the rest of a run buys nothing once the ring is warm. At the
+   * stride the oldest tile is a couple of seconds old rather than a fraction of
+   * one, which is just as far from "minutes ago", for a third of the bandwidth.
+   *
+   * The switch back to every frame leaves the ring briefly non-uniform in time —
+   * recent tiles a frame apart, older ones a stride apart — so the trail's depth
+   * axis is momentarily stretched at its far end. It costs a ring's worth of
+   * frames to clear, which is well under a second, against an effect that
+   * MIN_EFFECT_RAMP will not let reach visible strength for one and a half. The
+   * stretch is gone before there is anything on screen to see it in.
+   */
+  private captureHistory(live: boolean): void {
+    if (live) {
+      this.historyIdle = 0;
+      this.fields.capture();
+      return;
+    }
+    if (!this.fields.hasHistory) return;
+    if (++this.historyIdle < HISTORY_IDLE_STRIDE) return;
+    this.historyIdle = 0;
+    this.fields.capture();
   }
 
   /** Grab the just-drawn frame off the default framebuffer for next frame. */

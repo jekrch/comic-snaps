@@ -4,7 +4,7 @@ declare const self: ServiceWorkerGlobalScope;
 const CACHE_NAME = "panel-images-v1";
 
 /**
- * Cache-first strategy for image requests under the app's base path.
+ * Cache-first strategy for panel images under the app's base path.
  * Since image filenames are stable (same name = same content),
  * once cached they're served locally until the cache version bumps.
  */
@@ -31,12 +31,18 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
-  // Only cache-first for image requests within the app.
-  if (request.destination !== "image") return;
+  if (request.method !== "GET") return;
 
   // Only handle same-origin requests under the app's scope.
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // The path, and not `request.destination`, is what decides. A wall thumbnail
+  // is destination "image"; the same bytes asked for by the visualizer's texture
+  // pool are a bare `fetch`, whose destination is the empty string — so keying
+  // off the destination silently excluded every request the visualizer makes,
+  // and each panel it brought up was a round trip to the network however many
+  // times it had already been seen. Those round trips are what a turnover was
+  // waiting on while the frame sat empty.
   if (!url.pathname.includes("/images/")) return;
 
   event.respondWith(

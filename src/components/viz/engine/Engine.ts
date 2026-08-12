@@ -153,6 +153,10 @@ export class VizEngine {
     this.caps = deviceCaps(this.view);
     this.renderScale = this.caps.renderScale;
     this.director = new Director(panels, config, new Rng(seed), this.caps);
+    // Read through `this.backend` rather than bound to one, since a lost context
+    // replaces it — and false while there is none, which is the honest answer:
+    // a director mid-rebuild has nothing that can draw.
+    this.director.setDrawableProbe((panelId) => this.backend?.isReady(panelId) ?? false);
     this.createBackend(forceCss);
     this.observeSize();
   }

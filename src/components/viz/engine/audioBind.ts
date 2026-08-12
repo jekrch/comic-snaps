@@ -303,10 +303,38 @@ type GestureName = keyof typeof GESTURES;
  * doing — and the two axes it changes along are *which beats* carry the accent and
  * *what the accent moves*.
  *
- * So a figure is exactly those two things: a four-beat mask and a set of routing
- * gains. One is chosen every `FIGURE_BARS` from what the phrase that just ended
- * contained, blended into over a bar, and it decides how the whole beat row is
- * spent until the next one.
+ * So a figure is exactly those two things: a *pattern* of accents and a set of
+ * routing gains. One is chosen every `FIGURE_BARS` from what the phrase that just
+ * ended contained, blended into over a bar, and it decides how the whole beat row
+ * is spent until the next one.
+ *
+ * ## The two rules the patterns are written under — §22
+ *
+ * §§20 and 21 gave the row a vocabulary and the vocabulary was still relentless,
+ * because every member of it accented the *same* beats: one, or one and three, or
+ * all four. Three of those are a metronome at a different rate and the fourth is a
+ * metronome. Watched for a minute the composition had one rhythmic idea, stated
+ * continuously, and the only thing that ever changed was how many times a bar it
+ * was stated.
+ *
+ * Two rules replace that, and both are about where the accents are *not*:
+ *
+ * 1. **Never more than two beats in a row, and when there are two they are
+ *    adjacent** — one-two, two-three, three-four, or four-one across the barline.
+ *    A pair is a *figure* in the way a single accent and an even spread are not:
+ *    it has an inside and an outside, so the second hit means something the first
+ *    did not, and the four placements are four genuinely different statements
+ *    rather than four densities of the same one. One-and-three, which two members
+ *    used to play, is the one two-accent pattern with no such inside — it is the
+ *    half-note pulse, which is to say the metronome again.
+ * 2. **Then a real break.** A pattern runs over one *or more* bars, and the bars
+ *    that carry no accent at all are the point of the whole section: the ordinary
+ *    figure here states its pair and then holds still for six beats. What makes an
+ *    arrival read as an arrival is the length of the silence before it, and this
+ *    is the only place that silence can be bought.
+ *
+ * Only `drive` — the reserved one, reachable on a genuine lift and nowhere else —
+ * repeats its pair every bar, and even it rests for half of each.
  *
  * ## What is deliberately *not* orchestrated
  *
@@ -329,9 +357,18 @@ type GestureName = keyof typeof GESTURES;
  * exists to fix.
  */
 interface Figure {
-  /** How much of the pulse each beat of the bar carries, 0..1. Index 0 is the
-   *  downbeat. */
-  beats: readonly [number, number, number, number];
+  /**
+   * How much of the pulse each beat carries, 0..1 — a pattern whose length is
+   * `BEATS_PER_BAR` times however many bars it runs over. Index 0 is the downbeat
+   * of the first bar.
+   *
+   * Indexed against the *absolute* bar count rather than against however many bars
+   * have passed since the figure was chosen — see `cellAt`. A two-bar pattern
+   * therefore always accents even bars, whichever bar it was switched on, so two
+   * figures that follow each other agree about where the two-bar unit is instead
+   * of each starting its own.
+   */
+  beats: readonly number[];
   /** Depth multiplier on the whole-frame scale pulse. */
   frame: number;
   /** Depth multiplier on the beat-locked walk. */
@@ -352,17 +389,25 @@ interface Figure {
 
 const FIGURES = {
   /**
-   * All four beats, everything open — and §21 makes it the only member that does
-   * that, reachable by evidence alone.
+   * One and two, every bar — the densest thing in the vocabulary, reachable by
+   * evidence alone.
    *
    * It is not in `FIGURE_ROTATION`, so a phrase with nothing particular to say can
    * never land here: the composition opens up on a genuine peak and at no other
    * time. That is the whole of "stop pulsing with the beat all the time" — not a
    * smaller pulse, but a pulse that is *reserved*, so that the passage it belongs
-   * to is the one place a viewer ever sees the frame answer every beat.
+   * to is the one place a viewer sees the frame answer in consecutive bars.
+   *
+   * It answered all four beats until §22 and that is exactly what the rule there
+   * forbids. What it plays now is the pair on the downbeat — the strongest of the
+   * four placements, because the second hit lands while the first is still the
+   * newest thing that happened — followed by half a bar of nothing. Twice the
+   * silence and half the accents of the old member, at the same gains, which is the
+   * trade §19 already made once at beat rate and this section makes again at bar
+   * rate.
    */
   drive: {
-    beats: [1, 0.85, 0.95, 0.85],
+    beats: [1, 0.85, 0, 0],
     frame: 1,
     walk: 1,
     shape: 0,
@@ -379,28 +424,43 @@ const FIGURES = {
    * sixteenth-note hi-hat pattern is two busy things competing. A whole-frame
    * translation reads as *travel* where a scale reads as *impact*, and travel is
    * what a busy passage can absorb.
+   *
+   * Its pair is the one that straddles the barline — the four of the second bar
+   * into the one of the first, an anacrusis — and it is written at the two ends of
+   * a two-bar pattern so that the wrap *is* the pair. That leaves six beats of
+   * stillness in the middle of every repeat, which on the busiest material in the
+   * vocabulary is the most valuable silence the composition has: everything the
+   * viewer can hear is still happening, and the picture has stopped agreeing with
+   * all of it.
+   *
+   * The walk gain is raised with the density it lost. It steps twice per two bars
+   * where it used to step twice per bar, and `STRIDE_TURN` is a turn *per step*,
+   * so the square is traced over four bars rather than two — a slower, larger,
+   * legibly repeating figure at a lower delivered velocity than before.
    */
   step: {
-    beats: [1, 0, 0.85, 0],
+    beats: [1, 0, 0, 0, 0, 0, 0, 0.85],
     frame: 0.22,
-    walk: 1.45,
+    walk: 1.7,
     shape: 0,
     colour: 0.8,
     solo: false,
     motion: 0.9,
   },
   /**
-   * One and four, and the accent moves *shape* rather than size.
+   * One and two of every *other* bar, and the accent moves *shape* rather than
+   * size.
    *
-   * The sparse figure. Two arrivals a bar leaves three beats of stillness between
-   * them, which is what makes each one an event — and it is the only figure that
-   * puts beat-rate content into the geometry, which is affordable precisely
-   * because it fires half as often as anything else. The frame gain is over 1 for
-   * the same reason: a gesture that happens twice a bar can be larger than one
-   * that happens four times without costing any more motion overall.
+   * The sparse figure. Two arrivals and then six beats of nothing is the longest
+   * silence any figure holds, which is what makes each pair an event — and it is
+   * the only figure that puts beat-rate content into the geometry, which is
+   * affordable precisely because it fires a quarter as often as the old vocabulary
+   * did. The frame gain is over 1 for the same reason: a gesture that happens twice
+   * every two bars can be larger than one that happens four times a bar without
+   * costing any more motion overall.
    */
   mark: {
-    beats: [1, 0, 0, 0],
+    beats: [1, 0.8, 0, 0, 0, 0, 0, 0],
     frame: 1.3,
     walk: 0.55,
     shape: 1,
@@ -419,8 +479,15 @@ const FIGURES = {
    * survives, because the layer that answers answers on the beat; what changes is
    * that it is one layer rather than a sheet.
    */
+  /*
+   * Three and four, in the second bar of two — the one placement in the vocabulary
+   * that touches neither the downbeat nor the bar before it. A pair arriving late
+   * in a two-bar unit, answered by a single layer, is the least emphatic statement
+   * the row can make and the only one that leaves the downbeat to the bar gesture
+   * alone, which is what a soloing figure should look like.
+   */
   pane: {
-    beats: [1, 0, 0.75, 0],
+    beats: [0, 0, 0, 0, 0, 0, 1, 0.8],
     frame: 1.15,
     walk: 0.5,
     shape: 0,
@@ -459,16 +526,19 @@ type FigureName = keyof typeof FIGURES;
  * The figures a phrase with nothing particular to say rotates through — §21, and
  * the list is short on purpose.
  *
- * `drive` is deliberately absent. It is the only member that accents all four
- * beats, and while it sat in this rotation it was reached about a fifth of the time
- * on material that never asked for it, which — with `step` and `pane` also accenting
+ * `drive` is deliberately absent. It is the only member that accents in every bar,
+ * and while it sat in this rotation it was reached about a fifth of the time on
+ * material that never asked for it, which — with `step` and `pane` also accenting
  * four beats at the time — put the composition on every beat of every bar for two
  * thirds of a run. Reserving it to the evidence is what makes an open passage mean
  * something when it arrives.
  *
- * What remains is a downbeat figure, two one-and-three figures and a silent one, so
- * the ordinary state of the piece is an accent on the one, sometimes with the three,
- * and regularly with nothing at all.
+ * What remains is three two-bar figures and a silent one: a pair on the downbeat, a
+ * pair across the barline, a pair late in the second bar, and nothing at all. Every
+ * one of them accents two of every eight beats, so the ordinary state of the piece
+ * is a *placement* changing every phrase at a constant, low density — which is the
+ * axis §22 wanted the vocabulary to vary along, and the one it had no way to vary
+ * along while every member accented the one.
  */
 const FIGURE_ROTATION: readonly FigureName[] = ["mark", "step", "pane", "swell"];
 
@@ -497,10 +567,32 @@ const FIGURE_BLEND = 0.85;
  * music; nothing in a steady, loud, confident track ever *asks* for the
  * composition to stop punctuating, and a track like that is exactly the one where
  * unbroken punctuation becomes wallpaper fastest. So the rest is scheduled rather
- * than deserved — at three, a phrase of stillness arrives about every thirty-two
- * bars, which is a minute at 120BPM.
+ * than deserved — at two, a phrase of stillness arrives about every twenty-four
+ * bars, which is three quarters of a minute at 120BPM.
+ *
+ * Lowered from three by §22, and the number was never the reason the rest was rare.
+ * Measured on the bench, `swell` held **0% of frames** on three of the four
+ * patterns: the schedule was gated on `fill`, the gate was reading a phrase-wide
+ * maximum, and over eight bars of any real material something clears it. See
+ * `trackPhrase`, which now hands `chooseFigure` the *last* bar's fill — the only
+ * bar whose run-up the rest could possibly be interrupting. With that fixed the
+ * schedule fires as written, and one figure in three being silence is the
+ * proportion §22 asks for.
  */
-const REST_AFTER = 3;
+const REST_AFTER = 2;
+/**
+ * Further figure changes a run-up may push the scheduled rest back before it is
+ * taken anyway. Two, so the rest lands within about forty bars of when it was due
+ * whatever the material is doing.
+ *
+ * A bound rather than a fix, and it should be read as one: on all four bench
+ * patterns it never fires, and the figure occupancy is identical with it set to
+ * infinity. What it rules out is the *shape* of the bug §22 found in the gate
+ * beside it — a suppression with no ceiling, which on the wrong material cancels
+ * the rest rather than moving it, and which is invisible in exactly the way the
+ * `fill` maximum was until somebody counted frames. See `chooseFigure`.
+ */
+const REST_DEFER = 2;
 /**
  * How far over its own recent reference a phrase has to sit before the composition
  * will open up and answer all four beats.
@@ -549,10 +641,12 @@ const DRIVE_RATIO = 1.12;
  * and four, exactly anti-phase, and held 49% of that run doing it.
  *
  * Fixing it properly means publishing the slot from the reactor and rotating the
- * mask onto it, which is a change to `AudioFrame` and worth making when a backbeat
- * figure is wanted again. Removed rather than repaired here because §21's whole
- * direction is toward accents on the one and the three, and a figure whose entire
- * content is accenting the other two is pulling against that even when correct.
+ * pattern onto it, which is a change to `AudioFrame` and worth making when a
+ * backbeat figure is wanted again — and §22 makes it a better idea than it was,
+ * since a *rotation* of a two-beat figure onto the detected snare is exactly the
+ * axis that section wants the vocabulary to vary along. Removed rather than
+ * repaired at the time because a figure that accents two *and* four is four accents
+ * a bar under another name, which is what both sections exist to stop.
  *
  * Nothing is lost from the backbeat as a *texture*. `hitMid` and `backbeat` still
  * reach the press, and both are driven by detected events rather than by a position
@@ -574,9 +668,10 @@ const SOLO_OTHERS = 0.18;
  * The rule it bends is §4.3's, that geometric velocity is what the eye reads as a
  * flinch, and it is bent under two conditions that were not available before: the
  * shape rests for half the beat after §19, and `mark` is the only figure that opens
- * this route at all — with a mask of one and four, so it fires twice a bar rather
- * than four times. Occasional and sharp is a different object from continuous and
- * sharp, and it is the one the rule was never tested against.
+ * this route at all — with a pattern of one and two of every other bar, so it fires
+ * twice per eight beats rather than four times per four. Occasional and sharp is a
+ * different object from continuous and sharp, and it is the one the rule was never
+ * tested against.
  *
  * Small, and multiplicative on what the preset authored, so a piece running no
  * distortions gets nothing here at all.
@@ -1247,6 +1342,27 @@ const STRIDE_GLIDE = 0.38;
  */
 const STRIDE_FLOOR = 0.45;
 
+/**
+ * Bars before a beat at which the composition commits to answering it — §22, and
+ * the one instant at which a figure's pattern is allowed to change.
+ *
+ * Everything on the beat row *leads*: the pulse begins `BEAT_RISE + (1 -
+ * BEAT_PEAK)` of a beat early so that it peaks as the beat lands, and the walk is
+ * launched `STRIDE_GLIDE` early so that it has arrived by then. The widest of those
+ * is the moment the first channel commits, and quantising there is what makes "which
+ * beat is this pulse for" a question with one answer for every channel — index at a
+ * narrower lead and the walk resolves the beat it is stepping to a frame before the
+ * pulse does, so at every figure change the two would play a different bar of the
+ * pattern from each other.
+ *
+ * It also has to fall inside the rest between pulses, which bounds it above. Pulse
+ * `k` occupies `[k - 0.34, k + 0.16]` of a beat, so the rest is `(k - 0.84, k -
+ * 0.34)` and any lead in that range switches the pattern while the shape it
+ * multiplies is exactly zero. 0.38 sits just inside it — see `trackMask`, which is
+ * the property's whole point.
+ */
+const BEAT_COMMIT = Math.max(BEAT_RISE + (1 - BEAT_PEAK), STRIDE_GLIDE) / BEATS_PER_BAR;
+
 // --- depths, phrase row -----------------------------------------------------
 
 /** How far the phrase channel moves the amplitude of everything above it, ±.
@@ -1471,6 +1587,25 @@ function pulseShape(phase: number, peak: number, rise: number, fall: number): nu
   return d >= fall ? 0 : 0.5 * (1 + Math.cos((Math.PI * d) / fall));
 }
 
+/**
+ * One cell of a figure's pattern: how much of the pulse the beat at absolute cell
+ * index `cell` carries — §22.
+ *
+ * A cell index is `bar × BEATS_PER_BAR + beat`, counted from the reactor's own bar
+ * zero, so the modulo here is taken against the *absolute* position in the music
+ * rather than against a count kept since the figure was chosen. That is what makes
+ * a multi-bar pattern a property of the music: a two-bar figure always accents even
+ * bars, and a figure that replaces it mid-phrase lands on the same two-bar unit
+ * rather than starting one of its own.
+ *
+ * Written to survive a negative index, which the reactor can produce: the bar loop
+ * slides onto the detected downbeat and may step backwards over one while it does.
+ */
+function cellAt(pattern: readonly number[], cell: number): number {
+  const length = pattern.length;
+  return pattern[((cell % length) + length) % length];
+}
+
 /** A plain raised cosine over a wrapped phase, 0..1, peaking at 0.5. */
 function swellShape(phase: number): number {
   return 0.5 * (1 - Math.cos(2 * Math.PI * phase));
@@ -1537,11 +1672,24 @@ function chooseFigure(
 ): FigureName {
   const wanted: FigureName[] = [];
 
-  // The scheduled rest comes first and is the only entry not argued from the
-  // music — see `REST_AFTER`. Suppressed on a phrase that is visibly building,
-  // because standing down into a run-up is the one place it would read as the
-  // composition losing its nerve rather than as a choice.
-  if (sinceRest >= REST_AFTER && fill < LATE_FILL) wanted.push("swell");
+  /*
+   * The scheduled rest comes first and is the only entry not argued from the
+   * music — see `REST_AFTER`. Deferred on a phrase that is visibly building,
+   * because standing down into a run-up is the one place it would read as the
+   * composition losing its nerve rather than as a choice.
+   *
+   * Deferred and not skipped, which is §22's correction to it. A suppression with
+   * no ceiling on it is a suppression: on material whose fill measure happens to
+   * sit over the threshold at every phrase boundary, the rest is not moved, it is
+   * cancelled for the whole of a run — which is the failure that had just been
+   * found one line up, in a gate nobody suspected until the frames were counted.
+   * `REST_DEFER` bounds the wait, after which the composition stands down over the
+   * run-up and takes the small loss. The break is the product here; the good
+   * manners about where it lands are not worth never having one.
+   */
+  if (sinceRest >= REST_AFTER && (fill < LATE_FILL || sinceRest >= REST_AFTER + REST_DEFER)) {
+    wanted.push("swell");
+  }
   // A phrase with nothing in it gets the figure with nothing in it, on
   // `chooseGesture`'s argument about the `still` shape: the member that makes the
   // others mean something.
@@ -1602,6 +1750,16 @@ export class AudioBinding {
   /** Bar position of the most recent frame, so the per-layer spread can be
    *  taken as an offset into the same shape rather than as a filter. */
   private barPhase = 0;
+  /** And which bar it is, carried beside the phase because a figure's pattern may
+   *  run over more than one of them — see `cellAt`. Set from the same frame as
+   *  `barPhase` and never derived from a beat count, which is a different loop
+   *  with its own alignment. */
+  private barCount = 0;
+  /** The beat the row is currently answering, as an absolute cell index, and the
+   *  pattern it is answering it with. Latched together once per beat — see
+   *  `trackMask`, which is where the argument for latching at all lives. */
+  private maskCell = 0;
+  private maskFigure: FigureName = "drive";
   /** Amplitude the shapes are travelling at, 0..1 — the slow energy term, and
    *  the bar's own latch and the wind-up over the top of it. See `BAR_SWING`. */
   private amplitudeBase = 0;
@@ -2075,7 +2233,7 @@ export class AudioBinding {
        * sparser rhythm, it is the same rhythm played quieter, and the walk is the
        * channel a viewer reads movement from most directly.
        */
-      const step = this.strideStep(target);
+      const step = this.strideStep();
       if (this.strideMark >= 0 && step >= 0) {
         // Where the walk actually is right now, which on a glide that finished
         // is the last target and on one still in flight is somewhere between —
@@ -2115,35 +2273,66 @@ export class AudioBinding {
   }
 
   /**
-   * Which step of the walk's figure a given beat is, or -1 if this figure does not
-   * walk on it — §21.
+   * Which step of the walk's figure the beat now being glided to is, or -1 if this
+   * figure does not walk on it — §21.
    *
    * Counted rather than taken from the beat index, and that is what keeps the shape
-   * intact as the mask thins. `STRIDE_TURN` is a quarter turn *per step*, so if the
-   * angle were `0.25 × beatCount` and the figure only stepped on the downbeat, every
-   * step would land a full turn from the last one — which is the same place, and the
-   * walk would stop moving altogether. Against a step count the square is simply
-   * traced more slowly: over one bar when all four beats walk, two bars on one and
-   * three, four bars on the one alone.
+   * intact as the pattern thins. `STRIDE_TURN` is a quarter turn *per step*, so if
+   * the angle were `0.25 × beatCount` and the figure only stepped on the downbeat,
+   * every step would land a full turn from the last one — which is the same place,
+   * and the walk would stop moving altogether. Against a step count the square is
+   * simply traced more slowly: over one bar when all four beats walk, and over four
+   * under §22's vocabulary, where every figure walks twice in eight beats.
    *
-   * Derived from `beatCount` and the mask rather than accumulated, on
-   * `trackStride`'s own argument about accumulators: a beat missed while the lock
-   * was away would otherwise rotate the figure against the music permanently.
+   * Derived from the reactor's own counters rather than accumulated, on
+   * `trackStride`'s argument about accumulators: a beat missed while the lock was
+   * away would otherwise rotate the figure against the music permanently.
+   *
+   * ## Which bar and which beat, and why not `beatCount`
+   *
+   * This used to index the mask with `beatCount % 4`, and §22 is what makes that
+   * unsafe rather than merely approximate. The reactor keeps the bar as a *loop of
+   * its own*, slid onto the detected downbeat — `trackBar` there is explicit that a
+   * residue of the beat count is not the same thing — so `beatCount % 4` is the bar
+   * position plus whatever constant offset the downbeat detector settled on. Under
+   * the old vocabulary, where every figure accented the one and the three, an
+   * offset of two mapped the mask onto itself and the error was invisible. Under a
+   * vocabulary of *placements* the same offset plays a different figure from the one
+   * the pulse is playing.
+   *
+   * Taken from the bar phase instead, rounded to the nearest beat boundary. The
+   * caller fires this a fraction of a beat *before* the beat it is gliding to — see
+   * `STRIDE_GLIDE` — so the beat in question is always the nearest boundary, and
+   * rounding rather than flooring is what makes it the one being approached rather
+   * than the one just left. A round to `BEATS_PER_BAR` is the downbeat of the next
+   * bar, which carries into the bar index exactly as `beatMask`'s lead does.
    */
-  private strideStep(target: number): number {
-    if (target < 0) return -1;
-    const mask = FIGURES[this.figure].beats;
-    const within = target % BEATS_PER_BAR;
-    if (mask[within] <= STRIDE_STEP_GATE) return -1;
-    let perBar = 0;
+  private strideStep(): number {
+    const cell = this.barCount * BEATS_PER_BAR + Math.round(this.barPhase * BEATS_PER_BAR);
+    /*
+     * The pattern that is *sounding*, not the figure that is chosen — so the walk
+     * and the pulse play the same bar of the same figure through a change, and a
+     * figure switched on this frame does not move a step that was already launched.
+     * `trackMask` runs earlier in the frame than this does, and the caller fires
+     * `STRIDE_GLIDE` before the beat, which is the same instant the latch adopts —
+     * so the pattern read here is the one the pulse for this beat will play.
+     */
+    const pattern = FIGURES[this.maskFigure].beats;
+    if (cellAt(pattern, cell) <= STRIDE_STEP_GATE) return -1;
+    // Where in the pattern this beat falls, counted from the pattern's start rather
+    // than the bar's, so a step in the second bar of a two-bar figure follows the
+    // ones in the first instead of restarting the count.
+    const length = pattern.length;
+    const within = ((cell % length) + length) % length;
+    let perPattern = 0;
     let before = 0;
-    for (let i = 0; i < BEATS_PER_BAR; i++) {
-      if (mask[i] <= STRIDE_STEP_GATE) continue;
+    for (let i = 0; i < length; i++) {
+      if (pattern[i] <= STRIDE_STEP_GATE) continue;
       if (i < within) before++;
-      perBar++;
+      perPattern++;
     }
-    if (perBar === 0) return -1;
-    return Math.floor(target / BEATS_PER_BAR) * perBar + before;
+    if (perPattern === 0) return -1;
+    return Math.floor(cell / length) * perPattern + before;
   }
 
   /** How far the walk is currently allowed to reach, in fractions of the frame
@@ -2262,7 +2451,21 @@ export class AudioBinding {
     this.phraseHats += this.barHats;
     this.phraseLowFlux += this.barLowFlux;
     this.phraseAllFlux += this.barAllFlux;
-    if (this.barFill > this.phraseFill) this.phraseFill = this.barFill;
+    /*
+     * The *last* bar's fill rather than the phrase's largest — §22, and this one
+     * line is why the composition never rested.
+     *
+     * `chooseFigure` uses this for one thing: to suppress the scheduled rest on a
+     * phrase that is visibly building, because standing down into a run-up is the
+     * one place a rest reads as losing one's nerve. That is a statement about the
+     * bar the rest would interrupt — the last one — and taking a maximum over eight
+     * bars answers a different question, "did anything at all happen in the last
+     * sixteen seconds", to which the answer on real material is always yes.
+     * Measured on the bench, `swell` held 0% of frames on three of the four
+     * patterns: the schedule was firing and the gate was swallowing every one of
+     * them. See `REST_AFTER`.
+     */
+    this.phraseFill = this.barFill;
     this.phraseBars++;
     void lowShare;
 
@@ -2333,32 +2536,71 @@ export class AudioBinding {
   }
 
   /**
-   * How much of the pulse the beat currently arriving carries, 0..1.
+   * Which cell of a pattern the beat now being answered is — the absolute beat
+   * index in the *bar's* coordinates, shifted by `BEAT_COMMIT` so that the whole of
+   * a pulse falls inside the beat it is arriving at.
    *
-   * The mask is indexed by which beat of the *bar* the pulse is heading for, and
-   * the shift is what makes that well defined. `pulseShape` peaks `1 - BEAT_PEAK`
-   * before the beat and rises for `BEAT_RISE` ahead of that, so the pulse
-   * belonging to beat k occupies bar phase `[k/4 - 0.085, k/4 + 0.04]` — it
-   * *starts* in the previous beat's quarter. Shifting the phase forward by exactly
-   * that lead before quantising puts the whole of each pulse inside the quarter it
-   * is arriving at, which is the beat a listener hears it as.
-   *
-   * The consequence worth naming is that the mask only ever changes value during
-   * the rest between pulses, where the shape is zero — so gating this way is
-   * continuous, and no masked beat can produce a step. That is not a coincidence,
-   * it is the property `BEAT_RISE + BEAT_FALL < 1` was narrowed to buy in §19, now
-   * doing a second job.
+   * The carry is the bar half of the same shift, and §22 is what made it necessary:
+   * a pattern that runs over two bars is indexed by a bar as well as by a beat, and
+   * the pulse belonging to the downbeat of the coming bar starts in the one before
+   * it — so the shifted phase has to carry the bar with it or every pattern
+   * boundary is read a beat early. Same arithmetic as the reactor's own latency
+   * carry, and for the same reason: a phase pushed past a whole bar has pushed the
+   * composition into the next one.
    */
-  private beatMask(): number {
-    const lead = (BEAT_RISE + (1 - BEAT_PEAK)) / BEATS_PER_BAR;
+  private beatCell(): number {
+    const shifted = this.barPhase + BEAT_COMMIT;
+    const carry = Math.floor(shifted);
     const slot = Math.min(
       BEATS_PER_BAR - 1,
-      Math.floor(wrap01(this.barPhase + lead) * BEATS_PER_BAR)
+      Math.floor((shifted - carry) * BEATS_PER_BAR)
     );
-    const next = FIGURES[this.figure].beats[slot];
-    if (this.figureBlend >= 1) return next;
-    const previous = FIGURES[this.previousFigure].beats[slot];
-    return previous + (next - previous) * this.figureBlend;
+    return (this.barCount + carry) * BEATS_PER_BAR + slot;
+  }
+
+  /**
+   * Adopt the running figure's pattern for the beat now being answered — §22, and
+   * the reason a figure change is *not* a crossfade of rhythms.
+   *
+   * §20 blended the mask along with the routing gains, which is the obviously
+   * consistent thing to do and is wrong about rhythm specifically. Two patterns at
+   * half gain are not a transition between them, they are a third pattern with
+   * every accent of both in it: `pane` fading out under `mark` fading in puts three
+   * and four of one bar next to one and two of the next, which is four beats in a
+   * row and precisely what the rule at the top of `FIGURES` forbids. Every pair in
+   * the vocabulary but one overlaps into a run of three or four this way, and with
+   * `FIGURE_BLEND` at most of a bar and a figure change every eight, that is a bar
+   * in eight — frequent enough to be the thing a viewer remembers, since a bar
+   * where everything is accented is louder than the seven where two beats are.
+   *
+   * So the pattern is *switched*, and the switch is free because of where it
+   * happens. The cell index only advances during the rest between pulses — see
+   * `BEAT_COMMIT` — so the mask is being multiplied by a shape that is exactly zero
+   * at the instant the figure under it changes. Continuity, from the same property
+   * §19 narrowed `BEAT_RISE + BEAT_FALL` to buy, now doing a third job.
+   *
+   * What still crossfades is everything that is not the rhythm: the routing gains,
+   * the solo and the handover all move over `FIGURE_BLEND` as before. A figure
+   * change is therefore a new pattern arriving at once, played by an ensemble that
+   * takes a bar to rebalance — which is what it sounds like when a band changes
+   * figure, and it is not what a dissolve between two rhythms sounds like.
+   */
+  private trackMask(): void {
+    const cell = this.beatCell();
+    if (cell === this.maskCell) return;
+    this.maskCell = cell;
+    this.maskFigure = this.figure;
+  }
+
+  /**
+   * How much of the pulse the beat currently arriving carries, 0..1.
+   *
+   * Indexed by which beat of which bar the pulse is heading for — see `beatCell` —
+   * and read from the pattern latched for that beat rather than from the figure
+   * currently chosen, which is the whole of `trackMask`.
+   */
+  private beatMask(): number {
+    return cellAt(FIGURES[this.maskFigure].beats, this.beatCell());
   }
 
   /**
@@ -2644,6 +2886,15 @@ export class AudioBinding {
        * which is exactly one masked pulse landing in the wrong place per change.
        */
       this.barPhase = frame.barPhase;
+      this.barCount = frame.barCount;
+      /*
+       * Before `trackBar`, which is where a new figure may be chosen — so a figure
+       * arriving on this frame takes effect from the *next* beat rather than
+       * part-way through the one already sounding. That is the whole of §22's
+       * switch: at most one beat of the old pattern survives a change, and it
+       * survives it intact. See `trackMask`.
+       */
+      this.trackMask();
       this.trackBar(frame, dt);
       this.trackStride(frame, dt);
       const position = frame.barCount + frame.barPhase;
@@ -3075,6 +3326,8 @@ export class AudioBinding {
     this.barMark = -1;
     this.figure = "drive";
     this.previousFigure = "drive";
+    this.maskFigure = "drive";
+    this.maskCell = 0;
     this.figureBlend = 1;
     this.figureMark = -1;
     this.figureCue = false;

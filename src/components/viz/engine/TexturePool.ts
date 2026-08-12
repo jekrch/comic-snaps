@@ -5,6 +5,18 @@ import { panelImageUrl } from "../../../utils/imageUrl";
 
 const MAX_CONCURRENT_DECODES = 2;
 
+/**
+ * How many times a panel that will not decode is asked for again.
+ *
+ * `request` is called every frame for everything the composition wants, and a
+ * panel whose fetch failed is resident, pending and staged in none of the sets
+ * that make that call cheap — so a single missing file was sixty fetches a
+ * second for as long as the run kept wanting it. A couple of retries covers the
+ * blip that a dropped connection actually is; past that the panel is missing,
+ * and the frame that wanted it has already gone on without it.
+ */
+const MAX_DECODE_ATTEMPTS = 3;
+
 interface Entry {
   texture: Texture;
   /** Monotonic counter, not wall clock — cheaper and immune to tab throttling. */
@@ -18,7 +30,8 @@ interface Entry {
  * iOS drops the context long before that, so residency is capped and decodes
  * are downscaled on the way in. The bytes themselves are already in the
  * service worker's cache after a first visit, which makes a re-fetch for decode
- * effectively free.
+ * effectively free — which is true only because the worker keys its cache off
+ * the request's *path* rather than its destination. See `src/sw.ts`.
  */
 export class TexturePool {
   private readonly entries = new Map<string, Entry>();
@@ -34,6 +47,8 @@ export class TexturePool {
   private readonly staged = new Map<string, ImageBitmap>();
   private readonly queue: Panel[] = [];
   private readonly pinned = new Set<string>();
+  /** Failed decodes per panel — see `MAX_DECODE_ATTEMPTS`. */
+  private readonly failures = new Map<string, number>();
   private inflight = 0;
   private clock = 0;
   private disposed = false;
@@ -71,6 +86,7 @@ export class TexturePool {
     if (this.disposed) return;
     if (this.entries.has(panel.id) || this.pending.has(panel.id)) return;
     if (this.staged.has(panel.id)) return;
+    if ((this.failures.get(panel.id) ?? 0) >= MAX_DECODE_ATTEMPTS) return;
     if (this.queue.some((p) => p.id === panel.id)) return;
     this.queue.push(panel);
     this.pump();
@@ -128,9 +144,12 @@ export class TexturePool {
           }
           // Held, not uploaded — `flush` decides which frame pays for it.
           this.staged.set(panel.id, bitmap);
+          this.failures.delete(panel.id);
         })
         .catch(() => {
-          /* a panel that will not decode is simply never selected again */
+          // A panel that will not decode is skipped by every frame that wants
+          // it, and asked for a couple more times before being given up on.
+          this.failures.set(panel.id, (this.failures.get(panel.id) ?? 0) + 1);
         })
         .finally(() => {
           this.pending.delete(panel.id);

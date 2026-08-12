@@ -105,6 +105,30 @@ function gridGeometry(gl: OGLRenderingContext, around: number, along: number): G
 const SURFACE_BODY_CODE: Record<SurfaceBody, number> = { body: 0, drape: 1, band: 2 };
 
 /**
+ * Write a slot's or a solid's shared appearance into the uniforms it is drawn
+ * with, in place.
+ *
+ * In place because these are the innermost loops in the pass — three of them,
+ * once per resident panel per frame — and the pair of literals this replaces was
+ * two fresh arrays every time round. ogl clones what it caches rather than
+ * holding a reference, so a mutated array is uploaded exactly as a new one was.
+ */
+function applyAppearance(
+  uniforms: Record<string, { value: unknown }>,
+  look: { levels: { gain: number; lift: number }; tint: readonly number[]; tintAmount: number }
+): void {
+  const levels = uniforms.uLevels.value as number[];
+  levels[0] = look.levels.gain;
+  levels[1] = look.levels.lift;
+
+  const tint = uniforms.uTint.value as number[];
+  tint[0] = look.tint[0];
+  tint[1] = look.tint[1];
+  tint[2] = look.tint[2];
+  tint[3] = look.tintAmount;
+}
+
+/**
  * A stable number per panel, so each page lays its crops out differently.
  *
  * The cell hash in the fragment shader is seeded with this, which means a
@@ -347,8 +371,7 @@ export class SpatialPass {
       mesh.updateMatrixWorld();
 
       uniforms.uTex.value = texture;
-      uniforms.uLevels.value = [solid.levels.gain, solid.levels.lift];
-      uniforms.uTint.value = [...solid.tint, solid.tintAmount];
+      applyAppearance(uniforms, solid);
       uniforms.uOpacity.value = solid.opacity;
 
       this.renderer.render({
@@ -393,8 +416,7 @@ export class SpatialPass {
       if (!texture) continue;
 
       uniforms.uTex.value = texture;
-      uniforms.uLevels.value = [slot.levels.gain, slot.levels.lift];
-      uniforms.uTint.value = [...slot.tint, slot.tintAmount];
+      applyAppearance(uniforms, slot);
       uniforms.uOpacity.value = slot.opacity;
       uniforms.uPanelAspect.value = slot.aspect;
       uniforms.uScroll.value = wrapScroll(shell, slot.aspect);
@@ -456,8 +478,7 @@ export class SpatialPass {
       if (!texture) continue;
 
       uniforms.uTex.value = texture;
-      uniforms.uLevels.value = [slot.levels.gain, slot.levels.lift];
-      uniforms.uTint.value = [...slot.tint, slot.tintAmount];
+      applyAppearance(uniforms, slot);
       uniforms.uOpacity.value = slot.opacity;
       uniforms.uPanelAspect.value = slot.aspect;
       uniforms.uSeed.value = seedFor(slot.panelId);
@@ -600,8 +621,7 @@ export class SpatialPass {
       if (!texture) continue;
 
       uniforms.uTex.value = texture;
-      uniforms.uLevels.value = [slot.levels.gain, slot.levels.lift];
-      uniforms.uTint.value = [...slot.tint, slot.tintAmount];
+      applyAppearance(uniforms, slot);
       uniforms.uOpacity.value = slot.opacity;
       uniforms.uPanelAspect.value = slot.aspect;
 
