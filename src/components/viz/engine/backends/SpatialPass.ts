@@ -592,6 +592,27 @@ export class SpatialPass {
     return this.tube;
   }
 
+  /**
+   * Build the shell's program and grid now rather than on the frame that first
+   * asks for it.
+   *
+   * The laziness is worth keeping — a run that stays on the flat presets should
+   * not pay for these at all — but "the first frame that needs it" is the worst
+   * possible moment to pay: ogl asks for LINK_STATUS the instant it links, which
+   * makes every one of these a synchronous stall, and the frame it lands on is
+   * the frame a formation is arriving on. The backend calls these during the
+   * opening of a run instead, one per frame, where a stall is behind the fade-up
+   * and inside the governor's grace period. See `WebGLBackend.warm`.
+   */
+  warmShell(): void {
+    this.ensureTube();
+  }
+
+  /** The surface's program and grid, for the reason `warmShell` gives. */
+  warmSurface(): void {
+    this.ensureSurface();
+  }
+
   private drawSlots(stage: StageFrame, pool: TexturePool, target: RenderTarget): void {
     const uniforms = this.quadProgram.uniforms;
     uniforms.uMorph.value = stage.morph;

@@ -1166,8 +1166,6 @@ export interface DeviceCaps {
   reactSteps: number;
   /** GPU texture uploads allowed in a single frame — see `TexturePool.flush`. */
   uploadsPerFrame: number;
-  /** Feedback FBO scale relative to the render target — the blur hides it. */
-  feedbackScale: number;
   /** Shards composited in a single pass; more than this ping-pongs in batches. */
   maxShardsPerPass: number;
   /**
@@ -1203,7 +1201,6 @@ export function deviceCaps(view: Window | null = defaultView()): DeviceCaps {
     maxFps: mobile ? 30 : 0,
     reactSteps: mobile ? 2 : 4,
     uploadsPerFrame: 1,
-    feedbackScale: 0.75,
     maxShardsPerPass: 12,
     stagePanels: mobile ? 5 : 13,
     // Room for the density knob to be pushed a long way past what the scenes ask

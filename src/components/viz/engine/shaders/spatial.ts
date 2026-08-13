@@ -369,8 +369,25 @@ void main() {
   // exact edge this whole surface exists to avoid — where a mirrored one matches
   // its neighbour by construction and the wall has no discontinuity in it at all.
   vec2 m = abs(fract(vUv * 0.5) * 2.0 - 1.0);
-  // Row 0 of an ImageBitmap sits at v = 0 — same flip as the quad program.
-  vec3 col = texture(uTex, vec2(m.x, 1.0 - m.y)).rgb;
+  /*
+   * Row 0 of an ImageBitmap sits at v = 0 — same flip as the quad program.
+   *
+   * At an explicit gradient, for the surface program's reason one step milder.
+   * The mirror is continuous, so there is no jump to misread — but its
+   * derivative flips sign at every fold, and at the vanishing point of a
+   * corridor the folds arrive several to a pixel, where the hardware's estimate
+   * is noise. Reading it off vUv, which is smooth the length of the tube,
+   * gives every fragment the level its actual footprint deserves — which is the
+   * far end of the corridor, and the whole reason the chain is there.
+   */
+  vec2 dx = dFdx(vUv);
+  vec2 dy = dFdy(vUv);
+  vec3 col = textureGrad(
+    uTex,
+    vec2(m.x, 1.0 - m.y),
+    vec2(dx.x, -dx.y),
+    vec2(dy.x, -dy.y)
+  ).rgb;
   col = clamp(col * uLevels.x + uLevels.y, 0.0, 1.0);
   col = mix(col, col * uTint.rgb, uTint.a);
 
@@ -667,8 +684,26 @@ void main() {
   vec2 origin = vec2(hash21(cell + uSeed), hash21(cell.yx * 1.7 + uSeed + 11.3));
   vec2 uv = origin * (1.0 - size) + f * size;
 
-  // Row 0 of an ImageBitmap sits at v = 0 — same flip as every other program.
-  vec3 col = texture(uTex, vec2(uv.x, 1.0 - uv.y)).rgb;
+  /*
+   * Row 0 of an ImageBitmap sits at v = 0 — same flip as every other program.
+   *
+   * Sampled at an explicit gradient rather than the hardware's own, because the
+   * coordinate above is discontinuous by design: at every cell boundary f
+   * wraps from one to zero and origin jumps to a different hash. A derivative
+   * taken across that reads as most of the page in one pixel, which selects the
+   * coarsest level in the chain — so the panel textures having a chain at all
+   * would draw a blurred grey line along every seam of every surface. The
+   * gradient of the continuous map underneath the dicing is the true one, and it
+   * is what the whole cell should be sampled at.
+   */
+  vec2 gx = dFdx(scaled) * size;
+  vec2 gy = dFdy(scaled) * size;
+  vec3 col = textureGrad(
+    uTex,
+    vec2(uv.x, 1.0 - uv.y),
+    vec2(gx.x, -gx.y),
+    vec2(gy.x, -gy.y)
+  ).rgb;
   col = clamp(col * uLevels.x + uLevels.y, 0.0, 1.0);
   col = mix(col, col * uTint.rgb, uTint.a);
 

@@ -17,6 +17,44 @@ const MAX_CONCURRENT_DECODES = 2;
  */
 const MAX_DECODE_ATTEMPTS = 3;
 
+/**
+ * Anisotropic taps on the panel textures, where the device offers them.
+ *
+ * Paired with the mip chain in `insert`, and the reason the chain is affordable
+ * at all. Trilinear alone picks its level off the *larger* of the two screen-space
+ * derivatives, so a page seen at a grazing angle — the far end of a corridor, the
+ * curl at the edge of a drape, which is most of what the spatial pass draws — is
+ * blurred along the axis it is still sharp in. That is exactly the soft grey the
+ * scenes are tuned to avoid. Sampling along the minor axis keeps those surfaces
+ * at the level their detail actually warrants and leaves the blur to fragments
+ * that really are minified in both directions.
+ *
+ * Four rather than the sixteen a desktop will report: the taps are spent only on
+ * minified fragments, but they are spent per fragment, and the difference between
+ * 4 and 16 on a page that is already a fraction of its native size is not
+ * something the frame is going to show.
+ */
+const PANEL_ANISOTROPY = 4;
+
+/**
+ * Asked for explicitly rather than left to the default, which is "whatever the
+ * source says".
+ *
+ * The gallery's own JPEGs are opaque and this changes nothing for them. What it
+ * covers is the other source this pool decodes: a photo the reader picked off
+ * their own disk. A PNG with an alpha channel would otherwise arrive
+ * premultiplied, and the upload path does not un-premultiply it — the shader
+ * reads `.rgb` and would get colour that has already been multiplied down at
+ * every soft edge.
+ *
+ * Colour space conversion is deliberately *not* turned off here. It is the
+ * faster path and correct for the gallery, whose files carry no ICC profile at
+ * all — but a phone photo is usually Display P3 with a profile, and ignoring it
+ * would render the reader's own pictures oversaturated. The decode is off the
+ * main thread and metered two at a time, so what it would buy is not frame time.
+ */
+const DECODE_OPTIONS: ImageBitmapOptions = { premultiplyAlpha: "none" };
+
 interface Entry {
   texture: Texture;
   /** Monotonic counter, not wall clock — cheaper and immune to tab throttling. */
@@ -28,7 +66,9 @@ interface Entry {
  *
  * The whole gallery at full resolution would be several hundred MB of VRAM and
  * iOS drops the context long before that, so residency is capped and decodes
- * are downscaled on the way in. The bytes themselves are already in the
+ * are downscaled on the way in. Count the mip chain in that budget: a resident
+ * panel is a third larger than its base level, which on the mobile cap is a few
+ * megabytes across the whole pool. The bytes themselves are already in the
  * service worker's cache after a first visit, which makes a re-fetch for decode
  * effectively free — which is true only because the worker keys its cache off
  * the request's *path* rather than its destination. See `src/sw.ts`.
@@ -170,6 +210,7 @@ export class TexturePool {
       const scale = this.maxEdge / longest;
       try {
         return await createImageBitmap(blob, {
+          ...DECODE_OPTIONS,
           resizeWidth: Math.round(panel.width * scale),
           resizeHeight: Math.round(panel.height * scale),
           resizeQuality: "high",
@@ -178,7 +219,7 @@ export class TexturePool {
         // Older Safari rejects the resize options; full-size decode still works.
       }
     }
-    return createImageBitmap(blob);
+    return createImageBitmap(blob, DECODE_OPTIONS);
   }
 
   private insert(panelId: string, bitmap: ImageBitmap): void {
@@ -187,9 +228,27 @@ export class TexturePool {
     const texture = new Texture(this.gl, {
       // ImageBitmap is a valid texImage2D source; ogl's types predate it.
       image: bitmap as unknown as HTMLImageElement,
-      generateMipmaps: false,
-      minFilter: this.gl.LINEAR,
+      /*
+       * The spatial pass minifies these hard — a page at the far end of a
+       * corridor, or on the curl of a drape, is a thousand texels landing in a
+       * couple of hundred pixels. A single bilinear tap of that is two things at
+       * once: it is aliased, so the page boils as the formation turns; and it is
+       * the worst access pattern a tiler has, since neighbouring fragments reach
+       * into unrelated cache lines and every one of them misses.
+       *
+       * The chain costs a third more memory per resident panel and one
+       * `generateMipmap` per upload — and the uploads are already metered to one
+       * a frame, so that is a fixed cost on a frame that chose to pay it rather
+       * than a stall that lands wherever a fetch resolved.
+       *
+       * Paired with anisotropy, without which this would trade the boil for a
+       * blur on exactly the surfaces the scenes are built around — see
+       * PANEL_ANISOTROPY.
+       */
+      generateMipmaps: true,
+      minFilter: this.gl.LINEAR_MIPMAP_LINEAR,
       magFilter: this.gl.LINEAR,
+      anisotropy: PANEL_ANISOTROPY,
       wrapS: this.gl.CLAMP_TO_EDGE,
       wrapT: this.gl.CLAMP_TO_EDGE,
     });

@@ -24,6 +24,18 @@ function vec4(): Vec4 {
  *  `captureHistory`. One means every frame, which is what it was. */
 const HISTORY_IDLE_STRIDE = 3;
 
+/**
+ * Frames drawn before the warm-up starts pulling programs forward — see `warm`.
+ *
+ * Not zero, because the opening frames have costs of their own that should not
+ * be competing with these: the composite and post programs make their first
+ * draw, which is where a driver that deferred their real compilation does it,
+ * and the first panels are landing at one upload a frame. A couple of frames of
+ * clearance puts the warm-up after that and still nowhere near the moment a
+ * preset switch would otherwise trigger it.
+ */
+const WARM_FIRST_FRAME = 3;
+
 /** Identity tone levels, so an untouched slot is a pass-through rather than a
  *  black one — unlike the vec4 uniforms, zero is not the neutral value here. */
 function unitLevels(): Vec2 {
@@ -81,6 +93,24 @@ export class WebGLBackend implements VizBackend {
   private readonly geometry: Triangle;
   /** Scene textures currently carrying a mip chain — see `syncSceneMips`. */
   private readonly mipped = new Set<Texture>();
+  /**
+   * The lazily-built programs, in the order the warm-up pulls them forward, one
+   * per frame — see `warm`. Drained by `shift`, so an empty queue is a run that
+   * has nothing left to build.
+   *
+   * Ordered by how abruptly the frame that would otherwise build them arrives.
+   * The crossing is first because it is the only one whose own frame is a
+   * dissolve already underway — a stall there is a visible hitch *in* the effect
+   * that exists to hide the change of path.
+   */
+  private readonly warmQueue: Array<() => void> = [
+    () => this.ensureHandover(),
+    () => this.ensureSpatial(),
+    () => this.spatial?.warmSurface(),
+    () => this.spatial?.warmShell(),
+  ];
+  /** Frames drawn, counted only until the warm queue is empty. */
+  private frames = 0;
   /** Frames since the last ring capture — see `captureHistory`. */
   private historyIdle = 0;
   /**
@@ -414,6 +444,43 @@ export class WebGLBackend implements VizBackend {
     // already moved on.
     this.fields.update(frame.post, composed, frame.flowAngle, frame.time);
     this.renderPost(frame, composed);
+    // Last, so a compile that overruns lands after this frame has been handed
+    // over rather than in front of it.
+    this.warm();
+  }
+
+  /**
+   * Build one lazily-built program per frame, over the opening of a run.
+   *
+   * Everything in the queue is built on the first frame that needs it, which is
+   * the right call for memory — a run that never leaves the flat presets should
+   * not allocate the spatial pass — and the wrong one for timing. ogl reads
+   * LINK_STATUS as soon as it links, so every one of these is a synchronous
+   * stall of tens to hundreds of milliseconds, and the frame it lands on is
+   * never an idle one: it is the frame a formation arrives on, or the frame a
+   * crossing between the two paths begins. That is a dropped frame exactly where
+   * the composition is doing something.
+   *
+   * Pulling them forward does not raise the average rate at all. What it does is
+   * move the stalls to the opening seconds, where the frame is fading up out of
+   * nothing and the quality governor is still inside GOVERNOR_GRACE — which is
+   * to say, to the one moment in a run where a hitch has nothing to interrupt
+   * and no consequence beyond itself.
+   *
+   * One per frame rather than all four at once: four compiles in a single task
+   * is a freeze at the very start of the run, and the whole point is to spend
+   * this where it does not read as one.
+   *
+   * Only the programs, and deliberately not the buffers behind them. The spatial
+   * pass's target and every field in `FieldPass` stay lazy, because those are
+   * megabytes on a device whose context is lost when it runs out of them — and
+   * unlike a compile, an allocation on the frame that needs it is not a stall
+   * worth pre-paying for.
+   */
+  private warm(): void {
+    if (this.warmQueue.length === 0) return;
+    if (++this.frames < WARM_FIRST_FRAME) return;
+    this.warmQueue.shift()!();
   }
 
   /**
@@ -836,7 +903,19 @@ export class WebGLBackend implements VizBackend {
     this.fields.capture();
   }
 
-  /** Grab the just-drawn frame off the default framebuffer for next frame. */
+  /**
+   * Grab the just-drawn frame off the default framebuffer for next frame.
+   *
+   * 1:1, and deliberately. Capturing at a fraction of the frame — a blit into a
+   * smaller texture, as the history ring does — is the obvious saving here and a
+   * much smaller one than it looks: what it removes is part of the *write*, on a
+   * copy whose read is a full frame either way, against a post pass that is
+   * already moving many times this per frame. It does not touch the cost that
+   * actually distinguishes this call, which is forcing the tile buffer to
+   * resolve mid-frame — that is a fixed cost and a smaller destination does not
+   * reduce it. Softening the trail for a couple of percent of one frame's
+   * bandwidth is not a trade worth making.
+   */
   private captureFeedback(): void {
     const gl = this.gl;
     gl.bindTexture(gl.TEXTURE_2D, this.feedback.texture);
