@@ -10,7 +10,9 @@
       "artist": "Dave Geiser",
       "image": "images/clowns/issue-n-a-1786583460.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "underground"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-13T01:11:03.357Z"
     },
