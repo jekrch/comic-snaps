@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 234,
+      "id": "the-shaolin-cowboy-staying-a-i-alive-2-1786832600",
+      "title": "The Shaolin Cowboy: Staying A.I. Alive",
+      "slug": "the-shaolin-cowboy-staying-a-i-alive",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Geof Darrow",
+      "image": "images/the-shaolin-cowboy-staying-a-i-alive/issue-2-1786832600.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-15T22:23:23.630Z"
+    },
+    {
       "seq": 233,
       "id": "infernal-hulk-10-1786832475",
       "title": "Infernal Hulk",
