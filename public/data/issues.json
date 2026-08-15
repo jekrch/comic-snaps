@@ -7381,6 +7381,87 @@
       ]
     },
     {
+      "id": "the-dogsitter-1",
+      "series": "the-dogsitter",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "megan-levens",
+          "name": "Megan Levens",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nick-filardi",
+          "name": "Nick Filardi",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-crank",
+          "name": "Chris Crank",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jae-lee",
+          "name": "Jae Lee",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joe-quinones",
+          "name": "Joe Quinones",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "june-chung",
+          "name": "June Chung",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "maggie-howell",
+          "name": "Maggie Howell",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nicoletta-baldari",
+          "name": "Nicoletta Baldari",
+          "roles": [
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-dogsitter-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-eye-collector-1",
       "series": "the-eye-collector",
       "issue": 1,

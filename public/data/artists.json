@@ -5314,6 +5314,27 @@
       "country": "Italy"
     },
     {
+      "id": "joe-quinones",
+      "name": "Joe Quinones",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320255-1330348051-Joe-Q.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1556/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joe-quinones/4040-58194/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "joe-sabino",
       "name": "Joe Sabino",
       "description": "Formerly a Production Artist & Digital Compositor at Marvel. Now lettering for Virtual Calligraphy.",
@@ -7522,6 +7543,26 @@
       ]
     },
     {
+      "id": "megan-levens",
+      "name": "Megan Levens",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11120/111200217/4357663-megan-levens-1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/megan-levens/4040-78168/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3082/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "michael-allred",
       "name": "Michael Allred",
       "description": "Michael Dalton \"Mike\" Allred (born 1962) is an American comic book artist and writer. He is most well known for his independent comics creation Madman and for co-creating and drawing the comic book series iZombie. His work often draws upon pop art, as well as commercial and comic art of the 1950s and 1960s.",
@@ -7954,6 +7995,28 @@
       "country": "Germany"
     },
     {
+      "id": "nick-filardi",
+      "name": "Nick Filardi",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10069941-nick_filardi.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2244/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nick-filardi/4040-40867/"
+        }
+      ],
+      "birthYear": 1981,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "nick-robles",
       "name": "Nick Robles",
       "description": "",
@@ -8041,6 +8104,26 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/nicole-goux/4040-89457/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "nicoletta-baldari",
+      "name": "Nicoletta Baldari",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/55582/9517719-nicolettabaldari.jfif.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1128/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nicoletta-baldari/4040-90277/"
         }
       ],
       "sources": [

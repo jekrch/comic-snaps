@@ -2871,6 +2871,44 @@
       ]
     },
     {
+      "id": "the-dogsitter",
+      "name": "The Dogsitter",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10112637-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-dogsitter/4050-173817/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16029/"
+        }
+      ],
+      "publisher": "Ignition Press",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 2026,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-dogsitter/bda85ae0cfbd.jpg",
+        "data/covers/the-dogsitter/6ea74b3c0687.jpg",
+        "data/covers/the-dogsitter/94fcec544c14.jpg",
+        "data/covers/the-dogsitter/26bbbc2fa689.jpg"
+      ]
+    },
+    {
       "id": "the-eye-collector",
       "name": "The Eye Collector",
       "parentSeries": null,

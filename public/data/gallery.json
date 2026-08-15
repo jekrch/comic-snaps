@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-08-15T21:17:16.312Z"
+      "addedAt": "2026-08-15T21:17:16.312Z",
+      "width": 1280,
+      "height": 1072,
+      "dominantColors": [
+        [
+          71.3,
+          -1.1,
+          9.1
+        ],
+        [
+          32.4,
+          12.2,
+          1.1
+        ],
+        [
+          48.3,
+          19.2,
+          8.6
+        ]
+      ],
+      "colorfulness": 12.8,
+      "phash": "b58b60eae442decc",
+      "ahash": "0f0f1e0e8f8fc2c2",
+      "dhash": "3f1a585c3a188c8e"
     },
     {
       "seq": 230,
@@ -2657,7 +2680,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2731,7 +2754,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2953,7 +2976,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
