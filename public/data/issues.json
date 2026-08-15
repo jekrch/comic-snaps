@@ -4415,6 +4415,141 @@
       ]
     },
     {
+      "id": "infernal-hulk-10",
+      "series": "infernal-hulk",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "phillip-kennedy-johnson",
+          "name": "Phillip Kennedy Johnson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "adam-gorham",
+          "name": "Adam Gorham",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "matthew-wilson",
+          "name": "Matthew Wilson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "cory-petit",
+          "name": "Cory Petit",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "edgar-delgado",
+          "name": "Edgar Delgado",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "gerardo-sandoval",
+          "name": "Gerardo Sandoval",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "germ-n-peralta",
+          "name": "Germ\u00e1n Peralta",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "humberto-ramos",
+          "name": "Humberto Ramos",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jonas-scharf",
+          "name": "Jonas Scharf",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "josemaria-casanovas",
+          "name": "Josemaria Casanovas",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mauro-cascioli",
+          "name": "Mauro Cascioli",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nic-klein",
+          "name": "Nic Klein",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordan-d-white",
+          "name": "Jordan D. White",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "kaeden-mcgahey",
+          "name": "Kaeden McGahey",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "martin-biro",
+          "name": "Martin Biro",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "c-b-cebulski",
+          "name": "C. B. Cebulski",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "carlos-lao",
+          "name": "Carlos Lao",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-infernal-hulk-2026-10/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "it-s-jeff-brand-new-week-1",
       "series": "it-s-jeff-brand-new-week",
       "issue": 1,

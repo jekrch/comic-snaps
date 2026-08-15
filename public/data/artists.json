@@ -3816,6 +3816,43 @@
       ]
     },
     {
+      "id": "gerardo-sandoval",
+      "name": "Gerardo Sandoval",
+      "description": "Gerardo Sandoval is a Mexican graphic designer that started working in comics with Top Cow's Tomb Raider. He has also provided his pencils for Chaos! Comics, Stone Arch Books, and he is currently drawing Cable and X-Force for Marvel Comics, where he has also done interior work for What If? AvsX and Captain Marvel.\r\n\r\nGerardo also wrote and illustrated the independent comic book Colliders, released at Mexico City's comics author convention Festo on November 16, 2013 .",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/10/101307/3460051-1010946_600775426620858_803275872_n.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/251/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/gerardo-sandoval/4040-56416/"
+        }
+      ],
+      "country": "Mexico",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "germ-n-peralta",
+      "name": "Germ\u00e1n Peralta",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/31/g-peralta.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1023/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
       "description": "Gilberto Hern\u00e1ndez (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [\u02c8beto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
@@ -4224,6 +4261,28 @@
       ],
       "birthYear": 1882,
       "country": "United States"
+    },
+    {
+      "id": "humberto-ramos",
+      "name": "Humberto Ramos",
+      "description": "Humberto Ramos is a Mexican comic book penciller, best known for his work on American comic books such as Impulse, Runaways, The Spectacular Spider-Man, The Amazing Spider-Man and his creator-owned series Crimson.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10049336-humberto_ramos.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/260/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/humberto-ramos/4040-1678/"
+        }
+      ],
+      "birthYear": 1970,
+      "country": "Mexico",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "hunt-emerson",
@@ -5618,6 +5677,27 @@
       ]
     },
     {
+      "id": "jonas-scharf",
+      "name": "Jonas Scharf",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58790/8525829-jonasscharf_02.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2716/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jonas-scharf/4040-92683/"
+        }
+      ],
+      "country": "Germany",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jonathan-ball",
       "name": "Jonathan Ball",
       "description": "",
@@ -5816,6 +5896,26 @@
       "aliases": [
         "Jose Ortiz Moya",
         "Jos\u00e9 Maria Ortiz Moya"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "josemaria-casanovas",
+      "name": "Josemaria Casanovas",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3861/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/josemaria-casanovas/4040-107516/"
+        }
       ],
       "sources": [
         "comicvine",
@@ -7537,6 +7637,27 @@
         "comicvine"
       ],
       "country": "Italy"
+    },
+    {
+      "id": "mauro-cascioli",
+      "name": "Mauro Cascioli",
+      "description": "During 2005 he started working as an assistant artist for DC comics (Batman, Superman & Space Ghost) and also did freelance works for Warcraft and Marvel Comics (Wolverine, Mystique).\r\n\r\nIn 2007 he signed an exclusive contract with DC comics to replace Howard Porter for the last four issues of The Trials of Shazam!. He is currently working on the title Cry for Justice a new series for DC comics, written by James Robinson.\r\n\r\nMore current work has seen him working on the recent series Cry For Justice and working on cover art for the more recent Green Arrow Issues.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9241/497014-000.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3057/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mauro-cascioli/4040-50691/"
+        }
+      ],
+      "country": "Argentina",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "maya-bollinger",
