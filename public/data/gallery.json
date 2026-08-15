@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 231,
+      "id": "the-dogsitter-1-1786828633",
+      "title": "The Dogsitter",
+      "slug": "the-dogsitter",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Megan Levens",
+      "image": "images/the-dogsitter/issue-1-1786828633.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-15T21:17:16.312Z"
+    },
+    {
       "seq": 230,
       "id": "clowns-n-a-1786583460",
       "title": "Clowns",
