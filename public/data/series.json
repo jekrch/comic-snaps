@@ -974,6 +974,41 @@
       ]
     },
     {
+      "id": "eros-psyche",
+      "name": "Eros/Psyche",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7868895-01a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/erospsyche/4050-134572/"
+        }
+      ],
+      "startYear": 2021,
+      "publisher": "Ablaze",
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/eros-psyche/24d5672eaa05.jpg",
+        "data/covers/eros-psyche/a5b79187f9cc.jpg",
+        "data/covers/eros-psyche/f7e259588455.jpg",
+        "data/covers/eros-psyche/2338616cd1a6.jpg"
+      ]
+    },
+    {
       "id": "faithless-ii",
       "name": "Faithless II",
       "parentSeries": null,

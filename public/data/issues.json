@@ -3132,6 +3132,73 @@
       ]
     },
     {
+      "id": "eros-psyche-1",
+      "series": "eros-psyche",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "maria-llovet",
+          "name": "Maria Llovet",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "saida-temofonte",
+          "name": "Saida Temofonte",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "miguel-mercado",
+          "name": "Miguel Mercado",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mirka-andolfo",
+          "name": "Mirka Andolfo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sabine-rich",
+          "name": "Sabine Rich",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kevin-ketner",
+          "name": "Kevin Ketner",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "rodolfo-muraguchi",
+          "name": "Rodolfo Muraguchi",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/erospsyche-1/4000-837982/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "faithless-ii-5",
       "series": "faithless-ii",
       "issue": 5,

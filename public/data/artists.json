@@ -6564,6 +6564,26 @@
       ]
     },
     {
+      "id": "kevin-ketner",
+      "name": "Kevin Ketner",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/114183/6543448-kevin.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kevin-ketner/4040-88737/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1308/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kevin-maguire",
       "name": "Kevin Maguire",
       "description": "Kevin Maguire is an American comics artist, known for his work on series such as Justice League, Batman Confidential, Captain America, and X-Men.",
@@ -7851,6 +7871,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "miguel-mercado",
+      "name": "Miguel Mercado",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11118/111187046/7561992-dzmxr_nu0aec2lz.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/miguel-mercado/4040-94512/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1233/"
+        }
+      ],
+      "country": "Philippines",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -9274,6 +9315,30 @@
       ]
     },
     {
+      "id": "rodolfo-muraguchi",
+      "name": "Rodolfo Muraguchi",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rodolfo-muraguchi/4040-72232/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7352/"
+        }
+      ],
+      "aliases": [
+        "Rondolfo Muraguchi",
+        "Rudolfo Muraguchi"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "roger-langridge",
       "name": "Roger Langridge",
       "description": "He is the creator of \"The Muppet Show: The Comic Book\" for which he received a Eisner Award nomination. He is most currently working on the series Snarked.",
@@ -9601,6 +9666,27 @@
       ]
     },
     {
+      "id": "sabine-rich",
+      "name": "Sabine Rich",
+      "description": "Illustrator of comics and children's books.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11120/111200217/4784742-sabine%20rich.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sabine-rich/4040-65999/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/605/"
+        }
+      ],
+      "country": "France",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "sabrina-futch",
       "name": "Sabrina Futch",
       "description": "",
@@ -9620,6 +9706,28 @@
         "comicvine"
       ],
       "country": "USA"
+    },
+    {
+      "id": "saida-temofonte",
+      "name": "Saida Temofonte",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/4/47635/2876501-saida.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/saida-temofonte/4040-43779/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/482/"
+        }
+      ],
+      "birthYear": 1970,
+      "country": "Italy",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "sally-hurst",
