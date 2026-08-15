@@ -7026,6 +7026,22 @@
       ]
     },
     {
+      "id": "manny-carbonilla",
+      "name": "Manny Carbonilla",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16247/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "marguerite-bennett",
       "name": "Marguerite Bennett",
       "description": "Marguerite Bennett is an American comic book writer. She has worked on Bombshells, Angela, Josie and the Pussycats, and her creator-owned books InSeXts and Animosity. Her work has been recognized for her depiction of female relationships, and her representation of LGBTQ stories and characters earned nominations for a GLAAD Media Award in 2016 and 2017.",
@@ -10249,6 +10265,22 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9808830-stipan_morian.jpg",
       "country": "Croatia",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "stjepan-bartolic",
+      "name": "Stjepan Bartolic",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/13847/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
