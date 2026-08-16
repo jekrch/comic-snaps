@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 238,
+      "id": "just-brutal-5-1786901695",
+      "title": "Just Brutal",
+      "slug": "just-brutal",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Brahm Revel",
+      "image": "images/just-brutal/issue-5-1786901695.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-16T17:34:58.081Z"
+    },
+    {
       "seq": 237,
       "id": "just-brutal-5-1786901541",
       "title": "Just Brutal",
@@ -2902,7 +2916,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -2976,7 +2990,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3198,7 +3212,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
