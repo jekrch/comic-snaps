@@ -8425,6 +8425,89 @@
       ]
     },
     {
+      "id": "the-nice-house-by-the-sea-11",
+      "series": "the-nice-house-by-the-sea",
+      "issue": 11,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "lvaro-mart-nez-bueno",
+          "name": "\u00c1lvaro Mart\u00ednez Bueno",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "sam-wolfe-connelly",
+          "name": "Sam Wolfe Connelly",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-nice-house-by-the-sea-2024-11/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-twilight-zone-6",
       "series": "the-twilight-zone",
       "issue": 6,
