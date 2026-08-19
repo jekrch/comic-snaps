@@ -3199,6 +3199,88 @@
       ]
     },
     {
+      "id": "eros-psyche-5",
+      "series": "eros-psyche",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "maria-llovet",
+          "name": "Maria Llovet",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "saida-temofonte",
+          "name": "Saida Temofonte",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "giada-marchisio",
+          "name": "Giada Marchisio",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "guillem-march",
+          "name": "Guillem March",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "marika-cresta",
+          "name": "Marika Cresta",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sabine-rich",
+          "name": "Sabine Rich",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kevin-ketner",
+          "name": "Kevin Ketner",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "rich-young",
+          "name": "Rich Young",
+          "roles": [
+            "Editor",
+            "Other"
+          ]
+        },
+        {
+          "artistId": "rodolfo-muraguchi",
+          "name": "Rodolfo Muraguchi",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/erospsyche-5/4000-873211/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "faithless-ii-5",
       "series": "faithless-ii",
       "issue": 5,

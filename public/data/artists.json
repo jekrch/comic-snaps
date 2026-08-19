@@ -3853,6 +3853,26 @@
       ]
     },
     {
+      "id": "giada-marchisio",
+      "name": "Giada Marchisio",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/giada-marchisio/4040-97921/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/787/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "gilbert-hernandez",
       "name": "Gilbert Hernandez",
       "description": "Gilberto Hern\u00e1ndez (born February 1, 1957), usually credited as Gilbert Hernandez and also by the nickname Beto (Spanish: [\u02c8beto]), is an American cartoonist. He is best known for his Palomar/Heartbreak Soup stories in Love and Rockets, an alternative comic book he shared with his brothers Jaime and Mario.",
@@ -7294,6 +7314,26 @@
       "country": "United States"
     },
     {
+      "id": "marika-cresta",
+      "name": "Marika Cresta",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/marika-cresta/4040-97630/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2867/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "mario-hernandez",
       "name": "Mario Hernandez",
       "description": "Eldest brother of Jaime and Gilbert Hernandez and sporadic contributor to LOVE AND ROCKETS.",
@@ -9024,6 +9064,27 @@
         "comicvine"
       ],
       "country": "United States of America"
+    },
+    {
+      "id": "rich-young",
+      "name": "Rich Young",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10129281-rich_young.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rich-young/4040-56502/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8004/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "richard-grass-green",
