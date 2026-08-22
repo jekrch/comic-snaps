@@ -2456,6 +2456,41 @@
       }
     },
     {
+      "id": "redcoat",
+      "name": "Redcoat",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9320268-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/redcoat/4050-157526/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/7269/"
+        }
+      ],
+      "startYear": 2024,
+      "publisher": "Image",
+      "issueCount": 19,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          22
+        ]
+      },
+      "coverImages": [
+        "data/covers/redcoat/400689c25556.jpg",
+        "data/covers/redcoat/4c45fc4a1970.jpg",
+        "data/covers/redcoat/e20b20f74aae.jpg",
+        "data/covers/redcoat/9c34774e16dc.jpg"
+      ]
+    },
+    {
       "id": "rip-off-comix",
       "name": "Rip Off Comix",
       "parentSeries": null,

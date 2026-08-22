@@ -1444,6 +1444,28 @@
       ]
     },
     {
+      "id": "bryan-hitch",
+      "name": "Bryan Hitch",
+      "description": "Bryan Hitch (born on the 6th June 1970) is an acclaimed British comic book artist who has worked with both DC and Marvel. He is co-creator of The Authority (Wildstorm) and The Ultimates 1 and 2 (Marvel). He left college when he was 17 years old to undertake drawing professionally. Although his art is self taught it resembles that of Alan Davis, who was deemed his first influence. His first professional submission was to Marvel UK, which was an Action Force sample story. He later worked with Simon Furman on Death's Hand and Transformers.\r\n\r\nBryan Hitch's art was first widely seen on \"The Authority\" working alongside Warren Ellis. It was here that his unique drawing style, his use of detailed \"widescreen\" panels, was fully realized His work continued to evolve in \"The Ultimates\", this time working in collaboration with Mark Millar. However, is work is categorically defined by his \"lateness\" in releasing issues. His runs of The Ultimates as well as JLA and Fantastic Four being of particular note. The final issue of his run on Fantastic Four was drawn by fill-in artist Stuart Immonen. The cover of the November 2006 issue of the British movie magazine Empire was designed and drawn by Hitch.\r\n\r\nHe is currently working on America's Got Powers with Jonathan Ross.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9241/495790-000.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bryan-hitch/4040-5061/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/202/"
+        }
+      ],
+      "birthYear": 1970,
+      "country": "England",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "bryan-valenza",
       "name": "Bryan Valenza",
       "description": "",
