@@ -1,13 +1,27 @@
 {
   "panels": [
     {
+      "seq": 245,
+      "id": "redcoat-22-1787434628",
+      "title": "Redcoat",
+      "slug": "redcoat",
+      "issue": 22,
+      "year": 2026,
+      "artist": "Bryan Hitch",
+      "image": "images/redcoat/issue-22-1787434628.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-22T21:37:13.626Z"
+    },
+    {
       "seq": 244,
       "id": "heart-eyes-1-1787433089",
       "title": "Heart Eyes",
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -19,7 +33,7 @@
         [
           73.2,
           0.1,
-          32.0
+          32
         ],
         [
           50.8,
@@ -3165,7 +3179,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3239,7 +3253,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3461,7 +3475,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
