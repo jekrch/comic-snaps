@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 244,
+      "id": "heart-eyes-1-1787433089",
+      "title": "Heart Eyes",
+      "slug": "heart-eyes",
+      "issue": 1,
+      "year": 2022,
+      "artist": "Victor Ibáñez",
+      "image": "images/heart-eyes/issue-1-1787433089.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-22T21:11:31.539Z"
+    },
+    {
       "seq": 243,
       "id": "tales-calculated-to-drive-you-mad-1-1787432493",
       "title": "Tales Calculated to Drive You Mad",
@@ -3128,7 +3142,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3202,7 +3216,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3424,7 +3438,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
