@@ -3757,6 +3757,52 @@
       ]
     },
     {
+      "id": "grrl-scouts-stone-ghost-1",
+      "series": "grrl-scouts-stone-ghost",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jim-mahfood",
+          "name": "Jim Mahfood",
+          "roles": [
+            "Writer",
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "peach-momoko",
+          "name": "Peach Momoko",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tricia-ramos",
+          "name": "Tricia Ramos",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "adam-dumper",
+          "name": "Adam Dumper",
+          "roles": [
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/grrl-scouts-stone-ghost-2021-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "harley-quinn-x-elvira-6",
       "series": "harley-quinn-x-elvira",
       "issue": 6,

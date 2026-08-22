@@ -38,6 +38,26 @@
       ]
     },
     {
+      "id": "adam-dumper",
+      "name": "Adam Dumper",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5711/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/adam-dumper/4040-122473/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "adam-gorham",
       "name": "Adam Gorham",
       "description": "",
@@ -5115,6 +5135,28 @@
       "country": "USA"
     },
     {
+      "id": "jim-mahfood",
+      "name": "Jim Mahfood",
+      "description": "American comic book creator and co-founder of 40 Oz Comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320247-8880474024-Jim-M.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jim-mahfood/4040-16764/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1362/"
+        }
+      ],
+      "birthYear": 1975,
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jim-mitchell",
       "name": "Jim Mitchell",
       "description": "",
@@ -8641,6 +8683,30 @@
       ]
     },
     {
+      "id": "peach-momoko",
+      "name": "Peach Momoko",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11118/111187046/7439383-16729323_732346343601909_8131089215718837727_n.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2855/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/peach-momoko/4040-97738/"
+        }
+      ],
+      "country": "Japan",
+      "aliases": [
+        "\u6843\u6843\u5b50"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "pepe-larraz",
       "name": "Pepe Larraz",
       "description": "",
@@ -11034,6 +11100,26 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "tricia-ramos",
+      "name": "Tricia Ramos",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4727/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tricia-ramos/4040-77224/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "trish-forstner",
