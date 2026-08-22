@@ -1402,6 +1402,41 @@
       ]
     },
     {
+      "id": "heart-eyes",
+      "name": "Heart Eyes",
+      "parentSeries": null,
+      "description": "Sanity-eating monsters ended humanity. The unlucky few who survived now hide in the cracks of a broken world. And yet somehow, beneath the graveyard that used to be San Antonio, Rico met Lupe, the girl of his dreams. But how did she get here? And why is she smiling? No one survives out in the street. No one smiles where the monsters lurk.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11160/111600871/8623826-8430134208-STL22.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/heart-eyes/4050-144594/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/10670/"
+        }
+      ],
+      "startYear": 2022,
+      "publisher": "Vault Comics",
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/heart-eyes/360a711a712d.jpg",
+        "data/covers/heart-eyes/e91dc078bb0e.jpg",
+        "data/covers/heart-eyes/f9f135cbba79.jpg",
+        "data/covers/heart-eyes/2189fef13c2d.jpg"
+      ]
+    },
+    {
       "id": "heavy-liquid",
       "name": "Heavy Liquid",
       "parentSeries": null,

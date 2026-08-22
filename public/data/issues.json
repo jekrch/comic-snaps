@@ -3967,6 +3967,79 @@
       ]
     },
     {
+      "id": "heart-eyes-1",
+      "series": "heart-eyes",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "victor-ib-ez",
+          "name": "Victor Ib\u00e1\u00f1ez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "addison-duke",
+          "name": "Addison Duke",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "simon-bowland",
+          "name": "Simon Bowland",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "michael-dialynas",
+          "name": "Michael Dialynas",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "adrian-f-wassel",
+          "name": "Adrian F. Wassel",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "damian-a-wassel",
+          "name": "Damian A. Wassel",
+          "roles": [
+            "Publisher"
+          ]
+        },
+        {
+          "artistId": "rebecca-taylor",
+          "name": "Rebecca Taylor",
+          "roles": [
+            "Managing Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/heart-eyes-2022-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "heavy-liquid-1",
       "series": "heavy-liquid",
       "issue": 1,

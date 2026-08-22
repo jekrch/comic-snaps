@@ -7,12 +7,35 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-08-22T21:11:31.539Z"
+      "addedAt": "2026-08-22T21:11:31.539Z",
+      "width": 1111,
+      "height": 1280,
+      "dominantColors": [
+        [
+          73.2,
+          0.1,
+          32.0
+        ],
+        [
+          50.8,
+          25.9,
+          16.6
+        ],
+        [
+          15.3,
+          4.1,
+          2.4
+        ]
+      ],
+      "colorfulness": 21.3,
+      "phash": "8aba5ad23c42b6cb",
+      "ahash": "d5f93f777f7e3818",
+      "dhash": "ad4b6baeebece973"
     },
     {
       "seq": 243,
@@ -3142,7 +3165,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3216,7 +3239,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete “Omaha” the Cat Dancer",
+      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3438,7 +3461,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,

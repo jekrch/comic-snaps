@@ -79,6 +79,27 @@
       ]
     },
     {
+      "id": "addison-duke",
+      "name": "Addison Duke",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10049731-addison_duke.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3743/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/addison-duke/4040-73308/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "aditya-bidikar",
       "name": "Aditya Bidikar",
       "description": "My name is Aditya Bidikar, and you will most likely know me as a letterer for comics from Vault, DC Comics, Image, Dark Horse, Oni, and other comics publishers. I grew up in Pune, India, and spent some years in Kolkata and Bengaluru before returning to Pune, where I now reside. In previous lives, I have been a content writer, a technical translator, a book reviewer, a comics editor, and occasional fiction writer before I backed into my current profession of lettering. I mainly work in digital comics lettering, and I like to integrate hand-drawn sound effects and text design into my work. I have also hand-lettered two graphic novels so far, and am currently working on a third. I have also designed some of my own comics lettering fonts, and I\u2019m currently working on a way to make those and others available for purchase. But this is some way into the future, so let\u2019s not hold our breath. After spending years away from writing as a profession, I have recently returned to it, and have been publishing short comics and prose stories in the last year, and I\u2019m currently scripting a long-form comic book that I hope to publish in the near future.",
@@ -92,6 +113,25 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "adrian-f-wassel",
+      "name": "Adrian F. Wassel",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12452/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Adrian Wassel"
       ]
     },
     {
@@ -2192,6 +2232,29 @@
         "comicvine"
       ],
       "country": "Canada"
+    },
+    {
+      "id": "damian-a-wassel",
+      "name": "Damian A. Wassel",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12451/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/damian-a-wassel/4040-82329/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Damian Wassel"
+      ]
     },
     {
       "id": "dan-clyne",
@@ -7898,6 +7961,28 @@
       ]
     },
     {
+      "id": "michael-dialynas",
+      "name": "Michael Dialynas",
+      "description": "Appeared as an artist on Spera Vol. 2 from Archaia and writer/artist on Popgun Vol. 3 & 4 from Image Comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/63176/6025377-img_6820-768x1365.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3742/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/michael-dialynas/4040-62898/"
+        }
+      ],
+      "birthYear": 1984,
+      "country": "Greece",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "michael-heisler",
       "name": "Michael Heisler",
       "description": "An American comic book writer known for his work on the series DV8 and Union. Heisler got his start in the industry in the late 1980s as a letterer, primarily for Marvel Comics. From there, he moved into writing and editing.",
@@ -9077,6 +9162,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "rebecca-taylor",
+      "name": "Rebecca Taylor",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/2947681-1.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/106/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rebecca-taylor/4040-61906/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -10357,6 +10463,27 @@
       ]
     },
     {
+      "id": "simon-bowland",
+      "name": "Simon Bowland",
+      "description": "Letterer, primarily for Dynamite and 2000AD, but also Marvel as well as other publishers.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9944265-simon_bowland.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/837/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/simon-bowland/4040-43946/"
+        }
+      ],
+      "country": "England",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "simon-gane",
       "name": "Simon Gane",
       "description": "",
@@ -11268,6 +11395,30 @@
       ],
       "birthYear": 1999,
       "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "victor-ib-ez",
+      "name": "Victor Ib\u00e1\u00f1ez",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10070082-victor_ibanez.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/victor-ibanez/4040-55679/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/761/"
+        }
+      ],
+      "country": "Spain",
+      "aliases": [
+        "Victor Ibanez"
+      ],
       "sources": [
         "comicvine",
         "metron"
