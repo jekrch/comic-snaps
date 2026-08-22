@@ -4241,6 +4241,32 @@
       ]
     },
     {
+      "id": "harvey-kurtzman",
+      "name": "Harvey Kurtzman",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/114183/6428728-hof_kurtzman.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harvey-kurtzman/4040-3909/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1868/"
+        }
+      ],
+      "birthYear": 1924,
+      "deathYear": 1993,
+      "country": "United States",
+      "aliases": [
+        "H. Kurtz"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "hassan-otsmane-elhaou",
       "name": "Hassan Otsmane-Elhaou",
       "description": "",

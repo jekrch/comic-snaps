@@ -7421,6 +7421,30 @@
       ]
     },
     {
+      "id": "tales-calculated-to-drive-you-mad-1",
+      "series": "tales-calculated-to-drive-you-mad",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "harvey-kurtzman",
+          "name": "Harvey Kurtzman",
+          "roles": [
+            "Penciller",
+            "Inker"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tales-calculated-to-drive-you-mad-1/4000-43219/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "tales-of-ordinary-madness-2",
       "series": "tales-of-ordinary-madness",
       "issue": 2,

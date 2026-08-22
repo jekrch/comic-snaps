@@ -2756,6 +2756,41 @@
       ]
     },
     {
+      "id": "tales-calculated-to-drive-you-mad",
+      "name": "Tales Calculated to Drive You Mad",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/38464-6026-43219-1-tales-calculated-to-.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tales-calculated-to-drive-you-mad/4050-6026/"
+        }
+      ],
+      "startYear": 1997,
+      "publisher": "EC",
+      "issueCount": 5,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/tales-calculated-to-drive-you-mad/7168d2e6ccbd.jpg",
+        "data/covers/tales-calculated-to-drive-you-mad/b627b4ebf18d.jpg",
+        "data/covers/tales-calculated-to-drive-you-mad/e81f7d109624.jpg",
+        "data/covers/tales-calculated-to-drive-you-mad/0ef71c4047cb.jpg"
+      ]
+    },
+    {
       "id": "tales-of-ordinary-madness",
       "name": "Tales of Ordinary Madness",
       "parentSeries": null,
