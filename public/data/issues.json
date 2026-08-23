@@ -9121,8 +9121,8 @@
       ]
     },
     {
-      "id": "zap-0",
-      "series": "zap",
+      "id": "zap-comix-0",
+      "series": "zap-comix",
       "issue": 0,
       "credits": [
         {
@@ -9146,8 +9146,8 @@
       ]
     },
     {
-      "id": "zap-1",
-      "series": "zap",
+      "id": "zap-comix-1",
+      "series": "zap-comix",
       "issue": 1,
       "credits": [
         {
@@ -9171,8 +9171,8 @@
       ]
     },
     {
-      "id": "zap-2",
-      "series": "zap",
+      "id": "zap-comix-2",
+      "series": "zap-comix",
       "issue": 2,
       "credits": [
         {
@@ -9209,59 +9209,6 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/zap-comix-2/4000-185245/"
-        }
-      ],
-      "sources": [
-        "comicvine"
-      ]
-    },
-    {
-      "id": "zap-3",
-      "series": "zap",
-      "issue": 3,
-      "credits": [
-        {
-          "artistId": "gilbert-shelton",
-          "name": "Gilbert Shelton",
-          "roles": [
-            "Writer",
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "robert-crumb",
-          "name": "Robert Crumb",
-          "roles": [
-            "Writer",
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "rick-griffin",
-          "name": "Rick Griffin",
-          "roles": [
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "s-clay-wilson",
-          "name": "S. Clay Wilson",
-          "roles": [
-            "Artist"
-          ]
-        },
-        {
-          "artistId": "victor-moscoso",
-          "name": "Victor Moscoso",
-          "roles": [
-            "Artist"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/zap-comix-3/4000-185246/"
         }
       ],
       "sources": [

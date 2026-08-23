@@ -221,7 +221,10 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "battle-beast",
@@ -291,6 +294,9 @@
         "data/covers/bijou-funnies/6df2e87add63.jpg",
         "data/covers/bijou-funnies/580b1e977731.jpg",
         "data/covers/bijou-funnies/6020322d3a3a.jpg"
+      ],
+      "tags": [
+        "underground"
       ],
       "anthology": true
     },
@@ -501,6 +507,9 @@
       },
       "coverImages": [
         "data/covers/clowns/ca5027137249.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1555,6 +1564,9 @@
         "data/covers/hup/f9e277e122eb.jpg",
         "data/covers/hup/48c282bd417f.jpg",
         "data/covers/hup/84484c61fe20.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -1777,6 +1789,9 @@
       },
       "coverImages": [
         "data/covers/juice-city/76738b65f8c6.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -2152,6 +2167,9 @@
       "coverImages": [
         "data/covers/motor-city-comics/75c9178a97f4.jpg",
         "data/covers/motor-city-comics/f54420c772ad.jpg"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -2352,6 +2370,9 @@
         "data/covers/panic/09b63cb5a502.jpg",
         "data/covers/panic/985ab78cd12b.jpg",
         "data/covers/panic/c0a05e6702b0.jpg"
+      ],
+      "tags": [
+        "ec"
       ],
       "anthology": true
     },
@@ -2858,6 +2879,9 @@
         "data/covers/tales-calculated-to-drive-you-mad/b627b4ebf18d.jpg",
         "data/covers/tales-calculated-to-drive-you-mad/e81f7d109624.jpg",
         "data/covers/tales-calculated-to-drive-you-mad/0ef71c4047cb.jpg"
+      ],
+      "tags": [
+        "ec"
       ]
     },
     {
@@ -3670,10 +3694,11 @@
       }
     },
     {
-      "id": "zap",
+      "id": "zap-comix",
       "name": "Zap Comix",
       "parentSeries": null,
       "description": "Zap Comix is an underground comix series which was originally part of the counterculture of the late 1960s. While a few small-circulation self-published satirical comic books had been printed prior to this, Zap became the model for the \"comix\" movement that snowballed after its release. The title itself published 17 issues over a period of 46 years.\r\n\r\nPremiering in early 1968 as a showcase for the work of Robert Crumb, Zap was unlike any comic book that had been seen before. While working on Zap #1, Crumb saw a Family Dog poster drawn by Rick Griffin which resembled a psychedelic version of a Sunday funnies page. Its surreal, other-worldly imagery inspired him to think about comics in a new way, as seen in the art style of Zap #1's Abstract Expressionist Ultra Super Modernistic Comics. When Crumb started planning the next issue, he got in touch with Griffin, asking him to contribute to Zap #2. Griffin agreed and suggested bringing fellow poster artist Victor Moscoso on board. S. Clay Wilson, Gilbert Shelton, Robert Williams, and \"Spain\" Rodriguez were also contributors to Zap.\r\n\r\nWhile the origin of the spelling \"comix\" is a subject of some dispute, it was popularized by its appearance in the title of the first issues of Zap. Design critic Steven Heller claims that the term \"comix\" (\"co-mix\") refers to the traditional comic book style of Zap, and its mixture of dirty jokes and storylines.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/27783/1042085-zap_1feb68.jpg",
       "references": [
         {
           "name": "Wikipedia",
@@ -3684,15 +3709,14 @@
           "url": "https://comicvine.gamespot.com/zap-comix/4050-30068/"
         }
       ],
+      "startYear": 1968,
+      "publisher": "Fantagraphics",
+      "issueCount": 17,
       "sources": [
         "wikipedia",
         "comicvine",
         "metron"
       ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/27783/1042085-zap_1feb68.jpg",
-      "startYear": 1968,
-      "publisher": "Fantagraphics",
-      "issueCount": 17,
       "coverSources": {
         "metron": [
           1,
@@ -3702,44 +3726,6 @@
         "comicvine": [
           1,
           2,
-          3
-        ]
-      },
-      "coverImages": [
-        "data/covers/zap/828bcab32b1e.jpg",
-        "data/covers/zap/96e997803091.jpg",
-        "data/covers/zap/745bdfa0d8ac.jpg",
-        "data/covers/zap/8d1ae6d09c0f.jpg"
-      ],
-      "tags": [
-        "underground"
-      ],
-      "anthology": true
-    },
-    {
-      "id": "zap-comix",
-      "name": "Zap Comix",
-      "parentSeries": null,
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/27783/1042085-zap_1feb68.jpg",
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/zap-comix/4050-30068/"
-        }
-      ],
-      "startYear": 1968,
-      "publisher": "Fantagraphics",
-      "issueCount": 17,
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          3
-        ],
-        "comicvine": [
           3
         ]
       },

@@ -833,6 +833,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -2465,6 +2468,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -3043,6 +3049,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -3360,6 +3369,9 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -3601,6 +3613,9 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -4093,6 +4108,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -4454,6 +4472,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -4613,6 +4634,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "ec"
       ]
     },
     {
@@ -5296,6 +5320,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "underground"
       ]
     },
     {
@@ -6046,6 +6073,9 @@
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -7103,6 +7133,9 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -8300,6 +8333,9 @@
         "wikipedia",
         "comicvine",
         "metron"
+      ],
+      "tags": [
+        "bande dessin\u00e9e"
       ]
     },
     {
@@ -11364,35 +11400,13 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tyler-crook/4040-61923/"
-        }
-      ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7381938-1979407890-2014-.jpg",
-      "country": "U.S.",
-      "sources": [
-        "wikipedia",
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
-      "id": "tyler-crook",
-      "name": "Tyler Crook",
-      "imageUrl": "https://static.wikia.nocookie.net/sixth-gun/images/8/88/Tyler_Crook_profile_picture.jpg/revision/latest/scale-to-width-down/180?cb=20180802132944",
-      "description": "Tyler Crook is an American comics cartoonist. He broke into comics in 2011 with Petrograd, written by Philip Gelatt and published by Oni Press, and in 2012 he won the Russ Manning Most Promising Newcomer Award. He is best known for his work on Mike Mignola and John Arcudi's B.P.R.D.: Hell on Earth, Harrow County, which he co-created with Cullen Bunn, and his solo comic book series The Lonesome Hunters.",
-      "references": [
-        {
-          "name": "Wikipedia",
-          "url": "https://en.wikipedia.org/wiki/Tyler_Crook"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/tyler-crook/4040-61923/"
         },
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/1747/"
         }
       ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7381938-1979407890-2014-.jpg",
       "country": "U.S.",
       "sources": [
         "wikipedia",
@@ -11537,7 +11551,10 @@
         "metron",
         "comicvine"
       ],
-      "country": "United States"
+      "country": "United States",
+      "tags": [
+        "ec"
+      ]
     },
     {
       "id": "walter-pereyra",
