@@ -1315,10 +1315,27 @@ interface Pulse {
    * exists to limit; this is one gesture with two voices in it.
    */
   mate?: { effect: number; peak: number; args: number[] };
+  /**
+   * The pulse has been asked to leave early, and is going out over `over`
+   * seconds from `at` — see `advance`.
+   *
+   * A second envelope multiplied onto the first rather than a rewrite of it.
+   * The alternative is to reshape `attack`/`hold`/`release` around whatever the
+   * envelope currently reads, which needs the inverse of `smooth` to stay
+   * continuous; a factor that starts at exactly 1 the instant it is attached
+   * costs nothing and is continuous by construction.
+   */
+  retire?: { at: number; over: number };
 }
 
 function duration(pulse: Pulse): number {
   return pulse.attack + pulse.hold + pulse.release;
+}
+
+/** Whether a pulse has nothing left to contribute and may be dropped. */
+function finished(pulse: Pulse, time: number): boolean {
+  if (pulse.retire && time >= pulse.retire.at + pulse.retire.over) return true;
+  return time - pulse.start >= duration(pulse);
 }
 
 /**
@@ -1358,6 +1375,18 @@ function shape(pulse: Pulse, time: number): number {
 }
 
 /**
+ * The envelope with an early retirement folded in, which is what everything
+ * outside this pair of functions actually wants.
+ */
+function level(pulse: Pulse, time: number): number {
+  const k = shape(pulse, time);
+  if (k <= 0 || !pulse.retire) return k;
+  const out = (time - pulse.retire.at) / pulse.retire.over;
+  if (out >= 1) return 0;
+  return k * smooth(1 - out);
+}
+
+/**
  * Brings psychedelic effects in and out at random, one or a few at a time.
  *
  * The point is that no single frame is the piece: an effect swells over
@@ -1379,6 +1408,8 @@ export class EffectCycler {
   private chapterEnds = 0;
   /** A pulse asked for out of turn — see `cue`. */
   private cued = false;
+  /** A turnover asked for by hand — see `advance`. */
+  private advancing = false;
 
   constructor(
     private readonly forkStream: () => Rng,
@@ -1403,6 +1434,32 @@ export class EffectCycler {
     this.cued = true;
   }
 
+  /**
+   * Move the piece on now: what is running goes, and the next thing arrives in
+   * its place.
+   *
+   * The reader's own gesture, and the only thing in the class that ends a pulse
+   * before its envelope says so. It is a stronger thing than `cue` on purpose —
+   * a cue is the music saying *something* should change and is dropped when the
+   * composition is already busy, where this is someone who has looked at the
+   * frame and decided they are done with it. Dropping that would be answering a
+   * press with nothing.
+   *
+   * What it is not is a skip button on a playlist. The pool has no order, so
+   * there is no "next" to jump to: the draw is the same weighted draw the
+   * cycler makes on its own, still inside the movement it is in, and the
+   * effects on their way out are excluded from it by `available` so the press
+   * cannot land back on what the reader just dismissed.
+   *
+   * Everything leaves on a governed ramp rather than being spliced away — the
+   * exit is the release the schedule would have given it, taken at the fastest
+   * rate the safety floor allows. A press is a request to move on, not a
+   * licence to step whole-frame luminance.
+   */
+  advance(): void {
+    this.advancing = true;
+  }
+
   /** Mutates `post` in place with whatever is currently running. */
   apply(
     post: PostParams,
@@ -1414,7 +1471,7 @@ export class EffectCycler {
     const amount = clamp(intensity, 0, 1);
 
     for (let i = this.active.length - 1; i >= 0; i--) {
-      if (time - this.active[i].start >= duration(this.active[i])) this.active.splice(i, 1);
+      if (finished(this.active[i], time)) this.active.splice(i, 1);
     }
 
     if (amount <= 0) {
@@ -1445,11 +1502,28 @@ export class EffectCycler {
         this.begin(time, amount, tempo);
         this.nextOnset = this.schedule(time, time, amount, interval, tempo);
       }
+      /*
+       * And the hand-made version, which ignores the slot rule in both
+       * directions: everything running is sent away first, so the press is
+       * answered by the frame changing rather than by one more thing being
+       * added to it, and the arrival then happens whether or not the stack was
+       * full. The retiring pulses stay in `active` while they fade, so they
+       * still exclude themselves from the draw below and still count against
+       * the cap for the scheduler's own onsets — a manual turnover leaves the
+       * piece no busier than it found it.
+       */
+      if (this.advancing) {
+        const over = this.safety.clampRamp(0);
+        for (const pulse of this.active) pulse.retire ??= { at: time, over };
+        this.begin(time, amount, tempo);
+        this.nextOnset = this.schedule(time, time, amount, interval, tempo);
+      }
     }
     this.cued = false;
+    this.advancing = false;
 
     for (const pulse of this.active) {
-      const k = shape(pulse, time);
+      const k = level(pulse, time);
       if (k <= 0) continue;
       EFFECTS[pulse.effect].apply(post, k * pulse.peak, time, pulse.args);
       if (pulse.mate) EFFECTS[pulse.mate.effect].apply(post, k * pulse.mate.peak, time, pulse.mate.args);
@@ -1460,6 +1534,7 @@ export class EffectCycler {
     this.active.length = 0;
     this.nextOnset = -1;
     this.cued = false;
+    this.advancing = false;
     this.chapter = null;
     this.chapterEnds = 0;
   }

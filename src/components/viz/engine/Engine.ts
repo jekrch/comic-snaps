@@ -286,6 +286,14 @@ export class VizEngine {
     return panel;
   }
 
+  /** Retire the effects that are running and bring the cycler's next draw in
+   *  now. No cast invalidation: this changes the treatment, not the panel, so
+   *  the credit line is still describing the right thing. See
+   *  `Director.nextEffect`. */
+  nextEffect(): void {
+    this.director.nextEffect();
+  }
+
   /** Attach the run to a listener, or detach it. Re-attached after every
    *  rebuild, since the reactor outlives this object. */
   setAudioReactor(reactor: AudioReactor | null): void {

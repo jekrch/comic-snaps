@@ -451,6 +451,25 @@ export class Director {
     return pick.panel;
   }
 
+  /**
+   * Move the post-processing on by hand: whatever the cycler is running goes,
+   * and its next draw arrives in its place.
+   *
+   * Sits beside `stepForward` as the other half of what the transport can ask
+   * for. A step changes the *page*; this changes the *treatment*, and they are
+   * genuinely separate gestures — the run puts a new panel up every few seconds
+   * and stays inside one movement of effects for minutes, so a reader who is
+   * tired of the look has nothing else to press.
+   *
+   * Not gated on the hold, unlike the panel steps. Holding parks the panel and
+   * exists so the composition can carry on drifting around one page; the
+   * effects are the drift, and freezing them would be the hold doing something
+   * nobody asked it to.
+   */
+  nextEffect(): void {
+    this.cycler.advance();
+  }
+
   /** Put one pick at the head of the queue and cross to it. Picks made before
    *  it describe a composition it has just replaced, the same reason
    *  `setFocus` drops them. */

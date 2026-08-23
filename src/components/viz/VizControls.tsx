@@ -11,6 +11,7 @@ import {
   MonitorX,
   Pause,
   Play,
+  Aperture,
 } from "lucide-react";
 import type { Panel } from "../../types";
 import { panelCredit, panelName } from "./panelLabel";
@@ -49,6 +50,8 @@ interface VizControlsProps {
   onSpeedChange: (speed: number) => void;
   onStep: (delta: -1 | 1) => void;
   onToggleHold: () => void;
+  /** Retire the running effects and bring the next one in. */
+  onNextEffect: () => void;
   onTogglePin: () => void;
   onClose: () => void;
   onToggleFullscreen: () => void;
@@ -81,6 +84,7 @@ export default function VizControls({
   onSpeedChange,
   onStep,
   onToggleHold,
+  onNextEffect,
   onTogglePin,
   onClose,
   onToggleFullscreen,
@@ -239,6 +243,25 @@ export default function VizControls({
               tabIndex={visible ? 0 : -1}
             >
               <ChevronRight size={15} />
+            </button>
+            {/* Off the end of the arrows, with a gap: it belongs to the
+                transport but it is not one of the three, because it moves the
+                other axis. The arrows change the page; this changes what is
+                being done to it.
+
+                An iris rather than a shuffle, though a shuffle is what it
+                mechanically is: sat next to three transport buttons, a shuffle
+                glyph reads as a playback *mode* someone has turned on, and this
+                is a momentary press. The lens is the thing the page is being
+                seen through, which is the half of the composition this moves. */}
+            <button
+              onClick={onNextEffect}
+              className="viz-btn ml-2"
+              title="Next effect (E)"
+              aria-label="Next effect"
+              tabIndex={visible ? 0 : -1}
+            >
+              <Aperture size={14} />
             </button>
           </div>
           <VizModeControl

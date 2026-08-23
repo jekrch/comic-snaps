@@ -812,6 +812,19 @@ export default function VisualizerOverlay({
   );
 
   /**
+   * Move the effects on without touching the page.
+   *
+   * The other axis of the transport: the arrows step the panel, this steps the
+   * treatment. Deliberately available while the run is held — the hold is about
+   * staying on one page, and the whole point of staying is to watch the
+   * composition keep working on it.
+   */
+  const nextEffect = useCallback(() => {
+    engineRef.current?.nextEffect();
+    wakeChrome();
+  }, [wakeChrome]);
+
+  /**
    * Park the run on the panel it is carrying, or let it go again. Releasing
    * snaps the label back to the live head, so the trail resumes recording from
    * the run rather than staying where it was let go.
@@ -951,6 +964,9 @@ export default function VisualizerOverlay({
       } else if (event.key === "h") {
         event.preventDefault();
         toggleHold();
+      } else if (event.key === "e") {
+        event.preventDefault();
+        nextEffect();
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
         stepPanel(-1);
@@ -976,6 +992,7 @@ export default function VisualizerOverlay({
     togglePinned,
     stepPanel,
     toggleHold,
+    nextEffect,
     wakeChrome,
     viewerOpen,
     closing,
@@ -1167,6 +1184,7 @@ export default function VisualizerOverlay({
           onSpeedChange={setSpeed}
           onStep={stepPanel}
           onToggleHold={toggleHold}
+          onNextEffect={nextEffect}
           onTogglePin={togglePinned}
           onClose={() => requestClose()}
           onToggleFullscreen={toggleFullscreen}
