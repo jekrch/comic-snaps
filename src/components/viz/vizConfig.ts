@@ -1310,9 +1310,25 @@ export interface DeviceCaps {
   /**
    * Internal resolution multiplier the run *starts* at. Not the one it stays
    * at: the engine's governor moves the live scale within
-   * `[minRenderScale, renderScale]` from here (see `VizEngine.governQuality`).
+   * `[minRenderScale, maxRenderScale]` from here (see `VizEngine.governQuality`).
    */
   renderScale: number;
+  /**
+   * How far *up* the governor may climb — the ceiling, which on mobile is a
+   * different number from the opening scale above.
+   *
+   * They were one field, and that made the phone's conservative opening its
+   * permanent resolution: a device holding thirty cleanly had nowhere to spend
+   * the headroom it was demonstrating, because the value it started under was
+   * also the value it could never pass. The two answer different questions —
+   * where a run should begin, before anything is known about the device, and
+   * where it may end up once a minute of clean frames has said something.
+   *
+   * Raising this cannot cost a slow device anything, which is the point: the
+   * governor only steps up after `GOVERNOR_RAISE_SAMPLES` consecutive good
+   * samples, and gives the ground back in bigger strides than it took it.
+   */
+  maxRenderScale: number;
   /**
    * How far down the governor may push. The post chain is fill-bound almost
    * everywhere — one 1400-line fragment over every pixel — so resolution is the
@@ -1374,14 +1390,31 @@ export interface DeviceCaps {
 export function deviceCaps(view: Window | null = defaultView()): DeviceCaps {
   const mobile = isMobile(view);
   const dpr = view?.devicePixelRatio || 1;
+  const startScale = mobile ? 0.85 : Math.min(dpr, 1.5);
   return {
     texturePoolSize: mobile ? 8 : 16,
-    textureMaxEdge: mobile ? 768 : 1024,
+    // No longer split by device. Mobile's 768 was chosen against a phone that
+    // drew into a 334px buffer, where it was already oversampled; the ceiling
+    // below can put twice that many pixels under a crop, and the scenes crop to
+    // as little as 0.4 of the source — a 307px region magnified onto half a
+    // frame, which is a softness no render scale can undo. The cost is upload
+    // and VRAM rather than fill: mipmaps and anisotropy are on these textures,
+    // so what a frame pays to sample one is unchanged. The phone's pool is
+    // eight, so this is ~45MB where it was ~25MB.
+    textureMaxEdge: 1024,
     // Mobile starts a shade under its own CSS resolution rather than at it. The
     // governor would find this within a couple of seconds anyway; starting here
     // means the opening of a run — which is the part a viewer judges it on — is
     // not the part that stutters.
-    renderScale: mobile ? 0.85 : Math.min(dpr, 1.5),
+    renderScale: startScale,
+    // And climbs from there, on a phone that earns it, to somewhere above its
+    // own CSS resolution — which is still a long way under the panel's native
+    // pixels, since a phone that reports a scale of 1 is handing three device
+    // pixels to each of them. Bounded by the DPR because supersampling past what
+    // the compositor can show is fill spent on nothing.
+    // Never under the opening scale: a device reporting a DPR below it would
+    // otherwise hand the governor a ceiling it was already above.
+    maxRenderScale: Math.max(startScale, mobile ? Math.min(dpr, 1.25) : startScale),
     minRenderScale: mobile ? 0.65 : 0.75,
     maxFps: mobile ? 30 : 0,
     reactSteps: mobile ? 2 : 4,

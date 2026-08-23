@@ -150,7 +150,7 @@ export class WebGLBackend implements VizBackend {
   private aspect = 1;
   private disposed = false;
   /** Live internal-resolution multiplier. Starts at `caps.renderScale` and is
-   *  moved by the engine's governor; `caps.renderScale` stays the ceiling. */
+   *  moved by the engine's governor; `caps.maxRenderScale` is the ceiling. */
   private renderScale: number;
   /** Last CSS size seen, so a scale change can re-derive the buffers without
    *  waiting for the container to move. */
@@ -444,7 +444,7 @@ export class WebGLBackend implements VizBackend {
    */
   setRenderScale(scale: number): void {
     if (this.disposed) return;
-    const next = Math.min(this.caps.renderScale, Math.max(0.25, scale));
+    const next = Math.min(this.caps.maxRenderScale, Math.max(0.25, scale));
     if (Math.abs(next - this.renderScale) < 1e-4) return;
     this.renderScale = next;
     this.resize(this.cssWidth, this.cssHeight);

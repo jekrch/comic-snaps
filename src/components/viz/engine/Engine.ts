@@ -53,9 +53,15 @@ const GOVERNOR_RAISE = 0.95;
 const GOVERNOR_RAISE_SAMPLES = 4;
 /** How far each step moves the scale. Down in bigger strides than up, so the
  *  governor reaches a rate that works quickly and creeps back rather than
- *  ping-ponging across the threshold it just crossed. */
+ *  ping-ponging across the threshold it just crossed.
+ *
+ *  The up stride is no longer as small as it was, because the distance it has
+ *  to cover no longer is either: mobile now opens well under its ceiling rather
+ *  than at it, and at 0.05 a step — four confirming samples and a grace period
+ *  apiece — a phone took most of a minute to arrive at a resolution it could
+ *  have held from the start. The asymmetry that matters is kept. */
 const GOVERNOR_STEP_DOWN = 0.12;
-const GOVERNOR_STEP_UP = 0.05;
+const GOVERNOR_STEP_UP = 0.08;
 
 /**
  * What the frame is actually putting on screen, for the debug readout. Shards on
@@ -437,7 +443,7 @@ export class VizEngine {
 
     const target = this.caps.maxFps > 0 ? this.caps.maxFps : 60;
     const floor = this.caps.minRenderScale;
-    const ceiling = this.caps.renderScale;
+    const ceiling = this.caps.maxRenderScale;
 
     if (this.fps < target * GOVERNOR_DROP && this.renderScale > floor) {
       this.governorGood = 0;
