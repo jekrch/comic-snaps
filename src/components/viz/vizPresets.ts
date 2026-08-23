@@ -1224,6 +1224,43 @@ export const VIZ_PRESETS: VizPreset[] = [
       // and with the cycler this busy that would be two schedules moving the
       // frame at once, which is the one combination the pacing rule rules out.
       wander: 0,
+      /*
+       * And the answer to the objection the paragraph above raises about
+       * itself: a preset whose whole proposition is "the vault with zoink's
+       * appetite" spends every minute of its run at the appetite, and three
+       * effects deep for twenty minutes is not busy — it is a texture, and the
+       * corridor it is weather over stops being visible at all.
+       *
+       * So every three minutes or so the weather lifts for about a minute. The
+       * folds and the maps go — the standing six-fold mirror and the wrapped
+       * trail with them, since by the time the clearing runs they are the same
+       * parameters as anything the pool has installed — the cycler drops to a
+       * single shallow slot, and what is left on screen is the vault: one page,
+       * one continuous wall, a flight down it, and nothing between the eye and
+       * the page. Then it all comes back.
+       *
+       * Deep, at 0.8, and the depth is the whole point rather than a safety
+       * margin. At 0.5 the clearing is the same piece being quieter, which is
+       * not a change of state; at 0.8 the mirror is at a fifth of its standing
+       * depth and reads as gone, while the pool still lands something every
+       * twenty seconds at a tenth of its usual depth — a warp, a press drifting
+       * out of register, a slick — so the corridor is plainly a corridor and
+       * plainly not the vault preset. That last part is what the number is
+       * bought for: this is the vault as *this* piece plays it, not a quotation
+       * of another one.
+       *
+       * The flight opens up by half as it clears, which is the one thing the
+       * clearing adds rather than takes away, and the reason the stretch reads
+       * as somewhere the piece has gone rather than as a pause in it: a page's
+       * height of wall every seven seconds instead of every ten, arriving over
+       * the same nine-second ramp as the mirror leaving.
+       */
+      clearing: 0.8,
+      // A little over the default three minutes, so the clearing sits inside
+      // the cycler's own chapters rather than beating against them: at this
+      // spacing a movement of three to seven minutes contains one or two, and
+      // no two consecutive clearings arrive at the same point in one.
+      clearingInterval: 200,
       post: {
         /*
          * The trail read as a corridor rather than as a receding smear — the

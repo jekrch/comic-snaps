@@ -100,6 +100,35 @@ export interface VizConfig {
   /** Mean seconds between one cycled effect starting and the next. */
   cycleInterval: number;
   /**
+   * How completely the piece periodically puts its own decoration away, 0..1.
+   *
+   * The counterweight to `psychedelia`, and it exists because a mode that is
+   * always at its full strength has no full strength: three effects deep is a
+   * texture rather than an event once it has run for five minutes, and the only
+   * thing that can make a busy piece read as busy again is a stretch where it is
+   * not. So every few minutes the run stands its decoration down for the better
+   * part of a minute and lets the scene underneath be the picture, then brings
+   * it back.
+   *
+   * What goes is the frame's *decoration*, never the frame: the cycler thins out
+   * in proportion to this, and the reparameterisations — the folds, the maps,
+   * the wrapped trail, whatever is standing and whatever the pool is running —
+   * are scaled by the same factor. Everything that describes the picture itself
+   * is untouched, so what is left is the scene stated plainly.
+   *
+   * Deliberately not a switch. At 1 the clearing is total and reads as the piece
+   * stopping; the useful settings are around 0.8, where the pool drops to a
+   * single shallow slot and something still arrives every twenty seconds or so —
+   * a clearing the run keeps working through, rather than a gap in it.
+   *
+   * Inert at 0, which is the default: a preset that does not ask for this never
+   * draws from the director's stream for it and replays exactly as it did.
+   */
+  clearing: number;
+  /** Mean clock seconds between the starts of those clearings. The run itself
+   *  takes about a third of the gap — see `CLEAR_SHARE`. */
+  clearingInterval: number;
+  /**
    * How far the composition's own parameters wander from the ones authored
    * here, 0..1. Distinct from `psychedelia`, which adds effects on top of a
    * piece holding still: this moves the piece itself — fold depth and count,
@@ -474,6 +503,13 @@ export const DEFAULT_CONFIG: VizConfig = {
   speed: 1,
   psychedelia: 0,
   cycleInterval: 14,
+  clearing: 0,
+  // Three minutes between clearings, which nothing runs at until a preset turns
+  // the depth up. Chosen against the cycler's chapters rather than by eye: a
+  // movement lasts three to seven minutes, so a clearing at this spacing lands
+  // once or twice inside each one and reads as a pause in what the piece is
+  // saying rather than as the end of it.
+  clearingInterval: 180,
   wander: 0,
   wanderRate: 1,
   reactivity: 0.75,
@@ -743,6 +779,8 @@ const HINTS: Record<string, string> = {
 
   psychedelia: "How eagerly the piece turns effects on and off by itself.",
   cycleInterval: "Average seconds between one of those effects and the next.",
+  clearing: "How far the effects stand down during the quiet stretches between them.",
+  clearingInterval: "Average seconds between one of those quiet stretches and the next.",
   wander: "How far the composition drifts from the settings on this panel.",
   wanderRate: "How fast that drift moves.",
 
@@ -1015,6 +1053,8 @@ export const CONFIG_FIELDS: ConfigField[] = [
 
   field("cycle", "psychedelia", "psychedelia", 0, 1, 0.01, (c) => c.psychedelia, (c, v) => (c.psychedelia = v)),
   field("cycle", "cycleInterval", "interval", 3, 60, 1, (c) => c.cycleInterval, (c, v) => (c.cycleInterval = v)),
+  field("cycle", "clearing", "clearing", 0, 1, 0.01, (c) => c.clearing, (c, v) => (c.clearing = v)),
+  field("cycle", "clearingInterval", "clearing gap", 40, 480, 5, (c) => c.clearingInterval, (c, v) => (c.clearingInterval = v)),
   field("cycle", "wander", "wander", 0, 1, 0.01, (c) => c.wander, (c, v) => (c.wander = v)),
   field("cycle", "wanderRate", "wander rate", 0.2, 3, 0.05, (c) => c.wanderRate, (c, v) => (c.wanderRate = v)),
 

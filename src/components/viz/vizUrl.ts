@@ -121,6 +121,9 @@ const PINNED_PATHS: readonly string[] = [
   // The guard against a colour-out. Same rule: the end of this list is the only
   // free part of it.
   "colorFidelity",
+  // The stretches where the decoration stands down. Appended, on the rule this
+  // list states at the top: only the end of it is free.
+  "clearing", "clearingInterval",
 ];
 
 /**

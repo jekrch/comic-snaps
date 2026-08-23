@@ -138,6 +138,91 @@ const SECTION_TURNOVER = 0.6;
  */
 const TURNOVER_WAIT = 3;
 
+// --- The clearing ----------------------------------------------------------
+// `VizConfig.clearing` is the knob; everything from here to `CLEARED_MAPS` is
+// its shape. All of it is scaled by that one number, so a preset that leaves it
+// at zero reaches none of this, and a preset that turns it up gets one gesture
+// with four parts rather than four schedules that happen to coincide.
+
+/** How long a clearing's arrival and departure take, clock seconds.
+ *
+ *  Long, and longer than any single pulse's attack: what is leaving is the
+ *  frame's whole standing treatment, and a viewer who can see the moment it
+ *  goes reads a cut rather than the weather lifting. Floored by the safety
+ *  governor like every other ramp, which at this length never binds. */
+const CLEAR_RAMP = 9;
+/** A clearing's length as a share of the gap between one and the next. About a
+ *  third: at the default three-minute spacing that is a minute of clear run
+ *  against two of weather, which is a pause in the piece rather than half of
+ *  what the piece is. */
+const CLEAR_SHARE = 0.32;
+/** Spread on both, either side of 1. The clearings are the slowest schedule the
+ *  director runs and the one a viewer has the best chance of learning, so they
+ *  are the last thing here that should arrive on a metronome. */
+const CLEAR_JITTER = 0.25;
+/** The boundary a clearing's corners land on, in bars — see
+ *  `scheduleClearing`. A phrase, which is the coarsest rung the cycler's own
+ *  ladder offers and the right one for the largest change in the piece. */
+const CLEAR_BOUNDARY_BARS = 8;
+/**
+ * How much further into the flight a full clearing pushes the formation.
+ *
+ * The one thing a clearing *adds*, and the reason it reads as a state the piece
+ * enters rather than as a stretch where less is happening. `stageFlight` is the
+ * only stage rate that means the same thing in every formation that has one —
+ * travel through a repetition — and it is the safest of them to move: it is a
+ * texture scroll with no acceleration to be sudden about, and it is integrated,
+ * so a rate that changes bends the flight instead of stepping it. A formation
+ * that does not repeat ignores it, exactly as it ignores the authored value.
+ */
+const CLEAR_FLIGHT = 0.5;
+/**
+ * Exposure a full clearing hands back, as a fraction of the frame.
+ *
+ * Not a brightening: the folds and the wrapped trail are additive paths, and
+ * taking them out of a frame takes light out with them. Without this a clearing
+ * would read partly as the picture dimming, which is a different event from the
+ * one intended. Slew-limited by the safety governor on the way out like every
+ * other exposure move.
+ */
+const CLEAR_EXPOSURE = 0.14;
+/**
+ * What a clearing takes away: the maps that change what the frame's coordinates
+ * mean.
+ *
+ * The line is drawn where `PostParams` already draws it — the
+ * reparameterisation and geometric sections, plus the trail's own log-polar
+ * wrap — and the rule behind it is what a viewer can still see the scene
+ * through. A warp, a melt, a ripple, a press drifting out of register all leave
+ * the picture legible as itself; a fold, a regress, a tiling or a Julia lookup
+ * replace it with an arrangement of itself, and no amount of a corridor
+ * survives being folded into six wedges of corridor.
+ *
+ * So these are scaled and nothing else is, which is also what leaves a clearing
+ * something to still be doing: the pool's undulations and print artefacts go on
+ * arriving at whatever depth the thinned cycler is drawing them at, over a scene
+ * that is now being shown as itself.
+ *
+ * Applied to the frame's *sum* — after the cycler, before the audio pass — so
+ * one factor covers both what the preset stands up and what the pool is
+ * running. A pulse that begins inside a clearing therefore swells into the
+ * frame as the clearing releases, which is the same gesture arriving late
+ * rather than a second one.
+ */
+const CLEARED_MAPS: readonly (keyof PostParams)[] = [
+  "pane",
+  "kaleido",
+  "tile",
+  "fold",
+  "lattice",
+  "droste",
+  "feedbackDroste",
+  "tunnel",
+  "mobius",
+  "julia",
+  "deck",
+];
+
 /** Hermite ramp between two edges, the shader's own. */
 function smoothstep(edge0: number, edge1: number, x: number): number {
   const t = Math.min(1, Math.max(0, (x - edge0) / Math.max(1e-6, edge1 - edge0)));
@@ -280,6 +365,17 @@ export class Director {
   private readonly cycler = new EffectCycler(() => this.rng.fork(), this.safety);
   /** Same contract: inert, and untouched by the rng, until a preset asks. */
   private readonly wander = new Wander(() => this.rng.fork());
+  /**
+   * The clearing's schedule, and how deep it currently is — see `CLEAR_RAMP`.
+   *
+   * The stream is forked on the first clearing scheduled and not before, on the
+   * cycler's contract: a preset that never clears never draws from it, so every
+   * run that existed before this did replays frame for frame.
+   */
+  private clearStream: Rng | null = null;
+  private clearBegins = -1;
+  private clearEnds = -1;
+  private clearLevel = 0;
   /** Same again: built empty, and only ever draws once a spatial preset runs. */
   private readonly stage: Stage;
   /** Inert until the run is given a listener, like everything else here that
@@ -709,6 +805,10 @@ export class Director {
      * the durations that should match the music are half as long.
      */
     this.tempo.update(this.audioFrame, this.config.reactivity, this.timeScale, dt);
+    // After the tempo, because both of its corners are put on the bar, and
+    // before anything reads it: the flight and the post chain are two halves of
+    // one gesture and have to be looking at the same number.
+    this.updateClearing(time);
     this.syncStage();
 
     if (this.panels.length === 0) {
@@ -1124,8 +1224,16 @@ export class Director {
      * at full size.
      */
     const autonomy = this.audio.autonomy;
+    /*
+     * The clearing's one addition, scaling the authored rate before the
+     * handover rather than the product after it: the corridor the music is
+     * bending is the faster one, so the bend stays the same share of it.
+     */
     this.phases.travel +=
-      this.config.stageFlight * (autonomy + (this.audio.flight - 1)) * clockDt;
+      this.config.stageFlight *
+      (1 + this.clearLevel * CLEAR_FLIGHT) *
+      (autonomy + (this.audio.flight - 1)) *
+      clockDt;
     this.phases.orbit += this.config.stageSpin * (autonomy + (this.audio.spin - 1)) * clockDt;
     this.phases.swell += this.config.stageDisplaceRate * clockDt;
     return this.phases;
@@ -1461,6 +1569,32 @@ export class Director {
   }
 
   /**
+   * Take the frame's maps out for the duration of a clearing — see
+   * `CLEARED_MAPS`, which is the list and the argument for it.
+   *
+   * Multiplicative and applied to the sum, which is what makes one number do
+   * the whole job: the preset's standing fold and the pool's own are the same
+   * parameter by the time this runs, so both leave together and neither can be
+   * reinstated by the other. The music's pass comes after and works on what is
+   * left, which is the right way round — every geometric binding in it is
+   * proportional to the depth it finds, so a map that is on its way out is one
+   * the music can no longer lift.
+   */
+  private clearMaps(post: PostParams): void {
+    if (this.clearLevel <= 0) return;
+    const keep = 1 - this.clearLevel;
+    for (const key of CLEARED_MAPS) post[key] *= keep;
+    /*
+     * And the light those maps were putting into the frame, handed back.
+     *
+     * Added rather than multiplied, and added here rather than to the config,
+     * so it rides the same envelope as the removal it is compensating for. The
+     * governor slew-limits it on the way out like every other exposure move.
+     */
+    post.exposure += this.clearLevel * CLEAR_EXPOSURE;
+  }
+
+  /**
    * Every rate in the post chain that turns or cycles, snapped so a whole number
    * of them fits a whole number of bars — the quiet row of §5 and probably the
    * best of them.
@@ -1514,6 +1648,64 @@ export class Director {
     return t * t;
   }
 
+  /**
+   * Where the clearing has got to, 0..1 — the depth the preset asked for, times
+   * an envelope that is shut for most of every cycle.
+   *
+   * Read by `modulatePost` and `advancePhases` rather than applied here, because
+   * what a clearing does is spread across both: it is a post pass standing down
+   * and a flight opening up, and those are one gesture only because they share
+   * this number.
+   */
+  private updateClearing(time: number): void {
+    const depth = Math.min(1, Math.max(0, this.config.clearing));
+    if (depth <= 0) {
+      // Never asked for, or turned off. Nothing is scheduled and the stream is
+      // never forked — and a clearing already running simply ends here, which is
+      // the tuning panel's own behaviour for every other parameter on it.
+      this.clearLevel = 0;
+      return;
+    }
+    if (this.clearEnds < 0 || time >= this.clearEnds) this.scheduleClearing(time);
+    /*
+     * The ramp, floored by the governor and then held to a share of the run
+     * itself: a clearing whose arrival and departure met in the middle would
+     * never reach its own depth, and would read as the frame sagging rather than
+     * as the decoration being put away.
+     */
+    const ramp = Math.min(
+      this.safety.clampRamp(CLEAR_RAMP),
+      (this.clearEnds - this.clearBegins) * 0.4
+    );
+    const open = smoothstep(this.clearBegins, this.clearBegins + ramp, time);
+    const shut = 1 - smoothstep(this.clearEnds - ramp, this.clearEnds, time);
+    this.clearLevel = depth * Math.min(open, shut);
+  }
+
+  /**
+   * Draw the next clearing: when it begins and when it is over.
+   *
+   * Both corners go through `alignedDelay` rather than only the first. This is
+   * the largest discrete gesture the composition makes — every fold and every
+   * map in the frame leaving at once — so §16 applies to it more than to
+   * anything else the cycler schedules, and a phrase boundary is the coarsest
+   * rung on that ladder for the same reason: what is arriving is a section of
+   * the piece, not an effect. Unlocked, the delays come straight back and the
+   * schedule is the composition's own.
+   */
+  private scheduleClearing(time: number): void {
+    const rng = (this.clearStream ??= this.rng.fork());
+    const interval = Math.max(20, this.config.clearingInterval);
+    const jitter = (): number => rng.range(1 - CLEAR_JITTER, 1 + CLEAR_JITTER);
+    // Measured from now rather than from the last clearing's end, so a gap
+    // turned down mid-run answers at the spacing it was just given rather than
+    // at the one the previous draw was made under.
+    const gap = this.tempo.alignedDelay(interval * jitter(), CLEAR_BOUNDARY_BARS);
+    const length = interval * CLEAR_SHARE * jitter();
+    this.clearBegins = time + gap;
+    this.clearEnds = time + this.tempo.alignedDelay(gap + length, CLEAR_BOUNDARY_BARS);
+  }
+
   private modulatePost(time: number, clockDt: number): PostParams {
     const base = this.config.post;
     const post: PostParams = {
@@ -1539,12 +1731,19 @@ export class Director {
     this.cycler.apply(
       post,
       time,
-      this.config.psychedelia,
+      // Thinned by the clearing, which is most of what one is: the intensity
+      // decides how many pulses may overlap and how deep each is drawn, so at
+      // the settings a preset actually uses the pool drops to a single shallow
+      // slot arriving half as often. It is never closed outright — that is the
+      // authoring choice `clearing` leaves open, and a clearing with nothing
+      // happening in it is a gap rather than a passage.
+      this.config.psychedelia * (1 - this.clearLevel),
       this.tempo.duration(this.config.cycleInterval) / Math.max(0.2, this.audio.autonomy),
       // And the grid it should arrive on — §16. The interval above is how often
       // an effect comes in; this is the far more visible question of when.
       this.tempo
     );
+    this.clearMaps(post);
     // Fourth pass, after the three that decide what the piece is and before the
     // governor below: the music deepens whatever they arrived at.
     //
