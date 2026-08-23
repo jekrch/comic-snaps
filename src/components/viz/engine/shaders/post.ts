@@ -144,6 +144,22 @@ uniform float uQuasiFreq;
 uniform float uTurbulence;
 uniform float uTurbulenceScale;
 uniform float uTurbulenceSpeed;
+uniform float uMelt;
+uniform float uMeltLevel;
+uniform float uMeltAngle;
+uniform float uWake;
+uniform float uWakeSpread;
+uniform float uWakeLead;
+uniform float uCaustics;
+uniform float uCausticsScale;
+uniform float uCausticsSpeed;
+uniform float uNeon;
+uniform float uNeonHue;
+uniform float uNeonSpread;
+uniform float uNeonWidth;
+uniform float uSheen;
+uniform float uSheenBands;
+uniform float uSheenDrift;
 uniform float uDisperse;
 uniform float uBlur;
 uniform float uBlurSpin;
@@ -187,6 +203,27 @@ const int JULIA_WRAP = ${JULIA_WRAP};
  *  disc would leave most of the interior still travelling when the iteration cap
  *  arrives — which is the flat region this exists to remove. */
 const float JULIA_CAPTURE = 0.12;
+/**
+ * How far the melt may push the frame, as a multiple of the feature it is
+ * reading — see the block itself. The Jacobian guard, and the reason this is a
+ * constant rather than a tunable: it is what keeps a panel readable, not a
+ * matter of taste about how far the picture should run.
+ *
+ * Measured rather than guessed, over real pages, by scripts/melt-jacobian.py.
+ * At this value 99.9% of the frame stays inside the readable band at every
+ * grain the cycler draws, and under a thousandth of it folds. The cliff is
+ * close and it is steep: 2.4 puts eight times as much of the frame through a
+ * fold and drops two and a half points of readability, for a third more travel.
+ * Re-run the bench before moving it.
+ */
+const float MELT_REACH = 1.35;
+/**
+ * Peak the neon's emission is held to. Under white paper, deliberately: nothing
+ * the glow puts on screen may be brighter than what an ordinary light panel
+ * already puts there, so it cannot arm the max() trail any harder than the
+ * frame does on its own.
+ */
+const float NEON_LEVEL = 0.9;
 const int BLUR_TAPS = 6;
 /** Two, not the three this would want on its own. Dispersion re-runs the whole
  *  coordinate chain per channel, so every octave here is paid for three times
@@ -1241,9 +1278,36 @@ vec2 distortDisplace(vec2 uv, float disp) {
     uv += (v - 0.5) * uTurbulence * disp * 0.14;
   }
 
-  // The two displacements that are read rather than computed. They sit last
+  // The three displacements that are read rather than computed. They sit last
   // among the smooth ones — so dispersion refracts them like everything else
   // here — and they are the only lines in this function that touch a texture.
+  // Which also means dispersion pays for each of them three times over: two
+  // tiny field textures that cache well, and one mip of the frame.
+  if (uMelt > 0.0) {
+    /*
+     * The picture running under its own weight, displaced along one heading by
+     * the page's own tone.
+     *
+     * Read at a mip level rather than off the frame, and displaced by a
+     * *fraction of the feature it read*, which is the whole of what makes this
+     * legible rather than a shredder. A displacement whose amplitude is fixed
+     * while its field gets finer has a gradient that grows without limit — and
+     * that gradient is precisely the sampling Jacobian, so past about half a
+     * frame of it neighbouring pixels are reading unrelated parts of the panel
+     * and the art is gone. Tying the reach to the level's own texel makes the
+     * Jacobian a function of uMelt alone: the melt travels further at a
+     * coarser grain because there is more picture moving together, and the
+     * panel stays as readable at one grain as at another.
+     *
+     * Signed about mid-grey, so light and dark run opposite ways and the mean
+     * displacement over a frame is nothing. An unsigned field would slide the
+     * whole picture along the heading, which is a pan and not a melt.
+     */
+    float span = exp2(uMeltLevel) / uResolution.y;
+    float tone = dot(textureLod(uScene, uv, uMeltLevel).rgb, LUMA) - 0.5;
+    uv += vec2(cos(uMeltAngle), sin(uMeltAngle)) * tone * uMelt * disp * span * MELT_REACH;
+  }
+
   if (uFlow > 0.0) {
     // 0.5-centred: the field is signed and there is no universally available
     // float target to keep it in, so it lives biased in an unsigned one.
@@ -1467,6 +1531,32 @@ void main() {
     col = mix(col, history(suvG, age), uSlit);
   }
 
+  if (uWake > 0.0) {
+    /*
+     * The colour plates read at different moments. Green stays at now and the
+     * other two lag, so a frame that is not moving comes back out of this
+     * unchanged plate for plate — every colour it makes was made by something
+     * moving, which is why it can run deep without costing a single line of the
+     * drawing.
+     *
+     * uWakeLead swaps which of red and blue lags furthest. At either end the
+     * fringe is red one side of a moving edge and blue the other; in the middle
+     * both plates lag together and the fringe is magenta behind the movement
+     * with green ahead of it.
+     *
+     * Indexed by the distorted coordinate, like the slit above: the ring holds
+     * finished frames, so the folds and the warp land on the past too.
+     */
+    // Named around the reserved-word risk: near and far are not keywords in
+    // ESSL 3.00, but they are close enough to ones that some compilers have
+    // opinions about, and this is a shader nobody can step through.
+    float deep = uWakeSpread;
+    float shallow = uWakeSpread * 0.42;
+    vec3 slow = history(suvG, mix(deep, shallow, uWakeLead));
+    vec3 quick = history(suvG, mix(shallow, deep, uWakeLead));
+    col = mix(col, vec3(slow.r, col.g, quick.b), uWake);
+  }
+
   if (uFeedbackAmount > 0.0) {
     float ca = cos(uFeedbackRotate);
     float sa = sin(uFeedbackRotate);
@@ -1494,11 +1584,94 @@ void main() {
     col = max(col, prev * uFeedbackAmount);
   }
 
+  if (uNeon > 0.0) {
+    /*
+     * The drawing lit up: the frame's own edges found by central differences on
+     * luminance, and given emission.
+     *
+     * Four taps on the green plate's coordinate at the frame's own mip level, so
+     * what it finds is the linework the frame is actually showing rather than
+     * one from a sharper copy of it. Weighted toward the dark side of each
+     * boundary because a comic's edges are nearly all *ink* — without that this
+     * lights the join between two bright fills just as eagerly as the line the
+     * artist drew, and reads as an edge-detect filter instead of as a drawing.
+     *
+     * The hue turns with the gradient's own direction, so a single outline runs
+     * through the spectrum as it travels around a figure: the colour is the
+     * drawing's geometry rather than a wash laid over it. At a spread of 1 the
+     * ring closes on itself and there is no seam at all; below that there is one
+     * direction across which the hue steps, which is a soft colour boundary and
+     * not a break in the picture.
+     */
+    vec2 e = uNeonWidth / uResolution;
+    float lx0 = dot(textureLod(uScene, suvG - vec2(e.x, 0.0), lod).rgb, LUMA);
+    float lx1 = dot(textureLod(uScene, suvG + vec2(e.x, 0.0), lod).rgb, LUMA);
+    float ly0 = dot(textureLod(uScene, suvG - vec2(0.0, e.y), lod).rgb, LUMA);
+    float ly1 = dot(textureLod(uScene, suvG + vec2(0.0, e.y), lod).rgb, LUMA);
+    vec2 g = vec2(lx1 - lx0, ly1 - ly0);
+    float edge = smoothstep(0.04, 0.4, length(g)) * (1.0 - smoothstep(0.4, 0.95, dot(col, LUMA)));
+    // The epsilon is not cosmetic: atan(0, 0) is undefined by the spec, a flat
+    // region has exactly that gradient, and a NaN here would survive the mix
+    // below even at an edge weight of zero — which is a field of black speckle
+    // across every empty part of the page.
+    float turn = atan(g.y, g.x + 1e-6) / TAU;
+    vec3 tint = 0.5 + 0.5 * cos(TAU * (uNeonHue + turn * uNeonSpread) + vec3(0.0, 2.0944, 4.1888));
+    col = mix(col, tint * NEON_LEVEL, edge * uNeon);
+  }
+
+  if (uSheen > 0.0) {
+    /*
+     * Thin-film iridescence keyed to the frame's own tone — a slick, where the
+     * optical path that decides the colour is the picture's brightness.
+     *
+     * The film has its own luminance subtracted before it is applied, so what is
+     * added is pure chroma summing to no light at all. That is the bloom's
+     * guarantee arrived at from the other side, and it is what lets this run at
+     * any depth over a trail that keeps its maximum rather than decaying to it:
+     * the frame after this is exactly as bright as the frame before it, pixel
+     * for pixel, and no edge has moved.
+     *
+     * Windowed to the mid-tones. Ink and paper are the two values a comic states
+     * everything with, and leaving both of them alone is why a page can be
+     * turned to oil and still be read.
+     */
+    float lum = dot(col, LUMA);
+    vec3 film = cos(TAU * (lum * uSheenBands + uTime * uSheenDrift) + vec3(0.0, 2.0944, 4.1888));
+    film -= dot(film, LUMA);
+    col += film * uSheen * (4.0 * lum * (1.0 - lum)) * 0.5;
+  }
+
   if (uHueShift != 0.0) col = hueRotate(col, uHueShift);
   // Living Ben-Day: the screen's cells follow the distorted frame rather than a
   // grid pinned to the glass, so the dots flow with whatever is bending the
   // picture instead of the picture sliding underneath a static screen.
   if (uHalftone > 0.0) col = mix(col, halftone(col, mix(uv, suvG, uBenday)), uHalftone);
+
+  if (uCaustics > 0.0) {
+    /*
+     * Light through moving water: two ridged noises sliding across each other,
+     * with the net being where their ridges coincide. The interference is why
+     * the drift rate reads low — what a viewer follows moves several times
+     * faster than either layer does.
+     *
+     * Strictly at or below unity. The ridges are left exactly as the frame drew
+     * them and everything between them is shadowed, so this only ever removes
+     * light: the bright net is the *un*-shadowed picture. That is the whole
+     * reason it can sit at any depth beside the max() trail, and it costs
+     * nothing visually — a caustic is read by its contrast, not by whether the
+     * page it is on has got dimmer.
+     *
+     * In scene coordinates, so the net refracts along with the page under it.
+     * Screen space would be a light rig in front of the glass; this is light in
+     * the same water.
+     */
+    vec2 q = toStage(suvG) * uCausticsScale;
+    float t = uTime * uCausticsSpeed;
+    float a = 1.0 - abs(vnoise(q + vec2(t, -t * 0.73)) * 2.0 - 1.0);
+    float b = 1.0 - abs(vnoise(q * 1.63 + vec2(-t * 0.61, t * 0.44)) * 2.0 - 1.0);
+    float web = pow(clamp(a * b, 0.0, 1.0), 2.2);
+    col *= 1.0 - uCaustics * 0.5 * (1.0 - web);
+  }
 
   if (uKrackle > 0.0) {
     // Cells punched out of the highlights with their rims left standing, so what

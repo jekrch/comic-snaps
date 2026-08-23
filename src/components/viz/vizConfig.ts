@@ -327,6 +327,15 @@ export const DEFAULT_POST: PostParams = {
   turbulence: 0,
   turbulenceScale: 2.2,
   turbulenceSpeed: 0.12,
+  melt: 0,
+  // About ninety pixels to a feature at the default render scale — six percent
+  // of the frame's height, which is the page's masses rather than its drawing
+  // and the grain the melt reads best at. See the field note on `melt` for why
+  // the level is free to move without the picture coming apart.
+  meltLevel: 6.5,
+  // Straight down the frame. The obvious one, and the only one that reads as
+  // the picture giving way under itself rather than as a current in it.
+  meltAngle: 1.5708,
   flow: 0,
   flowScale: 2.6,
   // High retention. The field is what carries the effect's slowness, and at low
@@ -343,12 +352,21 @@ export const DEFAULT_POST: PostParams = {
   slitAxis: 0,
   slitLuma: 0,
   slitDepth: 0.6,
+  wake: 0,
+  // A quarter of the ring — about a fifth of a second at the capture stride,
+  // which is a fringe on anything moving at the speed a panel drifts and a
+  // visible second colour on anything the cycler is swinging.
+  wakeSpread: 0.25,
+  wakeLead: 0,
   disperse: 0,
   blur: 0,
   blurSpin: 0,
   bloom: 0,
   bloomThreshold: 0.68,
   bloomRadius: 0.02,
+  caustics: 0,
+  causticsScale: 3.4,
+  causticsSpeed: 0.05,
   misreg: 0,
   misregSpread: 0.006,
   moire: 0,
@@ -360,6 +378,13 @@ export const DEFAULT_POST: PostParams = {
   bleed: 0,
   bleedRadius: 1.6,
   paper: 0,
+  neon: 0,
+  neonHue: 0.55,
+  neonSpread: 0.5,
+  neonWidth: 1.6,
+  sheen: 0,
+  sheenBands: 3.5,
+  sheenDrift: 0.02,
   solarize: 0,
 };
 
@@ -519,6 +544,13 @@ const HINTS: Record<string, string> = {
   "post.shoulder":
     "Where highlights start rolling off instead of clipping. Lower keeps overlapping brights coloured rather than white.",
   "post.hueShift": "Rotates every colour around the wheel.",
+  "post.neon": "The drawing's own linework lights up.",
+  "post.neonHue": "The colour it lights up in.",
+  "post.neonSpread": "How far the colour turns as a line changes direction.",
+  "post.neonWidth": "Whether it finds the linework or the big shapes.",
+  "post.sheen": "An oil-slick sheen laid over the tones, leaving every value alone.",
+  "post.sheenBands": "How many colours the slick runs through.",
+  "post.sheenDrift": "How fast they crawl.",
   "post.solarize": "Inverts the brightest tones — a burnt, photographic reversal.",
 
   "post.pane": "Backs the view up until the frame is repeated in mirrored panes.",
@@ -574,6 +606,9 @@ const HINTS: Record<string, string> = {
   "post.turbulenceScale": "Size of the churn.",
   "post.turbulenceSpeed": "How fast it churns.",
 
+  "post.melt": "The picture runs under its own weight — light and dark flow opposite ways.",
+  "post.meltLevel": "How coarsely the flow reads the page. Low shreds; high stretches.",
+  "post.meltAngle": "Which way it runs.",
   "post.flow": "Drags the frame along a current that remembers where it has been.",
   "post.flowScale": "Size of the eddies in that current.",
   "post.flowDecay": "How long the current holds its history. High is slow and smooth.",
@@ -586,6 +621,9 @@ const HINTS: Record<string, string> = {
   "post.slitLuma": "Take the delay from brightness rather than from position.",
   "post.slitDepth": "How far back in time the oldest slice comes from.",
 
+  "post.wake": "The colour plates lag behind the movement, so motion leaves colour.",
+  "post.wakeSpread": "How far behind the lagging plates read.",
+  "post.wakeLead": "Which colour trails furthest — red or blue.",
   "post.disperse": "Splits the frame into its colours, like a prism.",
   "post.blur": "Blur streaking out from the centre.",
   "post.blurSpin": "Bends that streak into a spin around the centre.",
@@ -593,6 +631,9 @@ const HINTS: Record<string, string> = {
   "post.bloomThreshold": "How bright an area has to be before it glows.",
   "post.bloomRadius": "How far the glow spreads.",
 
+  "post.caustics": "A net of moving light, as if the page were under water.",
+  "post.causticsScale": "Size of the mesh.",
+  "post.causticsSpeed": "How fast the light moves across it.",
   "post.misreg": "Colour plates printed off-register.",
   "post.misregSpread": "How far the plates drift apart.",
   "post.moire": "Interference between overlaid print screens.",
@@ -644,7 +685,7 @@ export const GROUP_HINTS: Record<ConfigGroup, string> = {
   motion: "How panels drift, zoom and turn — and how fast the clock runs.",
   post: "Treatments over the finished frame: trails, tone and colour.",
   shape: "Distortions that re-map where the frame is drawn — folds, tunnels, mirrors.",
-  field: "Displacements driven by a simulation that carries its own history.",
+  field: "Displacements read out of something with a history of its own — a simulation, the run's past, or the page itself.",
   optics: "Lens behaviour: dispersion, radial blur and bloom.",
   print: "Comic-press artefacts — plates, screens, ink and paper.",
   cycle: "How much the piece changes itself while it runs.",
@@ -697,6 +738,13 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.exposure", "exposure", 0.2, 1.8, 0.01, (c) => c.post.exposure, (c, v) => (c.post.exposure = v)),
   field("post", "post.shoulder", "shoulder", 0.4, 1, 0.01, (c) => c.post.shoulder, (c, v) => (c.post.shoulder = v)),
   field("post", "post.hueShift", "hue", -1, 1, 0.01, (c) => c.post.hueShift, (c, v) => (c.post.hueShift = v)),
+  field("post", "post.neon", "neon ink", 0, 1, 0.01, (c) => c.post.neon, (c, v) => (c.post.neon = v)),
+  field("post", "post.neonHue", "neon hue", 0, 1, 0.01, (c) => c.post.neonHue, (c, v) => (c.post.neonHue = v)),
+  field("post", "post.neonSpread", "neon spread", 0, 1, 0.01, (c) => c.post.neonSpread, (c, v) => (c.post.neonSpread = v)),
+  field("post", "post.neonWidth", "neon width", 0.5, 6, 0.1, (c) => c.post.neonWidth, (c, v) => (c.post.neonWidth = v)),
+  field("post", "post.sheen", "sheen", 0, 1, 0.01, (c) => c.post.sheen, (c, v) => (c.post.sheen = v)),
+  field("post", "post.sheenBands", "sheen bands", 1, 8, 0.1, (c) => c.post.sheenBands, (c, v) => (c.post.sheenBands = v)),
+  field("post", "post.sheenDrift", "sheen drift", 0, 0.08, 0.002, (c) => c.post.sheenDrift, (c, v) => (c.post.sheenDrift = v)),
   field("post", "post.solarize", "solarize", 0, 1, 0.01, (c) => c.post.solarize, (c, v) => (c.post.solarize = v)),
 
   field("shape", "post.pane", "panes", 0, 1, 0.01, (c) => c.post.pane, (c, v) => (c.post.pane = v)),
@@ -788,6 +836,9 @@ export const CONFIG_FIELDS: ConfigField[] = [
   // so what is tunable here is the field's own character; how fast it moves is
   // not on offer, because a field carries its own history and there is no rate
   // in it to raise.
+  field("field", "post.melt", "melt", 0, 1, 0.01, (c) => c.post.melt, (c, v) => (c.post.melt = v)),
+  field("field", "post.meltLevel", "melt grain", 3, 9, 0.1, (c) => c.post.meltLevel, (c, v) => (c.post.meltLevel = v)),
+  field("field", "post.meltAngle", "melt heading", 0, 6.283, 0.01, (c) => c.post.meltAngle, (c, v) => (c.post.meltAngle = v)),
   field("field", "post.flow", "flow", 0, 1, 0.01, (c) => c.post.flow, (c, v) => (c.post.flow = v)),
   field("field", "post.flowScale", "flow scale", 0.5, 8, 0.1, (c) => c.post.flowScale, (c, v) => (c.post.flowScale = v)),
   field("field", "post.flowDecay", "flow hold", 0.8, 0.995, 0.005, (c) => c.post.flowDecay, (c, v) => (c.post.flowDecay = v)),
@@ -801,11 +852,17 @@ export const CONFIG_FIELDS: ConfigField[] = [
   // the shader clamps it there anyway and a slider reaching below would be a
   // stretch of travel that did nothing.
   field("field", "post.reactScale", "cell size", 1, 3, 0.05, (c) => c.post.reactScale, (c, v) => (c.post.reactScale = v)),
+  field("field", "post.wake", "colour wake", 0, 1, 0.01, (c) => c.post.wake, (c, v) => (c.post.wake = v)),
+  field("field", "post.wakeSpread", "wake depth", 0.02, 1, 0.01, (c) => c.post.wakeSpread, (c, v) => (c.post.wakeSpread = v)),
+  field("field", "post.wakeLead", "wake lead", 0, 1, 0.01, (c) => c.post.wakeLead, (c, v) => (c.post.wakeLead = v)),
   field("field", "post.slit", "slit-scan", 0, 1, 0.01, (c) => c.post.slit, (c, v) => (c.post.slit = v)),
   field("field", "post.slitAxis", "slit axis", 0, 1, 0.01, (c) => c.post.slitAxis, (c, v) => (c.post.slitAxis = v)),
   field("field", "post.slitLuma", "slit by tone", 0, 1, 0.01, (c) => c.post.slitLuma, (c, v) => (c.post.slitLuma = v)),
   field("field", "post.slitDepth", "slit depth", 0.05, 1, 0.01, (c) => c.post.slitDepth, (c, v) => (c.post.slitDepth = v)),
 
+  field("optics", "post.caustics", "caustics", 0, 1, 0.01, (c) => c.post.caustics, (c, v) => (c.post.caustics = v)),
+  field("optics", "post.causticsScale", "caustic mesh", 1, 12, 0.1, (c) => c.post.causticsScale, (c, v) => (c.post.causticsScale = v)),
+  field("optics", "post.causticsSpeed", "caustic drift", 0, 0.2, 0.005, (c) => c.post.causticsSpeed, (c, v) => (c.post.causticsSpeed = v)),
   field("optics", "post.disperse", "dispersion", 0, 0.6, 0.005, (c) => c.post.disperse, (c, v) => (c.post.disperse = v)),
   field("optics", "post.blur", "radial blur", 0, 1, 0.01, (c) => c.post.blur, (c, v) => (c.post.blur = v)),
   field("optics", "post.blurSpin", "blur spin", 0, 1, 0.01, (c) => c.post.blurSpin, (c, v) => (c.post.blurSpin = v)),

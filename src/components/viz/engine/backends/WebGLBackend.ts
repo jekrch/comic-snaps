@@ -285,6 +285,22 @@ export class WebGLBackend implements VizBackend {
         uTurbulence: { value: 0 },
         uTurbulenceScale: { value: 2.2 },
         uTurbulenceSpeed: { value: 0.12 },
+        uMelt: { value: 0 },
+        uMeltLevel: { value: 6 },
+        uMeltAngle: { value: Math.PI / 2 },
+        uWake: { value: 0 },
+        uWakeSpread: { value: 0.25 },
+        uWakeLead: { value: 0 },
+        uCaustics: { value: 0 },
+        uCausticsScale: { value: 3.4 },
+        uCausticsSpeed: { value: 0.05 },
+        uNeon: { value: 0 },
+        uNeonHue: { value: 0.55 },
+        uNeonSpread: { value: 0.5 },
+        uNeonWidth: { value: 1.6 },
+        uSheen: { value: 0 },
+        uSheenBands: { value: 3.5 },
+        uSheenDrift: { value: 0.02 },
         uDisperse: { value: 0 },
         uBlur: { value: 0 },
         uBlurSpin: { value: 0 },
@@ -738,7 +754,12 @@ export class WebGLBackend implements VizBackend {
   private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
     const fields = this.fields.textures;
-    this.syncSceneMips(scene, frame.post.julia > 0);
+    // Two effects read the frame at a level other than its own: the fractal, at
+    // whatever rate its orbit is compressing by, and the melt, at the level its
+    // grain names. Either one is enough to need the chain, and the melt is the
+    // reason this is no longer a single-preset cost — it is in the cycler's
+    // pool, so any run with psychedelia up can ask for it.
+    this.syncSceneMips(scene, frame.post.julia > 0 || frame.post.melt > 0);
     post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
     post.uBloomTex.value = fields.bloom;
@@ -845,6 +866,22 @@ export class WebGLBackend implements VizBackend {
     post.uBloomThreshold.value = frame.post.bloomThreshold;
     post.uFlow.value = frame.post.flow;
     post.uReact.value = frame.post.react;
+    post.uMelt.value = frame.post.melt;
+    post.uMeltLevel.value = frame.post.meltLevel;
+    post.uMeltAngle.value = frame.post.meltAngle;
+    post.uWake.value = frame.post.wake;
+    post.uWakeSpread.value = frame.post.wakeSpread;
+    post.uWakeLead.value = frame.post.wakeLead;
+    post.uCaustics.value = frame.post.caustics;
+    post.uCausticsScale.value = frame.post.causticsScale;
+    post.uCausticsSpeed.value = frame.post.causticsSpeed;
+    post.uNeon.value = frame.post.neon;
+    post.uNeonHue.value = frame.post.neonHue;
+    post.uNeonSpread.value = frame.post.neonSpread;
+    post.uNeonWidth.value = frame.post.neonWidth;
+    post.uSheen.value = frame.post.sheen;
+    post.uSheenBands.value = frame.post.sheenBands;
+    post.uSheenDrift.value = frame.post.sheenDrift;
     post.uSlit.value = frame.post.slit;
     post.uSlitAxis.value = frame.post.slitAxis;
     post.uSlitLuma.value = frame.post.slitLuma;
@@ -868,7 +905,11 @@ export class WebGLBackend implements VizBackend {
     this.renderer.render({ scene: this.postMesh, frustumCull: false });
 
     if (frame.post.feedbackAmount > 0) this.captureFeedback();
-    this.captureHistory(frame.post.slit > 0);
+    // Both readers of the ring keep it live, and the wake needs it far more
+    // urgently than the slit does: a slit reading a stale tile shows an old
+    // frame, where a wake reading one shows a *plate* of an old frame, which is
+    // a colour cast over the whole picture rather than a band of it.
+    this.captureHistory(frame.post.slit > 0 || frame.post.wake > 0);
   }
 
   /**

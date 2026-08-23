@@ -6,3 +6,4 @@ public/sw.js
 __pycache__/
 *.pyc
 /docs
+*.mp3

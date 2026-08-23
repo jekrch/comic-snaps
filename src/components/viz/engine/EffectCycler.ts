@@ -27,6 +27,23 @@ interface PsychEffect {
    * a frame that reads as neither, at twice the apparent speed.
    */
   exclusive?: string;
+  /**
+   * Effects this one is *worth more with* than without — the opposite end of
+   * the same judgement `exclusive` makes.
+   *
+   * Some pairs here are a third thing rather than two things: a melt under a
+   * slick is a lava lamp, a lit drawing under caustics is a sign seen from
+   * underwater, and dispersion — which by construction does nothing on its own —
+   * is only ever the glass some other warp is being seen through. Left to the
+   * weighted draw those meetings happen at the square of their weights, which
+   * on a pool of this size is a few times an hour.
+   *
+   * A companion arrives on the *same envelope* as the pulse that brought it, so
+   * the pair is one gesture with two parts rather than two schedules that
+   * happen to overlap — which is the distinction §6 of the effects backlog
+   * turns on, and the reason it costs no concurrency: see `Pulse.mate`.
+   */
+  partners?: readonly string[];
   /** Per-pulse parameters, drawn once at onset so a pulse holds its own shape
    *  for its whole life instead of shimmering between values every frame. */
   init(rng: Rng): number[];
@@ -57,6 +74,29 @@ const BOUNDARY_SHARE = 0.25;
 
 /** Most concurrent pulses, at psychedelia 1. */
 const MAX_CONCURRENT = 3;
+
+/** Chance a pulse brings one of its companions in with it — see `partners`. */
+const PARTNER_CHANCE = 0.5;
+
+/**
+ * Chance a pulse is a *bed* rather than a gust.
+ *
+ * The pool has one pacing and it is the same pacing every time: swell over a
+ * few seconds, hold for ten or so, leave. Thirty pulses of that in a row is a
+ * cadence a viewer learns, and a piece whose changes are all the same length
+ * has no phrasing — everything is punctuation and nothing is a sentence.
+ *
+ * So a quarter of them instead arrive at half the depth over twice the ramp and
+ * stay for the better part of a minute. That is not a smaller version of a
+ * gust; it is a different reading of the same effect — something the piece *is*
+ * for a while, with the ordinary pulses landing on top of it — and it is the
+ * cheapest variety available here, because it needs no new effect at all.
+ */
+const BED_CHANCE = 0.26;
+/** How much longer a bed's ramps and hold run, and how much shallower it sits. */
+const BED_RAMP = 2.1;
+const BED_HOLD = 2.6;
+const BED_DEPTH = 0.5;
 
 /**
  * Fold depth over which a kaleido pulse may no longer bring its own wedge count
@@ -89,6 +129,10 @@ const EFFECTS: PsychEffect[] = [
   {
     id: "kaleido",
     weight: 1,
+    // A mandala in oil. The fold restates the same wedge several times over, so
+    // a treatment that varies with tone rather than with position is the one
+    // that gives each copy of it something of its own.
+    partners: ["sheen"],
     init: (rng) => [rng.pick([4, 5, 6, 8, 10, 12])],
     apply: (post, k, _time, [segments]) => {
       const amount = k * 0.92;
@@ -172,6 +216,10 @@ const EFFECTS: PsychEffect[] = [
   {
     id: "droste",
     weight: 0.5,
+    // Travel, and the colour that travel makes. The regress is the strongest
+    // sense of movement in the pool and the wake draws entirely on movement, so
+    // between them the corridor arrives already coloured by its own flight.
+    partners: ["wake"],
     ramp: 2.5,
     exclusive: "reparam",
     init: (rng) => [
@@ -196,6 +244,7 @@ const EFFECTS: PsychEffect[] = [
   {
     id: "tunnel",
     weight: 0.4,
+    partners: ["wake"],
     ramp: 2.5,
     exclusive: "reparam",
     init: (rng) => [
@@ -255,6 +304,9 @@ const EFFECTS: PsychEffect[] = [
   // --- undulating -----------------------------------------------------------
   {
     id: "warp",
+    // Dispersion has nothing to act on by itself and everything to add to a
+    // frame that is already bending — see its own entry.
+    partners: ["disperse"],
     weight: 1.1,
     init: (rng) => [rng.range(1.2, 5), rng.range(0.15, 0.7)],
     apply: (post, k, _time, [scale, speed]) => {
@@ -267,6 +319,9 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "ripple",
+    // Dispersion has nothing to act on by itself and everything to add to a
+    // frame that is already bending — see its own entry.
+    partners: ["disperse"],
     weight: 0.9,
     init: (rng) => [rng.range(8, 40)],
     apply: (post, k, _time, [freq]) => {
@@ -297,6 +352,9 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "quasi",
+    // Dispersion has nothing to act on by itself and everything to add to a
+    // frame that is already bending — see its own entry.
+    partners: ["disperse"],
     weight: 0.8,
     ramp: 1.5,
     init: (rng) => [rng.range(7, 26), rng.range(0.5, 0.9)],
@@ -309,6 +367,9 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "turbulence",
+    // Dispersion has nothing to act on by itself and everything to add to a
+    // frame that is already bending — see its own entry.
+    partners: ["disperse"],
     weight: 0.6,
     ramp: 1.5,
     init: (rng) => [rng.range(1.4, 4), rng.range(0.06, 0.18), rng.range(0.45, 0.8)],
@@ -318,6 +379,53 @@ const EFFECTS: PsychEffect[] = [
       post.turbulence = amount;
       post.turbulenceScale = scale;
       post.turbulenceSpeed = speed;
+    },
+  },
+  {
+    /*
+     * The picture running under its own weight — and the only entry in this pool
+     * whose field is the comic rather than a formula.
+     *
+     * Every other displacement here is a figure the frame is bent *through*: the
+     * warp's sines, the quasicrystal, the fBm, and even the two simulations,
+     * which are seeded from the frame and then run on schedules of their own. A
+     * panel arriving under any of them is repainted and not redrawn. Under this
+     * one the page's own masses decide where the frame goes, so a handover
+     * changes the deformation itself — which is the thing a viewer can see
+     * without being told, and the reason this carries a weight near the top of
+     * the group despite being the youngest entry in it.
+     */
+    id: "melt",
+    weight: 0.65,
+    // Long. It moves the frame bodily rather than deforming it in place, which
+    // is the reparameterisations' argument for their ramps, and it is reading a
+    // field that changes only when the panel does — so an arrival that outruns
+    // the page it is reading has nothing to be about.
+    ramp: 2,
+    partners: ["sheen", "caustics"],
+    init: (rng) => [
+      // Down the frame four times in five, because that is the one everybody
+      // means by melting and the only heading that reads as weight rather than
+      // as wind. The fifth is across it, which is the same map and a completely
+      // different picture: a current running through the page.
+      rng.bool(0.8)
+        ? (rng.bool() ? 1 : -1) * (Math.PI / 2) + rng.range(-0.3, 0.3)
+        : rng.range(-0.3, 0.3),
+      // Features from about a fortieth of the frame to a sixth of it. The reach
+      // scales with the level, so this is a choice of grain and not of violence:
+      // the low end is a churn over the whole page and the high end is three or
+      // four slow tongues of it, and scripts/melt-jacobian.py puts both ends at
+      // 99.9% of the frame readable. The top is where it is because 8.5 is the
+      // first level that measurably is not.
+      rng.range(5.5, 8),
+      rng.range(0.5, 0.85),
+    ],
+    apply: (post, k, _time, [angle, level, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.melt) return;
+      post.melt = amount;
+      post.meltAngle = angle;
+      post.meltLevel = level;
     },
   },
   // --- fields ---------------------------------------------------------------
@@ -366,6 +474,11 @@ const EFFECTS: PsychEffect[] = [
     id: "slit-scan",
     weight: 0.35,
     ramp: 3,
+    // Shares the ring with the wake, and shares its subject: both are the frame
+    // at more than one moment. Composed, the wake would be separating the plates
+    // of a picture that is already several seconds deep, which is two statements
+    // about time made at once and reads as neither.
+    exclusive: "time",
     init: (rng) => [
       rng.range(0, 1),
       // Luminance only sometimes. It is the strangest of the three readings and
@@ -381,6 +494,44 @@ const EFFECTS: PsychEffect[] = [
       post.slitAxis = axis;
       post.slitLuma = luma;
       post.slitDepth = depth;
+    },
+  },
+  {
+    /*
+     * The colour plates lagging behind the frame's own movement.
+     *
+     * The one entry in this pool that costs the drawing nothing. Every map here
+     * trades legibility for structure at some depth — that is what a map is —
+     * and this one has no depth at which the panel stops being the panel:
+     * wherever the frame is still, all three plates read the same instant and
+     * the picture is untouched to the pixel. All of the colour is manufactured
+     * by motion, so what it looks like is decided by the composition rather than
+     * by this pulse, and a page swinging through a fold burns while a slow
+     * dissolve barely fringes.
+     *
+     * Which makes it the right thing to reach for often, and the reason its
+     * weight sits with the geometric group's rather than with the rest of the
+     * time-and-optics entries.
+     */
+    id: "wake",
+    weight: 0.7,
+    ramp: 2,
+    exclusive: "time",
+    partners: ["smear", "blur"],
+    init: (rng) => [
+      rng.range(0.1, 0.45),
+      // The ends and the middle are three different effects rather than a
+      // continuum with a null in it — see PostParams.wakeLead — so the draw is a
+      // pick between them rather than a range across them.
+      rng.pick([0, 0.5, 1]),
+      rng.range(0.55, 0.9),
+    ],
+    apply: (post, k, _time, [spread, lead, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.wake) return;
+      post.wake = amount;
+      post.wakeSpread = spread;
+      post.wakeLead = lead;
     },
   },
 
@@ -439,6 +590,9 @@ const EFFECTS: PsychEffect[] = [
   {
     id: "krackle",
     weight: 0.45,
+    // Both are the page's own drawing turned into light — one out of its
+    // highlights, one out of its lines.
+    partners: ["neon"],
     ramp: 1.5,
     init: (rng) => [rng.range(12, 46), rng.range(0.45, 0.78), rng.range(0.5, 0.9)],
     apply: (post, k, _time, [scale, knee, peak]) => {
@@ -507,6 +661,41 @@ const EFFECTS: PsychEffect[] = [
       post.bloomRadius = radius;
     },
   },
+  {
+    /*
+     * The page under moving water, with the light gathered into a net.
+     *
+     * Multiplicative and never above one — the ridges are the frame as it was
+     * drawn and everything between them is shadowed — so this is the rare
+     * addition here that has no washout argument to make at all: it can only
+     * take light away. A caustic is read by its contrast rather than by the
+     * brightness of the surface it lands on, so nothing is lost by building it
+     * downward.
+     *
+     * The other half of why it belongs in a pool with this brief: shading is the
+     * one treatment that cannot cost legibility. It does not move an edge, quantise
+     * a tone or claim a coordinate; every line stays where the artist put it and
+     * the light merely travels over it.
+     */
+    id: "caustics",
+    weight: 0.6,
+    ramp: 2,
+    partners: ["neon", "sheen"],
+    init: (rng) => [
+      rng.range(2.2, 6),
+      // Low, and lower than it looks: the net is where two layers coincide, so
+      // what a viewer follows moves several times faster than either layer.
+      rng.range(0.02, 0.07),
+      rng.range(0.45, 0.85),
+    ],
+    apply: (post, k, _time, [scale, speed, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.caustics) return;
+      post.caustics = amount;
+      post.causticsScale = scale;
+      post.causticsSpeed = speed;
+    },
+  },
   // --- surreal --------------------------------------------------------------
   {
     id: "solarize",
@@ -514,6 +703,75 @@ const EFFECTS: PsychEffect[] = [
     init: (rng) => [rng.range(0.5, 0.9)],
     apply: (post, k, _time, [peak]) => {
       post.solarize = Math.min(1, Math.max(post.solarize, k * peak));
+    },
+  },
+  {
+    /*
+     * The drawing lit up — the frame's own linework found and given emission.
+     *
+     * The most literal thing in the pool. Everything else treats a panel as a
+     * surface to bend, screen or tone; this reads the ink back out of it and
+     * makes the ink the figure, so the shape on screen is a shape somebody drew
+     * and a handover replaces it outright. Nothing else here can say that: the
+     * folds and the fractal draw the same figure whatever page is under them.
+     */
+    id: "neon",
+    weight: 0.6,
+    ramp: 1.5,
+    partners: ["caustics", "bloom"],
+    init: (rng) => [
+      rng.range(0, 1),
+      // Rarely the whole spectrum. A single colour over a whole drawing reads as
+      // a sign, which is the effect at its most legible; the full ring is
+      // gorgeous and busy, and it wants to be the exception.
+      rng.bool(0.3) ? rng.range(0.6, 1) : rng.range(0.05, 0.35),
+      // Pixels. The low end is the linework alone; the high end walks off it
+      // onto the boundaries between a panel's masses and lights those instead,
+      // which is the same effect drawn at the scale of the composition.
+      rng.range(0.9, 3.4),
+      // The lowest ceiling of anything here. Past about three-quarters the ink
+      // stops being ink and the frame is a wireframe of itself — which is a
+      // different effect, and not one that keeps a panel readable.
+      rng.range(0.35, 0.7),
+    ],
+    apply: (post, k, _time, [hue, spread, width, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.neon) return;
+      post.neon = amount;
+      post.neonHue = hue;
+      post.neonSpread = spread;
+      post.neonWidth = width;
+    },
+  },
+  {
+    /*
+     * Oil on water: a thin-film sheen keyed to the frame's own tone.
+     *
+     * Adds chroma that sums to no luminance at all, so the picture keeps every
+     * value it had — the bloom's guarantee, arrived at from the other side — and
+     * it is windowed to the mid-tones so the ink and the paper are untouched.
+     * Between them those two properties mean a page can be turned to petrol and
+     * still be read, which is why this carries the highest weight of the three
+     * colour entries added with it.
+     */
+    id: "sheen",
+    weight: 0.75,
+    ramp: 1.5,
+    partners: ["melt", "wake", "caustics"],
+    init: (rng) => [
+      // Two is a duotone rolling through the greys and six is a slick with
+      // visible fringes; both are the same effect at different tempers, and the
+      // draw covers the range because a run wants both.
+      rng.range(2, 6.5),
+      rng.range(0.008, 0.035),
+      rng.range(0.5, 0.9),
+    ],
+    apply: (post, k, _time, [bands, drift, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.sheen) return;
+      post.sheen = amount;
+      post.sheenBands = bands;
+      post.sheenDrift = drift;
     },
   },
   {
@@ -559,6 +817,9 @@ const EFFECTS: PsychEffect[] = [
     id: "smear",
     weight: 0.8,
     exclusive: "trail",
+    // The trail holds where the frame has been and the wake colours it by how
+    // fast it went.
+    partners: ["wake"],
     init: (rng) => [rng.range(-0.006, 0.006), rng.range(0.004, 0.016)],
     apply: (post, k, _time, [spin, grow]) => {
       // Additive on top of whatever the preset already runs: a piece that is
@@ -611,6 +872,18 @@ interface Pulse {
   /** Ceiling of the envelope, 0..1. */
   peak: number;
   args: number[];
+  /**
+   * A companion riding this pulse's envelope — see `partners`.
+   *
+   * Carried inside the pulse rather than pushed as a second one, and that is
+   * the whole argument for it costing no concurrency: the cap is on how many
+   * *schedules* are moving the frame at once, which is §6's constraint, and a
+   * companion sharing every corner of this envelope is not a second schedule.
+   * It arrives when this arrives, peaks when this peaks and is gone when this
+   * is gone. Two pulses that merely overlapped would be the thing the cap
+   * exists to limit; this is one gesture with two voices in it.
+   */
+  mate?: { effect: number; peak: number; args: number[] };
 }
 
 function duration(pulse: Pulse): number {
@@ -636,15 +909,21 @@ function smooth(t: number): number {
   return t * t * (3 - 2 * t);
 }
 
-function envelope(pulse: Pulse, time: number): number {
+/**
+ * The envelope's own shape, 0..1, before either voice's depth is applied.
+ *
+ * Split out from the depth because a pulse can carry a companion, and the two
+ * are the same gesture at two weights: one shape, multiplied twice.
+ */
+function shape(pulse: Pulse, time: number): number {
   const age = time - pulse.start;
   if (age <= 0) return 0;
-  if (age < pulse.attack) return smooth(age / pulse.attack) * pulse.peak;
+  if (age < pulse.attack) return smooth(age / pulse.attack);
   const held = pulse.attack + pulse.hold;
-  if (age < held) return pulse.peak;
+  if (age < held) return 1;
   const out = (age - held) / pulse.release;
   if (out >= 1) return 0;
-  return smooth(1 - out) * pulse.peak;
+  return smooth(1 - out);
 }
 
 /**
@@ -736,8 +1015,10 @@ export class EffectCycler {
     this.cued = false;
 
     for (const pulse of this.active) {
-      const k = envelope(pulse, time);
-      if (k > 0) EFFECTS[pulse.effect].apply(post, k, time, pulse.args);
+      const k = shape(pulse, time);
+      if (k <= 0) continue;
+      EFFECTS[pulse.effect].apply(post, k * pulse.peak, time, pulse.args);
+      if (pulse.mate) EFFECTS[pulse.mate.effect].apply(post, k * pulse.mate.peak, time, pulse.mate.args);
     }
   }
 
@@ -775,22 +1056,59 @@ export class EffectCycler {
     return now + tempo.alignedDelay(wanted - now, boundaryBars(gap, tempo.barSeconds));
   }
 
+  /**
+   * Whether an effect may start now: not already running — two pulses of the
+   * same effect would just be one louder pulse — and not tagged against
+   * anything that is.
+   *
+   * `also` is an effect being started in the same breath as this one, which is
+   * not in `active` yet and still has to be excluded against.
+   */
+  private available(index: number, also = -1): boolean {
+    if (index === also) return false;
+    const tag = EFFECTS[index].exclusive;
+    if (also >= 0 && tag && EFFECTS[also].exclusive === tag) return false;
+    for (const pulse of this.active) {
+      for (const voice of pulse.mate ? [pulse.effect, pulse.mate.effect] : [pulse.effect]) {
+        if (voice === index) return false;
+        if (tag && EFFECTS[voice].exclusive === tag) return false;
+      }
+    }
+    return true;
+  }
+
   private begin(time: number, amount: number, tempo?: TempoLock): void {
     const rng = this.rng;
-    // Weight out anything already running: two pulses of the same effect would
-    // just be one louder pulse. Exclusion tags extend that to the effects that
-    // are not the same but still cannot share a frame.
-    const running = new Set(this.active.map((pulse) => pulse.effect));
-    const claimed = new Set(
-      this.active.map((pulse) => EFFECTS[pulse.effect].exclusive).filter(Boolean)
-    );
     const effect = rng.weightedIndex(
-      EFFECTS.map((entry, index) =>
-        running.has(index) || (entry.exclusive && claimed.has(entry.exclusive)) ? 0 : entry.weight
-      )
+      EFFECTS.map((entry, index) => (this.available(index) ? entry.weight : 0))
     );
 
-    const ramp = EFFECTS[effect].ramp ?? 1;
+    /*
+     * The companion, drawn before the envelope rather than after it.
+     *
+     * The pair shares one envelope — that is what makes it a gesture with two
+     * parts rather than two things that happened to overlap — so the longer of
+     * the two ramps has to win. Decided the other way round, a warp's four
+     * second attack would be handing the slowest entry in the pool the fastest
+     * arrival in it, which is the one thing the per-effect `ramp` exists to
+     * prevent.
+     *
+     * The chance grows with psychedelia rather than being flat. A pair is the
+     * pool speaking in a compound sentence, and a preset that asked for one
+     * effect at a time is asking for simple ones.
+     */
+    let partner = -1;
+    const options = EFFECTS[effect].partners;
+    if (options && rng.bool(PARTNER_CHANCE * (0.35 + 0.65 * amount))) {
+      const wanted = rng.pick(options);
+      const index = EFFECTS.findIndex((entry) => entry.id === wanted);
+      if (index >= 0 && this.available(index, effect)) partner = index;
+    }
+
+    const bed = rng.bool(BED_CHANCE);
+    const ramp =
+      Math.max(EFFECTS[effect].ramp ?? 1, partner >= 0 ? EFFECTS[partner].ramp ?? 1 : 1) *
+      (bed ? BED_RAMP : 1);
     /*
      * Every segment of the envelope in tempo, so a pulse that begins on a
      * downbeat also *peaks* on one and is gone on one.
@@ -811,17 +1129,34 @@ export class EffectCycler {
      */
     const musical = (seconds: number): number =>
       tempo?.active ? tempo.duration(seconds) : seconds;
+    // The ramps are the safety-critical part; the governor floors them.
+    const attack = this.safety.clampRamp(musical(rng.range(2.5, 7) * ramp));
+    const release = this.safety.clampRamp(musical(rng.range(3, 9) * ramp));
+    // More psychedelia holds longer as well as stacking deeper, so a high
+    // setting reads as a state the piece is in rather than a flicker. A bed
+    // takes that much further and gives up half its depth to pay for it.
+    const hold = musical(rng.range(5, 18) * (0.6 + amount * 0.8) * (bed ? BED_HOLD : 1));
+    const depth = amount * (bed ? BED_DEPTH : 1);
+
     this.active.push({
       effect,
       start: time,
-      // The ramps are the safety-critical part; the governor floors them.
-      attack: this.safety.clampRamp(musical(rng.range(2.5, 7) * ramp)),
-      release: this.safety.clampRamp(musical(rng.range(3, 9) * ramp)),
-      // More psychedelia holds longer as well as stacking deeper, so a high
-      // setting reads as a state the piece is in rather than a flicker.
-      hold: musical(rng.range(5, 18) * (0.6 + amount * 0.8)),
-      peak: amount * rng.range(0.55, 1),
+      attack,
+      release,
+      hold,
+      peak: depth * rng.range(0.55, 1),
       args: EFFECTS[effect].init(rng),
+      // Drawn a shade under the pulse carrying it: the companion is the second
+      // voice, and a dispersion or a slick at the same weight as the thing it is
+      // dressing has stopped dressing it.
+      mate:
+        partner >= 0
+          ? {
+              effect: partner,
+              peak: depth * rng.range(0.4, 0.8),
+              args: EFFECTS[partner].init(rng),
+            }
+          : undefined,
     });
   }
 

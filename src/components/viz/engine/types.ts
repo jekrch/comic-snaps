@@ -909,6 +909,43 @@ export interface PostParams {
   turbulenceScale: number;
   turbulenceSpeed: number;
 
+  /**
+   * The picture melting under its own weight: every pixel is displaced along one
+   * heading by the *tone* of the page at that point, so light regions run one
+   * way and dark regions the other and the frame shears into taffy.
+   *
+   * The only displacement in this chain whose field is the comic itself. Every
+   * other one here — the sines, the lattice, the fBm, and even the two
+   * simulations, which are seeded from the frame but then run on their own — is
+   * a figure the frame is bent *through*; this one is a figure the frame is
+   * bent *by*, so changing the panel changes the deformation rather than merely
+   * repainting it. That is the property that keeps a run from reading as a
+   * filter over a slideshow.
+   *
+   * Read from a coarse mip rather than the frame, and that is what makes it
+   * legible instead of a shredder: at level three or four the field is the
+   * page's composition — the big shapes a panel is laid out in — so
+   * neighbouring pixels are displaced by nearly the same amount and the local
+   * scale stays near 1. A drip driven by the linework would move adjacent
+   * pixels by unrelated distances, which is the sampling Jacobian blowing up
+   * and the panel becoming mush.
+   *
+   * Signed about mid-grey, so the mean displacement over a frame is zero: the
+   * picture distends without the whole of it sliding off in one direction.
+   */
+  melt: number;
+  /** Mip level the tone is read at — the grain of the flow. Low is the drawing
+   *  and gives a fine, local churn; high is the page's overall composition and
+   *  gives a few great slow tongues. It does not trade legibility against
+   *  either: the reach scales with the level, so both ends move the picture by
+   *  the same fraction of whatever they are reading. Fractional and blended, so
+   *  it can be drifted without stepping between levels. */
+  meltLevel: number;
+  /** Heading the melt runs along, radians. Down the frame is the one everybody
+   *  means by melting, but the same map across it is a current and up it is the
+   *  page being drawn off the top. */
+  meltAngle: number;
+
   // --- Fields ---------------------------------------------------------------
   // The two displacements that are not a formula but a *simulation*, read out of
   // a buffer the backend advanced before the frame. Both are therefore slow by
@@ -965,6 +1002,38 @@ export interface PostParams {
    *  ring. Low is a shear, high is seconds of the run in one frame. */
   slitDepth: number;
 
+  /**
+   * The colour plates read at different *moments* — the frame's own motion
+   * leaves a warm trail behind it and a cool one ahead, or the reverse.
+   *
+   * Nothing here moves, tiles, folds or tones the picture: where the frame is
+   * still, all three plates read the same instant and the panel is exactly the
+   * panel, down to the pixel. All of the colour is manufactured by movement, so
+   * this is the one effect in the pool whose strength is decided entirely by the
+   * composition rather than by its own amount — a slow dissolve barely fringes,
+   * and a page swinging through a fold burns.
+   *
+   * Which is why it belongs in a pool otherwise full of maps: it is the only
+   * entry that can run deep while leaving every line where it was drawn.
+   *
+   * Compounds, like the slit-scan and for the same reason: the ring is fed from
+   * the *finished* frame, so the red plate of the moment this reads was itself
+   * taken from further back still. The series is geometric in the amount, which
+   * at a middling depth makes the colour reach two or three times further into
+   * the run than `wakeSpread` names — so the spread is drawn low and the effect
+   * is deeper than the number suggests.
+   */
+  wake: number;
+  /** How far back the lagging plate reads, as a fraction of the ring — the same
+   *  axis `slitDepth` walks. Small is a fringe, large is two seconds of the run
+   *  in three colours at once. */
+  wakeSpread: number;
+  /** Which plate lags furthest: 0 is red — the trail behind movement is warm and
+   *  the edge ahead of it cool — and 1 is blue, the same thing reversed. Blended,
+   *  and the middle is its own reading rather than a null: both plates lag
+   *  together there, so the trail is magenta and the leading edge green. */
+  wakeLead: number;
+
   // --- Optics ---------------------------------------------------------------
   /**
    * Prismatic dispersion: the three channels are sampled at different
@@ -998,6 +1067,30 @@ export interface PostParams {
   bloomThreshold: number;
   /** Radius of the spread, in fractions of the frame's short edge. */
   bloomRadius: number;
+
+  /**
+   * Caustics: the page seen through moving water, with the light gathered into
+   * a drifting net of ridges.
+   *
+   * Purely multiplicative and never above unity — the net *shadows* the frame
+   * between its ridges rather than brightening them — which is what lets it run
+   * at any depth beside a `max()` feedback path without re-opening the washout.
+   * The bright network a viewer sees is the un-shadowed frame, and the effect
+   * has therefore taken light away rather than added any.
+   *
+   * Carried in scene coordinates rather than screen ones, so the net is
+   * refracted by whatever is bending the frame along with the picture under it.
+   * Screen space would be a light rig in front of the glass; this is light in
+   * the same water as the page.
+   */
+  caustics: number;
+  /** Cells of the net across the frame. Low is a few slow ridges over the whole
+   *  page, high is a fine mesh that reads as texture rather than as light. */
+  causticsScale: number;
+  /** How fast the two layers of the net slide across each other. The ridges are
+   *  an interference of the two, so what a viewer sees moves faster than this
+   *  and the number is lower than it looks. */
+  causticsSpeed: number;
 
   // --- Print ----------------------------------------------------------------
   // On-theme, and mostly one step from `halftone()`, which already screens CMY
@@ -1058,6 +1151,58 @@ export interface PostParams {
   paper: number;
 
   // --- Surreal --------------------------------------------------------------
+  /**
+   * The drawing's own linework, lit: edges in the frame are found and given
+   * emission, with the hue turning around the direction each edge runs.
+   *
+   * The most literal answer in the engine to what the piece is *of*. Everything
+   * else here treats the panel as a surface to bend, screen or tone; this reads
+   * the ink back out of it and makes the ink the figure, so what glows is
+   * whatever the artist drew — a face's outline, a speech balloon, a
+   * skyline — and a panel change redraws the figure completely.
+   *
+   * Keyed on the dark side of each boundary, because a comic's edges are almost
+   * all ink: weighting by the frame's own darkness picks the drawn line rather
+   * than the accidental boundary between two bright fills, which is what keeps
+   * this reading as a drawing lit up instead of as an edge-detect filter.
+   *
+   * It mixes toward the emission rather than adding it, and the emission's
+   * luminance is held under what white paper already puts on screen, so the
+   * trail path cannot be armed any brighter by this than it is by an ordinary
+   * light panel.
+   */
+  neon: number;
+  /** Where the hue ring starts, in turns. */
+  neonHue: number;
+  /** How far the hue travels with the edge's direction, in turns per half turn
+   *  of the edge. At 0 the whole drawing glows one colour; at 1 an outline runs
+   *  through the entire spectrum as it goes around a figure. */
+  neonSpread: number;
+  /** Radius the edge is measured over, in pixels. Small is the linework alone;
+   *  large finds the boundaries between a panel's masses and glows those. */
+  neonWidth: number;
+  /**
+   * Iridescence: a thin-film sheen keyed to the frame's own tone, so a smooth
+   * gradient breaks into spectral bands the way oil does on water.
+   *
+   * Adds *chroma with no luminance*: the film's colour has its own brightness
+   * divided out before it is applied, so every value in the picture survives
+   * exactly — no edge moves, no line lightens, and the total light in the frame
+   * is unchanged, which is the same guarantee the bloom had to make and for the
+   * same reason.
+   *
+   * Windowed to the mid-tones, and that is the legibility clause: black ink and
+   * white paper are left alone, so the drawing keeps the two values that carry
+   * it and only the fills between them iridesce.
+   */
+  sheen: number;
+  /** Spectral cycles across the tonal range. Two is a duotone rolling through
+   *  the greys; seven is a slick with visible fringes. */
+  sheenBands: number;
+  /** How fast the bands crawl through the tones. Slow — the effect is a surface
+   *  the light is moving on, not a colour cycle. */
+  sheenDrift: number;
+
   /** Tone fold: highlights invert, mid-tones peak. */
   solarize: number;
 }

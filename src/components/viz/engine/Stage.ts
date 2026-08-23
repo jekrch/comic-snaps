@@ -253,14 +253,26 @@ export class Stage {
    * looks like on a stage: the arrangement never moves, so a panel change is
    * the only thing a step can be.
    *
-   * Each occupant is dropped onto the point in its own fade-out where it is
-   * already showing what it is showing, so nothing jumps — it simply starts
-   * leaving. A slot whose tenancy has not opened yet is showing nothing, so it
-   * expires immediately, which makes it the one the incoming panel arrives in
-   * and the outgoing fade something to cross against.
+   * Two ways of doing that, chosen by the same flag the schedule is chosen by.
+   * Solids overlap each other anyway, so they can all simply start leaving at
+   * once; a set that hands the surface between its slots cannot, and `handOver`
+   * is why.
    */
   retire(time: number): void {
-    for (const slot of [...this.slots, ...this.solidSlots]) {
+    if (this.scene?.sequential) this.handOver(time);
+    else this.fadeOut(this.slots, time);
+    this.fadeOut(this.solidSlots, time);
+  }
+
+  /**
+   * Drop every tenancy onto the point in its own fade-out where it is already
+   * showing what it is showing, so nothing jumps — it simply starts leaving. A
+   * slot whose tenancy has not opened yet is showing nothing, so it expires
+   * immediately, which makes it the one the incoming panel arrives in and the
+   * outgoing fade something to cross against.
+   */
+  private fadeOut(slots: Occupant[], time: number): void {
+    for (const slot of slots) {
       if (!slot.panel) continue;
       const remaining = slot.bornAt + slot.lifetime - time;
       if (remaining <= 0) continue;
@@ -271,6 +283,108 @@ export class Stage {
       if (remaining <= target) continue;
       slot.bornAt = time + target - slot.lifetime;
       slot.stepped = true;
+    }
+  }
+
+  /**
+   * Step a sequential set: one slot takes the next panel now, and whatever else
+   * is on the surface leaves against its arrival.
+   *
+   * The distinction from `fadeOut` is the whole of this method, and it is worth
+   * stating plainly, because the version that simply reused it shipped. A
+   * sequential set *is* the frame — its envelopes sum to one only because each
+   * tenancy opens exactly as its predecessor's fade begins — so putting every
+   * one of them into its fade-out at once leaves nothing at all on the surface.
+   * A corridor or a wall dropped to black and stayed there until the schedule
+   * came back round, which on the vault's eighty-second dwell is the better part
+   * of a minute.
+   *
+   * And the schedule did not come back round intact either. `stepped` is a
+   * licence to skip the wait between tenancies, and granting it to the outgoing
+   * slot as well as the incoming one collapsed the pair's spacing from a whole
+   * turn to a single fade: after one step the two slots ran nearly in phase, so
+   * they were both on the surface together — two comic pages superimposed, at
+   * twice the light the levelling had solved for — and then both off it
+   * together, and so on for the rest of the run. One section cue was enough to
+   * do it, and the music raises those every couple of minutes.
+   *
+   * So exactly one slot is stepped, and which one depends on where in the cycle
+   * the step lands. Outside a dissolve there is always precisely one tenancy
+   * staggered into the future, showing nothing and waiting its turn: it costs
+   * nothing to bring forward, so it takes the panel and the incumbent crosses to
+   * it. Inside a dissolve there is no such slot — both are on the surface — and
+   * the one to use is the page already on its way out, which comes free the
+   * moment its own fade runs out.
+   *
+   * That leaves its partner still *arriving*, which is the case the single
+   * shared line below is written for. A page part-way through its fade-in cannot
+   * be dropped onto its fade-out: that would take the frame down by however far
+   * it had got. It is left to finish arriving, and its tenancy is truncated to
+   * the pair of fades instead — a triangle that hands straight back, rather than
+   * a page that plateaus for a minute first. A page already at rest wants the
+   * opposite, its fade-out starting now, and the two are the same sentence: a
+   * tenancy ends at whichever is later, now plus what is left of its own fade,
+   * or the moment its fade-in is done plus a whole one.
+   *
+   * None of which has to re-derive the cadence. `refill` reads a slot's due date
+   * off `bornAt + lifetime`, so moving where a tenancy ends is also how it is
+   * told when the next one is owed, and every tenancy opened after a step lands
+   * back on the wait it would have had — a fade before its predecessor's end —
+   * with no further arithmetic here.
+   *
+   * Measured rather than argued, because the argument is arithmetic on lifetimes
+   * and fades that nobody can hold in their head, and the version this replaces
+   * looked correct for the first eighty seconds of every run. See
+   * `scripts/stage-coverage.mjs`, which drives this class against every spatial
+   * preset for forty minutes apiece and reports the slots' summed opacity: cues
+   * on the handover, cues inside the dissolve and cues on every frame all hold
+   * it at one. Two slots is what every sequential scene declares; the last loop
+   * generalises past that, but only the pair is exact under cues arriving faster
+   * than a dissolve.
+   */
+  private handOver(time: number): void {
+    const slots = this.slots;
+    const state = slots.map((slot) => fadeState(slot, time));
+    // Tenancies that have not opened yet, soonest first: the head of that queue
+    // is whose turn it was about to be, and so whose turn it now is.
+    const waiting = slots
+      .map((_, i) => i)
+      .filter((i) => !slots[i].panel || time - slots[i].bornAt <= 0)
+      .sort((a, b) => slots[a].bornAt - slots[b].bornAt);
+    const next = waiting.length > 0 ? waiting[0] : state.findIndex((s) => s.leaving);
+    // Neither waiting nor leaving, which a two-slot set cannot be. Leaving the
+    // surface exactly as it is costs a step; emptying it costs the picture.
+    if (next < 0) return;
+
+    // When the stepped-to panel opens: the frame the stepped slot stops showing
+    // anything, which is where `refill` will put it once `stepped` has spent its
+    // wait. Now, for a tenancy that never opened.
+    const start = time + state[next].level * state[next].fadeOut;
+
+    for (let i = 0; i < slots.length; i++) {
+      const slot = slots[i];
+      if (!slot.panel) continue;
+      if (i === next) {
+        slot.bornAt = start - slot.lifetime;
+        slot.stepped = true;
+        continue;
+      }
+      // Re-dealt below rather than shortened: it is showing nothing to shorten.
+      if (waiting.includes(i)) continue;
+      const { level, fadeIn, fadeOut } = state[i];
+      slot.lifetime = Math.max(time - slot.bornAt + level * fadeOut, fadeIn + fadeOut);
+    }
+
+    // Anything else still waiting goes back on the queue behind the arrival, one
+    // fade before the last, so a set of more than two hands over as evenly after
+    // a step as it did before one.
+    let turn = 1;
+    for (const i of waiting) {
+      if (i === next) continue;
+      const slot = slots[i];
+      if (!slot.panel) continue;
+      slot.bornAt = start + turn * (slot.lifetime - slot.curve.fadeOut);
+      turn++;
     }
   }
 
@@ -437,7 +551,20 @@ export class Stage {
         continue;
       }
 
-      const jitter = 1 + ((i * 0.37) % 1) * config.layerLifetimeJitter;
+      /*
+       * Spread in the lifetimes, so a concurrent set does not turn over all at
+       * once — and none at all for a sequential one, which needs the opposite.
+       *
+       * A sequential schedule abuts an outgoing fade against an incoming one,
+       * and that only stays exact while every slot runs the same lifetime: two
+       * slots on different ones drift apart by the difference every turn, and
+       * within a few handovers the surface they are supposed to be sharing has
+       * a gap in it — which on a full-bleed scene is a wall going black between
+       * pages. Every preset that declares `sequential` already sets the jitter
+       * to zero and says so; this is that convention made structural, so the
+       * tuning panel cannot undo it with one drag of a slider.
+       */
+      const jitter = sequential ? 1 : 1 + ((i * 0.37) % 1) * config.layerLifetimeJitter;
       const lifetime = dwell * jitter;
       const fade = safety.clampFade(lifetime * config.crossfade * 0.5);
       // Where this tenancy was due to start, from the one it is replacing.
@@ -519,13 +646,20 @@ export class Stage {
 }
 
 /**
- * A tenancy's linear envelope level and the fade-out it will leave by, both
- * after the same rescaling `envelope` applies when a curve's fades exceed the
- * lifetime they have to fit in. Retiring a slot needs the pair: the level says
- * where in the fade-out it already is, and the fade-out says how long the rest
- * of it takes.
+ * Where a tenancy is on its own envelope: its linear level, its two fades after
+ * the same rescaling `envelope` applies when they exceed the lifetime they have
+ * to fit in, and whether it is already on its way out.
+ *
+ * Stepping a slot needs all four. The level and the fade-out say how long the
+ * rest of its exit takes; the fade-in says when it would be done arriving, which
+ * is the earliest a page caught mid-dissolve may be asked to start leaving; and
+ * `leaving` is what picks the slot to hand the next panel to when none is
+ * waiting. See `Stage.handOver`.
  */
-function fadeState(slot: Occupant, time: number): { level: number; fadeOut: number } {
+function fadeState(
+  slot: Occupant,
+  time: number
+): { level: number; fadeIn: number; fadeOut: number; leaving: boolean } {
   const total = slot.curve.fadeIn + slot.curve.fadeOut;
   const scale = total > slot.lifetime ? slot.lifetime / total : 1;
   const fadeIn = slot.curve.fadeIn * scale;
@@ -534,13 +668,14 @@ function fadeState(slot: Occupant, time: number): { level: number; fadeOut: numb
   const age = time - slot.bornAt;
   // Staggered forward and not yet due: showing nothing, and nothing is where
   // its fade-out would have to start from.
-  if (age <= 0) return { level: 0, fadeOut };
+  if (age <= 0) return { level: 0, fadeIn, fadeOut, leaving: false };
 
   let level = 1;
   if (fadeIn > 0 && age < fadeIn) level = age / fadeIn;
   const remaining = slot.lifetime - age;
-  if (fadeOut > 0 && remaining < fadeOut) level = Math.min(level, remaining / fadeOut);
-  return { level: clamp(level, 0, 1), fadeOut };
+  const leaving = fadeOut > 0 && remaining < fadeOut;
+  if (leaving) level = Math.min(level, remaining / fadeOut);
+  return { level: clamp(level, 0, 1), fadeIn, fadeOut, leaving };
 }
 
 function emptyOccupant(): Occupant {

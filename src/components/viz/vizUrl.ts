@@ -96,6 +96,15 @@ const PINNED_PATHS: readonly string[] = [
   // reason the Julia block is: this list is the wire order, and only its end is
   // free.
   "post.pane", "post.paneGrid", "post.paneBreathe", "post.paneRate",
+  // The five effects that keep the drawing legible while they work — the melt,
+  // the colour wake, the caustic net, the lit linework and the slick. Appended
+  // whole rather than filed beside their neighbours above, on the rule this list
+  // states at the top: only the end of it is free.
+  "post.melt", "post.meltLevel", "post.meltAngle",
+  "post.wake", "post.wakeSpread", "post.wakeLead",
+  "post.caustics", "post.causticsScale", "post.causticsSpeed",
+  "post.neon", "post.neonHue", "post.neonSpread", "post.neonWidth",
+  "post.sheen", "post.sheenBands", "post.sheenDrift",
 ];
 
 /**

@@ -770,6 +770,87 @@ export const VIZ_PRESETS: VizPreset[] = [
       },
     },
   },
+  {
+    id: "lucid",
+    name: "Lucid",
+    blurb: "Oil on the page, light moving over it, and every line still where it was drawn.",
+    overrides: {
+      /*
+       * The one preset built around effects that cost the drawing nothing.
+       *
+       * Every other warm mode in the file trades legibility for structure and
+       * tunes the trade: the folds and the fractal reach a depth past which
+       * there is no page left to read, so their psychedelia is held down and
+       * their cycle is slowed to keep the frame from being two schedules at
+       * once. The five effects standing here have no such depth. The slick adds
+       * colour that sums to no light, the caustic net only shades, the wake is
+       * identity wherever the frame is still, the neon draws with the panel's
+       * own linework, and the melt is bounded by the feature it reads. So this
+       * runs warm for `press`'s reason and then further, because unlike the
+       * press these do not merely decline to move the frame — they decline to
+       * cost it anything.
+       */
+      layerCount: 3,
+      layerLifetime: 30,
+      crossfade: 0.5,
+      // Modest, all three. What is worth looking at here is the page and what
+      // is happening to it, and a stack that is already zooming and turning
+      // hard gives the wake a great deal of movement to colour before the
+      // cycler has asked for any.
+      zoomAmount: 1.16,
+      panAmount: 0.09,
+      rotateAmount: 0.025,
+      tintAmount: 0.2,
+      // High. The neon keys off the frame's darkness and the sheen off its
+      // tone, so both of them read a page with a blown corner as a piece about
+      // that corner. Levelling first is what keeps them reading as the drawing.
+      keyBalance: 0.8,
+      psychedelia: 0.55,
+      cycleInterval: 16,
+      post: {
+        // The slick, deepest of the standing set: it is the one that restates
+        // every colour in the frame and the one that cannot cost a value.
+        sheen: 0.55,
+        sheenBands: 3.2,
+        // Slow enough that a band takes the better part of a minute to cross
+        // the greys, which is where §6 asks a standing schedule to sit.
+        sheenDrift: 0.014,
+        caustics: 0.4,
+        causticsScale: 3.2,
+        causticsSpeed: 0.045,
+        // Low, and the lowest of the five deliberately. A lit line is the most
+        // *legible* thing here and therefore the most easily overdone: past
+        // about a third the ink stops reading as ink and the page becomes a
+        // wireframe of itself.
+        neon: 0.3,
+        neonHue: 0.58,
+        neonSpread: 0.35,
+        neonWidth: 1.5,
+        // Standing, and it costs a mip chain of the frame every frame — the
+        // fractal's bill, on a preset that runs no fractal. Worth it here: the
+        // melt is the only one of the five that is a *deformation*, so without
+        // it the mode is five treatments over a frame that is merely drifting,
+        // and the coarse grain makes it two or three slow tongues rather than a
+        // churn.
+        melt: 0.3,
+        meltLevel: 7,
+        // Down the frame.
+        meltAngle: 1.5708,
+        // Standing too, and this one keeps the history ring live — two frames
+        // of VRAM and a blit a frame. It buys the mode's signature: a page
+        // drifting under a fixed camera fringes warm behind and cool ahead
+        // without anything else in the chain having to move.
+        wake: 0.22,
+        wakeSpread: 0.18,
+        // Modest, and under the ceiling the smear works to: the trail is here to
+        // give the wake somewhere to sit rather than to smear on its own.
+        feedbackAmount: 0.35,
+        feedbackScale: 1.004,
+        chroma: 0.1,
+        vignette: 0.38,
+      },
+    },
+  },
   /*
    * Temporarily withheld, as above.
    *
@@ -972,6 +1053,189 @@ export const VIZ_PRESETS: VizPreset[] = [
         // is already darkening the middle of the frame; a strong vignette darkens
         // the outside as well and leaves the whole picture flat and dim.
         vignette: 0.42,
+      },
+    },
+  },
+  {
+    id: "wormhole",
+    name: "Wormhole",
+    blurb: "The same endless tube, with the whole effect pool arriving down it.",
+    overrides: {
+      stageKind: "vault",
+      /*
+       * The vault's corridor run as a piece that keeps changing rather than one
+       * that holds still — the vault with zoink's appetite, on the reading that
+       * those two are not opposites. Zoink's variety is entirely the cycler,
+       * which is a post chain and therefore has no opinion about what is
+       * underneath it; the vault's discipline is entirely the scene and the
+       * handover. So the corridor keeps every rule that makes it a corridor —
+       * one page, one continuous wall, nothing that ever arrives at the lens —
+       * and everything that changes arrives as weather happening *to* the tube.
+       *
+       * The tuning below is that sentence three times over: the stage is the
+       * vault pushed a little further into the flight, the standing post is the
+       * two effects that are themselves corridors, and the ceilings are under
+       * the vault's everywhere the cycler will be adding light.
+       */
+      // Shorter than the vault's eighty seconds, and the cycler is the whole
+      // reason for the difference. There a page change was the only event in the
+      // piece and had to be rare enough to read as one; here something arrives
+      // every fifteen seconds or so, and a wall that outlasts four of those
+      // stops reading as a wall that ever changes at all.
+      layerLifetime: 64,
+      // Still a fifth of the dwell, and still abutting: about thirteen seconds
+      // of dissolve at each end of a tenancy and forty seconds between them with
+      // exactly one page on the tube. The single-page rule is the vault's and
+      // survives here intact — see the note there for why it is not simply 1.
+      crossfade: 0.2,
+      // Zero, for the vault's reason: the alternation only stays exact while
+      // both slots run the same lifetime.
+      layerLifetimeJitter: 0,
+      tintAmount: 0.28,
+      // Higher than the vault's. The cycler's structural effects — the folds,
+      // the orbit trap, the slit — all redraw the frame as a function of what is
+      // bright in it, so a page with one blown corner becomes a piece *about*
+      // that corner for as long as the pulse lasts. Levelling the pages first is
+      // what keeps those effects reading as shapes rather than as a diagram of
+      // the brightest thing on the wall.
+      keyBalance: 0.86,
+      stageScale: 1,
+      // Well under the vault's 0.72, and this is the number that pays for
+      // everything else here. The wall already fills the frame, the cycler puts
+      // bloom, smear and chroma on top of it, and the trail keeps its maximum
+      // rather than decaying toward it. A tube at the vault's brightness with
+      // three effects stacked on it is a white tube.
+      stageOpacity: 0.6,
+      // Held nearer the straight pipe, as the vault holds it, with a little more
+      // swing left over: the cavern end is worth more on this preset, because a
+      // standing mirror and a wrapped trail both read differently against a wall
+      // that is opening out than against one that is parallel.
+      stageMorph: 0.34,
+      stageMorphRate: 0.0028,
+      // Wider than the vault's 74°. How fast the wall foreshortens is the whole
+      // of what says tunnel, and this is the preset that commits to saying it.
+      stageFov: 78,
+      // The wallpaper's wind, unchanged in rate from the vault's: a full wind
+      // and unwind takes about five minutes, which is where a formation's slow
+      // schedules are meant to sit.
+      stageSpin: 0.018,
+      // Up from the vault's 0.8 — a page's height of wall every ten seconds
+      // rather than every fourteen. This is the one knob here that is purely
+      // about the flight feeling like one, and it is the safest thing in the
+      // file to push: the travel is a texture scroll, so it has no acceleration
+      // to be sudden about, and nothing in the scene translates, so a faster
+      // corridor still cannot hand anything past the lens.
+      stageFlight: 1.1,
+      // The corridor breathing, a little deeper than the vault's. Still the only
+      // motion here that moves geometry rather than texture, and still moving
+      // the wall sideways past the eye rather than toward it.
+      stageDisplace: 0.6,
+      stageDisplaceRate: 0.1,
+      // Nothing to place them in, exactly as in the vault: a solid in the middle
+      // distance is something the flight closes on, and this corridor is built
+      // so that nothing ever arrives.
+      stageSolids: 0,
+      /*
+       * The point of the preset.
+       *
+       * Zoink's 0.9 is the reference and this sits just under it, which still
+       * buys the full three overlapping pulses — the count is `1 + round(amount
+       * * 2)`, so anything from 0.75 up is three — while taking something off
+       * every pulse's peak and a little off the rate. That gap is deliberate and
+       * it is the same distinction the scene makes: there is a page on the wall
+       * to be looked at here, where zoink's four screened layers are already a
+       * blur, so the effects are asked to be weather over the corridor rather
+       * than to be the subject.
+       */
+      psychedelia: 0.78,
+      // Between the two parents': a pulse every fifteen seconds or so at this
+      // depth, against zoink's eleven and the vault's twenty-five. With three
+      // slots that is nearly always two things running and often three.
+      cycleInterval: 18,
+      // Zero, which is the default, and worth stating rather than inheriting:
+      // the drift moves the composition's own parameters on a second schedule,
+      // and with the cycler this busy that would be two schedules moving the
+      // frame at once, which is the one combination the pacing rule rules out.
+      wander: 0,
+      post: {
+        /*
+         * The trail read as a corridor rather than as a receding smear — the
+         * cycler's own `corridor` effect, stood up as this preset's resting
+         * state, and the standing choice the theme argues for on its own.
+         *
+         * A scaled trail recedes toward the vanishing point and is gone, which
+         * is a second tunnel running the opposite way to the one the geometry is
+         * flying down. A log-polar one wraps instead, and hands the trail back
+         * in from the outside forever, so the corridor and its own history agree
+         * about which way the frame is going.
+         *
+         * Left under what the cycler can reach, rather than at the 0.6 the
+         * withheld chronoscope stands it at: the pulse only takes the parameter
+         * if it is deeper than what is already there, so standing this high
+         * would quietly delete the corridor effect from the pool this preset
+         * exists to open up. At 0.4 the wrap is the resting state and a pulse
+         * still has somewhere to go.
+         */
+        feedbackDroste: 0.4,
+        // Up from the vault's 0.22, because a wrap with nothing in it is nothing
+        // at all — and still under the 0.7 ceiling the cycler's own corridor
+        // works to, for the vault's reason: the wall fills the frame, so the
+        // trail is a copy of a bright frame, and the path accumulates with
+        // max().
+        feedbackAmount: 0.3,
+        feedbackScale: 1.006,
+        // The stride of the wrap. Shared by design with the frame's own regress,
+        // so a cycled droste landing on top of this one agrees with it about how
+        // far apart the copies sit.
+        drostePeriod: 1.7,
+        drosteInner: 0.08,
+        /*
+         * A standing six-fold mirror, and the one number here chosen against an
+         * engine constant rather than by eye.
+         *
+         * The fold's centre is the frame's centre, which on this scene is the
+         * vanishing point — so the mirror lands on the corridor's own radial
+         * symmetry instead of cutting across it, the way prism's six wedges land
+         * on a six-sided body. The depth is then deliberately above the cycler's
+         * `SEGMENT_CLAIM` of 0.35: below that threshold a kaleido pulse brings
+         * its own wedge count, which is an integer and therefore arrives between
+         * two frames. On a mode with no fold of its own that is invisible, which
+         * is why prism and band can sit under it; on this one, where the mirror
+         * is part of what the tunnel is, it would cut the corridor into a
+         * different number of pieces twice per pulse. Above the threshold a
+         * pulse can only deepen the mirror that is already there.
+         */
+        kaleido: 0.38,
+        kaleidoSegments: 6,
+        // Slow, as everywhere the fold is standing rather than passing through:
+        // the turn is only there to keep the mirror from reading as wallpaper.
+        kaleidoSpin: 0.01,
+        // Standing dispersion, on zoink's reasoning and more so. It refracts
+        // whatever is already bending and does nothing at all otherwise, so it
+        // costs nothing at rest — and on this preset there is nearly always
+        // something bending for it to act on.
+        disperse: 0.2,
+        chroma: 0.34,
+        // A little, standing. Solarisation is the one colour effect in the pool
+        // that takes light *out* of the highlights rather than adding to them,
+        // which on a frame this bright is worth having as a floor rather than
+        // only as occasional punctuation.
+        solarize: 0.1,
+        /*
+         * And `tunnel` left at zero, which is the one omission worth a line.
+         *
+         * The obvious knob for a preset named this is the post chain's own
+         * perspective map, and it is the wrong one to stand up: the corridor
+         * here is geometry, with real depth and real foreshortening, and a
+         * radial reparameterisation on top of it puts a second vanishing point
+         * inside the first, where the sampling flattens and the wall goes to
+         * mush. The cycler still brings it, which is exactly right — a second
+         * tunnel opening inside the first for half a minute is an event, where a
+         * permanent one is a soft grey disc in the middle of every frame.
+         */
+        // Modest, and the vault's, for the vault's reason: the tube's own
+        // grazing falloff is already darkening the middle of the frame.
+        vignette: 0.4,
       },
     },
   },
