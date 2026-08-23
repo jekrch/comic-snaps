@@ -10,10 +10,30 @@ import type { PostParams } from "./types";
  * two overlapping pulses can decide for themselves how they combine — the
  * distortions take the larger of the two, the additive ones accumulate.
  */
+/**
+ * The families a movement can be about — see `CHAPTER_FAVOUR`.
+ *
+ * Deliberately about what an effect *is to look at* rather than about how it is
+ * implemented: the fields sit with the sines under `liquid` because a viewer
+ * reads a reaction-diffusion displacement and a domain warp as the same kind of
+ * event, however little they share in the shader.
+ */
+const FAMILIES = ["geometric", "liquid", "print", "temporal", "light", "colour"] as const;
+type Family = (typeof FAMILIES)[number];
+
 interface PsychEffect {
   id: string;
   /** Relative chance of being drawn. */
   weight: number;
+  /**
+   * Which movement this belongs to, or nothing at all for the two modifiers.
+   *
+   * `keyplate` and `disperse` are untagged on purpose. Neither is a look — each
+   * is a thing done *to* whatever look is running — so a movement about one of
+   * them would be a movement about nothing, and being available at an even
+   * weight in every chapter is exactly right for both.
+   */
+  family?: Family;
   /**
    * Multiplier on this effect's attack and release. The floor in `clampRamp`
    * is a photosensitivity limit and sits well below what reads as calm, so the
@@ -79,6 +99,33 @@ const MAX_CONCURRENT = 3;
 const PARTNER_CHANCE = 0.5;
 
 /**
+ * How long the piece stays interested in one family, in seconds.
+ *
+ * The pool's draw has always been independent: every onset reaches into the
+ * same bag with the same weights, so an hour of run is statistically identical
+ * in its third minute and its fiftieth. That is not the same thing as variety —
+ * it is *uniformity*, which at this length reads as texture, and it is why a
+ * long run has never been able to feel like it was going anywhere.
+ *
+ * A movement is the cheapest possible fix and needs no new effect: hold a
+ * family for a few minutes and weight the draw toward it. What arrives is the
+ * same pool saying one kind of thing for a while — the piece is being a
+ * printing press, then it is being liquid — and because the bias is a tendency
+ * rather than a rule, the exceptions still land and still read as exceptions.
+ *
+ * Three to seven minutes puts eight to twenty chapters in an hour, which is
+ * slower than any other schedule here by a wide margin. It should be: this is
+ * the only one whose subject is the *run* rather than the frame.
+ */
+const CHAPTER_MIN = 170;
+const CHAPTER_MAX = 420;
+/** What being in the current movement is worth, and what being outside it
+ *  costs. Both sides matter: favouring alone would leave the rest of the pool
+ *  arriving at very nearly its old rate, and the chapter would not read. */
+const CHAPTER_FAVOUR = 3;
+const CHAPTER_AGAINST = 0.45;
+
+/**
  * Chance a pulse is a *bed* rather than a gust.
  *
  * The pool has one pacing and it is the same pacing every time: swell over a
@@ -128,11 +175,12 @@ const EFFECTS: PsychEffect[] = [
   // --- geometric ------------------------------------------------------------
   {
     id: "kaleido",
+    family: "geometric",
     weight: 1,
     // A mandala in oil. The fold restates the same wedge several times over, so
     // a treatment that varies with tone rather than with position is the one
     // that gives each copy of it something of its own.
-    partners: ["sheen"],
+    partners: ["sheen", "keyplate"],
     init: (rng) => [rng.pick([4, 5, 6, 8, 10, 12])],
     apply: (post, k, _time, [segments]) => {
       const amount = k * 0.92;
@@ -166,6 +214,10 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "tile",
+    family: "geometric",
+    // The pull-back minifies the whole frame, so the drawing is the first
+    // thing it costs — which is exactly what the hold gives back.
+    partners: ["keyplate"],
     weight: 0.6,
     init: (rng) => [rng.range(0.3, 0.85)],
     apply: (post, k, _time, [depth]) => {
@@ -175,6 +227,8 @@ const EFFECTS: PsychEffect[] = [
   {
     // The kaleidoscope compounded: four mirrors at four scales rather than one.
     id: "fold",
+    family: "geometric",
+    partners: ["keyplate"],
     weight: 0.7,
     ramp: 2,
     init: (rng) => [
@@ -199,6 +253,8 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "lattice",
+    family: "geometric",
+    partners: ["keyplate"],
     weight: 0.55,
     ramp: 2,
     init: (rng) => [rng.range(2, 5.5), rng.range(0.6, 0.9)],
@@ -215,11 +271,12 @@ const EFFECTS: PsychEffect[] = [
   // viewer rather than the picture.
   {
     id: "droste",
+    family: "geometric",
     weight: 0.5,
     // Travel, and the colour that travel makes. The regress is the strongest
     // sense of movement in the pool and the wake draws entirely on movement, so
     // between them the corridor arrives already coloured by its own flight.
-    partners: ["wake"],
+    partners: ["wake", "keyplate"],
     ramp: 2.5,
     exclusive: "reparam",
     init: (rng) => [
@@ -243,8 +300,9 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "tunnel",
+    family: "geometric",
     weight: 0.4,
-    partners: ["wake"],
+    partners: ["wake", "keyplate"],
     ramp: 2.5,
     exclusive: "reparam",
     init: (rng) => [
@@ -268,6 +326,8 @@ const EFFECTS: PsychEffect[] = [
     // filigree end — a pulse is a visit, and a visit wants the legible member of
     // the family, not the one that takes the whole ramp to resolve.
     id: "julia",
+    family: "geometric",
+    partners: ["keyplate"],
     weight: 0.35,
     ramp: 3,
     exclusive: "reparam",
@@ -301,9 +361,124 @@ const EFFECTS: PsychEffect[] = [
       post.juliaBind = Math.max(post.juliaBind, 0.5);
     },
   },
+  {
+    /*
+     * The page dealt out — the frame cut into panels, each moving as a rigid
+     * body.
+     *
+     * The other way to survive a violent map, and the opposite trade to the
+     * Mobius below it. That one keeps every neighbourhood looking like itself
+     * while the whole plane bends; this gives up the plane entirely and buys
+     * something stronger in exchange — inside a panel the Jacobian is exactly
+     * the identity, so the art is the page at native size however far the deal
+     * has thrown it. It is the only entry in this pool with no legibility
+     * ceiling at all, which is why it may be drawn to full depth.
+     *
+     * A pulse is the whole gesture, and it needs no rate to be one: both the
+     * slide and the turn scale with the envelope, so the page separates into
+     * panels, drifts, and closes back up over the pulse's own life.
+     */
+    id: "deck",
+    family: "geometric",
+    weight: 0.5,
+    // Long, and for the reason the fold's is: the depth is integral, so it can
+    // only be introduced while the amount is near zero, and a slow arrival is
+    // what guarantees there is nothing on screen yet to be seen changing.
+    ramp: 2,
+    partners: ["disperse", "misregister", "wake"],
+    init: (rng) => [
+      /*
+       * Four to sixteen panels, weighted toward the large end.
+       *
+       * The split is uneven by construction, so what matters is the *smallest*
+       * panel a deal can produce, and that was measured rather than guessed:
+       * across layouts, four panels puts the smallest at about 15% of the frame
+       * by area, eight at 7%, and sixteen at 2.3%. The first two are large
+       * crops by any reading. The last is where a deal starts to become a field
+       * of small pieces, which is the one thing the panel-scale rule forbids —
+       * so it is drawn one time in five rather than removed, because at a
+       * shallow spread sixteen sharp rectangles of one page is still a page.
+       */
+      rng.pick([2, 2, 3, 3, 4]),
+      rng.range(0.03, 0.16),
+      // Sometimes none at all. A deal that only slides reads as a page coming
+      // apart along its own gutters, which is the cleaner of the two readings
+      // and worth having on its own.
+      rng.bool(0.65) ? rng.range(0.05, 0.3) : 0,
+      rng.range(0, 1),
+      rng.range(0.6, 1),
+    ],
+    apply: (post, k, _time, [depth, spread, turn, seed, peak]) => {
+      const amount = k * peak;
+      // Read before it is replaced, on the kaleidoscope's reasoning: what
+      // decides whether the layout may be re-cut is the *incumbent* deal, not
+      // the one this pulse is about to install.
+      const incumbent = post.deck;
+      if (amount <= incumbent) return;
+      post.deck = amount;
+      post.deckSpread = spread;
+      post.deckTurn = turn;
+      // The layout belongs to whichever pulse introduced the deal. A second one
+      // deepening a deal already on screen must not re-cut the page underneath
+      // it: the depth is integral and the split fractions are a hash, so both
+      // arrive between two frames, and a page that changes its own panel edges
+      // mid-pulse is the worst discontinuity this effect can produce.
+      if (incumbent <= 0) {
+        post.deckDepth = depth;
+        post.deckSeed = seed;
+      }
+    },
+  },
+  {
+    /*
+     * The Mobius slide: the picture translated inside a disc that contains it,
+     * with the rim pinned.
+     *
+     * The third reparameterisation and the only untagged one, because unlike the
+     * pair above it does not redefine what the frame's radius means — it moves
+     * the picture *sideways*, in a geometry where sideways decays toward the
+     * edge. That makes it the one map here that composes with the other two
+     * rather than arguing with them, and a regress being slid around inside its
+     * own disc is the best thing either of them does.
+     *
+     * It is also the only map in this pool that is conformal over the whole
+     * frame with a Jacobian bounded in closed form, which is why it can be drawn
+     * this deep: angles are preserved everywhere, so the picture can be pushed
+     * a long way and every neighbourhood in it still looks like itself.
+     */
+    id: "mobius",
+    family: "geometric",
+    weight: 0.55,
+    // The reparameterisations' ramp. It moves the frame bodily rather than
+    // deforming it in place, and half a frame of travel arriving in four
+    // seconds is the velocity step §6 forbids.
+    ramp: 2.5,
+    partners: ["droste", "keyplate", "disperse"],
+    init: (rng) => [
+      // Up to the ceiling the Jacobian bound sets, and no further: past about
+      // 0.43 the corner of the frame leaves the readable band. See MOBIUS_FIT.
+      rng.range(0.14, 0.38),
+      // Either direction, and a circuit taking between two and seven minutes —
+      // the slowest schedule in the pool, which suits the largest motion in it.
+      (rng.bool() ? 1 : -1) * rng.range(0.015, 0.05),
+      rng.range(0.55, 0.9),
+    ],
+    apply: (post, k, _time, [shift, rate, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.mobius) return;
+      post.mobius = amount;
+      post.mobiusShift = shift;
+      // At full rate from the first frame, on the spins' reasoning: the heading
+      // is invisible while the slide is near zero, and by the time it can be
+      // seen the circulation should already be turning rather than accelerating
+      // out of rest.
+      post.mobiusRate = rate;
+    },
+  },
   // --- undulating -----------------------------------------------------------
   {
     id: "warp",
+    family: "liquid",
     // Dispersion has nothing to act on by itself and everything to add to a
     // frame that is already bending — see its own entry.
     partners: ["disperse"],
@@ -319,9 +494,12 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "ripple",
+    family: "liquid",
     // Dispersion has nothing to act on by itself and everything to add to a
     // frame that is already bending — see its own entry.
     partners: ["disperse"],
+    // See the pond below, which is this effect with its centre taken away.
+    exclusive: "rings",
     weight: 0.9,
     init: (rng) => [rng.range(8, 40)],
     apply: (post, k, _time, [freq]) => {
@@ -332,7 +510,124 @@ const EFFECTS: PsychEffect[] = [
     },
   },
   {
+    /*
+     * The pond: the same rings, from up to four places that are not the middle
+     * of the frame — and half the time not standing waves at all but drops
+     * landing, spreading and dying.
+     *
+     * The ripple above has one thing wrong with it and this is the whole of what
+     * this entry is about: it is centred. A frame rippling out of its own middle
+     * announces where the middle is, and once the eye has found it there is
+     * nothing further to look at — every pulse of it is the same pulse at a
+     * different spacing. Taking the centre away turns one figure into an
+     * arrangement, and an arrangement can be redrawn: the places, the spacings,
+     * the headings, the reaches and the lifetimes all come out of one hashed
+     * seed, so no two pulses of this are the same effect twice.
+     *
+     * It is also the only displacement in the pool that does not act on the
+     * whole frame. Everything else here — the warp, the lattice, the fBm, the
+     * melt — is a field defined everywhere, so what it produces is a treatment;
+     * this produces *events*, in a few places, with picture left plain around
+     * them, which is a thing the chain could not previously say at all.
+     */
+    id: "pond",
+    family: "liquid",
+    // Dispersion has nothing to act on by itself and everything to add to a
+    // frame that is already bending — see its own entry. The key plate is the
+    // other half of the same argument: the pools are local, so holding the ink
+    // near its own place leaves the drawing legible exactly where the rings are
+    // pushing hardest.
+    partners: ["disperse", "keyplate"],
+    // Two ring systems of the same kind at once is not twice the effect. The
+    // centred one is a frame breathing and this is something happening in it,
+    // and run together the two readings cancel into a shimmer that is neither —
+    // which is the case `exclusive` is for.
+    exclusive: "rings",
+    weight: 0.85,
+    ramp: 1.3,
+    init: (rng) => {
+      // A single source is the one draw that reads as a place rather than as a
+      // pattern, and it earns a wider pool for it: at four, what the eye is
+      // reading is the interference, and four large ones overlap into a boil.
+      const sources = rng.pick([1, 2, 2, 3, 3, 4]);
+      const reach = rng.range(0.18, 0.55) * (sources === 1 ? 1.5 : 1);
+      return [
+        /*
+         * Rings per pool, converted — never a spacing drawn on its own.
+         *
+         * What reads as rings is a fraction of the *pool*, so a spacing that
+         * gives a wide one three of them gives a narrow one a single swell, and
+         * the two would be different effects sharing an entry. Drawing the
+         * count and dividing puts every pond in the pool on the same footing
+         * whatever reach it got. Bounded at both ends: under about eight radians
+         * a unit the swell outgrows its own pool, and over ninety the rings are
+         * finer than the drawing they are bending.
+         */
+        clamp((Math.PI * 2 * rng.range(1.6, 3.6)) / reach, 8, 90),
+        sources,
+        reach,
+        /*
+         * Either rain or a pond, rarely the middle of the two.
+         *
+         * The parameter is continuous and every value of it is legible, but the
+         * two ends are different *events* — a surface standing and breathing,
+         * against drops arriving on it — and a pool of pulses drawn uniformly
+         * across the range would deliver the mixture almost every time and
+         * neither reading ever cleanly.
+         */
+        rng.bool(0.55) ? rng.range(0.75, 1) : rng.range(0, 0.3),
+        // A third of them are whirlpools instead. Kept a minority: turned fully
+        // sideways the rings stop reading as water and start reading as the
+        // page being wrung out, which is worth arriving occasionally and not
+        // as the effect's usual face.
+        rng.bool(0.34) ? rng.range(0.45, 1) : 0,
+        /*
+         * Ring travel, capped where it is because of what the rate *costs*
+         * here rather than what it looks like: the displacement's velocity is
+         * its amplitude times this, and the amplitude is already at the slope
+         * budget. Measured over the draws this init makes, the top of this
+         * range puts the pond's fastest pixel just under the centred ripple's
+         * — which is the right place for it, since the two are the same
+         * gesture and only one of them is allowed to be the loud one.
+         */
+        rng.range(0.12, 0.3),
+        rng.range(0, 1),
+        rng.range(0.6, 0.95),
+      ];
+    },
+    apply: (post, k, _time, [freq, sources, reach, burst, swirl, rate, seed, peak]) => {
+      const amount = k * peak;
+      // Read before it is replaced — the kaleidoscope's and the deck's
+      // reasoning, and for once it covers the whole character rather than only
+      // the integral part of it.
+      const incumbent = post.pond;
+      if (amount <= incumbent) return;
+      post.pond = amount;
+      /*
+       * The arrangement belongs to whichever pulse introduced the pond, and a
+       * second one deepening a pond already on screen takes only its depth.
+       *
+       * Stricter than the deck, which lets its spread and its turn move under a
+       * deeper deal, and deliberately: every number below decides *where the
+       * rings are*, not merely how far they push. A source that moved, a
+       * spacing that changed or a drop that restarted its life between two
+       * frames is a cut in the middle of a swell, and there is no ramp
+       * anywhere that can cover it.
+       */
+      if (incumbent <= 0) {
+        post.pondFreq = freq;
+        post.pondSources = sources;
+        post.pondReach = reach;
+        post.pondBurst = burst;
+        post.pondSwirl = swirl;
+        post.pondRate = rate;
+        post.pondSeed = seed;
+      }
+    },
+  },
+  {
     id: "twist",
+    family: "liquid",
     weight: 0.8,
     init: (rng) => [rng.bool() ? 1 : -1, rng.range(0.03, 0.11)],
     apply: (post, k, time, [direction, rate]) => {
@@ -344,6 +639,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "bulge",
+    family: "liquid",
     weight: 0.7,
     init: (rng) => [rng.range(0.04, 0.12), rng.range(0, Math.PI * 2)],
     apply: (post, k, time, [rate, phase]) => {
@@ -352,6 +648,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "quasi",
+    family: "liquid",
     // Dispersion has nothing to act on by itself and everything to add to a
     // frame that is already bending — see its own entry.
     partners: ["disperse"],
@@ -367,9 +664,10 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "turbulence",
+    family: "liquid",
     // Dispersion has nothing to act on by itself and everything to add to a
     // frame that is already bending — see its own entry.
-    partners: ["disperse"],
+    partners: ["disperse", "keyplate"],
     weight: 0.6,
     ramp: 1.5,
     init: (rng) => [rng.range(1.4, 4), rng.range(0.06, 0.18), rng.range(0.45, 0.8)],
@@ -396,13 +694,14 @@ const EFFECTS: PsychEffect[] = [
      * the group despite being the youngest entry in it.
      */
     id: "melt",
+    family: "liquid",
     weight: 0.65,
     // Long. It moves the frame bodily rather than deforming it in place, which
     // is the reparameterisations' argument for their ramps, and it is reading a
     // field that changes only when the panel does — so an arrival that outruns
     // the page it is reading has nothing to be about.
     ramp: 2,
-    partners: ["sheen", "caustics"],
+    partners: ["sheen", "caustics", "keyplate"],
     init: (rng) => [
       // Down the frame four times in five, because that is the one everybody
       // means by melting and the only heading that reads as weight rather than
@@ -435,6 +734,7 @@ const EFFECTS: PsychEffect[] = [
   // would arrive before there was anything in the field to see.
   {
     id: "flow",
+    family: "liquid",
     weight: 0.45,
     ramp: 2.5,
     init: (rng) => [rng.range(1.6, 4.2), rng.range(0.955, 0.988), rng.range(0.5, 0.85)],
@@ -448,6 +748,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "react",
+    family: "liquid",
     weight: 0.4,
     ramp: 2.5,
     init: (rng) => [
@@ -472,6 +773,7 @@ const EFFECTS: PsychEffect[] = [
     // The loudest structural effect in the pool: the frame stops being a picture
     // and becomes a cut through the run. Hence the longest ramp of anything here.
     id: "slit-scan",
+    family: "temporal",
     weight: 0.35,
     ramp: 3,
     // Shares the ring with the wake, and shares its subject: both are the frame
@@ -514,6 +816,7 @@ const EFFECTS: PsychEffect[] = [
      * time-and-optics entries.
      */
     id: "wake",
+    family: "temporal",
     weight: 0.7,
     ramp: 2,
     exclusive: "time",
@@ -541,6 +844,7 @@ const EFFECTS: PsychEffect[] = [
   // without competing with whatever else is deforming the picture.
   {
     id: "misregister",
+    family: "print",
     weight: 0.6,
     ramp: 1.5,
     init: (rng) => [rng.range(0.003, 0.014), rng.range(0.55, 0.95)],
@@ -553,6 +857,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "moire",
+    family: "print",
     weight: 0.5,
     ramp: 2,
     init: (rng) => [rng.range(0.03, 0.17), rng.range(0.7, 1.7), rng.range(0.6, 0.95)],
@@ -573,6 +878,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "benday",
+    family: "print",
     weight: 0.45,
     ramp: 1.5,
     init: (rng) => [rng.range(0.5, 1), rng.range(0.8, 1.8)],
@@ -588,7 +894,39 @@ const EFFECTS: PsychEffect[] = [
     },
   },
   {
+    /*
+     * Contour lines through the tones — the page as a topographic map.
+     *
+     * Filed with the press rather than with the colour work, because that is
+     * what it is: ink laid on the page in lines, at a plate-maker's idea of
+     * where the tones divide. It is also the only effect in the pool that
+     * *adds* structure — every other entry here takes some away or moves it
+     * about — which is why it holds up over the wildest maps: whatever the
+     * geometry has done, the contours describe the result of it.
+     */
+    id: "contour",
+    family: "print",
+    weight: 0.45,
+    ramp: 1.5,
+    partners: ["posterize", "relief", "keyplate"],
+    init: (rng) => [
+      // Four broad rings to twelve. The ceiling is where it is because the
+      // inked fraction of the frame was measured across it: twelve bands put
+      // ink on a quarter of the page, and past that the lines are closer than
+      // the tone can separate them and the map becomes a crosshatch.
+      rng.range(4, 12),
+      rng.range(0.4, 0.8),
+    ],
+    apply: (post, k, _time, [bands, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.contour) return;
+      post.contour = amount;
+      post.contourBands = bands;
+    },
+  },
+  {
     id: "krackle",
+    family: "print",
     weight: 0.45,
     // Both are the page's own drawing turned into light — one out of its
     // highlights, one out of its lines.
@@ -607,6 +945,7 @@ const EFFECTS: PsychEffect[] = [
     // Bleed and stock together: they are one idea — the paper taking the ink
     // badly — and separating them would spend two slots on half of it each.
     id: "newsprint",
+    family: "print",
     weight: 0.4,
     ramp: 2,
     init: (rng) => [rng.range(0.8, 3), rng.range(0.4, 0.8), rng.range(0.35, 0.75)],
@@ -622,6 +961,46 @@ const EFFECTS: PsychEffect[] = [
 
   // --- optics ---------------------------------------------------------------
   {
+    /*
+     * The key plate held while the colour plates go — the second modifier in
+     * this pool, and the one with the largest effect on everything else in it.
+     *
+     * It adds no look. What it does is move the wall every map here runs into:
+     * a fold, a regress or an orbit trap is held to the depth at which the
+     * linework survives, and under this the linework is no longer what is being
+     * folded. So the entry that matters is not this one on its own — which at a
+     * flat frame is exactly nothing — but the partner links pointing *at* it
+     * from every map in the pool that has ever had to be held back.
+     *
+     * Additive, on dispersion's reasoning: two things asking for the drawing to
+     * be held should hold it further rather than argue about how far.
+     */
+    id: "keyplate",
+    // Low as a standalone draw and high as a companion. Drawn on its own it
+    // will usually land on a frame that is barely bending and do nothing
+    // visible, which is a wasted pulse rather than a wrong one.
+    weight: 0.35,
+    ramp: 2,
+    partners: ["droste", "julia", "fold", "melt"],
+    init: (rng) => [
+      // Two and a half to five: from holding only the finest hatching back to
+      // holding most of the drawing. The high end is the one that reads as the
+      // page being pulled away from its own outlines.
+      rng.range(2.5, 5),
+      rng.range(0.3, 0.62),
+    ],
+    apply: (post, k, _time, [level, depth]) => {
+      // The level belongs to whichever pulse introduced the hold, on the moire's
+      // reasoning: a second one deepening it has no business restating where the
+      // drawing ends.
+      if (post.keyplate <= 0) post.keyplateLevel = level;
+      // Under the field's own ceiling. Past about two-thirds the map has been
+      // reduced to a colour field behind a nearly still drawing, which is a
+      // different effect and a much duller one.
+      post.keyplate = Math.min(0.68, post.keyplate + k * depth);
+    },
+  },
+  {
     // Additive, and deliberately so: dispersion has nothing to act on by
     // itself, so it is at its best stacked onto whatever warp is already
     // running rather than competing for a slot with it.
@@ -634,6 +1013,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "blur",
+    family: "light",
     weight: 0.5,
     ramp: 1.5,
     init: (rng) => [rng.range(0.2, 0.5), rng.range(0, 1)],
@@ -650,6 +1030,7 @@ const EFFECTS: PsychEffect[] = [
     // of. That is the property that lets this exist beside a max() feedback path
     // at all — see PostParams.bloom.
     id: "bloom",
+    family: "light",
     weight: 0.5,
     ramp: 2,
     init: (rng) => [rng.range(0.5, 0.85), rng.range(0.012, 0.042), rng.range(0.3, 0.6)],
@@ -659,6 +1040,46 @@ const EFFECTS: PsychEffect[] = [
       post.bloom = amount;
       post.bloomThreshold = knee;
       post.bloomRadius = radius;
+    },
+  },
+  {
+    /*
+     * The page lit as terrain: its tone read as height, with the light orbiting.
+     *
+     * The lighting family's third member, and the one that makes the page a
+     * *surface* rather than an image with things happening to it. It also has
+     * the most to gain from company: relief over a fold gives the rosette
+     * modelling, relief under caustics is a lit landscape with water over it,
+     * and relief beside the melt is the same height field driving the shading
+     * and the flow at once — which is the closest this engine comes to the page
+     * being a physical thing.
+     *
+     * Shading only, so like the caustics and the sheen it has no legibility
+     * ceiling: nothing here moves a sample.
+     */
+    id: "relief",
+    family: "light",
+    weight: 0.6,
+    ramp: 2,
+    partners: ["caustics", "melt", "contour"],
+    init: (rng) => [
+      // Fine crumpled foil at the low end, a few broad hills at the high. The
+      // slope is measured per texel of whichever level this picks, so both ends
+      // look equally carved and this is a choice of scale alone.
+      rng.range(3.5, 6.5),
+      // Either direction, a circuit in one to four minutes. The light is the
+      // only thing moving in this effect, so it carries the whole of its pace.
+      (rng.bool() ? 1 : -1) * rng.range(0.025, 0.1),
+      rng.range(0.45, 0.85),
+    ],
+    apply: (post, k, _time, [level, rate, peak]) => {
+      const amount = k * peak;
+      if (amount <= post.relief) return;
+      post.relief = amount;
+      post.reliefLevel = level;
+      // At full rate from the first frame, on the spins' reasoning: by the time
+      // the shading can be seen the light should already be moving.
+      post.reliefRate = rate;
     },
   },
   {
@@ -678,6 +1099,7 @@ const EFFECTS: PsychEffect[] = [
      * the light merely travels over it.
      */
     id: "caustics",
+    family: "light",
     weight: 0.6,
     ramp: 2,
     partners: ["neon", "sheen"],
@@ -699,6 +1121,7 @@ const EFFECTS: PsychEffect[] = [
   // --- surreal --------------------------------------------------------------
   {
     id: "solarize",
+    family: "colour",
     weight: 0.7,
     init: (rng) => [rng.range(0.5, 0.9)],
     apply: (post, k, _time, [peak]) => {
@@ -716,6 +1139,7 @@ const EFFECTS: PsychEffect[] = [
      * folds and the fractal draw the same figure whatever page is under them.
      */
     id: "neon",
+    family: "light",
     weight: 0.6,
     ramp: 1.5,
     partners: ["caustics", "bloom"],
@@ -755,6 +1179,7 @@ const EFFECTS: PsychEffect[] = [
      * colour entries added with it.
      */
     id: "sheen",
+    family: "colour",
     weight: 0.75,
     ramp: 1.5,
     partners: ["melt", "wake", "caustics"],
@@ -776,6 +1201,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "hue-sweep",
+    family: "colour",
     weight: 0.9,
     init: (rng) => [rng.bool() ? 1 : -1, rng.range(0.02, 0.07)],
     apply: (post, k, time, [direction, rate]) => {
@@ -784,6 +1210,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "chroma-bloom",
+    family: "colour",
     weight: 0.7,
     init: (rng) => [rng.range(0.4, 0.9)],
     apply: (post, k, _time, [depth]) => {
@@ -792,6 +1219,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "posterize",
+    family: "colour",
     weight: 0.6,
     init: (rng) => [rng.range(0.35, 0.85)],
     apply: (post, k, _time, [depth]) => {
@@ -800,6 +1228,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "halftone",
+    family: "print",
     // The lowest weight in the pool, and lower than the two effects that bring
     // a screen in as a side effect: a bare dot screen restates every tone in
     // the frame and says nothing the moire and the benday do not say with
@@ -815,6 +1244,7 @@ const EFFECTS: PsychEffect[] = [
   },
   {
     id: "smear",
+    family: "temporal",
     weight: 0.8,
     exclusive: "trail",
     // The trail holds where the frame has been and the wake colours it by how
@@ -839,6 +1269,7 @@ const EFFECTS: PsychEffect[] = [
     // running them together is one trail being asked to recede and to come back
     // at the same time.
     id: "corridor",
+    family: "temporal",
     weight: 0.4,
     ramp: 2.5,
     exclusive: "trail",
@@ -943,6 +1374,9 @@ export class EffectCycler {
   private stream: Rng | null = null;
   private readonly active: Pulse[] = [];
   private nextOnset = -1;
+  /** The movement the piece is currently in, and when it gives it up. */
+  private chapter: Family | null = null;
+  private chapterEnds = 0;
   /** A pulse asked for out of turn — see `cue`. */
   private cued = false;
 
@@ -1026,6 +1460,30 @@ export class EffectCycler {
     this.active.length = 0;
     this.nextOnset = -1;
     this.cued = false;
+    this.chapter = null;
+    this.chapterEnds = 0;
+  }
+
+  /**
+   * The family the draw is currently favouring, rolled over when its time is up.
+   *
+   * Called from `begin` rather than from `apply`, which keeps the promise the
+   * class makes about its stream: a preset at psychedelia 0 schedules nothing,
+   * so it reaches neither this nor the fork behind it, and replays exactly as it
+   * did before movements existed.
+   *
+   * Never twice in a row. A chapter that renewed itself would be a chapter
+   * nobody could see the end of, and the whole value here is that the piece
+   * audibly changes its mind every few minutes.
+   */
+  private movement(time: number): Family {
+    if (this.chapter === null || time >= this.chapterEnds) {
+      const rng = this.rng;
+      const previous = this.chapter;
+      this.chapter = rng.pick(FAMILIES.filter((family) => family !== previous));
+      this.chapterEnds = time + rng.range(CHAPTER_MIN, CHAPTER_MAX);
+    }
+    return this.chapter;
   }
 
   private get rng(): Rng {
@@ -1079,8 +1537,13 @@ export class EffectCycler {
 
   private begin(time: number, amount: number, tempo?: TempoLock): void {
     const rng = this.rng;
+    const chapter = this.movement(time);
     const effect = rng.weightedIndex(
-      EFFECTS.map((entry, index) => (this.available(index) ? entry.weight : 0))
+      EFFECTS.map((entry, index) => {
+        if (!this.available(index)) return 0;
+        if (!entry.family) return entry.weight;
+        return entry.weight * (entry.family === chapter ? CHAPTER_FAVOUR : CHAPTER_AGAINST);
+      })
     );
 
     /*
@@ -1096,6 +1559,12 @@ export class EffectCycler {
      * The chance grows with psychedelia rather than being flat. A pair is the
      * pool speaking in a compound sentence, and a preset that asked for one
      * effect at a time is asking for simple ones.
+     *
+     * The movement is deliberately not consulted here. A companion is chosen for
+     * what it composes with, which is a fact about the pair and not about what
+     * the piece happens to be interested in this minute — and a chapter that
+     * also filtered the companions would quietly suppress precisely the
+     * cross-family pairings that are the most surprising thing in the pool.
      */
     let partner = -1;
     const options = EFFECTS[effect].partners;

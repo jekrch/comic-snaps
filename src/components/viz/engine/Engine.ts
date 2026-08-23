@@ -267,6 +267,25 @@ export class VizEngine {
     return this.director.nextPick();
   }
 
+  /**
+   * Cross the frame over onto one panel without locking the run to it — what a
+   * step back does on a free-running composition. See `Director.turnTo`.
+   */
+  turnTo(panel: Panel): void {
+    this.director.turnTo(panel);
+    // Same reason as `setFocus`: a once-a-second cast sample is far too slow to
+    // be the credit line's answer to a keypress.
+    this.nextFeatureCheck = 0;
+  }
+
+  /** A step forward on a free-running composition: cross to the run's own next
+   *  choice. See `Director.stepForward`. */
+  stepForward(): Panel | null {
+    const panel = this.director.stepForward();
+    if (panel) this.nextFeatureCheck = 0;
+    return panel;
+  }
+
   /** Attach the run to a listener, or detach it. Re-attached after every
    *  rebuild, since the reactor outlives this object. */
   setAudioReactor(reactor: AudioReactor | null): void {

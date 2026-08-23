@@ -76,6 +76,7 @@ const REACH_LABELS: Record<string, string> = {
   bulge: "bulge",
   twist: "twist",
   ripple: "ripple",
+  pond: "pond",
   warp: "warp",
   kaleido: "kaleido",
   disperse: "disperse",

@@ -1100,7 +1100,25 @@ const CHROMA_TIDE = 0.5;
 const HUE_BEAT = 0.004;
 /** Turns of hue per bar. Over a few minutes this is the colour of the piece
  *  walking with the music, not a light show. */
-const HUE_PER_BAR = 0.016;
+export const HUE_PER_BAR = 0.005;
+/**
+ * How far that walk may get from the page's own hue, in turns.
+ *
+ * The walk used to be unbounded — one direction, wrapped at a turn — which over
+ * a track is not a walk but a circuit: at the old rate a bar every two seconds
+ * carried the colour a full rotation every two minutes, and measured over two
+ * hours it put the median frame 90° away from the printed colour with the piece
+ * never once passing back through it. That is a light show with a long period,
+ * and it is the largest single reason the visualiser did not look like the art.
+ *
+ * So it turns round at the ends instead. What the music gets is the same slow
+ * walk, over a range a tenth of a turn either side, that keeps coming back
+ * through the page's own colour — about a minute out and back at an ordinary
+ * tempo, which is a phrase or two and reads as the piece thinking about a
+ * colour rather than leaving for one. `colorFidelity` scales what survives of
+ * it downstream; this is the shape of the thing, not its depth.
+ */
+export const HUE_RANGE = 0.1;
 
 /**
  * What each of the three hits is worth, and where it goes.
@@ -1884,6 +1902,8 @@ export class AudioBinding {
   /** The luminance-affecting drive, after the governor's rate limit. */
   private luma = 0;
   private hue = 0;
+  /** Which way the bar walk is currently carrying it — see `HUE_RANGE`. */
+  private hueDirection = 1;
   private lastBar = -1;
   /** How far the print family may be lifted from zero, 0..1. */
   private lift = 0;
@@ -3116,7 +3136,13 @@ export class AudioBinding {
         // Weighted by how much the grid is believed, so an uncertain lock walks
         // the colour slowly rather than stepping it on a beat that may not be
         // there.
-        this.hue = wrap01(this.hue + HUE_PER_BAR * frame.confidence * depth);
+        this.hue += HUE_PER_BAR * frame.confidence * depth * this.hueDirection;
+        // Turned at the ends rather than wrapped, so the colour this walk keeps
+        // returning through is the page's own — see `HUE_RANGE`.
+        if (Math.abs(this.hue) >= HUE_RANGE) {
+          this.hue = Math.sign(this.hue) * HUE_RANGE;
+          this.hueDirection = -this.hueDirection;
+        }
         this.lastBar = bar;
       }
     }
@@ -3256,6 +3282,7 @@ export class AudioBinding {
     post.bulge *= geometry;
     post.twist *= geometry;
     post.ripple *= geometry;
+    post.pond *= geometry;
     post.warp *= geometry;
     post.disperse *= geometry;
 
@@ -3361,6 +3388,9 @@ export class AudioBinding {
     this.onsetAverage = 0;
     this.accentFlash = false;
     this.luma = 0;
+    // Back to the page's own colour, which is where a run starts.
+    this.hue = 0;
+    this.hueDirection = 1;
     this.lastBar = -1;
     this.lift = 0;
   }

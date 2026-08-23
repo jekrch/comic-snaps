@@ -104,7 +104,23 @@ const PINNED_PATHS: readonly string[] = [
   "post.wake", "post.wakeSpread", "post.wakeLead",
   "post.caustics", "post.causticsScale", "post.causticsSpeed",
   "post.neon", "post.neonHue", "post.neonSpread", "post.neonWidth",
+  // The modifier that raises the ceiling on every map above it. Appended last,
+  // as everything here must be.
+  "post.keyplate", "post.keyplateLevel",
+  // The disc slide. Same rule: the end of the list is the only free part of it.
+  "post.mobius", "post.mobiusShift", "post.mobiusRate",
+  // The deal.
+  "post.deck", "post.deckDepth", "post.deckSpread", "post.deckTurn", "post.deckSeed",
+  // The lighting pair.
+  "post.relief", "post.reliefLevel", "post.reliefRate", "post.contour", "post.contourBands",
   "post.sheen", "post.sheenBands", "post.sheenDrift",
+  // The pond — the uncentred ripple. Eight fields, appended whole, on the rule
+  // stated at the top: only the end of this list is free.
+  "post.pond", "post.pondFreq", "post.pondSources", "post.pondReach", "post.pondBurst",
+  "post.pondSwirl", "post.pondRate", "post.pondSeed",
+  // The guard against a colour-out. Same rule: the end of this list is the only
+  // free part of it.
+  "colorFidelity",
 ];
 
 /**

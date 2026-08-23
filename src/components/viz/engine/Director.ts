@@ -9,6 +9,7 @@ import { SafetyGovernor } from "./safety";
 import { Stage, stageResidency } from "./Stage";
 import { Wander } from "./Wander";
 import { JULIA_WRAP, juliaEfoldsPerTurn } from "./julia";
+import { POND_CYCLE } from "./shaders/post";
 import type {
   DrawShard,
   PostParams,
@@ -21,7 +22,7 @@ import type {
 import { resolveShard, shardEnd } from "./types";
 import { CAST_FLOOR, rankCast } from "./cast";
 import { chromaticDominant, complement, labToRgb, normalizeTint } from "./palette";
-import type { Rgb } from "./palette";
+import type { Lab, Rgb } from "./palette";
 import { driftStack } from "./scenes/driftStack";
 import type { Affinity, Scene } from "./scenes/types";
 import type { AudioFrame } from "./AudioReactor";
@@ -38,7 +39,53 @@ interface Pick {
 /** Incommensurate rates, so the modulations never visibly re-align. */
 const TAU = Math.PI * 2;
 
-const LFO_HZ = [0.037, 0.0611, 0.0893, 0.1307];
+export const LFO_HZ = [0.037, 0.0611, 0.0893, 0.1307];
+
+/**
+ * The hue excursion — how far the frame's colour may travel from the page's,
+ * in turns, before `colorFidelity` scales it down.
+ *
+ * This used to be a flat `lfo(time, 0) * 0.12` added to `hueShift` on every
+ * frame of every preset, and it is the reason the piece never looked like the
+ * artwork. A sine spends very little of its life near zero: measured over two
+ * hours with nothing else running, that term alone put the median frame 31°
+ * from the printed colour and only a sixth of the run inside 12° of it. The
+ * frame's resting state *was* a rotation, so nothing could read as a departure
+ * from anything.
+ *
+ * So the swing is windowed rather than shrunk. Its amplitude is gated by a much
+ * slower oscillation which is shut most of the time, and what comes out is a
+ * frame that states the page's own colour, drifts off it for a while every
+ * couple of minutes, and comes back. Same gesture, made an event.
+ */
+export const HUE_SWING = 0.12;
+/** Rate of the window that gates it — a little over two minutes a cycle. */
+export const HUE_WINDOW_HZ = 0.0075;
+/**
+ * How far up the window's own sine the gate sits. At 0.7 it is open for under a
+ * quarter of each cycle and at full width for none of it, so an excursion is a
+ * slow arrival and departure rather than a state the piece switches into.
+ */
+export const HUE_WINDOW_GATE = 0.7;
+
+/**
+ * Chroma either side of which a page counts as grey or as coloured, in Lab
+ * units — the window the complement tint is faded across.
+ *
+ * The tint exists so that overlapping layers go chromatic instead of settling
+ * into grey, and against a monochrome page it is the only chroma in the frame.
+ * Against a printed comic it is the opposite: the page arrives with more colour
+ * than the tint could give it, and all the complement does there is argue with
+ * the artist. So it is applied in proportion to how much colour the page has
+ * *not* got, and `colorFidelity` decides how completely a coloured one is
+ * spared.
+ *
+ * The ends are measured off the panel palettes rather than picked: newsprint
+ * greys and inked blacks sit under 8, and a flat four-colour fill lands between
+ * 40 and 70.
+ */
+const TINT_GREY = 8;
+const TINT_COLOURED = 45;
 
 /**
  * Rate the flow field's heading turns when the parameter drift is not supplying
@@ -91,6 +138,12 @@ const SECTION_TURNOVER = 0.6;
  */
 const TURNOVER_WAIT = 3;
 
+/** Hermite ramp between two edges, the shader's own. */
+function smoothstep(edge0: number, edge1: number, x: number): number {
+  const t = Math.min(1, Math.max(0, (x - edge0) / Math.max(1e-6, edge1 - edge0)));
+  return t * t * (3 - 2 * t);
+}
+
 /** How many panels to avoid repeating, capped against small filtered sets. */
 function recentWindow(count: number): number {
   return Math.max(2, Math.min(24, Math.floor(count / 2)));
@@ -119,6 +172,14 @@ function openingPhases(rng: Rng): VizPhases {
     // wide open, or anywhere on the way between.
     pane: rng.range(0, 1),
     kaleido: rng.range(0, TAU),
+    // Which way the slide is pushing when the run opens. Free like the angles
+    // around it: every direction is the same circulation caught elsewhere.
+    mobius: rng.range(0, TAU),
+    // Where the light stands when the run opens.
+    relief: rng.range(0, TAU),
+    // Cycles of ring travel, and a whole POND_CYCLE of them is the round trip
+    // the wrap is taken against.
+    pond: rng.range(0, POND_CYCLE),
     // Log-radii, and the widest stride a preset can ask for is 3.
     droste: rng.range(0, 3),
     fold: rng.range(0, TAU),
@@ -351,6 +412,56 @@ export class Director {
     // said what the frame is turning to.
     this.turnArmedAt = -1;
     if (panel) this.armTurnOver();
+  }
+
+  /**
+   * Turn the frame over onto one panel and carry on choosing after it.
+   *
+   * The step controls' half of `setFocus`: the same crossfade onto a panel the
+   * reader asked for, without the lock. Stepping used to park the run because a
+   * step that let it carry on would be over before the panel had arrived — but
+   * parking is what a *hold* is for, and a reader who wanted a particular page
+   * should not have to un-park to get the run back. The panel is queued at the
+   * head of the upcoming picks rather than held as the answer to all of them,
+   * so it is what the turnover crosses to and the composition resumes its own
+   * selection from there.
+   *
+   * Ignored while the run is held: the focus is the answer to every request for
+   * a panel, so a queued pick would sit unread behind it.
+   */
+  turnTo(panel: Panel): void {
+    if (this.focus) return;
+    this.queueTurn({ panel, affinity: "random" });
+  }
+
+  /**
+   * A step forward on a free-running composition: the director's own next
+   * choice, turned onto rather than waited for.
+   *
+   * A fresh choice on every call, and not the one `nextPick` is showing —
+   * pressing next twice before the first crossfade has landed has to be two
+   * pages, not the same page aimed at twice.
+   */
+  stepForward(): Panel | null {
+    if (this.focus) return null;
+    this.upcoming.length = 0;
+    const pick = this.pickPanel();
+    if (!pick) return null;
+    this.queueTurn(pick);
+    return pick.panel;
+  }
+
+  /** Put one pick at the head of the queue and cross to it. Picks made before
+   *  it describe a composition it has just replaced, the same reason
+   *  `setFocus` drops them. */
+  private queueTurn(pick: Pick): void {
+    this.upcoming.length = 0;
+    this.upcoming.push(pick);
+    // So the run does not choose it straight back out of the recency window.
+    this.remember(pick.panel.id);
+    // Whatever was already waiting was waiting on a panel this replaces.
+    this.turnArmedAt = -1;
+    this.armTurnOver();
   }
 
   /**
@@ -892,6 +1003,25 @@ export class Director {
     // slowly losing the fraction that is the whole of what the phase means.
     this.phases.pane = (this.phases.pane + post.paneRate * clockDt) % 1;
     this.phases.kaleido += post.kaleidoSpin * clockDt;
+    // The slide's heading. Integrated rather than evaluated for the reason all
+    // of these are: an effect ramping in finds the direction already turning,
+    // and a rate the drift is moving bends the circulation instead of jumping it.
+    this.phases.mobius += post.mobiusRate * clockDt;
+    this.phases.relief += post.reliefRate * clockDt;
+    /*
+     * The pond's rings, wrapped — and unusually, wrapped against something
+     * other than one.
+     *
+     * Every other periodic phase here is read through a single sine and can
+     * discard whole turns freely. This one is read through a sine *and* through
+     * the packet age the burst reading is built on, at three per-source rates,
+     * and POND_CYCLE is the shortest interval over which all of those come back
+     * to where they started. Wrapping anywhere else would step the rings; not
+     * wrapping at all would spend an overnight run's float on whole cycles
+     * nobody can see, which is the pane's argument in a different unit.
+     */
+    this.phases.pond = (this.phases.pond + post.pondRate * clockDt) % POND_CYCLE;
+    if (this.phases.pond < 0) this.phases.pond += POND_CYCLE;
     this.phases.droste += post.drosteSpin * Math.max(0.15, post.drostePeriod) * clockDt;
     this.phases.fold += post.foldSpin * clockDt;
     this.phases.tunnel += post.tunnelSpin * clockDt;
@@ -1244,7 +1374,22 @@ export class Director {
 
   /**
    * Bias tints toward the complement of what is currently on screen, so that
-   * overlapping layers go chromatic rather than settling into grey.
+   * overlapping layers go chromatic rather than settling into grey — and only
+   * as far as the pages on screen need it.
+   *
+   * The complement is what the tint *is*; how much of it survives is the
+   * question `colorFidelity` answers, faded across the chroma the panels
+   * already have. A monochrome page gets the whole thing, which is the case the
+   * tint was written for and the case where it is the only colour in the frame.
+   * A four-colour page gets almost none of it, because it arrived with more
+   * colour than the tint could add and the only thing a complement does there is
+   * pull against the artist.
+   *
+   * Returned as a weakened tint rather than as a separate strength, so this
+   * needs nothing of the scenes or of the shader: white is the tint's own
+   * identity — `mix(tex, tex * white, a)` is `tex` at any amount — so fading
+   * toward it is exactly fading the tint out, wherever a scene chose to apply
+   * it and at whatever share of `tintAmount` that scene asked for.
    */
   private currentTint(panels: Panel[]): Rgb {
     let L = 0;
@@ -1260,7 +1405,40 @@ export class Director {
       n++;
     }
     if (n === 0) return [1, 1, 1];
-    return normalizeTint(labToRgb(complement([L / n, a / n, b / n])));
+    const mean: Lab = [L / n, a / n, b / n];
+    const tint = normalizeTint(labToRgb(complement(mean)));
+    const coloured = smoothstep(TINT_GREY, TINT_COLOURED, Math.hypot(mean[1], mean[2]));
+    const kept = 1 - coloured * Math.min(1, Math.max(0, this.config.colorFidelity));
+    return [1 + (tint[0] - 1) * kept, 1 + (tint[1] - 1) * kept, 1 + (tint[2] - 1) * kept];
+  }
+
+  /**
+   * The frame's colour brought back toward the page's own — the last word on
+   * every hue term in the chain, and the only place any of them is answered.
+   *
+   * Written as a governor over the *net* departure rather than as a smaller
+   * number at each of the three sources, because the sources do not know about
+   * each other and a viewer only ever sees the sum: the director's own
+   * excursion, the walk the music takes the colour on over a phrase, and
+   * whatever a `hue-sweep` pulse is adding on top. Scaling the sum keeps their
+   * proportions — the sweep is still the largest thing that happens to the
+   * colour, and it still arrives when the pool decided it would — and puts one
+   * number in charge of how far any of it gets.
+   *
+   * Measured from what the preset authored, so a mode that asked to sit at a
+   * rotation keeps it. This holds the frame to the *page*, and a preset's own
+   * `hueShift` is part of what the page is being shown as.
+   *
+   * Runs after the probe has taken its reading, which costs the trace nothing
+   * that matters: `Channel.share` is a ratio of two path lengths, this scales
+   * the authored and the musical halves of `hueShift` by the same factor, and
+   * the attribution comes out unchanged. Only the absolute depth column reads
+   * high, by exactly `1 / (1 - colorFidelity)`.
+   */
+  private holdColour(post: PostParams, base: PostParams): void {
+    const keep = Math.min(1, Math.max(0, this.config.colorFidelity));
+    if (keep <= 0) return;
+    post.hueShift = base.hueShift + (post.hueShift - base.hueShift) * (1 - keep);
   }
 
   /**
@@ -1302,11 +1480,26 @@ export class Director {
     return Math.sin(time * LFO_HZ[index % LFO_HZ.length] * Math.PI * 2);
   }
 
+  /**
+   * How far open the hue excursion's window is, 0..1 — see `HUE_SWING`.
+   *
+   * Shut for most of every cycle and never quite at full width, which is the
+   * whole difference between a colour that departs and a colour that is
+   * departed. Squared on the way out so the shoulders are gentle: the window
+   * opens over tens of seconds either side, and there is no instant at which
+   * the piece can be seen deciding to change colour.
+   */
+  private hueWindow(time: number): number {
+    const open = Math.sin(time * HUE_WINDOW_HZ * TAU);
+    const t = Math.max(0, (open - HUE_WINDOW_GATE) / (1 - HUE_WINDOW_GATE));
+    return t * t;
+  }
+
   private modulatePost(time: number, clockDt: number): PostParams {
     const base = this.config.post;
     const post: PostParams = {
       ...base,
-      hueShift: base.hueShift + this.lfo(time, 0) * 0.12,
+      hueShift: base.hueShift + this.lfo(time, 0) * HUE_SWING * this.hueWindow(time),
       feedbackAmount: base.feedbackAmount * (0.85 + 0.15 * this.lfo(time, 1)),
       chroma: base.chroma * (0.7 + 0.3 * this.lfo(time, 2)),
     };
@@ -1343,6 +1536,9 @@ export class Director {
     this.probe?.authored(post);
     this.audio.applyPost(post);
     this.probe?.deliver(post, this.audio);
+    // Fifth, over the sum of the four above rather than inside any of them:
+    // three of those passes move the hue and none of them can see the others.
+    this.holdColour(post, base);
     // Last, because it governs the frame's trail against its symmetry and both
     // of the passes above can move either one.
     this.wander.settle(post, clockDt);

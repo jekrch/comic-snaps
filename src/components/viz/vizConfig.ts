@@ -54,6 +54,26 @@ export interface VizConfig {
   /** How strongly a layer is pushed toward its complement tint, 0..1. */
   tintAmount: number;
   /**
+   * How closely the frame keeps to the colours the artist printed, 0..1.
+   *
+   * `keyBalance` is the guard against a white-out; this is the guard against a
+   * colour-out, and it exists for the same reason: the panels are the material,
+   * and a page's own palette is a large part of what there is to look at. Every
+   * mechanism here that moves colour *away* from the source is scaled by it —
+   * the hue excursion the director breathes, the walk the music takes the
+   * colour on, whatever the cycler's sweep adds on top, and the complement the
+   * layer stack tints with.
+   *
+   * At 0 nothing is held back and the piece is free with colour in the way it
+   * always was. At 1 the frame states the page's own hue and never leaves it.
+   * The default is high on purpose: a departure reads as a departure only if
+   * the thing departed from is what is normally on screen, and measured over an
+   * hour the old resting state was a 31° rotation with the LFO alone and 90°
+   * with a track playing — which is to say there was no resting state at all.
+   * See `scripts/color-fidelity.mjs`, which is the instrument that says so.
+   */
+  colorFidelity: number;
+  /**
    * How strongly each layer is levelled toward a common key before it blends,
    * 0..1. At 0 panels composite at the brightness they were drawn at, which is
    * what lets a wall of white comic pages screen the frame to blank; at 1 a
@@ -279,6 +299,12 @@ export const DEFAULT_POST: PostParams = {
   // A cycle a little under a minute, so an opening and a closing are each about
   // half of one. Only read when `paneBreathe` is up.
   paneRate: 0.018,
+  mobius: 0,
+  // Under the 0.38 the cycler draws to, which is itself under the point where
+  // the corner of the frame leaves the readable band. See the shader.
+  mobiusShift: 0.28,
+  // A circuit in about three and a half minutes.
+  mobiusRate: 0.03,
   kaleido: 0,
   kaleidoSegments: 6,
   // The slow intrinsic turn that makes a fold legible as a fold rather than as
@@ -315,11 +341,38 @@ export const DEFAULT_POST: PostParams = {
   juliaChunk: 0,
   juliaChunkGrid: 0.5,
   juliaDrift: 0,
+  deck: 0,
+  // Eight panels: enough that the deal reads as a page rather than as a frame
+  // cut in four, and few enough that every one of them is still a large crop.
+  deckDepth: 3,
+  deckSpread: 0.08,
+  // About seven degrees.
+  deckTurn: 0.12,
+  deckSeed: 0,
   warp: 0,
   warpScale: 2.4,
   warpSpeed: 0.35,
   ripple: 0,
   rippleFreq: 16,
+  pond: 0,
+  // Tighter rings than the centred ripple's default, and necessarily so: the
+  // spacing that reads as rings is a fraction of the *pool*, not of the frame,
+  // and a default pool is half the frame's height across. About two and a half
+  // rings in one. The amplitude is derived from this — see POND_SLOPE — so
+  // moving it changes the grain and not the violence.
+  pondFreq: 34,
+  pondSources: 3,
+  // A pool about the height of the frame across, which is the scale the whole
+  // effect is for: large enough to read as an event in the picture, small
+  // enough that there is picture left around it.
+  pondReach: 0.45,
+  // Half way between a standing pool and rain on it — the reading that shows
+  // both halves of what the parameter does to anyone who finds the slider.
+  pondBurst: 0.5,
+  pondSwirl: 0,
+  // A ring crosses a default reach in about eight seconds.
+  pondRate: 0.25,
+  pondSeed: 0,
   twist: 0,
   bulge: 0,
   quasi: 0,
@@ -359,6 +412,18 @@ export const DEFAULT_POST: PostParams = {
   wakeSpread: 0.25,
   wakeLead: 0,
   disperse: 0,
+  keyplate: 0,
+  // Sixteen pixels to a feature at the default render scale: linework, balloon
+  // edges and the finest hatching stay in the held half, and everything the eye
+  // reads as a *shape* goes with the map.
+  keyplateLevel: 4,
+  relief: 0,
+  // Thirty-two pixels to a feature at the default render scale: the modelling
+  // inside a panel rather than its linework, which is the scale at which a page
+  // reads as terrain instead of as crumpled foil.
+  reliefLevel: 5,
+  // A circuit in about two minutes.
+  reliefRate: 0.05,
   blur: 0,
   blurSpin: 0,
   bloom: 0,
@@ -385,11 +450,16 @@ export const DEFAULT_POST: PostParams = {
   sheen: 0,
   sheenBands: 3.5,
   sheenDrift: 0.02,
+  contour: 0,
+  contourBands: 7,
   solarize: 0,
 };
 
 export const DEFAULT_CONFIG: VizConfig = {
-  layerCount: 4,
+  // Two. A base layer and one thing over it reads as a composition; three or
+  // more reads as a pile, and the slider still goes to eight for anyone who
+  // wants one.
+  layerCount: 2,
   layerLifetime: 26,
   layerLifetimeJitter: 0.35,
   crossfade: 0.42,
@@ -398,6 +468,7 @@ export const DEFAULT_CONFIG: VizConfig = {
   rotateAmount: 0.05,
   layerOpacity: 0.85,
   tintAmount: 0.22,
+  colorFidelity: 0.7,
   keyBalance: 0.75,
   beat: 2,
   speed: 1,
@@ -530,6 +601,7 @@ const HINTS: Record<string, string> = {
   panAmount: "How far a panel drifts across the frame.",
   rotateAmount: "How far a panel is allowed to tilt as it drifts.",
   tintAmount: "How strongly each layer is pushed toward its complementary colour.",
+  colorFidelity: "How closely the frame keeps to the colours the artist printed. The guard against a colour-out.",
 
   "post.feedbackAmount": "How much of the last frame is kept, smearing motion into trails.",
   "post.feedbackScale": "Zoom on the kept frame each pass — over 1 pushes the trails outward.",
@@ -551,12 +623,17 @@ const HINTS: Record<string, string> = {
   "post.sheen": "An oil-slick sheen laid over the tones, leaving every value alone.",
   "post.sheenBands": "How many colours the slick runs through.",
   "post.sheenDrift": "How fast they crawl.",
+  "post.contour": "Draws contour lines through the tones, like a map.",
+  "post.contourBands": "How many lines.",
   "post.solarize": "Inverts the brightest tones — a burnt, photographic reversal.",
 
   "post.pane": "Backs the view up until the frame is repeated in mirrored panes.",
   "post.paneGrid": "How many copies of the frame span the screen when it is fully backed up.",
   "post.paneBreathe": "Opens the panes out and closes them again, over and over.",
   "post.paneRate": "How fast that opening and closing cycles.",
+  "post.mobius": "Slides the picture sideways inside itself, with the edges pinned.",
+  "post.mobiusShift": "How far it slides.",
+  "post.mobiusRate": "How fast the direction of the slide turns.",
   "post.kaleido": "Mirrors the frame into a kaleidoscope.",
   "post.kaleidoSegments": "How many mirrored wedges.",
   "post.kaleidoSpin": "How fast the kaleidoscope turns.",
@@ -593,11 +670,24 @@ const HINTS: Record<string, string> = {
   "post.drostePeriod": "How much zoom fits between one repeat and the next.",
   "post.drosteTwist": "Winds the recursion into a spiral.",
   "post.drosteSpin": "How fast the recursion drifts inward.",
+  "post.deck": "Cuts the frame into panels and deals them out — each one stays perfectly sharp.",
+  "post.deckDepth": "How many panels the page is cut into.",
+  "post.deckSpread": "How far they slide.",
+  "post.deckTurn": "How far they turn.",
+  "post.deckSeed": "Redraws the layout.",
   "post.warp": "Pushes the frame around with smooth noise.",
   "post.warpScale": "Size of the warp — low is broad swells, high is fine churn.",
   "post.warpSpeed": "How fast the warp moves.",
   "post.ripple": "Rings rippling out from the centre.",
   "post.rippleFreq": "How tightly packed those rings are.",
+  "post.pond": "The same rings, but from several places at once instead of the centre.",
+  "post.pondFreq": "How tightly packed those rings are.",
+  "post.pondSources": "How many places they come from.",
+  "post.pondReach": "How far each one carries. Low is a few small pools; high floods the frame.",
+  "post.pondBurst": "Standing pools at 0, drops landing and spreading at 1.",
+  "post.pondSwirl": "Turns the push sideways, so the rings drag the picture round instead of in and out.",
+  "post.pondRate": "How fast the rings travel.",
+  "post.pondSeed": "Redraws the arrangement: new places, spacings and headings.",
   "post.twist": "Rotates the frame more the further out you go.",
   "post.bulge": "Pushes the centre toward you, or away, like a lens.",
   "post.quasi": "Lays a quasicrystal interference pattern over the frame.",
@@ -625,6 +715,11 @@ const HINTS: Record<string, string> = {
   "post.wakeSpread": "How far behind the lagging plates read.",
   "post.wakeLead": "Which colour trails furthest — red or blue.",
   "post.disperse": "Splits the frame into its colours, like a prism.",
+  "post.keyplate": "Holds the drawing near its own place while the colour goes where the distortion sends it.",
+  "post.keyplateLevel": "Where the drawing ends and the colour begins.",
+  "post.relief": "Lights the page as if its tones were hills, with the light slowly moving.",
+  "post.reliefLevel": "How coarse the terrain is.",
+  "post.reliefRate": "How fast the light goes round.",
   "post.blur": "Blur streaking out from the centre.",
   "post.blurSpin": "Bends that streak into a spin around the centre.",
   "post.bloom": "Glow bleeding out of the brightest areas.",
@@ -725,6 +820,7 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("motion", "panAmount", "pan", 0, 0.45, 0.005, (c) => c.panAmount, (c, v) => (c.panAmount = v)),
   field("motion", "rotateAmount", "rotate", 0, 0.35, 0.005, (c) => c.rotateAmount, (c, v) => (c.rotateAmount = v)),
   field("motion", "tintAmount", "tint", 0, 1, 0.01, (c) => c.tintAmount, (c, v) => (c.tintAmount = v)),
+  field("motion", "colorFidelity", "true colour", 0, 1, 0.01, (c) => c.colorFidelity, (c, v) => (c.colorFidelity = v)),
 
   field("post", "post.feedbackAmount", "feedback", 0, 0.98, 0.01, (c) => c.post.feedbackAmount, (c, v) => (c.post.feedbackAmount = v)),
   field("post", "post.feedbackScale", "fb scale", 0.97, 1.05, 0.001, (c) => c.post.feedbackScale, (c, v) => (c.post.feedbackScale = v)),
@@ -745,6 +841,8 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("post", "post.sheen", "sheen", 0, 1, 0.01, (c) => c.post.sheen, (c, v) => (c.post.sheen = v)),
   field("post", "post.sheenBands", "sheen bands", 1, 8, 0.1, (c) => c.post.sheenBands, (c, v) => (c.post.sheenBands = v)),
   field("post", "post.sheenDrift", "sheen drift", 0, 0.08, 0.002, (c) => c.post.sheenDrift, (c, v) => (c.post.sheenDrift = v)),
+  field("print", "post.contour", "contours", 0, 1, 0.01, (c) => c.post.contour, (c, v) => (c.post.contour = v)),
+  field("print", "post.contourBands", "contour lines", 2, 24, 0.5, (c) => c.post.contourBands, (c, v) => (c.post.contourBands = v)),
   field("post", "post.solarize", "solarize", 0, 1, 0.01, (c) => c.post.solarize, (c, v) => (c.post.solarize = v)),
 
   field("shape", "post.pane", "panes", 0, 1, 0.01, (c) => c.post.pane, (c, v) => (c.post.pane = v)),
@@ -758,6 +856,14 @@ export const CONFIG_FIELDS: ConfigField[] = [
   // rather than like a knob: past this it stops being the view backing up and
   // becomes the frame being pumped, which is the §7 limit's territory.
   field("shape", "post.paneRate", "pane rate", 0, 0.06, 0.002, (c) => c.post.paneRate, (c, v) => (c.post.paneRate = v)),
+  field("shape", "post.mobius", "mobius", 0, 1, 0.01, (c) => c.post.mobius, (c, v) => (c.post.mobius = v)),
+  field("shape", "post.mobiusShift", "mobius slide", 0, 0.6, 0.01, (c) => c.post.mobiusShift, (c, v) => (c.post.mobiusShift = v)),
+  field("shape", "post.mobiusRate", "mobius turn", 0, 0.12, 0.002, (c) => c.post.mobiusRate, (c, v) => (c.post.mobiusRate = v)),
+  field("shape", "post.deck", "deal", 0, 1, 0.01, (c) => c.post.deck, (c, v) => (c.post.deck = v)),
+  field("shape", "post.deckDepth", "panels", 1, 4, 1, (c) => c.post.deckDepth, (c, v) => (c.post.deckDepth = v)),
+  field("shape", "post.deckSpread", "deal spread", 0, 0.25, 0.005, (c) => c.post.deckSpread, (c, v) => (c.post.deckSpread = v)),
+  field("shape", "post.deckTurn", "deal turn", 0, 0.4, 0.01, (c) => c.post.deckTurn, (c, v) => (c.post.deckTurn = v)),
+  field("shape", "post.deckSeed", "deal layout", 0, 1, 0.01, (c) => c.post.deckSeed, (c, v) => (c.post.deckSeed = v)),
   field("shape", "post.kaleido", "kaleido", 0, 1, 0.01, (c) => c.post.kaleido, (c, v) => (c.post.kaleido = v)),
   field("shape", "post.kaleidoSegments", "segments", 2, 16, 1, (c) => c.post.kaleidoSegments, (c, v) => (c.post.kaleidoSegments = v)),
   field("shape", "post.kaleidoSpin", "kaleido spin", -0.4, 0.4, 0.005, (c) => c.post.kaleidoSpin, (c, v) => (c.post.kaleidoSpin = v)),
@@ -824,6 +930,23 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("shape", "post.warpSpeed", "warp rate", 0, 2, 0.01, (c) => c.post.warpSpeed, (c, v) => (c.post.warpSpeed = v)),
   field("shape", "post.ripple", "ripple", 0, 1, 0.01, (c) => c.post.ripple, (c, v) => (c.post.ripple = v)),
   field("shape", "post.rippleFreq", "ripple freq", 2, 60, 1, (c) => c.post.rippleFreq, (c, v) => (c.post.rippleFreq = v)),
+  field("shape", "post.pond", "pond", 0, 1, 0.01, (c) => c.post.pond, (c, v) => (c.post.pond = v)),
+  // Wider than the ripple's range at both ends. The low end is one slow heave
+  // per pool and the high end is a pool of fine corrugations — and unlike the
+  // ripple, neither end can tear the page, because the amplitude falls as the
+  // spacing tightens.
+  field("shape", "post.pondFreq", "pond freq", 4, 90, 1, (c) => c.post.pondFreq, (c, v) => (c.post.pondFreq = v)),
+  // Whole sources. The shader takes it as a loop bound, so the fractional part
+  // of a slider position would simply be discarded.
+  field("shape", "post.pondSources", "pond drops", 1, 4, 1, (c) => c.post.pondSources, (c, v) => (c.post.pondSources = v)),
+  // The frame's half-height is 0.5 and its corner is near 0.9, so the top of
+  // this is one source covering the whole picture — which is the centred ripple
+  // again, and worth having as the far end of the range rather than as a mode.
+  field("shape", "post.pondReach", "pond reach", 0.08, 0.9, 0.01, (c) => c.post.pondReach, (c, v) => (c.post.pondReach = v)),
+  field("shape", "post.pondBurst", "pond drops/pools", 0, 1, 0.01, (c) => c.post.pondBurst, (c, v) => (c.post.pondBurst = v)),
+  field("shape", "post.pondSwirl", "pond swirl", 0, 1, 0.01, (c) => c.post.pondSwirl, (c, v) => (c.post.pondSwirl = v)),
+  field("shape", "post.pondRate", "pond rate", 0, 0.8, 0.01, (c) => c.post.pondRate, (c, v) => (c.post.pondRate = v)),
+  field("shape", "post.pondSeed", "pond layout", 0, 1, 0.01, (c) => c.post.pondSeed, (c, v) => (c.post.pondSeed = v)),
   field("shape", "post.twist", "twist", -1, 1, 0.01, (c) => c.post.twist, (c, v) => (c.post.twist = v)),
   field("shape", "post.bulge", "bulge", -1, 1, 0.01, (c) => c.post.bulge, (c, v) => (c.post.bulge = v)),
   field("shape", "post.quasi", "quasicrystal", 0, 1, 0.01, (c) => c.post.quasi, (c, v) => (c.post.quasi = v)),
@@ -864,6 +987,11 @@ export const CONFIG_FIELDS: ConfigField[] = [
   field("optics", "post.causticsScale", "caustic mesh", 1, 12, 0.1, (c) => c.post.causticsScale, (c, v) => (c.post.causticsScale = v)),
   field("optics", "post.causticsSpeed", "caustic drift", 0, 0.2, 0.005, (c) => c.post.causticsSpeed, (c, v) => (c.post.causticsSpeed = v)),
   field("optics", "post.disperse", "dispersion", 0, 0.6, 0.005, (c) => c.post.disperse, (c, v) => (c.post.disperse = v)),
+  field("optics", "post.keyplate", "key hold", 0, 0.9, 0.01, (c) => c.post.keyplate, (c, v) => (c.post.keyplate = v)),
+  field("optics", "post.keyplateLevel", "key split", 2, 6, 0.1, (c) => c.post.keyplateLevel, (c, v) => (c.post.keyplateLevel = v)),
+  field("optics", "post.relief", "relief", 0, 1, 0.01, (c) => c.post.relief, (c, v) => (c.post.relief = v)),
+  field("optics", "post.reliefLevel", "relief grain", 2, 8, 0.1, (c) => c.post.reliefLevel, (c, v) => (c.post.reliefLevel = v)),
+  field("optics", "post.reliefRate", "relief light", 0, 0.2, 0.005, (c) => c.post.reliefRate, (c, v) => (c.post.reliefRate = v)),
   field("optics", "post.blur", "radial blur", 0, 1, 0.01, (c) => c.post.blur, (c, v) => (c.post.blur = v)),
   field("optics", "post.blurSpin", "blur spin", 0, 1, 0.01, (c) => c.post.blurSpin, (c, v) => (c.post.blurSpin = v)),
   // Capped well under 1. The spread is energy-normalised so it cannot bleach

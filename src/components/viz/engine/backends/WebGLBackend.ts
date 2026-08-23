@@ -243,6 +243,14 @@ export class WebGLBackend implements VizBackend {
         uWarpSpeed: { value: 0.35 },
         uRipple: { value: 0 },
         uRippleFreq: { value: 16 },
+        uPond: { value: 0 },
+        uPondFreq: { value: 12 },
+        uPondSources: { value: 3 },
+        uPondReach: { value: 0.45 },
+        uPondBurst: { value: 0 },
+        uPondSwirl: { value: 0 },
+        uPondPhase: { value: 0 },
+        uPondSeed: { value: 0 },
         uTwist: { value: 0 },
         uBulge: { value: 0 },
         uSolarize: { value: 0 },
@@ -285,6 +293,21 @@ export class WebGLBackend implements VizBackend {
         uTurbulence: { value: 0 },
         uTurbulenceScale: { value: 2.2 },
         uTurbulenceSpeed: { value: 0.12 },
+        uDeck: { value: 0 },
+        uDeckDepth: { value: 3 },
+        uDeckSpread: { value: 0.08 },
+        uDeckTurn: { value: 0.12 },
+        uDeckSeed: { value: 0 },
+        uMobius: { value: 0 },
+        uMobiusShift: { value: 0.28 },
+        uMobiusPhase: { value: 0 },
+        uRelief: { value: 0 },
+        uReliefLevel: { value: 5 },
+        uReliefPhase: { value: 0 },
+        uContour: { value: 0 },
+        uContourBands: { value: 7 },
+        uKeyplate: { value: 0 },
+        uKeyplateLevel: { value: 4 },
         uMelt: { value: 0 },
         uMeltLevel: { value: 6 },
         uMeltAngle: { value: Math.PI / 2 },
@@ -754,12 +777,20 @@ export class WebGLBackend implements VizBackend {
   private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
     const fields = this.fields.textures;
-    // Two effects read the frame at a level other than its own: the fractal, at
-    // whatever rate its orbit is compressing by, and the melt, at the level its
-    // grain names. Either one is enough to need the chain, and the melt is the
-    // reason this is no longer a single-preset cost — it is in the cycler's
-    // pool, so any run with psychedelia up can ask for it.
-    this.syncSceneMips(scene, frame.post.julia > 0 || frame.post.melt > 0);
+    // Four effects read the frame at a level other than its own: the fractal, at
+    // whatever rate its orbit is compressing by; the melt, at the level its
+    // grain names; the keyplate, at the level it splits the drawing from the
+    // colour on; and the relief, at the grain of its terrain. Any one of them
+    // needs the chain, and between them this is no longer a single-preset cost —
+    // three are in the cycler's pool, so any run with psychedelia up can ask for
+    // it, and a run in a liquid or a light movement will ask often.
+    this.syncSceneMips(
+      scene,
+      frame.post.julia > 0 ||
+        frame.post.melt > 0 ||
+        frame.post.keyplate > 0 ||
+        frame.post.relief > 0
+    );
     post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
     post.uBloomTex.value = fields.bloom;
@@ -798,6 +829,17 @@ export class WebGLBackend implements VizBackend {
     post.uWarpSpeed.value = frame.post.warpSpeed;
     post.uRipple.value = frame.post.ripple;
     post.uRippleFreq.value = frame.post.rippleFreq;
+    post.uPond.value = frame.post.pond;
+    post.uPondFreq.value = frame.post.pondFreq;
+    // Floored to a whole source here rather than in the shader: the loop takes
+    // this as a bound, and a preset sliding the slider should add a drop at the
+    // moment the number says so instead of half a frame either side of it.
+    post.uPondSources.value = Math.floor(frame.post.pondSources);
+    post.uPondReach.value = frame.post.pondReach;
+    post.uPondBurst.value = frame.post.pondBurst;
+    post.uPondSwirl.value = frame.post.pondSwirl;
+    post.uPondPhase.value = frame.phases.pond;
+    post.uPondSeed.value = frame.post.pondSeed;
     post.uTwist.value = frame.post.twist;
     post.uBulge.value = frame.post.bulge;
     post.uSolarize.value = frame.post.solarize;
@@ -866,6 +908,21 @@ export class WebGLBackend implements VizBackend {
     post.uBloomThreshold.value = frame.post.bloomThreshold;
     post.uFlow.value = frame.post.flow;
     post.uReact.value = frame.post.react;
+    post.uDeck.value = frame.post.deck;
+    post.uDeckDepth.value = frame.post.deckDepth;
+    post.uDeckSpread.value = frame.post.deckSpread;
+    post.uDeckTurn.value = frame.post.deckTurn;
+    post.uDeckSeed.value = frame.post.deckSeed;
+    post.uMobius.value = frame.post.mobius;
+    post.uMobiusShift.value = frame.post.mobiusShift;
+    post.uMobiusPhase.value = frame.phases.mobius;
+    post.uRelief.value = frame.post.relief;
+    post.uReliefLevel.value = frame.post.reliefLevel;
+    post.uReliefPhase.value = frame.phases.relief;
+    post.uContour.value = frame.post.contour;
+    post.uContourBands.value = frame.post.contourBands;
+    post.uKeyplate.value = frame.post.keyplate;
+    post.uKeyplateLevel.value = frame.post.keyplateLevel;
     post.uMelt.value = frame.post.melt;
     post.uMeltLevel.value = frame.post.meltLevel;
     post.uMeltAngle.value = frame.post.meltAngle;

@@ -762,10 +762,20 @@ export default function VisualizerOverlay({
   /**
    * Move the run on by a panel.
    *
-   * Stepping holds it. A step that let the run carry on would be over before
-   * the panel it landed on had finished arriving — the composition would have
-   * chosen its own next layer within a beat — so the arrows and the transport
-   * are one control: they step, and stepping parks.
+   * Stepping does not park the run. Parking is what the hold is for, and only a
+   * reader who asked for it should get it — a step is "show me the next page",
+   * not "and stay there". So the two cases are different gestures on the same
+   * arrows:
+   *
+   * Free-running, the step turns the composition over onto the panel and lets
+   * it carry on choosing from there (`Engine.turnTo`), and the trail keeps
+   * following the run: the panel it lands on is recorded by the cast the way
+   * any other feature is, so the label stays live rather than freezing on the
+   * one thing the reader stepped to.
+   *
+   * Held, the arrows walk the trail and the focus effect below carries the run
+   * with the cursor — the reader has already said they want to stay put, and
+   * stepping through a history is the point of holding.
    *
    * Forward from the newest panel seen takes the director's own next choice
    * rather than a random one, so stepping ahead is the run brought forward
@@ -775,13 +785,26 @@ export default function VisualizerOverlay({
   const stepPanel = useCallback(
     (delta: -1 | 1) => {
       const { items, cursor } = trailRef.current;
-      if (delta === 1 && cursor >= items.length - 1) {
+      const atHead = cursor >= items.length - 1;
+      if (!heldRef.current) {
+        // Forward is the run's own next pick; backward is the panel before the
+        // one on screen. Nothing is dispatched at the trail here: the turnover
+        // reaches the cast within a beat and records itself, which keeps the
+        // history a record of what was actually drawn.
+        if (delta === 1) engineRef.current?.stepForward();
+        else {
+          const back = items[cursor - 1];
+          if (back) engineRef.current?.turnTo(back);
+        }
+        wakeChrome();
+        return;
+      }
+      if (delta === 1 && atHead) {
         const panel = engineRef.current?.nextPanel();
         if (panel) dispatchTrail({ type: "feature", panel });
       } else {
         dispatchTrail({ type: "step", delta });
       }
-      setHeld(true);
       setPinned(true);
       wakeChrome();
     },

@@ -45,15 +45,27 @@ export const VIZ_PRESETS: VizPreset[] = [
     name: "Zoink",
     blurb: "Everything cycles: fractal folds, tunnels, prismatic warp and solarised colour.",
     overrides: {
-      layerCount: 4,
+      layerCount: 2,
       layerLifetime: 20,
       crossfade: 0.45,
       zoomAmount: 1.35,
       rotateAmount: 0.08,
-      // Four screen-blended layers over a wall of light comic pages pile up
-      // toward white, so each one carries less than the default.
+      // Screen-blended layers over a wall of light comic pages pile up toward
+      // white, so the one over the base carries less than the default.
       layerOpacity: 0.72,
       tintAmount: 0.3,
+      /*
+       * The one preset that keeps the old freedom with colour, and the reason
+       * `colorFidelity` is a knob rather than a constant.
+       *
+       * Everywhere else the guard is nearly closed, because a page's printed
+       * palette is most of what there is to look at and a frame that is never
+       * its own colour has nothing to depart from. This mode's blurb says
+       * "solarised colour" and means it: the whole proposition is the pool
+       * having its way with the page, so the hue is left most of its travel and
+       * the complement tint is left whole.
+       */
+      colorFidelity: 0.2,
       psychedelia: 0.9,
       // Longer again, on the same reasoning as the last two times: the pool has
       // grown by half with the print and field groups, and several of the new
@@ -81,7 +93,7 @@ export const VIZ_PRESETS: VizPreset[] = [
   {
     id: "drift",
     name: "Drift",
-    blurb: "Four full-bleed layers on long crossfades. Minimal processing.",
+    blurb: "Two full-bleed layers on long crossfades. Minimal processing.",
     overrides: {},
   },
   {
@@ -147,7 +159,7 @@ export const VIZ_PRESETS: VizPreset[] = [
     name: "Kaleidoscope",
     blurb: "Panels folded into rotating radial symmetry, the fold count drifting.",
     overrides: {
-      layerCount: 3,
+      layerCount: 2,
       layerLifetime: 30,
       crossfade: 0.5,
       zoomAmount: 1.35,
@@ -172,14 +184,14 @@ export const VIZ_PRESETS: VizPreset[] = [
     name: "Tumbler",
     blurb: "The same fold, never twice the same: wedge count, tiling, spin and drift all wander.",
     overrides: {
-      layerCount: 3,
+      layerCount: 2,
       layerLifetime: 26,
       crossfade: 0.5,
       zoomAmount: 1.42,
       panAmount: 0.13,
       rotateAmount: 0.1,
-      // Three screen-blended layers folded on top of themselves pile up toward
-      // white faster than an unfolded stack does — the fold is a copy.
+      // Screen-blended layers folded on top of themselves pile up toward white
+      // faster than an unfolded stack does — the fold is a copy.
       layerOpacity: 0.76,
       tintAmount: 0.32,
       // The drift is what carries this mode, so the cycler is turned down to
@@ -661,7 +673,7 @@ export const VIZ_PRESETS: VizPreset[] = [
     name: "Undertow",
     blurb: "A liquid domain warp with concentric ripples — the frame never sits still.",
     overrides: {
-      layerCount: 3,
+      layerCount: 2,
       layerLifetime: 34,
       crossfade: 0.55,
       zoomAmount: 1.2,
@@ -679,6 +691,55 @@ export const VIZ_PRESETS: VizPreset[] = [
         feedbackScale: 1.008,
         chroma: 0.35,
         vignette: 0.4,
+      },
+    },
+  },
+  {
+    /*
+     * Undertow's opposite number: the same water, seen from above rather than
+     * from inside it.
+     *
+     * Undertow is one wave train centred on the viewer, and everything in the
+     * frame is inside it. This is four sources that are not the viewer, each
+     * one firing drops that spread and die, with plain page in between — so
+     * what the eye reads is a place rather than a treatment, and it has to keep
+     * finding the next one.
+     */
+    id: "downpour",
+    name: "Downpour",
+    blurb: "Rain landing on the page: rings spreading from a few places at once, and stillness between them.",
+    overrides: {
+      layerCount: 2,
+      layerLifetime: 30,
+      crossfade: 0.5,
+      zoomAmount: 1.16,
+      panAmount: 0.08,
+      rotateAmount: 0.02,
+      psychedelia: 0.4,
+      cycleInterval: 18,
+      post: {
+        pond: 0.8,
+        // Four sources, each reaching about a third of the frame's height:
+        // between them they cover roughly half of it, which is the balance the
+        // whole preset is about.
+        pondSources: 4,
+        pondReach: 0.32,
+        // Two and a half rings inside one of those.
+        pondFreq: 48,
+        // Drops rather than pools. The stillness between them is what a pond of
+        // standing waves cannot give.
+        pondBurst: 0.9,
+        pondSwirl: 0.15,
+        pondRate: 0.26,
+        // A short trail, so a ring that has passed leaves something behind it
+        // and the frame is not empty the moment a drop dies.
+        feedbackAmount: 0.42,
+        feedbackScale: 1.004,
+        // The rings are the only thing bending the frame, and dispersion is
+        // what turns a bend into glass — see post.disperse.
+        disperse: 0.4,
+        chroma: 0.22,
+        vignette: 0.38,
       },
     },
   },
@@ -734,7 +795,7 @@ export const VIZ_PRESETS: VizPreset[] = [
     name: "Emulsion",
     blurb: "Ink in water, with a reaction spreading through it and the highlights bleeding.",
     overrides: {
-      layerCount: 3,
+      layerCount: 2,
       layerLifetime: 32,
       crossfade: 0.55,
       zoomAmount: 1.15,
@@ -790,7 +851,7 @@ export const VIZ_PRESETS: VizPreset[] = [
        * press these do not merely decline to move the frame — they decline to
        * cost it anything.
        */
-      layerCount: 3,
+      layerCount: 2,
       layerLifetime: 30,
       crossfade: 0.5,
       // Modest, all three. What is worth looking at here is the page and what
@@ -1143,11 +1204,17 @@ export const VIZ_PRESETS: VizPreset[] = [
        * * 2)`, so anything from 0.75 up is three — while taking something off
        * every pulse's peak and a little off the rate. That gap is deliberate and
        * it is the same distinction the scene makes: there is a page on the wall
-       * to be looked at here, where zoink's four screened layers are already a
+       * to be looked at here, where zoink's screened stack is already a
        * blur, so the effects are asked to be weather over the corridor rather
        * than to be the subject.
        */
       psychedelia: 0.78,
+      // Under zoink's, above everything else's, which is this preset's whole
+      // relationship to its parents: there is a page on the wall to be looked
+      // at here, so the colour it was printed in is worth more than it is in a
+      // screened stack — but the effects are still meant to be weather, and
+      // weather that may not touch the colour is half a pool.
+      colorFidelity: 0.45,
       // Between the two parents': a pulse every fifteen seconds or so at this
       // depth, against zoink's eleven and the vault's twenty-five. With three
       // slots that is nearly always two things running and often three.

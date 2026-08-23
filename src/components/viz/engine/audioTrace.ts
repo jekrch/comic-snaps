@@ -94,6 +94,7 @@ const GEOMETRY_ROW = [
   "bulge",
   "twist",
   "ripple",
+  "pond",
   "warp",
   "kaleido",
   "disperse",

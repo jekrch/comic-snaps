@@ -566,6 +566,54 @@ export interface PostParams {
   /** Travel down the tube, depth units per clock second. Signed; integrated. */
   tunnelSpin: number;
 
+  /**
+   * A Möbius slide: the frame translated *within a disc that contains it*,
+   * with the disc's rim pinned.
+   *
+   * The third reparameterisation, and unlike the other two it does not redefine
+   * what the frame's radius means — it moves the picture sideways in a geometry
+   * where sideways decays toward the edge. Content near the centre swings by
+   * half a frame while content at the corners barely stirs, and no part of it
+   * rotates about the viewer. Nothing else in this chain makes that motion:
+   * every other map here is radial or angular about the centre.
+   *
+   * Conformal everywhere, which is the property being bought. A map that
+   * preserves angles can be pushed enormously far while every neighbourhood
+   * still looks like itself — rotated and rescaled, never sheared into mush —
+   * and that is the only mechanism by which a frame stays coherent under
+   * genuinely violent distortion.
+   *
+   * Restricted to the *automorphisms of a disc*, `z -> (z - a)/(1 - conj(a)z)`
+   * with the disc drawn a little larger than the frame, and both halves of that
+   * restriction are load-bearing:
+   *
+   * - A general Möbius transformation has a pole — a point where the whole
+   *   plane collapses — and a pole crossing the frame is every legibility
+   *   failure at once. A disc automorphism's pole sits at `1/conj(a)`, outside
+   *   the disc by construction, so with the frame inside the disc the pole is
+   *   not merely avoided but *unreachable*. There is no epsilon in the shader
+   *   because there is no division that can approach zero.
+   * - The Jacobian is `(1 - |a|^2)/|1 - conj(a)z|^2`, which over a frame that
+   *   fills the fraction `MOBIUS_FIT` of the disc is bounded in closed form.
+   *   At the deepest slide the cycler draws it stays inside the readable band —
+   *   see the shader, where both bounds are worked out.
+   *
+   * Identity at zero *exactly*, and by a better route than the rest of the pool
+   * takes: the amount scales `a` rather than blending between two coordinates,
+   * so every value of it is a genuine automorphism rather than a mixture of
+   * one and the identity. §9's warning about blending toward an unbounded remap
+   * cannot apply, because nothing here is ever blended.
+   */
+  mobius: number;
+  /** How far the slide goes, as a fraction of the disc's radius. The Jacobian
+   *  bound is a function of this and nothing else. */
+  mobiusShift: number;
+  /** How fast the slide's *direction* turns, radians a second. The magnitude
+   *  never moves, so the picture circulates endlessly instead of arriving
+   *  somewhere: a circuit at the default takes about three and a half minutes,
+   *  which is where §6 asks a standing schedule to sit. */
+  mobiusRate: number;
+
   // --- Geometric ------------------------------------------------------------
   /**
    * The view backing up until several mirrored copies of the frame fit across
@@ -882,6 +930,42 @@ export interface PostParams {
    */
   juliaDrift: number;
 
+  /**
+   * The page dealt out: the frame cut into panels, each of which then moves as
+   * a *rigid body* — translated and turned, never scaled or sheared.
+   *
+   * The other way to survive violent distortion. Conformality (see `mobius`)
+   * keeps every neighbourhood looking like itself while the whole plane bends;
+   * rigidity gives that up globally and buys something stronger locally — the
+   * Jacobian inside a cell is exactly 1, so the art in it is the page at native
+   * size, pixel for pixel, no matter how far the composition has been thrown.
+   * There is nothing to measure and no ceiling to find: this is the one map in
+   * the chain that cannot cost the drawing anything at all.
+   *
+   * The partition is a binary split of the frame rather than a grid, which is
+   * both cheaper to irregularise and the right shape for the subject: what a
+   * comic page already is, is a handful of rectangles of unequal size. A few
+   * large ones, never a field of small — the depth tops out at sixteen and the
+   * cycler mostly draws four or eight.
+   *
+   * Cells sample from outside their own bounds, so the frame is always fully
+   * covered: this cuts the picture up without ever leaving a gap in it.
+   */
+  deck: number;
+  /** Splits of the partition. 2 is four panels, 4 is sixteen. Integral and
+   *  discontinuous, so it may only change while the amount is near zero — which
+   *  a pulse guarantees by starting there. */
+  deckDepth: number;
+  /** How far a panel travels at full amount, in fractions of the frame. */
+  deckSpread: number;
+  /** How far a panel may turn at full amount, radians. Small: a rectangle of
+   *  page turning more than a few degrees stops reading as a panel that has
+   *  slipped and starts reading as one that has fallen over. */
+  deckTurn: number;
+  /** Redraws the layout. Every value is a different arrangement of unequal
+   *  rectangles, and it is drawn fresh per pulse so no two deals are alike. */
+  deckSeed: number;
+
   // --- Undulating -----------------------------------------------------------
   /** Sinusoidal domain warp — the liquid one. */
   warp: number;
@@ -891,6 +975,62 @@ export interface PostParams {
   /** Concentric standing waves out from the centre. */
   ripple: number;
   rippleFreq: number;
+
+  /**
+   * The same rings, from anywhere but the centre — and from several places at
+   * once.
+   *
+   * `ripple` is one wave train centred on the viewer, which is the whole of what
+   * is wrong with it: a frame rippling from the middle out is a frame with a
+   * middle, and after a few seconds the eye has found it and the effect has
+   * nothing further to say. This is the same arithmetic with the centre taken
+   * away — up to four sources at their own places, each with its own spacing,
+   * its own heading and its own reach, so the interference between them is the
+   * subject rather than the rings themselves.
+   *
+   * Everything about the arrangement is hashed out of `pondSeed` rather than
+   * carried in a uniform per source, on the deck's reasoning: a whole layout
+   * from one number, redrawn per pulse and never twice alike.
+   *
+   * The two are kept as separate effects, not one with a mode flag, because
+   * they read as different events — the centred one is the frame breathing, and
+   * this is something happening *in* it — and because a preset that authored the
+   * plain ripple should keep getting the plain ripple.
+   */
+  pond: number;
+  /** Ring spacing, cycles per stage unit, before each source's own variation. */
+  pondFreq: number;
+  /** How many sources are running, 1 to POND_MAX. Integral, so like `deckDepth`
+   *  it may only change while the amount is near zero. */
+  pondSources: number;
+  /** How far one source's rings carry, in stage units — the frame's half-height
+   *  is 1/2 and its corner is near 9/10. This is what makes the effect local:
+   *  at the low end each source is a pool a few inches across, and only near the
+   *  top does any one of them reach the whole frame. */
+  pondReach: number;
+  /**
+   * Standing rings against travelling drops.
+   *
+   * At 0 each source is a steady pool: rings out to `pondReach` and nothing
+   * past it. At 1 the source instead fires a packet that is born at its centre,
+   * expands to the edge of its reach and dies there, over and over and out of
+   * step with its neighbours — rain on water, which is the reading the whole
+   * effect is named for. In between the pool has a swell moving through it.
+   */
+  pondBurst: number;
+  /** How far the push is turned off radial, 0 to a right angle. At 0 the rings
+   *  move the picture in and out along their own radius; at 1 they drag it
+   *  around them, and a pond of that is four slow whirlpools. */
+  pondSwirl: number;
+  /** Travel of the rings, cycles per second. Integrated into `VizPhases.pond`
+   *  rather than evaluated, because a pulse deeper than the incumbent may
+   *  install its own rate mid-flight and a jump in phase is a jump in the
+   *  picture. */
+  pondRate: number;
+  /** Redraws the arrangement: every value is a different set of places,
+   *  spacings, headings and lifetimes. Integral in effect — it is only ever
+   *  read through a hash — so it moves only while the amount is near zero. */
+  pondSeed: number;
   /** Radius-dependent rotation, i.e. a spiral shear. Signed. */
   twist: number;
   /** Lens: positive magnifies the centre, negative pinches it. */
@@ -1047,6 +1187,79 @@ export interface PostParams {
    * something bending the frame to disperse.
    */
   disperse: number;
+  /**
+   * The key plate held while the colour plates go.
+   *
+   * The frame is split by spatial frequency — which in a comic is very nearly
+   * the split between the drawing and the fills — and the two halves are read
+   * at *different points along the same map*. The masses are taken from where
+   * the distortion actually sends them; the drawing is taken from a coordinate
+   * a fraction of the way back toward the identity. So the composition can be
+   * folded, spiralled or liquefied as far as the chain will go while the ink
+   * stays near its own scale and its own place, and the frame still parses as a
+   * page.
+   *
+   * This is not an effect. It is a *modifier*, like dispersion, and like
+   * dispersion it does nothing whatever on its own: at rest the two coordinates
+   * are the same point and the correction below is exactly zero. What it is for
+   * is raising the ceiling on everything else — every map in the chain
+   * currently stops where it stops because past that point the linework shreds,
+   * and this moves that wall rather than adding a look of its own.
+   *
+   * How far it moves it is exact rather than a matter of taste. The drawing is
+   * read at `mix(sent, identity, keyplate)`, whose Jacobian is `I + (1 - k)·J`
+   * where `J` is the map's own — so the local scale deviation the linework
+   * suffers is scaled by `1 - k`, and a hold of 0.6 lets a map be pushed two and
+   * a half times as far for the same legibility. That is the whole claim, and it
+   * is arithmetic rather than a measurement, which is why this one has no bench
+   * of its own the way `melt` does.
+   *
+   * Two consequences worth knowing. The drawing and the masses are no longer
+   * registered with each other, which at small distortions reads as a press out
+   * of register and at large ones as the page being pulled away from its own
+   * outlines — both wanted, and the second is the whole point. And a symmetry
+   * fold running underneath ends up in the *colour* only: the rosette is in the
+   * masses, the drawing over it is the plain page.
+   */
+  keyplate: number;
+  /** Where the split falls, as a mip level. Low keeps only the finest linework
+   *  in the held half and sends everything else with the map; high holds most
+   *  of the drawing back and leaves the map little more than a colour field. */
+  keyplateLevel: number;
+  /**
+   * Relief: the page lit as though its tone were height, with the light slowly
+   * orbiting.
+   *
+   * The drawing becomes terrain. Where a panel goes from dark to light the
+   * surface has a slope, and a slope facing the light brightens while one facing
+   * away falls into shadow — so a figure's outline gains an edge, a balloon
+   * lifts off the page, and the whole thing turns under the light without a
+   * single sample moving.
+   *
+   * Shading only, and that is the distinction from `melt`, which reads the same
+   * field and *displaces* by it. Nothing here moves a pixel, so it cannot cost
+   * legibility at any depth — it is the third member of a lighting family with
+   * `caustics` and `neon`, and like both of those it is at its best over a map
+   * that is bending the frame underneath it.
+   *
+   * Centred on the flat surface's own response, so an unsloped region comes back
+   * exactly as it was and the frame's total light is unchanged: slopes are
+   * symmetric in any real page, so what one side of an edge gains the other
+   * loses. The same guarantee the bloom and the sheen make — and measured over
+   * real pages at every grain the cycler draws, the mean gain lands at 0.97 to
+   * 0.98 rather than exactly 1, the two percent being the low clamp biting on a
+   * fraction of a percent of pixels. It errs dark, which is the safe direction
+   * beside a trail that keeps its maximum.
+   */
+  relief: number;
+  /** Mip level the height is read from — the grain of the terrain. Slopes are
+   *  measured across one texel of whatever level this names, so the apparent
+   *  steepness does not change with it: low is fine crumpled foil, high is a few
+   *  broad hills. */
+  reliefLevel: number;
+  /** How fast the light orbits, radians a second. A circuit at the default takes
+   *  about two minutes. */
+  reliefRate: number;
   /** Directional blur along the radius. Streaks the frame under motion. */
   blur: number;
   /** Which way it streaks: 0 is radial (zoom), 1 is tangential (spin). */
@@ -1150,6 +1363,32 @@ export interface PostParams {
    *  paper that was never white. Static, so it can carry any amount. */
   paper: number;
 
+  /**
+   * Contours: iso-luminance lines drawn across the frame, the page as a
+   * topographic map.
+   *
+   * Unlike `neon`, which lights edges that are already drawn, this *invents*
+   * linework — a smooth sky becomes a set of nested rings, a figure's modelling
+   * becomes the contours of a landform. That makes it the rare effect which adds
+   * structure a viewer can follow rather than taking some away, and it is why it
+   * sits well over the wildest maps in the pool: whatever the geometry has done,
+   * the contours describe the result.
+   *
+   * Strictly darkening — the lines are ink laid on the page — so there is no
+   * washout argument to make, and it reads as a printing technique rather than
+   * as a filter, which is the register the rest of the print family is in.
+   *
+   * Placed before the posterise rather than after it. Both are keyed to tone, so
+   * run together the lines fall on the quantiser's own steps and the pair reads
+   * as one deliberate treatment; the other order would measure the tone of an
+   * already-quantised frame, whose slope is zero inside a band and a cliff
+   * between two.
+   */
+  contour: number;
+  /** How many bands the tonal range is cut into. Low is a few broad rings, high
+   *  is dense hatching. */
+  contourBands: number;
+
   // --- Surreal --------------------------------------------------------------
   /**
    * The drawing's own linework, lit: edges in the frame are found and given
@@ -1219,6 +1458,14 @@ export interface VizPhases {
    *  view, halves are the grid wide open. */
   pane: number;
   kaleido: number;
+  /** Where the Möbius slide's direction points, radians. */
+  mobius: number;
+  /** Where the relief's light has orbited to, radians. */
+  relief: number;
+  /** How far the pond's rings have travelled, in cycles. Wrapped against
+   *  POND_CYCLE — the sine takes whole cycles, and so does the packet age the
+   *  burst reading is built on, so only a multiple of both may be discarded. */
+  pond: number;
   droste: number;
   fold: number;
   tunnel: number;

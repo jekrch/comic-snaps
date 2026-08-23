@@ -14,6 +14,17 @@ import { JULIA_WRAP } from "../julia";
 export const FOLD_ITERS = 4;
 
 /**
+ * Cycles of ring travel after which the pond's phase may be wrapped.
+ *
+ * Shared with the director, which does the wrapping. Every rate a source may
+ * draw is a half, a whole or three halves of the phase, and the packet age
+ * runs at half of that again, so the smallest interval over which *all* of
+ * them return to where they started is eight: at any other wrap the rings
+ * would step, at whatever amount the effect happened to be running.
+ */
+export const POND_CYCLE = 8;
+
+/**
  * Iterations of the Julia orbit.
  *
  * Two things set this. It is the effect's resolution limit — the set is a
@@ -82,6 +93,18 @@ uniform float uWarpScale;
 uniform float uWarpSpeed;
 uniform float uRipple;
 uniform float uRippleFreq;
+uniform float uPond;
+uniform float uPondFreq;
+/** How many sources are running. Read as a loop bound against POND_MAX, so a
+ *  fractional value simply takes the sources below it. */
+uniform float uPondSources;
+uniform float uPondReach;
+uniform float uPondBurst;
+uniform float uPondSwirl;
+/** Travel of the rings, in cycles. Integrated in the director and wrapped
+ *  against POND_CYCLE, which every per-source rate below divides evenly. */
+uniform float uPondPhase;
+uniform float uPondSeed;
 uniform float uTwist;
 uniform float uBulge;
 uniform float uSolarize;
@@ -144,6 +167,21 @@ uniform float uQuasiFreq;
 uniform float uTurbulence;
 uniform float uTurbulenceScale;
 uniform float uTurbulenceSpeed;
+uniform float uDeck;
+uniform float uDeckDepth;
+uniform float uDeckSpread;
+uniform float uDeckTurn;
+uniform float uDeckSeed;
+uniform float uMobius;
+uniform float uMobiusShift;
+uniform float uMobiusPhase;
+uniform float uRelief;
+uniform float uReliefLevel;
+uniform float uReliefPhase;
+uniform float uContour;
+uniform float uContourBands;
+uniform float uKeyplate;
+uniform float uKeyplateLevel;
 uniform float uMelt;
 uniform float uMeltLevel;
 uniform float uMeltAngle;
@@ -224,6 +262,126 @@ const float MELT_REACH = 1.35;
  * frame does on its own.
  */
 const float NEON_LEVEL = 0.9;
+/**
+ * The relief surface's height against one texel of its own level, and the gain
+ * on the shading that comes out.
+ *
+ * Measuring the slope across one texel of whichever level is being read is what
+ * makes the apparent steepness independent of the grain — the same
+ * normalisation the melt uses for its reach, and the reason there is no depth
+ * knob here to get wrong. FLAT is then the only thing setting how carved the
+ * page looks: smaller is steeper.
+ */
+const float RELIEF_FLAT = 0.9;
+const float RELIEF_GAIN = 1.3;
+/** How black a contour line gets at full amount. Ink, not a mask. */
+const float CONTOUR_INK = 0.85;
+/**
+ * Contour line width, in units of the tone's own screen derivative — so about
+ * one and a quarter pixels.
+ *
+ * Measured rather than eyeballed, because the quantity that decides whether
+ * this reads as contours or as hatching is the *inked fraction of the frame*,
+ * and comic art has far more tone variation per pixel than a landscape does.
+ * Over real pages at full amount: at this width, four bands ink 15% of the
+ * frame and twelve ink 26%, darkening the page by 7% and 14%. At the 1.5 this
+ * started at, twelve bands inked 40% and took a quarter of the page's light —
+ * which is a crosshatch, not a map.
+ */
+const float CONTOUR_WIDTH = 0.6;
+/**
+ * How much of the Mobius disc's radius the frame's corner reaches.
+ *
+ * The one number the whole map's safety rests on, because both of the bounds
+ * that matter are functions of it and the slide alone. With the corner at this
+ * fraction and a slide of s, the Jacobian over the visible frame is confined to
+ *
+ *   (1 - s*s) / (1 + s*FIT)^2  ..  (1 - s*s) / (1 - s*FIT)^2
+ *
+ * which at the deepest slide the cycler draws (0.38) is 0.55 to 1.49. Checked
+ * numerically against the map the shader actually computes, at aspects from
+ * portrait to ultrawide: the closed form is a true bound everywhere, and every
+ * pixel of the frame is inside the readable band. The low end crosses 0.5 at a
+ * slide of about 0.43, which is where the cycler's ceiling comes from and what
+ * anyone pushing the slider past it is giving up.
+ *
+ * Raising this fills more of the disc and buys a stronger slide for a worse
+ * corner; the trade is one line of arithmetic, not a matter of taste.
+ *
+ * It is also what makes the denominator below provably non-zero: |conj(a)z| is
+ * at most s*FIT, so at any slide under 1/FIT there is no pole to guard against.
+ */
+const float MOBIUS_FIT = 0.64;
+/** Deepest the deal may cut. Sixteen panels, and a constant so the split loop
+ *  unrolls — a uniform bound would leave the whole body live. The cycler draws
+ *  well under it: see the panel-scale note on PostParams.deck. */
+const int DECK_MAX_DEPTH = 4;
+/**
+ * Most sources one pond may run.
+ *
+ * Four is where interference stops reading as several places and starts reading
+ * as a boil: past it the sources overlap everywhere, the rings cancel, and what
+ * is left is a shimmer with no centres in it — which is what turbulence is
+ * for, and it does it better and for the same money.
+ */
+const int POND_MAX = 4;
+/** How far a source may wander from where the seed put it, stage units. Small:
+ *  the drift is there so a long hold does not settle, not so the sources tour
+ *  the frame. */
+const float POND_DRIFT = 0.09;
+/**
+ * How fast a drop's front travels, as a fraction of the rings' own travel —
+ * so also the reciprocal of a packet's life, two ring cycles at unit rate.
+ *
+ * A half rather than a whole on purpose. With the front locked to the rings
+ * the packet would be a bubble with a still pattern inside it; at half, the
+ * rings are born at the back of the group, run forward through it and vanish
+ * off its leading edge. That is not a stylisation — deep water carries a
+ * gravity wave group at exactly half its phase speed, and it is the detail
+ * that makes a splash read as a splash.
+ */
+const float POND_DROP = 0.5;
+/** Width of the drop's ring, as the reciprocal square of a fraction of the
+ *  source's reach: about a quarter of it. */
+const float POND_SHARP = 14.0;
+/**
+ * The slope budget: the most any one source may bend the frame, as the
+ * derivative of its own displacement.
+ *
+ * This is the number the whole effect is scaled by, and scaling by a *slope*
+ * rather than by an amplitude is the point. A radial sine displaces by A and
+ * bends by A times its frequency, so an amplitude held fixed while the rings
+ * tighten walks straight past 1 — where the map stops being injective and the
+ * page starts folding back through itself — and a pond draws far tighter rings
+ * than the centred ripple, because its pools are a fraction of the frame and
+ * rings need room inside one to read as rings at all. So the amplitude is
+ * derived from the frequency instead, and every source gets the same bend
+ * whatever spacing it drew.
+ *
+ * Under 1 rather than at it because sources overlap. The sum is normalised by
+ * the root of their count and not by the count itself — see the end of the
+ * block — so two pools meeting can reach about a root-two multiple of this
+ * between them, and this is the largest value at which a sweep of the cycler's
+ * own draws finds no folded pixel anywhere in the frame at any phase.
+ */
+const float POND_SLOPE = 0.62;
+/** Ceiling on the amplitude the budget above implies, stage units. It only
+ *  binds at the loose end — below about a dozen radians a unit the slope is
+ *  cheap and the swell is enormous, and a fifteenth of the frame is as much
+ *  travel as §6 will pay for however smooth it is. */
+const float POND_AMP = 0.06;
+/**
+ * Radius over which a source's push fades in, in radians of its own rings.
+ *
+ * The exact centre of a radial displacement has no direction: the push flips
+ * sign across it, so a source with any amplitude there is a seam. The centred
+ * ripple has the same point and gets away with it — there is one of them, in
+ * the middle of the frame, where a viewer is not looking for a defect. Four of
+ * them scattered over the picture is a different proposition, so this fades the
+ * push out over the first fifth of a wavelength, which is also what a drop
+ * does: the water it came from is the calmest part of the pond.
+ */
+const float POND_CORE = 1.2;
 const int BLUR_TAPS = 6;
 /** Two, not the three this would want on its own. Dispersion re-runs the whole
  *  coordinate chain per channel, so every octave here is paid for three times
@@ -243,10 +401,16 @@ vec2 rot(vec2 p, float a) {
   return vec2(p.x * c - p.y * s, p.x * s + p.y * c);
 }
 
-/** Complex multiply. The Julia iteration and its derivative are the only things
- *  here that need one. */
+/** Complex multiply. The Julia iteration, its derivative and the Mobius slide
+ *  are the only things here that need one. */
 vec2 cmul(vec2 a, vec2 b) {
   return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+}
+
+/** Complex divide. No guard on the denominator, and that is a property of the
+ *  one caller rather than an oversight — see MOBIUS_FIT. */
+vec2 cdiv(vec2 a, vec2 b) {
+  return cmul(a, vec2(b.x, -b.y)) / dot(b, b);
 }
 
 /**
@@ -1214,6 +1378,41 @@ vec2 distortFold(vec2 uv) {
 }
 
 /**
+ * The panel a point falls in, as a rectangle, with its own seed.
+ *
+ * A binary split rather than a grid: at each step the current rectangle is cut
+ * across its longer side — longer *on screen*, so the aspect is folded in and a
+ * wide frame is not cut into a row of slivers — at a fraction drawn from the
+ * rectangle's own corners. So the layout is a handful of rectangles of unequal
+ * size, which is what a comic page is, and it costs one hash per level.
+ *
+ * The seed accumulates the path taken rather than being hashed from the
+ * rectangle at the end, which makes it exact: two cells that happen to have
+ * equal corners cannot collide, because they cannot have arrived the same way.
+ */
+vec4 deckCell(vec2 p, out float seed) {
+  vec2 lo = vec2(0.0);
+  vec2 hi = vec2(1.0);
+  float id = 1.0;
+  for (int i = 0; i < DECK_MAX_DEPTH; i++) {
+    if (float(i) >= uDeckDepth) break;
+    vec2 size = (hi - lo) * vec2(uAspect, 1.0);
+    float cut = mix(0.34, 0.66, hash21(lo * 17.3 + hi * 31.7 + vec2(float(i), uDeckSeed * 53.1)));
+    if (size.x > size.y) {
+      float x = mix(lo.x, hi.x, cut);
+      if (p.x < x) hi.x = x; else lo.x = x;
+      id = id * 2.0 + (p.x < x ? 0.0 : 1.0);
+    } else {
+      float y = mix(lo.y, hi.y, cut);
+      if (p.y < y) hi.y = y; else lo.y = y;
+      id = id * 2.0 + (p.y < y ? 0.0 : 1.0);
+    }
+  }
+  seed = id;
+  return vec4(lo, hi);
+}
+
+/**
  * The third stage: the smooth displacements, and they alone are scaled by disp.
  *
  * That is what dispersion moves — three refraction strengths through the one
@@ -1226,6 +1425,67 @@ vec2 distortFold(vec2 uv) {
  * else here.
  */
 vec2 distortDisplace(vec2 uv, float disp) {
+  if (uDeck > 0.0) {
+    /*
+     * The page dealt out — see PostParams.deck.
+     *
+     * First in the function, which in image terms makes it the outermost
+     * transformation: the panel edges are screen-aligned rectangles and every
+     * other map in the chain runs *inside* them. The other order would cut the
+     * panels out of a frame that had already been bent, which puts curved
+     * edges on the one effect here whose whole subject is straight ones.
+     *
+     * Rigid, and that word is doing all the work: rotate about the panel's own
+     * centre, then translate. No scale anywhere, so the Jacobian inside a cell
+     * is exactly the identity and the art in it is the page at native size
+     * however far the composition has been thrown. This is the only map in the
+     * chain with nothing to measure.
+     *
+     * Both amounts scale with the envelope, so a pulse *is* the gesture: the
+     * page separates into panels, they drift and turn, and they close back up.
+     * It needs no rate of its own to move, which is why it has none.
+     */
+    float seed;
+    vec4 cell = deckCell(uv, seed);
+    vec2 centre = (cell.xy + cell.zw) * 0.5;
+    float spin = (hash21(vec2(seed, 9.13)) - 0.5) * uDeckTurn * uDeck * disp;
+    float heading = hash21(vec2(seed, 3.71)) * TAU;
+    // Turned in stage units and put back, so a panel on a wide frame turns
+    // about its own centre rather than shearing with the aspect.
+    vec2 local = rot((uv - centre) * vec2(uAspect, 1.0), spin) / vec2(uAspect, 1.0);
+    uv = centre + local + vec2(cos(heading), sin(heading)) * uDeckSpread * uDeck * disp;
+  }
+
+  if (uMobius > 0.0) {
+    /*
+     * The Mobius slide — the picture translated inside a disc that contains it,
+     * with the rim pinned. See PostParams.mobius for what it buys and why it is
+     * restricted to the automorphisms of a disc rather than to the full group.
+     *
+     * Placed here, at the head of the displacements, for the ordering reason at
+     * the top of distortFold: this is a *smooth* map with no periodicity of its
+     * own, so ahead of the symmetry folds it would tear every seam they close.
+     * Behind them it slides the finished rosette around as one object, which is
+     * the reading that was wanted anyway.
+     *
+     * Which also means it is dispersed like everything else here, and correctly
+     * so: each channel gets its own automorphism at its own slide, and each is
+     * still conformal, so the fringing appears where the map bends hardest and
+     * nowhere else. That is what dispersion is for.
+     *
+     * The disc is sized off the frame rather than fixed, so the bound below
+     * holds at any aspect: what MOBIUS_FIT names is where the *corner* falls,
+     * and the corner is the worst case for every quantity here.
+     */
+    float radius = length(vec2(uAspect, 1.0)) * 0.5 / MOBIUS_FIT;
+    vec2 z = toStage(uv) / radius;
+    // The amount scales the slide rather than blending two coordinates, so
+    // every value of it is a genuine automorphism and zero is the identity map
+    // exactly rather than a mixture that happens to reduce to it.
+    vec2 a = uMobiusShift * uMobius * disp * vec2(cos(uMobiusPhase), sin(uMobiusPhase));
+    uv = fromStage(cdiv(z - a, vec2(1.0, 0.0) - cmul(vec2(a.x, -a.y), z)) * radius);
+  }
+
   vec2 p = toStage(uv);
   float r = length(p);
 
@@ -1239,6 +1499,99 @@ vec2 distortDisplace(vec2 uv, float disp) {
 
   if (uRipple > 0.0) {
     p += (p / max(r, 1e-4)) * sin(r * uRippleFreq - uTime * 1.7) * uRipple * disp * 0.045;
+  }
+
+  if (uPond > 0.0) {
+    /*
+     * The pond — the ripple with its centre taken away. See PostParams.pond.
+     *
+     * Sat directly under the ripple because it is the same displacement: a
+     * radial sine pushed along its own radius. Everything below the first two
+     * lines of the loop is about *where* — the places, their reaches, and the
+     * two windows that decide whether a source is a standing pool or a drop
+     * travelling out of one. The whole arrangement is hashed from one seed, as
+     * the deck's layout is, so a pulse costs one uniform rather than four.
+     */
+    vec2 g = vec2(0.0);
+    for (int i = 0; i < POND_MAX; i++) {
+      if (float(i) >= uPondSources) break;
+      float id = float(i) * 3.0 + uPondSeed * 61.0;
+      /*
+       * Placed in the frame and then carried into the stage, rather than drawn
+       * in stage coordinates directly: the hash gives a point in the unit
+       * square whatever the aspect is, so the same seed reads as the same
+       * arrangement on a phone held upright and on a television.
+       */
+      vec2 home = toStage(vec2(hash21(vec2(id, 1.73)), hash21(vec2(id, 5.31))));
+      float hf = hash21(vec2(id, 9.11));
+      float hr = hash21(vec2(id, 2.47));
+      float hd = hash21(vec2(id, 6.73));
+      float hs = hash21(vec2(id, 3.97));
+      float hw = hash21(vec2(id, 8.29));
+      float hv = hash21(vec2(id, 4.13));
+      /*
+       * Sources wander on slow circles of their own. On uTime rather than on
+       * the travel phase, and that is not an oversight: the phase wraps, and a
+       * wrap is invisible in a sine and a step in a position.
+       */
+      float turn = hr * TAU + uTime * mix(0.02, 0.05, hd);
+      vec2 c = home + vec2(cos(turn), sin(turn)) * POND_DRIFT;
+      vec2 d = p - c;
+      float rd = length(d);
+      float reach = max(uPondReach * mix(0.6, 1.4, hf), 1e-3);
+      float freq = uPondFreq * mix(0.7, 1.45, hs);
+      // Half of them run inward. Two sources facing each other read as two
+      // things happening; two running the same way read as one thing repeated,
+      // which is the whole argument against a single centred ripple.
+      float dir = hd < 0.5 ? -1.0 : 1.0;
+      /*
+       * Halves, unity and three halves — never anything between. The phase is
+       * wrapped against POND_CYCLE and only a rate that divides it evenly
+       * survives the wrap: an arbitrary multiplier would put a step into the
+       * rings every time the phase came round, at whatever amount the effect
+       * happened to be running.
+       */
+      float rate = (0.5 + 0.5 * floor(hv * 3.0)) * dir;
+      float travel = uPondPhase * rate;
+      float wave = sin(rd * freq - travel * TAU);
+
+      // The standing reading: a pool with a soft rim and nothing beyond it.
+      float pool = 1.0 - smoothstep(0.35, 1.0, rd / reach);
+
+      /*
+       * And the travelling one: a packet born at the source, expanding to the
+       * edge of its reach and dying there. Built on the same phase, so the two
+       * are one wave train under two windows rather than two effects — which is
+       * why pondBurst can sit anywhere between them and still mean something.
+       */
+      float age = fract(travel * POND_DROP + hf);
+      float edge = (rd - age * reach) / reach;
+      float ring = exp(-POND_SHARP * edge * edge);
+      // Born and gone smoothly. A packet that arrived at full size would be the
+      // one discontinuity this effect is able to produce.
+      float drop = ring * smoothstep(0.0, 0.12, age) * (1.0 - smoothstep(0.5, 1.0, age));
+
+      // Turned off radial by the swirl, each source its own way round: at a
+      // right angle the rings drag the picture around themselves instead of
+      // pushing it in and out, and a pond of that is four slow whirlpools.
+      vec2 push = rot(d / max(rd, 1e-4), uPondSwirl * 1.5708 * (hw < 0.5 ? -1.0 : 1.0));
+      // Amplitude out of the slope budget and the source's own spacing — see
+      // POND_SLOPE — with the core faded so the one point that has no radial
+      // direction is also the one point with nothing to push.
+      float amp = min(POND_SLOPE / freq, POND_AMP) * smoothstep(0.0, POND_CORE, rd * freq);
+      g += push * wave * amp * mix(pool, drop, uPondBurst);
+    }
+    /*
+     * Root of the count rather than the count.
+     *
+     * The sources only overlap where their reaches do, so their sum grows like
+     * a random walk and not like a total: dividing by the count would make a
+     * pond of four a quarter of the effect of a pond of one everywhere except
+     * the few places they meet, and dividing by nothing would put four times
+     * the travel on screen for no more picture. This is the budget §6 asks for
+     * — the rate a viewer sees is the same however many drops are running.
+     */
+    p += g * inversesqrt(max(uPondSources, 1.0)) * uPond * disp;
   }
 
   if (uQuasi > 0.0) {
@@ -1473,6 +1826,50 @@ void main() {
     suvK = suvG + plateDrift(3.0);
   }
 
+  /*
+   * The key plate held back while the colour plates go — see PostParams.keyplate.
+   *
+   * The four plate coordinates above are where the map sends the *picture*. Here
+   * they are pulled a fraction of the way back toward the identity, which is
+   * where the map will send the *drawing* instead, and the difference between
+   * the frame's low-frequency content at those two points is carried across as
+   * a lift. What comes out is the sharp half of the page read from the gentler
+   * coordinate and the soft half read from the wild one, which is the whole
+   * trick: the composition goes as far as the chain will take it and the ink
+   * stays near its own scale.
+   *
+   * Written as full(held) + masses(sent) - masses(held) rather than as a
+   * band-split and recombine, because that is the same three taps arranged so
+   * that two of them are coarse mips — a tiny footprint that stays in cache —
+   * and so that the identity at zero is exact rather than approximate.
+   *
+   * The correction sums to nothing over the frame — both terms are the same
+   * image read at two points — so there is no washout argument here: measured
+   * over real pages under a map strong enough to stand in for a fold, the mean
+   * level shift is under a thousandth and three or four percent of the frame
+   * clips at each end, which is what the clamp below is for.
+   *
+   * The lift is computed once and shared by all three channels even under
+   * dispersion. Dispersion exists to fringe *edges*, and there are no edges in
+   * a mip this coarse; splitting the correction per channel would cost two more
+   * taps to say nothing. The same reasoning covers misregistration: the drifting
+   * K plate is a property of the drawing, and the drawing is the half of the
+   * frame this does not touch.
+   */
+  vec3 lift = vec3(0.0);
+  if (uKeyplate > 0.0) {
+    // Never finer than the frame is being read at: under a compressing map the
+    // scene's own level already exceeds this one, and a split below it would be
+    // asking for detail that the fetch is not going to return anyway.
+    float level = max(uKeyplateLevel, lod);
+    vec2 held = mix(suvG, uv, uKeyplate);
+    lift = textureLod(uScene, suvG, level).rgb - textureLod(uScene, held, level).rgb;
+    suvR = mix(suvR, uv, uKeyplate);
+    suvB = mix(suvB, uv, uKeyplate);
+    suvK = mix(suvK, uv, uKeyplate);
+    suvG = held;
+  }
+
   vec3 col;
   if (uBlur > 0.0) {
     // Radial at 0, tangential at 1. Both scale with radius on their own, so the
@@ -1489,6 +1886,14 @@ void main() {
   } else {
     col = fetch(suvR, suvG, suvB, suvK, split, lod);
   }
+
+  // Clamped rather than left to the shoulder: the lift is a difference of two
+  // colours and can push a pixel out of gamut at either end, and everything
+  // below this — the ink dilation, the screens, the tone fold — is written for
+  // a colour and not for a signed quantity. It sums to nothing over the frame
+  // by construction, both terms being the same image read at two points, so
+  // there is no washout argument to make here beyond the clamp.
+  if (uKeyplate > 0.0) col = clamp(col + lift, 0.0, 1.0);
 
   if (uBleed > 0.0) {
     // Ink spreads *out* of a line into absorbent stock rather than smearing
@@ -1647,6 +2052,37 @@ void main() {
   // picture instead of the picture sliding underneath a static screen.
   if (uHalftone > 0.0) col = mix(col, halftone(col, mix(uv, suvG, uBenday)), uHalftone);
 
+  if (uRelief > 0.0) {
+    /*
+     * The page lit as terrain — see PostParams.relief.
+     *
+     * Four taps of a coarse mip give the height's central differences, and the
+     * differences are taken across exactly one texel of the level being read.
+     * That normalisation is the whole reason there is no steepness parameter:
+     * a coarse level has a gentler gradient in absolute terms and a finer one a
+     * sharper, so measuring per-texel makes the two look equally carved and
+     * leaves the level free to mean nothing but grain.
+     *
+     * Centred on the flat surface's own response — a page with no slope has
+     * normal (0,0,1) and therefore lands exactly on l.z, which subtracts to
+     * zero — so unsloped regions come back untouched and the frame's total
+     * light is unchanged. Slopes are symmetric in any real drawing, so what one
+     * side of an edge gains the other loses.
+     */
+    vec2 e = exp2(uReliefLevel) / uResolution;
+    float hl = dot(textureLod(uScene, suvG - vec2(e.x, 0.0), uReliefLevel).rgb, LUMA);
+    float hr = dot(textureLod(uScene, suvG + vec2(e.x, 0.0), uReliefLevel).rgb, LUMA);
+    float hd = dot(textureLod(uScene, suvG - vec2(0.0, e.y), uReliefLevel).rgb, LUMA);
+    float hu = dot(textureLod(uScene, suvG + vec2(0.0, e.y), uReliefLevel).rgb, LUMA);
+    vec3 n = normalize(vec3(hl - hr, hd - hu, RELIEF_FLAT));
+    vec3 l = normalize(vec3(cos(uReliefPhase), sin(uReliefPhase), 0.8));
+    // Bounded rather than left open: the response is small and symmetric for the
+    // gentle slopes that make up nearly all of a page, but a near-vertical wall
+    // can reach a long way down, and a gain that went negative would invert the
+    // picture in a thin line along one edge.
+    col *= clamp(1.0 + uRelief * (dot(n, l) - l.z) * RELIEF_GAIN, 0.25, 1.75);
+  }
+
   if (uCaustics > 0.0) {
     /*
      * Light through moving water: two ridged noises sliding across each other,
@@ -1689,6 +2125,29 @@ void main() {
   // Tone fold: highlights invert and mid-tones peak, the darkroom solarisation.
   // Sits before posterize so the quantiser sees the final tone curve.
   if (uSolarize > 0.0) col = mix(col, 1.0 - abs(1.0 - 2.0 * col), uSolarize);
+
+  if (uContour > 0.0) {
+    /*
+     * Iso-luminance lines — the page as a topographic map. See
+     * PostParams.contour.
+     *
+     * The width is taken from the tone's own screen derivative rather than
+     * being a fixed slice of the tonal range, which is what gives lines of
+     * constant thickness instead of hairlines across a steep gradient and
+     * fog across a shallow one. A real contour map states steepness by how
+     * *close together* its lines are, and it can only do that if they are all
+     * the same width.
+     *
+     * fwidth inside this branch is well defined: the condition is a uniform, so
+     * every invocation takes the same path and the implicit derivative has the
+     * neighbours it needs. It would not be safe under a per-pixel condition.
+     */
+    float lum = dot(col, LUMA);
+    float band = fract(lum * uContourBands);
+    float w = max(fwidth(lum) * uContourBands, 1e-4);
+    float line = 1.0 - smoothstep(0.0, w * CONTOUR_WIDTH, min(band, 1.0 - band));
+    col *= 1.0 - line * uContour * CONTOUR_INK;
+  }
 
   if (uPosterize > 0.0) {
     float levels = mix(64.0, 4.0, clamp(uPosterize, 0.0, 1.0));
