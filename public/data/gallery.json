@@ -6,7 +6,7 @@
       "title": "Faithless",
       "slug": "faithless",
       "issue": 5,
-      "year": 2026,
+      "year": 2019,
       "artist": "Maria Llovet",
       "image": "images/faithless/issue-5-1787879660.jpg",
       "notes": null,
@@ -24,7 +24,7 @@
         [
           13.6,
           3.8,
-          -3.0
+          -3
         ],
         [
           32.3,
@@ -194,7 +194,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -3352,7 +3352,7 @@
     {
       "seq": 157,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1782027293",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3426,7 +3426,7 @@
     {
       "seq": 155,
       "id": "the-complete-omaha-the-cat-dancer-vol-8-1781897102",
-      "title": "The Complete \u201cOmaha\u201d the Cat Dancer",
+      "title": "The Complete “Omaha” the Cat Dancer",
       "slug": "the-complete-omaha-the-cat-dancer",
       "issue": "Vol 8",
       "year": 2013,
@@ -3648,7 +3648,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
