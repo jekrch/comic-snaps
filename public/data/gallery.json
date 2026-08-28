@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 250,
+      "id": "faithless-5-1787880016",
+      "title": "Faithless",
+      "slug": "faithless",
+      "issue": 5,
+      "year": 2019,
+      "artist": "Maria Llovet",
+      "image": "images/faithless/issue-5-1787880016.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-28T01:20:19.143Z"
+    },
+    {
       "seq": 249,
       "id": "faithless-5-1787879660",
       "title": "Faithless",
