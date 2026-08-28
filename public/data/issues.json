@@ -3281,6 +3281,92 @@
       ]
     },
     {
+      "id": "faithless-5",
+      "series": "faithless",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "brian-azzarello",
+          "name": "Brian Azzarello",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "maria-llovet",
+          "name": "Maria Llovet",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "becky-cloonan",
+          "name": "Becky Cloonan",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-semanas",
+          "name": "Daniel Semanas",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eduardo-risso",
+          "name": "Eduardo Risso",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-pope",
+          "name": "Paul Pope",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sophie-philips-roberts",
+          "name": "Sophie Philips-Roberts",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "scott-newman",
+          "name": "Scott Newman",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/faithless-2019-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "faithless-ii-5",
       "series": "faithless-ii",
       "issue": 5,
