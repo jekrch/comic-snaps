@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T22:49:47.794Z",
+  "generatedAt": "2026-08-29T22:49:57.117Z",
   "targets": {
     "series:stray-bullets": {
       "label": "Stray Bullets",
@@ -12,7 +12,7 @@
           "score": 10,
           "review": null,
           "createdAt": "2026-08-29T22:49:47.794Z",
-          "updatedAt": "2026-08-29T22:49:47.794Z"
+          "updatedAt": "2026-08-29T22:49:57.117Z"
         }
       ]
     }
