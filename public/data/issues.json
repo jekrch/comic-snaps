@@ -2641,6 +2641,66 @@
       ]
     },
     {
+      "id": "concrete-stars-over-sand-3",
+      "series": "concrete-stars-over-sand",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "paul-chadwick",
+          "name": "Paul Chadwick",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-warner",
+          "name": "Chris Warner",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jenny-blenk",
+          "name": "Jenny Blenk",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "misha-gehr",
+          "name": "Misha Gehr",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "patrick-satterfield",
+          "name": "Patrick Satterfield",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "chris-horn",
+          "name": "Chris Horn",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/concrete-stars-over-sand-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "creatures-of-the-id-1",
       "series": "creatures-of-the-id",
       "issue": 1,
