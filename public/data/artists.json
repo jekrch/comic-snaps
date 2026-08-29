@@ -9464,6 +9464,26 @@
       ]
     },
     {
+      "id": "richard-isanove",
+      "name": "Richard Isanove",
+      "description": "Richard Isanove is a French artist and painter working in the American comic book industry.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9247947-richard-isanove.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/847/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/richard-isanove/4040-3774/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "richard-mercado",
       "name": "Richard Mercado",
       "description": "",
@@ -10897,6 +10917,27 @@
       "country": "United States of America",
       "aliases": [
         "Steve Oliffe"
+      ]
+    },
+    {
+      "id": "steve-skroce",
+      "name": "Steve Skroce",
+      "description": "Steve Skroce's career accolades include:\r\n\r\n- Penciling Spider-Man - Co-creating X-Man (Nate Grey) - Storyboarding the Matrix movies",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/34076/670163-450px_skroce_21_march_2006.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1228/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-skroce/4040-14190/"
+        }
+      ],
+      "country": "Canada",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
