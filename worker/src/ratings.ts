@@ -1,11 +1,4 @@
-import type {
-  Env,
-  Gallery,
-  InlineKeyboardMarkup,
-  PanelEntry,
-  SeriesEntry,
-  SeriesFile,
-} from "./types";
+import type { Env, Gallery, PanelEntry, SeriesEntry, SeriesFile } from "./types";
 import { parseIssue, slugify } from "./caption";
 import { formatIssue, mutateJsonFile, readGalleryJson, readJsonFile } from "./github";
 
@@ -26,10 +19,17 @@ export interface Aggregate {
   count: number;
 }
 
-/** One person's mark on one target. `uid` is the identity key — see `userKey`. */
+/**
+ * One person's mark on one target. `uid` is the identity key — see `userKey`.
+ *
+ * A rating is the group's by default: the site shows it as "our rating" and
+ * `user` stays null, so the published file carries no name. Signing a rating
+ * (`--me`) sets `attributed` and stores the first name to show beside it.
+ */
 export interface RatingRow {
   uid: string;
-  user: string;
+  user: string | null;
+  attributed: boolean;
   score: number | null;
   review: string | null;
   createdAt: string;
@@ -346,8 +346,44 @@ async function findPanel(env: Env, seq: number): Promise<PanelEntry | null> {
 // ---------------------------------------------------------------------------
 
 export type RateArgs =
-  | { ok: true; ref: string; score: number | null; review: string | null }
+  | {
+      ok: true;
+      ref: string;
+      score: number | null;
+      review: string | null;
+      /** `--me` / `--us`; null when the command said nothing either way. */
+      attributed: boolean | null;
+    }
   | { ok: false; message: string };
+
+/** `--me` signs a rating; `--us` hands it back to the group. */
+const ATTRIBUTION_FLAGS: Record<string, boolean> = {
+  me: true,
+  mine: true,
+  us: false,
+  ours: false,
+  anon: false,
+};
+
+/**
+ * Pull any attribution flag out of the reference. Flags are stripped wherever
+ * they appear so they can't be mistaken for the trailing score token, and the
+ * last one wins.
+ */
+function extractAttribution(head: string): { head: string; attributed: boolean | null } {
+  let attributed: boolean | null = null;
+  const kept = head
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((token) => {
+      const flag = token.match(/^--?([a-z]+)$/i);
+      const value = flag ? ATTRIBUTION_FLAGS[flag[1].toLowerCase()] : undefined;
+      if (value === undefined) return true;
+      attributed = value;
+      return false;
+    });
+  return { head: kept.join(" "), attributed };
+}
 
 /**
  * Split a rating command's argument into reference, score and review.
@@ -369,22 +405,23 @@ export function parseRateArgs(raw: string): RateArgs {
     };
   }
 
-  const tokens = head.split(/\s+/).filter(Boolean);
-  if (tokens.length === 0) return { ok: true, ref: "", score: null, review };
+  const { head: refHead, attributed } = extractAttribution(head);
+  const tokens = refHead.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return { ok: true, ref: "", score: null, review, attributed };
 
   const last = tokens[tokens.length - 1];
   const scoreMatch = last.match(/^(\d{1,3})(?:\/10)?$/);
-  if (!scoreMatch) return { ok: true, ref: head, score: null, review };
+  if (!scoreMatch) return { ok: true, ref: refHead, score: null, review, attributed };
 
   const score = parseInt(scoreMatch[1], 10);
   if (score < 1 || score > 10) {
     // A lone out-of-range number is far more likely a reference with the score
     // left off (`/rate 247`) than a bad score, so let the caller say so.
-    if (tokens.length === 1) return { ok: true, ref: head, score: null, review };
+    if (tokens.length === 1) return { ok: true, ref: refHead, score: null, review, attributed };
     return { ok: false, message: "Scores run 1–10." };
   }
 
-  return { ok: true, ref: tokens.slice(0, -1).join(" "), score, review };
+  return { ok: true, ref: tokens.slice(0, -1).join(" "), score, review, attributed };
 }
 
 // ---------------------------------------------------------------------------
@@ -439,6 +476,8 @@ function reaggregate(entry: TargetRatings): void {
 export interface UpsertResult {
   previous: { score: number | null; review: string | null } | null;
   current: { score: number | null; review: string | null };
+  /** Whether the row now carries the rater's name on the site. */
+  attributed: boolean;
   removed: boolean;
   target: Aggregate;
   series: Aggregate;
@@ -455,13 +494,18 @@ export async function readRatings(env: Env): Promise<RatingsIndex> {
  * an existing review untouched and a review alone leaves the score untouched
  * (§1.2) — that's the only merge rule, and it's why score and review share one
  * row rather than being two entities. A row left with neither is dropped.
+ *
+ * `attributed` follows the same rule: null leaves whatever the row already said,
+ * so signing a rating once keeps it signed through later edits. Unsigned rows
+ * store no name at all — the group's rating is the default (§1.8).
  */
 export async function upsertRating(
   env: Env,
   target: RatingTarget,
   user: { id: number; name: string },
   score: number | null,
-  review: string | null
+  review: string | null,
+  attributed: boolean | null = null
 ): Promise<UpsertResult> {
   const uid = await userKey(env, user.id);
   const now = new Date().toISOString();
@@ -483,7 +527,8 @@ export async function upsertRating(
 
     const row: RatingRow = existing ?? {
       uid,
-      user: user.name,
+      user: null,
+      attributed: false,
       score: null,
       review: null,
       createdAt: now,
@@ -491,7 +536,8 @@ export async function upsertRating(
     };
     if (!existing) entry.ratings.push(row);
 
-    row.user = user.name;
+    if (attributed !== null) row.attributed = attributed;
+    row.user = row.attributed ? user.name : null;
     if (score !== null) row.score = score;
     if (review !== null) row.review = review;
     row.updatedAt = now;
@@ -512,6 +558,7 @@ export async function upsertRating(
       result: {
         previous,
         current: { score: row.score, review: row.review },
+        attributed: row.attributed,
         removed,
         target: aggregate,
         series: seriesEntry
@@ -519,7 +566,7 @@ export async function upsertRating(
           : { avg: null, count: 0 },
         label,
       },
-      message: `Rate ${target.label}: ${user.name} ${score ?? "review"}`,
+      message: `Rate ${target.label}: ${row.attributed ? user.name : "group"} ${score ?? "review"}`,
     };
   });
 }
@@ -545,78 +592,9 @@ export function ratingsFrom(
 // Presentation
 // ---------------------------------------------------------------------------
 
-/**
- * The 2x5 score pad, attached to `/rate` replies only — panel posts stay plain,
- * since rating is the occasional case, not the default one.
- *
- * `callback_data` has a 64-byte budget and carries the target id outright; the
- * longest id in the gallery today comes to 57. The `r1` prefix lets the format
- * change without stale buttons misfiring. Returns undefined when an id won't
- * fit, in which case the pad is simply omitted and `/rate` still works.
- */
-export function ratingKeyboard(handle: string): InlineKeyboardMarkup | undefined {
-  if (`r1|${handle}|10`.length > 64) return undefined;
-  const row = (from: number) =>
-    Array.from({ length: 5 }, (_, i) => {
-      const score = from + i;
-      return { text: String(score), callback_data: `r1|${handle}|${score}` };
-    });
-  return { inline_keyboard: [row(1), row(6)] };
-}
-
-/** `i<id>` / `s<id>` — the target itself, since ids fit the 64-byte budget. */
-export function targetHandle(target: RatingTarget): string {
-  return `${target.type === "issue" ? "i" : "s"}${target.id}`;
-}
-
-export function parseCallbackData(data: string): { handle: string; score: number } | null {
-  const m = data.match(/^r1\|(.+)\|(\d{1,2})$/);
-  if (!m) return null;
-  const score = parseInt(m[2], 10);
-  if (score < 1 || score > 10) return null;
-  return { handle: m[1], score };
-}
-
-/** Turn a callback handle back into a full target, labelled from the gallery. */
-export async function targetFromHandle(env: Env, handle: string): Promise<RatingTarget | null> {
-  const kind = handle[0];
-  const rest = handle.slice(1);
-  if (!rest) return null;
-  if (kind !== "i" && kind !== "s") return null;
-
-  const list = await seriesIndex(env);
-  if (kind === "s") {
-    const owner = list.find((x) => x.id === rest);
-    const label = owner?.name ?? rest;
-    return { type: "series", id: rest, label, series: { id: rest, label } };
-  }
-
-  const owner = list.find((x) => rest.startsWith(`${x.id}-`));
-  const series = owner ? { id: owner.id, label: owner.name } : { id: rest, label: rest };
-  // Re-derive the issue's display label from a panel when the gallery has one.
-  const gallery = await loadGallery(env);
-  const panel = gallery.panels.find((p) => issueTargetId(p.slug, p.issue) === rest);
-  return {
-    type: "issue",
-    id: rest,
-    label: panel ? issueLabel(panel.title, panel.issue) : rest,
-    series,
-  };
-}
-
 export function formatAggregate(agg: Aggregate): string {
   if (agg.count === 0) return "no ratings yet";
   return `${agg.avg?.toFixed(1)} from ${agg.count}`;
-}
-
-/** `Saga #4 - 8.0 from 2 - Jacob 8 - Sam 8` */
-export function tallyText(label: string, rows: RatingRow[], agg: Aggregate): string {
-  const names = rows
-    .filter((r) => r.score !== null)
-    .map((r) => `${r.user} ${r.score}`)
-    .join(" · ");
-  const head = `${label} — ${formatAggregate(agg)}`;
-  return names ? `${head} · ${names}` : head;
 }
 
 /**

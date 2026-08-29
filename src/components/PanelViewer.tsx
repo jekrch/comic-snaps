@@ -63,7 +63,7 @@ function ViewerOverlay({
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
   const artistIndex = useArtistIndex();
-  const { issue: issueRatings } = useRatings(panel);
+  const { issue: issueRatings, series: seriesRatings } = useRatings(panel);
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
@@ -92,6 +92,7 @@ function ViewerOverlay({
         parentSeries={parentSeries}
         issueCredits={issueCredits}
         issueRatings={issueRatings}
+        seriesRatings={seriesRatings}
         artistIndex={artistIndex}
         onBrowse={onBrowse}
         searchUrl={searchUrl}

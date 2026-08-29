@@ -48,9 +48,14 @@ export interface IssueCredits {
   references?: Reference[];
 }
 
-/** One person's score and/or review of an issue or series. See docs/ratings-plan.md. */
+/**
+ * One person's score and/or review of an issue or series. Ratings are the
+ * group's by default — "our rating", with no name — so `user` is only set when
+ * the rater signed it (`/rate ... --me`). See docs/ratings-plan.md §1.8.
+ */
 export interface Rating {
-  user: string;
+  user: string | null;
+  attributed?: boolean;
   score: number | null;
   review: string | null;
   updatedAt: string;

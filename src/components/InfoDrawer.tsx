@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Bird, BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import type { ArtistIndex } from "../hooks/useMetadata";
@@ -30,6 +30,171 @@ function refIcon(ref: Reference) {
   return <ExternalLink size={12} />;
 }
 
+function hasMarks(r: TargetRatings | null): r is TargetRatings {
+  return !!r && r.ratings.length > 0;
+}
+
+/** The 1-10 scale, drawn as a bird apiece. */
+const SCORE_SCALE = 10;
+
+/**
+ * The logo bird's own rust — deliberately not `--color-accent`, which is the
+ * brighter orange the links use. Ten of those at once would shout; the faded
+ * rust is what the bird in the header is painted in, and the meter is quieter
+ * for borrowing it. The accent is held back for the hover, where lighting the
+ * whole run at once is the point.
+ */
+const SCORE_ON = "#8d422f";
+const SCORE_OFF = "rgba(255,255,255,0.22)";
+
+/** The logo's masked bird fades out from the waist down. So does the meter. */
+const BIRD_FADE = "linear-gradient(to bottom, #000 55%, rgba(0,0,0,0.4) 100%)";
+
+/** `10`, not `10.0` — the decimal only earns its place when there is one. */
+function formatScore(avg: number): string {
+  return Number.isInteger(avg) ? String(avg) : avg.toFixed(1);
+}
+
+/**
+ * One bird of the scale: solid for a scored one, hollow for the rest. The
+ * silhouette-versus-outline contrast is what makes the run readable at a
+ * glance — two solid masses at different opacities just read as a smudge, and
+ * at this size a filled glyph needs the room to still look like a bird.
+ *
+ * Colour is set inline rather than through a utility class: `fill`/`stroke`
+ * are `currentColor` by default, so the glyph takes whatever `color` it
+ * inherits the moment anything fails to override it — and inheriting the
+ * drawer's grey text is indistinguishable from an unscored bird.
+ */
+function ScoreBird({ on, delay }: { on: boolean; delay?: number }) {
+  const color = on ? SCORE_ON : SCORE_OFF;
+  return (
+    <Bird
+      size={16}
+      strokeWidth={1.5}
+      fill={on ? color : "none"}
+      stroke={color}
+      className={`shrink-0${on ? " score-bird-on" : ""}${delay === undefined ? "" : " score-bird-in"}`}
+      style={{ color, display: "block", animationDelay: delay ? `${delay}ms` : undefined }}
+    />
+  );
+}
+
+/**
+ * The score, then the scale it sits on: ten birds, solid in the logo's rust up
+ * to the average and hollow past it. The last bird fills part-way when an
+ * average lands between two whole numbers, so 8.5 reads as eight and a half
+ * birds rather than rounding the half away.
+ *
+ * How many people voted is deliberately nowhere on the row — at this group
+ * size it is one or two, and a second number only competes with the score for
+ * the same glance (docs/ratings-plan.md §8).
+ */
+function ScoreBirds({ avg, animate }: { avg: number; animate: boolean }) {
+  const label = `${formatScore(avg)} out of ${SCORE_SCALE}`;
+
+  return (
+    <div className="flex items-center gap-2.5" title={label} role="img" aria-label={label}>
+      {/* Fixed width and tabular figures so both scopes' meters start on the
+          same vertical line however wide the number is. */}
+      <span className="w-8 shrink-0 text-right font-display text-base tabular-nums text-white/90">
+        {formatScore(avg)}
+      </span>
+      <span
+        className="flex items-end gap-[3px]"
+        style={{ maskImage: BIRD_FADE, WebkitMaskImage: BIRD_FADE }}
+        aria-hidden
+      >
+        {Array.from({ length: SCORE_SCALE }, (_, i) => {
+          // Whole birds below the score, empty above, and one part-filled at
+          // the boundary when the average carries a fraction.
+          const fill = Math.min(Math.max(avg - i, 0), 1);
+          const delay = animate && fill > 0 ? i * 30 : undefined;
+
+          if (fill === 0) return <ScoreBird key={i} on={false} />;
+          if (fill === 1) return <ScoreBird key={i} on delay={delay} />;
+          return (
+            <span key={i} className="relative block h-4 w-4 shrink-0">
+              <ScoreBird on={false} />
+              <span
+                className="absolute left-0 top-0 h-full overflow-hidden"
+                style={{ width: `${fill * 100}%` }}
+              >
+                <ScoreBird on delay={delay} />
+              </span>
+            </span>
+          );
+        })}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * One scope on one line — its name, its score, its meter — with anything the
+ * meter can't say (a review, a name someone signed) wrapped underneath. Issue
+ * and series scores get one of these each and are never combined: a single
+ * series score shouldn't outweigh a stack of issue scores
+ * (docs/ratings-plan.md §8).
+ *
+ * The average is the group's verdict, so an unsigned score needs no line of its
+ * own — it is already in the meter. Only a review, or a rating someone signed
+ * with `--me`, earns one (§1.8).
+ */
+function RatingGroup({
+  scope,
+  data,
+  animate,
+}: {
+  scope: string;
+  data: TargetRatings;
+  animate: boolean;
+}) {
+  const rows = data.ratings.filter((r) => r.review || (r.attributed && r.user));
+
+  return (
+    <div className="score-row">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        {/* A step dimmer than the section header above it, so two lines of the
+            same small caps don't read as one flat block. */}
+        <span className="w-16 shrink-0 truncate text-[10px] uppercase tracking-widest text-white/25">
+          {scope}
+        </span>
+        {data.avg !== null && data.count > 0 && (
+          <ScoreBirds avg={data.avg} animate={animate} />
+        )}
+      </div>
+      {rows.length > 0 && (
+        <div className="mt-1.5 space-y-1 pl-18">
+          {rows.map((r, i) => {
+            // Unsigned is the default, so a name only appears when someone
+            // asked for it — trailing the review the way a byline does.
+            const byline = r.attributed && r.user
+              ? r.review || r.score === null
+                ? r.user
+                : `${r.user} · ${r.score}`
+              : null;
+            return (
+              <p
+                key={`${r.user ?? "us"}-${r.updatedAt}-${i}`}
+                className="text-xs leading-relaxed text-white/55"
+              >
+                {r.review}
+                {byline && (
+                  <span className="text-white/30">
+                    {r.review ? " — " : ""}
+                    {byline}
+                  </span>
+                )}
+              </p>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface Props {
   open: boolean;
   panel: Panel;
@@ -40,6 +205,7 @@ interface Props {
   parentSeries: Series | null;
   issueCredits: IssueCredits | null;
   issueRatings: TargetRatings | null;
+  seriesRatings: TargetRatings | null;
   artistIndex: ArtistIndex;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   searchUrl: string;
@@ -51,7 +217,7 @@ interface Props {
   overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -562,6 +728,23 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           </div>
         </div>
 
+        {/* Our rating — directly under the series card, which has just named the
+            series: the scopes here are "#4" and "Series", never the title
+            again. No divider above it either; the card's own edge is the
+            boundary, and a rule right below a filled panel reads as its
+            underline. */}
+        {(hasMarks(issueRatings) || hasMarks(seriesRatings)) && (
+          <div className="space-y-2">
+            <div className="text-[10px] uppercase tracking-widest text-white/30">Our Rating</div>
+            {hasMarks(issueRatings) && (
+              <RatingGroup scope={formatIssue(panel.issue)} data={issueRatings} animate={open} />
+            )}
+            {hasMarks(seriesRatings) && (
+              <RatingGroup scope="Series" data={seriesRatings} animate={open} />
+            )}
+          </div>
+        )}
+
         {/* Issue credits */}
         {creditGroups.length > 0 && (
           <>
@@ -595,41 +778,6 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                           </Fragment>
                         );
                       })}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Ratings — the group's scores for this issue. The count sits next to
-            the average rather than behind a prior: at this group size the count
-            is the caveat (docs/ratings-plan.md §8). */}
-        {issueRatings && issueRatings.ratings.length > 0 && (
-          <>
-            <div className="border-t border-white/8" />
-            <div>
-              <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30">
-                <span>Ratings</span>
-                <span className="text-white/20 normal-case tracking-normal">· {formatIssue(panel.issue)}</span>
-                {issueRatings.count > 0 && (
-                  <span className="ml-auto normal-case tracking-normal">
-                    <span className="font-display text-sm text-white/85">{issueRatings.avg?.toFixed(1)}</span>
-                    <span className="text-white/30"> from {issueRatings.count}</span>
-                  </span>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                {issueRatings.ratings.map((r) => (
-                  <div key={r.user} className="flex gap-3 text-xs leading-relaxed">
-                    <span className="w-24 shrink-0 text-white/35">{r.user}</span>
-                    <span className="min-w-0 text-white/70">
-                      {r.score !== null && (
-                        <span className="font-display text-white/90">{r.score}</span>
-                      )}
-                      {r.score !== null && r.review && <span className="text-white/20"> · </span>}
-                      {r.review && <span className="text-white/55">{r.review}</span>}
                     </span>
                   </div>
                 ))}

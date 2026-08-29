@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T22:50:04.651Z",
+  "generatedAt": "2026-08-29T23:37:03.455Z",
   "targets": {
     "series:stray-bullets": {
       "label": "Stray Bullets",
@@ -8,11 +8,348 @@
       "ratings": [
         {
           "uid": "141a6d566b9c",
-          "user": "Jacob",
+          "user": null,
+          "attributed": false,
           "score": 10,
           "review": null,
           "createdAt": "2026-08-29T22:49:47.794Z",
           "updatedAt": "2026-08-29T22:50:04.651Z"
+        }
+      ]
+    },
+    "series:stray-bullets-sunshine-roses": {
+      "label": "Stray Bullets: Sunshine & Roses",
+      "avg": 10,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 10,
+          "review": null,
+          "createdAt": "2026-08-29T23:29:04.472Z",
+          "updatedAt": "2026-08-29T23:29:04.472Z"
+        }
+      ]
+    },
+    "series:heart-eyes": {
+      "label": "Heart Eyes",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:concrete-stars-over-sand": {
+      "label": "Concrete: Stars Over Sand",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:faithless": {
+      "label": "Faithless",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:absolute-wonder-woman": {
+      "label": "Absolute Wonder Woman",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:final-cut": {
+      "label": "Final Cut",
+      "avg": 6.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 6.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:just-brutal": {
+      "label": "Just Brutal",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:the-nice-house-by-the-sea": {
+      "label": "The Nice House By The Sea",
+      "avg": 7,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7,
+          "review": null,
+          "createdAt": "2026-08-29T23:31:56.292Z",
+          "updatedAt": "2026-08-29T23:31:56.292Z"
+        }
+      ]
+    },
+    "series:bleeding-hearts": {
+      "label": "Bleeding Hearts",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-29T23:33:08.915Z",
+          "updatedAt": "2026-08-29T23:33:08.915Z"
+        }
+      ]
+    },
+    "series:assorted-crisis-events": {
+      "label": "Assorted Crisis Events",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:33:40.304Z",
+          "updatedAt": "2026-08-29T23:33:40.304Z"
+        }
+      ]
+    },
+    "series:minor-arcana": {
+      "label": "Minor Arcana",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:boy-island": {
+      "label": "Boy Island",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "issue:hup-1": {
+      "label": "Hup #1",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:nut": {
+      "label": "Nut",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:harrow-county": {
+      "label": "Harrow County",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:100": {
+      "label": "100%",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:omaha": {
+      "label": "Omaha",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:omaha-vol-2": {
+      "label": "Omaha: Vol 2",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:the-complete-omaha-the-cat-dancer": {
+      "label": "The Complete “Omaha” the Cat Dancer",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:under-the-trees-where-nobody-sees-rite-of-spring": {
+      "label": "Under the Trees Where Nobody Sees: Rite of Spring",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:eightball": {
+      "label": "Eightball",
+      "avg": 10,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 10,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
         }
       ]
     }

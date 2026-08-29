@@ -1101,3 +1101,43 @@ button,
 .recharts-wrapper :focus-visible {
   outline: none;
 }
+/* --- The rating meter's birds ------------------------------------------
+   The scored run holds the logo's faded rust at rest and lifts to the site
+   accent under the cursor — the one moment the brighter orange is worth
+   spending on ten glyphs at once. Written here rather than as utilities
+   because `fill`/`stroke` arrive as presentation attributes on the glyph, and
+   only the CSS properties outrank them. */
+.score-bird-on {
+  transition: fill 200ms ease-out, stroke 200ms ease-out;
+}
+
+.score-row:hover .score-bird-on {
+  fill: #e85d3a;
+  stroke: #e85d3a;
+}
+
+/* Scored birds arrive left to right when the drawer opens, a beat apiece, so
+   the meter reads as being filled rather than as having always been there. The
+   run is over in a third of a second: the empty birds are already in place, so
+   nothing about the score's shape is withheld while it plays. */
+.score-bird-in {
+  animation: scoreBirdIn 240ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes scoreBirdIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The score is the point; it can simply be there. */
+  .score-bird-in {
+    animation: none;
+  }
+}

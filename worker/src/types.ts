@@ -38,31 +38,9 @@ export interface TelegramMessage {
   reply_to_message?: TelegramMessage;
 }
 
-export interface InlineKeyboardButton {
-  text: string;
-  callback_data: string;
-}
-
-export interface InlineKeyboardMarkup {
-  inline_keyboard: InlineKeyboardButton[][];
-}
-
-export interface TelegramCallbackQuery {
-  id: string;
-  from: TelegramUser;
-  message?: TelegramMessage;
-  data?: string;
-}
-
 export interface TelegramUpdate {
   update_id: number;
   message?: TelegramMessage;
-  callback_query?: TelegramCallbackQuery;
-}
-
-export interface TelegramSendResponse {
-  ok: boolean;
-  result?: { message_id: number };
 }
 
 export interface TelegramFileResponse {
