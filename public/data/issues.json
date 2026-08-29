@@ -4297,6 +4297,92 @@
       ]
     },
     {
+      "id": "heart-eyes-2",
+      "series": "heart-eyes",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "victor-ib-ez",
+          "name": "Victor Ib\u00e1\u00f1ez",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "addison-duke",
+          "name": "Addison Duke",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "simon-bowland",
+          "name": "Simon Bowland",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "michael-dialynas",
+          "name": "Michael Dialynas",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "adrian-f-wassel",
+          "name": "Adrian F. Wassel",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "tim-daniel",
+          "name": "Tim Daniel",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "damian-a-wassel",
+          "name": "Damian A. Wassel",
+          "roles": [
+            "Publisher"
+          ]
+        },
+        {
+          "artistId": "der-shing-helmer",
+          "name": "Der-Shing Helmer",
+          "roles": [
+            "Managing Editor"
+          ]
+        },
+        {
+          "artistId": "kike-j-diaz",
+          "name": "Kike J. Diaz",
+          "roles": [
+            "Color Assists"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/heart-eyes-2022-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "heavy-liquid-1",
       "series": "heavy-liquid",
       "issue": 1,

@@ -3046,6 +3046,26 @@
       "country": "United States"
     },
     {
+      "id": "der-shing-helmer",
+      "name": "Der-Shing Helmer",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12978/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/der-shing-helmer/4040-75536/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "diego-lopez",
       "name": "Diego Lopez",
       "description": "",
@@ -6893,6 +6913,30 @@
       "country": "United Kingdom",
       "aliases": [
         "Kev Walker"
+      ]
+    },
+    {
+      "id": "kike-j-diaz",
+      "name": "Kike J. Diaz",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11143/111430075/9230151-411249422_1051036379483703_7459046198291980873_n.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4079/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kike-j-diaz/4040-97493/"
+        }
+      ],
+      "country": "Spain",
+      "aliases": [
+        "KJ Diaz"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -11181,6 +11225,26 @@
         }
       ],
       "birthYear": 1951,
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "tim-daniel",
+      "name": "Tim Daniel",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110802/3941246-tim%20daniel.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4883/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tim-daniel/4040-62554/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
