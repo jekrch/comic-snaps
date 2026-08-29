@@ -48,6 +48,29 @@ export interface IssueCredits {
   references?: Reference[];
 }
 
+/** One person's score and/or review of an issue or series. See docs/ratings-plan.md. */
+export interface Rating {
+  user: string;
+  score: number | null;
+  review: string | null;
+  updatedAt: string;
+}
+
+export interface TargetRatings {
+  label: string;
+  /** Mean of the scores on this target alone, to one decimal. Null when unrated. */
+  avg: number | null;
+  /** How many people scored it — always shown next to the average (§8). */
+  count: number;
+  ratings: Rating[];
+}
+
+export interface RatingsIndex {
+  generatedAt: string;
+  /** Keyed `issue:{series}-{issue}` / `series:{series}`. */
+  targets: Record<string, TargetRatings>;
+}
+
 export interface Panel {
   id: string;
   title: string;

@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits } from "../types";
+import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
@@ -39,6 +39,7 @@ interface Props {
   series: Series | null;
   parentSeries: Series | null;
   issueCredits: IssueCredits | null;
+  issueRatings: TargetRatings | null;
   artistIndex: ArtistIndex;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   searchUrl: string;
@@ -50,7 +51,7 @@ interface Props {
   overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -594,6 +595,41 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                           </Fragment>
                         );
                       })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Ratings — the group's scores for this issue. The count sits next to
+            the average rather than behind a prior: at this group size the count
+            is the caveat (docs/ratings-plan.md §8). */}
+        {issueRatings && issueRatings.ratings.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <div>
+              <div className="flex items-center gap-1.5 mb-2 text-[10px] uppercase tracking-widest text-white/30">
+                <span>Ratings</span>
+                <span className="text-white/20 normal-case tracking-normal">· {formatIssue(panel.issue)}</span>
+                {issueRatings.count > 0 && (
+                  <span className="ml-auto normal-case tracking-normal">
+                    <span className="font-display text-sm text-white/85">{issueRatings.avg?.toFixed(1)}</span>
+                    <span className="text-white/30"> from {issueRatings.count}</span>
+                  </span>
+                )}
+              </div>
+              <div className="space-y-1.5">
+                {issueRatings.ratings.map((r) => (
+                  <div key={r.user} className="flex gap-3 text-xs leading-relaxed">
+                    <span className="w-24 shrink-0 text-white/35">{r.user}</span>
+                    <span className="min-w-0 text-white/70">
+                      {r.score !== null && (
+                        <span className="font-display text-white/90">{r.score}</span>
+                      )}
+                      {r.score !== null && r.review && <span className="text-white/20"> · </span>}
+                      {r.review && <span className="text-white/55">{r.review}</span>}
                     </span>
                   </div>
                 ))}

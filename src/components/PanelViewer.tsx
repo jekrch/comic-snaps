@@ -4,7 +4,7 @@ import { ImageViewer } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { setHatchViewerOpen } from "../hooks/useHatchPause";
-import { useArtistIndex, useMetadata } from "../hooks/useMetadata";
+import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
 import InfoDrawer from "./InfoDrawer";
 
@@ -63,6 +63,7 @@ function ViewerOverlay({
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
   const artistIndex = useArtistIndex();
+  const { issue: issueRatings } = useRatings(panel);
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
@@ -90,6 +91,7 @@ function ViewerOverlay({
         series={series}
         parentSeries={parentSeries}
         issueCredits={issueCredits}
+        issueRatings={issueRatings}
         artistIndex={artistIndex}
         onBrowse={onBrowse}
         searchUrl={searchUrl}

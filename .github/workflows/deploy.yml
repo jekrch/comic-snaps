@@ -3,9 +3,22 @@ name: Deploy Gallery
 on:
   push:
     branches: [main]
+    # Everything the Compute Image Metadata job writes is ignored here: that
+    # job's completion is what triggers the deploy (workflow_run, below), so
+    # building on its commits too would just double up. This list mirrors that
+    # job's `git add`. public/data/ratings.json is deliberately NOT ignored —
+    # the bot commits it directly and nothing else would rebuild for it.
     paths-ignore:
       - 'public/images/**'
-      - 'public/data/**'
+      - 'public/data/gallery.json'
+      - 'public/data/artists.json'
+      - 'public/data/series.json'
+      - 'public/data/issues.json'
+      - 'public/data/disambiguation.json'
+      - 'public/data/embeddings.json'
+      - 'public/data/embeddings-dino.json'
+      - 'public/data/embeddings-gram.json'
+      - 'public/data/covers/**'
   workflow_dispatch:
   workflow_run:
     workflows: ["Compute Image Metadata"]

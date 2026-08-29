@@ -1,6 +1,34 @@
-import type { Env, PanelEntry, TelegramUpdate } from "./types";
+import type {
+  Env,
+  PanelEntry,
+  TelegramCallbackQuery,
+  TelegramMessage,
+  TelegramUpdate,
+} from "./types";
 import { parseCaption, parseTags, slugify } from "./caption";
-import { downloadFile, sendReply } from "./telegram";
+import {
+  answerCallbackQuery,
+  downloadFile,
+  editMessageText,
+  sendReply,
+} from "./telegram";
+import {
+  aggregateFrom,
+  formatAggregate,
+  invalidateSourceCache,
+  parseCallbackData,
+  parseRateArgs,
+  ratingKeyboard,
+  ratingsFrom,
+  readRatings,
+  resolveTarget,
+  tallyText,
+  targetFromHandle,
+  targetHandle,
+  upsertRating,
+  type RatingTarget,
+  type UpsertResult,
+} from "./ratings";
 import {
   addArtistTags,
   addSeriesTags,
@@ -49,7 +77,29 @@ Examples:
   /update 3 artist Fiona Staples
   /update 3 tags sci-fi, space opera
   /tag_series Saga // sci-fi, space opera
-  /tag_artist Fiona Staples // canadian`;
+  /tag_artist Fiona Staples // canadian
+
+Ratings (1-10):
+  /rate {ref} {score} — Rate the issue a reference points at
+  /rate {ref} {score} // {review} — Same, with a review
+  /rate_series {ref} {score} — Rate the whole series instead
+
+  A {ref} can be a panel ID, a series name, or a series plus an issue:
+    /rate 247 8                    the issue panel #247 came from
+    /rate Saga #4 8                by series and issue
+    /rate Saga 4 8                 same
+    /rate Saga 9                   the series itself
+    /rate Hellboy #Annual 2 7      non-numeric issues need the #
+    panel:247 / series:saga / issue:saga-4 force the reading
+
+  Scores and reviews are independent — a score alone leaves your review
+  alone, and a review alone leaves your score alone.
+
+  Every /rate reply carries a 1-10 pad, so changing your mind — or someone
+  else adding theirs — is one tap.
+
+  Ratings and reviews are published on the site under your Telegram
+  first name.`;
 
 /**
  * Handle `/tag_series` and `/tag_artist`. Argument form: `ref // tag1, tag2, ...`
@@ -90,6 +140,181 @@ async function handleTagCommand(
   return `Tagged ${type} ${result.entry.name}:\n  Added: ${result.addedTags.join(", ")}\n  Tags: ${result.allTags.join(", ")}`;
 }
 
+// ---------------------------------------------------------------------------
+// Ratings
+// ---------------------------------------------------------------------------
+
+/**
+ * The bot's card carries its rating tally in the block after the last blank
+ * line, so a tap can rewrite the tally without losing the panel details above
+ * it. `tallyText` is always a single line, which is what makes the last blank
+ * line reliably ours.
+ */
+function withTally(fullText: string, tally: string): string {
+  const idx = fullText.lastIndexOf("\n\n");
+  const base = idx === -1 ? fullText : fullText.slice(0, idx);
+  return `${base}\n\n${tally}`;
+}
+
+function raterName(from?: { first_name?: string; username?: string }): string {
+  return from?.first_name || from?.username || "someone";
+}
+
+/**
+ * `Issue avg 8.0 from 2 · Series avg 8.5 from 4` — §1.7. Issue and series
+ * averages are quoted side by side and never blended: one person's series score
+ * shouldn't outweigh a stack of issue scores (§8).
+ */
+function aggregateLine(target: RatingTarget, result: UpsertResult): string {
+  if (target.type === "series") {
+    return `  Series avg ${formatAggregate(result.target)}`;
+  }
+  return `  Issue avg ${formatAggregate(result.target)} · Series avg ${formatAggregate(result.series)}`;
+}
+
+/**
+ * What the message a command replied to was about. The bot's own cards carry
+ * their panel id in the text ("ID: 247"), and a human's photo carries the
+ * caption the panel was created from — so a reply resolves without keeping a
+ * chat-message map anywhere.
+ */
+async function targetOfRepliedMessage(
+  env: Env,
+  message: TelegramMessage
+): Promise<RatingTarget | null> {
+  const replied = message.reply_to_message;
+  if (!replied) return null;
+
+  const fromCard = replied.text?.match(/\(ID:\s*(\d+)\)/);
+  if (fromCard) {
+    const resolved = await resolveTarget(env, `panel:${fromCard[1]}`);
+    return resolved.ok ? resolved.target : null;
+  }
+
+  if (replied.caption) {
+    try {
+      const meta = parseCaption(replied.caption);
+      const resolved = await resolveTarget(env, `${meta.title} #${meta.issue}`);
+      return resolved.ok ? resolved.target : null;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+/**
+ * `/rate` and `/rate_series`. Both take the same references (§1.6) — the only
+ * difference is that `/rate_series` forces every one of them onto the series.
+ */
+async function handleRateCommand(
+  env: Env,
+  message: TelegramMessage,
+  argument: string,
+  forceSeries: boolean
+): Promise<{ text: string; target: RatingTarget | null }> {
+  const command = forceSeries ? "/rate_series" : "/rate";
+
+  const args = parseRateArgs(argument);
+  if (!args.ok) return { text: args.message, target: null };
+
+  const replyTarget = await targetOfRepliedMessage(env, message);
+
+  const resolved = await resolveTarget(env, args.ref, { forceSeries, replyTarget });
+  if (!resolved.ok) {
+    const suggestions = resolved.candidates.length
+      ? `\n\nDid you mean: ${resolved.candidates.map((c) => c.label).join(", ")}`
+      : "";
+    return { text: `${resolved.message}${suggestions}`, target: null };
+  }
+
+  const target = resolved.target;
+  if (args.score === null && args.review === null) {
+    return {
+      text: `Found ${target.label}, but no score.\n\nTry: ${command} ${args.ref || target.label} 8`,
+      target: null,
+    };
+  }
+
+  const user = { id: message.from?.id ?? 0, name: raterName(message.from) };
+  const result = await upsertAndDescribe(env, target, user, args.score, args.review);
+  return { text: result, target };
+}
+
+async function upsertAndDescribe(
+  env: Env,
+  target: RatingTarget,
+  user: { id: number; name: string },
+  score: number | null,
+  review: string | null
+): Promise<string> {
+  const result = await upsertRating(env, target, user, score, review);
+  const { previous, current } = result;
+
+  const lines: string[] = [];
+  if (score !== null) {
+    const was =
+      previous?.score != null && previous.score !== score ? ` (was ${previous.score})` : "";
+    lines.push(`${user.name} rated ${target.label} → ${score}${was}`);
+  } else {
+    lines.push(`${user.name} reviewed ${target.label}`);
+  }
+
+  lines.push(aggregateLine(target, result));
+
+  if (review !== null) {
+    const rewritten = previous?.review != null;
+    lines.push(`  Review ${rewritten ? "rewritten" : "saved"} (${current.review?.length ?? 0} chars)`);
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * A tap on the 1-10 pad. The target rides in the `callback_data` itself — the
+ * panel `seq` where there is one — so a tap needs no message map and works on a
+ * card of any age.
+ */
+async function handleCallbackQuery(env: Env, query: TelegramCallbackQuery): Promise<void> {
+  const token = env.TELEGRAM_BOT_TOKEN;
+  const card = query.message;
+
+  const parsed = query.data ? parseCallbackData(query.data) : null;
+  if (!card || !parsed) {
+    // Answer regardless — Telegram spins the button on the client until it lands.
+    await answerCallbackQuery(token, query.id);
+    return;
+  }
+
+  const target = await targetFromHandle(env, parsed.handle);
+  if (!target) {
+    await answerCallbackQuery(token, query.id, "That panel is gone — use /rate instead.");
+    return;
+  }
+
+  await answerCallbackQuery(token, query.id, `${target.label} → ${parsed.score}`);
+
+  const user = { id: query.from.id, name: raterName(query.from) };
+  await upsertRating(env, target, user, parsed.score, null);
+
+  // Re-read after writing rather than trusting the value just computed: a
+  // concurrent tap may have landed in between, and the later edit should win.
+  const index = await readRatings(env);
+  const tally = tallyText(
+    target.label,
+    ratingsFrom(index, target.type, target.id),
+    aggregateFrom(index, target.type, target.id)
+  );
+
+  await editMessageText(
+    token,
+    card.chat.id,
+    card.message_id,
+    withTally(card.text ?? target.label, tally),
+    ratingKeyboard(parsed.handle)
+  );
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method !== "POST") {
@@ -103,6 +328,24 @@ export default {
     }
 
     const update: TelegramUpdate = await request.json();
+
+    // Inline keyboard taps arrive as callback queries, not messages — and the
+    // chat allow-list applies to them just the same.
+    if (update.callback_query) {
+      const query = update.callback_query;
+      if (String(query.message?.chat.id) === env.TELEGRAM_ALLOWED_CHAT_ID) {
+        try {
+          await handleCallbackQuery(env, query);
+        } catch (err) {
+          // Always 200 back: Telegram retries an update the webhook failed on,
+          // and a retried tap would be applied twice.
+          const errorMessage = err instanceof Error ? err.message : "Unknown error";
+          await answerCallbackQuery(env.TELEGRAM_BOT_TOKEN, query.id, `Error: ${errorMessage}`);
+        }
+      }
+      return new Response("OK");
+    }
+
     const message = update.message;
 
     if (!message) {
@@ -133,6 +376,7 @@ export default {
         if (deleteMatch) {
           const seq = parseInt(deleteMatch[1], 10);
           const removed = await deletePanel(env, seq);
+          await invalidateSourceCache();
           if (!removed) {
             await sendReply(
               env.TELEGRAM_BOT_TOKEN,
@@ -148,6 +392,27 @@ export default {
               `Deleted panel #${seq}: ${removed.title} ${formatIssue(removed.issue)}`
             );
           }
+          return new Response("OK");
+        }
+
+        const rateMatch = text.match(/^\/(rate|rate_series)(?:@\w+)?(?:\s+([\s\S]+))?$/);
+        if (rateMatch) {
+          const forceSeries = rateMatch[1] === "rate_series";
+          const { text: reply, target } = await handleRateCommand(
+            env,
+            message,
+            rateMatch[2] ?? "",
+            forceSeries
+          );
+          // A successful write gets its own pad, so changing your mind — or
+          // anyone else's first rating — is still one tap.
+          await sendReply(
+            env.TELEGRAM_BOT_TOKEN,
+            message.chat.id,
+            message.message_id,
+            reply,
+            target ? ratingKeyboard(targetHandle(target)) : undefined
+          );
           return new Response("OK");
         }
 
@@ -182,6 +447,7 @@ export default {
           }
 
           const updated = await updatePanel(env, seq, field, value);
+          await invalidateSourceCache();
           if (!updated) {
             await sendReply(
               env.TELEGRAM_BOT_TOKEN,
@@ -295,6 +561,7 @@ export default {
         addedAt: new Date().toISOString(),
       };
       await updateGalleryJson(env, entry);
+      await invalidateSourceCache();
 
       // 8. Confirm via Telegram
       const artistLine = `\n  Artist: ${artist}${inheritedArtist ? " (from last post in series)" : ""}`;

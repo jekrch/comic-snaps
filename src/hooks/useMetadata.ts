@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Artist, IssueCredits, Series } from "../types";
+import type { Artist, IssueCredits, Panel, RatingsIndex, Series, TargetRatings } from "../types";
 import { loadMetadata } from "../utils/metadata";
+import { getCachedRatings, issueTargetId, loadRatings, lookupRatings, seriesTargetId } from "../utils/ratings";
 
 export interface ArtistIndex {
   byId: Map<string, Artist>;
@@ -79,4 +80,35 @@ export function useMetadata(artistName: string, seriesSlug: string, issue?: numb
   }, [artistName, seriesSlug, issue]);
 
   return { artist, series, parentSeries, issueCredits, hasContent: !!(artist || series) };
+}
+
+/**
+ * The group's scores and reviews for a panel's issue and its series. Both come
+ * back null until the index loads, so nothing flashes in and out — and the
+ * two are kept apart rather than blended, since a series score shouldn't
+ * outweigh a stack of issue scores (docs/ratings-plan.md §8).
+ */
+export function useRatings(panel: Panel): { issue: TargetRatings | null; series: TargetRatings | null } {
+  const [index, setIndex] = useState<RatingsIndex | null>(getCachedRatings);
+
+  useEffect(() => {
+    if (index) return;
+    let cancelled = false;
+    loadRatings()
+      .then((loaded) => {
+        if (!cancelled) setIndex(loaded);
+      })
+      .catch(() => {
+        // silently ignore — the ratings block just won't appear
+      });
+    return () => { cancelled = true; };
+  }, [index]);
+
+  return useMemo(
+    () => ({
+      issue: lookupRatings(index, "issue", issueTargetId(panel)),
+      series: lookupRatings(index, "series", seriesTargetId(panel)),
+    }),
+    [index, panel],
+  );
 }

@@ -252,7 +252,7 @@ export function isUpdatableField(field: string): field is UpdatableField {
 }
 
 /** Generic JSON file read from GitHub. */
-async function readJsonFile<T>(
+export async function readJsonFile<T>(
   env: Env,
   path: string
 ): Promise<{ data: T | null; sha: string | null }> {
@@ -272,8 +272,21 @@ async function readJsonFile<T>(
   return { data: JSON.parse(content) as T, sha: meta.sha };
 }
 
+/** A failed write to GitHub, carrying the status so conflicts can be retried. */
+export class GitHubWriteError extends Error {
+  constructor(readonly status: number, message: string) {
+    super(message);
+    this.name = "GitHubWriteError";
+  }
+
+  /** GitHub answers a stale `sha` with 409, and sometimes 422. */
+  get isConflict(): boolean {
+    return this.status === 409 || this.status === 422;
+  }
+}
+
 /** Generic JSON file write to GitHub. */
-async function writeJsonFile(
+export async function writeJsonFile(
   env: Env,
   path: string,
   data: unknown,
@@ -298,7 +311,40 @@ async function writeJsonFile(
 
   if (!resp.ok) {
     const err = await resp.text();
-    throw new Error(`Write to ${path} failed (${resp.status}): ${err}`);
+    throw new GitHubWriteError(resp.status, `Write to ${path} failed (${resp.status}): ${err}`);
+  }
+}
+
+/**
+ * Read a JSON file, apply a change, and commit it — retrying the whole cycle
+ * when someone else committed first.
+ *
+ * Panel posts are rare and naturally serialised, but rating taps are not: two
+ * people tapping at once is exactly the read-modify-write collision a bare PUT
+ * loses. GitHub rejects a stale `sha` rather than clobbering, so a conflict is
+ * safe to re-apply against the newer file.
+ */
+export async function mutateJsonFile<T, R>(
+  env: Env,
+  path: string,
+  empty: () => T,
+  apply: (data: T) => { result: R; message: string },
+  attempts = 4
+): Promise<R> {
+  for (let attempt = 0; ; attempt++) {
+    const { data, sha } = await readJsonFile<T>(env, path);
+    const doc = data ?? empty();
+    const { result, message } = apply(doc);
+
+    try {
+      await writeJsonFile(env, path, doc, sha, message);
+      return result;
+    } catch (err) {
+      const conflict = err instanceof GitHubWriteError && err.isConflict;
+      if (!conflict || attempt >= attempts - 1) throw err;
+      // Brief, growing backoff so simultaneous taps don't lock-step.
+      await new Promise((r) => setTimeout(r, 120 * (attempt + 1) + Math.random() * 80));
+    }
   }
 }
 
@@ -306,12 +352,13 @@ function normalize(s: string): string {
   return s.trim().toLowerCase();
 }
 
-/** Match a series by id (case-insensitive) or name (case-insensitive). */
-function findSeries(list: SeriesEntry[], ref: string): SeriesEntry | undefined {
+/** Match a series by id, name, or alias (all case-insensitive). */
+export function findSeries(list: SeriesEntry[], ref: string): SeriesEntry | undefined {
   const r = normalize(ref);
   return (
     list.find((s) => normalize(s.id) === r) ??
-    list.find((s) => normalize(s.name) === r)
+    list.find((s) => normalize(s.name) === r) ??
+    list.find((s) => s.aliases?.some((alias) => normalize(alias) === r))
   );
 }
 
