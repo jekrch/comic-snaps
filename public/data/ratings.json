@@ -1,4 +1,20 @@
 {
-  "generatedAt": "",
-  "targets": {}
+  "generatedAt": "2026-08-29T22:49:47.794Z",
+  "targets": {
+    "series:stray-bullets": {
+      "label": "Stray Bullets",
+      "avg": 10,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": "Jacob",
+          "score": 10,
+          "review": null,
+          "createdAt": "2026-08-29T22:49:47.794Z",
+          "updatedAt": "2026-08-29T22:49:47.794Z"
+        }
+      ]
+    }
+  }
 }
