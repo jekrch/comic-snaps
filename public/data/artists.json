@@ -3438,6 +3438,26 @@
       ]
     },
     {
+      "id": "elizabeth-beals",
+      "name": "Elizabeth Beals",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5441/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/elizabeth-beals/4040-88666/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "elizabeth-breitweiser",
       "name": "Elizabeth Breitweiser",
       "description": "Elizabeth Breitweiser is an American comic book colorist and cover artist. Some of her work includes Outcast by Robert Kirkman and Paul Azaceta, The Amazing Spider-Man, Fatale, Captain America, The Fade Out, Hulk, Legends of the Dark Knight and Wolverine.",
@@ -4082,6 +4102,27 @@
       "country": "England, United Kingdom",
       "sources": [
         "wikipedia",
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "gary-groth",
+      "name": "Gary Groth",
+      "description": "Co-founder of The Comics Journal and Fantagraphics and its editor-in-chief. Nominated for 1993 Eisner Award for Best Editor for his work on Bleeding Heart, Eightball, Love and Rockets, among others.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4808900-gg.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/gary-groth/4040-52287/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5148/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
         "comicvine",
         "metron"
       ]
@@ -4996,6 +5037,30 @@
       ],
       "birthYear": 1972,
       "country": "United States"
+    },
+    {
+      "id": "jaime-hernandez",
+      "name": "Jaime Hernandez",
+      "description": "A Latino Indie Comic writer and artist. Best known for the Love and Rockets series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320234-4793255688-Jaime.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jaime-hernandez/4040-15828/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2642/"
+        }
+      ],
+      "country": "United States",
+      "aliases": [
+        "Xaime"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "jaime-mendoza",
@@ -8875,6 +8940,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "nathan-widick",
+      "name": "Nathan Widick",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58790/9131001-9938937473-42453.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8036/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nathan-widick/4040-114536/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

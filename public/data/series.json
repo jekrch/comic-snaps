@@ -277,8 +277,37 @@
       "id": "beneath-the-trees-where-nobody-sees-rite-of-spring",
       "name": "Beneath the Trees Where Nobody Sees: Rite of Spring",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Follows Beneath the Trees Where Nobody Sees",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/beneath-the-trees-where-nobody-sees-rite-of-spring/4050-165375/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/12551/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9785259-cover.jpg",
+      "startYear": 2025,
+      "publisher": "IDW Publishing",
+      "issueCount": 6,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          5,
+          6
+        ]
+      },
+      "coverImages": [
+        "data/covers/beneath-the-trees-where-nobody-sees-rite-of-spring/b0879e45854e.jpg",
+        "data/covers/beneath-the-trees-where-nobody-sees-rite-of-spring/00e02e0bdcb9.jpg",
+        "data/covers/beneath-the-trees-where-nobody-sees-rite-of-spring/ed2de669a896.jpg",
+        "data/covers/beneath-the-trees-where-nobody-sees-rite-of-spring/90984f99ce34.jpg"
+      ]
     },
     {
       "id": "bijou-funnies",
@@ -740,15 +769,37 @@
       "id": "criminal-special-edition",
       "name": "Criminal: Special Edition",
       "parentSeries": "criminal",
-      "description": "",
+      "description": "One-shot featuring an all-new Criminal story by Ed Brubaker & Sean Phillips. This is the first Criminal comic published by Image Comics. All the previous mini-series were published by Icon Comics, a Marvel imprint.\r\n\r\nCollected in Criminal: Wrong Time, Wrong Place.\r\n\r\nNote: The indicia reads \"Criminal: The Special Edition (One-Shot)\".",
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/98/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/criminal-special-edition/4050-80328/"
         }
       ],
       "startYear": 2015,
-      "issueCount": 1
+      "issueCount": 1,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4413328-d08cced6-0b23-410a-86c3-8076ee1ee60c.jpg",
+      "publisher": "Image",
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          0
+        ],
+        "comicvine": [
+          0
+        ]
+      },
+      "coverImages": [
+        "data/covers/criminal-special-edition/9f5c5ee992c3.jpg",
+        "data/covers/criminal-special-edition/d887dde20c7b.jpg"
+      ]
     },
     {
       "id": "dark-spaces-wildfire",
@@ -1301,8 +1352,18 @@
         "metron": [
           1,
           4
+        ],
+        "comicvine": [
+          1,
+          4
         ]
-      }
+      },
+      "coverImages": [
+        "data/covers/frank/7b75f4025053.jpg",
+        "data/covers/frank/c9497be9f074.jpg",
+        "data/covers/frank/8e16b16c9b0d.jpg",
+        "data/covers/frank/a9e8a00846a7.jpg"
+      ]
     },
     {
       "id": "geiger",
@@ -1374,8 +1435,33 @@
       "name": "Hank Howard, Pizza Detective: A Slice of Life",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
-      "references": []
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10060516-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/hank-howard-pizza-detective-a-slice-of-life/4050-171775/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Bad Idea Comics",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/hank-howard-pizza-detective-a-slice-of-life/65f4272bed06.jpg",
+        "data/covers/hank-howard-pizza-detective-a-slice-of-life/30f0a3d0ec6c.jpg"
+      ]
     },
     {
       "id": "harley-quinn-x-elvira",
@@ -1758,11 +1844,17 @@
       "coverSources": {
         "metron": [
           1
+        ],
+        "comicvine": [
+          1
         ]
       },
       "startYear": 2026,
       "publisher": "Marvel",
-      "issueCount": 1
+      "issueCount": 1,
+      "coverImages": [
+        "data/covers/it-s-jeff-brand-new-week/531c638dc79f.jpg"
+      ]
     },
     {
       "id": "jacked",
@@ -2027,10 +2119,37 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/85892/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/love-and-rockets/4050-7000/"
         }
       ],
       "startYear": 1987,
-      "anthology": true
+      "anthology": true,
+      "sources": [
+        "wikipedia",
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/62782-7000-95778-1-love-and-rockets.jpg",
+      "publisher": "Fantagraphics",
+      "issueCount": 50,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/love-and-rockets/2efc422ec5af.jpg",
+        "data/covers/love-and-rockets/23827068f459.jpg",
+        "data/covers/love-and-rockets/315ab18b688d.jpg",
+        "data/covers/love-and-rockets/1cf8a1238090.jpg"
+      ]
     },
     {
       "id": "madman",
@@ -2078,11 +2197,16 @@
         }
       ],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "comicvine": [
-          1
+          0
+        ],
+        "metron": [
+          0
         ]
       }
     },
@@ -2332,7 +2456,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "metron-series-lookup"
       ],
       "coverImages": [
         "data/covers/omaha/66d9645cb3d5.jpg",
@@ -3314,8 +3439,32 @@
       "name": "The Oddball's Odyssey",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
-      "references": []
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10054288-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-oddballs-odyssey/4050-171692/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Bad Idea Comics",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-oddball-s-odyssey/7061c06fecfa.jpg"
+      ]
     },
     {
       "id": "the-shaolin-cowboy-staying-a-i-live",
@@ -3542,11 +3691,32 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/14693/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/universal-monsters-phantom-of-the-opera/4050-170674/"
         }
       ],
       "startYear": 2026,
       "publisher": "Skybound",
-      "issueCount": 4
+      "issueCount": 4,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9998215-cover.jpg",
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          2,
+          3
+        ]
+      },
+      "coverImages": [
+        "data/covers/universal-monsters-phantom-of-the-opera/c513b31384e8.jpg",
+        "data/covers/universal-monsters-phantom-of-the-opera/618baefcb293.jpg",
+        "data/covers/universal-monsters-phantom-of-the-opera/d236c1db43c8.jpg",
+        "data/covers/universal-monsters-phantom-of-the-opera/ca21a7fa7353.jpg"
+      ]
     },
     {
       "id": "universal-monsters-the-invisible-man",
@@ -3557,9 +3727,31 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/12574/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/universal-monsters-the-invisible-man/4050-166462/"
         }
       ],
-      "imageUrl": null
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9843153-cover.jpg",
+      "startYear": 2025,
+      "publisher": "Image",
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          3
+        ]
+      },
+      "coverImages": [
+        "data/covers/universal-monsters-the-invisible-man/8a7fd81f03c6.jpg",
+        "data/covers/universal-monsters-the-invisible-man/43c98dab99a3.jpg",
+        "data/covers/universal-monsters-the-invisible-man/f6dcc9cf2265.jpg",
+        "data/covers/universal-monsters-the-invisible-man/c833d01ba2b2.jpg"
+      ]
     },
     {
       "id": "w0rldtr33",
@@ -3669,8 +3861,33 @@
       "id": "xyz-comics",
       "name": "XYZ Comics",
       "parentSeries": null,
-      "description": "",
-      "references": []
+      "description": "Collection of Robert Crumb comics. Has multiple printings.",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/xyz-comics/4050-44961/"
+        }
+      ],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2147651-xyz.jpg",
+      "startYear": 1972,
+      "publisher": "Kitchen Sink",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/xyz-comics/3e907736a74a.jpg"
+      ]
     },
     {
       "id": "zap-comix",

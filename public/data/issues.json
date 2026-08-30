@@ -1624,6 +1624,142 @@
       ]
     },
     {
+      "id": "beneath-the-trees-where-nobody-sees-rite-of-spring-5",
+      "series": "beneath-the-trees-where-nobody-sees-rite-of-spring",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "patrick-horvath",
+          "name": "Patrick Horvath",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "elizabeth-beals",
+          "name": "Elizabeth Beals",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "maggie-howell",
+          "name": "Maggie Howell",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jake-williams",
+          "name": "Jake Williams",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "nathan-widick",
+          "name": "Nathan Widick",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/beneath-the-trees-where-nobody-sees-rite-of-spring-2025-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "beneath-the-trees-where-nobody-sees-rite-of-spring-6",
+      "series": "beneath-the-trees-where-nobody-sees-rite-of-spring",
+      "issue": 6,
+      "credits": [
+        {
+          "artistId": "patrick-horvath",
+          "name": "Patrick Horvath",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "elizabeth-beals",
+          "name": "Elizabeth Beals",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "maggie-howell",
+          "name": "Maggie Howell",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "jake-williams",
+          "name": "Jake Williams",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "nathan-widick",
+          "name": "Nathan Widick",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/beneath-the-trees-where-nobody-sees-rite-of-spring-2025-6/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "bijou-funnies-7",
       "series": "bijou-funnies",
       "issue": 7,
@@ -2797,7 +2933,8 @@
       "credits": [],
       "references": [],
       "sources": [
-        "metron"
+        "metron",
+        "comicvine"
       ]
     },
     {
@@ -3998,6 +4135,54 @@
       ]
     },
     {
+      "id": "frank-1",
+      "series": "frank",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jim-woodring",
+          "name": "Jim Woodring",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/frank-1/4000-325425/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "frank-4",
+      "series": "frank",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "jim-woodring",
+          "name": "Jim Woodring",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/frank-4/4000-325428/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "geiger-22",
       "series": "geiger",
       "issue": 22,
@@ -4116,6 +4301,16 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "hank-howard-pizza-detective-a-slice-of-life-1",
+      "series": "hank-howard-pizza-detective-a-slice-of-life",
+      "issue": 1,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
       ]
     },
     {
@@ -5967,6 +6162,46 @@
       ]
     },
     {
+      "id": "love-and-rockets-1",
+      "series": "love-and-rockets",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "gary-groth",
+          "name": "Gary Groth",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "gilbert-hernandez",
+          "name": "Gilbert Hernandez",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jaime-hernandez",
+          "name": "Jaime Hernandez",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/love-and-rockets-1/4000-95778/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "madman-picture-exhibition-1",
       "series": "madman-picture-exhibition",
       "issue": 1,
@@ -6636,6 +6871,16 @@
       ]
     },
     {
+      "id": "omaha-4",
+      "series": "omaha",
+      "issue": 4,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "pacific-presents-3",
       "series": "pacific-presents",
       "issue": 3,
@@ -6838,196 +7083,6 @@
       ],
       "sources": [
         "comicvine"
-      ]
-    },
-    {
-      "id": "universal-monsters-phantom-of-the-opera-2",
-      "series": "universal-monsters-phantom-of-the-opera",
-      "issue": 2,
-      "credits": [
-        {
-          "artistId": "tyler-boss",
-          "name": "Tyler Boss",
-          "roles": [
-            "Writer"
-          ]
-        },
-        {
-          "artistId": "martin-simmonds",
-          "name": "Martin Simmonds",
-          "roles": [
-            "Artist",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "becca-carey",
-          "name": "Becca Carey",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "abigail-larson",
-          "name": "Abigail Larson",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "anwita-citriya",
-          "name": "Anwita Citriya",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "jillian-crab",
-          "name": "Jillian Crab",
-          "roles": [
-            "Cover",
-            "Designer"
-          ]
-        },
-        {
-          "artistId": "lee-weeks",
-          "name": "Lee Weeks",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "michael-walsh",
-          "name": "Michael Walsh",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "alex-antone",
-          "name": "Alex Antone",
-          "roles": [
-            "Editor"
-          ]
-        },
-        {
-          "artistId": "caitlin-chappel",
-          "name": "Caitlin Chappel",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "cj-han",
-          "name": "CJ Han",
-          "roles": [
-            "Production"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-2/"
-        }
-      ],
-      "sources": [
-        "metron"
-      ]
-    },
-    {
-      "id": "universal-monsters-phantom-of-the-opera-3",
-      "series": "universal-monsters-phantom-of-the-opera",
-      "issue": 3,
-      "credits": [
-        {
-          "artistId": "tyler-boss",
-          "name": "Tyler Boss",
-          "roles": [
-            "Writer"
-          ]
-        },
-        {
-          "artistId": "martin-simmonds",
-          "name": "Martin Simmonds",
-          "roles": [
-            "Artist",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "becca-carey",
-          "name": "Becca Carey",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "anwita-citriya",
-          "name": "Anwita Citriya",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "jillian-crab",
-          "name": "Jillian Crab",
-          "roles": [
-            "Cover",
-            "Designer"
-          ]
-        },
-        {
-          "artistId": "julian-totino-tedesco",
-          "name": "Julian Totino Tedesco",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "luana-vecchio",
-          "name": "Luana Vecchio",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "mattia-de-iulis",
-          "name": "Mattia De Iulis",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "alex-antone",
-          "name": "Alex Antone",
-          "roles": [
-            "Editor"
-          ]
-        },
-        {
-          "artistId": "caitlin-chappel",
-          "name": "Caitlin Chappel",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "cj-han",
-          "name": "CJ Han",
-          "roles": [
-            "Production"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-3/"
-        }
-      ],
-      "sources": [
-        "metron"
       ]
     },
     {
@@ -8545,108 +8600,6 @@
       ]
     },
     {
-      "id": "universal-monsters-the-invisible-man-3",
-      "series": "universal-monsters-the-invisible-man",
-      "issue": 3,
-      "credits": [
-        {
-          "artistId": "james-tynion-iv",
-          "name": "James Tynion IV",
-          "roles": [
-            "Writer"
-          ]
-        },
-        {
-          "artistId": "dani-strips",
-          "name": "Dani Strips",
-          "roles": [
-            "Artist",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "brad-simpson",
-          "name": "Brad Simpson",
-          "roles": [
-            "Colorist"
-          ]
-        },
-        {
-          "artistId": "becca-carey",
-          "name": "Becca Carey",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "chris-mooneyham",
-          "name": "Chris Mooneyham",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "david-aja",
-          "name": "David Aja",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "lee-weeks",
-          "name": "Lee Weeks",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "michael-walsh",
-          "name": "Michael Walsh",
-          "roles": [
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "alex-antone",
-          "name": "Alex Antone",
-          "roles": [
-            "Editor"
-          ]
-        },
-        {
-          "artistId": "caitlin-chappel",
-          "name": "Caitlin Chappel",
-          "roles": [
-            "Assistant Editor"
-          ]
-        },
-        {
-          "artistId": "jillian-crab",
-          "name": "Jillian Crab",
-          "roles": [
-            "Designer"
-          ]
-        },
-        {
-          "artistId": "richard-mercado",
-          "name": "Richard Mercado",
-          "roles": [
-            "Production",
-            "Designer"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/universal-monsters-the-invisible-man-2025-3/"
-        }
-      ],
-      "sources": [
-        "metron"
-      ]
-    },
-    {
       "id": "the-many-deaths-of-laila-starr-4",
       "series": "the-many-deaths-of-laila-starr",
       "issue": 4,
@@ -9259,6 +9212,16 @@
       ]
     },
     {
+      "id": "the-oddball-s-odyssey-1",
+      "series": "the-oddball-s-odyssey",
+      "issue": 1,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "the-shaolin-cowboy-staying-a-i-live-1",
       "series": "the-shaolin-cowboy-staying-a-i-live",
       "issue": 1,
@@ -9726,6 +9689,298 @@
       ]
     },
     {
+      "id": "universal-monsters-phantom-of-the-opera-2",
+      "series": "universal-monsters-phantom-of-the-opera",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "abigail-larson",
+          "name": "Abigail Larson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "anwita-citriya",
+          "name": "Anwita Citriya",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Cover",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "lee-weeks",
+          "name": "Lee Weeks",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "universal-monsters-phantom-of-the-opera-3",
+      "series": "universal-monsters-phantom-of-the-opera",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "anwita-citriya",
+          "name": "Anwita Citriya",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Cover",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "julian-totino-tedesco",
+          "name": "Julian Totino Tedesco",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "luana-vecchio",
+          "name": "Luana Vecchio",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mattia-de-iulis",
+          "name": "Mattia De Iulis",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "universal-monsters-the-invisible-man-3",
+      "series": "universal-monsters-the-invisible-man",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "dani-strips",
+          "name": "Dani Strips",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-simpson",
+          "name": "Brad Simpson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "chris-mooneyham",
+          "name": "Chris Mooneyham",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-aja",
+          "name": "David Aja",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lee-weeks",
+          "name": "Lee Weeks",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappel",
+          "name": "Caitlin Chappel",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "richard-mercado",
+          "name": "Richard Mercado",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-invisible-man-2025-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "w0rldtr33-20",
       "series": "w0rldtr33",
       "issue": 20,
@@ -10004,6 +10259,34 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "xyz-comics-1",
+      "series": "xyz-comics",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Colorist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/xyz-comics-1-xyz-comics/4000-309454/"
+        }
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {

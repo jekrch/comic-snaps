@@ -202,6 +202,44 @@
           "name": "Deadline USA"
         }
       ]
+    },
+    "Criminal: Special Edition": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 15981,
+          "name": "Criminal: 10th Anniversary Special Edition"
+        },
+        {
+          "id": 98,
+          "name": "Criminal: The Special Edition"
+        }
+      ]
+    },
+    "Love and Rockets": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 15532,
+          "name": "The Complete Love and Rockets Library TPB"
+        },
+        {
+          "id": 10723,
+          "name": "Love and Rockets"
+        },
+        {
+          "id": 10729,
+          "name": "Love and Rockets"
+        },
+        {
+          "id": 10695,
+          "name": "Love and Rockets"
+        },
+        {
+          "id": 10733,
+          "name": "Love and Rockets: New Stories"
+        }
+      ]
     }
   }
 }
