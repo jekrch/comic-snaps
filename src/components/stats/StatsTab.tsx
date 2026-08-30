@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import type { Panel, IssueCredits, Series } from "../../types";
-import { loadMetadata } from "../../utils/metadata";
+import { PRODUCTION_ROLES, loadMetadata } from "../../utils/metadata";
 
 // Chart palette — validated against the app surface (#141414) with the
 // dataviz six-checks script: accent passes all four; gray is the deliberate
@@ -29,10 +29,6 @@ const COLORFULNESS_THRESHOLD = 6;
 // is handled separately — every panel carries its own artist (see below), so
 // it's sourced from the panel rather than the issue credits.
 const ISSUE_CREDIT_ROLES = ["Writer", "Colorist", "Letterer"];
-
-// Roles hidden from the "credits by role" breakdown — editorial/production
-// credits rather than authorship of the panel.
-const HIDDEN_ROLES = new Set(["Cover", "Editor", "Designer"]);
 
 /** Gallery filter selections a clicked bar can apply — keys match Filters. */
 export type StatsFilterPatch = Partial<
@@ -204,7 +200,7 @@ function computeMetaStats(
     if (!linkedIssueIds.has(i.id)) continue;
     for (const c of i.credits) {
       for (const r of c.roles) {
-        if (r === "Artist" || HIDDEN_ROLES.has(r)) continue;
+        if (r === "Artist" || PRODUCTION_ROLES.has(r)) continue;
         roleCounts.set(r, (roleCounts.get(r) ?? 0) + 1);
       }
     }

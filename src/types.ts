@@ -104,6 +104,14 @@ export interface Panel {
   /** Manual override for masonry column span; omit to fall back to aspect-ratio detection. */
   columnSpan?: 1 | 2;
   /**
+   * Not from the gallery: a series' cover art, standing in the panel viewer as
+   * a panel so a strip can be paged end to end. Its `image` is a cover path
+   * from `series.json`, and it carries none of a panel's bibliography — no
+   * issue, no artist, no posting — because a cover was never posted to the
+   * wall by anyone.
+   */
+  cover?: boolean;
+  /**
    * Not from the gallery: an image the reader chose off their own disk to feed
    * a visualizer run. Its `image` is a `blob:` URL that lives only as long as
    * the tab, nothing is uploaded, and it never reaches the wall or the viewer —

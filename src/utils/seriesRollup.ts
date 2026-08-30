@@ -202,3 +202,52 @@ export function buildSeriesRows(
 
   return rows;
 }
+
+/**
+ * What a cover's `issue` says, since it has no number of its own: the covers
+ * are stored as a bare list of images, with nothing recording which issue each
+ * one belongs to. `formatIssue` passes free-form text through verbatim, so this
+ * reads as "Amulet Cover" everywhere a panel's title and issue are printed
+ * together — the viewer's header, its alt text, the drawer's search link.
+ */
+export const COVER_ISSUE = "Cover";
+
+/**
+ * The covers of one series, as panels the viewer can page to.
+ *
+ * A cover is a printed object rather than something anybody posted, so every
+ * field that would name a poster, an artist or a date is left empty instead of
+ * invented — the same restraint the local-photo panels take. What is real is
+ * the slug, which is what the info drawer resolves the series card from, so a
+ * cover in the viewer still knows which book it is the cover of.
+ *
+ * Dimensions are unknown until the image loads and are left at zero: nothing
+ * that lays a cover out reads them. The strip gives every cover the same
+ * `COVER_ASPECT` box, and the viewer's shared-element flight measures the
+ * loaded image.
+ */
+export function buildCoverPanels(row: SeriesRow, covers: string[]): Panel[] {
+  return covers.map((image, i) => ({
+    id: `cover:${row.slug}:${i}`,
+    title: row.title,
+    slug: row.slug,
+    issue: COVER_ISSUE,
+    year: row.year ?? 0,
+    artist: "",
+    image,
+    notes: null,
+    tags: [],
+    postedBy: "",
+    addedAt: "",
+    height: 0,
+    width: 0,
+    phash: "",
+    ahash: "",
+    dhash: "",
+    dominantColors: null,
+    colorfulness: null,
+    blur: null,
+    blurStart: null,
+    cover: true,
+  }));
+}

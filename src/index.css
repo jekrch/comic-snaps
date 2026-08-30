@@ -137,6 +137,20 @@ button,
   animation: shimmer 1.5s infinite;
 }
 
+/* The filter dropdown's text search. Sized down to sit with the 10-12px type
+   around it, but Safari on iOS zooms the whole page in on any field it focuses
+   below 16px — and never zooms back out — so on a touch screen the field gives
+   up the smaller type rather than the reader's place on the wall. */
+.filter-search-input {
+  font-size: 12px;
+}
+
+@media (pointer: coarse) {
+  .filter-search-input {
+    font-size: 16px;
+  }
+}
+
 .viewer-btn {
   @apply flex items-center justify-center h-8 min-w-8 px-2 rounded-md bg-white/10 backdrop-blur-sm text-white/70 hover:text-white hover:bg-white/20 transition-all duration-150 ease-out active:scale-95;
 }
@@ -1145,71 +1159,45 @@ button,
 /* --- The series shelf --------------------------------------------------
    Every row is the same height and every row ends in a strip of art that stops
    wherever it stops, so without a rule between them the rows run together. The
-   head is that rule: the wall's own hatch motif, drawn as a gradient because a
-   26px band does not need HatchFiller's animation, with the title and year on
-   plates cut out of it. */
+   head is that rule: a hairline the full width of the row, and the wall's own
+   hatch motif drawn as a gradient because a 28px band does not need
+   HatchFiller's animation.
+
+   The hatch runs *between* the title and the year rather than behind them.
+   Cutting surface-coloured plates out of a full-width hatch was the earlier
+   move, and at this band height each plate came out nearly as tall as the band
+   itself: two or three near-black lozenges floating in a texture, which read as
+   boxes laid on top of the row rather than as type sitting in a rule. With the
+   hatch confined to the gap there is nothing to cut, the type sits on the
+   page's own surface, and the band reads as one connected line — title, rule,
+   year. */
 .series-head {
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent 0 4px,
-    rgba(232, 228, 223, 0.13) 4px 5.5px
-  );
   border-top: 1px solid rgba(232, 228, 223, 0.14);
 }
 
-/* Ground under the type, so the hatch runs behind the row rather than through
-   the words. The surface colour, not a tint — the lines have to stop under a
-   word for it to read as cut out of the rule. But a hard-edged rectangle reads
-   as a black box laid on top, so the plate is a pseudo-element that fades to
-   nothing on every side: opaque where the glyphs are, gone by its own edge.
-
-   The fade needs room the text does not, so the padding grows and an equal
-   negative margin takes the growth back — the words sit exactly where they sat
-   with a 0.4rem/0.2rem plate, and only the falloff is new. Two axes without
-   `mask-composite`: the gradient carries the horizontal fall-off, the mask the
-   vertical, the same trick `.series-bg` runs below. The mask would eat the
-   text too, hence the pseudo-element, and `isolation` so its negative z-index
-   lands above the hatch rather than behind it. */
-.series-head-plate {
-  position: relative;
-  isolation: isolate;
-  padding-inline: 0.95rem;
-  padding-block: 0.4rem;
-  margin-inline: -0.55rem;
-  margin-block: -0.2rem;
-}
-
-.series-head-plate::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: linear-gradient(
-    to right,
-    transparent 0,
-    color-mix(in srgb, var(--color-surface) 50%, transparent) 0.45rem,
-    var(--color-surface) 0.9rem,
-    var(--color-surface) calc(100% - 0.9rem),
-    color-mix(in srgb, var(--color-surface) 50%, transparent) calc(100% - 0.45rem),
-    transparent 100%
+/* The rule itself: shorter than the band and centred in it, so it reads as a
+   line the title and year are strung along rather than as a striped block
+   standing beside them. Its ends dissolve so it never butts hard against a
+   glyph, which is the one thing that would put an edge back next to the type. */
+.series-head-rule {
+  height: 0.85rem;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 4px,
+    rgba(232, 228, 223, 0.15) 4px 5.5px
   );
   mask-image: linear-gradient(
-    to bottom,
+    to right,
     transparent 0,
-    rgba(0, 0, 0, 0.5) 0.18rem,
-    #000 0.4rem,
-    #000 calc(100% - 0.4rem),
-    rgba(0, 0, 0, 0.5) calc(100% - 0.18rem),
+    #000 0.7rem,
+    #000 calc(100% - 0.7rem),
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
-    to bottom,
+    to right,
     transparent 0,
-    rgba(0, 0, 0, 0.5) 0.18rem,
-    #000 0.4rem,
-    #000 calc(100% - 0.4rem),
-    rgba(0, 0, 0, 0.5) calc(100% - 0.18rem),
+    #000 0.7rem,
+    #000 calc(100% - 0.7rem),
     transparent 100%
   );
 }
@@ -1360,7 +1348,10 @@ button,
   outline-offset: 2px;
 }
 
-.series-tile:focus-visible {
+/* Covers are tiles too now that they open in the viewer, so they take the same
+   focus ring — their own hairline border is not a focus state. */
+.series-tile:focus-visible,
+.series-cover:focus-visible {
   outline: 1px solid var(--color-accent);
   outline-offset: -1px;
 }

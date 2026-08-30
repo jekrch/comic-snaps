@@ -203,25 +203,12 @@
       ]
     },
     {
-      "id": "avenue-d-comics-and-stories",
-      "name": "Avenue D Comics and Stories",
+      "id": "avenue-d",
+      "name": "Avenue D",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
       "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      },
       "tags": [
         "underground"
       ]
@@ -423,31 +410,18 @@
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,
-      "description": "Buzz was a weekly anthology title launched by DC Thomson in 1973. Predominately a humour title, the cover stars were the trio of friends Hop, Skip and Jock, with other strips in the first issue including Big Bad Moggy (a malevolent cat who constantly tried to catch two unnamed birds), Big Fat Flo (the misadventures of a massively overweight girl), Billy the Kidder (a schoolboy whose propensity for telling tall tales constantly lands him in trouble), Calamity Kate (a tomboy whose clumsiness inevitably causes disaster all around her), Cookie (escapades of a nutty chef), Fred the Flop (the attempted crimes of an incompetent crook), Gus the Galoot (an incompetent cowboy), Harum-Scarem (the ongoing conflict between a thieving hare and the farmer's dog Scarem), Jimmy Jinx and What He Thinks (each week young Jimmy's good and bad sides, personified in Jimmy's mind as an angelic and devilish version of himself, argue and try to influence Jimmy to their way of thinking), Monty Moneybags (an amiable millionaire), Nero and Zero (Caesar's two nitwit bodyguards), Nobby (young and somewhat mischievous lad, who looks a lot like The Beezer's Ginger except for being blond haired), Olly's Occy (young Olly has an octopus for a friend), Skookum School (a standard gang of misbehaving schoolchildren in constant battle with their teacher), Tich and Snitch (an anthropomorphic mouse and elephant living together), The Twitz of the Ritz (the staff of the Ritz Hotel and their escapades), Wig and Wam (two warring Native Americans, one good and one bad), and Willie the Wizard (an incompetent young wizard in medieval times). Notable later additions to the comic included Spookum School (a spin-off from Skookum School, featuring four ghosts and their teacher haunting Skookum School at night), The Buzzies and the Fuzzies (two egg-shaped races, one smooth and one hairy, who constantly fight one another), Freeze! (an adventure strip where drilling for oil releases prehistoric bubbles of gas which freeze anything they make contact with), Sammy's Scribbles (the pictorial diary of a would-be artist), Sleep Ed (a boy who can and does fall asleep virtually anywhere) and Top Tec (a humorous detective).Buzz was cancelled after 103 issues and merged with Topper, with six Buzz strips - Big Fat Flo, Fred the Flop, Jimmy Jinx, Nobby, Sammy's Scribbles and Sleepy Ed - surviving the amalgamation. Spookum School and Snookum School both transferred to the new comic Cracker, which launched a couple of weeks after Buzz came to an end.",
+      "description": "",
       "references": [
         {
           "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/buzz/4050-51440/"
-        },
-        {
-          "name": "Grand Comics Database",
-          "url": "https://www.comics.org/series/56331/"
+          "url": "https://comicvine.gamespot.com/buzz/4050-48692/"
         }
       ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2544837-buzz1.jpg",
-      "startYear": 1973,
-      "publisher": "D.C. Thomson & Co.",
-      "issueCount": 103,
+      "imageUrl": null,
       "sources": [
         "comicvine",
         "metron",
         "metron-series-lookup"
-      ],
-      "coverImages": [
-        "data/covers/buzz/04f3e710dabf.jpg",
-        "data/covers/buzz/4915456e70e6.jpg",
-        "data/covers/buzz/5518dd54f833.jpg",
-        "data/covers/buzz/feb295a2ea50.jpg"
       ]
     },
     {
@@ -1015,7 +989,6 @@
       "coverImages": [
         "data/covers/eros-psyche/24d5672eaa05.jpg",
         "data/covers/eros-psyche/a5b79187f9cc.jpg",
-        "data/covers/eros-psyche/f7e259588455.jpg",
         "data/covers/eros-psyche/2338616cd1a6.jpg"
       ]
     },
@@ -1530,7 +1503,7 @@
         },
         {
           "name": "Grand Comics Database",
-          "url": "https://www.comics.org/series/183920/"
+          "url": "https://www.comics.org/series/110631/"
         },
         {
           "name": "Metron",
@@ -2237,7 +2210,6 @@
         ]
       },
       "coverImages": [
-        "data/covers/motor-city-comics/75c9178a97f4.jpg",
         "data/covers/motor-city-comics/f54420c772ad.jpg"
       ],
       "tags": [
@@ -2323,7 +2295,6 @@
         ]
       },
       "coverImages": [
-        "data/covers/odin/b6fcfda3c698.jpg",
         "data/covers/odin/15c99ef50389.jpg",
         "data/covers/odin/57f4c0654b6a.jpg",
         "data/covers/odin/7547dad6c601.jpg"
@@ -2447,6 +2418,22 @@
         "ec"
       ],
       "anthology": true
+    },
+    {
+      "id": "people-s-comics",
+      "name": "People's Comics",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
+        }
+      ],
+      "tags": [
+        "underground"
+      ]
     },
     {
       "id": "phantom-of-the-opera",
@@ -3136,9 +3123,7 @@
       },
       "coverImages": [
         "data/covers/the-deadman/f2e4bceaec8b.jpg",
-        "data/covers/the-deadman/4a0bf30b69d0.jpg",
-        "data/covers/the-deadman/447490374ee8.jpg",
-        "data/covers/the-deadman/22365ce2d81a.jpg"
+        "data/covers/the-deadman/4a0bf30b69d0.jpg"
       ]
     },
     {
@@ -3413,56 +3398,12 @@
       }
     },
     {
-      "id": "the-peoples-comics",
-      "name": "The Peoples Comics",
-      "parentSeries": null,
-      "description": "",
-      "references": [
-        {
-          "name": "Wikipedia",
-          "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
-        }
-      ],
-      "sources": [
-        "wikipedia",
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      },
-      "tags": [
-        "underground"
-      ]
-    },
-    {
-      "id": "the-shaolin-cowboy-staying-a-i-alive",
-      "name": "The Shaolin Cowboy: Staying A.I. Alive",
+      "id": "the-shaolin-cowboy-staying-a-i-live",
+      "name": "The Shaolin Cowboy: Staying A.I. Live",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1,
-          2
-        ],
-        "comicvine": [
-          1,
-          2
-        ]
-      }
+      "references": []
     },
     {
       "id": "the-twilight-zone",
@@ -3526,24 +3467,12 @@
       ]
     },
     {
-      "id": "thumpn-guts",
-      "name": "Thumpn Guts",
+      "id": "thump-n-guts",
+      "name": "Thump'n Guts",
       "parentSeries": null,
       "description": "",
+      "imageUrl": null,
       "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      },
       "tags": [
         "underground"
       ]
@@ -3687,24 +3616,12 @@
       ]
     },
     {
-      "id": "weird-magazine",
-      "name": "Weird Magazine",
+      "id": "weirdo",
+      "name": "Weirdo",
       "parentSeries": null,
       "description": "",
+      "imageUrl": null,
       "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          10
-        ],
-        "comicvine": [
-          10
-        ]
-      },
       "anthology": true
     },
     {

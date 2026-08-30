@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from "react";
-import type { Filters } from "../utils/filtering";
+import type { Filters, FilterSetKey } from "../utils/filtering";
+import { FILTER_SET_KEYS } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
 import type { GalleryView } from "../components/ViewControl";
@@ -7,7 +8,7 @@ import type { SeriesSortMode } from "../utils/seriesSorting";
 import { DEFAULT_SERIES_SORT, isSeriesSortMode } from "../utils/seriesSorting";
 import { VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../components/viz/vizConfig";
 
-const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "credits", "postedBy", "series"];
+const FILTER_KEYS: FilterSetKey[] = FILTER_SET_KEYS;
 const DEFAULT_SORT: SortMode = "newest";
 const VALID_TABS: InfoTab[] = ["about", "sorts", "stats"];
 const DEFAULT_VIEW: GalleryView = "wall";
@@ -34,6 +35,7 @@ function parseFiltersFromURL(): {
     credits: new Set(params.get("credits")?.split(",").filter(Boolean) ?? []),
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
     series: new Set(params.get("series")?.split(",").filter(Boolean) ?? []),
+    searchQuery: params.get("q") ?? "",
   };
 
   const sort = (params.get("sort") as SortMode) ?? DEFAULT_SORT;
@@ -92,6 +94,10 @@ function buildParams(
     if (values.length > 0) {
       params.set(key, values.join(","));
     }
+  }
+
+  if (filters.searchQuery.trim()) {
+    params.set("q", filters.searchQuery);
   }
 
   if (sort !== DEFAULT_SORT) {

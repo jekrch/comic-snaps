@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Panel } from "../types";
-import type { SeriesRow as SeriesRowData } from "../utils/seriesRollup";
+import { buildCoverPanels, type SeriesRow as SeriesRowData } from "../utils/seriesRollup";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import { useNearViewport } from "../hooks/useNearViewport";
@@ -59,9 +59,9 @@ const SCROLLBAR_H = 10;
  * wherever it ends, so the eye has no edge to cut on — and this is the one band
  * in the row that cannot be mistaken for art.
  *
- * 28px is the floor, not a round number: the title plate is a 15px line plus
- * the 0.4rem its fade needs on each side, and the rule has to clear that or
- * `overflow-hidden` cuts the falloff back into a hard edge.
+ * 28px is the floor, not a round number: the title is a 15px line and the band
+ * has to hold it with enough air on either side that the hatch beside it reads
+ * as a rule the type is set on rather than as a texture crowding it.
  */
 export const HEAD_H = 28;
 const HEAD_GAP = 8;
@@ -289,24 +289,39 @@ function PanelTile({ panel, height, range, onOpen }: TileProps) {
 }
 
 interface CoverProps {
-  src: string;
+  panel: Panel;
   height: number;
-  href: string | null;
+  onOpen: (panel: Panel) => void;
 }
 
 /**
- * A cover standing in for a panel the series does not have. Visibly not a
- * panel — dimmed, outlined, labelled — and never a way into the viewer, which
- * walks panels and has nothing to page to from here (§1.5).
+ * A cover closing out the strip. Visibly not a panel — dimmed, outlined,
+ * labelled — but opened the same way one is: the viewer walks the row's panels
+ * and then its covers, so a strip can be paged from end to end without the
+ * covers being the one thing on it that goes somewhere else.
+ *
+ * It lifts to full opacity under the pointer, which is the tile saying it is a
+ * way in; the dimming is there to keep a cover from reading as a panel at rest,
+ * not to say it is inert.
  */
-function CoverTile({ src, height, href }: CoverProps) {
-  const { ref, near } = useNearViewport<HTMLDivElement>();
+function CoverTile({ panel, height, onOpen }: CoverProps) {
+  const { ref, near } = useNearViewport<HTMLButtonElement>();
   const width = Math.round(COVER_ASPECT * height);
-  const body = (
-    <>
+
+  return (
+    <button
+      ref={ref}
+      type="button"
+      data-panel-id={panel.id}
+      onClick={() => onOpen(panel)}
+      className="series-cover relative shrink-0 cursor-pointer overflow-hidden rounded-sm border border-ink-faint/40 bg-surface-raised opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+      style={{ width, height }}
+      aria-label={`View ${panel.title} cover`}
+      title={`${panel.title} · cover`}
+    >
       {near && (
         <img
-          src={panelImageUrl(src)}
+          src={panelImageUrl(panel.image)}
           alt=""
           decoding="async"
           className="block h-full w-full object-cover"
@@ -318,23 +333,7 @@ function CoverTile({ src, height, href }: CoverProps) {
       <span className="absolute bottom-1 left-1 font-display text-[8px] tracking-widest uppercase text-white/70 bg-black/60 px-1 leading-relaxed">
         cover
       </span>
-    </>
-  );
-
-  return (
-    <div
-      ref={ref}
-      className="relative shrink-0 overflow-hidden rounded-sm border border-ink-faint/40 bg-surface-raised opacity-70"
-      style={{ width, height }}
-    >
-      {href ? (
-        <a href={href} target="_blank" rel="noreferrer" className="block h-full w-full">
-          {body}
-        </a>
-      ) : (
-        body
-      )}
-    </div>
+    </button>
   );
 }
 
@@ -369,19 +368,23 @@ function SeriesRowView({
     meterPlayed.add(row.slug);
   }, [row.slug]);
 
-  const openPanel = useCallback(
-    // The group form: paging from a row walks that series and stops at its ends.
-    (panel: Panel) => onSelectPanel(panel, row.panels),
-    [onSelectPanel, row.panels],
-  );
-
   const hero = row.panels[0];
   const teases = row.panels.slice(1);
   // Every row that has covers ends in them — 54 of 113 series have exactly one
   // panel and nothing to tease with, and the rest are still books someone can
   // go and buy (§1.5).
-  const covers = row.covers.slice(0, MAX_COVERS);
+  const covers = useMemo(() => buildCoverPanels(row, row.covers.slice(0, MAX_COVERS)), [row]);
   const hatchTail = row.panels.length === 1 && covers.length === 0;
+
+  // What prev/next walks: the strip itself, in the order it is drawn, so paging
+  // from any tile runs the panels and then the covers and stops at the row's
+  // ends rather than wandering into the next series.
+  const group = useMemo(() => [...row.panels, ...covers], [row.panels, covers]);
+
+  const openPanel = useCallback(
+    (panel: Panel) => onSelectPanel(panel, group),
+    [onSelectPanel, group],
+  );
 
   // The bar sits inside the strip's own box, so the tiles are shorter than the
   // strip by exactly its height and the row keeps the height the shelf placed it at.
@@ -389,7 +392,6 @@ function SeriesRowView({
 
   const backdrop = useMemo(() => backdropSrc(row, covers.length), [row, covers.length]);
 
-  const coverHref = row.series?.references?.[0]?.url ?? null;
   const score = row.rating && row.rating.count > 0 ? row.rating.avg : null;
   const posted = useMemo(
     () => postedRange(row.firstPostedAt, row.lastPostedAt),
@@ -469,11 +471,26 @@ function SeriesRowView({
     );
 
   /**
-   * The hatched rule: the series' name and the year its run starts. The hatch
-   * is the wall's own filler motif, drawn as a gradient — a 26px rule does not
-   * need `HatchFiller`'s animation machinery — and the text sits on plates
-   * that fade out at their edges, so it stays legible over the lines without
-   * a hard-edged box around every word.
+   * The hatched rule: the series' name and the year its run starts, strung
+   * along the wall's own filler motif drawn as a gradient — a 28px rule does
+   * not need `HatchFiller`'s animation machinery.
+   *
+   * The hatch is the flexible gap between them, not a band running behind
+   * them. Type set over the full-width hatch needed a plate cut out of it to
+   * stay legible, and a plate in a band this short is a near-black lozenge the
+   * height of the band — so the words came with boxes attached. Here nothing
+   * is cut: the title and year sit on the page's own surface and the rule
+   * simply takes whatever room is left between them.
+   *
+   * The title is capped rather than free to fill the row, so the rule survives
+   * a long name and every row's head has the same shape.
+   *
+   * Its line-height is not `leading-none`: `truncate` clips the button to its
+   * own box, and at line-height 1 that box is the 15px em square, which Space
+   * Mono's descenders hang below — a `y` came out flat-bottomed. 1.5 gives the
+   * box 22px inside the 28px band, so the descenders are contained and the
+   * band does not grow; the extra leading is split evenly, so the type stays
+   * centred where it was.
    */
   const head = (
     <div
@@ -483,19 +500,19 @@ function SeriesRowView({
       <button
         type="button"
         onClick={() => onSelectSeries(row)}
-        className="series-head-plate min-w-0 truncate font-display text-[15px] leading-none tracking-wide text-ink hover:text-accent transition-colors cursor-pointer"
+        className="min-w-0 max-w-[62%] truncate font-display text-[15px] leading-[1.5] tracking-wide text-ink hover:text-accent transition-colors cursor-pointer"
         title={`Show ${row.title} on the wall`}
       >
         {row.title}
       </button>
-      <span className="min-w-4 flex-1" aria-hidden="true" />
+      <span className="series-head-rule min-w-6 flex-1" aria-hidden="true" />
       {/* Ten birds at phone width either wrap or shrink into blobs, and a
           shrunken bird stops being a bird (ratings-plan.md §7.2) — so the
           narrow layout trades the meter for the bare number, up here where a
           band that has run out of room cannot clip it. */}
       {narrow && score !== null && (
         <span
-          className="series-head-plate shrink-0 font-display text-[13px] leading-none tabular-nums"
+          className="shrink-0 font-display text-[13px] leading-none tabular-nums"
           style={{ color: SCORE_RUST }}
           aria-label={`${formatScore(score)} out of 10`}
         >
@@ -503,7 +520,7 @@ function SeriesRowView({
         </span>
       )}
       {row.year !== null && (
-        <span className="series-head-plate shrink-0 font-display text-[11px] leading-none tracking-wider tabular-nums text-ink-muted">
+        <span className="shrink-0 font-display text-[11px] leading-none tracking-wider tabular-nums text-ink-muted">
           {row.year}
         </span>
       )}
@@ -596,8 +613,8 @@ function SeriesRowView({
               onOpen={openPanel}
             />
           ))}
-          {covers.map((src) => (
-            <CoverTile key={src} src={src} height={tileHeight} href={coverHref} />
+          {covers.map((cover) => (
+            <CoverTile key={cover.id} panel={cover} height={tileHeight} onOpen={openPanel} />
           ))}
           {/* Neither a second panel nor a cover: the same motif the masonry uses
               for leftover space, so the empty tail reads as part of the design

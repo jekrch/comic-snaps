@@ -3,6 +3,7 @@ import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "l
 import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
+import { panelImageUrl } from "../utils/imageUrl";
 import { setHatchViewerOpen } from "../hooks/useHatchPause";
 import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
@@ -169,7 +170,7 @@ export default function PanelViewer({
     () =>
       panels.map((p) => ({
         id: p.id,
-        src: `${import.meta.env.BASE_URL}${p.image}`,
+        src: panelImageUrl(p.image),
         alt: `${p.title} ${formatIssue(p.issue)}`,
       })),
     [panels]
@@ -204,10 +205,14 @@ export default function PanelViewer({
     return () => setHatchViewerOpen(false);
   }, []);
 
-  // Keep the open panel id in the URL so the viewer is linkable.
+  // Keep the open panel id in the URL so the viewer is linkable. A cover has no
+  // id the wall can resolve on a cold load, so it clears the param instead of
+  // writing a link that would open on nothing — and clearing it is also what
+  // takes the previous panel's id out of the URL when you page onto a cover.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    params.set("panel", panel.id);
+    if (panel.cover) params.delete("panel");
+    else params.set("panel", panel.id);
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
 
@@ -219,7 +224,7 @@ export default function PanelViewer({
         window.history.replaceState(null, "", q ? `${window.location.pathname}?${q}` : window.location.pathname);
       }
     };
-  }, [panel.id]);
+  }, [panel.id, panel.cover]);
 
   // Close any open overlay when the panel changes, then clear the slide
   // direction once the slide-out has settled.
@@ -307,17 +312,24 @@ export default function PanelViewer({
           <div className="min-w-0">
             <p className="font-display text-sm text-white/90 leading-snug">
               {panel.title} <span className="text-accent">{formatIssue(panel.issue)}</span>{" "}
-              <span className="text-white/40 text-xs">({panel.year})</span>
+              {panel.year > 0 && <span className="text-white/40 text-xs">({panel.year})</span>}
             </p>
-            <p className="text-xs text-white/60 mt-0.5 leading-snug">{panel.artist}</p>
-            <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
-              {panel.postedBy} ·{" "}
-              {new Date(panel.addedAt).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </p>
+            {/* A cover was never posted by anyone and has no artist of its own
+                on record, so the two lines that would name them are left off
+                rather than printed empty. */}
+            {!panel.cover && (
+              <>
+                <p className="text-xs text-white/60 mt-0.5 leading-snug">{panel.artist}</p>
+                <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
+                  {panel.postedBy} ·{" "}
+                  {new Date(panel.addedAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              </>
+            )}
           </div>
         )
       }
@@ -336,17 +348,23 @@ export default function PanelViewer({
             )
           : undefined
       }
-      renderNavEnd={() => (
-        <button
-          type="button"
-          onClick={toggleGraph}
-          className={`rvl-btn ${graphOpen ? "is-active" : ""}`}
-          title="Similarity graph"
-          aria-label="Similarity graph"
-        >
-          <GitGraph size={16} strokeWidth={1.5} />
-        </button>
-      )}
+      renderNavEnd={
+        // A cover carries none of the hashes or embeddings the graph measures
+        // with, so it would open on an anchor with no neighbours.
+        panel.cover
+          ? undefined
+          : () => (
+              <button
+                type="button"
+                onClick={toggleGraph}
+                className={`rvl-btn ${graphOpen ? "is-active" : ""}`}
+                title="Similarity graph"
+                aria-label="Similarity graph"
+              >
+                <GitGraph size={16} strokeWidth={1.5} />
+              </button>
+            )
+      }
       renderFooter={
         items.length <= 1
           ? (ctx) => (

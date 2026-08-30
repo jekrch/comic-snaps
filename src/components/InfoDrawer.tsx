@@ -896,66 +896,71 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           </>
         )}
 
-        {/* Divider */}
-        <div className="border-t border-white/8" />
+        {/* Artist info — omitted for a cover, which has no artist of its own on
+            record: the credited cover artist is not stored per image, and an
+            "Artist" card with nothing under it reads as missing data. */}
+        {panel.artist && (
+          <>
+          <div className="border-t border-white/8" />
 
-        {/* Artist info */}
-        <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-          {artist?.imageUrl && (
-            <div className="absolute inset-0 pointer-events-none">
-              <img
-                src={artist.imageUrl}
-                alt=""
-                className="absolute right-0 top-0 h-full w-2/3 object-cover object-center"
-                style={{ opacity: 0.3 }}
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "linear-gradient(to right, rgba(0,0,0,1) 25%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.15) 100%)",
-                }}
-              />
-            </div>
-          )}
-          <div className="relative z-10 px-4 py-3">
-            <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1.5">Artist</p>
-            {isPersonInteractive(panel.artist, artist?.id) ? (
-              <button
-                type="button"
-                onClick={() => openPerson(panel.artist, artist?.id)}
-                className="font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
-              >
-                {panel.artist}
-              </button>
-            ) : (
-              <p className="font-display text-sm text-white/90 leading-snug">
-                {panel.artist}
-              </p>
-            )}
-            {artistMeta && (
-              <p className="text-[10px] text-white/40 mt-0.5">{artistMeta}</p>
-            )}
-            {artist?.description && (
-              <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{artist.description}</p>
-            )}
-            {artist?.references && artist.references.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {artist.references.map((ref) => (
-                  <a
-                    key={ref.url}
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] text-accent hover:text-accent-dim transition-colors"
-                  >
-                    {refIcon(ref)}
-                    {ref.name}
-                  </a>
-                ))}
+          <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+            {artist?.imageUrl && (
+              <div className="absolute inset-0 pointer-events-none">
+                <img
+                  src={artist.imageUrl}
+                  alt=""
+                  className="absolute right-0 top-0 h-full w-2/3 object-cover object-center"
+                  style={{ opacity: 0.3 }}
+                />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(to right, rgba(0,0,0,1) 25%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.15) 100%)",
+                  }}
+                />
               </div>
             )}
+            <div className="relative z-10 px-4 py-3">
+              <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1.5">Artist</p>
+              {isPersonInteractive(panel.artist, artist?.id) ? (
+                <button
+                  type="button"
+                  onClick={() => openPerson(panel.artist, artist?.id)}
+                  className="font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
+                >
+                  {panel.artist}
+                </button>
+              ) : (
+                <p className="font-display text-sm text-white/90 leading-snug">
+                  {panel.artist}
+                </p>
+              )}
+              {artistMeta && (
+                <p className="text-[10px] text-white/40 mt-0.5">{artistMeta}</p>
+              )}
+              {artist?.description && (
+                <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{artist.description}</p>
+              )}
+              {artist?.references && artist.references.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {artist.references.map((ref) => (
+                    <a
+                      key={ref.url}
+                      href={ref.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[10px] text-accent hover:text-accent-dim transition-colors"
+                    >
+                      {refIcon(ref)}
+                      {ref.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+          </>
+        )}
 
         {/* More by this artist */}
         {artistPanels.length > 0 && (

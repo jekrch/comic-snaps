@@ -9,7 +9,23 @@ export interface Filters {
   credits: Set<string>;
   postedBy: Set<string>;
   series: Set<string>;
+  /** Free text, matched across every field a panel carries (see `panelHaystack`). */
+  searchQuery: string;
 }
+
+/** The facet dimensions — every key of `Filters` that holds a set of values. */
+export type FilterSetKey = Exclude<keyof Filters, "searchQuery">;
+
+export const FILTER_SET_KEYS: FilterSetKey[] = [
+  "decades",
+  "tags",
+  "artists",
+  "colorists",
+  "letterers",
+  "credits",
+  "postedBy",
+  "series",
+];
 
 export const EMPTY_FILTERS: Filters = {
   decades: new Set(),
@@ -20,6 +36,7 @@ export const EMPTY_FILTERS: Filters = {
   credits: new Set(),
   postedBy: new Set(),
   series: new Set(),
+  searchQuery: "",
 };
 
 export function hasActiveFilters(filters: Filters): boolean {
@@ -35,7 +52,8 @@ export function activeFilterCount(filters: Filters): number {
     filters.letterers.size +
     filters.credits.size +
     filters.postedBy.size +
-    filters.series.size
+    filters.series.size +
+    (filters.searchQuery.trim() ? 1 : 0)
   );
 }
 
@@ -44,8 +62,39 @@ export function getDecade(year: number): string {
   return `${d}s`;
 }
 
+/** Everything about a panel that free text can reach, lowercased into one blob. */
+function panelHaystack(panel: Panel): string {
+  const parts: (string | number | null | undefined)[] = [
+    panel.title,
+    panel.slug,
+    panel.issue,
+    panel.year,
+    getDecade(panel.year),
+    panel.artist,
+    panel.postedBy,
+    panel.notes,
+    ...(panel.tags ?? []),
+    ...(panel.colorists ?? []),
+    ...(panel.letterers ?? []),
+    ...(panel.credits ?? []),
+  ];
+  return parts.filter((v) => v !== null && v !== undefined && v !== "").join(" \n ").toLowerCase();
+}
+
+/** Whitespace-separated words, all of which have to land somewhere on a panel. */
+export function searchTokens(query: string): string[] {
+  return query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+}
+
+function matchesSearch(panel: Panel, tokens: string[]): boolean {
+  if (tokens.length === 0) return true;
+  const hay = panelHaystack(panel);
+  return tokens.every((t) => hay.includes(t));
+}
+
 export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
   if (!hasActiveFilters(filters)) return panels;
+  const tokens = searchTokens(filters.searchQuery);
   return panels.filter((p) => {
     if (filters.decades.size > 0 && !filters.decades.has(getDecade(p.year))) return false;
     if (filters.artists.size > 0 && !filters.artists.has(p.artist)) return false;
@@ -58,11 +107,13 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
       const panelTags = p.tags ?? [];
       if (!panelTags.some((t:any) => filters.tags.has(t))) return false;
     }
+    if (!matchesSearch(p, tokens)) return false;
     return true;
   });
 }
 
 export function computeFacets(panels: Panel[], filters: Filters) {
+  const tokens = searchTokens(filters.searchQuery);
   const decadeCounts = new Map<string, number>();
   const tagCounts = new Map<string, number>();
   const artistCounts = new Map<string, number>();
@@ -84,6 +135,9 @@ export function computeFacets(panels: Panel[], filters: Filters) {
       credits: filters.credits.size === 0 || (p.credits ?? []).some((c) => filters.credits.has(c)),
       postedBy: filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy),
       series: filters.series.size === 0 || filters.series.has(p.title),
+      // Not a facet of its own, so nothing skips it: the query narrows every
+      // count, the same as it narrows the grid.
+      search: matchesSearch(p, tokens),
     };
 
     const passAllExcept = (skip: keyof typeof pass) =>

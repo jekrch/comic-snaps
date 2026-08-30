@@ -17,7 +17,7 @@ import type { InfoTab } from "./components/InfoModal";
 import type { StatsFilterPatch } from "./components/stats/StatsTab";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
-import { loadMetadata } from "./utils/metadata";
+import { isProductionOnly, loadMetadata } from "./utils/metadata";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
@@ -279,6 +279,7 @@ export default function App() {
   const handleStatsFilter = useCallback(
     (patch: StatsFilterPatch) => {
       const next: Filters = {
+        ...EMPTY_FILTERS,
         decades: new Set(patch.decades ?? []),
         tags: new Set(patch.tags ?? []),
         artists: new Set(patch.artists ?? []),
@@ -315,7 +316,12 @@ export default function App() {
         for (const i of issues) {
           const colorists = i.credits.filter((c) => c.roles.includes("Colorist")).map((c) => c.name);
           const letterers = i.credits.filter((c) => c.roles.includes("Letterer")).map((c) => c.name);
-          const names = Array.from(new Set(i.credits.map((c) => c.name)));
+          // Cover artists and editors are on the issue, not in the panel —
+          // they are left out so the facet and the text search stay a list of
+          // people who made what is on the wall (see `isProductionOnly`).
+          const names = Array.from(
+            new Set(i.credits.filter((c) => !isProductionOnly(c)).map((c) => c.name))
+          );
           if (colorists.length || letterers.length || names.length) {
             creditMap.set(`${i.series}|${i.issue}`, { colorists, letterers, names });
           }

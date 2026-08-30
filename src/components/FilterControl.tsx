@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback } from "react";
 import type { Panel } from "../types";
-import type { Filters } from "../utils/filtering";
+import type { Filters, FilterSetKey } from "../utils/filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
 import { comparePersonNames } from "../utils/names";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
-import { ChevronDown, XCircle } from "lucide-react";
+import { ChevronDown, Search, X, XCircle } from "lucide-react";
 import VizLaunchButton from "./viz/VizLaunchButton";
 import ViewControl from "./ViewControl";
 import type { GalleryView } from "./ViewControl";
@@ -105,7 +105,7 @@ export default function FilterControl({
   );
 
   const toggleInSet = useCallback(
-    (key: keyof Filters, value: string) => {
+    (key: FilterSetKey, value: string) => {
       const next = new Set(filters[key]);
       if (next.has(value)) next.delete(value);
       else next.add(value);
@@ -179,6 +179,35 @@ export default function FilterControl({
                 </button>
               </div>
             )}
+
+            {/* free text across every field a panel carries */}
+            <div className="px-3 pt-2 pb-2">
+              <div className="flex items-center gap-2 px-2 py-1.5 rounded-sm bg-surface-raised/60 ring-1 ring-inset ring-ink-faint/15 focus-within:ring-accent/40 transition-colors">
+                <Search size={12} strokeWidth={1.5} className="text-ink-muted shrink-0" />
+                <input
+                  type="text"
+                  inputMode="search"
+                  placeholder="title, artist, tags…"
+                  value={filters.searchQuery}
+                  onChange={(e) => onFiltersChange({ ...filters, searchQuery: e.target.value })}
+                  className="filter-search-input flex-1 min-w-0 bg-transparent text-ink placeholder:text-ink-faint outline-none"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                />
+                {filters.searchQuery && (
+                  <button
+                    type="button"
+                    aria-label="Clear search"
+                    onClick={() => onFiltersChange({ ...filters, searchQuery: "" })}
+                    className="flex items-center justify-center h-4 w-4 rounded text-ink-muted hover:text-ink hover:bg-white/5 transition-colors shrink-0 cursor-pointer"
+                  >
+                    <X size={11} strokeWidth={1.5} />
+                  </button>
+                )}
+              </div>
+            </div>
 
             <FacetSection
               title="DECADE"
