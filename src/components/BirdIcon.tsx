@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState, useCallback, useImperativeHandle } from "react";
 import type { Ref } from "react";
 import { Bird } from "lucide-react";
+import { useAtTop } from "../hooks/useAtTop";
+
+/**
+ * How the header's ink stops at the bottom of the bar once the page is
+ * scrolled: solid through the top of the box, gone by the time it reaches the
+ * edge. The thought balloon wears the same fade, so the two dissolve together.
+ */
+export const HEADER_FADE_MASK = "linear-gradient(to bottom, black 40%, transparent 90%)";
 
 export interface BirdHandle {
   /** Peck once, if the intro has finished. */
@@ -19,7 +27,7 @@ export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
   const birdMaskedRef = useRef<SVGSVGElement>(null);
   const [introComplete, setIntroComplete] = useState(false);
   const introCompleteRef = useRef(false);
-  const [atTop, setAtTop] = useState(true);
+  const atTop = useAtTop();
 
   // Held in a ref so the effect below keeps its `[triggerPeck]` deps — taking
   // the callback as a dependency would re-run it and replay the intro hop.
@@ -66,7 +74,6 @@ export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
     let lastScrollY = window.scrollY;
 
     const onScroll = () => {
-      setAtTop(window.scrollY <= 0);
       if (!introCompleteRef.current) return;
       if (Math.abs(window.scrollY - lastScrollY) < 10) return;
       lastScrollY = window.scrollY;
@@ -104,10 +111,10 @@ export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
         style={{
           maskImage: `repeating-linear-gradient(to bottom,
             black 0px, black 10px, transparent 4px, transparent 3px),
-            linear-gradient(to bottom, black 40%, transparent 90%)`,
+            ${HEADER_FADE_MASK}`,
           WebkitMaskImage: `repeating-linear-gradient(to bottom,
             black 0px, black 10px, transparent 2px, transparent 3px),
-            linear-gradient(to bottom, black 40%, transparent 90%)`,
+            ${HEADER_FADE_MASK}`,
           maskComposite: 'intersect',
           WebkitMaskComposite: 'source-in',
         }}

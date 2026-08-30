@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import ThoughtBalloon from "./ThoughtBalloon";
+import { HEADER_FADE_MASK } from "../BirdIcon";
+import { useAtTop } from "../../hooks/useAtTop";
 
 /**
  * The visualizer's entry point in the header: what the bird is thinking about.
@@ -11,6 +13,12 @@ import ThoughtBalloon from "./ThoughtBalloon";
  * arrives in the order a thought does: the bubble at its head, the next one out,
  * then the balloon. Sequencing it against the landing is the difference between
  * a bird that is thinking and a header that has a graphic in it.
+ *
+ * Once the page is scrolled the balloon dissolves toward the bottom of the bar
+ * exactly as the bird does — two copies stacked, the solid one fading off to
+ * leave the masked one behind, because a `mask-image` cannot be transitioned.
+ * The bird thinning out while its thought stayed inked was the whole tell that
+ * the two were separate marks.
  */
 
 interface VizThoughtProps {
@@ -22,6 +30,8 @@ interface VizThoughtProps {
 }
 
 export default function VizThought({ onLaunch, onNudge, landed }: VizThoughtProps) {
+  const atTop = useAtTop();
+
   const nudge = useCallback(() => {
     onNudge?.();
     // The overlay is lazily chunked, so the first launch of a session otherwise
@@ -42,7 +52,23 @@ export default function VizThought({ onLaunch, onNudge, landed }: VizThoughtProp
          `ml-1` keeps the trail within a thought's reach of the bird. */
       className="viz-think cursor-pointer p-1 -m-1 -my-2 ml-1 -translate-y-0.5 -translate-x-1.5 focus:outline-none scale-75"
     >
-      <ThoughtBalloon shown={!!landed} label="" />
+      {/* The two copies are the same drawing at the same place, so at the top of
+          the page the masked one is simply hidden under the solid one. */}
+      <div className="relative">
+        <div
+          className={`transition-opacity duration-300 ease-in ${
+            landed && !atTop ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <ThoughtBalloon shown={!!landed} label="" />
+        </div>
+        <div
+          className="absolute inset-0"
+          style={{ maskImage: HEADER_FADE_MASK, WebkitMaskImage: HEADER_FADE_MASK }}
+        >
+          <ThoughtBalloon shown={!!landed} label="" />
+        </div>
+      </div>
     </button>
   );
 }

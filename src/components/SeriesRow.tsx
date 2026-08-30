@@ -27,10 +27,27 @@ const COVER_ASPECT = 0.66;
 /** The logo bird's rust, borrowed for the bare number the narrow band shows. */
 const SCORE_RUST = "#8d422f";
 
-/** Covers follow the hero, up to three (§1.5). */
-const MAX_COVERS = 3;
+/**
+ * Covers close every strip, after the last panel (§1.5).
+ *
+ * Four is every cover the metadata has for any series, so the cap is really
+ * "all of them". They come last on purpose: the panels are what the wall
+ * collected and the covers are what the book looked like on a shelf, so the
+ * strip reads panels-then-objects and the covers are the thing the row trails
+ * off into rather than something the eye has to get past.
+ */
+const MAX_COVERS = 4;
 
 const TILE_GAP = 4;
+
+/**
+ * Height the strip gives up to its scrollbar, so the bar has somewhere to sit
+ * that is not on top of the art. Reserved on the desktop layout only — the
+ * narrow one keeps the bar hidden and the tiles take the full height — and it
+ * is reserved whether or not the row actually overflows, because uniform row
+ * height is what the shelf's windowing arithmetic is built on (§7).
+ */
+const SCROLLBAR_H = 10;
 
 /**
  * Row geometry. Uniform height is what makes 113 rows scannable and windowing
@@ -41,8 +58,12 @@ const TILE_GAP = 4;
  * height with nothing between them run together — a strip of panels ends
  * wherever it ends, so the eye has no edge to cut on — and this is the one band
  * in the row that cannot be mistaken for art.
+ *
+ * 28px is the floor, not a round number: the title plate is a 15px line plus
+ * the 0.4rem its fade needs on each side, and the rule has to clear that or
+ * `overflow-hidden` cuts the falloff back into a hard edge.
  */
-export const HEAD_H = 26;
+export const HEAD_H = 28;
 const HEAD_GAP = 8;
 export const STRIP_H = 220;
 export const STRIP_H_NARROW = 150;
@@ -97,6 +118,111 @@ function postedRange(first: number, last: number): string | null {
   return from === to ? to : `${from} – ${to}`;
 }
 
+/**
+ * The image the row washes its background with: a close-up of the series
+ * itself, dimmed almost out of sight, so a row reads as *this* book's shelf
+ * rather than as a generic strip — the same move the info drawer makes behind
+ * its series card.
+ *
+ * A cover the strip is not already showing comes first — never a second copy of
+ * a tile a few pixels to the right — though with every cover now ending the
+ * strip that leaves the series' key image, which is a different photograph of
+ * the book anyway. Then the parent's, then any cover at all, and only then the
+ * row's own art, skipping blurred panels: the strip covers those on purpose and
+ * the backdrop must not uncover them.
+ */
+function backdropSrc(row: SeriesRowData, shownCovers: number): string | null {
+  const spare = row.covers[shownCovers];
+  if (spare) return spare;
+  if (row.series?.imageUrl) return row.series.imageUrl;
+  if (row.parent?.imageUrl) return row.parent.imageUrl;
+  if (row.covers[0]) return row.covers[0];
+  return row.panels.find((p) => !p.blur)?.image ?? null;
+}
+
+/**
+ * How far past 1:1 the backdrop may be magnified, and the zoom a source big
+ * enough to afford it gets.
+ *
+ * The covers are not one size — they run from 293x450 to 832x1280 — and
+ * `object-fit: cover` has already blown a small one up to the width of the wash
+ * before any zoom is applied. So the zoom is whatever is left of the budget
+ * after that: a big scan gets the full close-up, a small one is left nearly
+ * where cover put it rather than magnified into visible blocks.
+ */
+const BACKDROP_MAX_UPSCALE = 1.5;
+const BACKDROP_ZOOM = 1.85;
+/** Never exactly 1: a hair of overscan keeps the blur from sampling past the
+ *  image's own edges and drawing a soft border inside the wash. */
+const BACKDROP_MIN_ZOOM = 1.04;
+
+/**
+ * The wash itself: the series' art behind the rail, fitted to whatever
+ * resolution the source actually has.
+ *
+ * Whatever upscale the budget cannot avoid is spent as softness instead — at
+ * 19% opacity a soft wash is the effect, where a sharp grid of blocks is just a
+ * small picture stretched. The fit is measured rather than assumed because the
+ * box is a share of the row's width, which is the window's.
+ */
+function SeriesBackdrop({ src }: { src: string }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [fit, setFit] = useState<{ transform: string; filter: string } | null>(null);
+
+  const measure = useCallback(() => {
+    const wrap = wrapRef.current;
+    const img = imgRef.current;
+    if (!wrap || !img || !img.naturalWidth || !img.naturalHeight) return;
+    const boxW = wrap.clientWidth;
+    const boxH = wrap.clientHeight;
+    // Under `content-visibility: auto` a row that is still skipped lays nothing
+    // out; the ResizeObserver calls back the moment it does.
+    if (!boxW || !boxH) return;
+
+    const cover = Math.max(boxW / img.naturalWidth, boxH / img.naturalHeight);
+    const zoom = Math.min(
+      BACKDROP_ZOOM,
+      Math.max(BACKDROP_MIN_ZOOM, BACKDROP_MAX_UPSCALE / cover),
+    );
+    const upscale = Math.max(1, cover * zoom);
+    const blur = Math.min(2.2, (upscale - 1) * 1.3);
+
+    const next = {
+      transform: `scale(${zoom.toFixed(3)})`,
+      filter: `saturate(0.85) contrast(1.05)${blur > 0.05 ? ` blur(${blur.toFixed(2)}px)` : ""}`,
+    };
+    setFit((prev) =>
+      prev && prev.transform === next.transform && prev.filter === next.filter ? prev : next,
+    );
+  }, []);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [measure]);
+
+  return (
+    <div ref={wrapRef} className="series-bg" data-fitted={fit ? "true" : undefined} aria-hidden="true">
+      <img
+        ref={imgRef}
+        src={panelImageUrl(src)}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style={fit ?? undefined}
+        onLoad={measure}
+        onError={(e) => {
+          e.currentTarget.style.visibility = "hidden";
+        }}
+      />
+    </div>
+  );
+}
+
 interface TileProps {
   panel: Panel;
   height: number;
@@ -111,6 +237,9 @@ interface TileProps {
  * place a blur does not apply. `PanelCard`'s directional variants are dropped —
  * "blurred from the left" says nothing about a centred crop of the middle — so
  * every blurred tile is covered whole, which is the safe direction to err in.
+ *
+ * `data-panel-id` is how the viewer finds the tile to fly out of and collapse
+ * back into, the same handle `PanelCard` carries on the wall.
  */
 function PanelTile({ panel, height, range, onOpen }: TileProps) {
   const { ref, near } = useNearViewport<HTMLButtonElement>();
@@ -122,6 +251,7 @@ function PanelTile({ panel, height, range, onOpen }: TileProps) {
     <button
       ref={ref}
       type="button"
+      data-panel-id={panel.id}
       onClick={() => onOpen(panel)}
       className="series-tile relative shrink-0 overflow-hidden rounded-sm bg-surface-raised cursor-pointer"
       style={{ width, height, backgroundColor: placeholderFor(panel) }}
@@ -247,10 +377,17 @@ function SeriesRowView({
 
   const hero = row.panels[0];
   const teases = row.panels.slice(1);
-  // 54 of 113 series have exactly one panel, so half the view has nothing to
-  // tease with. Those rows borrow the series' own cover art (§1.5).
-  const covers = row.panels.length === 1 ? row.covers.slice(0, MAX_COVERS) : [];
+  // Every row that has covers ends in them — 54 of 113 series have exactly one
+  // panel and nothing to tease with, and the rest are still books someone can
+  // go and buy (§1.5).
+  const covers = row.covers.slice(0, MAX_COVERS);
   const hatchTail = row.panels.length === 1 && covers.length === 0;
+
+  // The bar sits inside the strip's own box, so the tiles are shorter than the
+  // strip by exactly its height and the row keeps the height the shelf placed it at.
+  const tileHeight = narrow ? stripHeight : stripHeight - SCROLLBAR_H;
+
+  const backdrop = useMemo(() => backdropSrc(row, covers.length), [row, covers.length]);
 
   const coverHref = row.series?.references?.[0]?.url ?? null;
   const score = row.rating && row.rating.count > 0 ? row.rating.avg : null;
@@ -334,18 +471,19 @@ function SeriesRowView({
   /**
    * The hatched rule: the series' name and the year its run starts. The hatch
    * is the wall's own filler motif, drawn as a gradient — a 26px rule does not
-   * need `HatchFiller`'s animation machinery — and the text sits on solid
-   * plates cut out of it so it stays legible over the lines.
+   * need `HatchFiller`'s animation machinery — and the text sits on plates
+   * that fade out at their edges, so it stays legible over the lines without
+   * a hard-edged box around every word.
    */
   const head = (
     <div
-      className="series-head flex shrink-0 items-center gap-2 overflow-hidden px-2.5"
+      className="series-head relative flex shrink-0 items-center gap-2 overflow-hidden px-2.5"
       style={{ height: HEAD_H }}
     >
       <button
         type="button"
         onClick={() => onSelectSeries(row)}
-        className="series-head-plate min-w-0 truncate font-display text-[13px] leading-none tracking-wide text-ink hover:text-accent transition-colors cursor-pointer"
+        className="series-head-plate min-w-0 truncate font-display text-[15px] leading-none tracking-wide text-ink hover:text-accent transition-colors cursor-pointer"
         title={`Show ${row.title} on the wall`}
       >
         {row.title}
@@ -426,10 +564,14 @@ function SeriesRowView({
   );
 
   return (
-    <section className="series-row flex h-full flex-col" aria-label={row.title}>
+    <section className="series-row relative flex h-full flex-col" aria-label={row.title}>
+      {/* Atmosphere, not information: it is masked away well before the strip
+          begins, so it lives behind the rail's white space and never competes
+          with the panels for the same pixels. */}
+      {backdrop && <SeriesBackdrop key={backdrop} src={backdrop} />}
       {head}
       <div
-        className={`flex min-h-0 flex-1 ${narrow ? "flex-col" : "flex-row items-stretch"}`}
+        className={`relative flex min-h-0 flex-1 ${narrow ? "flex-col" : "flex-row items-stretch"}`}
         style={{ marginTop: HEAD_GAP }}
       >
         {rail}
@@ -439,29 +581,33 @@ function SeriesRowView({
           role="group"
           aria-label={`${row.title} panels`}
           onKeyDown={handleStripKey}
-          className={`series-strip flex min-w-0 flex-1 items-stretch overflow-x-auto ${
+          className={`series-strip flex min-w-0 flex-1 items-stretch overflow-x-auto overflow-y-hidden ${
             masked ? "series-strip--masked" : ""
           }`}
           style={{ height: stripHeight, gap: TILE_GAP }}
         >
-          <PanelTile panel={hero} height={stripHeight} range={HERO_ASPECT} onOpen={openPanel} />
+          <PanelTile panel={hero} height={tileHeight} range={HERO_ASPECT} onOpen={openPanel} />
           {teases.map((panel) => (
             <PanelTile
               key={panel.id}
               panel={panel}
-              height={stripHeight}
+              height={tileHeight}
               range={TEASE_ASPECT}
               onOpen={openPanel}
             />
           ))}
           {covers.map((src) => (
-            <CoverTile key={src} src={src} height={stripHeight} href={coverHref} />
+            <CoverTile key={src} src={src} height={tileHeight} href={coverHref} />
           ))}
           {/* Neither a second panel nor a cover: the same motif the masonry uses
               for leftover space, so the empty tail reads as part of the design
               rather than as a loading failure. */}
           {hatchTail && (
-            <div className="min-w-20 flex-1 overflow-hidden rounded-sm" aria-hidden="true">
+            <div
+              className="min-w-20 flex-1 overflow-hidden rounded-sm"
+              style={{ height: tileHeight }}
+              aria-hidden="true"
+            >
               <HatchFiller empty />
             </div>
           )}

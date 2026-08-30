@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
-import { ImageViewer } from "@jekrch/react-viewport-lightbox";
+import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { setHatchViewerOpen } from "../hooks/useHatchPause";
@@ -117,6 +117,34 @@ function ViewerOverlay({
   );
 }
 
+/**
+ * The rect the viewer's image flies out of, and collapses back into.
+ *
+ * A wall card shows the whole panel, so the card's own box is the right
+ * target. A series tile is a *crop* — a clamped width with `object-fit: cover`
+ * — and flying the uncropped image into that box squashes it for the length of
+ * the animation, hardest on exactly the panels the crop works hardest on. So
+ * where the thumbnail crops, hand back the rect the whole image would occupy
+ * at the crop's own scale: the slice actually on screen still lines up with the
+ * tile, and the flight stays in proportion the whole way.
+ */
+function originRect(el: HTMLElement): HTMLElement | ViewerRect {
+  const img = el.querySelector("img");
+  if (!img || getComputedStyle(img).objectFit !== "cover") return el;
+  const { naturalWidth: iw, naturalHeight: ih } = img;
+  const rect = el.getBoundingClientRect();
+  if (!iw || !ih || !rect.width || !rect.height) return el;
+  const scale = Math.max(rect.width / iw, rect.height / ih);
+  const width = iw * scale;
+  const height = ih * scale;
+  return {
+    left: rect.left + (rect.width - width) / 2,
+    top: rect.top + (rect.height - height) / 2,
+    width,
+    height,
+  };
+}
+
 export default function PanelViewer({
   panel,
   panels,
@@ -149,9 +177,11 @@ export default function PanelViewer({
 
   const overlayOpen = drawerOpen || graphOpen;
 
-  // Shared-element open/close: expand from (and collapse back into) the gallery
-  // card with the matching id. Offscreen cards return their (offscreen) element
-  // and the library falls back to a plain fade, so this is safe after deep nav.
+  // Shared-element open/close: expand from (and collapse back into) the wall
+  // card or series tile carrying the matching id. Offscreen thumbnails return
+  // their (offscreen) rect and the library falls back to a plain fade, so this
+  // is safe after deep nav, and so is a viewer group wider than the strip it
+  // was opened from.
   // While an overlay is open the image stage is shifted off-screen, so its rect
   // no longer matches the thumbnail — return null to fall back to a fade close.
   // Over the visualizer there is no visible card to fly from either: the run
@@ -162,7 +192,8 @@ export default function PanelViewer({
       if (overlayOpen || overViz) return null;
       const it = items[i];
       if (!it) return null;
-      return document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
+      const el = document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
+      return el ? originRect(el) : null;
     },
     [items, overlayOpen, overViz]
   );

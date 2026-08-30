@@ -1157,13 +1157,122 @@ button,
   border-top: 1px solid rgba(232, 228, 223, 0.14);
 }
 
-/* Solid ground under the type, so the hatch runs behind the row rather than
-   through the words. The surface colour, not a tint — the lines have to stop
-   dead at the edge of a plate for the cut-out to read. */
+/* Ground under the type, so the hatch runs behind the row rather than through
+   the words. The surface colour, not a tint — the lines have to stop under a
+   word for it to read as cut out of the rule. But a hard-edged rectangle reads
+   as a black box laid on top, so the plate is a pseudo-element that fades to
+   nothing on every side: opaque where the glyphs are, gone by its own edge.
+
+   The fade needs room the text does not, so the padding grows and an equal
+   negative margin takes the growth back — the words sit exactly where they sat
+   with a 0.4rem/0.2rem plate, and only the falloff is new. Two axes without
+   `mask-composite`: the gradient carries the horizontal fall-off, the mask the
+   vertical, the same trick `.series-bg` runs below. The mask would eat the
+   text too, hence the pseudo-element, and `isolation` so its negative z-index
+   lands above the hatch rather than behind it. */
 .series-head-plate {
-  background-color: var(--color-surface);
-  padding-inline: 0.4rem;
-  padding-block: 0.2rem;
+  position: relative;
+  isolation: isolate;
+  padding-inline: 0.95rem;
+  padding-block: 0.4rem;
+  margin-inline: -0.55rem;
+  margin-block: -0.2rem;
+}
+
+.series-head-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to right,
+    transparent 0,
+    color-mix(in srgb, var(--color-surface) 50%, transparent) 0.45rem,
+    var(--color-surface) 0.9rem,
+    var(--color-surface) calc(100% - 0.9rem),
+    color-mix(in srgb, var(--color-surface) 50%, transparent) calc(100% - 0.45rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, 0.5) 0.18rem,
+    #000 0.4rem,
+    #000 calc(100% - 0.4rem),
+    rgba(0, 0, 0, 0.5) calc(100% - 0.18rem),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, 0.5) 0.18rem,
+    #000 0.4rem,
+    #000 calc(100% - 0.4rem),
+    rgba(0, 0, 0, 0.5) calc(100% - 0.18rem),
+    transparent 100%
+  );
+}
+
+/* Atmosphere behind a row: a close-up of the series' own cover, dimmed nearly
+   out and masked away before the strip starts, so it fills the rail's white
+   space with the book's colour without ever standing behind a panel. The same
+   idea the info drawer runs behind its series card, mirrored — there the art is
+   on the right and the type on the left, here the type is the rail on the left.
+
+   Masks rather than a dark scrim on top: a scrim has to guess the page colour
+   at every edge, a mask fades to whatever is actually behind it. The wrapper
+   takes the horizontal fall-off, the image the vertical, which composes the two
+   without `mask-composite`. */
+.series-bg {
+  position: absolute;
+  inset: 0 auto 0 0;
+  /* Capped rather than a bare share of the row: a wash that grew with the
+     monitor would put a wide upscale of a small cover behind the panels on a
+     large screen, and the thing it is dressing — the rail — is 260px wide
+     wherever it is drawn. A narrower box is also less to magnify the source
+     into, which is half of why the wash stays clean. */
+  width: min(72%, 680px);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0.5) 58%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0.5) 58%, transparent 100%);
+}
+
+/* Close up, not a thumbnail: cover already crops a portrait cover to a wide
+   band, and the zoom pushes past that into paper — faces, ink, a corner of
+   logo — which is what reads as atmosphere rather than as a small picture
+   someone left behind the text.
+
+   How far past is `SeriesBackdrop`'s call, since only it knows how many pixels
+   the source actually has; it writes the transform and the filter inline once
+   it has measured, and the wash fades up when it does rather than snapping from
+   one zoom to another. */
+.series-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 32% 38%;
+  transform: scale(1.04);
+  transform-origin: 30% 45%;
+  opacity: 0;
+  transition: opacity 0.45s ease-out;
+  filter: saturate(0.85) contrast(1.05);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+}
+
+.series-bg[data-fitted="true"] img {
+  opacity: 0.19;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .series-bg img {
+    transition: none;
+  }
 }
 
 /* --- The series shelf's strips -----------------------------------------
@@ -1174,14 +1283,65 @@ button,
    chevrons here (docs/series-view-plan.md §1.3). */
 .series-strip {
   scroll-snap-type: x proximity;
-  /* The bar would be a second horizontal line under every row, and the rows
-     are already a stack of them. */
+  /* Hidden by default: a touch strip is scrolled by dragging it, and a bar
+     under every row would be a second stack of horizontal lines in a view that
+     is already a stack of them. The desktop layout takes one back below. */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .series-strip::-webkit-scrollbar {
   display: none;
+}
+
+/* With a mouse there is nothing to drag and covers now run past the edge of
+   most rows, so the desktop layout gets a real scrollbar — the affordance the
+   dissolving edge only hints at, and a way to see how much row is left.
+
+   Gated on the same 620px the shelf calls narrow, so the bar appears exactly
+   where `SeriesRow` reserved the 10px for it; the pointer test keeps it off
+   touch screens wide enough to clear that breakpoint.
+
+   Drawn as the row's own furniture rather than the browser's: a hairline track
+   in the head's rule colour, and a thumb of the same faint ink the credits are
+   set in, warming to the accent under the pointer. The 3px transparent border
+   with `background-clip` is what makes a 10px bar read as a 4px line. */
+@media (min-width: 621px) and (hover: hover) and (pointer: fine) {
+  .series-strip {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232, 228, 223, 0.22) transparent;
+  }
+
+  .series-strip::-webkit-scrollbar {
+    display: block;
+    height: 10px;
+  }
+
+  .series-strip::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-top: 1px solid rgba(232, 228, 223, 0.08);
+  }
+
+  .series-strip::-webkit-scrollbar-thumb {
+    background-color: rgba(232, 228, 223, 0.2);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    border-radius: 999px;
+  }
+
+  .series-strip:hover::-webkit-scrollbar-thumb,
+  .series-strip:focus-within::-webkit-scrollbar-thumb {
+    background-color: rgba(232, 228, 223, 0.34);
+  }
+
+  .series-strip::-webkit-scrollbar-thumb:hover,
+  .series-strip::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-accent);
+  }
+
+  .series-strip:hover {
+    scrollbar-color: rgba(232, 228, 223, 0.34) transparent;
+  }
 }
 
 .series-strip > * {
