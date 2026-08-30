@@ -138,16 +138,23 @@ button,
 }
 
 /* The filter dropdown's text search. Sized down to sit with the 10-12px type
-   around it, but Safari on iOS zooms the whole page in on any field it focuses
-   below 16px — and never zooms back out — so on a touch screen the field gives
-   up the smaller type rather than the reader's place on the wall. */
+   around it. Safari on iOS zooms the whole page in on any field it focuses
+   below 16px — and never zooms back out — so the viewport meta pins
+   maximum-scale=1 to hold the field's place on the wall, and touch keeps only
+   a slightly larger face than the desktop size rather than the full 16px. */
 .filter-search-input {
   font-size: 12px;
 }
 
 @media (pointer: coarse) {
   .filter-search-input {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  /* The row's own padding was drawn around 16px type; at 14px it reads as a
+     band rather than a field. */
+  .filter-search-box {
+    padding-block: 0.2rem;
   }
 }
 

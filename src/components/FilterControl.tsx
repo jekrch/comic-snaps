@@ -182,7 +182,7 @@ export default function FilterControl({
 
             {/* free text across every field a panel carries */}
             <div className="px-3 pt-2 pb-2">
-              <div className="flex items-center gap-2 px-2 py-1.5 rounded-sm bg-surface-raised/60 ring-1 ring-inset ring-ink-faint/15 focus-within:ring-accent/40 transition-colors">
+              <div className="filter-search-box flex items-center gap-2 px-2 py-1.5 rounded-sm bg-surface-raised/60 ring-1 ring-inset ring-ink-faint/15 focus-within:ring-accent/40 transition-colors">
                 <Search size={12} strokeWidth={1.5} className="text-ink-muted shrink-0" />
                 <input
                   type="text"
