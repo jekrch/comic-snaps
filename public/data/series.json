@@ -686,7 +686,9 @@
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2,
+          3
         ],
         "comicvine": [
           1
@@ -695,7 +697,8 @@
       "coverImages": [
         "data/covers/concrete-stars-over-sand/adbd820470e4.jpg",
         "data/covers/concrete-stars-over-sand/dc3c854eb3e9.jpg",
-        "data/covers/concrete-stars-over-sand/c0cafe56de93.jpg"
+        "data/covers/concrete-stars-over-sand/c0cafe56de93.jpg",
+        "data/covers/concrete-stars-over-sand/97b16cdb23d2.jpg"
       ]
     },
     {
@@ -1942,13 +1945,15 @@
       "coverImages": [
         "data/covers/just-brutal/90aafc119c17.jpg",
         "data/covers/just-brutal/abfb661b87c6.jpg",
-        "data/covers/just-brutal/15754eed571a.jpg"
+        "data/covers/just-brutal/15754eed571a.jpg",
+        "data/covers/just-brutal/8213322e4dce.jpg"
       ],
       "coverSources": {
         "metron": [
           2,
           3,
-          4
+          4,
+          5
         ],
         "comicvine": [
           2,
@@ -2264,7 +2269,8 @@
       "coverSources": {
         "metron": [
           1,
-          2
+          2,
+          3
         ],
         "comicvine": [
           1
@@ -2273,7 +2279,8 @@
       "coverImages": [
         "data/covers/mind-mgmt-new-improved/d88427fdbd88.jpg",
         "data/covers/mind-mgmt-new-improved/252ce7ee89b4.jpg",
-        "data/covers/mind-mgmt-new-improved/65dc04185332.jpg"
+        "data/covers/mind-mgmt-new-improved/65dc04185332.jpg",
+        "data/covers/mind-mgmt-new-improved/0eae53fcd6eb.jpg"
       ],
       "startYear": 2026
     },
@@ -2619,7 +2626,8 @@
       "coverImages": [
         "data/covers/red-roots/77bf13a7fec6.jpg",
         "data/covers/red-roots/01819fdd2868.jpg",
-        "data/covers/red-roots/fa253263be99.jpg"
+        "data/covers/red-roots/fa253263be99.jpg",
+        "data/covers/red-roots/1ee358a9b1be.jpg"
       ],
       "coverSources": {
         "metron": [
@@ -2629,7 +2637,8 @@
         ],
         "comicvine": [
           1,
-          3
+          3,
+          4
         ]
       }
     },
