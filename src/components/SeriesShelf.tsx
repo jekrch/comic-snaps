@@ -38,8 +38,7 @@ interface Props {
   onViewChange: (view: GalleryView) => void;
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
-  onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onSelectSeries: (row: SeriesRowData) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => void;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   onLayoutReady?: () => void;
   /** The page has already faded in, so the first-paint check has nothing to do. */
@@ -57,7 +56,6 @@ export default function SeriesShelf({
   filters,
   onFiltersChange,
   onSelectPanel,
-  onSelectSeries,
   onBrowse,
   onLayoutReady,
   layoutReady,
@@ -252,7 +250,6 @@ export default function SeriesShelf({
                 stripHeight={stripHeight}
                 narrow={narrow}
                 onSelectPanel={onSelectPanel}
-                onSelectSeries={onSelectSeries}
                 onBrowse={onBrowse}
                 onJumpToParent={
                   parentIndex === undefined ? undefined : () => jumpTo(parentIndex)

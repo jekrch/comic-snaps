@@ -8,8 +8,9 @@ from pathlib import Path
 
 import requests
 
+from .cover_dedupe import CoverSet
 from .health import IntegrationHealth
-from .paths import COVERS_DIR, COVERS_WEB_PREFIX
+from .paths import COVERS_DIR, COVERS_WEB_PREFIX, IMAGE_ROOT
 from .references import (
     SOURCE_COMICVINE,
     SOURCE_METRON,
@@ -78,18 +79,32 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             break
 
         gallery_issues = get_gallery_issues_for_series(panels, series_slug)
-        covers = list(existing)
+        kept = CoverSet(IMAGE_ROOT, existing)
         seen_urls: set[str] = set()
+        claimed_issues: set[int] = set()
 
-        def try_add(url: str) -> None:
+        def try_add(issue_num: int | None, url: str) -> None:
             # Download the URL inline; only record the cover if the file
             # actually landed on disk, so we never persist a broken hotlink.
-            if url in seen_urls or len(covers) >= MAX_COVER_IMAGES:
+            if url in seen_urls or len(kept) >= MAX_COVER_IMAGES:
+                return
+            # Both providers are aimed at the same gallery issues, so without
+            # this the second one hands back another scan of a cover we
+            # already have — different URL, different hash, duplicate tile.
+            # First provider to answer for an issue owns it.
+            if issue_num is not None and issue_num in claimed_issues:
                 return
             seen_urls.add(url)
             local = localize_cover_url(url, series_slug)
-            if local and local not in covers:
-                covers.append(local)
+            if not local:
+                return
+            if issue_num is not None:
+                claimed_issues.add(issue_num)
+            # Claimed issues only span this run: a provider that bailed on an
+            # earlier run and retries alone now has no record of what the
+            # other one already contributed, so CoverSet still has to catch
+            # that case on the pixels.
+            kept.add(local)
 
         # Try Metron first.  Skip when we've already tried this source for
         # this exact set of gallery_issues — the previous run either filled
@@ -99,15 +114,15 @@ def backfill_cover_images(path: Path, panels: list) -> int:
             username
             and password
             and not metron_health.should_bail
-            and len(covers) < MAX_COVER_IMAGES
+            and len(kept) < MAX_COVER_IMAGES
             and not has_cover_source(entry, SOURCE_METRON, gallery_issues)
         )
         if try_metron:
             metron_covers = fetch_metron_covers(
                 entry, gallery_issues, username, password, health=metron_health
             )
-            for url in metron_covers:
-                try_add(url)
+            for issue_num, url in metron_covers:
+                try_add(issue_num, url)
             # Only mark the source as tried when the integration actually
             # completed.  If we got rate-limited mid-call, leave the marker
             # off so the next run retries.
@@ -120,24 +135,24 @@ def backfill_cover_images(path: Path, panels: list) -> int:
         try_cv = (
             cv_api_key
             and not comicvine_health.should_bail
-            and len(covers) < MAX_COVER_IMAGES
+            and len(kept) < MAX_COVER_IMAGES
             and not has_cover_source(entry, SOURCE_COMICVINE, gallery_issues)
         )
         if try_cv:
             cv_covers = fetch_comicvine_covers(
                 entry, gallery_issues, cv_api_key, health=comicvine_health
             )
-            for url in cv_covers:
-                try_add(url)
+            for issue_num, url in cv_covers:
+                try_add(issue_num, url)
             if not comicvine_health.should_bail:
                 mark_cover_source(entry, SOURCE_COMICVINE, gallery_issues)
                 dirty = True
 
-        if covers and covers != existing:
-            entry["coverImages"] = covers
+        if kept.covers and kept.covers != existing:
+            entry["coverImages"] = kept.covers
             updated += 1
             dirty = True
-            print(f"  {entry.get('name')}: {len(covers)} cover(s)")
+            print(f"  {entry.get('name')}: {len(kept.covers)} cover(s)")
 
     if dirty:
         data["series"] = entries
@@ -255,7 +270,12 @@ def localize_cover_images(path: Path) -> int:
                 resolved[key] = local
 
     # Pass 3: rebuild each entry's coverImages in original order from the
-    # resolution map, preserving dedupe semantics from the original code.
+    # resolution map.  CoverSet does the deduping — by path, as the original
+    # code did, and now also by content, so a cover that two providers each
+    # supplied under their own URL collapses to the better of the two scans.
+    # This is what clears duplicates already sitting in series.json: backfill
+    # never revisits an entry that is at MAX_COVER_IMAGES, but this pass sees
+    # every entry on every run.
     updated = 0
     for entry in entries:
         covers = entry.get("coverImages") or []
@@ -265,22 +285,28 @@ def localize_cover_images(path: Path) -> int:
         if not series_slug:
             continue
 
-        new_covers: list[str] = []
+        kept = CoverSet(IMAGE_ROOT)
+        unavailable = 0
         for url in covers:
             local = resolved.get((url, series_slug))
             if local is None:
+                unavailable += 1
                 continue
-            if local not in new_covers:
-                new_covers.append(local)
+            kept.add(local)
 
+        new_covers = kept.covers
         if new_covers != covers:
             if new_covers:
                 entry["coverImages"] = new_covers
             else:
                 entry.pop("coverImages", None)
             updated += 1
-            dropped = len(covers) - len(new_covers)
-            suffix = f" (dropped {dropped})" if dropped else ""
+            dropped = []
+            if unavailable:
+                dropped.append(f"{unavailable} unavailable")
+            if kept.deduped:
+                dropped.append(f"{kept.deduped} duplicate")
+            suffix = f" (dropped {', '.join(dropped)})" if dropped else ""
             print(f"  {entry.get('name')}: {len(new_covers)} local{suffix}")
 
     if updated:

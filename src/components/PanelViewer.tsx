@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
@@ -14,6 +14,8 @@ interface Props {
   panels: Panel[];
   allPanels: Panel[];
   currentIndex: number;
+  /** Opened for the details rather than the art — the info drawer starts out. */
+  openWithInfo?: boolean;
   /** Opened on top of a running visualizer, which keeps playing underneath. */
   overViz?: boolean;
   onClose: () => void;
@@ -151,6 +153,7 @@ export default function PanelViewer({
   panels,
   allPanels,
   currentIndex,
+  openWithInfo = false,
   overViz = false,
   onClose,
   onNavigate,
@@ -227,8 +230,15 @@ export default function PanelViewer({
   }, [panel.id, panel.cover]);
 
   // Close any open overlay when the panel changes, then clear the slide
-  // direction once the slide-out has settled.
+  // direction once the slide-out has settled. The first run is the mount,
+  // where there is nothing open to close and a reset would undo the drawer a
+  // details-first open is about to ask for.
+  const mounted = useRef(false);
   useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
     setDrawerOpen(false);
     setGraphOpen(false);
     const t = setTimeout(() => {
@@ -237,6 +247,20 @@ export default function PanelViewer({
     }, 450);
     return () => clearTimeout(t);
   }, [currentIndex]);
+
+  /**
+   * Opened for the details: the drawer comes out on its own, but only once the
+   * metadata it reads has landed — until then it has nothing to show, and
+   * sliding an empty sheet up over the panel is worse than a beat of delay.
+   * A series with no record at all never gets one, the same way the Info
+   * button is never offered for it.
+   */
+  const wantInfo = useRef(openWithInfo);
+  useEffect(() => {
+    if (!wantInfo.current || !hasContent) return;
+    wantInfo.current = false;
+    setDrawerOpen(true);
+  }, [hasContent]);
 
   const toggleDrawer = useCallback(() => {
     setDrawerOpen((d) => {
@@ -256,6 +280,7 @@ export default function PanelViewer({
   // navigates (fires before the slide + index change).
   const handleViewerNavigate = useCallback(
     (dir: "prev" | "next") => {
+      wantInfo.current = false;
       const slideOut = dir === "next" ? "left" : "right";
       if (drawerOpen) {
         setDrawerSlideDir(slideOut);

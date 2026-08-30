@@ -76,6 +76,9 @@ export default function App() {
   );
   const [viewerScope, setViewerScope] = useState<"filtered" | "all" | "custom">("filtered");
   const [customViewerPanels, setCustomViewerPanels] = useState<Panel[] | null>(null);
+  /** The viewer was opened *for* the details — a series row's title — so it
+   *  comes up with the info drawer already out rather than on the bare image. */
+  const [viewerInfo, setViewerInfo] = useState(false);
   // The launch button opens a chooser; a `?viz=1` link skips it and runs the
   // preset the URL names, since the link already carries the choice.
   const [vizPrompt, setVizPrompt] = useState(false);
@@ -394,28 +397,9 @@ export default function App() {
     setIsFirstLoad(false);
   }, []);
 
-  /**
-   * A row's title is a way back to the wall narrowed to that series.
-   *
-   * The series facet keys on `panel.title` rather than on the slug, and one
-   * slug already carries two title spellings — so the row hands over every
-   * spelling it was built from rather than filtering itself down to a subset
-   * of itself (§9). Worth fixing at the source on ingest; this at least does
-   * not lose panels in the meantime.
-   */
-  const handleSelectSeries = useCallback(
-    (row: SeriesRow) => {
-      const next: Filters = { ...EMPTY_FILTERS, series: new Set(row.titles) };
-      setFilters(next);
-      setView("wall");
-      syncToURL(next, sortMode, "wall", seriesSort);
-      window.scrollTo({ top: 0, behavior: "auto" });
-    },
-    [seriesSort, sortMode, syncToURL]
-  );
-
   const handleOpenPanel = useCallback((panel: Panel) => {
     setViewerScope("filtered");
+    setViewerInfo(false);
     setOpenPanelId(panel.id);
   }, []);
 
@@ -423,10 +407,12 @@ export default function App() {
     setOpenPanelId(null);
     setViewerScope("filtered");
     setCustomViewerPanels(null);
+    setViewerInfo(false);
   }, []);
 
   const handleSelectPanel = useCallback(
-    (panel: Panel, group?: Panel[]) => {
+    (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => {
+      setViewerInfo(!!opts?.info);
       // A related-panel group (e.g. a whole series or an artist's panels)
       // scopes prev/next to just that group via the custom list.
       if (group && group.length > 0) {
@@ -568,7 +554,6 @@ export default function App() {
                 filters={filters}
                 onFiltersChange={handleFiltersChange}
                 onSelectPanel={handleSelectPanel}
-                onSelectSeries={handleSelectSeries}
                 onBrowse={handleBrowseBy}
                 onLayoutReady={handleLayoutReady}
                 layoutReady={imagesLoaded}
@@ -608,6 +593,7 @@ export default function App() {
           panels={viewerPanels}
           allPanels={panels}
           currentIndex={openIndex}
+          openWithInfo={viewerInfo}
           overViz={vizRun !== null}
           onClose={handleCloseViewer}
           onNavigate={handleNavigateViewer}

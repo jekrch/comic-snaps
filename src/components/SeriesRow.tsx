@@ -343,8 +343,7 @@ interface Props {
   stripHeight: number;
   /** Below 620px the rail stacks above the strip instead of shrinking (§1.1). */
   narrow: boolean;
-  onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onSelectSeries: (row: SeriesRowData) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => void;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   /** Present only when the parent series also has a row in the current set. */
   onJumpToParent?: () => void;
@@ -355,7 +354,6 @@ function SeriesRowView({
   stripHeight,
   narrow,
   onSelectPanel,
-  onSelectSeries,
   onBrowse,
   onJumpToParent,
 }: Props) {
@@ -384,6 +382,18 @@ function SeriesRowView({
   const openPanel = useCallback(
     (panel: Panel) => onSelectPanel(panel, group),
     [onSelectPanel, group],
+  );
+
+  /**
+   * The title opens the row's first panel with the info drawer already out —
+   * the series card, its credits and its scores are what a reader clicking the
+   * name is after, and the drawer is where all of that already lives. The
+   * panel behind it is the row's own hero, so the viewer still pages the strip
+   * from where the row starts.
+   */
+  const openSeriesInfo = useCallback(
+    () => onSelectPanel(hero, group, { info: true }),
+    [onSelectPanel, hero, group],
   );
 
   // The bar sits inside the strip's own box, so the tiles are shorter than the
@@ -499,9 +509,9 @@ function SeriesRowView({
     >
       <button
         type="button"
-        onClick={() => onSelectSeries(row)}
+        onClick={openSeriesInfo}
         className="min-w-0 max-w-[62%] truncate font-display text-[15px] leading-[1.5] tracking-wide text-ink hover:text-accent transition-colors cursor-pointer"
-        title={`Show ${row.title} on the wall`}
+        title={`About ${row.title}`}
       >
         {row.title}
       </button>

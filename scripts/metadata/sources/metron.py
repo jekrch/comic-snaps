@@ -22,7 +22,7 @@ from ..references import (
     mark_source,
 )
 from ..text import extract_year, is_meaningful_description, strip_html
-from . import API_HEADERS, MAX_COVER_IMAGES, pick_exact_match
+from . import API_HEADERS, MAX_COVER_IMAGES, parse_issue_number, pick_exact_match
 
 METRON_BASE = "https://metron.cloud/api"
 
@@ -302,10 +302,14 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
 
 def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
                         username: str, password: str,
-                        health: IntegrationHealth | None = None) -> list[str]:
+                        health: IntegrationHealth | None = None) -> list[tuple[int | None, str]]:
     """
-    Fetch cover image URLs from Metron for a series. Prioritizes issues
-    that appear in the gallery, then fills remaining slots.
+    Fetch cover images from Metron for a series. Prioritizes issues that
+    appear in the gallery, then fills remaining slots.
+
+    Returns (issue_number, url) pairs — the caller needs the issue number to
+    keep a second provider from contributing another scan of the same cover.
+    The number is None when Metron doesn't give a whole one.
     """
     # Find the Metron series ID from the reference URL
     metron_id = None
@@ -327,22 +331,18 @@ def fetch_metron_covers(series_entry: dict, gallery_issues: list[int],
     issues = data.get("results", []) or []
 
     # Separate gallery issues from others
-    gallery_covers = []
-    other_covers = []
+    gallery_covers: list[tuple[int | None, str]] = []
+    other_covers: list[tuple[int | None, str]] = []
     for issue in issues:
         img = issue.get("image")
         if not img:
             continue
-        issue_num = issue.get("number")
-        try:
-            issue_num = int(issue_num) if issue_num else None
-        except (TypeError, ValueError):
-            issue_num = None
+        issue_num = parse_issue_number(issue.get("number"))
 
-        if issue_num and issue_num in gallery_issues:
-            gallery_covers.append(img)
+        if issue_num is not None and issue_num in gallery_issues:
+            gallery_covers.append((issue_num, img))
         else:
-            other_covers.append(img)
+            other_covers.append((issue_num, img))
 
     covers = gallery_covers[:MAX_COVER_IMAGES]
     remaining = MAX_COVER_IMAGES - len(covers)

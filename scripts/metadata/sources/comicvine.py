@@ -16,7 +16,7 @@ from ..references import (
     mark_source,
 )
 from ..text import extract_year, is_meaningful_description, strip_html
-from . import API_HEADERS, MAX_COVER_IMAGES, pick_exact_match
+from . import API_HEADERS, MAX_COVER_IMAGES, parse_issue_number, pick_exact_match
 
 COMIC_VINE_BASE = "https://comicvine.gamespot.com/api"
 COMIC_VINE_HEADERS = API_HEADERS
@@ -267,10 +267,12 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
 
 def fetch_comicvine_covers(series_entry: dict, gallery_issues: list[int],
                            api_key: str,
-                           health: IntegrationHealth | None = None) -> list[str]:
+                           health: IntegrationHealth | None = None) -> list[tuple[int | None, str]]:
     """
-    Fetch cover image URLs from Comic Vine for a series, prioritizing
-    issues that appear in the gallery. Returns at most MAX_COVER_IMAGES URLs.
+    Fetch cover images from Comic Vine for a series, prioritizing issues that
+    appear in the gallery. Returns at most MAX_COVER_IMAGES (issue_number,
+    url) pairs; see `fetch_metron_covers` for why the issue number travels
+    with the URL.
     """
     volume_id = extract_comicvine_volume_id(series_entry)
     if not volume_id:
@@ -311,21 +313,17 @@ def fetch_comicvine_covers(series_entry: dict, gallery_issues: list[int],
         return []
     issues = data.get("results", []) or []
 
-    gallery_covers: list[str] = []
-    other_covers: list[str] = []
+    gallery_covers: list[tuple[int | None, str]] = []
+    other_covers: list[tuple[int | None, str]] = []
     for issue in issues:
         img_url = extract_comicvine_image(issue)
         if not img_url:
             continue
-        issue_num = issue.get("issue_number")
-        try:
-            issue_num = int(issue_num) if issue_num else None
-        except (TypeError, ValueError):
-            issue_num = None
-        if issue_num and issue_num in gallery_issues:
-            gallery_covers.append(img_url)
+        issue_num = parse_issue_number(issue.get("issue_number"))
+        if issue_num is not None and issue_num in gallery_issues:
+            gallery_covers.append((issue_num, img_url))
         else:
-            other_covers.append(img_url)
+            other_covers.append((issue_num, img_url))
 
     covers = gallery_covers[:MAX_COVER_IMAGES]
     remaining = MAX_COVER_IMAGES - len(covers)
