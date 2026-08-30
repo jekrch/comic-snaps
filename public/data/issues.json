@@ -8600,6 +8600,44 @@
       ]
     },
     {
+      "id": "the-eye-collector-3",
+      "series": "the-eye-collector",
+      "issue": 3,
+      "credits": [
+        {
+          "artistId": "jonathan-ball",
+          "name": "Jonathan Ball",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "g-m-b-chomichuk",
+          "name": "G. M. B. Chomichuk",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lyndon-radchenka",
+          "name": "Lyndon Radchenka",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-eye-collector-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-many-deaths-of-laila-starr-4",
       "series": "the-many-deaths-of-laila-starr",
       "issue": 4,
