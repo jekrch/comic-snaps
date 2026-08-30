@@ -274,6 +274,13 @@
       ]
     },
     {
+      "id": "beneath-the-trees-where-nobody-sees-rite-of-spring",
+      "name": "Beneath the Trees Where Nobody Sees: Rite of Spring",
+      "parentSeries": null,
+      "description": "",
+      "references": []
+    },
+    {
       "id": "bijou-funnies",
       "name": "Bijou Funnies",
       "parentSeries": null,
@@ -730,8 +737,8 @@
       ]
     },
     {
-      "id": "criminal-the-special-edition",
-      "name": "Criminal: The Special Edition",
+      "id": "criminal-special-edition",
+      "name": "Criminal: Special Edition",
       "parentSeries": "criminal",
       "description": "",
       "references": [
@@ -740,18 +747,6 @@
           "url": "https://metron.cloud/series/98/"
         }
       ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          0
-        ],
-        "comicvine": [
-          0
-        ]
-      },
       "startYear": 2015,
       "issueCount": 1
     },
@@ -1290,6 +1285,10 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Frank_(comics)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/frank/4050-47391/"
         }
       ],
       "sources": [
@@ -1300,10 +1299,6 @@
       ],
       "coverSources": {
         "metron": [
-          1,
-          4
-        ],
-        "comicvine": [
           1,
           4
         ]
@@ -1375,25 +1370,12 @@
       ]
     },
     {
-      "id": "hank-howard-pizza-detective",
-      "name": "Hank Howard Pizza Detective",
+      "id": "hank-howard-pizza-detective-a-slice-of-life",
+      "name": "Hank Howard, Pizza Detective: A Slice of Life",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
+      "references": []
     },
     {
       "id": "harley-quinn-x-elvira",
@@ -1763,6 +1745,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/15867/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/its-jeff-brand-new-week/4050-172458/"
         }
       ],
       "sources": [
@@ -1771,9 +1757,6 @@
       ],
       "coverSources": {
         "metron": [
-          1
-        ],
-        "comicvine": [
           1
         ]
       },
@@ -2032,8 +2015,8 @@
       ]
     },
     {
-      "id": "love-rockets",
-      "name": "Love & Rockets",
+      "id": "love-and-rockets",
+      "name": "Love and Rockets",
       "parentSeries": null,
       "description": "Love and Rockets (often abbreviated L&R) is a comic book series by the Hernandez brothers: Gilbert, Jaime, and Mario. It was one of the first comic books in the alternative comics movement of the 1980s.\r\n\r\nThe Hernandez brothers produce stories in the series independently of each other. Gilbert and Jaime produce the majority of the material, and tend to focus on particular casts of characters and settings. Those of Gilbert usually focus on a cast of characters in the fictional Central American village of Palomar; the stories often feature magic realist elements. The Locas stories of Jaime center on a social group in Los Angeles, particularly the Latina friends and sometime-lovers Maggie and Hopey.",
       "references": [
@@ -2046,23 +2029,7 @@
           "url": "https://www.comics.org/series/85892/"
         }
       ],
-      "sources": [
-        "wikipedia",
-        "gcd",
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
       "startYear": 1987,
-      "publisher": "https://www.comics.org/api/publisher/543/?format=json",
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      },
       "anthology": true
     },
     {
@@ -2100,20 +2067,20 @@
       }
     },
     {
-      "id": "madman-adventures-mini-comic",
-      "name": "Madman Adventures Mini-Comic",
+      "id": "madman-adventures",
+      "name": "Madman Adventures",
       "parentSeries": "madman",
       "description": "",
-      "references": [],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/madman-adventures-0-ash-can-edition/4000-279553/"
+        }
+      ],
       "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
+        "comicvine"
       ],
       "coverSources": {
-        "metron": [
-          1
-        ],
         "comicvine": [
           1
         ]
@@ -2378,29 +2345,6 @@
       ]
     },
     {
-      "id": "omaha-vol-2",
-      "name": "Omaha: Vol 2",
-      "parentSeries": "omaha",
-      "description": "",
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          4
-        ],
-        "comicvine": [
-          4
-        ]
-      },
-      "tags": [
-        "underground"
-      ]
-    },
-    {
       "id": "pacific-presents",
       "name": "Pacific Presents",
       "parentSeries": null,
@@ -2500,35 +2444,6 @@
       "coverImages": [
         "data/covers/people-s-comics/f8a6c08a0835.jpg"
       ]
-    },
-    {
-      "id": "phantom-of-the-opera",
-      "name": "Phantom of the Opera",
-      "parentSeries": null,
-      "description": "",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/series/14693/"
-        }
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          2,
-          3
-        ],
-        "comicvine": [
-          2,
-          3
-        ]
-      },
-      "startYear": 2026,
-      "publisher": "Skybound",
-      "issueCount": 4
     },
     {
       "id": "red-book",
@@ -3141,22 +3056,6 @@
       ]
     },
     {
-      "id": "the-complete-omaha-the-cat-dancer",
-      "name": "The Complete \u201cOmaha\u201d the Cat Dancer",
-      "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [],
-        "comicvine": []
-      }
-    },
-    {
       "id": "the-deadman",
       "name": "The Deadman",
       "parentSeries": null,
@@ -3270,41 +3169,6 @@
         "data/covers/the-eye-collector/598b1a46d75d.jpg",
         "data/covers/the-eye-collector/c8c894e25f4b.jpg"
       ]
-    },
-    {
-      "id": "the-invisible-man",
-      "name": "The Invisible Man",
-      "parentSeries": null,
-      "description": "Adaptation of the H.G. Wells' novel.",
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/the-invisible-man/4050-58217/"
-        },
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/series/12574/"
-        }
-      ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/85763/2903793-inviman.jpg",
-      "startYear": 2010,
-      "publisher": "Universal",
-      "issueCount": 1,
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverImages": [
-        "data/covers/the-invisible-man/43ca4afa4727.jpg"
-      ],
-      "coverSources": {
-        "metron": [
-          3
-        ],
-        "comicvine": [
-          3
-        ]
-      }
     },
     {
       "id": "the-many-deaths-of-laila-starr",
@@ -3446,25 +3310,12 @@
       ]
     },
     {
-      "id": "the-oddballs-odyssey",
-      "name": "The Oddballs Odyssey",
+      "id": "the-oddball-s-odyssey",
+      "name": "The Oddball's Odyssey",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
+      "references": []
     },
     {
       "id": "the-shaolin-cowboy-staying-a-i-live",
@@ -3648,28 +3499,6 @@
       }
     },
     {
-      "id": "under-the-trees-where-nobody-sees-rite-of-spring",
-      "name": "Under the Trees Where Nobody Sees: Rite of Spring",
-      "parentSeries": null,
-      "description": "",
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          5,
-          6
-        ],
-        "comicvine": [
-          5,
-          6
-        ]
-      }
-    },
-    {
       "id": "uneeda-comix",
       "name": "Uneeda Comix",
       "parentSeries": null,
@@ -3703,6 +3532,34 @@
       "tags": [
         "underground"
       ]
+    },
+    {
+      "id": "universal-monsters-phantom-of-the-opera",
+      "name": "Universal Monsters: Phantom of the Opera",
+      "parentSeries": null,
+      "description": "",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/14693/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Skybound",
+      "issueCount": 4
+    },
+    {
+      "id": "universal-monsters-the-invisible-man",
+      "name": "Universal Monsters: The Invisible Man",
+      "parentSeries": null,
+      "description": "",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/12574/"
+        }
+      ],
+      "imageUrl": null
     },
     {
       "id": "w0rldtr33",
@@ -3809,24 +3666,11 @@
       ]
     },
     {
-      "id": "xyz",
-      "name": "XYZ",
+      "id": "xyz-comics",
+      "name": "XYZ Comics",
       "parentSeries": null,
       "description": "",
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
+      "references": []
     },
     {
       "id": "zap-comix",

@@ -289,54 +289,6 @@
         }
       ]
     },
-    "series:omaha-vol-2": {
-      "label": "Omaha: Vol 2",
-      "avg": 9.5,
-      "count": 1,
-      "ratings": [
-        {
-          "uid": "141a6d566b9c",
-          "user": null,
-          "attributed": false,
-          "score": 9.5,
-          "review": null,
-          "createdAt": "2026-08-29T23:37:03.455Z",
-          "updatedAt": "2026-08-29T23:37:03.455Z"
-        }
-      ]
-    },
-    "series:the-complete-omaha-the-cat-dancer": {
-      "label": "The Complete “Omaha” the Cat Dancer",
-      "avg": 9.5,
-      "count": 1,
-      "ratings": [
-        {
-          "uid": "141a6d566b9c",
-          "user": null,
-          "attributed": false,
-          "score": 9.5,
-          "review": null,
-          "createdAt": "2026-08-29T23:37:03.455Z",
-          "updatedAt": "2026-08-29T23:37:03.455Z"
-        }
-      ]
-    },
-    "series:under-the-trees-where-nobody-sees-rite-of-spring": {
-      "label": "Under the Trees Where Nobody Sees: Rite of Spring",
-      "avg": 9.5,
-      "count": 1,
-      "ratings": [
-        {
-          "uid": "141a6d566b9c",
-          "user": null,
-          "attributed": false,
-          "score": 9.5,
-          "review": null,
-          "createdAt": "2026-08-29T23:37:03.455Z",
-          "updatedAt": "2026-08-29T23:37:03.455Z"
-        }
-      ]
-    },
     "series:eightball": {
       "label": "Eightball",
       "avg": 10,
@@ -347,6 +299,22 @@
           "user": null,
           "attributed": false,
           "score": 10,
+          "review": null,
+          "createdAt": "2026-08-29T23:37:03.455Z",
+          "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:beneath-the-trees-where-nobody-sees-rite-of-spring": {
+      "label": "Beneath the Trees Where Nobody Sees: Rite of Spring",
+      "avg": 9.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9.5,
           "review": null,
           "createdAt": "2026-08-29T23:37:03.455Z",
           "updatedAt": "2026-08-29T23:37:03.455Z"
