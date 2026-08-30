@@ -4582,6 +4582,26 @@
       ]
     },
     {
+      "id": "imani-davis",
+      "name": "Imani Davis",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12124/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/imani-davis/4040-132175/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "in-s-amaro",
       "name": "In\u00eas Amaro",
       "description": "",
@@ -4595,6 +4615,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "ivan-nunes",
+      "name": "Ivan Nunes",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11120/111200217/4708445-ivan_nunes.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/80/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ivan-nunes/4040-42135/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -10044,6 +10084,26 @@
       ]
     },
     {
+      "id": "ryan-keizer",
+      "name": "Ryan Keizer",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7142/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ryan-keizer/4040-124237/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ryan-ottley",
       "name": "Ryan Ottley",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/ROTTLEYbioPic.jpg/500px-ROTTLEYbioPic.jpg",
@@ -10558,6 +10618,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "shawn-crystal",
+      "name": "Shawn Crystal",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320369-4568853634-Shawn.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1355/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/shawn-crystal/4040-55750/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -11192,6 +11273,46 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "thomas-healy",
+      "name": "Thomas Healy",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7100/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/thomas-healy/4040-112278/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "thomas-nachlik",
+      "name": "Thomas Nachlik",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/64770/1959238-thomas_nachlik.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/thomas-nachlik/4040-61453/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3902/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "tim-boxell",
@@ -12023,6 +12144,26 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "zabriel-kennedy",
+      "name": "Zabriel Kennedy",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7143/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zabriel-kennedy/4040-124236/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "lvaro-mart-nez-bueno",

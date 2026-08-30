@@ -5639,6 +5639,85 @@
       ]
     },
     {
+      "id": "king-spawn-58",
+      "series": "king-spawn",
+      "issue": 58,
+      "credits": [
+        {
+          "artistId": "matthew-rosenberg",
+          "name": "Matthew Rosenberg",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "thomas-nachlik",
+          "name": "Thomas Nachlik",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "ivan-nunes",
+          "name": "Ivan Nunes",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "andworld-design",
+          "name": "AndWorld Design",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "shawn-crystal",
+          "name": "Shawn Crystal",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "thomas-healy",
+          "name": "Thomas Healy",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "imani-davis",
+          "name": "Imani Davis",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "ryan-keizer",
+          "name": "Ryan Keizer",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "zabriel-kennedy",
+          "name": "Zabriel Kennedy",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/king-spawn-2021-58/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "kingdom-of-earth-1",
       "series": "kingdom-of-earth",
       "issue": 1,

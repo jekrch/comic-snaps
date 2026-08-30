@@ -1873,6 +1873,41 @@
       }
     },
     {
+      "id": "king-spawn",
+      "name": "King Spawn",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9029048-kingspawn1a.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/king-spawn/4050-138562/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/4248/"
+        }
+      ],
+      "startYear": 2021,
+      "publisher": "Image",
+      "issueCount": 58,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          58
+        ]
+      },
+      "coverImages": [
+        "data/covers/king-spawn/47b3b4958ba2.jpg",
+        "data/covers/king-spawn/263f582ff68b.jpg",
+        "data/covers/king-spawn/4a70bb812bdb.jpg",
+        "data/covers/king-spawn/6eea0b2a294c.jpg"
+      ]
+    },
+    {
       "id": "kingdom-of-earth",
       "name": "Kingdom Of Earth",
       "parentSeries": null,
