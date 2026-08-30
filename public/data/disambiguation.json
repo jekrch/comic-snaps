@@ -25,6 +25,51 @@
           "name": "J.C. Ruiz"
         }
       ]
+    },
+    "Kaz": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 12238,
+          "name": "Ibraheem Kazi"
+        },
+        {
+          "id": 17279,
+          "name": "Kazasa Sumita"
+        },
+        {
+          "id": 14137,
+          "name": "Kazimieras G. Prapuolenis"
+        },
+        {
+          "id": 15717,
+          "name": "Kazuhisa Iwata"
+        },
+        {
+          "id": 10527,
+          "name": "Kazuo Koike"
+        },
+        {
+          "id": 15771,
+          "name": "Kazuya Kudo"
+        },
+        {
+          "id": 15730,
+          "name": "Masakazu Katsura"
+        },
+        {
+          "id": 5251,
+          "name": "Mike Kazaleh"
+        },
+        {
+          "id": 11678,
+          "name": "Miki Okazaki"
+        },
+        {
+          "id": 3903,
+          "name": "Ngozi Ukazu"
+        }
+      ]
     }
   },
   "metron:series": {

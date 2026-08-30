@@ -1282,6 +1282,34 @@
       ]
     },
     {
+      "id": "avenue-d-1",
+      "series": "avenue-d",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "glenn-head",
+          "name": "Glenn Head",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Colorist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/avenue-d-1/4000-332901/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "battle-beast-8",
       "series": "battle-beast",
       "issue": 8,
@@ -2265,9 +2293,32 @@
       "id": "buzz-1",
       "series": "buzz",
       "issue": 1,
-      "credits": [],
-      "references": [],
-      "sources": []
+      "credits": [
+        {
+          "artistId": "daniel-clowes",
+          "name": "Daniel Clowes",
+          "roles": []
+        },
+        {
+          "artistId": "jim-woodring",
+          "name": "Jim Woodring",
+          "roles": []
+        },
+        {
+          "artistId": "richard-sala",
+          "name": "Richard Sala",
+          "roles": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/buzz-1/4000-334851/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "buzzard-1",
@@ -6756,6 +6807,40 @@
       ]
     },
     {
+      "id": "people-s-comics-1",
+      "series": "people-s-comics",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "harvey-pekar",
+          "name": "Harvey Pekar",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/peoples-comics-1/4000-364312/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "phantom-of-the-opera-2",
       "series": "phantom-of-the-opera",
       "issue": 2,
@@ -9174,6 +9259,217 @@
       ]
     },
     {
+      "id": "the-shaolin-cowboy-staying-a-i-live-1",
+      "series": "the-shaolin-cowboy-staying-a-i-live",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "geof-darrow",
+          "name": "Geof Darrow",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ian-herring",
+          "name": "Ian Herring",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "nate-piekos",
+          "name": "Nate Piekos",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "daniel-warren-johnson",
+          "name": "Daniel Warren Johnson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-mack",
+          "name": "David Mack",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "peach-momoko",
+          "name": "Peach Momoko",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-ottley",
+          "name": "Ryan Ottley",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "simon-gough",
+          "name": "Simon Gough",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "foster-r-kupbens",
+          "name": "Foster R. Kupbens",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "chuck-howitt",
+          "name": "Chuck Howitt",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "hannah-noble",
+          "name": "Hannah Noble",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "chris-horn",
+          "name": "Chris Horn",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        },
+        {
+          "artistId": "mike-richardson",
+          "name": "Mike Richardson",
+          "roles": [
+            "Publisher"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-shaolin-cowboy-staying-ailive-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-shaolin-cowboy-staying-a-i-live-2",
+      "series": "the-shaolin-cowboy-staying-a-i-live",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "geof-darrow",
+          "name": "Geof Darrow",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ian-herring",
+          "name": "Ian Herring",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "nate-piekos",
+          "name": "Nate Piekos",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "adi-granov",
+          "name": "Adi Granov",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-johnson",
+          "name": "Dave Johnson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jerry-ma",
+          "name": "Jerry Ma",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "foster-r-kupbens",
+          "name": "Foster R. Kupbens",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "chuck-howitt",
+          "name": "Chuck Howitt",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "may-hijikuro",
+          "name": "May Hijikuro",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "chris-horn",
+          "name": "Chris Horn",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-shaolin-cowboy-staying-ailive-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-twilight-zone-6",
       "series": "the-twilight-zone",
       "issue": 6,
@@ -9307,6 +9603,46 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/thrillogy-1-a-conrad-thrillogy/4000-386946/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
+      "id": "thump-n-guts-1",
+      "series": "thump-n-guts",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "kevin-eastman",
+          "name": "Kevin Eastman",
+          "roles": [
+            "Writer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "simon-bisley",
+          "name": "Simon Bisley",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "steve-lavigne",
+          "name": "Steve Lavigne",
+          "roles": [
+            "Letterer",
+            "Colorist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/thumpn-guts-1/4000-386638/"
         }
       ],
       "sources": [
@@ -9460,6 +9796,126 @@
       ],
       "sources": [
         "metron"
+      ]
+    },
+    {
+      "id": "weirdo-10",
+      "series": "weirdo",
+      "issue": 10,
+      "credits": [
+        {
+          "artistId": "aline-kominsky-crumb",
+          "name": "Aline Kominsky-Crumb",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "carol-lay",
+          "name": "Carol Lay",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "dennis-worden",
+          "name": "Dennis Worden",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "drew-friedman",
+          "name": "Drew Friedman",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "harold-smith",
+          "name": "Harold Smith",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "kaz",
+          "name": "Kaz",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "ken-weiner-avidor",
+          "name": "Ken (Weiner) Avidor",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "ken-struck",
+          "name": "Ken Struck",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "lynda-barry",
+          "name": "Lynda Barry",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "peter-bagge",
+          "name": "Peter Bagge",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "savage-pencil-edwin-pouncey",
+          "name": "Savage Pencil (Edwin Pouncey)",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "j-d-king",
+          "name": "J. D. King",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/weirdo-10/4000-231379/"
+        }
+      ],
+      "sources": [
+        "comicvine"
       ]
     },
     {

@@ -100,6 +100,27 @@
       ]
     },
     {
+      "id": "adi-granov",
+      "name": "Adi Granov",
+      "description": "Adi is a Bosnian artist who's working at Marvel. He's very well known for his outstanding covers for Iron Man, Nova, etc.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320135-1951739910-Adi-G.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/815/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/adi-granov/4040-42356/"
+        }
+      ],
+      "country": "Bosnia",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "aditya-bidikar",
       "name": "Aditya Bidikar",
       "description": "My name is Aditya Bidikar, and you will most likely know me as a letterer for comics from Vault, DC Comics, Image, Dark Horse, Oni, and other comics publishers. I grew up in Pune, India, and spent some years in Kolkata and Bengaluru before returning to Pune, where I now reside. In previous lives, I have been a content writer, a technical translator, a book reviewer, a comics editor, and occasional fiction writer before I backed into my current profession of lettering. I mainly work in digital comics lettering, and I like to integrate hand-drawn sound effects and text design into my work. I have also hand-lettered two graphic novels so far, and am currently working on a third. I have also designed some of my own comics lettering fonts, and I\u2019m currently working on a way to make those and others available for purchase. But this is some way into the future, so let\u2019s not hold our breath. After spending years away from writing as a profession, I have recently returned to it, and have been publishing short comics and prose stories in the last year, and I\u2019m currently scripting a long-form comic book that I hope to publish in the near future.",
@@ -376,6 +397,32 @@
       "birthYear": 1925,
       "deathYear": 2000,
       "country": "Philippines"
+    },
+    {
+      "id": "aline-kominsky-crumb",
+      "name": "Aline Kominsky-Crumb",
+      "description": "Aline Kominsky was a writer and artist of underground comic books. Much of her work focuses on women's issues.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/1328087-aline_1_.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/aline-kominsky-crumb/4040-48182/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16790/"
+        }
+      ],
+      "birthYear": 1948,
+      "deathYear": 2022,
+      "country": "United States",
+      "aliases": [
+        "Aline Goldsmith"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "alison-sampson",
@@ -1691,6 +1738,27 @@
       "country": "Italy"
     },
     {
+      "id": "carol-lay",
+      "name": "Carol Lay",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/562072-1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/carol-lay/4040-30642/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1300/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "cary-nord",
       "name": "Cary Nord",
       "description": "Cary Nord is the award-winning artist of comic books and graphic novels such as Daredevil, X-Men, and Conan The Barbarian. Throughout his career Cary has drawn virtually every major character in comics, having worked on Superman, Wolverine, Mutant X, Ghost Rider, Spider-Man, Thor, and Star Wars.\r\n\r\nHe is currently working on the critically acclaimed series X-O Manowar from Valiant Entertainment.\r\n\r\nIn 2004, Cary was awarded the industry's top honour for his work on Conan the Barbarian, taking home the Will Eisner Comic Industry Award for Best Single Issue.\r\n\r\nBorn in Calgary, Cary spent most of his youth drawing, and after attending the Alberta College of Art and Design he began to submit his work to Marvel and DC Comics. Diligence and hard work paid off, and work on single issues grew into longer fan-favourite stories with beloved characters.",
@@ -2444,6 +2512,26 @@
       ]
     },
     {
+      "id": "daniel-warren-johnson",
+      "name": "Daniel Warren Johnson",
+      "description": "A Chicago-based comic book writer, artist, and illustrator.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10018920-daniel_warren_johnson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2233/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/daniel-warren-johnson/4040-75741/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "daniele-di-nicuolo",
       "name": "Daniele Di Nicuolo",
       "description": "",
@@ -2812,6 +2900,28 @@
       ]
     },
     {
+      "id": "david-mack",
+      "name": "David Mack",
+      "description": "David Mack is a multi talented comic book writer/artist. A Kentucky native, he is best known for his creator owned series Kabuki, published originally by Image and then by the Marvel imprint ICON. He has worked on multiple issue of Daredevil with Brian Michael Bendis and is credited with co-creating Marvel character Echo. He went onto drawing the covers of titles from Alias to Green Arrow and Justice League of America. He has also written a children's book called The Shy Creatures published by MacMillan. David Mack is once again working on Daredevil, this time in the mini series Daredevil: End of Days with Klaus Janson, Bill Sienkiewicz and Brian Michael Bendis.\r\n\r\nDavid Mack has been nominated for Eisner Awards six times as well as nominations for Eagle, Harvey and Kirby Awards.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9578288-davidmack.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/189/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/david-mack/4040-9037/"
+        }
+      ],
+      "birthYear": 1972,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "david-nakayama",
       "name": "David Nakayama",
       "description": "David Nakayama is an artist that has worked for Marvel Comics.",
@@ -3168,6 +3278,27 @@
           "url": "https://comicvine.gamespot.com/doug-hansen/4040-30900/"
         }
       ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "drew-friedman",
+      "name": "Drew Friedman",
+      "description": "Artist nominated in 1991 for the Eisner Award for Best Artist.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/5838604-0503871043-149150.jpeg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/drew-friedman/4040-52326/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1861/"
+        }
+      ],
+      "country": "United States",
       "sources": [
         "comicvine",
         "metron"
@@ -4415,6 +4546,22 @@
       ]
     },
     {
+      "id": "harold-smith",
+      "name": "Harold Smith",
+      "description": "1930's Writer. Not to be confused with Archie Writer Harold \"Hal\" Smith.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harold-smith/4040-93039/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "harry-driggs",
       "name": "Harry Driggs",
       "description": "",
@@ -4451,6 +4598,29 @@
       "aliases": [
         "H. Kurtz"
       ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "harvey-pekar",
+      "name": "Harvey Pekar",
+      "description": "Harvey Pekar was the developer of American Splendor, an independently published comic book based on the life of Harvey Pekar.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/399761-184768-harvey-pekar.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harvey-pekar/4040-48168/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9668/"
+        }
+      ],
+      "birthYear": 1939,
+      "deathYear": 2010,
+      "country": "United States",
       "sources": [
         "comicvine",
         "metron"
@@ -4562,6 +4732,26 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "ian-herring",
+      "name": "Ian Herring",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11120/111200217/4781278-ian%20herring.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2296/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ian-herring/4040-59209/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -4677,6 +4867,25 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "j-d-king",
+      "name": "J. D. King",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/j-d-king/4040-59682/"
+        }
+      ],
+      "birthYear": 1951,
+      "deathYear": 2025,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -5284,6 +5493,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "jerry-ma",
+      "name": "Jerry Ma",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10545/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jerry-ma/4040-125232/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -6699,6 +6928,25 @@
       "country": "USA"
     },
     {
+      "id": "kaz",
+      "name": "Kaz",
+      "description": "Artist. Real name: Kazimieras G. Prapuolenis.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kaz/4040-58251/"
+        }
+      ],
+      "aliases": [
+        "Kazimieras G. Prapuolenis"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "keith-giffen",
       "name": "Keith Giffen",
       "description": "Keith Giffen was born in Queens, New York City. Giffen is known for having an unconventional writing style, often taking a new approach when writing a character, and sometimes ignoring past continuity.\r\n\r\nHe is possibly best-known for his long runs illustrating, and later writing the Legion of Super-Heroes in the 80's and 90's. He also created the mercenary, Lobo and the zany Ambush Bug. He has worked on several titles over the years, including All-Star Comics, Doctor Fate, Drax the Destroyer, Heckler, Nick Fury's Howling Commandos, The Defenders, Suicide Squad, Justice League International, Trencher, T.H.U.N.D.E.R. Agents, Magnus Robot Fighter. For a while, he took a break from comics and worked in the television and film industry, including shows as The Real Ghostbusters and Ed, Edd 'n' Eddy.\r\n\r\nKeith Giffen was the breakdown artist on 52 and Countdown to Final Crisis. He was also the lead writer for Marvel's Annihilation event. He currently writes Doom Patrol and Booster Gold for DC, and it has been reported that he will be working on the Legion of Super-Heroes Annual.\r\n\r\nGiffen's art has taken on many styles over the years. His early work tended towards a heavy influence from Jack Kirby. When he returned to comics after a hiatus, his style was more precise and reminiscent of George Perez and Jim Starlin, and helped make the Legion of Super-Heroes DC's second most popular comic. It was his work on the Legion that rocketed him to comic book fame and gave him a creative control with the national companies that few artists achieved. He peppered his artwork with in-jokes such as upside down Superman logos, hidden Marvel characters, eyeball creatures, and scrawled humorous messages on signs in the background of his panels in the alternate futuristic alphabet known as Interlac.\r\n\r\nSoon thereafter he developed a scratchier, more impressionistic style, using a highly stylized method of drawing directly with ink, on titles such as Trencher, Lobo: Infanticide and Images of Shadowhawk. After his lengthy sabbatical from comics work, Giffen returned with a style that some said was influenced by his Justice League artist Kevin Maguire that was mid-way between the tight, controlled pencils of his early Legion days and the freer but less anatomically correct style he had later adopted.\r\n\r\nFor many years, Giffen would co-write comics, but only as a plotter. He relied on others such as Robert Loren Fleming, and Tom and Mary Bierbaum to supply dialogue, even when he was basically the author of the work. Beginning with Trencher, Giffen started writing comics fully by himself, although he still collaborates when the project calls for it.\r\n\r\nGiffen is known for having an unorthodox writing style, often using characters in ways not seen before. His dialogue is usually characterized by a biting wit that is seen as much less zany than dialogue provided by longtime collaborators DeMatteis and Fleming. That approach has brought him both criticism and admiration,as perhaps best illustrated by the mixed (although commercially successful) response to his work in Justice League International.\r\n\r\nHe is also known for his humorous takes on existing characters, often focusing on their personality clashes. He also has a tendency to poke fun at trends in comic books or character archetypes. His Ambush Bug miniseries is especially noted for its in-jokes such as Villian the Villain, Cheeks the Toy Wonder, and the use of DC editor Julius Schwartz as a character.\r\n\r\nGiffen was also added to the writing team for the weekly The New 52: Futures End weekly series alongside other writers such as Brian Azzarello, Jeff Lemire, and Dan Jurgens\r\n\r\nSome Characters Created by Keith Giffen\r\n\r\n- Ambush Bug - Aagog - Aaban Tariq - Aegis - Annihilation Wave - Ariel Masters - Arsenal - Azur Te - Banger - Beefeater - Big Sir - Bleeding Adonis - Blood Rose - Blue Beetle(Reyes) - Botfly - Cammi - Carny - Catherine Cobert - Cheeks - Coeval - Coil - Colonel Rumaan Harjavti - The Convert - Dr. Diehard - Dreamslayer - Elton Kookaburra - Enchanthrax - Errata - Ethan Boyer - Fallen One - Fifty Sue - Firestorm (Payne) - G'Nort - Gorgon - Gray Man - Ice - Ilda - Jack of Hearts - Jacques Foccart - Jediah Caul - Jody Robbins - Justin - Kali - Kevin Kho - L-Ron - Laord of the Hunt - Lobo - Locus - Lord Havok - Manga Khan - Martin Welman - Mash - Maxwell Lord - Mercy - Midas - The Mighty Bruce - Porcelain Doll - Queen Bee - Rocket Raccoon - Rocket Red - Stormguard - Silver Sorceress - Sky Witness - Sweet Leilani - Tenebrous - Teri - Terry - Thumpa - Tracer - Vext - Warwolf - The Wanderer - Wandjina - Woodgod - Xum of All Things",
@@ -6778,6 +7026,22 @@
       ]
     },
     {
+      "id": "ken-weiner-avidor",
+      "name": "Ken (Weiner) Avidor",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ken-weiner-avidor/4040-59954/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ken-brown",
       "name": "Ken Brown",
       "description": "",
@@ -6834,6 +7098,22 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "ken-struck",
+      "name": "Ken Struck",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11122/111222211/6373148-blank.png",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ken-struck/4040-59955/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "kendrick-lim",
@@ -7447,6 +7727,28 @@
       "country": "Italy"
     },
     {
+      "id": "lynda-barry",
+      "name": "Lynda Barry",
+      "description": "Cartoonist best known for her comic strip Ernie Pook's Comeek.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/66740/2331832-lynda_barry.jpeg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lynda-barry/4040-59855/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18290/"
+        }
+      ],
+      "birthYear": 1956,
+      "country": "U.S.A.",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "lyndon-radchenka",
       "name": "Lyndon Radchenka",
       "description": "",
@@ -8057,6 +8359,27 @@
       ]
     },
     {
+      "id": "may-hijikuro",
+      "name": "May Hijikuro",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9896975-may_hijikuro.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5107/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/may-hijikuro/4040-115331/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "maya-bollinger",
       "name": "Maya Bollinger",
       "description": "",
@@ -8487,6 +8810,30 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
+      ]
+    },
+    {
+      "id": "nate-piekos",
+      "name": "Nate Piekos",
+      "description": "Nate Piekos (Blambot) has lettered comic books for Marvel Comics, DC Comics, Oni Press, and Dark Horse Comics as well as dozens of independent publishers. Nate also produces the webcomic ATLAND found at http://www.realmofatland.com",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10008482-nate_piekos.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/774/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nate-piekos/4040-43079/"
+        }
+      ],
+      "aliases": [
+        "Blambot",
+        "Blambots"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -9589,6 +9936,29 @@
       "country": "Philippines"
     },
     {
+      "id": "richard-sala",
+      "name": "Richard Sala",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/2819359-1999richard_sala.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/richard-sala/4040-59876/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/15658/"
+        }
+      ],
+      "birthYear": 1955,
+      "deathYear": 2020,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "rick-geary",
       "name": "Rick Geary",
       "description": "Rick Geary was born in 1946 in Kansas City and grew up in Wichita. After getting a degree in art and film, he moved to San Diego in 1975. He became known by publishing in Heavy Metal, Epic and National Lampoon. His straightfaced absurd humour stuff published in National Lampoon has been collected in Housebound with Rick Geary. Geary is perhaps best known from his ongoing real crime comics series dedicated to famous homicide cases of 19th century , \"A Treasury of Victorian Murder.\"\r\n\r\nGeary has a very distinctive black and white graphig style. He uses clean black lines on a white background.",
@@ -10391,6 +10761,23 @@
       ]
     },
     {
+      "id": "savage-pencil-edwin-pouncey",
+      "name": "Savage Pencil (Edwin Pouncey)",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/14/148518/2999304-savage%20pencil.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/savage-pencil-edwin-pouncey/4040-59473/"
+        }
+      ],
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "scott-allie",
       "name": "Scott Allie",
       "description": "Scott Allie is an American comics writer and editor, best known as an editor and executive at Dark Horse Comics from 1994 to 2017.",
@@ -10775,6 +11162,27 @@
       "country": "United Kingdom"
     },
     {
+      "id": "simon-gough",
+      "name": "Simon Gough",
+      "description": "Simon has been an illustrator since early childhood. He was always drawing and painting at home as much as he could. This was carried into his education, where Simon took all of the arts subjects he could. He did the basics in everything he could find, from watercolours to oils, pencils to pastels, and clay to photography. He settled on Photoshop in his late University years as he was more into graphics and photography at the time. Simon's love of comics also started when he was very young, and it seemed inevitable that he would eventually combine the two interests. In his final year of University, Simon says he began \"creating comic book covers to express the concern I had of the narrowminded middle class parent generation (from a personal angle), using misunderstood art pieces as my vehicle for explaining my point. I took Conceptual Art, so I can talk my way out of a paper bag!\"\r\n\r\nAfter finishing his University education, Simon struggled to find a niche that he could settle into for his artwork. He was still reading comics though. Simon invested in a cheap tablet and tested it out by colouring someone else's work, a Booster Gold piece by Joh James. This led Simon to just enjoy the freedom of painting and not having the stress of creating the image. \u00a0He just enjoys the painting more than he drawing.\r\n\r\nSimon continued to practice on lots of people's art, just for fun and experience. He was offered a couple of small gigs for no pay, but they went nowhere. He then coloured a full issue of 'The Lonely', which then disappeared into limbo, but it was paying work, so he had no complaints. \u00a0Simon also did a bit of work on Quarterstone\u00a0Comics 'Savior' title. \u00a0Then Simon got into a regular stream of commission work, which continues to this day. \u00a0Eventually, after working alongside some of the most prolific artists in comics to cement a style and build a name, he was offered the colour work on DC's DC Universe Online video game, colouring the cut scenes. This gave Simon his first taste of deadlines and edits. \u00a0He was then offered the ongoing position to colour G.I.Joe: Snake Eyes, which continues to this day.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/68065/1978596-198648_10150741089860099_612540098_19648677_3363495_n.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5097/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/simon-gough/4040-61945/"
+        }
+      ],
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "skan-srisuwan",
       "name": "Skan Srisuwan",
       "description": "",
@@ -11017,6 +11425,26 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "steve-lavigne",
+      "name": "Steve Lavigne",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/111746/8073390-lavigne-featured-image.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steve-lavigne/4040-26519/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9074/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
