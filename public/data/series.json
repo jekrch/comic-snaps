@@ -385,7 +385,8 @@
       "coverSources": {
         "metron": [
           1,
-          2
+          2,
+          3
         ],
         "comicvine": [
           1,
@@ -398,7 +399,8 @@
       "coverImages": [
         "data/covers/blood-of-the-wolf-man/a12ceda907cd.jpg",
         "data/covers/blood-of-the-wolf-man/363ed4945ea2.jpg",
-        "data/covers/blood-of-the-wolf-man/54a3b18e349b.jpg"
+        "data/covers/blood-of-the-wolf-man/54a3b18e349b.jpg",
+        "data/covers/blood-of-the-wolf-man/fd5e8cbaefeb.jpg"
       ]
     },
     {
