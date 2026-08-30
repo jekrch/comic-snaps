@@ -3499,6 +3499,33 @@
       ]
     },
     {
+      "id": "eightball-15",
+      "series": "eightball",
+      "issue": 15,
+      "credits": [
+        {
+          "artistId": "daniel-clowes",
+          "name": "Daniel Clowes",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Colorist",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/eightball-1989-15/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "eros-psyche-1",
       "series": "eros-psyche",
       "issue": 1,
