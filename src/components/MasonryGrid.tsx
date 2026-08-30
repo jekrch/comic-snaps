@@ -9,6 +9,7 @@ import HatchFiller from "./HatchFillter";
 import { buildStampPool } from "./HatchFillter";
 import type { StampDef } from "./HatchFillter";
 import FooterPyramid from "./FooterPryamid";
+import type { GalleryView } from "./ViewControl";
 import { resolveNeighbors } from "../adjacency";
 import type { NeighborMap } from "../adjacency";
 
@@ -263,6 +264,8 @@ interface MasonryGridProps {
   onOpenPanel: (panel: Panel) => void;
   onLaunchViz?: () => void;
   isFirstLoad?: boolean;
+  view?: GalleryView;
+  onViewChange?: (view: GalleryView) => void;
 }
 
 export default function MasonryGrid({
@@ -277,6 +280,8 @@ export default function MasonryGrid({
   onPanelPositions,
   onOpenPanel,
   onLaunchViz,
+  view,
+  onViewChange,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -504,6 +509,8 @@ export default function MasonryGrid({
             onFiltersChange={onFiltersChange}
             onLaunchViz={onLaunchViz}
             vizDisabled={panels.length === 0}
+            view={view}
+            onViewChange={onViewChange}
           />
         </div>
 

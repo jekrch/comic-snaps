@@ -1,7 +1,7 @@
-import { useState } from "react";
 import type { SortMode } from "../utils/sorting";
 import { SORT_OPTIONS } from "../utils/sorting";
-import { ChevronDown, HelpCircle, GitGraph } from "lucide-react";
+import { HelpCircle, GitGraph } from "lucide-react";
+import SortMenu from "./SortMenu";
 
 interface SortControlProps {
   activeSort: SortMode;
@@ -12,109 +12,41 @@ interface SortControlProps {
 // Embedding-based sort modes
 const EMBEDDING_MODES = new Set<SortMode>(["embedding-dino", "embedding-gram", "embedding-siglip"]);
 
-
 export default function SortControl({ activeSort, onSort, onInfoOpen }: SortControlProps) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className="sort-control panel-item overflow-hidden select-none">
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="
-          w-full flex items-center justify-end
-          px-3 py-2.5
-          transition-colors duration-150
-          cursor-pointer
-        "
-      >
-        <span className="flex items-center gap-1.5">
-          <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
-            {activeSort === "newest" || activeSort === "oldest"
-              ? activeSort
-              : `BY ${activeSort.toUpperCase()}`}
-          </span>
-          <ChevronDown
-            size={14}
-            className={`text-ink-faint transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          />
-        </span>
-      </button>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateRows: open ? "1fr" : "0fr",
-          transition: "grid-template-rows 200ms ease-out",
-        }}
-      >
-        <div className="overflow-hidden">
-          <div>
-            {SORT_OPTIONS.map((opt) => {
-              const isActive = opt.value === activeSort;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => {
-                    onSort(opt.value);
-                    setOpen(false);
-                  }}
-                  className={`
-                    w-full text-right px-3 py-2
-                    font-display text-[11px] tracking-wider uppercase
-                    transition-colors duration-100
-                    cursor-pointer
-                    ${isActive
-                      ? "text-accent"
-                      : "text-ink-muted hover:text-ink"
-                    }
-                  `}
-                >
-                  <span className="flex items-center justify-end gap-2">
-                    {isActive && (
-                      <span className="inline-block w-1 h-1 rounded-full bg-accent flex-shrink-0" />
-                    )}
-                    {opt.label}
-                    {EMBEDDING_MODES.has(opt.value) && (
-                      <GitGraph size={10} className="opacity-40 flex-shrink-0" />
-                    )}
-                  </span>
-                </button>
-              );
-            })}
-
-            {/* Info link at the bottom of the sort list */}
-            {onInfoOpen && (
-              <>
-                <div
-                  className="mx-3 my-1"
-                  style={{
-                    height: "1px",
-                    background: "var(--color-border, rgba(74,71,69,0.25))",
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    //setOpen(false);
-                    onInfoOpen();
-                  }}
-                  className="
-                    w-full text-right px-3 py-2
-                    font-display text-[11px] tracking-wider uppercase
-                    transition-colors duration-100
-                    cursor-pointer
-                    text-ink-muted hover:text-ink
-                  "
-                >
-                  <span className="flex items-center justify-end gap-1.5">
-                    <HelpCircle size={11} className="opacity-60" />
-                    huh?
-                  </span>
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <SortMenu
+      headerLabel={
+        activeSort === "newest" || activeSort === "oldest"
+          ? activeSort.toUpperCase()
+          : `BY ${activeSort.toUpperCase()}`
+      }
+      options={SORT_OPTIONS}
+      active={activeSort}
+      onSelect={onSort}
+      renderBadge={(value) =>
+        EMBEDDING_MODES.has(value) ? (
+          <GitGraph size={10} className="opacity-40 flex-shrink-0" />
+        ) : null
+      }
+      footer={
+        onInfoOpen ? (
+          <button
+            onClick={onInfoOpen}
+            className="
+              w-full text-right px-3 py-2
+              font-display text-[11px] tracking-wider uppercase
+              transition-colors duration-100
+              cursor-pointer
+              text-ink-muted hover:text-ink
+            "
+          >
+            <span className="flex items-center justify-end gap-1.5">
+              <HelpCircle size={11} className="opacity-60" />
+              huh?
+            </span>
+          </button>
+        ) : null
+      }
+    />
   );
 }

@@ -1,9 +1,16 @@
 import { useEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
-import type { Gallery, Panel } from "./types";
+import type { Gallery, IssueCredits, Panel, RatingsIndex, Series } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./utils/filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
+import SeriesShelf from "./components/SeriesShelf";
+import type { GalleryView } from "./components/ViewControl";
+import { buildSeriesRows } from "./utils/seriesRollup";
+import type { SeriesRow } from "./utils/seriesRollup";
+import { sortSeriesRows } from "./utils/seriesSorting";
+import type { SeriesSortMode } from "./utils/seriesSorting";
+import { getCachedRatings, loadRatings } from "./utils/ratings";
 import BackgroundEchoes from "./components/BackgroundEchoes";
 import InfoModal from "./components/InfoModal";
 import type { InfoTab } from "./components/InfoModal";
@@ -38,6 +45,8 @@ export default function App() {
     initialFilters,
     initialSort,
     initialTab,
+    initialView,
+    initialSeriesSort,
     initialViz,
     initialVizPreset,
     initialVizSpeed,
@@ -48,7 +57,18 @@ export default function App() {
   } = useFilterParams();
   const [showInfo, setShowInfo] = useState<InfoTab | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
+  // Two readings of the same filtered set. Both sorts stay live across a
+  // toggle: the row sort orders the shelf, the panel sort still orders the
+  // panels inside each strip (docs/series-view-plan.md §1.6, §3.1).
+  const [view, setView] = useState<GalleryView>(initialView);
+  const [seriesSort, setSeriesSort] = useState<SeriesSortMode>(initialSeriesSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
+  /** The metadata a row is assembled from, kept from the same boot fetch. */
+  const [meta, setMeta] = useState<{ series: Series[]; issues: IssueCredits[] }>({
+    series: [],
+    issues: [],
+  });
+  const [ratings, setRatings] = useState<RatingsIndex | null>(getCachedRatings);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
   const [panelPositions, setPanelPositions] = useState<{ panel: Panel; y: number; h: number }[]>([]);
   const [openPanelId, setOpenPanelId] = useState<string | null>(
@@ -200,17 +220,38 @@ export default function App() {
   const handleFiltersChange = useCallback(
     (next: Filters) => {
       setFilters(next);
-      syncToURL(next, sortMode);
+      syncToURL(next, sortMode, view, seriesSort);
     },
-    [sortMode, syncToURL]
+    [seriesSort, sortMode, syncToURL, view]
   );
 
   const handleSortChange = useCallback(
     (next: SortMode) => {
       setSortMode(next);
-      syncToURL(filters, next);
+      syncToURL(filters, next, view, seriesSort);
     },
-    [filters, syncToURL]
+    [filters, seriesSort, syncToURL, view]
+  );
+
+  const handleViewChange = useCallback(
+    (next: GalleryView) => {
+      setView(next);
+      syncToURL(filters, sortMode, next, seriesSort);
+      // The echoes are a wall texture, driven by the masonry's layout pass.
+      // Nothing reports positions from the shelf, so the last wall's are
+      // cleared rather than left hanging behind a different rhythm (§5.3).
+      if (next !== "wall") setPanelPositions([]);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    },
+    [filters, seriesSort, sortMode, syncToURL]
+  );
+
+  const handleSeriesSortChange = useCallback(
+    (next: SeriesSortMode) => {
+      setSeriesSort(next);
+      syncToURL(filters, sortMode, view, next);
+    },
+    [filters, sortMode, syncToURL, view]
   );
 
   const handleOpenInfo = useCallback(
@@ -248,9 +289,9 @@ export default function App() {
         series: new Set(patch.series ?? []),
       };
       setFilters(next);
-      syncToURL(next, sortMode);
+      syncToURL(next, sortMode, view, seriesSort);
     },
-    [sortMode, syncToURL]
+    [seriesSort, sortMode, syncToURL, view]
   );
 
   useEffect(() => {
@@ -297,9 +338,22 @@ export default function App() {
         });
 
         setPanels(merged);
+        // The rows are assembled from the same three bundles the wall already
+        // fetches at boot — nothing in the series view needs a new request.
+        setMeta({ series, issues });
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
+  }, []);
+
+  // `loadRatings` caches module-side and falls back to an empty index when the
+  // file does not exist yet, so this can run unconditionally on mount.
+  useEffect(() => {
+    let cancelled = false;
+    loadRatings().then((loaded) => {
+      if (!cancelled) setRatings(loaded);
+    });
+    return () => { cancelled = true; };
   }, []);
 
   const filteredPanels = useMemo(
@@ -315,10 +369,44 @@ export default function App() {
     return () => { cancelled = true; };
   }, [filteredPanels, sortMode]);
 
+  // One row per slug over the *filtered* set, in the active panel order — so a
+  // filter narrows both which rows appear and which panels tease inside them,
+  // and switching the panel sort reorders every strip (§1.6, §4).
+  const seriesRows = useMemo<SeriesRow[]>(
+    () =>
+      view === "series" ? sortSeriesRows(buildSeriesRows(sortedPanels, meta, ratings), seriesSort) : [],
+    [view, sortedPanels, meta, ratings, seriesSort]
+  );
+
+  // The guard lives here rather than per view, so toggling never re-arms the
+  // page's opening fade (§5.3).
+  const layoutReadyRef = useRef(false);
   const handleLayoutReady = useCallback(() => {
+    if (layoutReadyRef.current) return;
+    layoutReadyRef.current = true;
     setImagesLoaded(true);
     setIsFirstLoad(false);
   }, []);
+
+  /**
+   * A row's title is a way back to the wall narrowed to that series.
+   *
+   * The series facet keys on `panel.title` rather than on the slug, and one
+   * slug already carries two title spellings — so the row hands over every
+   * spelling it was built from rather than filtering itself down to a subset
+   * of itself (§9). Worth fixing at the source on ingest; this at least does
+   * not lose panels in the meantime.
+   */
+  const handleSelectSeries = useCallback(
+    (row: SeriesRow) => {
+      const next: Filters = { ...EMPTY_FILTERS, series: new Set(row.titles) };
+      setFilters(next);
+      setView("wall");
+      syncToURL(next, sortMode, "wall", seriesSort);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    },
+    [seriesSort, sortMode, syncToURL]
+  );
 
   const handleOpenPanel = useCallback((panel: Panel) => {
     setViewerScope("filtered");
@@ -443,20 +531,44 @@ export default function App() {
             className="transition-opacity duration-700 ease-out"
             style={{ opacity: imagesLoaded ? 1 : 0 }}
           >
-            <MasonryGrid
-              panels={sortedPanels}
-              allPanels={panels}
-              sortMode={sortMode}
-              onSort={handleSortChange}
-              filters={filters}
-              onFiltersChange={handleFiltersChange}
-              onInfoOpen={() => handleOpenInfo("sorts")}
-              onLayoutReady={handleLayoutReady}
-              onPanelPositions={setPanelPositions}
-              onOpenPanel={handleOpenPanel}
-              onLaunchViz={handleOpenViz}
-              isFirstLoad={isFirstLoad}
-            />
+            {/* The wall is unmounted rather than hidden on a toggle, so the two
+                views never both hold images in memory. It costs the wall's
+                scroll position, which is the right trade at this size (§7). */}
+            {view === "wall" ? (
+              <MasonryGrid
+                panels={sortedPanels}
+                allPanels={panels}
+                sortMode={sortMode}
+                onSort={handleSortChange}
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onInfoOpen={() => handleOpenInfo("sorts")}
+                onLayoutReady={handleLayoutReady}
+                onPanelPositions={setPanelPositions}
+                onOpenPanel={handleOpenPanel}
+                onLaunchViz={handleOpenViz}
+                isFirstLoad={isFirstLoad}
+                view={view}
+                onViewChange={handleViewChange}
+              />
+            ) : (
+              <SeriesShelf
+                rows={seriesRows}
+                allPanels={panels}
+                sort={seriesSort}
+                onSort={handleSeriesSortChange}
+                view={view}
+                onViewChange={handleViewChange}
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onSelectPanel={handleSelectPanel}
+                onSelectSeries={handleSelectSeries}
+                onBrowse={handleBrowseBy}
+                onLayoutReady={handleLayoutReady}
+                layoutReady={imagesLoaded}
+                onLaunchViz={handleOpenViz}
+              />
+            )}
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <p className="text-ink-muted text-sm font-display tracking-wide">

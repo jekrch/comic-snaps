@@ -73,3 +73,19 @@ export function lookupRatings(
 ): TargetRatings | null {
   return index?.targets[`${type}:${id}`] ?? null;
 }
+
+/**
+ * The one sortable number a panel has: its issue's score when the issue has
+ * been rated, otherwise its series'. Unrated is `null`, and every caller
+ * orders nulls last (docs/ratings-plan.md §8).
+ *
+ * Shared deliberately — the series view sorts rows on the series half of this
+ * ladder today, and the panel-level `"rating"` sort in `sorting.ts` will want
+ * the whole thing. Two copies of the fallback order would drift.
+ */
+export function ratingSortKey(index: RatingsIndex | null, panel: Panel): number | null {
+  const issue = lookupRatings(index, "issue", issueTargetId(panel));
+  if (issue?.avg !== null && issue?.avg !== undefined) return issue.avg;
+  const series = lookupRatings(index, "series", seriesTargetId(panel));
+  return series?.avg ?? null;
+}

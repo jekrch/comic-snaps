@@ -7,6 +7,8 @@ import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
 import { ChevronDown, XCircle } from "lucide-react";
 import VizLaunchButton from "./viz/VizLaunchButton";
+import ViewControl from "./ViewControl";
+import type { GalleryView } from "./ViewControl";
 
 interface FilterControlProps {
   panels: Panel[];
@@ -15,6 +17,9 @@ interface FilterControlProps {
   onLaunchViz?: () => void;
   /** Nothing survives the current filters, so there is no run to start. */
   vizDisabled?: boolean;
+  /** The wall/shelf switch rides at the bottom of the list (§5.1). */
+  view?: GalleryView;
+  onViewChange?: (view: GalleryView) => void;
 }
 
 export default function FilterControl({
@@ -23,6 +28,8 @@ export default function FilterControl({
   onFiltersChange,
   onLaunchViz,
   vizDisabled,
+  view,
+  onViewChange,
 }: FilterControlProps) {
   const [open, setOpen] = useState(false);
   const active = hasActiveFilters(filters);
@@ -223,24 +230,33 @@ export default function FilterControl({
               onToggle={(v) => toggleInSet("postedBy", v)}
             />
 
-            {/* An action on the narrowed set, so it closes the list */}
+            {/* Actions on the narrowed set, so they close the list */}
+            {(onLaunchViz || (view && onViewChange)) && (
+              <div
+                className="mx-3 my-1"
+                style={{
+                  height: "1px",
+                  background: "var(--color-border, rgba(74,71,69,0.25))",
+                }}
+              />
+            )}
+            {view && onViewChange && (
+              <ViewControl
+                view={view}
+                onViewChange={(next) => {
+                  setOpen(false);
+                  onViewChange(next);
+                }}
+              />
+            )}
             {onLaunchViz && (
-              <>
-                <div
-                  className="mx-3 my-1"
-                  style={{
-                    height: "1px",
-                    background: "var(--color-border, rgba(74,71,69,0.25))",
-                  }}
-                />
-                <VizLaunchButton
-                  onLaunch={() => {
-                    setOpen(false);
-                    onLaunchViz();
-                  }}
-                  disabled={vizDisabled}
-                />
-              </>
+              <VizLaunchButton
+                onLaunch={() => {
+                  setOpen(false);
+                  onLaunchViz();
+                }}
+                disabled={vizDisabled}
+              />
             )}
           </div>
         </div>

@@ -4,7 +4,9 @@ import { Expand } from "lucide-react";
 import { formatIssue } from "../utils/issueFormat";
 import { useNearViewport } from "../hooks/useNearViewport";
 
-const BLUR_COPY = {
+/** Shared with the series strip, so the two places a blur is announced say
+ *  the same thing. */
+export const BLUR_COPY = {
   ew: "ew! open to view",
   nsfw: "for adult intellectuals only! open to view",
 } as const;

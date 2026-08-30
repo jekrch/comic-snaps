@@ -1141,3 +1141,93 @@ button,
     animation: none;
   }
 }
+
+/* --- The series shelf --------------------------------------------------
+   Every row is the same height and every row ends in a strip of art that stops
+   wherever it stops, so without a rule between them the rows run together. The
+   head is that rule: the wall's own hatch motif, drawn as a gradient because a
+   26px band does not need HatchFiller's animation, with the title and year on
+   plates cut out of it. */
+.series-head {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 4px,
+    rgba(232, 228, 223, 0.13) 4px 5.5px
+  );
+  border-top: 1px solid rgba(232, 228, 223, 0.14);
+}
+
+/* Solid ground under the type, so the hatch runs behind the row rather than
+   through the words. The surface colour, not a tint — the lines have to stop
+   dead at the edge of a plate for the cut-out to read. */
+.series-head-plate {
+  background-color: var(--color-surface);
+  padding-inline: 0.4rem;
+  padding-block: 0.2rem;
+}
+
+/* --- The series shelf's strips -----------------------------------------
+   A row shows one panel properly and teases the rest off the right edge. The
+   strip simply overflows and a mask dissolves whatever is crossing that edge,
+   so the row ends mid-panel when there is more to see and ends cleanly when
+   there is not — the cut panel is the affordance, which is why there are no
+   chevrons here (docs/series-view-plan.md §1.3). */
+.series-strip {
+  scroll-snap-type: x proximity;
+  /* The bar would be a second horizontal line under every row, and the rows
+     are already a stack of them. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.series-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.series-strip > * {
+  scroll-snap-align: start;
+}
+
+/* Applied only while there is something past the edge — its absence is the
+   honest signal that the row fits. */
+.series-strip--masked {
+  mask-image: linear-gradient(to right, #000 calc(100% - 80px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 80px), transparent 100%);
+}
+
+.series-strip:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.series-tile:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: -1px;
+}
+
+/* The blur hatch, as a gradient rather than a second copy of PanelCard's SVG
+   pattern: a centred crop has no direction for the card's masked variants to
+   fade along, so the strip covers a blurred panel whole. Same 9px period,
+   1.5px white line and overlay blend as the card, so the two read as one
+   motif. `ew` leans one way, `nsfw` the other. */
+.series-tile-hatch {
+  opacity: 0.45;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.series-tile-hatch[data-blur="ew"] {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 7.5px,
+    #fff 7.5px 9px
+  );
+}
+
+.series-tile-hatch[data-blur="nsfw"] {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 7.5px,
+    #fff 7.5px 9px
+  );
+}

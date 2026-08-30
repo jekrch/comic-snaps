@@ -2,16 +2,22 @@ import { useCallback, useMemo } from "react";
 import type { Filters } from "../utils/filtering";
 import type { SortMode } from "../utils/sorting";
 import type { InfoTab } from "../components/InfoModal";
+import type { GalleryView } from "../components/ViewControl";
+import type { SeriesSortMode } from "../utils/seriesSorting";
+import { DEFAULT_SERIES_SORT, isSeriesSortMode } from "../utils/seriesSorting";
 import { VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../components/viz/vizConfig";
 
 const FILTER_KEYS: (keyof Filters)[] = ["decades", "tags", "artists", "colorists", "letterers", "credits", "postedBy", "series"];
 const DEFAULT_SORT: SortMode = "newest";
 const VALID_TABS: InfoTab[] = ["about", "sorts", "stats"];
+const DEFAULT_VIEW: GalleryView = "wall";
 
 function parseFiltersFromURL(): {
   filters: Filters;
   sort: SortMode;
   tab: InfoTab | null;
+  view: GalleryView;
+  seriesSort: SeriesSortMode;
   viz: boolean;
   vizPreset: string | null;
   vizSpeed: number | null;
@@ -32,6 +38,14 @@ function parseFiltersFromURL(): {
 
   const sort = (params.get("sort") as SortMode) ?? DEFAULT_SORT;
 
+  // The two views are separate places to browse, and both sorts stay live
+  // across a toggle — so the row sort gets its own key rather than sharing
+  // `sort`, which would silently reset a colour sort to newest on the way back
+  // (docs/series-view-plan.md §5.2).
+  const view: GalleryView = params.get("view") === "series" ? "series" : DEFAULT_VIEW;
+  const rawSsort = params.get("ssort");
+  const seriesSort = isSeriesSortMode(rawSsort) ? rawSsort : DEFAULT_SERIES_SORT;
+
   const rawTab = params.get("tab");
   const tab = rawTab && VALID_TABS.includes(rawTab as InfoTab) ? (rawTab as InfoTab) : null;
 
@@ -49,6 +63,8 @@ function parseFiltersFromURL(): {
     filters,
     sort,
     tab,
+    view,
+    seriesSort,
     viz: params.get("viz") === "1",
     vizPreset: params.get("vizpreset"),
     vizSpeed,
@@ -65,6 +81,8 @@ function buildParams(
   filters: Filters,
   sort: SortMode,
   tab: InfoTab | null,
+  view: GalleryView,
+  seriesSort: SeriesSortMode,
   carried: URLSearchParams
 ): string {
   const params = new URLSearchParams();
@@ -82,6 +100,14 @@ function buildParams(
 
   if (tab) {
     params.set("tab", tab);
+  }
+
+  // Both omitted at their defaults, the way `sort=newest` is.
+  if (view !== DEFAULT_VIEW) {
+    params.set("view", view);
+  }
+  if (seriesSort !== DEFAULT_SERIES_SORT) {
+    params.set("ssort", seriesSort);
   }
 
   // A visualizer run composes with the active filters, so both sets of params
@@ -111,11 +137,17 @@ export function useFilterParams() {
   const initial = useMemo(() => parseFiltersFromURL(), []);
 
   const syncToURL = useCallback(
-    (filters: Filters, sort: SortMode, tab?: InfoTab | null) => {
+    (
+      filters: Filters,
+      sort: SortMode,
+      view: GalleryView,
+      seriesSort: SeriesSortMode,
+      tab?: InfoTab | null
+    ) => {
       const params = new URLSearchParams(window.location.search);
       // preserve the current tab param if not explicitly provided
       const currentTab = tab !== undefined ? tab : (params.get("tab") as InfoTab | null);
-      pushURL(buildParams(filters, sort, currentTab, params));
+      pushURL(buildParams(filters, sort, currentTab, view, seriesSort, params));
     },
     []
   );
@@ -168,6 +200,8 @@ export function useFilterParams() {
     initialFilters: initial.filters,
     initialSort: initial.sort,
     initialTab: initial.tab,
+    initialView: initial.view,
+    initialSeriesSort: initial.seriesSort,
     initialViz: initial.viz,
     initialVizPreset: initial.vizPreset,
     initialVizSpeed: initial.vizSpeed,
