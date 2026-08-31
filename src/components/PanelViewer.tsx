@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
@@ -76,10 +76,24 @@ function ViewerOverlay({
   // the drawer (slides from the bottom), down for the graph (slides from the
   // top). The shared-element close/collapse still measures the resting image,
   // so reset to center before the viewer tears down.
-  useEffect(() => {
-    if (drawerOpen) setContentShift("translateY(-100vh)");
-    else if (graphOpen) setContentShift("translateY(100vh)");
-    else setContentShift(null);
+  // The very first placement snaps, in a layout effect: a viewer that opens
+  // with the drawer already out is already where it belongs, and animating the
+  // stage there would show the art for a beat and then slide it away.
+  // Guarded on the shift last applied rather than a "have I placed" flag —
+  // StrictMode runs mount effects twice, and the second pass re-sending the
+  // same shift with `animate: true` is exactly what put the slide back: by
+  // then the viewer's own layout effects have measured, so the stage has a
+  // computed transform at rest for the transition to run from.
+  const applied = useRef<string | null | undefined>(undefined);
+  useLayoutEffect(() => {
+    const shift = drawerOpen ? "translateY(-100vh)" : graphOpen ? "translateY(100vh)" : null;
+    if (applied.current === shift) return;
+    // Only a shift that is actually off-center needs snapping; a viewer opening
+    // on the art is already centered, so it keeps the library's default and
+    // never carries a `transition: none` into the first toggle.
+    const snap = applied.current === undefined && shift !== null;
+    applied.current = shift;
+    setContentShift(shift, !snap);
   }, [drawerOpen, graphOpen, setContentShift]);
 
   return (
@@ -160,14 +174,17 @@ export default function PanelViewer({
   onSelectPanel,
   onBrowse,
 }: Props) {
+  // Drawer is only offered when there's artist/series metadata to show.
+  const { hasContent } = useMetadata(panel.artist, panel.slug);
+
   const [graphOpen, setGraphOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  // A details-first open starts with the drawer already out rather than
+  // sliding it up after the fact: coming off a series title, the art flashing
+  // by on the way to the info is the jerk, not the point.
+  const [drawerOpen, setDrawerOpen] = useState(openWithInfo && hasContent);
   const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
   const [graphSlideDir, setGraphSlideDir] = useState<"left" | "right" | null>(null);
   const [graphToolbarEl, setGraphToolbarEl] = useState<HTMLElement | null>(null);
-
-  // Drawer is only offered when there's artist/series metadata to show.
-  const { hasContent } = useMetadata(panel.artist, panel.slug);
 
   const items = useMemo(
     () =>
@@ -230,15 +247,14 @@ export default function PanelViewer({
   }, [panel.id, panel.cover]);
 
   // Close any open overlay when the panel changes, then clear the slide
-  // direction once the slide-out has settled. The first run is the mount,
-  // where there is nothing open to close and a reset would undo the drawer a
-  // details-first open is about to ask for.
-  const mounted = useRef(false);
+  // direction once the slide-out has settled. Guarded on the index it last ran
+  // for rather than a "have I mounted" flag: at mount there is nothing open to
+  // close, and a flag is spent by the first of StrictMode's two mount passes,
+  // so the second would shut the drawer a details-first open had just put up.
+  const lastIndex = useRef(currentIndex);
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
+    if (lastIndex.current === currentIndex) return;
+    lastIndex.current = currentIndex;
     setDrawerOpen(false);
     setGraphOpen(false);
     const t = setTimeout(() => {
@@ -249,13 +265,13 @@ export default function PanelViewer({
   }, [currentIndex]);
 
   /**
-   * Opened for the details: the drawer comes out on its own, but only once the
-   * metadata it reads has landed — until then it has nothing to show, and
-   * sliding an empty sheet up over the panel is worse than a beat of delay.
-   * A series with no record at all never gets one, the same way the Info
-   * button is never offered for it.
+   * Opened for the details on a cold load, where the metadata had not landed
+   * in time for the drawer to be out on the first render: it comes out on its
+   * own as soon as there is something to show, since sliding an empty sheet up
+   * over the panel is worse than a beat of delay. A series with no record at
+   * all never gets one, the same way the Info button is never offered for it.
    */
-  const wantInfo = useRef(openWithInfo);
+  const wantInfo = useRef(openWithInfo && !drawerOpen);
   useEffect(() => {
     if (!wantInfo.current || !hasContent) return;
     wantInfo.current = false;
