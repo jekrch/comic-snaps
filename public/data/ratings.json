@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T23:37:03.455Z",
+  "generatedAt": "2026-08-31T00:36:23.583Z",
   "targets": {
     "series:stray-bullets": {
       "label": "Stray Bullets",
@@ -35,14 +35,14 @@
     },
     "series:heart-eyes": {
       "label": "Heart Eyes",
-      "avg": 9,
+      "avg": 8.5,
       "count": 1,
       "ratings": [
         {
           "uid": "141a6d566b9c",
           "user": null,
           "attributed": false,
-          "score": 9,
+          "score": 8.5,
           "review": null,
           "createdAt": "2026-08-29T23:31:56.292Z",
           "updatedAt": "2026-08-29T23:31:56.292Z"
@@ -131,14 +131,14 @@
     },
     "series:the-nice-house-by-the-sea": {
       "label": "The Nice House By The Sea",
-      "avg": 7,
+      "avg": 7.5,
       "count": 1,
       "ratings": [
         {
           "uid": "141a6d566b9c",
           "user": null,
           "attributed": false,
-          "score": 7,
+          "score": 7.5,
           "review": null,
           "createdAt": "2026-08-29T23:31:56.292Z",
           "updatedAt": "2026-08-29T23:31:56.292Z"
@@ -243,17 +243,17 @@
     },
     "series:harrow-county": {
       "label": "Harrow County",
-      "avg": 9.5,
+      "avg": 10,
       "count": 1,
       "ratings": [
         {
           "uid": "141a6d566b9c",
           "user": null,
           "attributed": false,
-          "score": 9.5,
+          "score": 10,
           "review": null,
           "createdAt": "2026-08-29T23:37:03.455Z",
-          "updatedAt": "2026-08-29T23:37:03.455Z"
+          "updatedAt": "2026-08-31T00:31:51.617Z"
         }
       ]
     },
@@ -269,7 +269,7 @@
           "score": 9,
           "review": null,
           "createdAt": "2026-08-29T23:37:03.455Z",
-          "updatedAt": "2026-08-29T23:37:03.455Z"
+          "updatedAt": "2026-08-31T00:31:51.617Z"
         }
       ]
     },
@@ -318,6 +318,422 @@
           "review": null,
           "createdAt": "2026-08-29T23:37:03.455Z",
           "updatedAt": "2026-08-29T23:37:03.455Z"
+        }
+      ]
+    },
+    "series:battle-beast": {
+      "label": "Battle Beast",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:eros-psyche": {
+      "label": "Eros/Psyche",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:fatale": {
+      "label": "Fatale",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:frank": {
+      "label": "Frank",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:geiger": {
+      "label": "Geiger",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:heavy-liquid": {
+      "label": "Heavy Liquid",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:lady-killer": {
+      "label": "Lady Killer",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:the-muppets-noir": {
+      "label": "The Muppets Noir",
+      "avg": 6.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 6.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:red-roots": {
+      "label": "Red Roots",
+      "avg": 7.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:redcoat": {
+      "label": "Redcoat",
+      "avg": 7.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:skinbreaker": {
+      "label": "Skinbreaker",
+      "avg": 7,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:street-poet-ray": {
+      "label": "Street Poet Ray",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:tales-of-ordinary-madness": {
+      "label": "Tales of Ordinary Madness",
+      "avg": 9,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 9,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:trencher": {
+      "label": "Trencher",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:universal-monsters-phantom-of-the-opera": {
+      "label": "Universal Monsters: Phantom of the Opera",
+      "avg": 7.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:universal-monsters-the-invisible-man": {
+      "label": "Universal Monsters: The Invisible Man",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:w0rldtr33": {
+      "label": "W0rldtr33",
+      "avg": 6.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 6.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:31:51.617Z",
+          "updatedAt": "2026-08-31T00:31:51.617Z"
+        }
+      ]
+    },
+    "series:absolute-martian-manhunter": {
+      "label": "Absolute Martian Manhunter",
+      "avg": 7.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:the-city-beneath-her-feet": {
+      "label": "The City Beneath Her Feet",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:concrete-fragile-creature": {
+      "label": "Concrete: Fragile Creature",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:dark-spaces-wildfire": {
+      "label": "Dark Spaces: Wildfire",
+      "avg": 8.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:feral": {
+      "label": "Feral",
+      "avg": 7.5,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7.5,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:fire-and-ice-darkwolf": {
+      "label": "Fire and Ice: Darkwolf",
+      "avg": 6,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 6,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:hank-howard-pizza-detective-a-slice-of-life": {
+      "label": "Hank Howard, Pizza Detective: A Slice of Life",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:hyde-street": {
+      "label": "Hyde Street",
+      "avg": 8,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 8,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
+        }
+      ]
+    },
+    "series:infernal-hulk": {
+      "label": "Infernal Hulk",
+      "avg": 7,
+      "count": 1,
+      "ratings": [
+        {
+          "uid": "141a6d566b9c",
+          "user": null,
+          "attributed": false,
+          "score": 7,
+          "review": null,
+          "createdAt": "2026-08-31T00:36:23.583Z",
+          "updatedAt": "2026-08-31T00:36:23.583Z"
         }
       ]
     }

@@ -530,7 +530,9 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
   if (effectiveSeries?.publisher) seriesMetaParts.push(effectiveSeries.publisher);
   if (effectiveSeries?.issueCount) {
-    seriesMetaParts.push(`${effectiveSeries.issueCount} issue${effectiveSeries.issueCount === 1 ? "" : "s"}`);
+    const count = effectiveSeries.issueCount;
+    const plural = count === 1 && !effectiveSeries.issueCountInferred ? "" : "s";
+    seriesMetaParts.push(`${count}${effectiveSeries.issueCountInferred ? "+" : ""} issue${plural}`);
   }
   const seriesMeta = seriesMetaParts.join(" · ");
 

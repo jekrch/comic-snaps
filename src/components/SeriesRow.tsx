@@ -103,19 +103,37 @@ function capNames(names: string[]): { shown: string[]; extra: number } {
 }
 
 const MONTH_YEAR: Intl.DateTimeFormatOptions = { month: "short", year: "numeric" };
+const MONTH_DAY: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
 
 /**
  * When this series' panels went up — first to last.
  *
- * Month precision on purpose: the exact day is on the panel, and what the row
- * is answering is whether this is something the group keeps coming back to or
- * something posted once. A series posted inside one month says so with one date.
+ * Month precision across months, because what the row is answering is whether
+ * this is something the group keeps coming back to or something posted once,
+ * and the exact day of each panel is on the panel.
+ *
+ * A span that opens and closes inside one month is the case month precision
+ * cannot state: "Aug 2026" for four panels reads as one post rather than as a
+ * fortnight of them. Those drop to days and name the month once — the range is
+ * still a range, without printing the same word at both ends. A series with a
+ * genuinely single posting day keeps the one date it has always had.
  */
 function postedRange(first: number, last: number): string | null {
   if (!first || !last) return null;
-  const from = new Date(first).toLocaleDateString(undefined, MONTH_YEAR);
-  const to = new Date(last).toLocaleDateString(undefined, MONTH_YEAR);
-  return from === to ? to : `${from} – ${to}`;
+  const a = new Date(first);
+  const b = new Date(last);
+
+  if (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()) {
+    if (a.getDate() === b.getDate()) return b.toLocaleDateString(undefined, MONTH_YEAR);
+    // "Aug 1 – 15, 2026": the month leads, the closing day is bare, and the
+    // year is stated once at the end for both.
+    const from = a.toLocaleDateString(undefined, MONTH_DAY);
+    return `${from} – ${b.getDate()}, ${b.getFullYear()}`;
+  }
+
+  const from = a.toLocaleDateString(undefined, MONTH_YEAR);
+  const to = b.toLocaleDateString(undefined, MONTH_YEAR);
+  return `${from} – ${to}`;
 }
 
 /**

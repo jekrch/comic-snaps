@@ -26,6 +26,10 @@ export interface Series {
   startYear?: number | null;
   publisher?: string | null;
   issueCount?: number | null;
+  /** issueCount was raised to the highest issue we own a panel from, because
+   *  the count recorded when the series was first looked up went stale. It is
+   *  a floor, not a verified total — shown as "N+ issues". */
+  issueCountInferred?: boolean;
   aliases?: string[] | null;
   coverImages?: string[] | null;
   tags?: string[] | null;

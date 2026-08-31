@@ -73,17 +73,23 @@ const CLOUD = `
  * Radius and spacing both grow toward the balloon (1.8 then 4.0, with gaps of
  * roughly 3.5 and 6.3), because a thought that expands as it leaves the head is
  * the whole convention.
+ *
+ * The big bubble carries a slightly lighter `pen` than the rest of the drawing:
+ * at that radius the full weight closes the circle up into a blot, and it sits
+ * right against the cloud where the contrast shows. Thinning it keeps it reading
+ * as an outline without breaking the one-hand look.
  */
 const TRAIL = [
   { cx: 3.2, cy: 11, r: 1.8 },
-  { cx: 14.5, cy: 13, r: 4 },
+  { cx: 14.5, cy: 13, r: 4, pen: 3.4 },
 ];
 
 /** Between one part of the thought and the next. */
 const BEAT_MS = 220;
 
-/** One pen for the whole drawing, matched to the bird's own weight. */
-const PEN = 3.6;
+/** The drawing's pen, matched to the bird's own weight; see TRAIL for the
+ *  one mark that lightens off it. */
+const PEN = 4;
 
 interface ThoughtBalloonProps {
   /** Word inside the balloon. Omit for an empty one. */
@@ -131,7 +137,14 @@ export default function ThoughtBalloon({
       className={`viz-think-ink${className ? ` ${className}` : ""}`}
     >
       {TRAIL.map((b, i) => (
-        <circle key={b.cx} cx={b.cx} cy={b.cy} r={b.r} {...beat(i)} />
+        <circle
+          key={b.cx}
+          cx={b.cx}
+          cy={b.cy}
+          r={b.r}
+          strokeWidth={"pen" in b ? b.pen : undefined}
+          {...beat(i)}
+        />
       ))}
       {/* Carried on the group so the cloud and its word stay registered to each
           other; the pop each part animates in with is its own transform and

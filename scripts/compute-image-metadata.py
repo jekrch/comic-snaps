@@ -33,7 +33,7 @@ from metadata.covers import backfill_cover_images, localize_cover_images
 from metadata.credits import backfill_issue_credits
 from metadata.image_metadata import compute_metadata, needs_update
 from metadata.paths import ARTISTS_PATH, GALLERY_PATH, IMAGE_ROOT, SERIES_PATH
-from metadata.seed import seed_artists, seed_series
+from metadata.seed import seed_artists, seed_series, sync_issue_counts
 from metadata.sources.comicvine import backfill_comicvine
 from metadata.sources.gcd import backfill_gcd
 from metadata.sources.metron import backfill_metron
@@ -129,6 +129,16 @@ def main():
             print(f"Processed {gcd_updated} series via GCD.")
         else:
             print("No GCD entries needed processing.")
+
+    # Raise stale issue counts to match the issues we actually own panels
+    # from. Runs after the source backfills so a freshly-fetched count is the
+    # baseline this floors against; costs no requests.
+    print("Syncing issue counts against the gallery...")
+    counts_raised = sync_issue_counts(panels)
+    if counts_raised:
+        print(f"Raised issueCount for {counts_raised} series.")
+    else:
+        print("No issue counts needed raising.")
 
     # Fetch cover images for series from Metron and Comic Vine
     print("Fetching cover images...")

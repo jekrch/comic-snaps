@@ -70,13 +70,14 @@
         "comicvine",
         "metron"
       ],
-      "issueCount": 10,
+      "issueCount": 12,
       "coverImages": [
         "data/covers/absolute-martian-manhunter/d33403b67fc4.jpg",
         "data/covers/absolute-martian-manhunter/ed8761a2e738.jpg",
         "data/covers/absolute-martian-manhunter/b0215185e204.jpg",
         "data/covers/absolute-martian-manhunter/5284527ec366.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "absolute-wonder-woman",
@@ -100,7 +101,7 @@
       ],
       "startYear": 2024,
       "publisher": "DC Comics",
-      "issueCount": 18,
+      "issueCount": 23,
       "sources": [
         "comicvine",
         "metron"
@@ -110,7 +111,8 @@
         "data/covers/absolute-wonder-woman/0825c91ca081.jpg",
         "data/covers/absolute-wonder-woman/c7b5bd3206fc.jpg",
         "data/covers/absolute-wonder-woman/6d5f246da5f0.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "action-comics",
@@ -190,7 +192,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9655759-cover.jpg",
       "startYear": 2025,
       "publisher": "Image",
-      "issueCount": 8,
+      "issueCount": 9,
       "sources": [
         "comicvine",
         "metron"
@@ -200,7 +202,8 @@
         "data/covers/assorted-crisis-events/fa6996348205.jpg",
         "data/covers/assorted-crisis-events/33e1d38f7c66.jpg",
         "data/covers/assorted-crisis-events/58e0c92474f0.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "avenue-d",
@@ -401,7 +404,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg",
       "startYear": 2026,
       "publisher": "DC Comics",
-      "issueCount": 3,
+      "issueCount": 7,
       "sources": [
         "comicvine",
         "metron"
@@ -411,7 +414,8 @@
         "data/covers/bleeding-hearts/b58296d4429c.jpg",
         "data/covers/bleeding-hearts/fc5e77194c09.jpg",
         "data/covers/bleeding-hearts/e0156860ba7a.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "blood-of-the-wolf-man",
@@ -679,7 +683,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dark Horse Comics",
-      "issueCount": 1,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron"
@@ -699,7 +703,8 @@
         "data/covers/concrete-stars-over-sand/dc3c854eb3e9.jpg",
         "data/covers/concrete-stars-over-sand/c0cafe56de93.jpg",
         "data/covers/concrete-stars-over-sand/97b16cdb23d2.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "creatures-of-the-id",
@@ -1641,14 +1646,15 @@
           325
         ]
       },
-      "issueCount": 5,
+      "issueCount": 325,
       "anthology": true,
       "coverImages": [
         "data/covers/heavy-metal/f1aed80cc8d3.jpg",
         "data/covers/heavy-metal/dcc701977f4c.jpg",
         "data/covers/heavy-metal/af4292162152.jpg",
         "data/covers/heavy-metal/465e259dbe3f.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "hup",
@@ -1765,7 +1771,7 @@
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 1,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron"
@@ -1784,7 +1790,8 @@
         "data/covers/if-destruction-be-our-lot/36b8212a6198.jpg",
         "data/covers/if-destruction-be-our-lot/48e883e5a1e1.jpg",
         "data/covers/if-destruction-be-our-lot/e3f0eda32d15.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "infernal-hulk",
@@ -1808,7 +1815,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9923000-cover.jpg",
       "startYear": 2026,
       "publisher": "Marvel",
-      "issueCount": 5,
+      "issueCount": 10,
       "sources": [
         "gcd",
         "comicvine",
@@ -1819,7 +1826,8 @@
         "data/covers/infernal-hulk/6229354e57b5.jpg",
         "data/covers/infernal-hulk/8da36eab8911.jpg",
         "data/covers/infernal-hulk/953d7b55255e.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "it-s-jeff-brand-new-week",
@@ -1937,7 +1945,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985196-cover.jpg",
       "startYear": 2026,
       "publisher": "Ignition Press",
-      "issueCount": 2,
+      "issueCount": 5,
       "sources": [
         "comicvine",
         "metron"
@@ -1959,7 +1967,8 @@
           2,
           3
         ]
-      }
+      },
+      "issueCountInferred": true
     },
     {
       "id": "king-spawn",
@@ -2261,7 +2270,7 @@
         }
       ],
       "publisher": "Oni Press",
-      "issueCount": 1,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron"
@@ -2282,7 +2291,8 @@
         "data/covers/mind-mgmt-new-improved/65dc04185332.jpg",
         "data/covers/mind-mgmt-new-improved/0eae53fcd6eb.jpg"
       ],
-      "startYear": 2026
+      "startYear": 2026,
+      "issueCountInferred": true
     },
     {
       "id": "minor-arcana",
@@ -2302,7 +2312,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9466557-6820814136-B0CW1.jpg",
       "startYear": 2024,
       "publisher": "Boom! Studios",
-      "issueCount": 15,
+      "issueCount": 16,
       "sources": [
         "comicvine",
         "metron"
@@ -2312,7 +2322,8 @@
         "data/covers/minor-arcana/adca0951a1fe.jpg",
         "data/covers/minor-arcana/8dd4cfc11dc8.jpg",
         "data/covers/minor-arcana/4e2504b30a23.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "motor-city-comics",
@@ -2393,7 +2404,8 @@
       ],
       "startYear": 2025,
       "publisher": "Row 7 Publishing",
-      "issueCount": 1
+      "issueCount": 5,
+      "issueCountInferred": true
     },
     {
       "id": "odin",
@@ -2618,7 +2630,7 @@
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 1,
+      "issueCount": 4,
       "sources": [
         "comicvine",
         "metron"
@@ -2640,7 +2652,8 @@
           3,
           4
         ]
-      }
+      },
+      "issueCountInferred": true
     },
     {
       "id": "redcoat",
@@ -2660,7 +2673,7 @@
       ],
       "startYear": 2024,
       "publisher": "Image",
-      "issueCount": 19,
+      "issueCount": 22,
       "sources": [
         "comicvine",
         "metron"
@@ -2675,7 +2688,8 @@
         "data/covers/redcoat/4c45fc4a1970.jpg",
         "data/covers/redcoat/e20b20f74aae.jpg",
         "data/covers/redcoat/9c34774e16dc.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "rip-off-comix",
@@ -3198,7 +3212,7 @@
       ],
       "startYear": 2026,
       "publisher": "DC Comics",
-      "issueCount": 2,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron"
@@ -3217,7 +3231,8 @@
         "data/covers/the-deadman/4a0bf30b69d0.jpg",
         "data/covers/the-deadman/c4c3f1c66423.jpg",
         "data/covers/the-deadman/ec3ee2a52987.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-dogsitter",
@@ -3425,13 +3440,14 @@
         "comicvine",
         "metron"
       ],
-      "issueCount": 9,
+      "issueCount": 11,
       "coverImages": [
         "data/covers/the-nice-house-by-the-sea/6e3f6922cec0.jpg",
         "data/covers/the-nice-house-by-the-sea/470e1758fdfd.jpg",
         "data/covers/the-nice-house-by-the-sea/33ecda2ba801.jpg",
         "data/covers/the-nice-house-by-the-sea/008ca5409881.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-oddball-s-odyssey",
