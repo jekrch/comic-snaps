@@ -1264,6 +1264,24 @@ button,
   opacity: 0.19;
 }
 
+/* Quiet under the viewer.
+
+   The wash is the shelf's most expensive layer — a masked box holding a
+   masked, filtered, upscaled image — and once the viewer is open a dozen of
+   them are sitting under a backdrop that has already covered them. On iOS the
+   open scroll-locks the body, Safari re-expands its toolbars, the viewport
+   height changes and every row re-lays out while that backdrop is mid-fade,
+   which is enough compositing work to drop a frame of the overlay itself.
+
+   `visibility` rather than `display`: it stops the layer being rasterized
+   without disturbing layout, so the tile geometry the viewer's collapse
+   measures on the way back out is exactly where it was. At 19% opacity behind
+   a 90% backdrop the wash was contributing under 2% of what is on screen, so
+   there is nothing to see going or coming. */
+.series-bg[data-quiet="true"] {
+  visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .series-bg img {
     transition: none;

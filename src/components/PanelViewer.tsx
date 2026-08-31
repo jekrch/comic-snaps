@@ -4,7 +4,7 @@ import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
-import { setHatchViewerOpen } from "../hooks/useHatchPause";
+import { setViewerOpen } from "../hooks/useViewerOpen";
 import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
 import InfoDrawer from "./InfoDrawer";
@@ -84,6 +84,15 @@ function ViewerOverlay({
   // same shift with `animate: true` is exactly what put the slide back: by
   // then the viewer's own layout effects have measured, so the stage has a
   // computed transform at rest for the transition to run from.
+  // Hand the page back the moment the close *starts*, rather than when the
+  // viewer finally unmounts a quarter-second later: the washes and the hatch
+  // come back under a backdrop that is still up and fade out along with it,
+  // where returning them on unmount would pop them in one frame after the
+  // backdrop had already gone.
+  useEffect(() => {
+    if (closing) setViewerOpen(false);
+  }, [closing]);
+
   const applied = useRef<string | null | undefined>(undefined);
   useLayoutEffect(() => {
     const shift = drawerOpen ? "translateY(-100vh)" : graphOpen ? "translateY(100vh)" : null;
@@ -219,10 +228,11 @@ export default function PanelViewer({
     [items, overlayOpen, overViz]
   );
 
-  // Pause the background hatch animation while the viewer owns the screen.
+  // Tell the page behind to go quiet while the viewer owns the screen: the
+  // hatch stops animating and the series washes stop painting.
   useEffect(() => {
-    setHatchViewerOpen(true);
-    return () => setHatchViewerOpen(false);
+    setViewerOpen(true);
+    return () => setViewerOpen(false);
   }, []);
 
   // Keep the open panel id in the URL so the viewer is linkable. A cover has no

@@ -1,6 +1,6 @@
 import { memo, useId, useMemo, useRef } from "react";
 import type { NeighborMap } from "../adjacency";
-import { useHatchViewerOpen } from "../hooks/useHatchPause";
+import { useViewerOpen } from "../hooks/useViewerOpen";
 import FillerLabels from "./FillerLabels";
 import HatchPattern from "./hatch/HatchPattern";
 import MaskContent from "./hatch/MaskContent";
@@ -56,7 +56,7 @@ function HatchFiller({
   const size = useContainerSize(containerRef);
   const onScreen = useOnScreen(containerRef);
   const reducedMotion = usePrefersReducedMotion();
-  const viewerOpen = useHatchViewerOpen();
+  const viewerOpen = useViewerOpen();
 
   // Pick the stamp once and pin it — re-picks would visually swap mid-life.
   const stampRef = useRef<StampDef | null>(null);

@@ -4,6 +4,7 @@ import { buildCoverPanels, type SeriesRow as SeriesRowData } from "../utils/seri
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import { useNearViewport } from "../hooks/useNearViewport";
+import { useViewerOpen } from "../hooks/useViewerOpen";
 import { BLUR_COPY } from "./PanelCard";
 import HatchFiller from "./HatchFillter";
 import { ScoreBirds, formatScore } from "./ScoreMeter";
@@ -188,7 +189,26 @@ function SeriesBackdrop({ src }: { src: string }) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [fit, setFit] = useState<{ transform: string; filter: string } | null>(null);
 
+  /**
+   * A wash is the most expensive thing the shelf paints — a masked box holding
+   * a masked, filtered, upscaled image — and a dozen of them sit under the
+   * viewer once it opens, where the backdrop has already covered them.
+   *
+   * On iOS that is not free: opening the viewer locks the body to
+   * `position: fixed`, Safari re-expands its toolbars, the viewport height
+   * changes, and every row re-lays out while the backdrop is mid-fade. The
+   * washes are what makes that re-raster expensive, so they stop painting for
+   * as long as the viewer is up (`visibility: hidden` in `.series-bg`, which
+   * keeps the geometry the viewer's collapse-back-into-the-tile measures).
+   */
+  const viewerOpen = useViewerOpen();
+  const quietRef = useRef(viewerOpen);
+  quietRef.current = viewerOpen;
+
   const measure = useCallback(() => {
+    // Nothing to fit while the wash is not being painted, and the observers
+    // that call this fire hardest at exactly the moment the viewer opens.
+    if (quietRef.current) return;
     const wrap = wrapRef.current;
     const img = imgRef.current;
     if (!wrap || !img || !img.naturalWidth || !img.naturalHeight) return;
@@ -223,8 +243,19 @@ function SeriesBackdrop({ src }: { src: string }) {
     return () => ro.disconnect();
   }, [measure]);
 
+  // Whatever the row missed while it was quiet is taken once, on the way back.
+  useEffect(() => {
+    if (!viewerOpen) measure();
+  }, [viewerOpen, measure]);
+
   return (
-    <div ref={wrapRef} className="series-bg" data-fitted={fit ? "true" : undefined} aria-hidden="true">
+    <div
+      ref={wrapRef}
+      className="series-bg"
+      data-fitted={fit ? "true" : undefined}
+      data-quiet={viewerOpen ? "true" : undefined}
+      aria-hidden="true"
+    >
       <img
         ref={imgRef}
         src={panelImageUrl(src)}
