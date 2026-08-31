@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 260,
+      "id": "eightball-16-1788149843",
+      "title": "Eightball",
+      "slug": "eightball",
+      "issue": 16,
+      "year": 1995,
+      "artist": "Daniel Clowes",
+      "image": "images/eightball/issue-16-1788149843.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-08-31T04:17:26.233Z"
+    },
+    {
       "seq": 259,
       "id": "eightball-15-1788129156",
       "title": "Eightball",
@@ -229,7 +243,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -564,7 +578,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -4018,7 +4032,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
