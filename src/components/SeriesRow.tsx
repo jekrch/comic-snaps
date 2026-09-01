@@ -42,6 +42,13 @@ const MAX_COVERS = 4;
 const TILE_GAP = 4;
 
 /**
+ * Width of the dissolve at the strip's right edge, and the last stretch of
+ * travel over which it closes — the same number for both, so the fade narrows
+ * exactly as fast as the row runs out and reaches nothing at the end.
+ */
+const FADE_W = 80;
+
+/**
  * Height the strip gives up to its scrollbar, so the bar has somewhere to sit
  * that is not on top of the art. Reserved on the desktop layout only — the
  * narrow one keeps the bar hidden and the tiles take the full height — and it
@@ -393,8 +400,10 @@ function SeriesRowView({
   onJumpToParent,
 }: Props) {
   const stripRef = useRef<HTMLDivElement>(null);
-  /** The strip has more to show past its right edge, so the edge dissolves. */
-  const [masked, setMasked] = useState(false);
+  /** The strip has more to show than fits, so its right edge dissolves. */
+  const [overflows, setOverflows] = useState(false);
+  /** How far the strip can travel; recomputed on layout, not on scroll. */
+  const maxScrollRef = useRef(0);
 
   const [animateMeter] = useState(() => !meterPlayed.has(row.slug));
   useEffect(() => {
@@ -443,14 +452,31 @@ function SeriesRowView({
     [row.firstPostedAt, row.lastPostedAt],
   );
 
-  // A row that fits has no fade, which is the honest signal that there is
-  // nothing past the edge; a row scrolled to its end loses it again.
+  /**
+   * Close the dissolve over the last stretch of travel.
+   *
+   * Written straight onto the element rather than through state: this runs on
+   * every animation frame of a drag, and a row that re-rendered its whole strip
+   * to move a gradient would be re-rendering a dozen lazy-load observers under
+   * a moving finger. React only hears about `overflows`, which is a fact about
+   * the layout and does not change while scrolling.
+   */
+  const paintEdge = useCallback(() => {
+    const el = stripRef.current;
+    if (!el) return;
+    const left = Math.max(0, maxScrollRef.current - el.scrollLeft);
+    el.style.setProperty("--strip-fade", `${Math.min(FADE_W, left).toFixed(1)}px`);
+  }, []);
+
+  // A row that fits has no fade at all, which is the honest signal that there
+  // is nothing past the edge.
   const measure = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
-    const more = el.scrollWidth - el.clientWidth - el.scrollLeft;
-    setMasked(more > 2);
-  }, []);
+    maxScrollRef.current = Math.max(0, el.scrollWidth - el.clientWidth);
+    setOverflows(maxScrollRef.current > 2);
+    paintEdge();
+  }, [paintEdge]);
 
   useEffect(() => {
     const el = stripRef.current;
@@ -469,13 +495,26 @@ function SeriesRowView({
       { threshold: 0 },
     );
     io.observe(el);
-    el.addEventListener("scroll", measure, { passive: true });
+
+    // One repaint per frame at most. A touch scroll fires far more events than
+    // that, and every one of them reads `scrollLeft` — a layout flush the
+    // compositor does not owe us more than once a frame.
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        paintEdge();
+      });
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       ro.disconnect();
       io.disconnect();
-      el.removeEventListener("scroll", measure);
+      el.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
-  }, [measure, row.slug, stripHeight]);
+  }, [measure, paintEdge, row.slug, stripHeight]);
 
   const handleStripKey = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
@@ -644,7 +683,7 @@ function SeriesRowView({
           aria-label={`${row.title} panels`}
           onKeyDown={handleStripKey}
           className={`series-strip flex min-w-0 flex-1 items-stretch overflow-x-auto overflow-y-hidden ${
-            masked ? "series-strip--masked" : ""
+            overflows ? "series-strip--masked" : ""
           }`}
           style={{ height: stripHeight, gap: TILE_GAP }}
         >

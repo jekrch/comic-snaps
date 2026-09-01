@@ -1279,9 +1279,17 @@ button,
    header un-sticks and takes its `backdrop-filter` with it, and the compositor
    drops a frame — of the page, of the overlay, intermittently either.
 
-   Nothing here tries to make that cheap enough to survive. The page simply
-   stops being drawn, so a dropped frame has nothing to expose but the app's
-   own near-black surface, which is what the backdrop was fading to anyway.
+   Nothing here tries to make that cheap enough to survive. The page goes to
+   nothing instead, so a dropped frame has nothing to expose but the app's own
+   near-black surface — which is what the backdrop was fading to anyway.
+
+   It goes there on the backdrop's own clock rather than cutting: the same
+   duration, the same easing, read off the viewer's variable so the two stay
+   in step if it ever changes. What the reader sees is the dimming they always
+   saw, taken the rest of the way down instead of stopping at the 10% ghost a
+   90% scrim leaves. `visibility` waits out the fade before it lands, and only
+   in that direction — coming back it lifts immediately, so the page rises
+   under the closing backdrop the same way it fell under the opening one.
 
    `visibility` rather than `display`: the boxes stay exactly where they are,
    so the tile the viewer flies out of — and collapses back into — is still
@@ -1290,9 +1298,20 @@ button,
    Touch only. On a desktop none of the above happens, and the page ghosting
    faintly through the backdrop is the look, not an artefact. */
 @media (hover: none) and (pointer: coarse) {
+  header,
+  main {
+    transition:
+      opacity var(--rvl-anim-duration, 250ms) ease-out,
+      visibility 0s;
+  }
+
   .viewer-open header,
   .viewer-open main {
+    opacity: 0;
     visibility: hidden;
+    transition:
+      opacity var(--rvl-anim-duration, 250ms) ease-out,
+      visibility 0s var(--rvl-anim-duration, 250ms);
   }
 }
 
@@ -1309,12 +1328,17 @@ button,
    there is not — the cut panel is the affordance, which is why there are no
    chevrons here (docs/series-view-plan.md §1.3). */
 .series-strip {
-  scroll-snap-type: x proximity;
   /* Hidden by default: a touch strip is scrolled by dragging it, and a bar
      under every row would be a second stack of horizontal lines in a view that
      is already a stack of them. The desktop layout takes one back below. */
   scrollbar-width: none;
   -ms-overflow-style: none;
+  /* A flung strip that runs out of row must stop there. Without this the
+     leftover momentum is handed to the page behind it, so a drag to the end of
+     a row finishes by dragging the shelf — or, at the outer edges, by arming
+     the browser's own back-swipe. */
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .series-strip::-webkit-scrollbar {
@@ -1337,6 +1361,20 @@ button,
   .series-strip {
     scrollbar-width: thin;
     scrollbar-color: rgba(232, 228, 223, 0.22) transparent;
+  }
+
+  /* Snapping is for the discrete inputs — a wheel notch or an arrow press
+     lands on a tile edge rather than mid-panel. A finger is not discrete: the
+     same proximity rule catches the fling, arrests the momentum and yanks the
+     strip to the nearest edge, which is what makes a drag feel rigid and
+     stepped. So the touch layout gets free scrolling and the tiles keep their
+     alignment only where something is stepping them. */
+  .series-strip {
+    scroll-snap-type: x proximity;
+  }
+
+  .series-strip > * {
+    scroll-snap-align: start;
   }
 
   .series-strip::-webkit-scrollbar {
@@ -1371,15 +1409,21 @@ button,
   }
 }
 
-.series-strip > * {
-  scroll-snap-align: start;
-}
-
-/* Applied only while there is something past the edge — its absence is the
-   honest signal that the row fits. */
+/* Applied whenever the row overflows at all — a property of the row, not of
+   where it is scrolled to, so the mask is never switched on and off under a
+   moving finger. What the scroll drives is `--strip-fade`, the width of the
+   dissolve, which `SeriesRow` closes to zero over the last stretch of travel:
+   the cut edge softens away as the row runs out instead of popping off at a
+   threshold. A row that fits never gets the class, so its absence is still the
+   honest signal that there is nothing past the edge. */
 .series-strip--masked {
-  mask-image: linear-gradient(to right, #000 calc(100% - 80px), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 80px), transparent 100%);
+  --strip-fade: 80px;
+  mask-image: linear-gradient(to right, #000 calc(100% - var(--strip-fade)), transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--strip-fade)),
+    transparent 100%
+  );
 }
 
 .series-strip:focus-visible {

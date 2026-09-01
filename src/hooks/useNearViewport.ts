@@ -22,7 +22,13 @@ function getObserver(): IntersectionObserver {
         }
       }
     },
-    { rootMargin: `${PRELOAD_MARGIN}px 0px ${PRELOAD_MARGIN}px 0px` }
+    // Horizontal margin as well as vertical: the series shelf's strips run off
+    // the right of the window, and a tile parked out there is one the observer
+    // would otherwise first notice as it crosses the edge mid-drag — decoding
+    // and painting inside the gesture. This is also what the synchronous check
+    // below has always done, which tests vertical proximity only and so treats
+    // anything off to the side as near.
+    { rootMargin: `${PRELOAD_MARGIN}px` }
   );
   return observer;
 }

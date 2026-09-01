@@ -33,7 +33,6 @@ interface Props {
  */
 function ViewerOverlay({
   panel,
-  panels,
   allPanels,
   drawerOpen,
   graphOpen,
@@ -49,7 +48,6 @@ function ViewerOverlay({
   setContentShift,
 }: {
   panel: Panel;
-  panels: Panel[];
   allPanels: Panel[];
   drawerOpen: boolean;
   graphOpen: boolean;
@@ -130,9 +128,13 @@ function ViewerOverlay({
         overViz={overViz}
       />
 
+      {/* The graph always searches the whole library, never the group the
+          viewer is paging through: a series opened off the shelf hands the
+          viewer just that series, and neighbors drawn from it would only ever
+          be the same book's other panels. */}
       <SimilarityGraph
         panel={panel}
-        allPanels={panels}
+        allPanels={allPanels}
         open={graphOpen}
         closing={closing}
         topOffset={topOffset}
@@ -434,7 +436,6 @@ export default function PanelViewer({
       renderOverlay={(ctx) => (
         <ViewerOverlay
           panel={panel}
-          panels={panels}
           allPanels={allPanels}
           drawerOpen={drawerOpen}
           graphOpen={graphOpen}
