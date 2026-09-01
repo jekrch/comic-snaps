@@ -40,11 +40,11 @@ const VisualizerOverlay = lazy(() => import("./components/viz/VisualizerOverlay"
  * in.
  *
  * It has to outlast the exit *and* the tail of its stagger, or the last few
- * objects are cut off mid-flight by the unmount. 180ms of travel plus five
- * steps of 18ms; both figures live in `.view-swap` in index.css, and the three
+ * objects are cut off mid-flight by the unmount. 150ms of travel plus five
+ * steps of 14ms; both figures live in `.view-swap` in index.css, and the three
  * move together.
  */
-const VIEW_LEAVE_MS = 270;
+const VIEW_LEAVE_MS = 220;
 
 /** Read at click time, so the swap can skip its own timers rather than just
  *  its transitions — a zeroed CSS duration with a live timeout behind it is
@@ -590,6 +590,13 @@ export default function App() {
     layoutReadyRef.current = true;
     setImagesLoaded(true);
     setIsFirstLoad(false);
+    // The page's first sight of the gallery is an arrival like any other, so it
+    // gets the same one: the cards come in off the left rail rather than simply
+    // being there once the fade is over. Set here rather than in an effect on
+    // `imagesLoaded` so it lands in the same commit — a frame later, the
+    // objects would be painted at rest first and have to jump back to the rail
+    // to start.
+    if (!prefersReducedMotion()) setViewPhase("entering");
   }, []);
 
   const handleOpenPanel = useCallback((panel: Panel) => {
@@ -715,7 +722,7 @@ export default function App() {
         {status === "ready" && panels.length === 0 && imagesLoaded && <EmptyState />}
         {status === "ready" && panels.length > 0 && (
           <div
-            className="transition-opacity duration-700 ease-out"
+            className="transition-opacity duration-500 ease-out"
             style={{ opacity: imagesLoaded ? 1 : 0 }}
           >
             {/* The wall is unmounted rather than hidden on a toggle, so the two

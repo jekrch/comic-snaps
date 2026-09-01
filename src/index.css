@@ -1734,15 +1734,16 @@ button,
 /* The exit is quicker and eases *in*, so the objects accelerate away rather
    than easing to a halt somewhere off the page. Its wave is tighter too: the
    tail of it is time the swap has to wait through before it can mount the
-   other view. 180ms + five steps of 18ms is what VIEW_LEAVE_MS in App.tsx
-   waits for — if either figure moves, the other has to follow, or the last
-   stragglers are cut off mid-flight. */
+   other view, which is why both figures are kept as short as the motion will
+   bear. 150ms + five steps of 14ms is what VIEW_LEAVE_MS in App.tsx waits for
+   — if either moves, it has to follow, or the last stragglers are cut off
+   mid-flight. */
 .view-swap.is-leaving .swap-card,
 .view-swap.is-leaving .swap-row {
   opacity: 0;
-  transition-duration: 180ms;
+  transition-duration: 150ms;
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-  transition-delay: calc(var(--d, 0) * 18ms);
+  transition-delay: calc(var(--d, 0) * 14ms);
 }
 
 .view-swap.is-leaving .swap-card {
