@@ -101,7 +101,7 @@ export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
           ref={birdRef}
           size={70}
           strokeWidth={1.5}
-          className="ml-6 stroke-[#8d422f] bird-base"
+          className="ml-6 stroke-rust bird-base"
           style={{ pointerEvents: "none" }}
         />
       </div>
@@ -123,7 +123,7 @@ export default function BirdIcon({ ref, onIntroComplete }: BirdIconProps) {
           ref={birdMaskedRef}
           size={70}
           strokeWidth={1.5}
-          className="ml-6 stroke-[#8d422f] bird-base"
+          className="ml-6 stroke-rust bird-base"
           style={{ pointerEvents: "none" }}
           aria-hidden
         />

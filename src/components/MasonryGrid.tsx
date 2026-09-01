@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect, useLayoutEffect, useMemo } from "react";
+import type { CSSProperties } from "react";
 import type { Panel } from "../types";
 import type { SortMode } from "../utils/sorting";
 import type { Filters } from "../utils/filtering";
@@ -14,6 +15,27 @@ import { resolveNeighbors } from "../adjacency";
 import type { NeighborMap } from "../adjacency";
 
 const GAP = 4;
+
+/**
+ * Which step of the view swap's wave a card sits on: its column plus its
+ * distance below the top of the viewport, so the wall comes apart (and back
+ * together) as a diagonal running out of the top-left corner of what is
+ * actually on screen rather than all at once.
+ *
+ * Measured from the viewport and not from the page, because the render band
+ * reaches 2400px above it: anchored to the page, a reader scrolled halfway
+ * down would have every card they can see pinned to the same late step, and
+ * the wave would play out entirely off screen. Capped for the same reason it
+ * is short — its tail is dead time the swap has to wait through.
+ */
+const STAGGER_BAND = 420;
+const STAGGER_MAX = 5;
+
+function staggerStep(x: number, y: number, colWidth: number, viewTop: number) {
+  const col = colWidth > 0 ? Math.round(x / (colWidth + GAP)) : 0;
+  const down = Math.max(0, Math.floor((y - viewTop) / STAGGER_BAND));
+  return Math.min(col + down, STAGGER_MAX);
+}
 const DEFAULT_ASPECT = 3 / 4;
 const WIDE_THRESHOLD = 1.4;
 
@@ -396,7 +418,12 @@ export default function MasonryGrid({
     }
   }, [panels]);
 
-  useEffect(() => {
+  // Before paint, not after: on a mount the first frame would otherwise be an
+  // empty container with the cards arriving a frame later — which the view swap
+  // turns from a flicker into a real fault, since the cards would miss the
+  // arrival they are supposed to animate, and the geometry the swap measures
+  // would be a column width short.
+  useLayoutEffect(() => {
     layout();
     window.addEventListener("resize", layout);
     return () => window.removeEventListener("resize", layout);
@@ -486,6 +513,8 @@ export default function MasonryGrid({
   }, [selectedId]);
 
   const lastColX = (colCount - 1) * (colWidth + GAP);
+  /** Where the swap's wave starts — the top of the viewport, near enough. */
+  const waveTop = viewport.bucket * SCROLL_BUCKET;
 
   useEffect(() => {
     if (!onPanelPositions || placed.length === 0) return;
@@ -501,6 +530,7 @@ export default function MasonryGrid({
         <div
           ref={filterRef}
           className="absolute top-0 left-0"
+          data-persist="filter"
           style={{ width: colWidth > 0 ? `${colWidth}px` : undefined }}
         >
           <FilterControl
@@ -518,6 +548,7 @@ export default function MasonryGrid({
           <div
             ref={sortRef}
             className="absolute top-0"
+            data-persist="sort"
             style={{
               left: `${lastColX}px`,
               width: colWidth > 0 ? `${colWidth}px` : undefined,
@@ -532,13 +563,16 @@ export default function MasonryGrid({
             return (
               <div
                 key={item.key}
-                className="absolute"
-                style={{
-                  left: `${item.x}px`,
-                  top: `${item.y}px`,
-                  width: `${item.w}px`,
-                  height: `${item.h}px`,
-                }}
+                className="absolute swap-card"
+                style={
+                  {
+                    left: `${item.x}px`,
+                    top: `${item.y}px`,
+                    width: `${item.w}px`,
+                    height: `${item.h}px`,
+                    "--d": staggerStep(item.x, item.y, colWidth, waveTop),
+                  } as CSSProperties
+                }
               >
                 <HatchFiller
                   assignedStamp={item.assignedStamp}
@@ -551,12 +585,15 @@ export default function MasonryGrid({
           return (
             <div
               key={item.panel.id}
-              className="absolute"
-              style={{
-                left: `${item.x}px`,
-                top: `${item.y}px`,
-                width: `${item.w}px`,
-              }}
+              className="absolute swap-card"
+              style={
+                {
+                  left: `${item.x}px`,
+                  top: `${item.y}px`,
+                  width: `${item.w}px`,
+                  "--d": staggerStep(item.x, item.y, colWidth, waveTop),
+                } as CSSProperties
+              }
             >
               <PanelCard
                 panel={item.panel}
@@ -569,7 +606,9 @@ export default function MasonryGrid({
           );
         })}
       </div>
-      <FooterPyramid />
+      <div className="swap-tail">
+        <FooterPyramid />
+      </div>
     </>
   );
 }

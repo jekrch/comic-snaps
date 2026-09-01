@@ -18,6 +18,11 @@ const PIXEL_SIZE = 64;
 const GAP_EM = 1;
 const PILLAR_EM = 3;
 const PARALLAX = 0;
+/** How long the strip is held after its positions are cleared. Matches the
+ *  `.echo-field` fade in index.css — long enough to read as the strip receding
+ *  rather than switching off, short enough to be gone before the view that
+ *  replaced it has finished arriving. */
+const FADE_MS = 420;
 
 export default function BackgroundEchoes({
   panelPositions,
@@ -32,6 +37,18 @@ export default function BackgroundEchoes({
   );
   const [scrollY, setScrollY] = useState(0);
   const rafRef = useRef(0);
+  /** The last set of positions the wall reported, kept one fade past the
+   *  moment they are cleared. */
+  const [held, setHeld] = useState<{ panel: Panel; y: number; h: number }[]>(panelPositions);
+
+  useEffect(() => {
+    if (panelPositions.length > 0) {
+      setHeld(panelPositions);
+      return;
+    }
+    const t = setTimeout(() => setHeld([]), FADE_MS);
+    return () => clearTimeout(t);
+  }, [panelPositions]);
 
   useEffect(() => {
     function measure() {
@@ -70,6 +87,16 @@ export default function BackgroundEchoes({
     };
   }, []);
 
+  // The echoes are the wall's own texture, and the wall can leave: switching to
+  // the shelf clears the positions out from under them. Dropping the strip in a
+  // single frame is exactly the blink the view swap was built to avoid, so the
+  // last set is held on screen and faded out instead — and, because `held`
+  // lands a commit after the positions do, the same opacity covers the arrival:
+  // the container is painted empty at zero first, then the echoes fade up into
+  // it rather than appearing at full strength.
+  const lit = panelPositions.length > 0 && held.length > 0;
+  const shown = panelPositions.length > 0 ? panelPositions : held;
+
   if (viewportWidth < MIN_VIEWPORT_WIDTH || !contentRect) return null;
 
   const sideWidth = Math.min(contentRect.left, contentRect.right);
@@ -88,14 +115,12 @@ export default function BackgroundEchoes({
 
   // Compute the gallery extent so echoes stay within bounds
   const galleryHeight =
-    panelPositions.length > 0
-      ? Math.max(...panelPositions.map((p) => p.y + p.h))
-      : 0;
+    shown.length > 0 ? Math.max(...shown.map((p) => p.y + p.h)) : 0;
 
   const echoes: EchoDef[] = [];
-  for (let i = 0; i < panelPositions.length; i++) {
+  for (let i = 0; i < shown.length; i++) {
     if (i % ECHO_INTERVAL !== 1) continue;
-    const pos = panelPositions[i];
+    const pos = shown[i];
     if (pos.panel.blur) continue;
     echoes.push({
       panel: pos.panel,
@@ -107,7 +132,7 @@ export default function BackgroundEchoes({
 
   return (
     <div
-      className="pointer-events-none"
+      className="pointer-events-none echo-field"
       style={{
         position: "absolute",
         top: contentRect.top,
@@ -116,6 +141,7 @@ export default function BackgroundEchoes({
         height: galleryHeight,
         overflow: "hidden",
         zIndex: 0,
+        opacity: lit ? 1 : 0,
       }}
     >
       {echoes.map((echo, idx) => {

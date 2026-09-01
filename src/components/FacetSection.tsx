@@ -31,12 +31,12 @@ export default function FacetSection({
           hover:bg-surface-hover transition-colors duration-100
         "
       >
-        <span className="font-display text-[10px] tracking-widest text-accent uppercase">
+        <span className="font-display text-[10px] tracking-widest text-rust-ink uppercase">
           {title}
         </span>
         <span className="flex items-center gap-1.5">
           {selected.size > 0 && (
-            <span className="font-display text-[9px] text-accent tabular-nums">
+            <span className="font-display text-[9px] text-rust-ink tabular-nums">
               {selected.size}
             </span>
           )}
@@ -69,21 +69,21 @@ export default function FacetSection({
                     transition-colors duration-100
                     cursor-pointer
                     ${isActive
-                      ? "text-accent bg-accent/8"
+                      ? "text-rust-ink bg-rust-ink/8"
                       : "text-ink-muted hover:text-ink hover:bg-surface-hover"
                     }
                   `}
                 >
                   <span className="flex items-center gap-1.5 min-w-0">
                     {isActive && (
-                      <span className="inline-block w-1 h-1 rounded-full bg-accent flex-shrink-0" />
+                      <span className="inline-block w-1 h-1 rounded-full bg-rust-ink flex-shrink-0" />
                     )}
                     <span className="font-display text-[10px] tracking-wide uppercase truncate">
                       {renderLabel ? renderLabel(item.label) : item.label}
                     </span>
                   </span>
                   <span
-                    className={`font-display text-[9px] tabular-nums flex-shrink-0 ${isActive ? "text-accent/60" : "text-ink-faint"
+                    className={`font-display text-[9px] tabular-nums flex-shrink-0 ${isActive ? "text-rust-ink/60" : "text-ink-faint"
                       }`}
                   >
                     {item.count}

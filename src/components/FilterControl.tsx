@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import type { Panel } from "../types";
 import type { Filters, FilterSetKey } from "../utils/filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
@@ -9,6 +9,10 @@ import { ChevronDown, Search, X, XCircle } from "lucide-react";
 import VizLaunchButton from "./viz/VizLaunchButton";
 import ViewControl from "./ViewControl";
 import type { GalleryView } from "./ViewControl";
+
+/** The expanded body's collapse, shared by the transition below and by the
+ *  handover in the view plate — the two have to agree. */
+const CLOSE_MS = 200;
 
 interface FilterControlProps {
   panels: Panel[];
@@ -32,6 +36,15 @@ export default function FilterControl({
   onViewChange,
 }: FilterControlProps) {
   const [open, setOpen] = useState(false);
+  /** A view switch waiting for the list to finish closing (see below). */
+  const handoverRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (handoverRef.current !== null) window.clearTimeout(handoverRef.current);
+    },
+    []
+  );
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
@@ -153,7 +166,7 @@ export default function FilterControl({
         style={{
           display: "grid",
           gridTemplateRows: open ? "1fr" : "0fr",
-          transition: "grid-template-rows 200ms ease-out",
+          transition: `grid-template-rows ${CLOSE_MS}ms ease-out`,
         }}
       >
         <div className="overflow-hidden">
@@ -169,12 +182,12 @@ export default function FilterControl({
                   className="
                     flex items-center gap-1.5
                     font-display text-[10px] tracking-wider uppercase
-                    text-white/60 hover:text-accent
+                    text-white/60 hover:text-rust-ink
                     transition-colors duration-100
                     cursor-pointer
                   "
                 >
-                  <XCircle size={12} className="text-accent" />
+                  <XCircle size={12} className="text-rust-ink" />
                   CLEAR {count} {count === 1 ? "FILTER" : "FILTERS"}
                 </button>
               </div>
@@ -259,33 +272,48 @@ export default function FilterControl({
               onToggle={(v) => toggleInSet("postedBy", v)}
             />
 
-            {/* Actions on the narrowed set, so they close the list */}
+            {/* Actions on the narrowed set, so they close the list. Two
+                plates in a gutter rather than two more rows of list type —
+                what you can do with the narrowed set shouldn't look like more
+                ways to narrow it. */}
             {(onLaunchViz || (view && onViewChange)) && (
-              <div
-                className="mx-3 my-1"
-                style={{
-                  height: "1px",
-                  background: "var(--color-border, rgba(74,71,69,0.25))",
-                }}
-              />
-            )}
-            {view && onViewChange && (
-              <ViewControl
-                view={view}
-                onViewChange={(next) => {
-                  setOpen(false);
-                  onViewChange(next);
-                }}
-              />
-            )}
-            {onLaunchViz && (
-              <VizLaunchButton
-                onLaunch={() => {
-                  setOpen(false);
-                  onLaunchViz();
-                }}
-                disabled={vizDisabled}
-              />
+              <>
+                <div
+                  className="mx-3 mt-1"
+                  style={{
+                    height: "1px",
+                    background: "var(--color-border, rgba(74,71,69,0.25))",
+                  }}
+                />
+                <div className="flex gap-1.5 px-3 pt-2.5 pb-3">
+                  {view && onViewChange && (
+                    <ViewControl
+                      view={view}
+                      onViewChange={(next) => {
+                        setOpen(false);
+                        // The switch is handed over only once the list has
+                        // finished collapsing. Sent immediately, the page's own
+                        // leaving fade starts on top of the collapse and the
+                        // list darkens as it closes — two things happening to
+                        // it at once, when only one of them is about the list.
+                        handoverRef.current = window.setTimeout(() => {
+                          handoverRef.current = null;
+                          onViewChange(next);
+                        }, CLOSE_MS);
+                      }}
+                    />
+                  )}
+                  {onLaunchViz && (
+                    <VizLaunchButton
+                      onLaunch={() => {
+                        setOpen(false);
+                        onLaunchViz();
+                      }}
+                      disabled={vizDisabled}
+                    />
+                  )}
+                </div>
+              </>
             )}
           </div>
         </div>

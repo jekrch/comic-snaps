@@ -49,6 +49,16 @@
   --color-ink-faint: #686563;
   --color-accent: #e85d3a;
   --color-accent-dim: #c44d2f;
+  /* The bird logo's rust, as the mark itself is stroked. */
+  --color-rust: #8d422f;
+  /* The same rust, optically matched for small text. Two things make the logo
+     read brighter than 9-10px type at an identical hex: the header draws the
+     bird twice (solid layer plus hatched layer) so its antialiased edges
+     double up, and at 9-10px Space Mono the glyph stems are sub-pixel wide, so
+     antialiasing never lets them reach full ink coverage. Menu text therefore
+     needs ~0.08 more OKLab L to sit at the same apparent brightness; chroma is
+     scaled with it so the lift stays rust instead of going dusty pink. */
+  --color-rust-ink: #af533c;
 }
 
 @layer base {
@@ -1464,4 +1474,347 @@ button,
     transparent 0 7.5px,
     #fff 7.5px 9px
   );
+}
+
+/* ─── Action plates ──────────────────────────────────────────────────────────
+   The two actions on the narrowed set — the view switch and the visualizer —
+   at the foot of the filter card, as a two-up strip of inked plates in a
+   gutter. They were two more rows of list type with a glyph in front, which
+   made them read as further filtering rather than as the things you do with
+   what you have narrowed to.
+
+   The plate is the site's own unit: a ruled panel, a caption box in the corner,
+   and under the key line a second impression landing a hair off register. Every
+   size here is small on purpose — the strip is no taller than the two rows it
+   replaced. */
+
+.action-plate {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: none;
+  isolation: isolate;
+}
+
+/* The misregistration. Nothing else about the plates says "printed" as cheaply
+   as one pixel of colour showing past the black, and widening it is the whole
+   hover state — no lift, no fill, no ring. */
+.action-plate-ghost {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  transform: translate(1.5px, 1.5px);
+  opacity: 0.45;
+  pointer-events: none;
+  transition:
+    transform 200ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 200ms ease-out;
+}
+
+.action-plate-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-ink-faint) 55%, transparent);
+  transition: border-color 200ms ease-out;
+}
+
+.action-plate:hover:not(:disabled) .action-plate-ghost,
+.action-plate:focus-visible:not(:disabled) .action-plate-ghost {
+  transform: translate(3.5px, 3.5px);
+  opacity: 0.95;
+}
+
+.action-plate:hover:not(:disabled) .action-plate-frame,
+.action-plate:focus-visible:not(:disabled) .action-plate-frame {
+  border-color: color-mix(in srgb, var(--color-ink) 60%, transparent);
+}
+
+.action-plate:focus-visible {
+  outline: none;
+}
+
+/* Nothing survives the filters, so there is no run to start. */
+.action-plate:disabled {
+  opacity: 0.26;
+  cursor: default;
+}
+
+/* The drawing sits above the caption's line rather than being centred in the
+   whole plate, so the caption reads as sitting on the art instead of in it. */
+.action-plate-art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 7px 17px 7px;
+}
+
+/* A caption box, filled and ruled on the two sides that face the art, with the
+   frame's own corner doing the rest. */
+.action-plate-caption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 3px 6px 2px 5px;
+  background: var(--color-surface);
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-faint) 55%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--color-ink-faint) 55%, transparent);
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink) 62%, transparent);
+  transition: color 160ms ease-out, border-color 200ms ease-out;
+}
+
+.action-plate:hover:not(:disabled) .action-plate-caption,
+.action-plate:focus-visible:not(:disabled) .action-plate-caption {
+  color: var(--color-accent);
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
+/* ── The view plate: a miniature of where the switch lands ───────────────────
+   The same six blocks hold both arrangements, so a click re-packs them from
+   the wall's uneven columns into the shelf's rows instead of swapping one
+   drawing for another. The per-block delay is the masonry's own settle. */
+
+.plate-grid {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+}
+
+.plate-block {
+  position: absolute;
+  background: color-mix(in srgb, var(--color-ink-faint) 60%, transparent);
+  transition:
+    left 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    top 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    width 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    height 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    background-color 220ms ease-out;
+  transition-delay: calc(var(--i) * 34ms);
+}
+
+/* Hovering inks the plate, left column first — the destination filling in. */
+.action-plate:hover:not(:disabled) .plate-block,
+.action-plate:focus-visible:not(:disabled) .plate-block {
+  background: color-mix(in srgb, var(--color-accent) 78%, transparent);
+}
+
+/* ── The visualize plate: the compositing model, performed ───────────────────
+   Three discs on `screen` over the plate's own black, so the overlaps really
+   are brighter than either disc — superimposed panels, blended. `isolation`
+   keeps the blend inside the mark. */
+
+.plate-blend {
+  position: relative;
+  width: 40px;
+  height: 30px;
+  isolation: isolate;
+}
+
+.plate-disc {
+  position: absolute;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  transition: opacity 220ms ease-out;
+}
+
+.plate-disc-a {
+  left: 0;
+  top: 0;
+  background: var(--color-accent-dim);
+}
+
+.plate-disc-b {
+  left: 19px;
+  top: 0;
+  background: var(--color-accent);
+}
+
+.plate-disc-c {
+  left: 9.5px;
+  top: 9px;
+  background: color-mix(in srgb, var(--color-ink-muted) 72%, transparent);
+}
+
+.action-plate:hover:not(:disabled) .plate-disc,
+.action-plate:focus-visible:not(:disabled) .plate-disc {
+  opacity: 1;
+  animation: plateDiscDrift 7s ease-in-out infinite;
+}
+
+/* Each disc runs the same slow loop from a different phase, so the three
+   never travel as one object. Kept to a couple of pixels and seven seconds:
+   the door to a long slow run should not be twitching. */
+.action-plate:hover:not(:disabled) .plate-disc-b {
+  animation-delay: -2.4s;
+}
+
+.action-plate:hover:not(:disabled) .plate-disc-c {
+  animation-delay: -4.8s;
+}
+
+@keyframes plateDiscDrift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(2.5px, -1.5px);
+  }
+  66% {
+    transform: translate(-1.5px, 2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-plate-ghost,
+  .plate-block {
+    transition-duration: 1ms;
+    transition-delay: 0ms;
+  }
+
+  .action-plate:hover:not(:disabled) .plate-disc,
+  .action-plate:focus-visible:not(:disabled) .plate-disc {
+    animation: none;
+  }
+}
+
+/* ── The way across, in motion ───────────────────────────────────────────────
+   The wall and the shelf are the same panels read two ways: packed into
+   columns, or lined up one row per series. The switch has to say that, and a
+   page-wide dissolve cannot — everything goes at once, so nothing is seen to
+   go anywhere. The objects move instead, and they move along one axis: the
+   left rail of the page.
+
+   The two control cards are exempt: they persist across the switch and are
+   moved rather than animated from here (App.tsx). Leaving the wall, the rest of
+   the cards gather off to the left, the near column first,
+   the wave running out of the top-left corner diagonally (`--d`, set by the
+   grid from a card's column and its distance down the page). Arriving at the
+   shelf, the rows come in from that same edge, dealt from the top down. Going
+   back, the rows retract the way they came and the cards spill out of it into
+   their columns again. One hinge, two readings of what is hanging off it.
+
+   `.view-swap` itself does nothing — no opacity, no transform. If it dimmed as
+   a whole it would take the motion's legibility with it, and a transform here
+   would make the wall's absolute positioning a containing block for anything
+   fixed inside it. */
+
+.view-swap.is-leaving,
+.view-swap.is-entering {
+  /* Whatever is going is no longer clickable — a card taking a tap on its way
+     out would open a panel from a view the reader has already left. */
+  pointer-events: none;
+}
+
+/* The settle: what every object animates on when the phase class comes off and
+   they run to their resting state. Slower than the exit — arriving is the half
+   worth watching. */
+.swap-card,
+.swap-row,
+.swap-tail {
+  transition:
+    opacity 420ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--d, 0) * 30ms);
+}
+
+/* The exit is quicker and eases *in*, so the objects accelerate away rather
+   than easing to a halt somewhere off the page. Its wave is tighter too: the
+   tail of it is time the swap has to wait through before it can mount the
+   other view. 180ms + five steps of 18ms is what VIEW_LEAVE_MS in App.tsx
+   waits for — if either figure moves, the other has to follow, or the last
+   stragglers are cut off mid-flight. */
+.view-swap.is-leaving .swap-card,
+.view-swap.is-leaving .swap-row {
+  opacity: 0;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  transition-delay: calc(var(--d, 0) * 18ms);
+}
+
+.view-swap.is-leaving .swap-card {
+  /* Toward the rail, and a little downward with it — the wall settling as it
+     is taken apart. */
+  transform: translate(-30px, 10px);
+}
+
+.view-swap.is-leaving .swap-row {
+  transform: translateX(-48px);
+}
+
+/* The arrival's start state, painted for one frame before the class comes off.
+   No transition into it — it is where the settle begins, not a step of its
+   own. */
+.view-swap.is-entering .swap-card {
+  opacity: 0;
+  transform: translate(-30px, 10px);
+  transition: none;
+}
+
+.view-swap.is-entering .swap-row {
+  opacity: 0;
+  transform: translateX(-48px);
+  transition: none;
+}
+
+/* The filter and the sort are not here. They are the same two cards in both
+   views, holding the same state in the same place, and fading them said the
+   opposite — that they had gone away and something else had arrived. They are
+   carried across the swap instead and moved into their new geometry: see
+   `data-persist` and the FLIP in App.tsx.
+
+   What is left is the tail piece at the foot of the page, which is decoration
+   rather than an object anyone is holding on to. No travel, no wave — it just
+   goes and comes back. */
+.view-swap.is-leaving .swap-tail {
+  opacity: 0;
+  transition-duration: 150ms;
+  transition-delay: 0ms;
+}
+
+.view-swap.is-entering .swap-tail {
+  opacity: 0;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap-card,
+  .swap-row,
+  .swap-tail,
+  .view-swap.is-leaving .swap-card,
+  .view-swap.is-leaving .swap-row,
+  .view-swap.is-leaving .swap-tail,
+  .view-swap.is-entering .swap-card,
+  .view-swap.is-entering .swap-row,
+  .view-swap.is-entering .swap-tail {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* The wall's echo strip, faded rather than switched. Its opacity is set on the
+   element (it is driven by whether the wall is reporting positions); the timing
+   lives here so reduced motion can take it out. See BackgroundEchoes. */
+.echo-field {
+  transition: opacity 420ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .echo-field {
+    transition: none;
+  }
 }

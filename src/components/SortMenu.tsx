@@ -85,12 +85,12 @@ export default function SortMenu<T extends string>({
                     font-display text-[11px] tracking-wider uppercase
                     transition-colors duration-100
                     cursor-pointer
-                    ${isActive ? "text-accent" : "text-ink-muted hover:text-ink"}
+                    ${isActive ? "text-rust-ink" : "text-ink-muted hover:text-ink"}
                   `}
                 >
                   <span className="flex items-center justify-end gap-2">
                     {isActive && (
-                      <span className="inline-block w-1 h-1 rounded-full bg-accent flex-shrink-0" />
+                      <span className="inline-block w-1 h-1 rounded-full bg-rust-ink flex-shrink-0" />
                     )}
                     {opt.label}
                     {renderBadge?.(opt.value)}

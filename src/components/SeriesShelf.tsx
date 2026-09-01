@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import type { Panel } from "../types";
 import type { Filters } from "../utils/filtering";
 import type { SeriesRow as SeriesRowData } from "../utils/seriesRollup";
@@ -196,14 +197,20 @@ export default function SeriesShelf({
   }, [rows.length, layoutReady, onLayoutReady]);
 
   const visible = rows.slice(band.first, band.last + 1);
+  // Where the view swap's wave starts: the first row at or below the top of
+  // the viewport, not the first one mounted — the band reaches 2400px above it,
+  // and a wave anchored there would be over before it reached the screen.
+  const waveFirst = Math.max(band.first, Math.floor((viewport.bucket * SCROLL_BUCKET) / stride));
 
   return (
     <>
       {/* The same two cards the wall puts in its first and last columns, in the
           same order and the same idiom — this view just lays them out itself
-          rather than packing them into a masonry. */}
+          rather than packing them into a masonry. `data-persist` is that claim
+          made literal: on a view switch they are not repainted, they are moved
+          from wherever the other view was holding them (see App). */}
       <div className="flex items-start justify-between gap-3 pb-4">
-        <div className="w-45 shrink-0 sm:w-55">
+        <div className="w-45 shrink-0 sm:w-55" data-persist="filter">
           <FilterControl
             panels={allPanels}
             filters={filters}
@@ -214,7 +221,7 @@ export default function SeriesShelf({
             onViewChange={onViewChange}
           />
         </div>
-        <div className="w-45 shrink-0 sm:w-55">
+        <div className="w-45 shrink-0 sm:w-55" data-persist="sort">
           <SortMenu
             headerLabel={`BY ${SERIES_SORT_OPTIONS.find((o) => o.value === sort)?.label ?? sort}`}
             options={SERIES_SORT_OPTIONS}
@@ -235,15 +242,20 @@ export default function SeriesShelf({
           return (
             <div
               key={row.slug}
-              className="absolute inset-x-0"
-              style={{
-                top: index * stride,
-                height: rowH,
-                // Horizontal overflow in a row nobody is looking at costs
-                // nothing (§7).
-                contentVisibility: "auto",
-                containIntrinsicSize: `auto ${rowH}px`,
-              }}
+              className="absolute inset-x-0 swap-row"
+              style={
+                {
+                  top: index * stride,
+                  height: rowH,
+                  // Horizontal overflow in a row nobody is looking at costs
+                  // nothing (§7).
+                  contentVisibility: "auto",
+                  containIntrinsicSize: `auto ${rowH}px`,
+                  // Its step of the view swap's wave — the shelf is dealt from
+                  // the top down. Capped for the same reason the wall's is.
+                  "--d": Math.min(Math.max(0, index - waveFirst), 5),
+                } as CSSProperties
+              }
             >
               <SeriesRow
                 row={row}
@@ -260,7 +272,11 @@ export default function SeriesShelf({
         })}
       </div>
 
-      {rows.length > 0 && <FooterPyramid />}
+      {rows.length > 0 && (
+        <div className="swap-tail">
+          <FooterPyramid />
+        </div>
+      )}
     </>
   );
 }

@@ -1,4 +1,5 @@
-import { Rows3, LayoutGrid } from "lucide-react";
+import type { CSSProperties } from "react";
+import ActionPlate from "./ActionPlate";
 
 /**
  * Two readings of the same filtered set: the wall, one card per panel, and the
@@ -12,6 +13,38 @@ interface Props {
 }
 
 /**
+ * A block in the plate's miniature, in percent of the art box. The two
+ * arrangements hold the same six blocks in the same order, so switching views
+ * moves them rather than replacing them.
+ */
+interface Block {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** The wall: three columns, packed to uneven heights. */
+const WALL: Block[] = [
+  { x: 0, y: 0, w: 30, h: 44 },
+  { x: 0, y: 52, w: 30, h: 48 },
+  { x: 35, y: 0, w: 30, h: 62 },
+  { x: 35, y: 70, w: 30, h: 30 },
+  { x: 70, y: 0, w: 30, h: 30 },
+  { x: 70, y: 38, w: 30, h: 62 },
+];
+
+/** The shelf: three rows, each a cover with its strip running off to the right. */
+const SHELF: Block[] = [
+  { x: 0, y: 0, w: 15, h: 22 },
+  { x: 20, y: 0, w: 80, h: 22 },
+  { x: 0, y: 39, w: 15, h: 22 },
+  { x: 20, y: 39, w: 80, h: 22 },
+  { x: 0, y: 78, w: 15, h: 22 },
+  { x: 20, y: 78, w: 80, h: 22 },
+];
+
+/**
  * The way across, tucked into the bottom of the filter list beside the
  * visualizer launch.
  *
@@ -20,25 +53,40 @@ interface Props {
  * permanently over the wall claimed more of it than a second reading of the
  * same set deserves. It sits with the other action on the narrowed set, since
  * that is what it is — both views take the filters with them.
+ *
+ * The plate draws its destination instead of captioning a symbol, which means
+ * the click has somewhere to land: the same six blocks re-pack from the wall's
+ * uneven columns into the shelf's rows, staggered the way the masonry itself
+ * settles. The control performs the switch it just made, and afterwards it is
+ * sitting on the drawing of the way back.
  */
 export default function ViewControl({ view, onViewChange }: Props) {
   const goingToSeries = view === "wall";
-  const Icon = goingToSeries ? Rows3 : LayoutGrid;
+  const blocks = goingToSeries ? SHELF : WALL;
 
   return (
-    <button
+    <ActionPlate
+      label={goingToSeries ? "by series" : "by panel"}
+      ariaLabel={goingToSeries ? "Show one row per series" : "Show one card per panel"}
       onClick={() => onViewChange(goingToSeries ? "series" : "wall")}
-      className="
-        w-full flex items-center gap-1.5
-        px-3 py-2
-        font-display text-[10px] tracking-wider uppercase
-        text-white/60 hover:text-accent
-        transition-colors duration-100
-        cursor-pointer
-      "
     >
-      <Icon size={12} className="text-accent shrink-0" />
-      {goingToSeries ? "BY SERIES" : "BY PANEL"}
-    </button>
+      <span className="plate-grid" aria-hidden="true">
+        {blocks.map((b, i) => (
+          <i
+            key={i}
+            className="plate-block"
+            style={
+              {
+                left: `${b.x}%`,
+                top: `${b.y}%`,
+                width: `${b.w}%`,
+                height: `${b.h}%`,
+                "--i": i,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </span>
+    </ActionPlate>
   );
 }

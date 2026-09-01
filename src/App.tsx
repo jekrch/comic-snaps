@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
+import { useEffect, useLayoutEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
 import type { Gallery, IssueCredits, Panel, RatingsIndex, Series } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
@@ -33,6 +33,52 @@ import type { VizConfig } from "./components/viz/vizConfig";
 // gallery's first paint and loads on launch instead.
 const VisualizerOverlay = lazy(() => import("./components/viz/VisualizerOverlay"));
 
+/**
+ * How long the outgoing view has to clear out before the incoming one is
+ * mounted. The two are never on screen together — only one of them holds
+ * images at a time, by design (§7) — so the switch is sequential: out, swap,
+ * in.
+ *
+ * It has to outlast the exit *and* the tail of its stagger, or the last few
+ * objects are cut off mid-flight by the unmount. 180ms of travel plus five
+ * steps of 18ms; both figures live in `.view-swap` in index.css, and the three
+ * move together.
+ */
+const VIEW_LEAVE_MS = 270;
+
+/** Read at click time, so the swap can skip its own timers rather than just
+ *  its transitions — a zeroed CSS duration with a live timeout behind it is
+ *  190ms of blank page. */
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
+  );
+}
+
+/**
+ * The elements both views claim as the same object: the filter card and the
+ * sort card. The wall puts them in its first and last columns, the shelf lays
+ * them out itself, but they are the same two cards holding the same state, and
+ * the reader has no reason to believe otherwise — so on a switch they are not
+ * crossed or repainted. They are moved.
+ *
+ * Neither view can do this alone: the outgoing copy is gone by the time the
+ * incoming one exists, so the geometry has to be carried across the swap from
+ * out here. It is a plain FLIP — measure before, measure after, start the new
+ * copy at the old one's place and size, then let it run to its own.
+ */
+const PERSISTENT = "[data-persist]";
+const CHROME_MS = 420;
+
+function measurePersistent() {
+  const rects = new Map<string, DOMRect>();
+  for (const el of document.querySelectorAll<HTMLElement>(PERSISTENT)) {
+    if (el.dataset.persist) rects.set(el.dataset.persist, el.getBoundingClientRect());
+  }
+  return rects;
+}
+
 export default function App() {
   const birdRef = useRef<BirdHandle>(null);
   /** The bird has finished its intro hop, so its thought can form. */
@@ -61,6 +107,19 @@ export default function App() {
   // toggle: the row sort orders the shelf, the panel sort still orders the
   // panels inside each strip (docs/series-view-plan.md §1.6, §3.1).
   const [view, setView] = useState<GalleryView>(initialView);
+  /**
+   * Where the switch between the two readings currently is: "leaving" while the
+   * old one is still mounted and on its way out, "entering" for the frame the
+   * new one is painted in its offset start state, "idle" the rest of the time.
+   */
+  const [viewPhase, setViewPhase] = useState<"idle" | "leaving" | "entering">("idle");
+  /** The pending swap's timer — also the guard that makes a second click while
+   *  one is in flight a no-op rather than a second, overlapping switch. */
+  const viewSwapRef = useRef<number | null>(null);
+  /** Where the persistent cards were sitting in the view that is leaving. */
+  const chromeRectsRef = useRef<Map<string, DOMRect> | null>(null);
+  /** Timers that put the moved cards' own styles back once they have landed. */
+  const chromeTimersRef = useRef<number[]>([]);
   const [seriesSort, setSeriesSort] = useState<SeriesSortMode>(initialSeriesSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   /** The metadata a row is assembled from, kept from the same boot fetch. */
@@ -236,17 +295,153 @@ export default function App() {
     [filters, seriesSort, syncToURL, view]
   );
 
+  /**
+   * The switch used to read as a cut: one tree unmounted, the other mounted a
+   * frame later, and the page blinked — with the jump home landing in the
+   * middle of it. It is staged now, and the staging is the objects' own: the
+   * cards gather off the left rail, the rows are dealt back in from it (see
+   * `.view-swap` in index.css). All this holds is the clock — the phase the
+   * views read their motion from, and the gap between the two halves where the
+   * swap and the scroll home happen unseen.
+   */
   const handleViewChange = useCallback(
     (next: GalleryView) => {
-      setView(next);
-      syncToURL(filters, sortMode, next, seriesSort);
-      // The echoes are a wall texture, driven by the masonry's layout pass.
-      // Nothing reports positions from the shelf, so the last wall's are
-      // cleared rather than left hanging behind a different rhythm (§5.3).
-      if (next !== "wall") setPanelPositions([]);
-      window.scrollTo({ top: 0, behavior: "auto" });
+      if (next === view || viewSwapRef.current !== null) return;
+
+      const commit = () => {
+        viewSwapRef.current = null;
+        setView(next);
+        syncToURL(filters, sortMode, next, seriesSort);
+        // The echoes are a wall texture, driven by the masonry's layout pass.
+        // Nothing reports positions from the shelf, so the last wall's are
+        // cleared rather than left hanging behind a different rhythm (§5.3).
+        if (next !== "wall") setPanelPositions([]);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      };
+
+      if (prefersReducedMotion()) {
+        commit();
+        return;
+      }
+
+      // Taken now, while the old layout still holds them. Only from the top of
+      // the page: further down the two cards are off screen, the switch jumps
+      // home anyway, and there is nothing on screen to carry across.
+      chromeRectsRef.current = window.scrollY < 8 ? measurePersistent() : null;
+
+      setViewPhase("leaving");
+      viewSwapRef.current = window.setTimeout(() => {
+        commit();
+        setViewPhase("entering");
+      }, VIEW_LEAVE_MS);
     },
-    [filters, seriesSort, sortMode, syncToURL]
+    [filters, seriesSort, sortMode, syncToURL, view]
+  );
+
+  // The incoming view has to be painted once with its objects still off the
+  // rail before the class comes off, or the browser has nothing to transition
+  // from and the arrival is the same cut as before. Two frames: one to paint,
+  // one to be sure it landed. Layout is already settled by then — both views
+  // place themselves in a layout effect, so the first painted frame is the
+  // real geometry, which is what the stagger is computed from.
+  useEffect(() => {
+    if (viewPhase !== "entering") return;
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setViewPhase("idle"));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, [viewPhase]);
+
+  // The moved cards, picked up where the other view left them. This runs
+  // before the browser paints — a layout effect, not an effect — because the
+  // whole point is that the new copy is never seen anywhere but the old one's
+  // place. Everything here is written straight to the DOM: the elements belong
+  // to whichever view just mounted, the styles live for one animation, and
+  // rendering them through React would mean threading a measurement taken
+  // during the *previous* view down into the one that replaced it.
+  useLayoutEffect(() => {
+    if (viewPhase !== "entering") return;
+    const from = chromeRectsRef.current;
+    chromeRectsRef.current = null;
+    if (!from) return;
+
+    for (const t of chromeTimersRef.current) window.clearTimeout(t);
+    chromeTimersRef.current = [];
+
+    let raf = 0;
+    let dropped = false;
+
+    // The view that just mounted measures itself in its own layout effect, and
+    // React flushes the state that comes out of it after this one has run — so
+    // the DOM here is still a column width short of its real geometry. A
+    // microtask puts this at the end of the same commit instead: everything
+    // settled, and still nothing painted.
+    queueMicrotask(() => {
+      if (dropped) return;
+      const moved: { el: HTMLElement; width: number; prev: Record<string, string> }[] = [];
+      for (const el of document.querySelectorAll<HTMLElement>(PERSISTENT)) {
+        const was = el.dataset.persist ? from.get(el.dataset.persist) : undefined;
+        if (!was) continue;
+        const now = el.getBoundingClientRect();
+        const dx = was.left - now.left;
+        const dy = was.top - now.top;
+        const dw = was.width - now.width;
+        // A card the two layouts happen to agree about is left alone rather
+        // than handed a transition with nothing to travel.
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(dw) < 1) continue;
+
+        // Whatever the view had set itself — the wall sizes its columns inline,
+        // the shelf sizes its own in a class — is put back at the end, so this
+        // borrows the element for the animation rather than taking it over.
+        const prev = {
+          transition: el.style.transition,
+          transform: el.style.transform,
+          width: el.style.width,
+        };
+        el.style.transition = "none";
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+        el.style.width = `${was.width}px`;
+        moved.push({ el, width: now.width, prev });
+      }
+      if (moved.length === 0) return;
+
+      // One frame with the start state on it, then let go — the same reason the
+      // arriving cards and rows need theirs painted before their class comes
+      // off.
+      raf = requestAnimationFrame(() => {
+        for (const { el, width } of moved) {
+          el.style.transition = `transform ${CHROME_MS}ms cubic-bezier(0.2, 0.7, 0.2, 1), width ${CHROME_MS}ms cubic-bezier(0.2, 0.7, 0.2, 1)`;
+          el.style.transform = "";
+          el.style.width = `${width}px`;
+        }
+        chromeTimersRef.current.push(
+          window.setTimeout(() => {
+            for (const { el, prev } of moved) {
+              el.style.transition = prev.transition;
+              el.style.transform = prev.transform;
+              el.style.width = prev.width;
+            }
+          }, CHROME_MS)
+        );
+      });
+    });
+
+    return () => {
+      dropped = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [viewPhase]);
+
+  useEffect(
+    () => () => {
+      if (viewSwapRef.current !== null) window.clearTimeout(viewSwapRef.current);
+      for (const t of chromeTimersRef.current) window.clearTimeout(t);
+    },
+    []
   );
 
   const handleSeriesSortChange = useCallback(
@@ -525,41 +720,54 @@ export default function App() {
           >
             {/* The wall is unmounted rather than hidden on a toggle, so the two
                 views never both hold images in memory. It costs the wall's
-                scroll position, which is the right trade at this size (§7). */}
-            {view === "wall" ? (
-              <MasonryGrid
-                panels={sortedPanels}
-                allPanels={panels}
-                sortMode={sortMode}
-                onSort={handleSortChange}
-                filters={filters}
-                onFiltersChange={handleFiltersChange}
-                onInfoOpen={() => handleOpenInfo("sorts")}
-                onLayoutReady={handleLayoutReady}
-                onPanelPositions={setPanelPositions}
-                onOpenPanel={handleOpenPanel}
-                onLaunchViz={handleOpenViz}
-                isFirstLoad={isFirstLoad}
-                view={view}
-                onViewChange={handleViewChange}
-              />
-            ) : (
-              <SeriesShelf
-                rows={seriesRows}
-                allPanels={panels}
-                sort={seriesSort}
-                onSort={handleSeriesSortChange}
-                view={view}
-                onViewChange={handleViewChange}
-                filters={filters}
-                onFiltersChange={handleFiltersChange}
-                onSelectPanel={handleSelectPanel}
-                onBrowse={handleBrowseBy}
-                onLayoutReady={handleLayoutReady}
-                layoutReady={imagesLoaded}
-                onLaunchViz={handleOpenViz}
-              />
-            )}
+                scroll position, which is the right trade at this size (§7).
+                The wrapper carries no motion of its own — it only tells the
+                cards and rows inside which half of the swap they are in. */}
+            <div
+              className={
+                "view-swap" +
+                (viewPhase === "leaving"
+                  ? " is-leaving"
+                  : viewPhase === "entering"
+                    ? " is-entering"
+                    : "")
+              }
+            >
+              {view === "wall" ? (
+                <MasonryGrid
+                  panels={sortedPanels}
+                  allPanels={panels}
+                  sortMode={sortMode}
+                  onSort={handleSortChange}
+                  filters={filters}
+                  onFiltersChange={handleFiltersChange}
+                  onInfoOpen={() => handleOpenInfo("sorts")}
+                  onLayoutReady={handleLayoutReady}
+                  onPanelPositions={setPanelPositions}
+                  onOpenPanel={handleOpenPanel}
+                  onLaunchViz={handleOpenViz}
+                  isFirstLoad={isFirstLoad}
+                  view={view}
+                  onViewChange={handleViewChange}
+                />
+              ) : (
+                <SeriesShelf
+                  rows={seriesRows}
+                  allPanels={panels}
+                  sort={seriesSort}
+                  onSort={handleSeriesSortChange}
+                  view={view}
+                  onViewChange={handleViewChange}
+                  filters={filters}
+                  onFiltersChange={handleFiltersChange}
+                  onSelectPanel={handleSelectPanel}
+                  onBrowse={handleBrowseBy}
+                  onLayoutReady={handleLayoutReady}
+                  layoutReady={imagesLoaded}
+                  onLaunchViz={handleOpenViz}
+                />
+              )}
+            </div>
             {hasActiveFilters(filters) && sortedPanels.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
                 <p className="text-ink-muted text-sm font-display tracking-wide">
