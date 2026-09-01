@@ -72,6 +72,17 @@ function ViewerOverlay({
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
   )}`;
 
+  // Hand the page back the moment the close *starts*, rather than when the
+  // viewer finally unmounts a quarter-second later: the gallery comes back
+  // under a backdrop that is still up and fades out along with it, where
+  // returning it on unmount would pop it in one frame after the backdrop had
+  // already gone. A layout effect, and in the overlay rather than in
+  // `PanelViewer` itself, so it lands before the viewer's own layout effects
+  // measure the thumbnail the image collapses back into.
+  useLayoutEffect(() => {
+    if (closing) setViewerOpen(false);
+  }, [closing]);
+
   // Push the image track out of the way for whichever overlay is open: up for
   // the drawer (slides from the bottom), down for the graph (slides from the
   // top). The shared-element close/collapse still measures the resting image,
@@ -84,15 +95,6 @@ function ViewerOverlay({
   // same shift with `animate: true` is exactly what put the slide back: by
   // then the viewer's own layout effects have measured, so the stage has a
   // computed transform at rest for the transition to run from.
-  // Hand the page back the moment the close *starts*, rather than when the
-  // viewer finally unmounts a quarter-second later: the washes and the hatch
-  // come back under a backdrop that is still up and fade out along with it,
-  // where returning them on unmount would pop them in one frame after the
-  // backdrop had already gone.
-  useEffect(() => {
-    if (closing) setViewerOpen(false);
-  }, [closing]);
-
   const applied = useRef<string | null | undefined>(undefined);
   useLayoutEffect(() => {
     const shift = drawerOpen ? "translateY(-100vh)" : graphOpen ? "translateY(100vh)" : null;

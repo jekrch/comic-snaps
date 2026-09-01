@@ -5,6 +5,7 @@ import { formatIssue } from "../utils/issueFormat";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
 import { ScoreBirds } from "./ScoreMeter";
+import PanelPalette from "./PanelPalette";
 
 interface PersonFacets {
   artists: number;
@@ -1027,6 +1028,16 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 ))}
               </div>
             </div>
+          </>
+        )}
+
+        {/* Palette — the colours the sorts and the similarity graph read this
+            panel by, in a notation that can leave the page. Last of the
+            sections because it describes the image rather than the book. */}
+        {panel.dominantColors && panel.dominantColors.length > 0 && (
+          <>
+            <div className="border-t border-white/8" />
+            <PanelPalette colors={panel.dominantColors} />
           </>
         )}
 

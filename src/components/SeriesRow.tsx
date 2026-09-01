@@ -190,24 +190,16 @@ function SeriesBackdrop({ src }: { src: string }) {
   const [fit, setFit] = useState<{ transform: string; filter: string } | null>(null);
 
   /**
-   * A wash is the most expensive thing the shelf paints — a masked box holding
-   * a masked, filtered, upscaled image — and a dozen of them sit under the
-   * viewer once it opens, where the backdrop has already covered them.
-   *
-   * On iOS that is not free: opening the viewer locks the body to
-   * `position: fixed`, Safari re-expands its toolbars, the viewport height
-   * changes, and every row re-lays out while the backdrop is mid-fade. The
-   * washes are what makes that re-raster expensive, so they stop painting for
-   * as long as the viewer is up (`visibility: hidden` in `.series-bg`, which
-   * keeps the geometry the viewer's collapse-back-into-the-tile measures).
+   * The wash is not painted while the viewer is up (`.viewer-open` in
+   * `index.css`), so there is nothing to fit either — and the observers below
+   * fire hardest at exactly the moment the viewer opens, when the scroll lock
+   * resizes the viewport out from under every row.
    */
   const viewerOpen = useViewerOpen();
   const quietRef = useRef(viewerOpen);
   quietRef.current = viewerOpen;
 
   const measure = useCallback(() => {
-    // Nothing to fit while the wash is not being painted, and the observers
-    // that call this fire hardest at exactly the moment the viewer opens.
     if (quietRef.current) return;
     const wrap = wrapRef.current;
     const img = imgRef.current;
@@ -249,13 +241,7 @@ function SeriesBackdrop({ src }: { src: string }) {
   }, [viewerOpen, measure]);
 
   return (
-    <div
-      ref={wrapRef}
-      className="series-bg"
-      data-fitted={fit ? "true" : undefined}
-      data-quiet={viewerOpen ? "true" : undefined}
-      aria-hidden="true"
-    >
+    <div ref={wrapRef} className="series-bg" data-fitted={fit ? "true" : undefined} aria-hidden="true">
       <img
         ref={imgRef}
         src={panelImageUrl(src)}

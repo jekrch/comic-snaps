@@ -1264,22 +1264,36 @@ button,
   opacity: 0.19;
 }
 
-/* Quiet under the viewer.
+/* --- The page underneath an open viewer --------------------------------
 
-   The wash is the shelf's most expensive layer — a masked box holding a
-   masked, filtered, upscaled image — and once the viewer is open a dozen of
-   them are sitting under a backdrop that has already covered them. On iOS the
-   open scroll-locks the body, Safari re-expands its toolbars, the viewport
-   height changes and every row re-lays out while that backdrop is mid-fade,
-   which is enough compositing work to drop a frame of the overlay itself.
+   On a phone the gallery stops painting entirely while the viewer is up.
 
-   `visibility` rather than `display`: it stops the layer being rasterized
-   without disturbing layout, so the tile geometry the viewer's collapse
-   measures on the way back out is exactly where it was. At 19% opacity behind
-   a 90% backdrop the wash was contributing under 2% of what is on screen, so
-   there is nothing to see going or coming. */
-.series-bg[data-quiet="true"] {
-  visibility: hidden;
+   The blink this fixes is an iOS one, and it only shows once you have scrolled
+   — which is the tell. Opening the viewer scroll-locks the body to
+   `position: fixed`, the document's scroll height collapses to a single
+   viewport, and Safari answers by re-expanding the toolbars it had minimised
+   on the way down. At the top of the page they were never minimised, so
+   nothing moves and nothing blinks. Scrolled, that is a viewport resize landing
+   squarely in the middle of the backdrop's 250ms fade: every row re-lays out,
+   `content-visibility: auto` re-decides what is worth rendering, the sticky
+   header un-sticks and takes its `backdrop-filter` with it, and the compositor
+   drops a frame — of the page, of the overlay, intermittently either.
+
+   Nothing here tries to make that cheap enough to survive. The page simply
+   stops being drawn, so a dropped frame has nothing to expose but the app's
+   own near-black surface, which is what the backdrop was fading to anyway.
+
+   `visibility` rather than `display`: the boxes stay exactly where they are,
+   so the tile the viewer flies out of — and collapses back into — is still
+   measurable at its own coordinates the whole time.
+
+   Touch only. On a desktop none of the above happens, and the page ghosting
+   faintly through the backdrop is the look, not an artefact. */
+@media (hover: none) and (pointer: coarse) {
+  .viewer-open header,
+  .viewer-open main {
+    visibility: hidden;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
