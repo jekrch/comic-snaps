@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 263,
+      "id": "final-cut-n-a-1788324138",
+      "title": "Final Cut",
+      "slug": "final-cut",
+      "issue": "N/A",
+      "year": 2024,
+      "artist": "Charles Burns",
+      "image": "images/final-cut/issue-n-a-1788324138.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-02T04:42:21.493Z"
+    },
+    {
       "seq": 262,
       "id": "eightball-15-1788323794",
       "title": "Eightball",
@@ -17,7 +31,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          21.0,
+          21,
           10.1,
           11.1
         ],
@@ -340,7 +354,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -675,7 +689,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -4129,7 +4143,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
