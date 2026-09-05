@@ -171,6 +171,41 @@
       ]
     },
     {
+      "id": "archie",
+      "name": "Archie",
+      "parentSeries": null,
+      "description": "The first 101 issues of the series were published under the title, Archie Comics and so this series began with issue #102. This series ended with issue #666 before being relaunched and renumbered as part of Archie's 75th Anniversary in 2015 as Archie Volume 2. Although the series has a new numbering, the original numbering returns after issue 32 of that series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/73247-9628-85708-1-archie.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/archie/4050-9628/"
+        }
+      ],
+      "startYear": 1960,
+      "publisher": "Archie Comics",
+      "issueCount": 553,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/archie/2b12391fc47d.jpg",
+        "data/covers/archie/387fa0755cbb.jpg",
+        "data/covers/archie/bdbab37aec16.jpg",
+        "data/covers/archie/ddaa3ceeac5f.jpg"
+      ]
+    },
+    {
       "id": "assorted-crisis-events",
       "name": "Assorted Crisis Events",
       "parentSeries": null,
