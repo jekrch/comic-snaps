@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 270,
+      "id": "archie-1-1788648437",
+      "title": "Archie",
+      "slug": "archie",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Tyler Crook",
+      "image": "images/archie/issue-1-1788648437.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-05T22:47:19.243Z"
+    },
+    {
       "seq": 269,
       "id": "archie-1-1788648187",
       "title": "Archie",
@@ -27,7 +41,7 @@
           0.8
         ],
         [
-          13.0,
+          13,
           2.6,
           -5.5
         ]
@@ -599,7 +613,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -934,7 +948,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -4388,7 +4402,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
