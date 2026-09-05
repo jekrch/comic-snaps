@@ -12,7 +12,30 @@
       "notes": "This is from the back matter sneak preview of Sabrina by Bechko and Kano",
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-05T22:39:37.322Z"
+      "addedAt": "2026-09-05T22:39:37.322Z",
+      "width": 1280,
+      "height": 535,
+      "dominantColors": [
+        [
+          78.8,
+          8.4,
+          -9.9
+        ],
+        [
+          52.0,
+          23.0,
+          -37.1
+        ],
+        [
+          12.4,
+          5.0,
+          -7.7
+        ]
+      ],
+      "colorfulness": 23.6,
+      "phash": "a40f7f7b38662452",
+      "ahash": "003f7773dbc3e202",
+      "dhash": "7362e6a6b2ae8e8e"
     },
     {
       "seq": 267,
@@ -539,7 +562,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -874,7 +897,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -4328,7 +4351,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
