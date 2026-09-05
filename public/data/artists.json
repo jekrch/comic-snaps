@@ -12205,6 +12205,17 @@
       "country": "United States"
     },
     {
+      "id": "travis-charset",
+      "name": "Travis Charset",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "tricia-ramos",
       "name": "Tricia Ramos",
       "description": "",
