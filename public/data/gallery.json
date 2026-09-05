@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 272,
+      "id": "walkie-talkie-1-1788650004",
+      "title": "Walkie Talkie",
+      "slug": "walkie-talkie",
+      "issue": 1,
+      "year": 2002,
+      "artist": "Nate Powell",
+      "image": "images/walkie-talkie/issue-1-1788650004.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-05T23:13:27.320Z"
+    },
+    {
       "seq": 271,
       "id": "archie-1-1788648620",
       "title": "Archie",
