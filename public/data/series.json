@@ -3869,6 +3869,27 @@
       ]
     },
     {
+      "id": "walkie-talkie",
+      "name": "Walkie Talkie",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "weirdo",
       "name": "Weirdo",
       "parentSeries": null,
