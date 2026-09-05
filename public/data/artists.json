@@ -3806,6 +3806,17 @@
       ]
     },
     {
+      "id": "fabio-moon",
+      "name": "Fabio Moon",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "fernando-blanco",
       "name": "Fernando Blanco",
       "description": "Interview with Fernando Blanco (In Spanish)",

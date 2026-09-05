@@ -70,6 +70,15 @@
           "name": "Ngozi Ukazu"
         }
       ]
+    },
+    "Fabio Moon": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 707,
+          "name": "F\u00e1bio Moon"
+        }
+      ]
     }
   },
   "metron:series": {
