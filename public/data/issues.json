@@ -6288,6 +6288,33 @@
       ]
     },
     {
+      "id": "mickey-rat-2",
+      "series": "mickey-rat",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "robert-armstrong",
+          "name": "Robert Armstrong",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mickey-rat-2-mickey-rat-comix/4000-359527/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "mind-mgmt-new-improved-1",
       "series": "mind-mgmt-new-improved",
       "issue": 1,

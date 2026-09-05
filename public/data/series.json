@@ -2254,6 +2254,41 @@
       ]
     },
     {
+      "id": "mickey-rat",
+      "name": "Mickey Rat",
+      "parentSeries": null,
+      "description": "#1 published by Los Angeles Comic Book Company\r\n\r\n#2 published by Kitchen Sink\r\n\r\n3-4 published by Last Gasp",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2622086-mic3.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mickey-rat/4050-52592/"
+        }
+      ],
+      "startYear": 1972,
+      "publisher": "Last Gasp",
+      "issueCount": 4,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/mickey-rat/acf708a35629.jpg",
+        "data/covers/mickey-rat/876644a22c21.jpg",
+        "data/covers/mickey-rat/ace11ae6bf98.jpg",
+        "data/covers/mickey-rat/170bb787303e.jpg"
+      ]
+    },
+    {
       "id": "mind-mgmt-new-improved",
       "name": "Mind MGMT: New & Improved",
       "parentSeries": null,
