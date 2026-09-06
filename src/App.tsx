@@ -27,7 +27,7 @@ import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
 import VizLaunchModal from "./components/viz/VizLaunchModal";
-import VizThought from "./components/viz/VizThought";
+//import VizThought from "./components/viz/VizThought";
 import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
 import { findPreset, initialPresetId, presetConfig } from "./components/viz/vizPresets";
 import { useLocalPhotos } from "./components/viz/localPhotos/useLocalPhotos";
@@ -87,7 +87,7 @@ function measurePersistent() {
 export default function App() {
   const birdRef = useRef<BirdHandle>(null);
   /** The bird has finished its intro hop, so its thought can form. */
-  const [birdLanded, setBirdLanded] = useState(false);
+  //const [ setBirdLanded] = useState(false);
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -735,17 +735,19 @@ export default function App() {
             >
               C0MIC SNAPS
             </h1>
-            <BirdIcon ref={birdRef} onIntroComplete={() => setBirdLanded(true)} />
+            <BirdIcon ref={birdRef} 
+            //onIntroComplete={() => setBirdLanded(true)} 
+            />
             {/* The thought only forms once the bird has settled — a balloon
                 trailing off a bird still mid-hop reads as two unrelated things
                 that happen to be animating. */}
-            {status === "ready" && (
+            {/* {status === "ready" && (
               <VizThought
                 landed={birdLanded}             
                 onLaunch={handleOpenViz}
                 onNudge={() => birdRef.current?.peck()}
               />
-            )}
+            )} */}
           </div>
           <div className="flex items-center gap-1">
             <button
