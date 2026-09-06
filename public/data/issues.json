@@ -4435,6 +4435,31 @@
       ]
     },
     {
+      "id": "grrl-scouts-work-sucks-1",
+      "series": "grrl-scouts-work-sucks",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jim-mahfood",
+          "name": "Jim Mahfood",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/grrl-scouts-work-sucks-2003-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "hank-howard-pizza-detective-a-slice-of-life-1",
       "series": "hank-howard-pizza-detective-a-slice-of-life",
       "issue": 1,
