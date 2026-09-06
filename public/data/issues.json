@@ -8652,6 +8652,110 @@
       ]
     },
     {
+      "id": "the-deadman-4",
+      "series": "the-deadman",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "chloe-brailsford",
+          "name": "Chloe Brailsford",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-brunner",
+          "name": "Chris Brunner",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rico-renzi",
+          "name": "Rico Renzi",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-kaminski",
+          "name": "Paul Kaminski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "chris-rosa",
+          "name": "Chris Rosa",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-deadman-2026-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-dogsitter-1",
       "series": "the-dogsitter",
       "issue": 1,

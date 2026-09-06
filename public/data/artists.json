@@ -1965,6 +1965,22 @@
       ]
     },
     {
+      "id": "chloe-brailsford",
+      "name": "Chloe Brailsford",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12120/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "chris-bachalo",
       "name": "Chris Bachalo",
       "description": "Chris Bachalo is a Canadian comic book illustrator known for his quirky, cartoon-like style. He became well known for stints on DC Comics' Shade, the Changing Man and Neil Gaiman's two Death series. Chris has also illustrated several of Marvel Comics' X-Men-related series, including Generation X (which he co-created), X-Men Vol. 2, Uncanny X-Men, and Ultimate X-Men. Beginning in April, 2000 Chris illustrated his creator-owned series Steampunk.",
@@ -1985,6 +2001,32 @@
         "comicvine"
       ],
       "country": "Canada"
+    },
+    {
+      "id": "chris-brunner",
+      "name": "Chris Brunner",
+      "description": "Known as \"Kickstandkid78\" on DeviantArt.com.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/64770/2033399-chris_brunner.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1356/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/chris-brunner/4040-4883/"
+        }
+      ],
+      "country": "United States",
+      "aliases": [
+        "Chris F. Brunner",
+        "Christopher F. Brunner",
+        "Monk"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "chris-burnham",
@@ -10611,6 +10653,30 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "rico-renzi",
+      "name": "Rico Renzi",
+      "description": "Rico Renzi is an American colorist, designer, and director of creative endeavors at http://heroesonline.com.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/115351/3105976-picture%202.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/962/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rico-renzi/4040-4884/"
+        }
+      ],
+      "country": "USA",
+      "aliases": [
+        "Rico Rensi"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
