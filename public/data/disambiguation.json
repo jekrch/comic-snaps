@@ -249,51 +249,6 @@
           "name": "Love and Rockets: New Stories"
         }
       ]
-    },
-    "Archie": {
-      "id": null,
-      "candidates": [
-        {
-          "id": 6645,
-          "name": "The Adventures of Little Archie"
-        },
-        {
-          "id": 30,
-          "name": "Afterlife with Archie"
-        },
-        {
-          "id": 7926,
-          "name": "Afterlife with Archie TPB"
-        },
-        {
-          "id": 7927,
-          "name": "Afterlife with Archie Magazine"
-        },
-        {
-          "id": 6004,
-          "name": "Archie"
-        },
-        {
-          "id": 2555,
-          "name": "Archie"
-        },
-        {
-          "id": 16609,
-          "name": "Archie"
-        },
-        {
-          "id": 11324,
-          "name": "Archie 1000 Page Comics Acclaim TPB"
-        },
-        {
-          "id": 11329,
-          "name": "Archie 1000 Page Comics Blow-Out! TPB"
-        },
-        {
-          "id": 11327,
-          "name": "Archie 1000 Page Comics Bonanza TPB"
-        }
-      ]
     }
   }
 }

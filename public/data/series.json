@@ -174,17 +174,21 @@
       "id": "archie",
       "name": "Archie",
       "parentSeries": null,
-      "description": "The first 101 issues of the series were published under the title, Archie Comics and so this series began with issue #102. This series ended with issue #666 before being relaunched and renumbered as part of Archie's 75th Anniversary in 2015 as Archie Volume 2. Although the series has a new numbering, the original numbering returns after issue 32 of that series.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/73247-9628-85708-1-archie.jpg",
+      "description": "Archie Comics' flagship title, relaunched by Oni Press in 2026 under a new publishing partnership timed to the 85th anniversary of Archie Andrews' first appearance in Pep Comics #22. Written by Ben H. Winters with art by F\u00e1bio Moon, the ongoing follows a seventeen-year-old Archie through Riverdale's past, present, and future.\r\n\r\nThe extra-sized, 40-page first issue arrived September 2, 2026 with a main cover by Stuart Immonen and variants by Moon, Karl Kerschl, Khary Randolph, Kano, Dan Parent, Elsa Charretier and Mahmud Asrar, joined at final order cutoff by a surprise cover from Travis Charest. It leads a three-title line alongside Sabrina the Teenage Witch by Corinna Bechko and Kano, and Archie in Hell by Patrick Horvath and Tyler Crook.",
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/651302f86c2c335a35c606d6/1783369056027-65H69W8N6G7DMJF03JRM/Archie+%231.jpg?format=750w",
       "references": [
         {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/archie/4050-9628/"
+          "name": "Oni Press",
+          "url": "https://www.onipress.com/archie"
+        },
+        {
+          "name": "The Hollywood Reporter",
+          "url": "https://www.hollywoodreporter.com/news/general-news/archie-sabrina-the-teenage-witch-oni-press-1236453904/"
         }
       ],
-      "startYear": 1960,
-      "publisher": "Archie Comics",
-      "issueCount": 553,
+      "startYear": 2026,
+      "publisher": "Oni Press",
+      "issueCount": 1,
       "sources": [
         "comicvine",
         "metron",
@@ -199,11 +203,12 @@
         ]
       },
       "coverImages": [
-        "data/covers/archie/2b12391fc47d.jpg",
-        "data/covers/archie/387fa0755cbb.jpg",
-        "data/covers/archie/bdbab37aec16.jpg",
-        "data/covers/archie/ddaa3ceeac5f.jpg"
-      ]
+        "data/covers/archie/ae7c426b9eb6.jpg",
+        "data/covers/archie/0af6d40a146f.jpg",
+        "data/covers/archie/6c073944b2c7.jpg",
+        "data/covers/archie/34f7eba15601.jpg"
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "assorted-crisis-events",
@@ -3872,9 +3877,26 @@
       "id": "walkie-talkie",
       "name": "Walkie Talkie",
       "parentSeries": null,
-      "description": "",
+      "description": "Nate Powell's self-published solo series, four issues released through his Food Chain imprint between May 2000 and June 2002. He funded the first issue with the Shakespeare & Company Books Self-Publishing Grant, awarded when he graduated from the School of Visual Arts in 2000. Saddle-stitched, with a colour cover over black-and-white interiors.\r\n\r\nIts stories, drawn from the complications and disappointments of young adulthood, were later collected in Tiny Giants (Soft Skull Press, 2003) and Sounds of Your Name (Microcosm Publishing, 2006).",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Nate_Powell"
+        },
+        {
+          "name": "Nate Powell",
+          "url": "https://www.seemybrotherdance.org/bibliography"
+        },
+        {
+          "name": "Encyclopedia of Arkansas",
+          "url": "https://encyclopediaofarkansas.net/entries/nathan-lee-6974/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/113566/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron",
@@ -3887,7 +3909,13 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "startYear": 2000,
+      "publisher": "Food Chain (self-published)",
+      "issueCount": 4,
+      "coverImages": [
+        "data/covers/walkie-talkie/bf7814e245e3.jpg"
+      ]
     },
     {
       "id": "weirdo",
