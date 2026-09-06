@@ -142,7 +142,6 @@ function SeriesRowView({
   // panel and nothing to tease with, and the rest are still books someone can
   // go and buy (§1.5).
   const covers = useMemo(() => buildCoverPanels(row, row.covers.slice(0, MAX_COVERS)), [row]);
-  const hatchTail = row.panels.length === 1 && covers.length === 0;
 
   // What prev/next walks: the strip itself, in the order it is drawn, so paging
   // from any tile runs the panels and then the covers and stops at the row's
@@ -353,10 +352,12 @@ function SeriesRowView({
           {covers.map((cover) => (
             <CoverTile key={cover.id} panel={cover} height={tileHeight} onOpen={openPanel} />
           ))}
-          {/* Neither a second panel nor a cover: the same motif the masonry uses
-              for leftover space, so the empty tail reads as part of the design
-              rather than as a loading failure. */}
-          {hatchTail && <RowHatchTail tileHeight={tileHeight} />}
+          {/* Whatever the panels and covers left over: the same motif the
+              masonry uses for leftover space, so a strip that stops short of
+              its right edge reads as part of the design rather than as a
+              loading failure. A row that overflows has no leftover space and
+              so no tail — the strip's own measurement is what says which. */}
+          {!overflows && <RowHatchTail tileHeight={tileHeight} />}
         </div>
       </div>
     </section>

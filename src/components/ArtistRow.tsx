@@ -20,24 +20,20 @@ import {
 } from "./rowGeometry";
 
 /** What the rail gives up under the narrow band so the row below it can
- *  breathe — and the one number the narrow face size is derived from, for the
- *  rows that still draw a face in the band. */
+ *  breathe. */
 const NARROW_RAIL_PAD = 6;
 
 /**
- * The portrait, at each breakpoint. Square, because 111 of the 124 sources are
- * already head-and-shoulders crops and the rest crop to one without losing a
- * face.
+ * The portrait in the rail. Square, because 111 of the 124 sources are already
+ * head-and-shoulders crops and the rest crop to one without losing a face.
  *
- * Wide, it is the largest thing in the rail — a face at 46px was a stamp you
- * had to lean in to read, and the whole argument for this view over a filter
- * is that a directory of faces is browsable where a directory of names is not.
- * Narrow, the portrait proper has left the band for the strip, and this is the
- * size of what is left: the monogram of a person with no picture, filling the
- * band's height with the text beside it.
+ * It is the largest thing in the rail — a face at 46px was a stamp you had to
+ * lean in to read, and the whole argument for this view over a filter is that
+ * a directory of faces is browsable where a directory of names is not. Narrow,
+ * nothing stands in this box: the picture leads the strip instead, and so does
+ * the monogram of a person who has none.
  */
 const FACE = 84;
-const FACE_NARROW = RAIL_BAND_H - NARROW_RAIL_PAD;
 
 /**
  * The image the row washes its background with: the artist's own portrait,
@@ -67,6 +63,28 @@ const PORTRAIT_BOX =
 /** Portraits are head-and-shoulders crops; a little above centre keeps the
  *  face in the box when one is squarer or taller than the frame it fills. */
 const PORTRAIT_POSITION = { objectPosition: "center 22%" } as const;
+
+/**
+ * The stand-in for a portrait nobody has: the person's initial cut into the
+ * same box, the way the profile's hero does it, rather than a grey square or a
+ * stock silhouette that would claim to be them.
+ *
+ * Sized off the box rather than set in a fixed step, so it fills whichever one
+ * it is given — the rail's face wide, a strip tile narrow. Inert either way:
+ * there is no picture behind it to open.
+ */
+function Monogram({ name, size }: { name: string; size: number }) {
+  return (
+    <div className={PORTRAIT_BOX} style={{ width: size, height: size }} aria-hidden="true">
+      <span
+        className="absolute inset-0 flex items-center justify-center font-display leading-none text-white/15 select-none"
+        style={{ fontSize: Math.round(size * 0.46) }}
+      >
+        {name.charAt(0)}
+      </span>
+    </div>
+  );
+}
 
 /**
  * The portrait leading a narrow strip, in line with the panels.
@@ -142,7 +160,6 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
 
   const hero = row.panels[0];
   const teases = row.panels.slice(1);
-  const hatchTail = row.panels.length === 1;
 
   // The person's portrait as something the viewer can open — the rail's face
   // wide, the strip's leading tile narrow, the same picture either way. Null
@@ -186,7 +203,6 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
     [row.firstPostedAt, row.lastPostedAt],
   );
   const span = workSpan(row.years);
-  const face = narrow ? FACE_NARROW : FACE;
   const series = capNames(row.series);
 
   /**
@@ -243,11 +259,9 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
    * usually far bigger, and a reader who wants to look at the person rather
    * than at a stamp of them had nowhere to go before.
    *
-   * The 13 people with no portrait get their initial cut into the same box,
-   * the way the profile's hero does, rather than a grey square or a stock
-   * silhouette that would claim to be them. It is sized off the box rather
-   * than set in a fixed step, so it fills either one — and it is inert, since
-   * there is no picture behind it to open.
+   * The 13 people with no portrait get their initial in the same box (see
+   * `Monogram`), so the rail's first column is the same shape down all 124
+   * rows whether or not there is a picture for it.
    */
   const portrait = portraitPanel ? (
     <button
@@ -255,7 +269,7 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
       data-panel-id={portraitPanel.id}
       onClick={() => openPanel(portraitPanel)}
       className={`${PORTRAIT_BOX} row-portrait cursor-pointer transition-colors hover:ring-accent/50`}
-      style={{ width: face, height: face }}
+      style={{ width: FACE, height: FACE }}
       aria-label={`View portrait of ${row.name}`}
       title={`${row.name} · portrait`}
     >
@@ -272,14 +286,7 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
       />
     </button>
   ) : (
-    <div className={PORTRAIT_BOX} style={{ width: face, height: face }} aria-hidden="true">
-      <span
-        className="absolute inset-0 flex items-center justify-center font-display leading-none text-white/15 select-none"
-        style={{ fontSize: Math.round(face * 0.46) }}
-      >
-        {row.name.charAt(0)}
-      </span>
-    </div>
+    <Monogram name={row.name} size={FACE} />
   );
 
   /** "colours 4 · letters 2" — the roles the strip is not already showing. */
@@ -361,16 +368,16 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
    * leaves it altogether: a face at band height is a thumbnail next to three
    * lines of type, where the same face at the head of the strip below is one
    * of the row's images, at their size, on the axis the reader is already
-   * scanning. The band keeps the type and spends the whole width on it. A
-   * person with no portrait has nothing to move, so their initial stays where
-   * it was, at the left of the band with the lines beside it.
+   * scanning. The band keeps the type and spends the whole width on it —
+   * including for the people with no portrait, whose initial goes down to the
+   * strip with the rest of them rather than being the one thing left stranded
+   * above it.
    */
   const rail = narrow ? (
     <div
       className="row-rail flex w-full min-w-0 items-stretch gap-2.5 overflow-hidden pl-2.5 pr-2.5"
       style={{ height: RAIL_BAND_H, paddingBottom: NARROW_RAIL_PAD }}
     >
-      {!portraitPanel && portrait}
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
         {identity}
         {seriesLine}
@@ -416,11 +423,16 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
           style={{ height: stripHeight, gap: TILE_GAP }}
         >
           {/* Narrow, the face is one of the row's images rather than a stamp
-              in the band above them (see `PortraitTile`). Wide, the rail has
-              the room to hold it and the strip stays all art. */}
-          {narrow && portraitPanel && (
-            <PortraitTile panel={portraitPanel} height={tileHeight} onOpen={openPanel} />
-          )}
+              in the band above them (see `PortraitTile`), and a person with no
+              picture leads with their initial at the same size so every row
+              opens on the same axis. Wide, the rail has the room to hold
+              either and the strip stays all art. */}
+          {narrow &&
+            (portraitPanel ? (
+              <PortraitTile panel={portraitPanel} height={tileHeight} onOpen={openPanel} />
+            ) : (
+              <Monogram name={row.name} size={tileHeight} />
+            ))}
           <RowTile
             panel={hero}
             height={tileHeight}
@@ -439,10 +451,11 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
             />
           ))}
           {/* 67 of the 124 artists have exactly one panel here, and unlike a
-              series there is no cover to trail off into — so the tail is the
-              masonry's own motif for leftover space, and the empty stretch
-              reads as part of the design rather than as a loading failure. */}
-          {hatchTail && <RowHatchTail tileHeight={tileHeight} />}
+              series there is no cover to trail off into — so any stretch the
+              tiles leave short of the right edge is the masonry's own motif
+              for leftover space, and reads as part of the design rather than
+              as a loading failure. A row that overflows leaves none. */}
+          {!overflows && <RowHatchTail tileHeight={tileHeight} />}
         </div>
       </div>
     </section>

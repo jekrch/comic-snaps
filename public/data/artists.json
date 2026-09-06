@@ -513,7 +513,7 @@
       "id": "anand-rk",
       "name": "Anand RK",
       "description": "",
-      "imageUrl": "https://www.stirworld.com/images/inspire/AnandRadhakrishnan_10.jpg",
+      "imageUrl": "https://kineticcollectibles.com/cdn/shop/files/anand-rk.png",
       "references": [],
       "sources": [
         "comicvine",
@@ -1310,11 +1310,23 @@
       "id": "bob-armstrong",
       "name": "Bob Armstrong",
       "description": "",
-      "imageUrl": null,
-      "references": [],
+      "imageUrl": "https://i0.wp.com/prewargibsonl-5.com/wp-content/uploads/2021/05/Robert-Armstrong-1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/robert-armstrong/4040-60013/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/14178/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
+      ],
+      "aliases": [
+        "Robert Armstrong"
       ]
     },
     {
@@ -1396,7 +1408,7 @@
       "id": "brandon-john",
       "name": "Brandon John",
       "description": "",
-      "imageUrl": "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/c2f620d7-d2d2-40df-a6e6-1f9e033f3cac/DSC_0009.JPG?format=1000w",
+      "imageUrl": "https://i.kickstarter.com/assets/050/337/042/6535048b491acbc18562a8175ac271a1_original.jpg?anim=false&fit=cover&height=220&origin=ugc&q=92&v=1754584372&width=220&sig=1w8rPKqygNB03kIyk0PCljRmCPKgasAguQTDH74NaN8%3D",
       "references": [
         {
           "name": "Online Store",
@@ -2599,7 +2611,7 @@
       "id": "dave-geiser",
       "name": "Dave Geiser",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://bloximages.chicago2.vip.townnews.com/27east.com/content/tncms/assets/v3/editorial/0/83/083ee9cd-11a0-5885-96c0-334d193ce409/69175c4655e9b.image.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -4376,7 +4388,7 @@
       "id": "glenn-head",
       "name": "Glenn Head",
       "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83392/1640302-173664_100000538253422_500668_n.jpg",
+      "imageUrl": "https://the-comics-journal.sfo3.digitaloceanspaces.com/wp-content/uploads/2025/10/GLENN-HEAD-2025-PORTRAIT-WITH-ASYLUM.png",
       "references": [
         {
           "name": "Comic Vine",
@@ -5759,7 +5771,7 @@
       "id": "jim-philips",
       "name": "Jim Philips",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://www.sandiegouniontribune.com/wp-content/uploads/2025/12/jim-phillips.jpg",
       "references": [],
       "sources": [
         "comicvine",
@@ -7157,7 +7169,7 @@
       "id": "ken-brown",
       "name": "Ken Brown",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://images.squarespace-cdn.com/content/v1/5c0ac5edd274cbf0e25ea16c/1552494393414-7YDUP21QT2ZC60DKQX8F/KEN%2BBROWN%2BPORTRAIT%2B%2540%252787%2Bcopy.jpg",
       "references": [],
       "sources": [
         "metron",
@@ -7249,6 +7261,7 @@
     {
       "id": "kev-walker",
       "name": "Kev Walker",
+      "imageUrl": "https://avp.fandom.com/wiki/Kev_Walker",
       "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",
       "references": [
         {
@@ -9281,7 +9294,7 @@
     {
       "id": "patrick-horvath",
       "name": "Patrick Horvath",
-      "imageUrl": null,
+      "imageUrl": "https://www.ocregister.com/wp-content/uploads/2026/07/OCR-L-SDCC-HORVATH-0725-01.jpeg",
       "description": "Patrick Horvath is an American film producer, writer, director, and the author and illustrator of the IDW horror graphic novel Beneath the Trees Where Nobody Sees and its sequel, Beneath the Trees Where Nobody Sees: Rite of Spring.\r\n\r\nHorvarth's films include Entrance, The Pact 2, and Southbound.",
       "references": [
         {
@@ -9609,7 +9622,7 @@
       "id": "phil-trumbo",
       "name": "Phil Trumbo",
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9oLEDUxUXzDEZUB4YQYJzNW7dSpl6u5INT_Lmv8_JuHHsAXxBLUxEiuMZ&s=10",
       "references": [
         {
           "name": "Comic Vine",
@@ -10202,26 +10215,6 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
-    },
-    {
-      "id": "robert-armstrong",
-      "name": "Robert Armstrong",
-      "description": "",
-      "imageUrl": null,
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/robert-armstrong/4040-60013/"
-        },
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/14178/"
-        }
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
       ]
     },
     {
