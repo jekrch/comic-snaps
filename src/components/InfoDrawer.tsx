@@ -115,6 +115,9 @@ interface Props {
   artistIndex: ArtistIndex;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   searchUrl: string;
+  /** Opened *for* a person — an artist row's name — so their profile is out
+   *  from the start rather than sliding in over the drawer a beat later. */
+  initialPerson?: string | null;
   topOffset?: number;
   bottomOffset?: number;
   closing?: boolean;
@@ -123,7 +126,7 @@ interface Props {
   overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, initialPerson = null, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -196,6 +199,21 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     },
     [resolvePerson]
   );
+
+  /**
+   * A profile the drawer was opened *for*, put up as soon as the drawer is.
+   *
+   * Consumed once: paging to the next panel closes the profile the way it
+   * closes everything else, and the reader who navigated away has said they
+   * are done with it.
+   */
+  const wantPerson = useRef<string | null>(initialPerson);
+  useEffect(() => {
+    const name = wantPerson.current;
+    if (!open || !name) return;
+    wantPerson.current = null;
+    openPerson(name);
+  }, [open, openPerson]);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [slideOutSettled, setSlideOutSettled] = useState(false);
   const thumbRectRef = useRef<DOMRect | null>(null);

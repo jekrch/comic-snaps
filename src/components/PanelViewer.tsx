@@ -16,6 +16,8 @@ interface Props {
   currentIndex: number;
   /** Opened for the details rather than the art — the info drawer starts out. */
   openWithInfo?: boolean;
+  /** Opened for a *person* — the drawer starts out with their profile over it. */
+  openWithPerson?: string | null;
   /** Opened on top of a running visualizer, which keeps playing underneath. */
   overViz?: boolean;
   onClose: () => void;
@@ -35,6 +37,7 @@ function ViewerOverlay({
   panel,
   allPanels,
   drawerOpen,
+  initialPerson,
   graphOpen,
   drawerSlideDir,
   graphSlideDir,
@@ -50,6 +53,7 @@ function ViewerOverlay({
   panel: Panel;
   allPanels: Panel[];
   drawerOpen: boolean;
+  initialPerson: string | null;
   graphOpen: boolean;
   drawerSlideDir: "left" | "right" | null;
   graphSlideDir: "left" | "right" | null;
@@ -122,6 +126,7 @@ function ViewerOverlay({
         artistIndex={artistIndex}
         onBrowse={onBrowse}
         searchUrl={searchUrl}
+        initialPerson={initialPerson}
         topOffset={topOffset}
         bottomOffset={bottomOffset}
         slideDir={drawerSlideDir}
@@ -181,6 +186,7 @@ export default function PanelViewer({
   allPanels,
   currentIndex,
   openWithInfo = false,
+  openWithPerson = null,
   overViz = false,
   onClose,
   onNavigate,
@@ -438,6 +444,7 @@ export default function PanelViewer({
           panel={panel}
           allPanels={allPanels}
           drawerOpen={drawerOpen}
+          initialPerson={openWithPerson}
           graphOpen={graphOpen}
           drawerSlideDir={drawerSlideDir}
           graphSlideDir={graphSlideDir}

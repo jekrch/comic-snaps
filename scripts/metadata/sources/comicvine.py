@@ -23,6 +23,12 @@ COMIC_VINE_HEADERS = API_HEADERS
 
 COMIC_VINE_VOLUME_ID_RE = re.compile(r"/4050-(\d+)")
 
+# Comic Vine answers "no image on file" with a placeholder — a pale "Blank!"
+# starburst — rather than omitting the field. Storing it puts an empty graphic
+# where a face should be and, worse, suppresses the site's lettered fallback,
+# so it is treated here as no image at all.
+COMIC_VINE_BLANK_IMAGE_RE = re.compile(r"/\d+-blank\.(png|jpg)$", re.IGNORECASE)
+
 # Reused for keep-alive across all Comic Vine requests in a run.
 _SESSION = requests.Session()
 _SESSION.headers.update(COMIC_VINE_HEADERS)
@@ -120,7 +126,7 @@ def extract_comicvine_image(match: dict) -> str | None:
     image = match.get("image") or {}
     for field in ("super_url", "original_url", "screen_large_url", "screen_url", "medium_url"):
         url = image.get(field)
-        if url:
+        if url and not COMIC_VINE_BLANK_IMAGE_RE.search(url):
             return url
     return None
 

@@ -272,10 +272,12 @@ export default function FilterControl({
               onToggle={(v) => toggleInSet("postedBy", v)}
             />
 
-            {/* Actions on the narrowed set, so they close the list. Two
-                plates in a gutter rather than two more rows of list type —
-                what you can do with the narrowed set shouldn't look like more
-                ways to narrow it. */}
+            {/* Actions on the narrowed set, so they close the list. The two
+                ways across are plates in a gutter — what you can do with the
+                narrowed set shouldn't look like more ways to narrow it — and
+                the run is a line beneath them, since it is a thing the
+                collection does rather than a place to go (see
+                `VizLaunchButton`). */}
             {(onLaunchViz || (view && onViewChange)) && (
               <>
                 <div
@@ -285,25 +287,32 @@ export default function FilterControl({
                     background: "var(--color-border, rgba(74,71,69,0.25))",
                   }}
                 />
-                <div className="flex gap-1.5 px-3 pt-2.5 pb-3">
-                  {view && onViewChange && (
-                    <ViewControl
-                      view={view}
-                      onViewChange={(next) => {
-                        setOpen(false);
-                        // The switch is handed over only once the list has
-                        // finished collapsing. Sent immediately, the page's own
-                        // leaving fade starts on top of the collapse and the
-                        // list darkens as it closes — two things happening to
-                        // it at once, when only one of them is about the list.
-                        handoverRef.current = window.setTimeout(() => {
-                          handoverRef.current = null;
-                          onViewChange(next);
-                        }, CLOSE_MS);
-                      }}
-                    />
-                  )}
-                  {onLaunchViz && (
+                {view && onViewChange && (
+                  <div className="flex gap-1.5 px-3 pt-2.5">
+                    {(["series", "artists"] as const).map((target) => (
+                      <ViewControl
+                        key={target}
+                        target={target}
+                        view={view}
+                        onViewChange={(next) => {
+                          setOpen(false);
+                          // The switch is handed over only once the list has
+                          // finished collapsing. Sent immediately, the page's
+                          // own leaving fade starts on top of the collapse and
+                          // the list darkens as it closes — two things
+                          // happening to it at once, when only one of them is
+                          // about the list.
+                          handoverRef.current = window.setTimeout(() => {
+                            handoverRef.current = null;
+                            onViewChange(next);
+                          }, CLOSE_MS);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {onLaunchViz && (
+                  <div className="px-3 pt-2 pb-2.5">
                     <VizLaunchButton
                       onLaunch={() => {
                         setOpen(false);
@@ -311,8 +320,8 @@ export default function FilterControl({
                       }}
                       disabled={vizDisabled}
                     />
-                  )}
-                </div>
+                  </div>
+                )}
               </>
             )}
           </div>

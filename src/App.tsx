@@ -1,15 +1,20 @@
 import { useEffect, useLayoutEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
-import type { Gallery, IssueCredits, Panel, RatingsIndex, Series } from "./types";
+import type { Artist, Gallery, IssueCredits, Panel, RatingsIndex, Series } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
 import type { Filters } from "./utils/filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./utils/filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import SeriesShelf from "./components/SeriesShelf";
+import ArtistShelf from "./components/ArtistShelf";
 import type { GalleryView } from "./components/ViewControl";
 import { buildSeriesRows } from "./utils/seriesRollup";
 import type { SeriesRow } from "./utils/seriesRollup";
 import { sortSeriesRows } from "./utils/seriesSorting";
 import type { SeriesSortMode } from "./utils/seriesSorting";
+import { buildArtistRows } from "./utils/artistRollup";
+import type { ArtistRow } from "./utils/artistRollup";
+import { sortArtistRows } from "./utils/artistSorting";
+import type { ArtistSortMode } from "./utils/artistSorting";
 import { getCachedRatings, loadRatings } from "./utils/ratings";
 import BackgroundEchoes from "./components/BackgroundEchoes";
 import InfoModal from "./components/InfoModal";
@@ -93,6 +98,7 @@ export default function App() {
     initialTab,
     initialView,
     initialSeriesSort,
+    initialArtistSort,
     initialViz,
     initialVizPreset,
     initialVizSpeed,
@@ -103,9 +109,10 @@ export default function App() {
   } = useFilterParams();
   const [showInfo, setShowInfo] = useState<InfoTab | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>(initialSort);
-  // Two readings of the same filtered set. Both sorts stay live across a
-  // toggle: the row sort orders the shelf, the panel sort still orders the
-  // panels inside each strip (docs/series-view-plan.md §1.6, §3.1).
+  // Three readings of the same filtered set: the wall, one row per series, one
+  // row per artist. Every sort stays live across a toggle — a row sort orders
+  // its own shelf, and the panel sort still orders the panels inside every
+  // strip (docs/series-view-plan.md §1.6, §3.1).
   const [view, setView] = useState<GalleryView>(initialView);
   /**
    * Where the switch between the two readings currently is: "leaving" while the
@@ -121,9 +128,11 @@ export default function App() {
   /** Timers that put the moved cards' own styles back once they have landed. */
   const chromeTimersRef = useRef<number[]>([]);
   const [seriesSort, setSeriesSort] = useState<SeriesSortMode>(initialSeriesSort);
+  const [artistSort, setArtistSort] = useState<ArtistSortMode>(initialArtistSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   /** The metadata a row is assembled from, kept from the same boot fetch. */
-  const [meta, setMeta] = useState<{ series: Series[]; issues: IssueCredits[] }>({
+  const [meta, setMeta] = useState<{ artists: Artist[]; series: Series[]; issues: IssueCredits[] }>({
+    artists: [],
     series: [],
     issues: [],
   });
@@ -138,6 +147,8 @@ export default function App() {
   /** The viewer was opened *for* the details — a series row's title — so it
    *  comes up with the info drawer already out rather than on the bare image. */
   const [viewerInfo, setViewerInfo] = useState(false);
+  /** …and for an artist row's name, the person whose profile it opens on. */
+  const [viewerPerson, setViewerPerson] = useState<string | null>(null);
   // The launch button opens a chooser; a `?viz=1` link skips it and runs the
   // preset the URL names, since the link already carries the choice.
   const [vizPrompt, setVizPrompt] = useState(false);
@@ -282,17 +293,17 @@ export default function App() {
   const handleFiltersChange = useCallback(
     (next: Filters) => {
       setFilters(next);
-      syncToURL(next, sortMode, view, seriesSort);
+      syncToURL(next, sortMode, view, seriesSort, artistSort);
     },
-    [seriesSort, sortMode, syncToURL, view]
+    [artistSort, seriesSort, sortMode, syncToURL, view]
   );
 
   const handleSortChange = useCallback(
     (next: SortMode) => {
       setSortMode(next);
-      syncToURL(filters, next, view, seriesSort);
+      syncToURL(filters, next, view, seriesSort, artistSort);
     },
-    [filters, seriesSort, syncToURL, view]
+    [artistSort, filters, seriesSort, syncToURL, view]
   );
 
   /**
@@ -311,7 +322,7 @@ export default function App() {
       const commit = () => {
         viewSwapRef.current = null;
         setView(next);
-        syncToURL(filters, sortMode, next, seriesSort);
+        syncToURL(filters, sortMode, next, seriesSort, artistSort);
         // The echoes are a wall texture, driven by the masonry's layout pass.
         // Nothing reports positions from the shelf, so the last wall's are
         // cleared rather than left hanging behind a different rhythm (§5.3).
@@ -335,7 +346,7 @@ export default function App() {
         setViewPhase("entering");
       }, VIEW_LEAVE_MS);
     },
-    [filters, seriesSort, sortMode, syncToURL, view]
+    [artistSort, filters, seriesSort, sortMode, syncToURL, view]
   );
 
   // The incoming view has to be painted once with its objects still off the
@@ -447,9 +458,17 @@ export default function App() {
   const handleSeriesSortChange = useCallback(
     (next: SeriesSortMode) => {
       setSeriesSort(next);
-      syncToURL(filters, sortMode, view, next);
+      syncToURL(filters, sortMode, view, next, artistSort);
     },
-    [filters, sortMode, syncToURL, view]
+    [artistSort, filters, sortMode, syncToURL, view]
+  );
+
+  const handleArtistSortChange = useCallback(
+    (next: ArtistSortMode) => {
+      setArtistSort(next);
+      syncToURL(filters, sortMode, view, seriesSort, next);
+    },
+    [filters, seriesSort, sortMode, syncToURL, view]
   );
 
   const handleOpenInfo = useCallback(
@@ -488,9 +507,9 @@ export default function App() {
         series: new Set(patch.series ?? []),
       };
       setFilters(next);
-      syncToURL(next, sortMode, view, seriesSort);
+      syncToURL(next, sortMode, view, seriesSort, artistSort);
     },
-    [seriesSort, sortMode, syncToURL, view]
+    [artistSort, seriesSort, sortMode, syncToURL, view]
   );
 
   useEffect(() => {
@@ -544,7 +563,7 @@ export default function App() {
         setPanels(merged);
         // The rows are assembled from the same three bundles the wall already
         // fetches at boot — nothing in the series view needs a new request.
-        setMeta({ series, issues });
+        setMeta({ artists, series, issues });
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
@@ -582,6 +601,17 @@ export default function App() {
     [view, sortedPanels, meta, ratings, seriesSort]
   );
 
+  // One row per artist over the same filtered set, in the same active panel
+  // order. Built only for the view that is up: a row holds a dozen lazy-load
+  // observers, and the two shelves are never on screen together.
+  const artistRows = useMemo<ArtistRow[]>(
+    () =>
+      view === "artists"
+        ? sortArtistRows(buildArtistRows(sortedPanels, meta), artistSort)
+        : [],
+    [view, sortedPanels, meta, artistSort]
+  );
+
   // The guard lives here rather than per view, so toggling never re-arms the
   // page's opening fade (§5.3).
   const layoutReadyRef = useRef(false);
@@ -602,6 +632,7 @@ export default function App() {
   const handleOpenPanel = useCallback((panel: Panel) => {
     setViewerScope("filtered");
     setViewerInfo(false);
+    setViewerPerson(null);
     setOpenPanelId(panel.id);
   }, []);
 
@@ -610,11 +641,16 @@ export default function App() {
     setViewerScope("filtered");
     setCustomViewerPanels(null);
     setViewerInfo(false);
+    setViewerPerson(null);
   }, []);
 
   const handleSelectPanel = useCallback(
-    (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => {
+    (panel: Panel, group?: Panel[], opts?: { info?: boolean; person?: string }) => {
       setViewerInfo(!!opts?.info);
+      // An artist row's name opens on the person rather than on the panel's own
+      // card — the profile is where their portrait, dates and work in every
+      // role already live.
+      setViewerPerson(opts?.person ?? null);
       // A related-panel group (e.g. a whole series or an artist's panels)
       // scopes prev/next to just that group via the custom list.
       if (group && group.length > 0) {
@@ -646,6 +682,25 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: "auto" });
     },
     [handleCloseViz, handleFiltersChange]
+  );
+
+  /**
+   * The other jump a row offers: from an artist's rail to one of the books
+   * they are on. Every spelling of the title the wall carries is passed, since
+   * `Filters.series` matches on the panel's own `title` and one slug already
+   * carries two of them (§9).
+   *
+   * It narrows in place rather than changing view, which is what every other
+   * jump off a row does: the roster filtered to one book is every artist on
+   * it, which is this view's own answer to the question and a better one than
+   * silently moving the reader somewhere else.
+   */
+  const handleBrowseSeries = useCallback(
+    (titles: string[]) => {
+      handleFiltersChange({ ...EMPTY_FILTERS, series: new Set(titles) });
+      window.scrollTo({ top: 0, behavior: "auto" });
+    },
+    [handleFiltersChange]
   );
 
   const viewerPanels =
@@ -725,9 +780,9 @@ export default function App() {
             className="transition-opacity duration-500 ease-out"
             style={{ opacity: imagesLoaded ? 1 : 0 }}
           >
-            {/* The wall is unmounted rather than hidden on a toggle, so the two
-                views never both hold images in memory. It costs the wall's
-                scroll position, which is the right trade at this size (§7).
+            {/* The view that is leaving is unmounted rather than hidden, so no
+                two of them ever hold images in memory at once. It costs the
+                wall's scroll position, which is the right trade at this size (§7).
                 The wrapper carries no motion of its own — it only tells the
                 cards and rows inside which half of the swap they are in. */}
             <div
@@ -757,7 +812,7 @@ export default function App() {
                   view={view}
                   onViewChange={handleViewChange}
                 />
-              ) : (
+              ) : view === "series" ? (
                 <SeriesShelf
                   rows={seriesRows}
                   allPanels={panels}
@@ -769,6 +824,22 @@ export default function App() {
                   onFiltersChange={handleFiltersChange}
                   onSelectPanel={handleSelectPanel}
                   onBrowse={handleBrowseBy}
+                  onLayoutReady={handleLayoutReady}
+                  layoutReady={imagesLoaded}
+                  onLaunchViz={handleOpenViz}
+                />
+              ) : (
+                <ArtistShelf
+                  rows={artistRows}
+                  allPanels={panels}
+                  sort={artistSort}
+                  onSort={handleArtistSortChange}
+                  view={view}
+                  onViewChange={handleViewChange}
+                  filters={filters}
+                  onFiltersChange={handleFiltersChange}
+                  onSelectPanel={handleSelectPanel}
+                  onBrowseSeries={handleBrowseSeries}
                   onLayoutReady={handleLayoutReady}
                   layoutReady={imagesLoaded}
                   onLaunchViz={handleOpenViz}
@@ -809,6 +880,7 @@ export default function App() {
           allPanels={panels}
           currentIndex={openIndex}
           openWithInfo={viewerInfo}
+          openWithPerson={viewerPerson}
           overViz={vizRun !== null}
           onClose={handleCloseViewer}
           onNavigate={handleNavigateViewer}
