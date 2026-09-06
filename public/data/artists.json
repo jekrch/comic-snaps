@@ -156,6 +156,30 @@
       ]
     },
     {
+      "id": "al-gordon",
+      "name": "Al Gordon",
+      "description": "Alan Gordon is an American comic book creator primarily known as an inker and writer. He is best known for his 1990's work on DC Comics' Legion of Super Heroes and the Justice League of America, Marvel Comics' Fantastic Four, and Image Comics' creator-owned WildStar.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1867/446390-day2_v_algordon.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/645/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/al-gordon/4040-13522/"
+        }
+      ],
+      "aliases": [
+        "Alan Gordon"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1953
+    },
+    {
       "id": "al-williamson",
       "name": "Al Williamson",
       "description": "An American cartoonist, comic book artist and illustrator specializing in adventure, Western, science fiction and fantasy.",
@@ -252,7 +276,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -525,7 +550,7 @@
     {
       "id": "anand-rk",
       "name": "Anand RK",
-      "description": "",
+      "description": "Anand Radhakrishnan, known professionally as Anand RK, is an Indian illustrator, visual artist and comics artist based in Mumbai. His works include the graphic novels Grafity's Wall and Blue in Green, the comic series Radio Apocalypse and Resurrection Man: Quantum Karma, and illustrated journalism for Bloomberg News.\r\n\r\nIn 2021, Radhakrishnan and colourist John Pearson won the Eisner Award for Best Painter/Multimedia Artist (interior art) for their work on Blue in Green. He was reported as the first Indian to receive an Eisner Award. In 2026, he shared the Pulitzer Prize for Illustrated Reporting and Commentary with journalists Suparna Sharma and Natalie Obiko Pearson for the Bloomberg graphic story trAPPed.",
       "imageUrl": "https://kineticcollectibles.com/cdn/shop/files/anand-rk.png",
       "references": [
         {
@@ -535,7 +560,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -686,7 +712,7 @@
     {
       "id": "andy-price",
       "name": "Andy Price",
-      "description": "",
+      "description": "Andy Price is an American comic artist, currently employed by IDW Publishing. He illustrates the My Little Pony: Friendship is Magic comic.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320154-7652543111-Andy-.jpg",
       "references": [
         {
@@ -701,7 +727,8 @@
       "country": "United States",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -909,7 +936,8 @@
       "country": "Sweden",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "underground"
@@ -1381,7 +1409,8 @@
       "birthYear": 1953,
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -1909,7 +1938,8 @@
       "country": "United States",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -2672,7 +2702,7 @@
     {
       "id": "dave-geiser",
       "name": "Dave Geiser",
-      "description": "",
+      "description": "David Geiser (June 28, 1947 \u2013 October 14, 2020) was an American painter and creator of several underground comix.",
       "imageUrl": "https://bloximages.chicago2.vip.townnews.com/27east.com/content/tncms/assets/v3/editorial/0/83/083ee9cd-11a0-5885-96c0-334d193ce409/69175c4655e9b.image.jpg",
       "references": [
         {
@@ -2693,7 +2723,8 @@
       "country": "USA",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "underground"
@@ -2767,7 +2798,7 @@
     {
       "id": "dave-sheridan",
       "name": "Dave Sheridan",
-      "description": "",
+      "description": "Dave Sheridan (June 7, 1943 \u2013 March 28, 1982) was an American cartoonist and underground comix artist. He was the creator of Dealer McDope and collaborated with Gilbert Shelton and Paul Mavrides on The Fabulous Furry Freak Brothers. As creative partner with fellow underground creator Fred Schrier, using the name \"Overland Vegetable Stagecoach,\" they worked on Mother's Oats Funnies, published by Rip Off Press from 1970 to 1976.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/1288342-david_sheridan.gif",
       "references": [
         {
@@ -2785,7 +2816,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -3161,7 +3193,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ],
       "birthYear": 1946,
       "country": "United States"
@@ -3169,7 +3202,7 @@
     {
       "id": "deniz-camp",
       "name": "Deniz Camp",
-      "description": "",
+      "description": "Deniz Camp is a Filipino-American comics writer who has written for independent comics, Marvel Comics, and DC Comics. His most notable works are The Ultimates, Absolute Martian Manhunter and Assorted Crisis Events.\r\n\r\nCamp received five Eisner Award nominations in 2025, the most of any creator. This led to Popverse stating that \"Camp has established himself as a vibrant new voice in American comics today thanks to his ability to merge high-concept genre storytelling with slippery, inventive prose.\"",
       "imageUrl": "https://static.metron.cloud/media/creator/2024/04/14/d-camp.jpg",
       "references": [
         {
@@ -3187,7 +3220,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -3862,7 +3896,7 @@
     {
       "id": "esteban-maroto",
       "name": "Esteban Maroto",
-      "description": "",
+      "description": "Esteban Maroto (born 1942) is a Spanish comic book artist.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/225835-124792-esteban-maroto.jpg",
       "references": [
         {
@@ -3881,7 +3915,8 @@
       "country": "Spain",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -3958,7 +3993,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -4749,7 +4785,7 @@
     {
       "id": "gurihiru-goodman-yamada",
       "name": "Gurihiru & Goodman Yamada",
-      "description": "",
+      "description": "Gurihiru (Japanese: \u30b0\u30ea\u30d2\u30eb), also credited as Illustrator Unit Gurihiru and Gurihiru Studios, is a Japanese illustration duo, consisting of Chifuyu Sasaki (workplan design, pencils, inks) and Naoko Kawano (workplan design, colors, webdesign). Both originating from Sapporo, Japan, they are currently based in Saitama, mainly working as artists for American comics.\r\n\r\nThe two women are art school graduates who worked as web designers and art museum receptionists prior to their work in comics. After winning 2nd place in a manga competition, they were advised by the organizer of the contest that their art style didn't fit the Japanese market. They decided to try the American market and have since illustrated many American comics and graphic novels.",
       "imageUrl": null,
       "references": [
         {
@@ -4759,7 +4795,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -5013,7 +5050,8 @@
       "country": "Greece",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -5565,13 +5603,14 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
       "id": "jay-lynch",
       "name": "Jay Lynch",
-      "description": "",
+      "description": "Jay Patrick Lynch (January 7, 1945 \u2013 March 5, 2017) was an American cartoonist who played a key role in the underground comix movement with his Bijou Funnies and other titles. He is best known for his comic strip Nard n' Pat and the running gag Um tut sut. His work is sometimes signed Jayzey Lynch. Lynch was the main writer for Bazooka Joe comics from 1967 to 1990; he contributed to Mad, and in the 2000s expanded into the children's book field.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9085212-jaylynch.jpg",
       "references": [
         {
@@ -5592,7 +5631,8 @@
       "country": "USA",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "underground"
@@ -5627,7 +5667,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -6308,7 +6349,8 @@
       "country": "Malta",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -6852,7 +6894,7 @@
     {
       "id": "joseph-shuster",
       "name": "Joseph Shuster",
-      "description": "",
+      "description": "Joseph Shuster ( SHOO-st\u0259r; July 10, 1914 \u2013 July 30, 1992) was a Canadian-American comic book artist best known for co-creating the DC Comics character Superman, with Jerry Siegel, in Action Comics #1 (cover-dated June 1938).\r\n\r\nShuster was involved in a number of legal battles over ownership of the Superman character. His comic book career after Superman was relatively unsuccessful, and by the mid-1970s, Shuster had left the field completely due to partial blindness.\r\n\r\nHe and Siegel were inducted into both the comic book industry's Will Eisner Comic Book Hall of Fame in 1992 and the Jack Kirby Hall of Fame in 1993. In 2005, the Canadian Comic Book Creator Awards Association instituted the Joe Shuster Awards, named to honor the Canada-born artist.",
       "imageUrl": null,
       "references": [
         {
@@ -6862,7 +6904,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -7099,7 +7142,8 @@
       "country": "Canada",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -7310,7 +7354,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -7339,7 +7384,7 @@
     {
       "id": "keith-griffen",
       "name": "Keith Griffen",
-      "description": "",
+      "description": "Keith Ian Giffen (November 30, 1952 \u2013 October 9, 2023) was an American comics artist and writer. He was known for his work for DC Comics on their Legion of Super-Heroes and Justice League titles and as the co-creator of Lobo, Rocket Raccoon, and Jaime Reyes.",
       "imageUrl": null,
       "references": [
         {
@@ -7353,7 +7398,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -7600,7 +7646,8 @@
       "birthYear": 1960,
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -8061,7 +8108,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ],
       "birthYear": 1946,
       "country": "U.S.A.",
@@ -8496,6 +8544,28 @@
       ]
     },
     {
+      "id": "mark-waid",
+      "name": "Mark Waid",
+      "description": "Mark Waid is an American comic book writer, known for his work on titles for DC Comics such as The Flash, Kingdom Come and Superman: Birthright, and for his work on Captain America, Fantastic Four, and Daredevil for Marvel Comics. From August 2007 to December 2010, Waid served as Editor-in-Chief, and later, Chief Creative Officer of Boom! Studios, where he wrote titles such as Irredeemable, Incorruptible, and The Traveler.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10141398-mark_waid.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/36/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mark-waid/4040-40724/"
+        }
+      ],
+      "birthYear": 1962,
+      "country": "United States of America",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "martin-biro",
       "name": "Martin Biro",
       "description": "",
@@ -8581,9 +8651,29 @@
       ]
     },
     {
+      "id": "mary-bierbaum",
+      "name": "Mary Bierbaum",
+      "description": "Writer who had long runs on Legion of Superheroes and Legionnaires for DC and also worked for Image and Marvel among others.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/95246-59922-mary-bierbaum.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/644/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mary-bierbaum/4040-42142/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "mary-fleener",
       "name": "Mary Fleener",
-      "description": "",
+      "description": "Mary Fleener (born September 14, 1951) is an American alternative comics artist, writer and musician from Los Angeles. Fleener's drawing style, which she calls cubismo, derives from the cubist aesthetic and other artistic traditions. Her first publication was a work about Zora Neale Hurston, called Hoodoo (1988), followed by the semi-autobiographical comics series Slutburger, and the anthology Life of the Party (1996). She is a member of the rock band called The Wigbillies.\r\n\r\nAmong Fleener's influences are ancient Egyptian art and the works of Chester Gould (Dick Tracy), Otto Soglow (The Little King) and Al Capp (Li'l Abner). Robert Crumb and Robert Armstrong (creator of Mickey Rat) encouraged her to create her own comics.\r\n\r\nHer works have been exhibited at La Luz de Jesus Gallery, Track 16, David Zapt Gallery, Laguna Beach Art Museum Annex, LACE (Los Angeles), COCA (Seattle), Southwestern College, Patricia Correia Gallery, Sushi Gallery. In 2020 her work was included in the exhibit Women in Comics: Looking Forward, Looking Back at the Society of Illustrators in New York City.\r\n\r\nShe lives and works in Encinitas, California.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/79902/1903531-event_fleener_1_.jpg",
       "references": [
         {
@@ -8602,7 +8692,8 @@
       "country": "USA",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "underground"
@@ -8693,7 +8784,8 @@
       "country": "United States of America",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -8719,7 +8811,7 @@
     {
       "id": "matthew-rosenberg",
       "name": "Matthew Rosenberg",
-      "description": "",
+      "description": "Matthew Rosenberg is an American comics writer who has worked for small press, Marvel Comics, and DC Comics. He is best known for his work on the Punisher, X-Men, the Red Hood, and the Joker, as well as his indie comic 4 Kids Walk Into a Bank with artist Tyler Boss. He also helps run a podcast called Ideas Don't Bleed with Ethan S. Parker and Griffin Sheridan.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/04/25/m-rosenberg.jpg",
       "references": [
         {
@@ -8737,7 +8829,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -9997,7 +10090,7 @@
     {
       "id": "phillip-kennedy-johnson",
       "name": "Phillip Kennedy Johnson",
-      "description": "",
+      "description": "Phillip Kennedy Johnson is an American Eisner-nominated comic book writer. He is best known for his work on Superman/Action Comics, Batman and Robin, The Incredible Hulk, Alien, and 007; his comics work has been published by DC, Marvel, BOOM! Studios, Dynamite, Archaia, IDW, Aftershock, and Scout Comics.\r\n\r\nOutside of his writing career, Johnson is an Army veteran and musician in the Washington, DC area. He was a trumpet player with The U.S. Army Field Band of Washington, DC and the Glenn Miller Orchestra, and has also performed with the Moscow Ballet, Dallas Opera, Washington Symphonic Brass, and Benny Goodman Orchestra.\r\n\r\nPhillip Kennedy Johnson, along with Nic Klein, celebrated 800 issues of 'Hulk' in 'Incredible Hulk #19' in November 2024.",
       "imageUrl": "https://static.metron.cloud/media/creator/2019/01/23/johnson.jpg",
       "references": [
         {
@@ -10011,7 +10104,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -10853,7 +10947,8 @@
       "birthYear": 1994,
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -11058,7 +11153,8 @@
       "country": "U.S.",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "underground"
@@ -11296,7 +11392,7 @@
     {
       "id": "savage-pencil-edwin-pouncey",
       "name": "Savage Pencil (Edwin Pouncey)",
-      "description": "",
+      "description": "Edwin Pouncey (born June 1951), also known by the nom de plume Savage Pencil, is an English comics artist, musician, and music journalist.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/14/148518/2999304-savage%20pencil.jpg",
       "references": [
         {
@@ -11311,7 +11407,8 @@
       "country": "United Kingdom",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -12405,6 +12502,26 @@
       "country": "USA"
     },
     {
+      "id": "tom-bierbaum",
+      "name": "Tom Bierbaum",
+      "description": "Writer who worked with Mary Bierbaum on Legion of Superheroes and Legionnaires as well as other work for Image, Marvel and others.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/95245-28753-tom-bierbaum.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/643/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-bierbaum/4040-42143/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "tom-brevoort",
       "name": "Tom Brevoort",
       "description": "Tom Brevoort is an American comic book editor, known for his work for Marvel Comics, where he has overseen titles such as New Avengers, Civil War, and Fantastic Four. He became Executive Editor in 2007, and in January 2011 was promoted to Senior Vice President of Publishing.",
@@ -12446,6 +12563,29 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "tom-mccraw",
+      "name": "Tom McCraw",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10812/1793460-tom_mccraw.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1268/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-mccraw/4040-5771/"
+        }
+      ],
+      "aliases": [
+        "Tom J. McCraw"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "tom-muller",
@@ -12598,7 +12738,8 @@
       "country": "USA",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {

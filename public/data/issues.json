@@ -6174,6 +6174,75 @@
       ]
     },
     {
+      "id": "legion-of-super-heroes-1",
+      "series": "legion-of-super-heroes",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "al-gordon",
+          "name": "Al Gordon",
+          "roles": [
+            "Writer",
+            "Inker",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "keith-giffen",
+          "name": "Keith Giffen",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mary-bierbaum",
+          "name": "Mary Bierbaum",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "tom-bierbaum",
+          "name": "Tom Bierbaum",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "tom-mccraw",
+          "name": "Tom McCraw",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "todd-klein",
+          "name": "Todd Klein",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "mark-waid",
+          "name": "Mark Waid",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/legion-of-super-heroes-1989-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "lobo-1",
       "series": "lobo",
       "issue": 1,

@@ -393,7 +393,8 @@
       "issueCount": 8,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "coverSources": {
         "metron": [
@@ -967,7 +968,8 @@
       "issueCount": 71,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "coverSources": {
         "metron": [
@@ -2249,6 +2251,41 @@
       ]
     },
     {
+      "id": "legion-of-super-heroes",
+      "name": "Legion of Super-Heroes",
+      "parentSeries": null,
+      "description": "Starring: Legion of Super-Heroes.\r\n\r\nContinued from: Legion of Super-Heroes (Volume 3)\r\n\r\nRuns in tandem with: Legionnaires (Starting in 1993).",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/1949621-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/legion-of-super-heroes/4050-4201/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/1777/"
+        }
+      ],
+      "startYear": 1989,
+      "publisher": "DC Comics",
+      "issueCount": 127,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/legion-of-super-heroes/409d9849aba7.jpg",
+        "data/covers/legion-of-super-heroes/2eca67458e49.jpg",
+        "data/covers/legion-of-super-heroes/f87e340575e7.jpg",
+        "data/covers/legion-of-super-heroes/22147227288c.jpg"
+      ]
+    },
+    {
       "id": "lobo",
       "name": "Lobo",
       "parentSeries": null,
@@ -2975,7 +3012,8 @@
       "issueCount": 31,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "coverImages": [
         "data/covers/rip-off-comix/9bbcb0dbcf4b.jpg",
@@ -4181,7 +4219,8 @@
       "sources": [
         "comicvine",
         "metron",
-        "metron-series-lookup"
+        "metron-series-lookup",
+        "wikipedia"
       ],
       "coverSources": {
         "metron": [
@@ -4222,7 +4261,8 @@
       "sources": [
         "comicvine",
         "metron",
-        "metron-series-lookup"
+        "metron-series-lookup",
+        "wikipedia"
       ],
       "coverSources": {
         "metron": [
