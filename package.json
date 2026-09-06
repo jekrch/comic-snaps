@@ -14,7 +14,7 @@
     "test:types": "tsc -p tsconfig.test.json --noEmit"
   },
   "dependencies": {
-    "@jekrch/react-viewport-lightbox": "^0.8.0",
+    "@jekrch/react-viewport-lightbox": "^0.9.0",
     "@xyflow/react": "^12.11.2",
     "lucide-react": "^0.575.0",
     "ogl": "^1.0.11",

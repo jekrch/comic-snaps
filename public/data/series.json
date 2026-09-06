@@ -154,6 +154,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/anubis/4050-49806/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/26480/"
         }
       ],
       "startYear": 1996,
@@ -255,6 +259,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/avenue-d/4050-48191/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/4267/"
         }
       ],
       "tags": [
@@ -289,6 +297,14 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/11881/"
+        },
+        {
+          "name": "Image Comics",
+          "url": "https://imagecomics.com/press-releases/new-invincible-comics-incoming-invincible-universe-battle-beast-by-robert-kirkman-ryan-ottley-to-launch-in-april-2025"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/223763/"
         }
       ],
       "sources": [
@@ -362,6 +378,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/bijou-funnies/4050-48147/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Bijou_Funnies"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/bijoufunnies.html"
         }
       ],
       "startYear": 1968,
@@ -400,6 +424,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/bizarre-sex/4050-6824/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/7341/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/bizarresex.html"
         }
       ],
       "startYear": 1972,
@@ -467,6 +499,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16109/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/238479/"
         }
       ],
       "sources": [
@@ -500,7 +536,16 @@
       "parentSeries": null,
       "description": "Boy Island is a graphic novel by Leo Fox, published by Silver Sprocket. A modern transgender fable told in Fox's organic, surreal style, it follows Lucille, who lives on Girl Island, one of two islands formed when the world was split in twain, but who is secretly a boy.",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Silver Sprocket",
+          "url": "https://store.silversprocket.net/products/boy-island-by-leo-fox"
+        },
+        {
+          "name": "Silver Sprocket: Leo Fox",
+          "url": "https://www.silversprocket.net/crew/leo-fox/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -519,6 +564,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/buzz/4050-48692/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/32347/"
         }
       ],
       "imageUrl": null,
@@ -585,6 +634,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/clowns/4050-50696/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/16158/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/clowns.html"
         }
       ],
       "startYear": 1972,
@@ -755,6 +812,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/creatures-of-the-id/4050-18313/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/4123/"
+        },
+        {
+          "name": "Wikipedia: Madman",
+          "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/978/100394-18313-107226-1-creatures-of-the-id.jpg",
@@ -887,6 +952,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/deadline/4050-32862/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Deadline_(comics_magazine)"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/37956/"
         }
       ],
       "startYear": 1988,
@@ -991,6 +1064,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/dracula-vlad-the-impaler/4050-5187/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/4892/"
         }
       ],
       "startYear": 1993,
@@ -1097,6 +1174,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/erospsyche/4050-134572/"
+        },
+        {
+          "name": "Bleeding Cool",
+          "url": "https://bleedingcool.com/comics/ablaze-publish-maria-llovets-eros-psyche-in-march-2021/"
+        },
+        {
+          "name": "Comic Book RoundUp",
+          "url": "https://comicbookroundup.com/comic-books/reviews/ablaze/maria-llovets-erospsyche"
         }
       ],
       "startYear": 2021,
@@ -1230,7 +1315,16 @@
       "parentSeries": null,
       "description": "Femme Noire is a one-shot published by Cat-Head Comics in 1989, written and drawn by David A. Cherry and Shirin Tolle with a cover by Steve Lafler. It collects two stories, \"The Shamness\" and \"Wimp Rock Babylon.\"",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/40714/"
+        },
+        {
+          "name": "Wikipedia: Cat-Head Comics",
+          "url": "https://en.wikipedia.org/wiki/Cat-Head_Comics"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron",
@@ -1293,6 +1387,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/final-cut/4050-160092/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/218796/"
+        },
+        {
+          "name": "Wikipedia: Charles Burns",
+          "url": "https://en.wikipedia.org/wiki/Charles_Burns_(cartoonist)"
         }
       ],
       "startYear": 2024,
@@ -1353,7 +1455,16 @@
       "parentSeries": null,
       "description": "Floating BunnyHead and friends are a group of oddball rascals who find themselves neck-deep in trouble seemingly everywhere they go.",
       "imageUrl": "https://www.indyplanet.com/wp-content/uploads/2026/05/7004_246969B.jpg",
-      "references": [],
+      "references": [
+        {
+          "name": "Skelenaut",
+          "url": "https://www.skelenaut.com/floating-bunnyhead/"
+        },
+        {
+          "name": "IndyPlanet",
+          "url": "https://www.indyplanet.com/floating-bunnyhead-1"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron",
@@ -1485,6 +1596,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/hank-howard-pizza-detective-a-slice-of-life/4050-171775/"
+        },
+        {
+          "name": "The Thrilling Detective",
+          "url": "https://thrillingdetective.com/2026/04/09/hank-howard-pizza-detective/"
+        },
+        {
+          "name": "Comic Watch",
+          "url": "https://comic-watch.com/comic-book-reviews/indie-spotlight-hank-howard-pizza-detective-a-slice-of-life-1-how-the-slice-falls/"
         }
       ],
       "startYear": 2026,
@@ -1706,6 +1825,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/hup/4050-39526/"
+        },
+        {
+          "name": "Wikipedia: Robert Crumb",
+          "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
         }
       ],
       "startYear": 1986,
@@ -1944,6 +2067,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/juice-city/4050-74843/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/160508/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/juicecity1.html"
         }
       ],
       "startYear": 1977,
@@ -2243,6 +2374,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/madman-adventures-0-ash-can-edition/4000-279553/"
+        },
+        {
+          "name": "Wikipedia: Madman",
+          "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
         }
       ],
       "sources": [
@@ -2269,6 +2404,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/madman-picture-exhibition/4050-25782/"
+        },
+        {
+          "name": "Wikipedia: Madman",
+          "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
         }
       ],
       "startYear": 2002,
@@ -2303,6 +2442,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/mickey-rat/4050-52592/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/mickeyrat.html"
+        },
+        {
+          "name": "Wikipedia: Robert Armstrong",
+          "url": "https://en.wikipedia.org/wiki/Robert_Armstrong_(cartoonist)"
         }
       ],
       "startYear": 1972,
@@ -2410,6 +2557,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/motor-city-comics/4050-54970/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17116/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/motorcitycomics.html"
         }
       ],
       "startYear": 1969,
@@ -2440,7 +2595,16 @@
       "parentSeries": null,
       "description": "My Body Is Unspooling is a minicomic by the UK cartoonist and painter Leo Fox, published by Silver Sprocket in 2024. It follows Lucille, whose body and mind are permanently at odds: Lucille too cold and too resentful for his body, his body too warm and too loud for Lucille. The comic worries at what holds the two together.",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Silver Sprocket",
+          "url": "https://store.silversprocket.net/products/my-body-unspooling-by-leo-fox"
+        },
+        {
+          "name": "Silver Sprocket: Leo Fox",
+          "url": "https://www.silversprocket.net/crew/leo-fox/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron",
@@ -2574,6 +2738,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/pacific-presents/4050-3172/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/2687/"
+        },
+        {
+          "name": "Wikipedia: Pacific Comics",
+          "url": "https://en.wikipedia.org/wiki/List_of_Pacific_Comics_publications"
         }
       ],
       "startYear": 1982,
@@ -2784,6 +2956,18 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/rip-off-comix/4050-28555/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Rip_Off_Comix"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17118/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/ripoffcomix.html"
         }
       ],
       "startYear": 1977,
@@ -2814,6 +2998,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/seamonsters-and-superheroes/4050-63987/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/45179/"
+        },
+        {
+          "name": "Comiclopedia: Scott Mills",
+          "url": "https://www.lambiek.net/artists/m/mills.htm"
         }
       ],
       "startYear": 2003,
@@ -2900,6 +3092,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/snarf/4050-6956/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/7485/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/snarf.html"
         }
       ],
       "startYear": 1972,
@@ -2937,6 +3137,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/space-riders/4050-81111/"
+        },
+        {
+          "name": "Black Mask Studios",
+          "url": "https://blackmaskstudios.com/space-riders/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4774946-01.jpg",
@@ -2963,6 +3167,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/space-riders-galaxy-of-brutality/4050-100380/"
+        },
+        {
+          "name": "Black Mask Studios",
+          "url": "https://blackmaskstudios.com/space-riders/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/5773001-01.jpg",
@@ -2990,6 +3198,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/space-riders-vortex-of-darkness/4050-123148/"
+        },
+        {
+          "name": "Black Mask Studios",
+          "url": "https://blackmaskstudios.com/space-riders/"
         }
       ],
       "startYear": 2019,
@@ -3093,6 +3305,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/street-poet-ray/4050-12008/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/13035/"
         }
       ],
       "startYear": 1990,
@@ -3119,6 +3335,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tales-calculated-to-drive-you-mad/4050-6026/"
+        },
+        {
+          "name": "Wikipedia: History of Mad",
+          "url": "https://en.wikipedia.org/wiki/History_of_Mad"
         }
       ],
       "startYear": 1997,
@@ -3157,6 +3377,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tales-of-ordinary-madness/4050-21152/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17030/"
         }
       ],
       "startYear": 1992,
@@ -3183,6 +3407,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tasty-comix/4050-82248/"
+        },
+        {
+          "name": "Comix Joint",
+          "url": "https://www.comixjoint.com/tastycomix.html"
         }
       ],
       "startYear": 1969,
@@ -3542,6 +3770,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/the-oddballs-odyssey/4050-171692/"
+        },
+        {
+          "name": "The Comics Journal",
+          "url": "https://www.tcj.com/reviews/the-oddballs-odyssey-1/"
         }
       ],
       "startYear": 2026,
@@ -3574,6 +3806,14 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16138/"
+        },
+        {
+          "name": "Dark Horse",
+          "url": "https://www.darkhorse.com/comics/3019-114/shaolin-cowboy-staying-ailive-1/"
+        },
+        {
+          "name": "Wikipedia: Geof Darrow",
+          "url": "https://en.wikipedia.org/wiki/Geof_Darrow"
         }
       ],
       "sources": [
@@ -3638,6 +3878,18 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/thrillogy/4050-57431/"
+        },
+        {
+          "name": "Wikipedia: Pacific Comics",
+          "url": "https://en.wikipedia.org/wiki/List_of_Pacific_Comics_publications"
+        },
+        {
+          "name": "Comiclopedia: Tim Conrad",
+          "url": "https://www.lambiek.net/artists/c/conrad_tim.htm"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/2937/"
         }
       ],
       "sources": [
@@ -3669,6 +3921,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/thumpn-guts/4050-57346/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/13892/"
         }
       ],
       "tags": [
@@ -3730,7 +3986,16 @@
       "parentSeries": null,
       "description": "Trumpzilla is a 32-page one-shot by the underground cartoonist Sandez Rey, self-published through IndyPlanet. Trumpzilla rises to fight a giant robot piloted by a female mad scientist, and a back-up strip follows Dr. Spiral, a lucha libre enforcer for the Catholic Church, against a werewolf.",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "IndyPlanet",
+          "url": "https://www.indyplanet.com/trumpzilla-1"
+        },
+        {
+          "name": "Comic Vine: Sandez Rey",
+          "url": "https://comicvine.gamespot.com/sandez-rey/4040-60019/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron",
@@ -3755,6 +4020,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/uneeda-comix/4050-46722/"
+        },
+        {
+          "name": "Wikipedia: Robert Crumb",
+          "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17228/"
         }
       ],
       "startYear": 1970,
@@ -3936,6 +4209,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/weirdo/4050-33497/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Weirdo_(comics)"
         }
       ],
       "anthology": true,
@@ -4008,6 +4285,14 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/xyz-comics/4050-44961/"
+        },
+        {
+          "name": "Wikipedia: Robert Crumb",
+          "url": "https://en.wikipedia.org/wiki/Robert_Crumb"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17128/"
         }
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2147651-xyz.jpg",

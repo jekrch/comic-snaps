@@ -1,19 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
-import { ImageViewer, type ViewerRect } from "@jekrch/react-viewport-lightbox";
+import { ImageViewer } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import { setViewerOpen } from "../hooks/useViewerOpen";
-import {
-  clipInsets,
-  coverRect,
-  cropsAnything,
-  dissolveMask,
-  featherFor,
-  parseObjectPosition,
-  type Rect,
-} from "../utils/sharedElement";
 import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
 import InfoDrawer from "./InfoDrawer";
@@ -54,12 +45,10 @@ function ViewerOverlay({
   topOffset,
   bottomOffset,
   closing,
-  isZoomed,
   overViz,
   onSelectPanel,
   onBrowse,
   setContentShift,
-  onCollapse,
 }: {
   panel: Panel;
   allPanels: Panel[];
@@ -72,12 +61,10 @@ function ViewerOverlay({
   topOffset: number;
   bottomOffset: number;
   closing: boolean;
-  isZoomed: boolean;
   overViz: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
-  onCollapse: (isZoomed: boolean) => void;
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
   const artistIndex = useArtistIndex();
@@ -97,19 +84,6 @@ function ViewerOverlay({
   useLayoutEffect(() => {
     if (closing) setViewerOpen(false);
   }, [closing]);
-
-  // Start the crop's aperture on the same frame the collapse starts, and for
-  // the same reason this file's other close-time work lives out here: a child's
-  // layout effects run before its parent's, so this lands while the image is
-  // still at rest, which is the box the library is about to measure. Latched,
-  // because the effect's other dependencies could otherwise re-fire it partway
-  // through the flight and restart the aperture from open.
-  const clipped = useRef(false);
-  useLayoutEffect(() => {
-    if (!closing || clipped.current) return;
-    clipped.current = true;
-    onCollapse(isZoomed);
-  }, [closing, isZoomed, onCollapse]);
 
   // Push the image track out of the way for whichever overlay is open: up for
   // the drawer (slides from the bottom), down for the graph (slides from the
@@ -178,46 +152,6 @@ function ViewerOverlay({
   );
 }
 
-/** The library's own collapse timing, which the aperture has to run with. */
-const COLLAPSE_MS = 250;
-/** Samples of the dissolve; ~20ms apart, so finer than a frame. */
-const DISSOLVE_STEPS = 12;
-/**
- * The fade is done a little before the flight is, so the picture has settled on
- * its tile for a frame or two before the viewer tears down — the end of the
- * animation is where a stray frame of timing slop would show.
- */
-const DISSOLVE_END = 0.85;
-
-/**
- * The rect the viewer's image flies out of and collapses back into, plus the
- * window the thumbnail leaves open on it.
- *
- * A wall card shows the whole panel, so the card's own box is the right
- * target and nothing is hidden. A series tile is a *crop* — a clamped width
- * with `object-fit: cover` — and flying the uncropped image into that box
- * squashes it for the length of the animation, hardest on exactly the panels
- * the crop works hardest on. So where the thumbnail crops, hand back the rect
- * the whole image would occupy at the crop's own scale: the slice actually on
- * screen still lines up with the tile, and the flight stays in proportion the
- * whole way.
- *
- * What that leaves over is `clip` — the tile's own box, the part of the
- * arriving image a reader is meant to still be able to see once it lands. See
- * `playCollapseClip`.
- */
-function originGeometry(el: HTMLElement): { origin: HTMLElement | ViewerRect; clip: Rect | null } {
-  const img = el.querySelector("img");
-  if (!img || getComputedStyle(img).objectFit !== "cover") return { origin: el, clip: null };
-  const { naturalWidth: iw, naturalHeight: ih } = img;
-  // The img's own box rather than the tile's: a cover carries a 1px border,
-  // and it is the painted image the crop and the aperture are cut from.
-  const box = img.getBoundingClientRect();
-  if (!iw || !ih || !box.width || !box.height) return { origin: el, clip: null };
-  const position = parseObjectPosition(getComputedStyle(img).objectPosition);
-  return { origin: coverRect(box, { width: iw, height: ih }, position), clip: box };
-}
-
 export default function PanelViewer({
   panel,
   panels,
@@ -265,7 +199,7 @@ export default function PanelViewer({
   // Over the visualizer there is no visible card to fly from either: the run
   // covers the grid, so flying out of a hidden thumbnail would read as a jump
   // from nowhere.
-  const originEl = useCallback(
+  const getOrigin = useCallback(
     (i: number) => {
       if (overlayOpen || overViz) return null;
       const it = items[i];
@@ -273,74 +207,6 @@ export default function PanelViewer({
       return document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
     },
     [items, overlayOpen, overViz]
-  );
-
-  const getOrigin = useCallback(
-    (i: number) => {
-      const el = originEl(i);
-      return el ? originGeometry(el).origin : null;
-    },
-    [originEl]
-  );
-
-  /**
-   * Dissolve away the part of the image the tile crops off, over the flight.
-   *
-   * Flying the whole image back to the crop's scale keeps its proportions, but
-   * it also means the parts the tile crops away are still on screen when the
-   * flight lands — and a beat later the viewer unmounts and they blink out
-   * together, which reads as a glitch rather than as an ending. So fade them
-   * out on the way instead: a mask that leaves the tile's slice alone and takes
-   * the rest down to nothing where it stands, so there is nothing left to blink
-   * out. See `dissolveMask` for why it fades rather than closing inward.
-   *
-   * The conditions match the library's own, because none of this must happen on
-   * a close that is a plain fade instead of a flight: no thumbnail on screen, a
-   * zoomed image, or reduced motion all mean there is nothing to collapse into,
-   * and thinning the art on the way out would be worse than the snap it is here
-   * to fix.
-   */
-  const playCollapseClip = useCallback(
-    (isZoomed: boolean) => {
-      if (isZoomed) return;
-      if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-      const el = originEl(currentIndex);
-      if (!el) return;
-      const { origin, clip } = originGeometry(el);
-      if (!clip || origin instanceof HTMLElement) return;
-      // Offscreen thumbnails get a fade from the library, not a flight.
-      if (
-        origin.top >= window.innerHeight ||
-        origin.top + origin.height <= 0 ||
-        origin.left >= window.innerWidth ||
-        origin.left + origin.width <= 0
-      )
-        return;
-
-      const img = document.querySelector<HTMLImageElement>(".rvl-img-wrapper > img.rvl-img");
-      if (!img || typeof img.animate !== "function") return;
-      // Read before the library's own layout effect fires: the image is still
-      // at rest, which is the same box the collapse measures. `clip-path` is
-      // paint-only, so starting one here cannot disturb that measurement.
-      const rest = img.getBoundingClientRect();
-      if (!rest.width || !rest.height) return;
-
-      const insets = clipInsets(rest, origin, clip);
-      if (!cropsAnything(insets)) return;
-
-      const size = { width: rest.width, height: rest.height };
-      const feather = featherFor(insets);
-      // Linear, and holding still: an even fade is the point, and the flight's
-      // own easing run over the top of it is what made the first attempt at
-      // this lurch — three quarters of the crop inside the first four frames.
-      const frames = Array.from({ length: DISSOLVE_STEPS + 1 }, (_, i) => {
-        const u = i / DISSOLVE_STEPS;
-        const mask = dissolveMask(insets, size, Math.min(1, u / DISSOLVE_END), feather);
-        return { offset: u, maskImage: mask, webkitMaskImage: mask };
-      });
-      img.animate(frames, { duration: COLLAPSE_MS, easing: "linear", fill: "forwards" });
-    },
-    [originEl, currentIndex]
   );
 
   // Tell the page behind to go quiet while the viewer owns the screen: the
@@ -562,12 +428,10 @@ export default function PanelViewer({
           topOffset={ctx.topBarHeight}
           bottomOffset={ctx.bottomBarHeight}
           closing={ctx.closing}
-          isZoomed={ctx.isZoomed}
           overViz={overViz}
           onSelectPanel={onSelectPanel}
           onBrowse={onBrowse}
           setContentShift={ctx.setContentShift}
-          onCollapse={playCollapseClip}
         />
       )}
     />
