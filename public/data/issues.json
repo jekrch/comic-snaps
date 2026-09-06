@@ -2948,6 +2948,73 @@
       ]
     },
     {
+      "id": "crowbound-1",
+      "series": "crowbound",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "jeff-lemire",
+          "name": "Jeff Lemire",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "steve-wands",
+          "name": "Steve Wands",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "dustin-nguyen",
+          "name": "Dustin Nguyen",
+          "roles": [
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jeffrey-alan-love",
+          "name": "Jeffrey Alan Love",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "martin-simmonds",
+          "name": "Martin Simmonds",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "peach-momoko",
+          "name": "Peach Momoko",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/crowbound-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "dark-spaces-wildfire-1",
       "series": "dark-spaces-wildfire",
       "issue": 1,
