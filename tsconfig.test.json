@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // The worker's own types live in worker/node_modules; the DOM lib the
+    // app config already pulls in covers Request/Response for these tests.
+    "types": ["node", "vitest/globals"],
+    "noEmit": true,
+    // Test doubles name only the fields a case is about and cast the rest.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/utils/testPanel.ts",
+    "src/vite-env.d.ts",
+    "types/test-globals.d.ts",
+    "worker/src/**/*.test.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": []
+}

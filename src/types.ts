@@ -116,6 +116,15 @@ export interface Panel {
    */
   cover?: boolean;
   /**
+   * Not from the gallery: a creator's portrait from `artists.json`, standing in
+   * the panel viewer as a panel so an artist row's strip can be paged end to
+   * end. Its `image` is the record's `imageUrl` and its `artist` is the person
+   * it is of — which is the one piece of bibliography a portrait does have, and
+   * what the info drawer resolves their card from. Everything a panel is posted
+   * with is empty: nobody put a portrait on the wall.
+   */
+  portrait?: boolean;
+  /**
    * Not from the gallery: an image the reader chose off their own disk to feed
    * a visualizer run. Its `image` is a `blob:` URL that lives only as long as
    * the tab, nothing is uploaded, and it never reaches the wall or the viewer —

@@ -1,6 +1,8 @@
 import { memo, useCallback, useMemo } from "react";
 import type { Panel } from "../types";
-import type { ArtistRow as ArtistRowData } from "../utils/artistRollup";
+import { buildPortraitPanel, type ArtistRow as ArtistRowData } from "../utils/artistRollup";
+import { panelImageUrl } from "../utils/imageUrl";
+import { useNearViewport } from "../hooks/useNearViewport";
 import { useRowStrip } from "../hooks/useRowStrip";
 import RowBackdrop from "./RowBackdrop";
 import RowTile from "./RowTile";
@@ -18,8 +20,8 @@ import {
 } from "./rowGeometry";
 
 /** What the rail gives up under the narrow band so the row below it can
- *  breathe — and, since the portrait fills the band there, the one number the
- *  narrow face size is derived from. */
+ *  breathe — and the one number the narrow face size is derived from, for the
+ *  rows that still draw a face in the band. */
 const NARROW_RAIL_PAD = 6;
 
 /**
@@ -30,9 +32,9 @@ const NARROW_RAIL_PAD = 6;
  * Wide, it is the largest thing in the rail — a face at 46px was a stamp you
  * had to lean in to read, and the whole argument for this view over a filter
  * is that a directory of faces is browsable where a directory of names is not.
- * Narrow, it takes the full height of the band and the text sits beside it: the
- * band is 96px of a phone's width either way, and a portrait using all of it is
- * a picture where one floating at the top of a column of type is a bullet.
+ * Narrow, the portrait proper has left the band for the strip, and this is the
+ * size of what is left: the monogram of a person with no picture, filling the
+ * band's height with the text beside it.
  */
 const FACE = 84;
 const FACE_NARROW = RAIL_BAND_H - NARROW_RAIL_PAD;
@@ -55,6 +57,61 @@ function backdropSrc(row: ArtistRowData): string | null {
 function workSpan(years: { from: number; to: number } | null): string | null {
   if (!years) return null;
   return years.from === years.to ? `${years.from}` : `${years.from}–${years.to}`;
+}
+
+/** The box the portrait is drawn in, wherever it is drawn: the rail's own
+ *  face, and the tile that stands in for it at the head of a narrow strip. */
+const PORTRAIT_BOX =
+  "relative shrink-0 overflow-hidden rounded-sm bg-surface-raised ring-1 ring-inset ring-ink-faint/25";
+
+/** Portraits are head-and-shoulders crops; a little above centre keeps the
+ *  face in the box when one is squarer or taller than the frame it fills. */
+const PORTRAIT_POSITION = { objectPosition: "center 22%" } as const;
+
+/**
+ * The portrait leading a narrow strip, in line with the panels.
+ *
+ * Under the breakpoint the rail is a 96px band across the phone, and a face
+ * taking the left of it is a thumbnail beside three lines of type. The strip
+ * below it is 150px of the same width with nothing else competing for it, so
+ * that is where the picture goes: at the head of the row's own images, at
+ * their height, opening the way they do.
+ *
+ * Square, because the sources are, and labelled for the same reason a cover is
+ * — it is a photograph of a person, not a piece of the art the strip is made
+ * of, and at a glance the two should not be the same kind of thing.
+ */
+function PortraitTile({ panel, height, onOpen }: { panel: Panel; height: number; onOpen: (panel: Panel) => void }) {
+  const { ref, near } = useNearViewport<HTMLButtonElement>();
+
+  return (
+    <button
+      ref={ref}
+      type="button"
+      data-panel-id={panel.id}
+      onClick={() => onOpen(panel)}
+      className={`${PORTRAIT_BOX} row-portrait cursor-pointer transition-colors hover:ring-accent/50`}
+      style={{ width: height, height }}
+      aria-label={`View portrait of ${panel.title}`}
+      title={`${panel.title} · portrait`}
+    >
+      {near && (
+        <img
+          src={panelImageUrl(panel.image)}
+          alt=""
+          decoding="async"
+          className="block h-full w-full object-cover"
+          style={PORTRAIT_POSITION}
+          onError={(e) => {
+            e.currentTarget.style.visibility = "hidden";
+          }}
+        />
+      )}
+      <span className="absolute bottom-1 left-1 bg-black/60 px-1 font-display text-[8px] uppercase leading-relaxed tracking-widest text-white/70">
+        portrait
+      </span>
+    </button>
+  );
 }
 
 interface Props {
@@ -87,10 +144,20 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
   const teases = row.panels.slice(1);
   const hatchTail = row.panels.length === 1;
 
-  // What prev/next walks: this person's panels, in the order the strip draws
-  // them, so paging from any tile stops at the row's ends rather than wandering
-  // into the next artist.
-  const group = row.panels;
+  // The person's portrait as something the viewer can open — the rail's face
+  // wide, the strip's leading tile narrow, the same picture either way. Null
+  // for the 13 names with no portrait on record.
+  const portraitPanel = useMemo(() => buildPortraitPanel(row), [row]);
+
+  // What prev/next walks: the portrait and then this person's panels, in the
+  // order the row draws them, so paging from any tile stops at the row's ends
+  // rather than wandering into the next artist. The portrait leads even where
+  // it is not in the strip: wide, it is still the first thing in the row, and
+  // the viewer's flight finds it in the rail by its `data-panel-id`.
+  const group = useMemo(
+    () => (portraitPanel ? [portraitPanel, ...row.panels] : row.panels),
+    [portraitPanel, row.panels],
+  );
 
   const openPanel = useCallback(
     (panel: Panel) => onSelectPanel(panel, group),
@@ -161,8 +228,9 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
   );
 
   /**
-   * The portrait: at the head of the rail where a series row puts its
-   * publisher, and down the left of it under the narrow band.
+   * The portrait in the rail: at the head of it where a series row puts its
+   * publisher, and down the left of the narrow band for the people whose
+   * picture is not leading the strip instead.
    *
    * A face is the whole reason this view is worth having as something other
    * than a filter. The panels are still the subject of the row — the strip is
@@ -170,37 +238,47 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
    * portrait is what the eye lands on first, which is what makes the column
    * scannable at a hundred and twenty-four rows.
    *
+   * It opens in the viewer like everything else on the row, at the size the
+   * photograph actually is: the rail's crop is 84px of a picture that is
+   * usually far bigger, and a reader who wants to look at the person rather
+   * than at a stamp of them had nowhere to go before.
+   *
    * The 13 people with no portrait get their initial cut into the same box,
    * the way the profile's hero does, rather than a grey square or a stock
    * silhouette that would claim to be them. It is sized off the box rather
-   * than set in a fixed step, so it fills either one.
+   * than set in a fixed step, so it fills either one — and it is inert, since
+   * there is no picture behind it to open.
    */
-  const portrait = (
-    <div
-      className="relative shrink-0 overflow-hidden rounded-sm bg-surface-raised ring-1 ring-inset ring-ink-faint/25"
+  const portrait = portraitPanel ? (
+    <button
+      type="button"
+      data-panel-id={portraitPanel.id}
+      onClick={() => openPanel(portraitPanel)}
+      className={`${PORTRAIT_BOX} row-portrait cursor-pointer transition-colors hover:ring-accent/50`}
       style={{ width: face, height: face }}
-      aria-hidden="true"
+      aria-label={`View portrait of ${row.name}`}
+      title={`${row.name} · portrait`}
     >
-      {row.artist?.imageUrl ? (
-        <img
-          src={row.artist.imageUrl}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover"
-          style={{ objectPosition: "center 22%" }}
-          onError={(e) => {
-            e.currentTarget.style.visibility = "hidden";
-          }}
-        />
-      ) : (
-        <span
-          className="absolute inset-0 flex items-center justify-center font-display leading-none text-white/15 select-none"
-          style={{ fontSize: Math.round(face * 0.46) }}
-        >
-          {row.name.charAt(0)}
-        </span>
-      )}
+      <img
+        src={panelImageUrl(portraitPanel.image)}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover"
+        style={PORTRAIT_POSITION}
+        onError={(e) => {
+          e.currentTarget.style.visibility = "hidden";
+        }}
+      />
+    </button>
+  ) : (
+    <div className={PORTRAIT_BOX} style={{ width: face, height: face }} aria-hidden="true">
+      <span
+        className="absolute inset-0 flex items-center justify-center font-display leading-none text-white/15 select-none"
+        style={{ fontSize: Math.round(face * 0.46) }}
+      >
+        {row.name.charAt(0)}
+      </span>
     </div>
   );
 
@@ -279,18 +357,20 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
    * face, and the lines that can run long — the series list above all — keep
    * the rail's full 260px to truncate in.
    *
-   * Narrow, the band is 96px tall and as wide as the phone, which is the
-   * opposite shape: stacking a portrait on top of three lines of type wastes
-   * the width and starves the height. So the portrait takes the left of the
-   * band at its full height and every line sits to its right, which is also
-   * the arrangement the plate in the filter list draws.
+   * Narrow, the band is 96px tall and as wide as the phone, and the picture
+   * leaves it altogether: a face at band height is a thumbnail next to three
+   * lines of type, where the same face at the head of the strip below is one
+   * of the row's images, at their size, on the axis the reader is already
+   * scanning. The band keeps the type and spends the whole width on it. A
+   * person with no portrait has nothing to move, so their initial stays where
+   * it was, at the left of the band with the lines beside it.
    */
   const rail = narrow ? (
     <div
       className="row-rail flex w-full min-w-0 items-stretch gap-2.5 overflow-hidden pl-2.5 pr-2.5"
       style={{ height: RAIL_BAND_H, paddingBottom: NARROW_RAIL_PAD }}
     >
-      {portrait}
+      {!portraitPanel && portrait}
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
         {identity}
         {seriesLine}
@@ -335,6 +415,12 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
           }`}
           style={{ height: stripHeight, gap: TILE_GAP }}
         >
+          {/* Narrow, the face is one of the row's images rather than a stamp
+              in the band above them (see `PortraitTile`). Wide, the rail has
+              the room to hold it and the strip stays all art. */}
+          {narrow && portraitPanel && (
+            <PortraitTile panel={portraitPanel} height={tileHeight} onOpen={openPanel} />
+          )}
           <RowTile
             panel={hero}
             height={tileHeight}

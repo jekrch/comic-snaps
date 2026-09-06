@@ -174,3 +174,53 @@ export function buildArtistRows(panels: Panel[], meta: ArtistMeta): ArtistRow[] 
 
   return rows;
 }
+
+/**
+ * What a portrait's `issue` says, since it has no number of its own. The
+ * viewer prints a panel's title and issue together, so this reads as
+ * "Wally Wood Portrait" in the header, the alt text and the search link —
+ * the same trick `COVER_ISSUE` plays for a series' cover.
+ */
+export const PORTRAIT_ISSUE = "Portrait";
+
+/**
+ * A creator's portrait, as a panel the viewer can open.
+ *
+ * The same standing-in the covers do: the rail's face and the strip's tile are
+ * a 84px crop of a photograph that is usually far bigger, and a reader who
+ * wants to look at the person rather than at the thumbnail of them has nowhere
+ * to go unless it opens like everything else on the row does.
+ *
+ * `artist` is the person's own name — the one field a portrait can honestly
+ * fill, and what the info drawer resolves their card from — while everything
+ * that records a posting is left empty, because nobody posted it. Dimensions
+ * are declared square rather than left at zero: the strip's tile is a square
+ * crop by design (see `ArtistRow`), and the aspect is what sizes it.
+ */
+export function buildPortraitPanel(row: ArtistRow): Panel | null {
+  const image = row.artist?.imageUrl;
+  if (!image) return null;
+  return {
+    id: `portrait:${row.artist?.id ?? row.name}`,
+    title: row.name,
+    slug: "",
+    issue: PORTRAIT_ISSUE,
+    year: 0,
+    artist: row.name,
+    image,
+    notes: null,
+    tags: [],
+    postedBy: "",
+    addedAt: "",
+    height: 1,
+    width: 1,
+    phash: "",
+    ahash: "",
+    dhash: "",
+    dominantColors: null,
+    colorfulness: null,
+    blur: null,
+    blurStart: null,
+    portrait: true,
+  };
+}

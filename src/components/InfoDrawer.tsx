@@ -606,7 +606,11 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           transition: "opacity 0.25s ease-out 0.15s, transform 0.25s ease-out 0.15s",
         }}
       >
-        {/* Series info */}
+        {/* Series info — a portrait belongs to a person rather than to a book,
+            and its `title` is their name, so the card that would print it as a
+            series is left off entirely (the artist card below is the one this
+            drawer is open for). */}
+        {!panel.portrait && (
         <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
           {seriesImageUrl && (
             <div className="absolute inset-0 pointer-events-none">
@@ -653,6 +657,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
             )}
           </div>
         </div>
+        )}
 
         {/* Our rating — directly under the series card, which has just named the
             series: the scopes here are "#4" and "Series", never the title

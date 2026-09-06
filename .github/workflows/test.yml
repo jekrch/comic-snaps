@@ -1,0 +1,56 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "worker/src/**"
+      - "scripts/**"
+      - "package.json"
+      - "tsconfig*.json"
+      - "vitest.config.ts"
+      - ".github/workflows/test.yml"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  js:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # The app build and the test suite are typechecked as separate projects
+      # so a type error in a test never blocks a deploy.
+      - name: Typecheck app
+        run: bunx tsc -b
+
+      - name: Typecheck tests
+        run: bun run test:types
+
+      - name: Unit tests
+        run: bun run test:coverage
+
+  python:
+    name: Metadata pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements-dev.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements-dev.txt
+
+      - name: Unit tests
+        run: pytest scripts/tests -q

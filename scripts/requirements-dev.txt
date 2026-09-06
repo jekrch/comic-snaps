@@ -1,0 +1,9 @@
+# Everything the metadata test suite (scripts/tests) needs, and nothing else.
+#
+# Deliberately not `-r requirements.txt`: the pipeline pulls in torch,
+# transformers and paddle to compute embeddings, none of which any test
+# touches. These four are what the modules under test actually import.
+pytest
+requests
+Pillow
+imagehash

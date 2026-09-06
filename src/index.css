@@ -1442,9 +1442,12 @@ button,
 }
 
 /* Covers are tiles too now that they open in the viewer, so they take the same
-   focus ring — their own hairline border is not a focus state. */
+   focus ring — their own hairline border is not a focus state. So does an
+   artist's portrait, wherever the row is drawing it: the ring it wears at rest
+   is its edge, not a focus state either. */
 .row-tile:focus-visible,
-.row-cover:focus-visible {
+.row-cover:focus-visible,
+.row-portrait:focus-visible {
   outline: 1px solid var(--color-accent);
   outline-offset: -1px;
 }

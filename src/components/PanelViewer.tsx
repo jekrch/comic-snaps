@@ -245,13 +245,15 @@ export default function PanelViewer({
     return () => setViewerOpen(false);
   }, []);
 
-  // Keep the open panel id in the URL so the viewer is linkable. A cover has no
-  // id the wall can resolve on a cold load, so it clears the param instead of
-  // writing a link that would open on nothing — and clearing it is also what
-  // takes the previous panel's id out of the URL when you page onto a cover.
+  // Keep the open panel id in the URL so the viewer is linkable. Neither a
+  // cover nor a portrait has an id the wall can resolve on a cold load, so
+  // those clear the param instead of writing a link that would open on
+  // nothing — and clearing it is also what takes the previous panel's id out
+  // of the URL when you page onto one.
+  const offWall = panel.cover || panel.portrait;
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (panel.cover) params.delete("panel");
+    if (offWall) params.delete("panel");
     else params.set("panel", panel.id);
     const qs = params.toString();
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
@@ -264,7 +266,7 @@ export default function PanelViewer({
         window.history.replaceState(null, "", q ? `${window.location.pathname}?${q}` : window.location.pathname);
       }
     };
-  }, [panel.id, panel.cover]);
+  }, [panel.id, offWall]);
 
   // Close any open overlay when the panel changes, then clear the slide
   // direction once the slide-out has settled. Guarded on the index it last ran
@@ -375,10 +377,12 @@ export default function PanelViewer({
               {panel.title} <span className="text-accent">{formatIssue(panel.issue)}</span>{" "}
               {panel.year > 0 && <span className="text-white/40 text-xs">({panel.year})</span>}
             </p>
-            {/* A cover was never posted by anyone and has no artist of its own
-                on record, so the two lines that would name them are left off
-                rather than printed empty. */}
-            {!panel.cover && (
+            {/* Neither a cover nor a portrait was posted by anyone, and a
+                cover has no artist of its own on record while a portrait's is
+                the person the header has just named — so the two lines that
+                would name them are left off rather than printed empty or
+                twice. */}
+            {!offWall && (
               <>
                 <p className="text-xs text-white/60 mt-0.5 leading-snug">{panel.artist}</p>
                 <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
@@ -410,9 +414,10 @@ export default function PanelViewer({
           : undefined
       }
       renderNavEnd={
-        // A cover carries none of the hashes or embeddings the graph measures
-        // with, so it would open on an anchor with no neighbours.
-        panel.cover
+        // Neither a cover nor a portrait carries the hashes or embeddings the
+        // graph measures with, so it would open on an anchor with no
+        // neighbours.
+        offWall
           ? undefined
           : () => (
               <button
