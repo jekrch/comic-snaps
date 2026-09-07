@@ -2327,12 +2327,32 @@
       "parentSeries": null,
       "description": "One thousand years after the rocket carrying the Last Son of Krypton crashed on the Kent farm, super heroes have been outlawed and enforcers called the Persuaders keep order across the United Planets. With R.J. Brande murdered, Brainiac 5 sets out to solve the crime and gather young rebels from across the cosmos into a new Legion of Super-Heroes.\r\n\r\nThe ninth Legion series, launched in September 2026 as part of DC's Next Level line, written by Joshua Williamson with art by Hayden Sherman and colors by Tamra Bonvillain.",
       "imageUrl": null,
-      "references": [],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16591/"
+        }
+      ],
       "startYear": 2026,
       "publisher": "DC Comics",
       "issueCount": 1,
-      "sources": [],
-      "issueCountInferred": true
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "issueCountInferred": true,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/legion-of-super-heroes/4976cbffb23e.jpg",
+        "data/covers/legion-of-super-heroes/1820e1ef5fe8.jpg"
+      ]
     },
     {
       "id": "lobo",

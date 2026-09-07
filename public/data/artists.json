@@ -2520,6 +2520,31 @@
       ]
     },
     {
+      "id": "dan-mora",
+      "name": "Dan Mora",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10141397-dan_mora.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/743/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dan-mora/4040-82190/"
+        }
+      ],
+      "country": "Costa Rica",
+      "aliases": [
+        "Daniel Mora"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1987
+    },
+    {
       "id": "dan-panosian",
       "name": "Dan Panosian",
       "description": "Now known for his work on the Irredeemables with writer Mark Waid. \u00a0A regular at conventions and very nice guy! \u00a0He has worked on just about every respectable title and with every big name artist in the comic biz. \u00a0And has done work on some of the most memorable covers!",
@@ -12330,6 +12355,31 @@
       ]
     },
     {
+      "id": "tamra-bonvillain",
+      "name": "Tamra Bonvillain",
+      "description": "Born in Germany and raised in Augusta, Georgia, Tamra knew she loved to draw from a very early age. In 1997, she was accepted to the prestigious Davidson Fine Arts magnet school in Augusta \u2013 one of the top public arts high schools in the country. After graduation in 2000, Tamra attended Augusta State University as an art major but, after a few years, decided she wanted to focus more on illustration.\r\n\r\nIn 2006, she moved to Dover, New Jersey to attend The Kubert School \u2013 the only accredited trade school devoted entirely to the instruction of sequential art, comic creation and commercial illustration. Founder Joe Kubert (1926-2012) was the legendary artist behind DC titles Sgt. Rock and Hawkman beginning in the 1940s and was inducted into the Jack Kirby Hall of Fame in 1997.\r\n\r\nSince its founding in 1976, The Kubert school has trained artists who have worked in all aspects of the comic and film industries including DC, Marvel and Darkhorse. Joe was in his 80s and still part of the faculty when Tamra started school there. He was her sequential art instructor for one year. Joe\u2019s sons Adam and Andy were also members of the faculty.\r\n\r\nBefore graduating, Tamra began working freelance for various comic book companies such as Dynamite, Boom, Zenescope and IDW \u2013 mostly as a colorist. In 2012, Tamra moved to North Augusta, SC to pursue freelance illustration full time.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320377-6831316258-Tamra.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1109/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tamra-bonvillain/4040-63682/"
+        }
+      ],
+      "birthYear": 1982,
+      "country": "USA",
+      "aliases": [
+        "Thomas Bonvillain"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "tara-mccarron",
       "name": "Tara McCarron",
       "description": "",
@@ -12922,6 +12972,47 @@
       ],
       "birthYear": 1999,
       "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "v-ken-marion",
+      "name": "V. Ken Marion",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/08/18/v-ken-marion.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2581/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Kenneth V. Marion"
+      ]
+    },
+    {
+      "id": "veronica-gandini",
+      "name": "Veronica Gandini",
+      "description": "Veronica's color work has appeared in books from DC Entertainment, Marvel, Image Comics, BOOM! Studios, Arcana, Ape Entertainment, and Atlantis Studios.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/54649/1141362-vero_1_.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/511/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/veronica-gandini/4040-56885/"
+        }
+      ],
+      "birthYear": 1982,
+      "country": "Argentina",
       "sources": [
         "comicvine",
         "metron"

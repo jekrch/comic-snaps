@@ -6266,6 +6266,125 @@
       ]
     },
     {
+      "id": "legion-of-super-heroes-1",
+      "series": "legion-of-super-heroes",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "joshua-williamson",
+          "name": "Joshua Williamson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tamra-bonvillain",
+          "name": "Tamra Bonvillain",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "dan-mora",
+          "name": "Dan Mora",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "Cover",
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        },
+        {
+          "artistId": "mark-spears",
+          "name": "Mark Spears",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-spicer",
+          "name": "Michael Spicer",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "v-ken-marion",
+          "name": "V. Ken Marion",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "veronica-gandini",
+          "name": "Veronica Gandini",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "yasmine-putri",
+          "name": "Yasmine Putri",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-kaminski",
+          "name": "Paul Kaminski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "chris-rosa",
+          "name": "Chris Rosa",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/legion-of-super-heroes-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "lobo-1",
       "series": "lobo",
       "issue": 1,
