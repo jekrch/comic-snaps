@@ -1,11 +1,12 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Youtube, Search, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { Panel, Artist, Series, Reference, IssueCredit, IssueCredits, TargetRatings } from "../types";
+import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
+import type { Panel, Artist, Series, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
 import { ScoreBirds } from "./ScoreMeter";
 import PanelPalette from "./PanelPalette";
+import ReferenceLinks from "./ReferenceLinks";
 
 interface PersonFacets {
   artists: number;
@@ -23,13 +24,6 @@ function hasProfileInfo(artist: Artist | null): boolean {
       artist.birthYear ||
       artist.country)
   );
-}
-
-function refIcon(ref: Reference) {
-  const url = ref.url.toLowerCase();
-  if (url.includes("wikipedia.org") || url.includes("wiki")) return <BookOpen size={12} />;
-  if (url.includes("youtube.com") || url.includes("youtu.be")) return <Youtube size={12} />;
-  return <ExternalLink size={12} />;
 }
 
 function hasMarks(r: TargetRatings | null): r is TargetRatings {
@@ -639,22 +633,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
             {seriesDesc && (
               <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{seriesDesc}</p>
             )}
-            {seriesRefs.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {seriesRefs.map((ref) => (
-                  <a
-                    key={ref.url}
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[10px] text-accent hover:text-accent-dim transition-colors"
-                  >
-                    {refIcon(ref)}
-                    {ref.name}
-                  </a>
-                ))}
-              </div>
-            )}
+            <ReferenceLinks references={seriesRefs} className="mt-2" />
           </div>
         </div>
         )}
@@ -967,22 +946,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
               {artist?.description && (
                 <p className="text-xs text-white/55 mt-1.5 leading-relaxed whitespace-pre-line">{artist.description}</p>
               )}
-              {artist?.references && artist.references.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {artist.references.map((ref) => (
-                    <a
-                      key={ref.url}
-                      href={ref.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[10px] text-accent hover:text-accent-dim transition-colors"
-                    >
-                      {refIcon(ref)}
-                      {ref.name}
-                    </a>
-                  ))}
-                </div>
-              )}
+              <ReferenceLinks references={artist?.references ?? []} className="mt-2" />
             </div>
           </div>
           </>

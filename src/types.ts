@@ -1,6 +1,10 @@
 export interface Reference {
   name: string;
   url: string;
+  /** Set when the reference is one article rather than a whole database entry
+   *  (a Comics Journal interview, say) — the row only has room for the source,
+   *  so the title is rendered under it. */
+  title?: string;
 }
 
 export interface Artist {

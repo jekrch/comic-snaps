@@ -1,15 +1,9 @@
 import { Fragment, useEffect, useMemo } from "react";
-import { BookOpen, Youtube, Search, ExternalLink, ArrowLeft } from "lucide-react";
-import type { Artist, Panel, Reference } from "../types";
+import { Search, ArrowLeft } from "lucide-react";
+import type { Artist, Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
-
-function refIcon(ref: Reference) {
-  const url = ref.url.toLowerCase();
-  if (url.includes("wikipedia.org") || url.includes("wiki")) return <BookOpen size={12} />;
-  if (url.includes("youtube.com") || url.includes("youtu.be")) return <Youtube size={12} />;
-  return <ExternalLink size={12} />;
-}
+import ReferenceLinks from "./ReferenceLinks";
 
 interface Props {
   open: boolean;
@@ -214,24 +208,7 @@ export default function PersonProfile({
                 )}
               </div>
 
-              {/* References — set as the drawer sets them: accent text links,
-                  not pills. */}
-              {artist?.references && artist.references.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {artist.references.map((ref) => (
-                    <a
-                      key={ref.url}
-                      href={ref.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[10px] text-accent hover:text-accent-dim transition-colors"
-                    >
-                      {refIcon(ref)}
-                      {ref.name}
-                    </a>
-                  ))}
-                </div>
-              )}
+              <ReferenceLinks references={artist?.references ?? []} />
 
               {/* Description */}
               {artist?.description && (
