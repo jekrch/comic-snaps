@@ -22,7 +22,13 @@ from ..references import (
     mark_source,
 )
 from ..text import extract_year, is_meaningful_description, strip_html
-from . import API_HEADERS, MAX_COVER_IMAGES, parse_issue_number, pick_exact_match
+from . import (
+    API_HEADERS,
+    MAX_COVER_IMAGES,
+    filter_by_start_year,
+    parse_issue_number,
+    pick_exact_match,
+)
 
 METRON_BASE = "https://metron.cloud/api"
 
@@ -89,32 +95,17 @@ def normalize_series_results(results: list) -> list:
     return results
 
 
-def parse_year_began(value) -> int | None:
-    try:
-        return int(value) if value else None
-    except (TypeError, ValueError):
-        return None
-
-
 def filter_series_by_start_year(results: list, start_year: int | None) -> list:
     """
     Drop series whose start year contradicts the one we already know.
 
     Metron's series search matches on title alone, so "Deadline" returns
-    every unrelated series sharing that name. When an earlier source has
-    already established startYear, a differing year_began is proof of a
-    wrong series. Results with no parseable year stay in — a missing year
-    isn't a contradiction.
+    every unrelated series sharing that name.
 
     Call after normalize_series_results, which lifts year_began out of the
     "Name (1988)" display string.
     """
-    if not start_year:
-        return results
-    return [
-        r for r in results
-        if parse_year_began(r.get("year_began")) in (None, start_year)
-    ]
+    return filter_by_start_year(results, start_year, "year_began")
 
 
 def extract_metron_artist_fields(match: dict) -> dict:

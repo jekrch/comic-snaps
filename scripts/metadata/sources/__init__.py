@@ -20,6 +20,41 @@ def parse_issue_number(value) -> int | None:
         return None
 
 
+def parse_year_began(value) -> int | None:
+    """Parse a series' start year out of a source payload, or None.
+
+    Sources disagree on the type: Metron sends an int, Comic Vine a string.
+    Anything unparseable comes back as None, which every caller reads as
+    "unknown" rather than "contradiction".
+    """
+    try:
+        return int(value) if value else None
+    except (TypeError, ValueError):
+        return None
+
+
+def filter_by_start_year(results: list, start_year: int | None, key: str) -> list:
+    """
+    Drop series/volume results whose start year contradicts the one we know.
+
+    Both sources search on title alone, so a relaunch under an old name
+    ("Legion of Super-Heroes", 1989 and 2026) hands back every volume that
+    ever carried it. When an earlier source — or a hand edit — has already
+    established startYear, a differing start year is proof of a wrong
+    series. Results with no parseable year stay in: a missing year isn't a
+    contradiction.
+
+    `key` is whichever field the source spells it with (`year_began` on
+    Metron, `start_year` on Comic Vine).
+    """
+    if not start_year:
+        return results
+    return [
+        r for r in results
+        if parse_year_began(r.get(key)) in (None, start_year)
+    ]
+
+
 def pick_exact_match(results: list, name: str, tiebreak_key: str | None = None) -> dict | None:
     """
     Pick the result whose name matches `name` case-insensitively.

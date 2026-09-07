@@ -6,7 +6,6 @@ from metadata.sources.metron import (
     filter_series_by_start_year,
     metron_resource_url,
     normalize_series_results,
-    parse_year_began,
 )
 
 
@@ -56,20 +55,6 @@ class TestNormalizeSeriesResults:
 
     def test_empty_input(self):
         assert normalize_series_results([]) == []
-
-
-class TestParseYearBegan:
-    def test_reads_an_int_or_a_numeric_string(self):
-        assert parse_year_began(1987) == 1987
-        assert parse_year_began("1987") == 1987
-
-    @pytest.mark.parametrize("value", [None, "", 0])
-    def test_falsy_values_are_none(self, value):
-        assert parse_year_began(value) is None
-
-    @pytest.mark.parametrize("value", ["nineteen", [], {}])
-    def test_unparseable_values_are_none(self, value):
-        assert parse_year_began(value) is None
 
 
 class TestFilterSeriesByStartYear:

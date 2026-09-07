@@ -2325,36 +2325,14 @@
       "id": "legion-of-super-heroes",
       "name": "Legion of Super-Heroes",
       "parentSeries": null,
-      "description": "Starring: Legion of Super-Heroes.\r\n\r\nContinued from: Legion of Super-Heroes (Volume 3)\r\n\r\nRuns in tandem with: Legionnaires (Starting in 1993).",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/1949621-cover.jpg",
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/legion-of-super-heroes/4050-4201/"
-        },
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/series/1777/"
-        }
-      ],
-      "startYear": 1989,
+      "description": "One thousand years after the rocket carrying the Last Son of Krypton crashed on the Kent farm, super heroes have been outlawed and enforcers called the Persuaders keep order across the United Planets. With R.J. Brande murdered, Brainiac 5 sets out to solve the crime and gather young rebels from across the cosmos into a new Legion of Super-Heroes.\r\n\r\nThe ninth Legion series, launched in September 2026 as part of DC's Next Level line, written by Joshua Williamson with art by Hayden Sherman and colors by Tamra Bonvillain.",
+      "imageUrl": null,
+      "references": [],
+      "startYear": 2026,
       "publisher": "DC Comics",
-      "issueCount": 127,
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ]
-      },
-      "coverImages": [
-        "data/covers/legion-of-super-heroes/409d9849aba7.jpg",
-        "data/covers/legion-of-super-heroes/2eca67458e49.jpg",
-        "data/covers/legion-of-super-heroes/f87e340575e7.jpg",
-        "data/covers/legion-of-super-heroes/22147227288c.jpg"
-      ]
+      "issueCount": 1,
+      "sources": [],
+      "issueCountInferred": true
     },
     {
       "id": "lobo",

@@ -1,6 +1,11 @@
 import pytest
 
-from metadata.sources import parse_issue_number, pick_exact_match
+from metadata.sources import (
+    filter_by_start_year,
+    parse_issue_number,
+    parse_year_began,
+    pick_exact_match,
+)
 
 
 class TestParseIssueNumber:
@@ -69,3 +74,47 @@ class TestPickExactMatch:
     def test_a_tiebreak_is_ignored_when_only_one_matches(self):
         results = [{"name": "Saga", "id": 1}, {"name": "Other", "id": 2}]
         assert pick_exact_match(results, "Saga", "count_of_issues")["id"] == 1
+
+
+class TestParseYearBegan:
+    def test_reads_an_int_or_a_numeric_string(self):
+        # Metron sends an int, Comic Vine a string.
+        assert parse_year_began(1987) == 1987
+        assert parse_year_began("1987") == 1987
+
+    @pytest.mark.parametrize("value", [None, "", 0])
+    def test_falsy_values_are_none(self, value):
+        assert parse_year_began(value) is None
+
+    @pytest.mark.parametrize("value", ["nineteen", [], {}])
+    def test_unparseable_values_are_none(self, value):
+        assert parse_year_began(value) is None
+
+
+class TestFilterByStartYear:
+    def test_no_known_start_year_filters_nothing(self):
+        results = [{"start_year": "1989"}, {"start_year": "2026"}]
+        assert filter_by_start_year(results, None, "start_year") == results
+
+    def test_drops_a_contradicting_year(self):
+        results = [{"id": 1, "start_year": "1989"}, {"id": 2, "start_year": "2026"}]
+        assert filter_by_start_year(results, 2026, "start_year") == [
+            {"id": 2, "start_year": "2026"}
+        ]
+
+    def test_keeps_a_result_with_no_year_since_that_is_not_a_contradiction(self):
+        results = [{"id": 1}, {"id": 2, "start_year": "1989"}]
+        assert filter_by_start_year(results, 2026, "start_year") == [{"id": 1}]
+
+    def test_keeps_a_result_whose_year_is_unparseable(self):
+        results = [{"id": 1, "start_year": "nope"}]
+        assert filter_by_start_year(results, 2026, "start_year") == results
+
+    def test_reads_whichever_field_the_source_spells_it_with(self):
+        results = [{"id": 1, "year_began": 1989}, {"id": 2, "year_began": 2026}]
+        assert filter_by_start_year(results, 2026, "year_began") == [
+            {"id": 2, "year_began": 2026}
+        ]
+
+    def test_can_filter_everything_out(self):
+        assert filter_by_start_year([{"start_year": "1989"}], 2026, "start_year") == []

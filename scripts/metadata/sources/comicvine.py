@@ -16,7 +16,13 @@ from ..references import (
     mark_source,
 )
 from ..text import extract_year, is_meaningful_description, strip_html
-from . import API_HEADERS, MAX_COVER_IMAGES, parse_issue_number, pick_exact_match
+from . import (
+    API_HEADERS,
+    MAX_COVER_IMAGES,
+    filter_by_start_year,
+    parse_issue_number,
+    pick_exact_match,
+)
 
 COMIC_VINE_BASE = "https://comicvine.gamespot.com/api"
 COMIC_VINE_HEADERS = API_HEADERS
@@ -141,6 +147,20 @@ def extract_comicvine_volume_id(series_entry: dict) -> str | None:
     return None
 
 
+def filter_volumes_by_start_year(results: list, start_year: int | None) -> list:
+    """
+    Drop volumes whose start year contradicts the one we already know.
+
+    Comic Vine's volume search matches on title alone, and `count_of_issues`
+    then breaks the tie in favour of the longest run carrying that name. For
+    a relaunch — "Legion of Super-Heroes" in both 1989 and 2026 — that is
+    always the decades-old volume, and because Comic Vine runs before every
+    other series source, its answer becomes the startYear that Metron and
+    GCD go on to trust. Filtering first keeps a known year authoritative.
+    """
+    return filter_by_start_year(results, start_year, "start_year")
+
+
 def extract_artist_fields(match: dict) -> dict:
     """Pull supplemental fields from a Comic Vine `/people/` result."""
     aliases_raw = (match.get("aliases") or "").strip()
@@ -218,7 +238,11 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
         if health.should_bail and not results:
             break
 
-        match = pick_exact_match(results, name, tiebreak_key=tiebreak_key)
+        candidates = results
+        if resource == "volumes":
+            candidates = filter_volumes_by_start_year(results, entry.get("startYear"))
+
+        match = pick_exact_match(candidates, name, tiebreak_key=tiebreak_key)
         if not match:
             print(f"    SKIP: no exact match ({len(results)} candidate(s))")
             mark_source(entry, SOURCE_COMICVINE)

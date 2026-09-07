@@ -156,30 +156,6 @@
       ]
     },
     {
-      "id": "al-gordon",
-      "name": "Al Gordon",
-      "description": "Alan Gordon is an American comic book creator primarily known as an inker and writer. He is best known for his 1990's work on DC Comics' Legion of Super Heroes and the Justice League of America, Marvel Comics' Fantastic Four, and Image Comics' creator-owned WildStar.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1867/446390-day2_v_algordon.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/645/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/al-gordon/4040-13522/"
-        }
-      ],
-      "aliases": [
-        "Alan Gordon"
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "birthYear": 1953
-    },
-    {
       "id": "al-williamson",
       "name": "Al Williamson",
       "description": "An American cartoonist, comic book artist and illustrator specializing in adventure, Western, science fiction and fantasy.",
@@ -8628,28 +8604,6 @@
       ]
     },
     {
-      "id": "mark-waid",
-      "name": "Mark Waid",
-      "description": "Mark Waid is an American comic book writer, known for his work on titles for DC Comics such as The Flash, Kingdom Come and Superman: Birthright, and for his work on Captain America, Fantastic Four, and Daredevil for Marvel Comics. From August 2007 to December 2010, Waid served as Editor-in-Chief, and later, Chief Creative Officer of Boom! Studios, where he wrote titles such as Irredeemable, Incorruptible, and The Traveler.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10141398-mark_waid.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/36/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/mark-waid/4040-40724/"
-        }
-      ],
-      "birthYear": 1962,
-      "country": "United States of America",
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "martin-biro",
       "name": "Martin Biro",
       "description": "",
@@ -8732,26 +8686,6 @@
       "sources": [
         "metron",
         "comicvine"
-      ]
-    },
-    {
-      "id": "mary-bierbaum",
-      "name": "Mary Bierbaum",
-      "description": "Writer who had long runs on Legion of Superheroes and Legionnaires for DC and also worked for Image and Marvel among others.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/95246-59922-mary-bierbaum.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/644/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/mary-bierbaum/4040-42142/"
-        }
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
       ]
     },
     {
@@ -12610,26 +12544,6 @@
       "country": "USA"
     },
     {
-      "id": "tom-bierbaum",
-      "name": "Tom Bierbaum",
-      "description": "Writer who worked with Mary Bierbaum on Legion of Superheroes and Legionnaires as well as other work for Image, Marvel and others.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/95245-28753-tom-bierbaum.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/643/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/tom-bierbaum/4040-42143/"
-        }
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "tom-brevoort",
       "name": "Tom Brevoort",
       "description": "Tom Brevoort is an American comic book editor, known for his work for Marvel Comics, where he has overseen titles such as New Avengers, Civil War, and Fantastic Four. He became Executive Editor in 2007, and in January 2011 was promoted to Senior Vice President of Publishing.",
@@ -12671,29 +12585,6 @@
         "comicvine"
       ],
       "country": "United States"
-    },
-    {
-      "id": "tom-mccraw",
-      "name": "Tom McCraw",
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10812/1793460-tom_mccraw.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/1268/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/tom-mccraw/4040-5771/"
-        }
-      ],
-      "aliases": [
-        "Tom J. McCraw"
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
     },
     {
       "id": "tom-muller",
