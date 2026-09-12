@@ -9150,6 +9150,59 @@
       ]
     },
     {
+      "id": "the-karman-blade-1",
+      "series": "the-karman-blade",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "darcy-van-poelgeest",
+          "name": "Darcy Van Poelgeest",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "ian-bertram",
+          "name": "Ian Bertram",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "matt-hollingsworth",
+          "name": "Matt Hollingsworth",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ben-didier",
+          "name": "Ben Didier",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-karman-blade-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-many-deaths-of-laila-starr-4",
       "series": "the-many-deaths-of-laila-starr",
       "issue": 4,

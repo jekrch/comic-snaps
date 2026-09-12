@@ -1157,6 +1157,22 @@
       "country": "United States of America"
     },
     {
+      "id": "ben-didier",
+      "name": "Ben Didier",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/11496/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ben-oliver",
       "name": "Ben Oliver",
       "description": "Ben Oliver is a British comics artist who has worked for 2000 AD on Judge Dredd as well as providing art for The Authority, The Losers, and Ultimate X-Men",
@@ -2774,6 +2790,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "darcy-van-poelgeest",
+      "name": "Darcy Van Poelgeest",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5567/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -5165,6 +5197,27 @@
       ],
       "tags": [
         "underground"
+      ]
+    },
+    {
+      "id": "ian-bertram",
+      "name": "Ian Bertram",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/10/100647/5405594-untitled-12.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ian-bertram/4040-75424/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2656/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

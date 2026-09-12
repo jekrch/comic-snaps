@@ -3808,6 +3808,42 @@
       ]
     },
     {
+      "id": "the-karman-blade",
+      "name": "The Karman Blade",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10182032-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-karman-blade/4050-176903/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16612/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Image",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-karman-blade/22c6b987dbb5.jpg",
+        "data/covers/the-karman-blade/fdc83bf6c8e8.jpg"
+      ]
+    },
+    {
       "id": "the-many-deaths-of-laila-starr",
       "name": "The Many Deaths of Laila Starr",
       "parentSeries": null,
