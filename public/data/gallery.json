@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 289,
+      "id": "the-karman-blade-1-1789264071",
+      "title": "The Karman Blade",
+      "slug": "the-karman-blade",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Ian Bertram",
+      "image": "images/the-karman-blade/issue-1-1789264071.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-13T01:47:53.207Z"
+    },
+    {
       "seq": 288,
       "id": "odin-4-1789263537",
       "title": "Odin",
@@ -17,17 +31,17 @@
       "height": 1280,
       "dominantColors": [
         [
-          69.0,
-          2.0,
+          69,
+          2,
           -14.9
         ],
         [
           47.1,
-          6.0,
+          6,
           -17.3
         ],
         [
-          24.0,
+          24,
           1.8,
           -3.6
         ]
@@ -1304,7 +1318,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -1639,7 +1653,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5093,7 +5107,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
