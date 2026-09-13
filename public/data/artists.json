@@ -1777,6 +1777,17 @@
       ]
     },
     {
+      "id": "carl-belfast",
+      "name": "Carl Belfast",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "carlos-gomez",
       "name": "Carlos Gomez",
       "description": "A Spanish artist who has worked for Marvel Comics.",

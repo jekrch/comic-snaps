@@ -4361,6 +4361,39 @@
       ]
     },
     {
+      "id": "verbatim",
+      "name": "Verbatim",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/3808507-ver1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/verbatim/4050-73719/"
+        }
+      ],
+      "startYear": 1993,
+      "publisher": "Fantagraphics",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/verbatim/793000a205a0.jpg",
+        "data/covers/verbatim/32349937b816.jpg"
+      ]
+    },
+    {
       "id": "w0rldtr33",
       "name": "W0rldtr33",
       "parentSeries": null,
