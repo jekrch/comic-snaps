@@ -1,6 +1,22 @@
 {
   "panels": [
     {
+      "seq": 293,
+      "id": "verbatim-1-1789314593",
+      "title": "Verbatim",
+      "slug": "verbatim",
+      "issue": 1,
+      "year": 1993,
+      "artist": "Carl Belfast",
+      "image": "images/verbatim/issue-1-1789314593.jpg",
+      "notes": null,
+      "tags": [
+        "cover"
+      ],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-13T15:49:56.272Z"
+    },
+    {
       "seq": 292,
       "id": "verbatim-1-1789313594",
       "title": "Verbatim",
@@ -1452,7 +1468,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -1787,7 +1803,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5241,7 +5257,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
