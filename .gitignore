@@ -12,3 +12,4 @@ __pycache__/
 # test output
 coverage/
 .pytest_cache/
+*Zone.Identifier
