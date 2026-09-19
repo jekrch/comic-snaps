@@ -7810,6 +7810,59 @@
       ]
     },
     {
+      "id": "red-roots-5",
+      "series": "red-roots",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "lorenzo-de-felici",
+          "name": "Lorenzo De Felici",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rus-wooton",
+          "name": "Rus Wooton",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "francesca-ciregia",
+          "name": "Francesca Ciregia",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "liam-sharp",
+          "name": "Liam Sharp",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "drew-gill",
+          "name": "Drew Gill",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/red-roots-2026-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "redcoat-22",
       "series": "redcoat",
       "issue": 22,
