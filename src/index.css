@@ -1121,14 +1121,6 @@ button,
   }
 }
 
-/* The portrait has no frame: it dissolves into whatever the drawer is sitting
-   on — the viewer's backdrop, or the scrim over a running visualizer — so the
-   hero needs no fill of its own to fade into. */
-.profile-portrait {
-  -webkit-mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, 0.55) 70%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, 0.55) 70%, transparent 100%);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .profile-rise {
     animation: scrimIn 120ms ease-out both;

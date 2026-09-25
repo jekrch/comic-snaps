@@ -33,11 +33,14 @@ const ROLE_ROWS: {
 ];
 
 /**
- * The hero portrait. The fade into the backdrop is a mask on a wrapper rather
- * than on the `<img>`, and the image fades up once it has decoded: iOS Safari
- * painted a masked `<img>` inside the drawer's animated, scrolling layer before
- * the remote image arrived and never repainted it, leaving a dark gap. This is
- * the pattern `.row-bg` already uses, which renders there.
+ * The hero portrait, fading into the backdrop at its foot.
+ *
+ * The fade is a gradient laid over the image, not a mask: iOS Safari left a
+ * masked portrait in the drawer as a dark gap, both with the mask on the
+ * `<img>` and on a wrapper around it. The gradient ends in black, which is
+ * what the viewer's backdrop (90% black over the wall) reads as, and its stops
+ * mirror the mask it replaces. The image also fades up once it has decoded,
+ * so it never pops in half-drawn.
  */
 function ProfilePortrait({ src, alt, onError }: { src: string; alt: string; onError: () => void }) {
   const [loaded, setLoaded] = useState(false);
@@ -48,7 +51,7 @@ function ProfilePortrait({ src, alt, onError }: { src: string; alt: string; onEr
     if (img?.complete && img.naturalWidth > 0) setLoaded(true);
   }, []);
   return (
-    <div className="profile-portrait w-full aspect-16/10 overflow-hidden rounded-sm">
+    <div className="relative w-full aspect-16/10 overflow-hidden rounded-sm">
       <img
         ref={imgRef}
         src={src}
@@ -61,6 +64,11 @@ function ProfilePortrait({ src, alt, onError }: { src: string; alt: string; onEr
           opacity: loaded ? 1 : 0,
           transition: "opacity 0.3s ease-out",
         }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, transparent 35%, rgba(0,0,0,0.45) 70%, #000 100%)" }}
       />
     </div>
   );

@@ -134,32 +134,52 @@ export default function FilterControl({
   return (
     <div className="filter-control panel-item overflow-hidden select-none">
       {/* header row */}
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="
-          w-full flex items-center
-          px-3 py-2.5
-          transition-colors duration-150
-          cursor-pointer
-        "
-      >
-        <span className="flex items-center gap-1.5">
-          <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
-            FILTER
-          </span>
-          {active && (
-            <span className="font-display text-[9px] text-surface bg-accent rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">
-              {count}
+      <div className="flex items-stretch">
+        <button
+          onClick={() => setOpen((prev) => !prev)}
+          className="
+            flex-1 min-w-0 flex items-center
+            px-3 py-2.5
+            transition-colors duration-150
+            cursor-pointer
+          "
+        >
+          <span className="flex items-center gap-1.5">
+            <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
+              FILTER
             </span>
-          )}
-          <ChevronDown
-            size={14}
-            className={`text-ink-faint transition-transform duration-200 ${
-              open ? "rotate-180" : ""
-            }`}
-          />
-        </span>
-      </button>
+            {active && (
+              <span className="font-display text-[9px] text-surface bg-accent rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">
+                {count}
+              </span>
+            )}
+            <ChevronDown
+              size={14}
+              className={`text-ink-faint transition-transform duration-200 ${
+                open ? "rotate-180" : ""
+              }`}
+            />
+          </span>
+        </button>
+        {/* Clearing without opening the list; once it's open, the list's own
+            clear line takes over. */}
+        {active && !open && (
+          <button
+            type="button"
+            aria-label={`Clear ${count} ${count === 1 ? "filter" : "filters"}`}
+            title="Clear filters"
+            onClick={clearAll}
+            className="
+              shrink-0 flex items-center px-3
+              text-ink-muted hover:text-rust-ink
+              transition-colors duration-100
+              cursor-pointer
+            "
+          >
+            <XCircle size={13} />
+          </button>
+        )}
+      </div>
 
       {/* expanded body */}
       <div
