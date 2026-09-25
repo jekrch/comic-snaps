@@ -7,7 +7,7 @@ import { panelImageUrl } from "../utils/imageUrl";
 import { setViewerOpen } from "../hooks/useViewerOpen";
 import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
-import InfoDrawer from "./InfoDrawer";
+import InfoDrawer, { type PersonRequest } from "./InfoDrawer";
 
 interface Props {
   panel: Panel;
@@ -37,7 +37,8 @@ function ViewerOverlay({
   panel,
   allPanels,
   drawerOpen,
-  initialPerson,
+  personRequest,
+  onDismissDrawer,
   graphOpen,
   drawerSlideDir,
   graphSlideDir,
@@ -53,7 +54,8 @@ function ViewerOverlay({
   panel: Panel;
   allPanels: Panel[];
   drawerOpen: boolean;
-  initialPerson: string | null;
+  personRequest: PersonRequest | null;
+  onDismissDrawer: () => void;
   graphOpen: boolean;
   drawerSlideDir: "left" | "right" | null;
   graphSlideDir: "left" | "right" | null;
@@ -126,7 +128,8 @@ function ViewerOverlay({
         artistIndex={artistIndex}
         onBrowse={onBrowse}
         searchUrl={searchUrl}
-        initialPerson={initialPerson}
+        personRequest={personRequest}
+        onDismiss={onDismissDrawer}
         topOffset={topOffset}
         bottomOffset={bottomOffset}
         slideDir={drawerSlideDir}
@@ -176,6 +179,11 @@ export default function PanelViewer({
   const [drawerSlideDir, setDrawerSlideDir] = useState<"left" | "right" | null>(null);
   const [graphSlideDir, setGraphSlideDir] = useState<"left" | "right" | null>(null);
   const [graphToolbarEl, setGraphToolbarEl] = useState<HTMLElement | null>(null);
+  // Opened for a person (an artist row's name), their page is the first thing
+  // the drawer shows, and closing it lands on the drawer's details.
+  const [personRequest, setPersonRequest] = useState<PersonRequest | null>(() =>
+    openWithPerson ? { name: openWithPerson, seq: 1, returnTo: "details" } : null
+  );
 
   const items = useMemo(
     () =>
@@ -278,6 +286,21 @@ export default function PanelViewer({
     });
   }, []);
 
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
+  // The header's artist name opens their page in the drawer. From the art,
+  // the drawer comes up just to show it, so closing the page goes back to the
+  // art; with the details already out, it goes back to them.
+  const openArtist = useCallback(() => {
+    setGraphOpen(false);
+    setPersonRequest((r) => ({
+      name: panel.artist,
+      seq: (r?.seq ?? 0) + 1,
+      returnTo: drawerOpen ? "details" : "art",
+    }));
+    setDrawerOpen(true);
+  }, [panel.artist, drawerOpen]);
+
   const toggleGraph = useCallback(() => {
     setGraphOpen((g) => {
       if (!g) setDrawerOpen(false);
@@ -355,7 +378,21 @@ export default function PanelViewer({
                 twice. */}
             {!offWall && (
               <>
-                <p className="text-xs text-white/60 mt-0.5 leading-snug">{panel.artist}</p>
+                <p className="text-xs text-white/60 mt-0.5 leading-snug">
+                  {panel.artist && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openArtist();
+                      }}
+                      className="text-left text-white/60 hover:text-accent underline decoration-white/20 decoration-dotted underline-offset-2 hover:decoration-accent transition-colors"
+                      title={`About ${panel.artist}`}
+                    >
+                      {panel.artist}
+                    </button>
+                  )}
+                </p>
                 <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
                   {panel.postedBy} ·{" "}
                   {new Date(panel.addedAt).toLocaleDateString(undefined, {
@@ -420,7 +457,8 @@ export default function PanelViewer({
           panel={panel}
           allPanels={allPanels}
           drawerOpen={drawerOpen}
-          initialPerson={openWithPerson}
+          personRequest={personRequest}
+          onDismissDrawer={closeDrawer}
           graphOpen={graphOpen}
           drawerSlideDir={drawerSlideDir}
           graphSlideDir={graphSlideDir}

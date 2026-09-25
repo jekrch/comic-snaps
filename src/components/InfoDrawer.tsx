@@ -95,6 +95,18 @@ function RatingGroup({
   );
 }
 
+/**
+ * Ask the drawer to put a person's page up. `seq` makes each ask distinct, so
+ * asking for the same person twice (after closing them) still opens them;
+ * `returnTo` is where closing the page lands — the drawer's details, or, when
+ * the drawer came up only to show the person, straight back to the art.
+ */
+export interface PersonRequest {
+  name: string;
+  seq: number;
+  returnTo: "details" | "art";
+}
+
 interface Props {
   open: boolean;
   panel: Panel;
@@ -109,9 +121,11 @@ interface Props {
   artistIndex: ArtistIndex;
   onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
   searchUrl: string;
-  /** Opened *for* a person — an artist row's name — so their profile is out
-   *  from the start rather than sliding in over the drawer a beat later. */
-  initialPerson?: string | null;
+  /** A person to show — an artist row's name, or the viewer header's — put up
+   *  as soon as the drawer is open. */
+  personRequest?: PersonRequest | null;
+  /** Close the whole drawer; a person page opened for the art returns there. */
+  onDismiss?: () => void;
   topOffset?: number;
   bottomOffset?: number;
   closing?: boolean;
@@ -120,7 +134,7 @@ interface Props {
   overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, initialPerson = null, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, personRequest = null, onDismiss, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -138,6 +152,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
 
   const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null } | null>(null);
   const [personOpen, setPersonOpen] = useState(false);
+  const [personReturn, setPersonReturn] = useState<PersonRequest["returnTo"]>("details");
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
   const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
 
@@ -187,27 +202,20 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   );
 
   const openPerson = useCallback(
-    (name: string, artistId?: string | null) => {
+    (name: string, artistId?: string | null, returnTo: PersonRequest["returnTo"] = "details") => {
       setActivePerson({ name, artist: resolvePerson(name, artistId) });
+      setPersonReturn(returnTo);
       setPersonOpen(true);
     },
     [resolvePerson]
   );
 
-  /**
-   * A profile the drawer was opened *for*, put up as soon as the drawer is.
-   *
-   * Consumed once: paging to the next panel closes the profile the way it
-   * closes everything else, and the reader who navigated away has said they
-   * are done with it.
-   */
-  const wantPerson = useRef<string | null>(initialPerson);
-  useEffect(() => {
-    const name = wantPerson.current;
-    if (!open || !name) return;
-    wantPerson.current = null;
-    openPerson(name);
-  }, [open, openPerson]);
+  const closePerson = useCallback(() => {
+    // The profile stays up and rides the drawer down; the `open` effect below
+    // clears it once it is out of sight.
+    if (personReturn === "art" && onDismiss) onDismiss();
+    else setPersonOpen(false);
+  }, [personReturn, onDismiss]);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [slideOutSettled, setSlideOutSettled] = useState(false);
   const thumbRectRef = useRef<DOMRect | null>(null);
@@ -231,7 +239,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const prevCoverIdx = selectedCoverIdx === null || len < 2 ? -1 : (selectedCoverIdx - 1 + len) % len;
   const nextCoverIdx = selectedCoverIdx === null || len < 2 ? -1 : (selectedCoverIdx + 1) % len;
 
+  // Guarded on the id it last ran for rather than running at mount: there is
+  // nothing to reset then, and StrictMode's second mount pass would otherwise
+  // take down a profile the request below had just put up.
+  const lastPanelId = useRef(panel.id);
   useEffect(() => {
+    if (lastPanelId.current === panel.id) return;
+    lastPanelId.current = panel.id;
     setSelectedCoverIdx(null);
     setAnimPhase("idle");
     setActivePerson(null);
@@ -240,10 +254,26 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   }, [panel.id]);
 
   // When the drawer itself closes, dismiss any open profile so it doesn't
-  // reappear the next time the drawer opens.
+  // reappear the next time the drawer opens — once the drawer has finished
+  // sliding away, since the profile is on it and goes down with it.
   useEffect(() => {
-    if (!open) setPersonOpen(false);
+    if (open) return;
+    const t = setTimeout(() => setPersonOpen(false), 400);
+    return () => clearTimeout(t);
   }, [open]);
+
+  /**
+   * A person asked for from outside the drawer, put up as soon as the drawer
+   * is open. Each request is consumed once: paging to the next panel closes
+   * the profile the way it closes everything else, and the reader who
+   * navigated away has said they are done with it.
+   */
+  const lastRequest = useRef<number | null>(null);
+  useEffect(() => {
+    if (!open || !personRequest || personRequest.seq === lastRequest.current) return;
+    lastRequest.current = personRequest.seq;
+    openPerson(personRequest.name, null, personRequest.returnTo);
+  }, [open, personRequest, openPerson]);
 
   // After the slide-out animation completes, snap the drawer to its closed
   // position (off-screen bottom) without transition. This prevents a diagonal
@@ -570,10 +600,28 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     transform = "translateY(0)";
   }
 
+  // The details and the person page trade places on a shared lateral axis:
+  // the details step left and fade as the page pushes in from the right, and
+  // come back in just behind it leaving. Entering (the drawer rising, or the
+  // page handing back) waits a beat for the other to clear; leaving to the
+  // person is quick, so the two never read as stacked.
+  const detailsShown = show && !personOpen;
+  const detailsStyle = {
+    opacity: detailsShown ? 1 : 0,
+    transform: !show ? "translateY(12px)" : personOpen ? "translateX(-24px)" : "none",
+    transition: !show
+      ? "opacity 0.25s ease-out 0.15s, transform 0.25s ease-out 0.15s"
+      : personOpen
+        ? "opacity 0.12s ease-in, transform 0.22s cubic-bezier(0.3, 0, 0.8, 0.15)"
+        : "opacity 0.25s ease-out 0.12s, transform 0.34s cubic-bezier(0.2, 0, 0, 1) 0.08s",
+  };
+
   return (
-    <>
+    // The moving box: rises with the drawer, pages sideways with the viewer,
+    // and carries both of its pages with it, so a person page open when the
+    // drawer closes goes down with it rather than being left behind.
     <div
-      className="absolute inset-x-0 z-15 overflow-y-auto info-modal-scroll"
+      className="absolute inset-x-0 z-15 overflow-hidden"
       style={{
         top: topOffset,
         bottom: bottomOffset,
@@ -590,15 +638,16 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       }}
       onClick={(e) => e.stopPropagation()}
     >
+    <div
+      className="absolute inset-0 overflow-y-auto info-modal-scroll"
+      style={{ pointerEvents: personOpen ? "none" : undefined }}
+      inert={personOpen}
+    >
       <div
         className={`px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full${
           overViz ? " viz-read-scrim min-h-full" : ""
         }`}
-        style={{
-          opacity: show ? 1 : 0,
-          transform: show ? "translateY(0)" : "translateY(12px)",
-          transition: "opacity 0.25s ease-out 0.15s, transform 0.25s ease-out 0.15s",
-        }}
+        style={detailsStyle}
       >
         {/* Series info — a portrait belongs to a person rather than to a book,
             and its `title` is their name, so the card that would print it as a
@@ -1051,11 +1100,11 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       allPanels={allPanels}
       currentPanelId={panel.id}
       onSelectPanel={onSelectPanel}
-      onClose={() => setPersonOpen(false)}
+      onClose={closePerson}
       onBrowse={onBrowse}
-      topOffset={topOffset}
-      bottomOffset={bottomOffset}
+      onOpenPerson={(n) => openPerson(n, null, personReturn)}
+      overViz={overViz}
     />
-    </>
+    </div>
   );
 }
