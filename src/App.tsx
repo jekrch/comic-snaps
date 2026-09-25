@@ -726,7 +726,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-surface relative">
       <BackgroundEchoes panelPositions={panelPositions} />
-      <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
+      <header className="page-layer sticky top-0 z-40 bg-surface/90 backdrop-blur-sm border-bx border-ink-faint/30 pl-1!">
         <div className="content-container px-1 py-0 flex items-center justify-between">
           <div className="flex items-center">
             <h1
@@ -773,7 +773,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="content-container px-1 pt-0 pb-12 sm:px-1 sm:pt-0">
+      <main className="page-layer content-container px-1 pt-0 pb-12 sm:px-1 sm:pt-0">
         {(status === "loading" || (status === "ready" && !imagesLoaded)) && <SpinnerState />}
         {status === "error" && <ErrorState />}
         {status === "ready" && panels.length === 0 && imagesLoaded && <EmptyState />}

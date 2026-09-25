@@ -32,36 +32,6 @@ const ROLE_ROWS: {
   { dimension: "letterers", label: "As letterer", matches: (p, name) => (p.letterers ?? []).includes(name) },
 ];
 
-/**
- * The hero portrait, fading into the backdrop at its foot.
- *
- * The fade is a gradient laid over the image, not a mask: a masked portrait
- * rendered as a dark gap on iOS Safari. The structure is deliberately the one
- * the pre-2026-09-24 profile used, which rendered there — the `<img>` sized by
- * its own aspect ratio, in flow, and always visible, with the gradient
- * absolutely over it. The gradient ends in black, which is what the viewer's
- * backdrop (90% black over the wall) reads as, and its stops mirror the mask
- * it replaces.
- */
-function ProfilePortrait({ src, alt, onError }: { src: string; alt: string; onError: () => void }) {
-  return (
-    <div className="relative overflow-hidden rounded-sm">
-      <img
-        src={src}
-        alt={alt}
-        onError={onError}
-        className="block w-full aspect-16/10 object-cover"
-        style={{ objectPosition: "center 22%" }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, transparent 35%, rgba(0,0,0,0.45) 70%, #000 100%)" }}
-      />
-    </div>
-  );
-}
-
 /** Stagger slot for one block of the page; see `.profile-rise`. */
 const rise = (i: number) => ({ "--i": Math.min(i, 5) }) as CSSProperties;
 
@@ -88,9 +58,6 @@ export default function PersonProfile({
   overViz = false,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  // A portrait whose source is gone (a moved or hotlink-blocked image) falls
-  // back to the monogram rather than leaving a blank hero.
-  const [failedPortrait, setFailedPortrait] = useState<string | null>(null);
 
   // Intercept Escape before the viewer/drawer sees it so it closes the profile
   // first, returning the user to wherever they came from.
@@ -216,13 +183,13 @@ export default function PersonProfile({
             in a box, and the name is set over its faded foot, so the person
             reads as the subject of the page rather than as a card on it. */}
         <header className="profile-rise" style={rise(1)}>
-          {artist?.imageUrl && failedPortrait !== artist.imageUrl ? (
+          {artist?.imageUrl ? (
             <>
-              <ProfilePortrait
-                key={artist.imageUrl}
+              <img
                 src={artist.imageUrl}
                 alt={name}
-                onError={() => setFailedPortrait(artist.imageUrl ?? null)}
+                className="block w-full aspect-16/10 object-cover rounded-sm profile-portrait"
+                style={{ objectPosition: "center 22%" }}
               />
               <div className="relative -mt-12 px-0.5" style={{ textShadow: "0 1px 14px rgba(0,0,0,0.7)" }}>
                 {nameBlock}

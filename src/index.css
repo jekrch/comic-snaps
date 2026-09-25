@@ -1121,6 +1121,14 @@ button,
   }
 }
 
+/* The portrait has no frame: it dissolves into whatever the drawer is sitting
+   on — the viewer's backdrop, or the scrim over a running visualizer — so the
+   hero needs no fill of its own to fade into. */
+.profile-portrait {
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, 0.55) 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 35%, rgba(0, 0, 0, 0.55) 70%, transparent 100%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .profile-rise {
     animation: scrimIn 120ms ease-out both;
@@ -1335,17 +1343,20 @@ button,
    measurable at its own coordinates the whole time.
 
    Touch only. On a desktop none of the above happens, and the page ghosting
-   faintly through the backdrop is the look, not an artefact. */
+   faintly through the backdrop is the look, not an artefact.
+
+   Keyed to `.page-layer` — the page's own header and main — never to the bare
+   elements: the viewer is in the same document, and a `<header>` inside it
+   (the person page's hero) went invisible on phones under `.viewer-open
+   header`, portrait and name both. */
 @media (hover: none) and (pointer: coarse) {
-  header,
-  main {
+  .page-layer {
     transition:
       opacity var(--rvl-anim-duration, 250ms) ease-out,
       visibility 0s;
   }
 
-  .viewer-open header,
-  .viewer-open main {
+  .viewer-open .page-layer {
     opacity: 0;
     visibility: hidden;
     transition:
