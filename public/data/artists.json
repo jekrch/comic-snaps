@@ -4247,6 +4247,27 @@
       ]
     },
     {
+      "id": "francesca-ciregia",
+      "name": "Francesca Ciregia",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/64770/1952300-francesca_ciregia.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8378/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/francesca-ciregia/4040-60115/"
+        }
+      ],
+      "country": "Italy",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "francesco-francavilla",
       "name": "Francesco Francavilla",
       "description": "Francesco Francavilla is a comic artist who does mostly covers although he has done interiors for Zorro, Detective Comics, and Captain America and Bucky. He is best known for his gritty, pulp noir style.",
@@ -8310,6 +8331,31 @@
         "comicvine",
         "metron"
       ]
+    },
+    {
+      "id": "liam-sharp",
+      "name": "Liam Sharp",
+      "description": "Liam lives in Derby, UK, with his wife Christina, and three children, Matylda, Lorcan and Jeff.\r\n\r\nLiam made his debut in the 1980s for the famous British weekly science-fiction comic 2000ad, after a year's apprenticeship with the legendary Don Lawrence, artist on the seminal Dutch comic Storm.\r\n\r\nHis works include many Judge Dredd stories \u2013 most notably featuring PJ Maybe, whom he created with John Wagner and Alan Grant, and who became one of Dredd\u2019s most popular villains. He also worked on Finn and the ABC Warriors (both with Pat Mills).\r\n\r\nLiam's audience increased markedly when he moved to Marvel UK, for which he drew the best-selling Marvel UK title ever, the mini-series Death's Head II. Thereafter he began working mainly in the United States on books as diverse as the X-Men, the Hulk, Spider-Man, Venom, Man-Thing (for Marvel Comics) - Superman, Batman, and The Possessed (for DC Comics and Wildstorm) - Spawn: The Dark Ages (for Todd McFarlane) and Red Sonja for Dynamite comics.\r\n\r\nSharp has also worked on more mature themed books for Verotik, drawing GOTH, Jaguar God and Frank Frazetta's Death Dealer. He also briefly worked on a strip originated by Stan Winston - Realm of the Claw. He has also scripted and illustrated a strip for Heavy Metal magazine, entitled 'A-crazy-A' featuring Playboy model Tiffany Taylor as the title character.\r\n\r\nIn 2004 Sharp set up his own publishing company, Mam Tor\u2122 Publishing, with wife Christina McCormack, to publish the art-book 'Sharpenings: the Art of Liam Sharp'. Following the success of this book, and together with designer Tom Muller and friend and comic art collector John Bamber, Sharp set out to expand the company and start publishing more work. This saw the launch of the critically acclaimed and award-winning anthology 'Event Horizon', and Matt Coyle's ground-breaking graphic novel 'Worry Doll'.\r\n\r\nSharp is currently working on the controversial DC Vertigo title Testament with best-selling novelist and media commentator Douglas Rushkoff, and DC\u2019s Countdown related mini-series Lord Havok.\r\n\r\nSharp has also worked on the movies Small Soldiers, Lost in Space, and the animated TV series Batman Beyond.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/225848-183317-liam-sharp.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/470/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/liam-sharp/4040-2629/"
+        }
+      ],
+      "country": "United Kingdom",
+      "aliases": [
+        "Liam McCormack-Sharp"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1968
     },
     {
       "id": "liberatore",

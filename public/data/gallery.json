@@ -1,6 +1,117 @@
 {
   "panels": [
     {
+      "seq": 296,
+      "id": "red-roots-5-1789860485",
+      "title": "Red Roots",
+      "slug": "red-roots",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Lorenzo De Felici",
+      "image": "images/red-roots/issue-5-1789860485.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-19T23:28:08.301Z",
+      "width": 1280,
+      "height": 603,
+      "dominantColors": [
+        [
+          61.3,
+          49.0,
+          -41.3
+        ],
+        [
+          49.1,
+          30.6,
+          -34.3
+        ],
+        [
+          29.7,
+          25.0,
+          -16.0
+        ]
+      ],
+      "colorfulness": 18.8,
+      "phash": "e28dc6d3e01c9e33",
+      "ahash": "fff383c1e1e5c0c0",
+      "dhash": "e6272797dd9d8d8d"
+    },
+    {
+      "seq": 295,
+      "id": "just-brutal-6-1789860252",
+      "title": "Just Brutal",
+      "slug": "just-brutal",
+      "issue": 6,
+      "year": 2026,
+      "artist": "Brahm Revel",
+      "image": "images/just-brutal/issue-6-1789860252.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-19T23:24:15.536Z",
+      "width": 970,
+      "height": 1280,
+      "dominantColors": [
+        [
+          63.1,
+          2,
+          7.2
+        ],
+        [
+          14.2,
+          1,
+          1.5
+        ],
+        [
+          74.3,
+          12.1,
+          51
+        ]
+      ],
+      "colorfulness": 23,
+      "phash": "b6e53a8ce5345a52",
+      "ahash": "f3fffeef7c1c0404",
+      "dhash": "06020856d5313d1d"
+    },
+    {
+      "seq": 294,
+      "id": "just-brutal-6-1789841228",
+      "title": "Just Brutal",
+      "slug": "just-brutal",
+      "issue": 6,
+      "year": 2026,
+      "artist": "Brahm Revel",
+      "image": "images/just-brutal/issue-6-1789841228.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-19T18:07:11.892Z",
+      "width": 865,
+      "height": 1280,
+      "dominantColors": [
+        [
+          69.3,
+          2.6,
+          15.1
+        ],
+        [
+          27.1,
+          12.6,
+          -6.7
+        ],
+        [
+          52.8,
+          47.4,
+          -28.8
+        ]
+      ],
+      "colorfulness": 30.7,
+      "phash": "f46ea2c70484df2d",
+      "ahash": "67c1000000fcffff",
+      "dhash": "c50f37945460d494"
+    },
+    {
       "seq": 293,
       "id": "verbatim-1-1789314593",
       "title": "Verbatim",
@@ -30,7 +141,7 @@
         ],
         [
           42.3,
-          22.0,
+          22,
           14.2
         ]
       ],
