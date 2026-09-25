@@ -62,12 +62,17 @@ function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
     onOpen(panel);
   }, [onOpen, panel]);
 
-  // First tap reveals the details; tapping the already-selected card opens the
-  // full viewer. Selecting one card deselects any other (handled by the parent),
-  // so there is no timing window — the two taps can be arbitrarily far apart.
+  // A mouse has already revealed the details on hover, so one click opens the
+  // viewer. On touch, the first tap reveals the details and tapping the
+  // already-selected card opens the viewer. Selecting one card deselects any
+  // other (handled by the parent), so there is no timing window — the two taps
+  // can be arbitrarily far apart.
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.pointerType === "mouse") {
+        if (e.button === 0) openViewer();
+        return;
+      }
       if (selected) openViewer();
       else onSelect(panel);
     },

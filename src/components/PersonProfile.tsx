@@ -32,6 +32,40 @@ const ROLE_ROWS: {
   { dimension: "letterers", label: "As letterer", matches: (p, name) => (p.letterers ?? []).includes(name) },
 ];
 
+/**
+ * The hero portrait. The fade into the backdrop is a mask on a wrapper rather
+ * than on the `<img>`, and the image fades up once it has decoded: iOS Safari
+ * painted a masked `<img>` inside the drawer's animated, scrolling layer before
+ * the remote image arrived and never repainted it, leaving a dark gap. This is
+ * the pattern `.row-bg` already uses, which renders there.
+ */
+function ProfilePortrait({ src, alt, onError }: { src: string; alt: string; onError: () => void }) {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  // A cached image can finish before the load listener is attached.
+  useLayoutEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+  }, []);
+  return (
+    <div className="profile-portrait w-full aspect-16/10 overflow-hidden rounded-sm">
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        onError={onError}
+        className="block w-full h-full object-cover"
+        style={{
+          objectPosition: "center 22%",
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 0.3s ease-out",
+        }}
+      />
+    </div>
+  );
+}
+
 /** Stagger slot for one block of the page; see `.profile-rise`. */
 const rise = (i: number) => ({ "--i": Math.min(i, 5) }) as CSSProperties;
 
@@ -58,6 +92,9 @@ export default function PersonProfile({
   overViz = false,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  // A portrait whose source is gone (a moved or hotlink-blocked image) falls
+  // back to the monogram rather than leaving a blank hero.
+  const [failedPortrait, setFailedPortrait] = useState<string | null>(null);
 
   // Intercept Escape before the viewer/drawer sees it so it closes the profile
   // first, returning the user to wherever they came from.
@@ -183,13 +220,13 @@ export default function PersonProfile({
             in a box, and the name is set over its faded foot, so the person
             reads as the subject of the page rather than as a card on it. */}
         <header className="profile-rise" style={rise(1)}>
-          {artist?.imageUrl ? (
+          {artist?.imageUrl && failedPortrait !== artist.imageUrl ? (
             <>
-              <img
+              <ProfilePortrait
+                key={artist.imageUrl}
                 src={artist.imageUrl}
                 alt={name}
-                className="block w-full aspect-16/10 object-cover rounded-sm profile-portrait"
-                style={{ objectPosition: "center 22%" }}
+                onError={() => setFailedPortrait(artist.imageUrl ?? null)}
               />
               <div className="relative -mt-12 px-0.5" style={{ textShadow: "0 1px 14px rgba(0,0,0,0.7)" }}>
                 {nameBlock}
