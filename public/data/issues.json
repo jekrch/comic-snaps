@@ -9294,6 +9294,44 @@
       ]
     },
     {
+      "id": "the-eye-collector-4",
+      "series": "the-eye-collector",
+      "issue": 4,
+      "credits": [
+        {
+          "artistId": "jonathan-ball",
+          "name": "Jonathan Ball",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "g-m-b-chomichuk",
+          "name": "G. M. B. Chomichuk",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lyndon-radchenka",
+          "name": "Lyndon Radchenka",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-eye-collector-2026-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-karman-blade-1",
       "series": "the-karman-blade",
       "issue": 1,
