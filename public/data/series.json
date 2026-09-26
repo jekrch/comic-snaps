@@ -3751,7 +3751,7 @@
         }
       ],
       "publisher": "Ignition Press",
-      "issueCount": 2,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron"
@@ -3759,7 +3759,8 @@
       "startYear": 2026,
       "coverSources": {
         "metron": [
-          1
+          1,
+          3
         ],
         "comicvine": [
           1
@@ -3768,8 +3769,10 @@
       "coverImages": [
         "data/covers/the-dogsitter/26bbbc2fa689.jpg",
         "data/covers/the-dogsitter/6ea74b3c0687.jpg",
-        "data/covers/the-dogsitter/94fcec544c14.jpg"
-      ]
+        "data/covers/the-dogsitter/94fcec544c14.jpg",
+        "data/covers/the-dogsitter/194190683021.jpg"
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-eye-collector",

@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-26T18:40:36.506Z"
+      "addedAt": "2026-09-26T18:40:36.506Z",
+      "width": 1218,
+      "height": 1280,
+      "dominantColors": [
+        [
+          64.9,
+          7.1,
+          11.6
+        ],
+        [
+          36.6,
+          22.6,
+          22.3
+        ],
+        [
+          33.4,
+          -1.6,
+          -10.6
+        ]
+      ],
+      "colorfulness": 14.6,
+      "phash": "dfaf635c2f0ec020",
+      "ahash": "bfefdf1f989c8c00",
+      "dhash": "631a38767430500c"
     },
     {
       "seq": 297,
@@ -1653,7 +1676,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -1988,7 +2011,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5442,7 +5465,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
