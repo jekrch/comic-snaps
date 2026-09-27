@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-27T18:52:43.626Z"
+      "addedAt": "2026-09-27T18:52:43.626Z",
+      "width": 1280,
+      "height": 832,
+      "dominantColors": [
+        [
+          37.6,
+          9.7,
+          10.4
+        ],
+        [
+          59.0,
+          8.6,
+          10.7
+        ],
+        [
+          61.7,
+          30.8,
+          40.4
+        ]
+      ],
+      "colorfulness": 15.7,
+      "phash": "c1230e39dbacb9d2",
+      "ahash": "0020fff7ec693a3c",
+      "dhash": "d3cec686889bb4f0"
     },
     {
       "seq": 302,
@@ -28,7 +51,30 @@
         "line-work"
       ],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-27T18:51:55.120Z"
+      "addedAt": "2026-09-27T18:51:55.120Z",
+      "width": 974,
+      "height": 1280,
+      "dominantColors": [
+        [
+          37.5,
+          11.1,
+          8.1
+        ],
+        [
+          59.8,
+          11.3,
+          11.9
+        ],
+        [
+          52.2,
+          30.6,
+          23.5
+        ]
+      ],
+      "colorfulness": 12.7,
+      "phash": "89f707a35876838e",
+      "ahash": "0c6b7fdcdb6f0418",
+      "dhash": "9bcac991b3dbf9f3"
     },
     {
       "seq": 301,
@@ -1817,7 +1863,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -2152,7 +2198,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5606,7 +5652,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
