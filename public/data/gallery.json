@@ -40,7 +40,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-27T18:50:57.413Z"
+      "addedAt": "2026-09-27T18:50:57.413Z",
+      "width": 834,
+      "height": 1280,
+      "dominantColors": [
+        [
+          40.7,
+          1.8,
+          8.5
+        ],
+        [
+          69.0,
+          -10.3,
+          37.8
+        ],
+        [
+          63.7,
+          24.1,
+          26.1
+        ]
+      ],
+      "colorfulness": 24.5,
+      "phash": "919dee09d89133f2",
+      "ahash": "dff3671f4d0262e0",
+      "dhash": "5367cdb2bb9ec689"
     },
     {
       "seq": 300,
@@ -54,7 +77,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-09-27T18:50:03.445Z"
+      "addedAt": "2026-09-27T18:50:03.445Z",
+      "width": 394,
+      "height": 1280,
+      "dominantColors": [
+        [
+          28.2,
+          9.0,
+          8.5
+        ],
+        [
+          69.0,
+          24.9,
+          17.1
+        ],
+        [
+          44.7,
+          42.2,
+          31.3
+        ]
+      ],
+      "colorfulness": 19.0,
+      "phash": "a58f80c34acfb13e",
+      "ahash": "3f070700846f3340",
+      "dhash": "e3ef3e7b3cdc6387"
     },
     {
       "seq": 299,
@@ -1769,7 +1815,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -2104,7 +2150,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5558,7 +5604,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
