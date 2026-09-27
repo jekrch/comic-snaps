@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 300,
+      "id": "absolute-wonder-woman-24-1790535001",
+      "title": "Absolute Wonder Woman",
+      "slug": "absolute-wonder-woman",
+      "issue": 24,
+      "year": 2026,
+      "artist": "Hayden Sherman",
+      "image": "images/absolute-wonder-woman/issue-24-1790535001.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-09-27T18:50:03.445Z"
+    },
+    {
       "seq": 299,
       "id": "the-dogsitter-3-1790534900",
       "title": "The Dogsitter",
