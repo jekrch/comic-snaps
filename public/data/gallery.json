@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 307,
+      "id": "mind-mgmt-new-improved-4-1791159369",
+      "title": "Mind MGMT: New & Improved",
+      "slug": "mind-mgmt-new-improved",
+      "issue": 4,
+      "year": 2026,
+      "artist": "Matt Kindt",
+      "image": "images/mind-mgmt-new-improved/issue-4-1791159369.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-05T00:16:12.970Z"
+    },
+    {
       "seq": 306,
       "id": "mind-mgmt-new-improved-4-1791159333",
       "title": "Mind MGMT: New & Improved",
