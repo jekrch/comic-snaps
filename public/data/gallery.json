@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 305,
+      "id": "bleeding-hearts-8-1791159122",
+      "title": "Bleeding Hearts",
+      "slug": "bleeding-hearts",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Stipan Morian",
+      "image": "images/bleeding-hearts/issue-8-1791159122.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-05T00:12:04.774Z"
+    },
+    {
       "seq": 304,
       "id": "bleeding-hearts-8-1791159081",
       "title": "Bleeding Hearts",
