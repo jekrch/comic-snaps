@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 304,
+      "id": "bleeding-hearts-8-1791159081",
+      "title": "Bleeding Hearts",
+      "slug": "bleeding-hearts",
+      "issue": 8,
+      "year": 2026,
+      "artist": "Stipan Morian",
+      "image": "images/bleeding-hearts/issue-8-1791159081.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-05T00:11:24.406Z"
+    },
+    {
       "seq": 303,
       "id": "the-shaolin-cowboy-staying-a-i-live-3-1790535160",
       "title": "The Shaolin Cowboy: Staying A.I. Live",
@@ -22,7 +36,7 @@
           10.4
         ],
         [
-          59.0,
+          59,
           8.6,
           10.7
         ],
@@ -1863,7 +1877,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -2198,7 +2212,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5652,7 +5666,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
