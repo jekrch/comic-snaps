@@ -9401,6 +9401,110 @@
       ]
     },
     {
+      "id": "the-deadman-5",
+      "series": "the-deadman",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alejandro-s-nchez",
+          "name": "Alejandro S\u00e1nchez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chloe-brailsford",
+          "name": "Chloe Brailsford",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "javier-fernandez",
+          "name": "Javier Fernandez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "taurin-clarke",
+          "name": "Taurin Clarke",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-kaminski",
+          "name": "Paul Kaminski",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sophie-philips-roberts",
+          "name": "Sophie Philips-Roberts",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-deadman-2026-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-dogsitter-1",
       "series": "the-dogsitter",
       "issue": 1,

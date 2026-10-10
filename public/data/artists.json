@@ -262,6 +262,22 @@
       ]
     },
     {
+      "id": "alejandro-s-nchez",
+      "name": "Alejandro S\u00e1nchez",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/13/Alejandro-Sanchez.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/748/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "alex-antone",
       "name": "Alex Antone",
       "description": "",
@@ -5868,6 +5884,25 @@
         "comicvine"
       ],
       "country": "USA"
+    },
+    {
+      "id": "javier-fernandez",
+      "name": "Javier Fernandez",
+      "description": "",
+      "imageUrl": "https://static.metron.cloud/media/creator/2018/12/31/Javier-Fernandez.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1021/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Javi Fernandez"
+      ]
     },
     {
       "id": "javier-rodriguez",
@@ -12872,6 +12907,27 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/tara-mccarron/4040-131601/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "taurin-clarke",
+      "name": "Taurin Clarke",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9998545-taurin_clarke.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4025/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/taurin-clarke/4040-111471/"
         }
       ],
       "country": "United States",
