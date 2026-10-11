@@ -143,12 +143,15 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const artistGroup = allPanels.filter((p) => p.artist === panel.artist);
   const seriesDesc = series?.description || parentSeries?.description || "";
   const seriesRefs = series?.references?.length ? series.references : parentSeries?.references ?? [];
-  const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl || null;
   const effectiveSeries = series ?? parentSeries ?? null;
   const coverImages = effectiveSeries?.coverImages ?? [];
   const hasCovers = coverImages.length > 0;
   const resolveCover = (url: string) =>
     url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
+  // Series images come only from Comic Vine (Metron series carry none), so a
+  // series it didn't match falls back to its first downloaded cover.
+  const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl
+    || (hasCovers ? resolveCover(coverImages[0]) : null);
 
   const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null } | null>(null);
   const [personOpen, setPersonOpen] = useState(false);
@@ -811,12 +814,24 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                       }}
                       onPointerMove={(e) => {
                         if (e.pointerType === "touch") return;
-                        moveDrag(e.clientX, e.clientY, 4, 1);
+                        // Button released somewhere we didn't hear about
+                        // (outside the window, or before capture was taken).
+                        if (e.buttons === 0) { endDrag(); return; }
+                        const moved = moveDrag(e.clientX, e.clientY, 4, 1);
+                        // Capture only once the drag locks, so a plain click
+                        // still reaches the arrow/close buttons inside; from
+                        // then on the release lands here even off the container.
+                        if (moved && !e.currentTarget.hasPointerCapture(e.pointerId)) {
+                          e.currentTarget.setPointerCapture(e.pointerId);
+                        }
                       }}
                       onPointerUp={(e) => {
                         if (e.pointerType !== "touch") endDrag();
                       }}
                       onPointerCancel={(e) => {
+                        if (e.pointerType !== "touch") endDrag();
+                      }}
+                      onLostPointerCapture={(e) => {
                         if (e.pointerType !== "touch") endDrag();
                       }}
                       onTouchStart={(e) => {
