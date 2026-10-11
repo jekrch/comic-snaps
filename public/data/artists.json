@@ -12448,11 +12448,19 @@
           "name": "Border Crossings",
           "url": "https://bordercrossingsmag.com/article/the-fetishing-touch-shawn-kuruneru",
           "title": "The Fetishing Touch: Shawn Kuruneru"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8437/"
         }
       ],
       "country": "Canada",
       "aliases": [
         "Sawn Kuruneru"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
