@@ -156,7 +156,8 @@ def metron_resource_url(resource: str, match: dict) -> str | None:
     return f"https://metron.cloud/{kind}/{mid}/"
 
 
-def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | None) -> int:
+def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | None,
+                    year_hints: dict[str, int] | None = None) -> int:
     """
     For entries missing data, search Metron and fill in whichever fields are
     missing. Adds a Metron reference whenever any field is populated.
@@ -167,6 +168,9 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
     is fetched directly by ID instead of searched by name.  Entries that were
     previously marked as processed but now have a resolved disambiguation ID
     are re-processed.
+
+    `year_hints` maps an entry id to a likely start year (seed.issue_one_years),
+    used to choose among same-named series.
     """
     username = os.environ.get("METRON_USERNAME")
     password = os.environ.get("METRON_PASSWORD")
@@ -232,7 +236,10 @@ def backfill_metron(path: Path, key: str, resource: str, tiebreak_key: str | Non
                     results, entry.get("startYear")
                 )
 
-            match = pick_exact_match(candidates, name, tiebreak_key=tiebreak_key)
+            match = pick_exact_match(
+                candidates, name, tiebreak_key=tiebreak_key,
+                prefer_year=(year_hints or {}).get(entry.get("id")), year_key="year_began",
+            )
             if not match and results:
                 print(f"    SKIP: no exact match ({len(results)} candidate(s))")
                 record_disambiguation_candidates(

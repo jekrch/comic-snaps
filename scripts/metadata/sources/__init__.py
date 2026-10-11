@@ -55,18 +55,28 @@ def filter_by_start_year(results: list, start_year: int | None, key: str) -> lis
     ]
 
 
-def pick_exact_match(results: list, name: str, tiebreak_key: str | None = None) -> dict | None:
+def pick_exact_match(results: list, name: str, tiebreak_key: str | None = None,
+                     prefer_year: int | None = None, year_key: str | None = None) -> dict | None:
     """
     Pick the result whose name matches `name` case-insensitively.
 
-    If multiple exact matches exist and `tiebreak_key` is provided, pick the
-    one with the highest numeric value for that key (e.g. count_of_issues).
+    If multiple exact matches exist and `prefer_year` is given, narrow them to
+    the ones whose start year (read from `year_key`) equals it — when any do.
+    Only then, if several remain and `tiebreak_key` is provided, pick the one
+    with the highest numeric value for that key (e.g. count_of_issues).
     Returns None if no exact match.
+
+    Unlike filter_by_start_year, a preferred year never rules a result out:
+    it is a hint (see seed.issue_one_years), not an established fact.
     """
     norm = name.strip().lower()
     exact = [r for r in results if (r.get("name") or "").strip().lower() == norm]
     if not exact:
         return None
+    if len(exact) > 1 and prefer_year and year_key:
+        year_hits = [r for r in exact if parse_year_began(r.get(year_key)) == prefer_year]
+        if year_hits:
+            exact = year_hits
     if len(exact) == 1 or not tiebreak_key:
         return exact[0]
     return max(exact, key=lambda r: int(r.get(tiebreak_key) or 0))

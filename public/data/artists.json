@@ -2643,33 +2643,6 @@
       ]
     },
     {
-      "id": "dan-raspler",
-      "name": "Dan Raspler",
-      "description": "Editor and writer for DC who was 1997's Eisner Award winner for Best Editor for his work on Kingdom Come, Hitman, the Spectre, and Sergio Aragones Destroys the DC Universe.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/64770/2185517-dan_raspler.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/1740/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/dan-raspler/4040-42515/"
-        }
-      ],
-      "birthYear": 1963,
-      "country": "United States",
-      "aliases": [
-        "Daniel A. Raspler",
-        "Daniel Raspler",
-        "Rusty Wells"
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "dani",
       "name": "Dani",
       "description": "",
@@ -3391,27 +3364,6 @@
       ],
       "birthYear": 1946,
       "country": "United States"
-    },
-    {
-      "id": "denis-rodier",
-      "name": "Denis Rodier",
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/77/1088572-392.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/2941/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/denis-rodier/4040-13005/"
-        }
-      ],
-      "country": "France",
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
     },
     {
       "id": "deniz-camp",
@@ -11267,30 +11219,6 @@
       ]
     },
     {
-      "id": "robbie-busch",
-      "name": "Robbie Busch",
-      "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10004924-robbie_busch.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/1565/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/robbie-busch/4040-13475/"
-        }
-      ],
-      "country": "United States",
-      "aliases": [
-        "mcboingboing"
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "robert-crumb",
       "name": "Robert Crumb",
       "description": "Robert Dennis Crumb (; born August 30, 1943) is an American artist who often signs his work R. Crumb. His work displays a nostalgia for American folk culture of the late 19th and early 20th centuries, and satire of contemporary American culture.\r\n\r\nCrumb contributed to many of the seminal works of the underground comix movement in the 1960s, including being a founder of the first successful underground comix publication, Zap Comix, contributing to all 16 issues. He was additionally contributing to the East Village Other and many other publications, including a variety of one-off and anthology comics. During this time, inspired by psychedelics and cartoons from the 1920s and 1930s, he introduced a wide variety of characters that became extremely popular, including countercultural icons Fritz the Cat and Mr. Natural, and the images from his Keep On Truckin' strip. Sexual themes abounded in all these projects, often shading into scatological and pornographic comics. In the mid-1970s, he contributed to the Arcade anthology; following the decline of the underground, he moved towards biographical and autobiographical subjects while refining his drawing style, a heavily crosshatched pen-and-ink style inspired by late 19th- and early 20th-century cartooning. Much of his work appeared in a magazine he founded, Weirdo (1981\u20131993), which was one of the most prominent publications of the alternative comics era. As his career progressed, his comic work became more autobiographical.\r\n\r\nIn 1991 Crumb was inducted into the comic book industry's Will Eisner Comic Book Hall of Fame, and in 1994 the Terry Zwigoff film Crumb explored his artistic career and personal life. He was married to cartoonist Aline Kominsky-Crumb, with whom he frequently collaborated. Their daughter, Sophie Crumb, has also followed a cartooning career.",
@@ -13628,28 +13556,6 @@
       ],
       "aliases": [
         "Kenneth V. Marion"
-      ]
-    },
-    {
-      "id": "val-semeiks",
-      "name": "Val Semeiks",
-      "description": "Val Semeiks is an American comic book artist. Both a penciller and an inker, he has worked for both Marvel and DC.",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/229/399644-12768-val-semeiks.jpg",
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/creator/3316/"
-        },
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/val-semeiks/4040-13465/"
-        }
-      ],
-      "birthYear": 1955,
-      "country": "United States of America",
-      "sources": [
-        "comicvine",
-        "metron"
       ]
     },
     {

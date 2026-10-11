@@ -9572,66 +9572,6 @@
       ]
     },
     {
-      "id": "the-demon-1",
-      "series": "the-demon",
-      "issue": 1,
-      "credits": [
-        {
-          "artistId": "alan-grant",
-          "name": "Alan Grant",
-          "roles": [
-            "Writer"
-          ]
-        },
-        {
-          "artistId": "val-semeiks",
-          "name": "Val Semeiks",
-          "roles": [
-            "Penciller",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "denis-rodier",
-          "name": "Denis Rodier",
-          "roles": [
-            "Inker",
-            "Cover"
-          ]
-        },
-        {
-          "artistId": "robbie-busch",
-          "name": "Robbie Busch",
-          "roles": [
-            "Colorist"
-          ]
-        },
-        {
-          "artistId": "todd-klein",
-          "name": "Todd Klein",
-          "roles": [
-            "Letterer"
-          ]
-        },
-        {
-          "artistId": "dan-raspler",
-          "name": "Dan Raspler",
-          "roles": [
-            "Editor"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/issue/the-demon-1990-1/"
-        }
-      ],
-      "sources": [
-        "metron"
-      ]
-    },
-    {
       "id": "the-dogsitter-1",
       "series": "the-dogsitter",
       "issue": 1,

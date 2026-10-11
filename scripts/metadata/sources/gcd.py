@@ -156,7 +156,7 @@ def extract_gcd_series_fields(match: dict) -> dict:
     }
 
 
-def backfill_gcd(path: Path, key: str) -> int:
+def backfill_gcd(path: Path, key: str, year_hints: dict[str, int] | None = None) -> int:
     """
     For series entries missing data, search the Grand Comics Database and
     fill in whichever fields are missing. GCD has no creator/people endpoint
@@ -165,6 +165,9 @@ def backfill_gcd(path: Path, key: str) -> int:
     If a disambiguation entry with a resolved ID exists for a name, the entry
     is fetched directly by ID. Entries previously marked as processed are
     re-processed when a disambiguation ID becomes available.
+
+    `year_hints` maps an entry id to a likely start year (seed.issue_one_years),
+    used in place of a startYear no earlier source has established.
     """
     if not path.exists():
         return 0
@@ -227,7 +230,10 @@ def backfill_gcd(path: Path, key: str) -> int:
                 print(f"    SKIP: request failed, will retry next run")
                 continue
 
-            match = pick_gcd_series_match(results, name, entry.get("startYear"))
+            match = pick_gcd_series_match(
+                results, name,
+                entry.get("startYear") or (year_hints or {}).get(entry.get("id")),
+            )
             if not match:
                 if results:
                     print(f"    SKIP: no exact match ({len(results)} candidate(s))")

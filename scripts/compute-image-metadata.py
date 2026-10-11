@@ -33,7 +33,7 @@ from metadata.covers import backfill_cover_images, localize_cover_images
 from metadata.credits import backfill_issue_credits
 from metadata.image_metadata import compute_metadata, needs_update
 from metadata.paths import ARTISTS_PATH, GALLERY_PATH, IMAGE_ROOT, SERIES_PATH
-from metadata.seed import seed_artists, seed_series, sync_issue_counts
+from metadata.seed import issue_one_years, seed_artists, seed_series, sync_issue_counts
 from metadata.sources.comicvine import backfill_comicvine
 from metadata.sources.gcd import backfill_gcd
 from metadata.sources.metron import backfill_metron
@@ -61,6 +61,7 @@ def main():
     # Seed artists.json and series.json if they don't exist
     seed_artists(panels)
     seed_series(panels)
+    year_hints = issue_one_years(panels)
 
     # Localize any previously-fetched remote cover URLs first, so a later
     # rate-limit/timeout in this run doesn't leave the UI with broken
@@ -86,7 +87,8 @@ def main():
     print("Backfilling Comic Vine data...")
     cv_updated = 0
     cv_updated += backfill_comicvine(ARTISTS_PATH, "artists", "people", tiebreak_key=None)
-    cv_updated += backfill_comicvine(SERIES_PATH, "series", "volumes", tiebreak_key="count_of_issues")
+    cv_updated += backfill_comicvine(SERIES_PATH, "series", "volumes", tiebreak_key="count_of_issues",
+                                    year_hints=year_hints)
     if cv_updated:
         print(f"Processed {cv_updated} entr(ies) via Comic Vine.")
     else:
@@ -96,7 +98,8 @@ def main():
     print("Backfilling Metron data...")
     mt_updated = 0
     mt_updated += backfill_metron(ARTISTS_PATH, "artists", "creator", tiebreak_key=None)
-    mt_updated += backfill_metron(SERIES_PATH, "series", "series", tiebreak_key=None)
+    mt_updated += backfill_metron(SERIES_PATH, "series", "series", tiebreak_key=None,
+                                 year_hints=year_hints)
     if mt_updated:
         print(f"Processed {mt_updated} entr(ies) via Metron.")
     else:
@@ -124,7 +127,7 @@ def main():
         print("Skipping GCD backfill (--skip-gcd).")
     else:
         print("Backfilling GCD data...")
-        gcd_updated = backfill_gcd(SERIES_PATH, "series")
+        gcd_updated = backfill_gcd(SERIES_PATH, "series", year_hints=year_hints)
         if gcd_updated:
             print(f"Processed {gcd_updated} series via GCD.")
         else:

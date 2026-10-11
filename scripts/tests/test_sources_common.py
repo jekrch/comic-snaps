@@ -76,6 +76,57 @@ class TestPickExactMatch:
         assert pick_exact_match(results, "Saga", "count_of_issues")["id"] == 1
 
 
+class TestPickExactMatchPreferYear:
+    # Comic Vine's four "The Demon" volumes, as a title search returns them.
+    DEMON = [
+        {"name": "The Demon", "id": 1972, "start_year": "1972", "count_of_issues": 16},
+        {"name": "The Demon", "id": 1987, "start_year": "1987", "count_of_issues": 4},
+        {"name": "The Demon", "id": 1990, "start_year": "1990", "count_of_issues": 59},
+        {"name": "The Demon", "id": 2026, "start_year": "2026", "count_of_issues": 1},
+    ]
+
+    def pick(self, results, prefer_year, name="The Demon"):
+        return pick_exact_match(
+            results, name, "count_of_issues", prefer_year=prefer_year, year_key="start_year"
+        )
+
+    def test_a_preferred_year_outranks_the_count_of_issues_tiebreak(self):
+        assert self.pick(self.DEMON, 2026)["id"] == 2026
+
+    def test_without_a_preferred_year_the_tiebreak_decides(self):
+        assert self.pick(self.DEMON, None)["id"] == 1990
+
+    def test_a_year_no_result_has_falls_back_to_the_tiebreak(self):
+        # A reprint's #1 can carry a year no volume started in; the hint
+        # must not cost us the match.
+        assert self.pick(self.DEMON, 1952)["id"] == 1990
+
+    def test_never_rules_out_a_lone_exact_match(self):
+        results = [
+            {"name": "Tales Calculated to Drive You Mad", "id": 1, "start_year": "1997"},
+            {"name": "Mad", "id": 2, "start_year": "1952"},
+        ]
+        assert self.pick(results, 1952, "Tales Calculated to Drive You Mad")["id"] == 1
+
+    def test_the_tiebreak_still_applies_among_several_year_hits(self):
+        results = [
+            {"name": "Saga", "id": 1, "start_year": "2012", "count_of_issues": 3},
+            {"name": "Saga", "id": 2, "start_year": "2012", "count_of_issues": 60},
+            {"name": "Saga", "id": 3, "start_year": "1990", "count_of_issues": 99},
+        ]
+        assert self.pick(results, 2012, "Saga")["id"] == 2
+
+    def test_reads_whichever_field_the_source_spells_it_with(self):
+        results = [{"name": "The Demon", "id": 2945, "year_began": 1990},
+                   {"name": "The Demon", "id": 99, "year_began": 2026}]
+        match = pick_exact_match(results, "The Demon", prefer_year=2026, year_key="year_began")
+        assert match["id"] == 99
+
+    def test_is_ignored_without_a_year_key(self):
+        assert pick_exact_match(self.DEMON, "The Demon", "count_of_issues",
+                                prefer_year=2026)["id"] == 1990
+
+
 class TestParseYearBegan:
     def test_reads_an_int_or_a_numeric_string(self):
         # Metron sends an int, Comic Vine a string.

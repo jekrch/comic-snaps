@@ -77,6 +77,33 @@ def seed_series(panels: list) -> None:
         print(f"Added {added} new series to {SERIES_PATH}.")
 
 
+def issue_one_years(panels: list) -> dict[str, int]:
+    """Map each series slug to the earliest year on any of its #1 panels.
+
+    A new series is seeded from a title alone, and every source searches on
+    title, so a relaunch under an old name ("The Demon", 1972/1987/1990/2026)
+    comes back as several exact matches. The year on a #1 panel is the best
+    clue to which one is meant.
+
+    It is only a clue. A panel's year is that of the copy it was taken from,
+    which for a reprint or later printing isn't when the series began
+    (Tales Calculated to Drive You Mad #1 is dated 1952 against a 1997
+    series). So callers use it to choose among same-named matches, never to
+    rule one out — that is what an established startYear is for.
+    """
+    years: dict[str, int] = {}
+    for panel in panels:
+        slug = panel.get("slug", "")
+        year = panel.get("year")
+        if not slug or _issue_number(panel.get("issue")) != 1:
+            continue
+        if isinstance(year, bool) or not isinstance(year, int):
+            continue
+        if year < years.get(slug, year + 1):
+            years[slug] = year
+    return years
+
+
 def _issue_number(value) -> int | None:
     """Return a panel's issue as a whole number, or None if it isn't one.
 

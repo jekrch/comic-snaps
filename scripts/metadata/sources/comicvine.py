@@ -196,13 +196,17 @@ def extract_series_fields(match: dict) -> dict:
     }
 
 
-def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | None) -> int:
+def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | None,
+                       year_hints: dict[str, int] | None = None) -> int:
     """
     For entries in `path` missing a description, imageUrl, or supplemental
     fields, search Comic Vine and fill in whichever fields are missing. Adds
     a Comic Vine reference whenever any field is populated from Comic Vine.
 
     `resource` is the Comic Vine endpoint ('people' or 'volumes').
+
+    `year_hints` maps an entry id to a likely start year (seed.issue_one_years),
+    used to choose among same-named volumes before `tiebreak_key` does.
     """
     api_key = os.environ.get("COMIC_VINE_API_KEY")
     if not api_key:
@@ -242,7 +246,10 @@ def backfill_comicvine(path: Path, key: str, resource: str, tiebreak_key: str | 
         if resource == "volumes":
             candidates = filter_volumes_by_start_year(results, entry.get("startYear"))
 
-        match = pick_exact_match(candidates, name, tiebreak_key=tiebreak_key)
+        match = pick_exact_match(
+            candidates, name, tiebreak_key=tiebreak_key,
+            prefer_year=(year_hints or {}).get(entry.get("id")), year_key="start_year",
+        )
         if not match:
             print(f"    SKIP: no exact match ({len(results)} candidate(s))")
             mark_source(entry, SOURCE_COMICVINE)

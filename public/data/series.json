@@ -3742,36 +3742,10 @@
       "id": "the-demon",
       "name": "The Demon",
       "parentSeries": null,
-      "description": "In 1990 DC launched an ongoing series for Etrigan the Demon and his host Jason Blood, written initially by Alan Grant and art from Val Semeiks and later written/drawn by Garth Ennis and John McCrea as well as a number of guest writers. Grant had previously written the character in his six issue Action Comics Weekly feature in 1989, before which Matt Wagner penned a mini-series The Demon (1987) after the character's revival in Alan Moore's Saga of the Swamp Thing.\r\n\r\nWhere previous versions had been serious, Grant had a more chaotic and sardonic/comedic take on the character similar to Grant's parody take on Lobo (with whom the series would crossover many times). After Grant left Ennis continued in that vain for the remainder of the series which lasted for 59 issues (including an event #0 issue ) and 2 annuals ( Ennis' popular Hitman character made his debut in the 2nd annual.)",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/29685-4358-32996-1-demon-the.jpg",
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/the-demon/4050-4358/"
-        },
-        {
-          "name": "Metron",
-          "url": "https://metron.cloud/series/2945/"
-        }
-      ],
-      "startYear": 1990,
-      "publisher": "DC Comics",
-      "issueCount": 59,
-      "sources": [
-        "comicvine",
-        "metron"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ]
-      },
-      "coverImages": [
-        "data/covers/the-demon/0a06d504617d.jpg",
-        "data/covers/the-demon/e25f1c542a8a.jpg",
-        "data/covers/the-demon/5de3cc48e4ed.jpg",
-        "data/covers/the-demon/65a998f59796.jpg"
-      ]
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "startYear": 2026
     },
     {
       "id": "the-dogsitter",

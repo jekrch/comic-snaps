@@ -28,6 +28,7 @@ from .disambiguation import (
 )
 from .health import IntegrationHealth
 from .paths import ARTISTS_PATH, ISSUES_PATH, SERIES_PATH
+from .seed import issue_one_years
 from .references import (
     SOURCE_COMICVINE,
     SOURCE_METRON,
@@ -148,7 +149,8 @@ def _metron_series_display(result: dict) -> str:
 
 
 def resolve_metron_series_id(series_entry: dict, username: str, password: str,
-                             disambig: dict, health: IntegrationHealth) -> tuple[int | None, bool, bool]:
+                             disambig: dict, health: IntegrationHealth,
+                             year_hint: int | None = None) -> tuple[int | None, bool, bool]:
     """
     Find the Metron series ID for a series entry.
 
@@ -161,6 +163,9 @@ def resolve_metron_series_id(series_entry: dict, username: str, password: str,
     otherwise every run re-pays a request plus a 3s rate-limit gap for each
     series Metron doesn't carry.  Request *failures* (throttle, timeout) are
     deliberately left unmarked so they retry next run.
+
+    Same-named series are told apart by the entry's startYear, or failing
+    that by `year_hint` (seed.issue_one_years).
 
     Returns (id, disambig_changed, series_changed).
     """
@@ -191,7 +196,7 @@ def resolve_metron_series_id(series_entry: dict, username: str, password: str,
     results = data.get("results") or []
 
     norm = name.strip().lower()
-    start_year = series_entry.get("startYear")
+    start_year = series_entry.get("startYear") or year_hint
     exact = []
     for r in results:
         display = _metron_series_display(r)
@@ -445,6 +450,7 @@ def backfill_issue_credits(panels: list) -> int:
     metron_health = IntegrationHealth("Metron")
     cv_health = IntegrationHealth("Comic Vine")
     metron_series_cache: dict[str, int | None] = {}
+    year_hints = issue_one_years(panels)
 
     updated = 0
     issues_dirty = False
@@ -479,7 +485,7 @@ def backfill_issue_credits(panels: list) -> int:
             if slug not in metron_series_cache:
                 mid, dchanged, schanged = resolve_metron_series_id(
                     series_entry, metron_username, metron_password,
-                    disambig, metron_health,
+                    disambig, metron_health, year_hint=year_hints.get(slug),
                 )
                 metron_series_cache[slug] = mid
                 if dchanged:
