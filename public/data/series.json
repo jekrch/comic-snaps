@@ -344,24 +344,18 @@
     },
     {
       "id": "beneath-the-trees-where-nobody-sees-halloween-special",
-      "name": "Beneath The Trees Where Nobody Sees - Halloween Special",
+      "name": "Beneath the Trees Where Nobody Sees: Halloween Special",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
+      "references": [
+        {
+          "name": "The Beat",
+          "url": "https://comicsbeat.com/beneath-the-trees-gets-an-all-star-halloween-special/",
+          "title": "Beneath The Trees Where Nobody Sees gets an all-star Halloween Special"
+        }
       ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
+      "publisher": "IDW Publishing"
     },
     {
       "id": "beneath-the-trees-where-nobody-sees-rite-of-spring",
