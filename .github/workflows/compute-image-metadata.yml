@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "public/data/gallery.json"
+  workflow_dispatch:
 
 jobs:
   compute-metadata:
