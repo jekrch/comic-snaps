@@ -1,11 +1,13 @@
 import pytest
 
+import metadata.credits as credits
 from metadata.credits import (
     ROLE_ORDER,
     get_gallery_issue_pairs,
     merge_credit,
     normalize_role,
     promote_creators,
+    resolve_metron_series_id,
     role_rank,
     sort_credits,
 )
@@ -278,3 +280,36 @@ class TestPromoteCreators:
         artists = []
         assert promote_creators([], artists, {}, set(), {}) == (False, False)
         assert artists == []
+
+
+class TestResolveMetronSeriesId:
+    RESULTS = [
+        {"id": 1, "series": "The Demon (1972)"},
+        {"id": 2945, "series": "The Demon (1990)"},
+        {"id": 99, "series": "The Demon (2026)"},
+    ]
+
+    @pytest.fixture(autouse=True)
+    def metron(self, monkeypatch):
+        monkeypatch.setattr(
+            credits, "metron_get_patient",
+            lambda *args, **kwargs: {"results": self.RESULTS},
+        )
+
+    def resolve(self, entry, year_hint=None):
+        return resolve_metron_series_id(entry, "u", "p", {}, None, year_hint=year_hint)
+
+    def test_a_year_hint_picks_among_same_named_series(self):
+        entry = {"name": "The Demon", "references": []}
+        assert self.resolve(entry, year_hint=2026)[0] == 99
+        assert entry["references"] == [
+            {"name": "Metron", "url": "https://metron.cloud/series/99/"}
+        ]
+
+    def test_an_established_start_year_outranks_the_hint(self):
+        entry = {"name": "The Demon", "references": [], "startYear": 1990}
+        assert self.resolve(entry, year_hint=2026)[0] == 2945
+
+    def test_without_a_year_several_matches_are_left_unresolved(self):
+        entry = {"name": "The Demon", "references": []}
+        assert self.resolve(entry)[0] is None
