@@ -12163,17 +12163,6 @@
       ]
     },
     {
-      "id": "sawn-kuruneru",
-      "name": "Sawn Kuruneru",
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "scott-allie",
       "name": "Scott Allie",
       "description": "Scott Allie is an American comics writer and editor, best known as an editor and executive at Dark Horse Comics from 1994 to 2017.",
@@ -12431,6 +12420,39 @@
       "sources": [
         "comicvine",
         "metron"
+      ]
+    },
+    {
+      "id": "shawn-kuruneru",
+      "name": "Shawn Kuruneru",
+      "description": "Shawn Kuruneru is a Canadian cartoonist and painter of Chinese and Sri Lankan heritage. Born in Toronto in 1984, he earned a BFA from Concordia University in 2006 and now lives in Montreal. He drew The Goddamn Tragedy (written by Chris Condon), chapter six of Jeff Lemire's Fishflies, and Colonel Weird and Little Andromeda (written by Tate Brombal). His self-published comics include Burn Man (2018), shown at the Mus\u00e9e d'art contemporain de Montr\u00e9al alongside work by Julie Doucet, Walter Scott and Connor Willumsen, and Alien Glove, which won a Koyama Provides grant in 2022. Oni Press collected his western comics as Cave Grave: Wild West Tales in 2026. He keeps his comics separate from his fine-art practice of ink drawing, painting and collage, which has been exhibited in New York, Los Angeles, Milan, Geneva, Tokyo and Toronto.",
+      "imageUrl": "https://www.fbdm-mcaf.ca/wp-content/uploads/programmation/auteurs/817-shawn-kuruneru.jpg",
+      "references": [
+        {
+          "name": "Instagram",
+          "url": "https://www.instagram.com/shawnkuruneru/"
+        },
+        {
+          "name": "InkWell Management",
+          "url": "https://inkwellmanagement.com/client/shawn-kuruneru"
+        },
+        {
+          "name": "Cooper Cole",
+          "url": "https://coopercolegallery.com/related-artist/shawn-kuruneru/"
+        },
+        {
+          "name": "Montreal Comic Arts Festival",
+          "url": "https://fbdm-mcaf.ca/en/comic-arts-festival/find-them/guest/817/shawn-kuruneru"
+        },
+        {
+          "name": "Border Crossings",
+          "url": "https://bordercrossingsmag.com/article/the-fetishing-touch-shawn-kuruneru",
+          "title": "The Fetishing Touch: Shawn Kuruneru"
+        }
+      ],
+      "country": "Canada",
+      "aliases": [
+        "Sawn Kuruneru"
       ]
     },
     {
