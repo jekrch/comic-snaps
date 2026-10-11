@@ -3744,8 +3744,32 @@
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "startYear": 2026
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16896/"
+        }
+      ],
+      "startYear": 2026,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "publisher": "DC Comics",
+      "issueCount": 3,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-demon/75323d001399.jpg",
+        "data/covers/the-demon/ab358d6380af.jpg",
+        "data/covers/the-demon/41a122a74ff9.jpg"
+      ]
     },
     {
       "id": "the-dogsitter",
