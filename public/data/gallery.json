@@ -15,43 +15,6 @@
       "addedAt": "2026-10-11T18:14:18.916Z"
     },
     {
-      "seq": 313,
-      "id": "beneath-the-trees-where-nobody-sees-halloween-special-1-1791741527",
-      "title": "Beneath the Trees Where Nobody Sees: Halloween Special",
-      "slug": "beneath-the-trees-where-nobody-sees-halloween-special",
-      "issue": 1,
-      "year": 2026,
-      "artist": "Patrick Horvath",
-      "image": "images/beneath-the-trees-where-nobody-sees-halloween-special/issue-1-1791741527.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-10-11T17:58:50.473Z",
-      "width": 1280,
-      "height": 1085,
-      "dominantColors": [
-        [
-          56.3,
-          12.5,
-          15.7
-        ],
-        [
-          74.2,
-          4.4,
-          5.9
-        ],
-        [
-          32.1,
-          11.1,
-          11.6
-        ]
-      ],
-      "colorfulness": 9.9,
-      "phash": "ed869c981c6782be",
-      "ahash": "7fffe7e399c88000",
-      "dhash": "b626ce4a3bb21216"
-    },
-    {
       "seq": 311,
       "id": "crowbound-2-1791735326",
       "title": "Crowbound",
