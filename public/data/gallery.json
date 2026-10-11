@@ -12,7 +12,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-11T18:17:57.588Z"
+      "addedAt": "2026-10-11T18:17:57.588Z",
+      "width": 1280,
+      "height": 1086,
+      "dominantColors": [
+        [
+          72.1,
+          6.6,
+          9.2
+        ],
+        [
+          56.5,
+          9.0,
+          12.8
+        ],
+        [
+          35.5,
+          11.8,
+          12.7
+        ]
+      ],
+      "colorfulness": 8.6,
+      "phash": "edae8d18184f83ba",
+      "ahash": "1bf3e3e1d9c8e0c2",
+      "dhash": "b3264e4bbb9a0a12"
     },
     {
       "seq": 314,
@@ -26,7 +49,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-11T18:14:18.916Z"
+      "addedAt": "2026-10-11T18:14:18.916Z",
+      "width": 1152,
+      "height": 1280,
+      "dominantColors": [
+        [
+          47.2,
+          6.2,
+          4.2
+        ],
+        [
+          69.3,
+          5.1,
+          -1.8
+        ],
+        [
+          23.0,
+          5.2,
+          1.6
+        ]
+      ],
+      "colorfulness": 8.0,
+      "phash": "f5b071b5f2494ac8",
+      "ahash": "c2c6f0f3f78382a0",
+      "dhash": "9e1ec3472c06120c"
     },
     {
       "seq": 311,
@@ -2187,7 +2233,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -2522,7 +2568,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -5976,7 +6022,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
