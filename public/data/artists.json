@@ -9376,6 +9376,22 @@
       "country": "Italy"
     },
     {
+      "id": "mat-as-bergara",
+      "name": "Mat\u00edas Bergara",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2354/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "mauro-cascioli",
       "name": "Mauro Cascioli",
       "description": "During 2005 he started working as an assistant artist for DC comics (Batman, Superman & Space Ghost) and also did freelance works for Warcraft and Marvel Comics (Wolverine, Mystique).\r\n\r\nIn 2007 he signed an exclusive contract with DC comics to replace Howard Porter for the last four issues of The Trials of Shazam!. He is currently working on the title Cry for Justice a new series for DC comics, written by James Robinson.\r\n\r\nMore current work has seen him working on the recent series Cry For Justice and working on cover art for the more recent Green Arrow Issues.",

@@ -956,23 +956,27 @@
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 1,
+      "issueCount": 2,
       "sources": [
         "comicvine",
         "metron"
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
-          1
+          1,
+          2
         ]
       },
       "coverImages": [
         "data/covers/crowbound/adf7a15450dc.jpg",
-        "data/covers/crowbound/eed04f87ca19.jpg"
-      ]
+        "data/covers/crowbound/eed04f87ca19.jpg",
+        "data/covers/crowbound/0bc617ab89ca.jpg"
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "dark-spaces-wildfire",
