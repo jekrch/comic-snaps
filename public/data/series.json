@@ -343,6 +343,27 @@
       ]
     },
     {
+      "id": "beneath-the-trees-where-nobody-sees-halloween-special",
+      "name": "Beneath The Trees Where Nobody Sees - Halloween Special",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "beneath-the-trees-where-nobody-sees-rite-of-spring",
       "name": "Beneath the Trees Where Nobody Sees: Rite of Spring",
       "parentSeries": null,
