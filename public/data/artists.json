@@ -631,6 +631,27 @@
       "country": "United States"
     },
     {
+      "id": "andrew-marino",
+      "name": "Andrew Marino",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9988421-andrew_marino.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/69/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/andrew-marino/4040-84502/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "andrew-robinson",
       "name": "Andrew Robinson",
       "description": "The greatest gift ever given to Robinson from his father was the news that Andrew had to pay for his own education. Lacking sufficient funds, he volunteered for Desert Storm, where he served in a water purification unit. Upon his return, he moved from the small country town in Florida where he grew up to Savannah, Georgia, to attend The Savannah College of Art and Design. After that, he lived for a time in Montgomery, Orlando and Macon before relocating to Pasadena, California in 2002.\r\n\r\nHis first published sequential work was a short story called \"The Chairman\" which appeared in Dark Horse Presents. After working on a few independent titles in the early 90's such as the NEGATIVE BURN anthology, he started getting work from DC Comics, doing STARMAN covers. After that series ended, he gained wide recognition for a time doing the covers of HAWKMAN. He's also done covers for BATMAN and DETECTIVE COMICS and numerous covers for STAR WARS.\r\n\r\nRecently, Andrew has produced numerous covers for DC titles. Among them are SUPERMAN, ACTION, BATMAN AND THE OUTSIDERS, SECRET SIX, VIGILANTE and the FACES OF EVIL project. He has also, from the first issue, done the variant covers for IDW's ANGEL AFTER THE FALL.\r\n\r\nBeing an artist above all else, he does have his own \"art & story\" project (originally co-written with Joe Pruett) DUSTY STAR. There have been a few random issues over the years, but the graphic novel compilation, with mostly new material, is now in production.\r\n\r\nAlso now in production is a unique semi-non-fictional graphic novel that Andrew is drawing called THE FIFTH BEATLE. It is the comic adaptation of a film which is currently being cast about the life of Brian Epstein, the original manager of the Fab Four.\r\n\r\nIn addition to comics, Andrew also has a music project called the Spacejunkies. He writes the lyrics and with Suki's permission is allowed to play harmonica. The first song can be heard on his website and there is a video for \"Star Rider\" on youtube.",
@@ -1613,6 +1634,27 @@
       "country": "United States"
     },
     {
+      "id": "brittany-holzherr",
+      "name": "Brittany Holzherr",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10043970-brittany_holzherr.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/19/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/brittany-holzherr/4040-84047/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1990
+    },
+    {
       "id": "bruce-hilvitz",
       "name": "Bruce Hilvitz",
       "description": "",
@@ -2330,6 +2372,27 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "clayton-cowles",
+      "name": "Clayton Cowles",
+      "description": "Clayton Cowles is an Eisner-nominated letterer. He graduated from the Joe Kubert School in 2009 and has been lettering comic books ever since. In addition to uncool mainstream titles like Daredevil, Star Wars, and Batman, Clayton has worked on Bitch Planet, Bitter Root, Die, Moonstruck, Redlands, The Wicked + The Divine, and a host of other books published by Image Comics. He resides in upstate New York in a house with two cats.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10069922-clayton_cowles.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/clayton-cowles/4040-57831/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "clayton-crain",
@@ -6940,6 +7003,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "john-mccrea",
+      "name": "John McCrea",
+      "description": "John Mcrea is an artist from Northern Ireland. He regularly works with Garth Ennis, a famous collaboration of the two being the much loved HITMAN.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320415-4161388859-mccre.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1655/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/john-mccrea/4040-6341/"
+        }
+      ],
+      "country": "England, United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

@@ -9572,6 +9572,117 @@
       ]
     },
     {
+      "id": "the-demon-1",
+      "series": "the-demon",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "james-harren",
+          "name": "James Harren",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-stewart",
+          "name": "Dave Stewart",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "clayton-cowles",
+          "name": "Clayton Cowles",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "daniel-warren-johnson",
+          "name": "Daniel Warren Johnson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "john-mccrea",
+          "name": "John McCrea",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-spicer",
+          "name": "Michael Spicer",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-walsh",
+          "name": "Michael Walsh",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "andrew-marino",
+          "name": "Andrew Marino",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-futch",
+          "name": "Sabrina Futch",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "brittany-holzherr",
+          "name": "Brittany Holzherr",
+          "roles": [
+            "Senior Editor"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-demon-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "the-dogsitter-1",
       "series": "the-dogsitter",
       "issue": 1,
