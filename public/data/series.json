@@ -353,9 +353,30 @@
           "name": "The Beat",
           "url": "https://comicsbeat.com/beneath-the-trees-gets-an-all-star-halloween-special/",
           "title": "Beneath The Trees Where Nobody Sees gets an all-star Halloween Special"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16903/"
         }
       ],
-      "publisher": "IDW Publishing"
+      "publisher": "IDW Publishing",
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 2026,
+      "issueCount": 1,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/beneath-the-trees-where-nobody-sees-halloween-special/bba014b3d1a3.jpg"
+      ]
     },
     {
       "id": "beneath-the-trees-where-nobody-sees-rite-of-spring",

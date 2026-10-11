@@ -1745,6 +1745,131 @@
       ]
     },
     {
+      "id": "beneath-the-trees-where-nobody-sees-halloween-special-1",
+      "series": "beneath-the-trees-where-nobody-sees-halloween-special",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "che-grayson",
+          "name": "Che Grayson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "james-tynion-iv",
+          "name": "James Tynion IV",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "jared-cullum",
+          "name": "Jared Cullum",
+          "roles": [
+            "Writer",
+            "Illustrator"
+          ]
+        },
+        {
+          "artistId": "patrick-horvath",
+          "name": "Patrick Horvath",
+          "roles": [
+            "Writer",
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Writer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "allen-passalaqua",
+          "name": "Allen Passalaqua",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "francesco-francavilla",
+          "name": "Francesco Francavilla",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "j-gonzo",
+          "name": "J. Gonzo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "peach-momoko",
+          "name": "Peach Momoko",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jake-williams",
+          "name": "Jake Williams",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "nathan-widick",
+          "name": "Nathan Widick",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "david-wachter",
+          "name": "David Wachter",
+          "roles": [
+            "Illustrator"
+          ]
+        },
+        {
+          "artistId": "matt-emmons",
+          "name": "Matt Emmons",
+          "roles": [
+            "Illustrator"
+          ]
+        },
+        {
+          "artistId": "tyler-boss",
+          "name": "Tyler Boss",
+          "roles": [
+            "Illustrator"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/beneath-the-trees-where-nobody-sees-halloween-special-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "beneath-the-trees-where-nobody-sees-rite-of-spring-5",
       "series": "beneath-the-trees-where-nobody-sees-rite-of-spring",
       "issue": 5,

@@ -2061,6 +2061,29 @@
       ]
     },
     {
+      "id": "che-grayson",
+      "name": "Che Grayson",
+      "description": "Che Grayson is a filmmaker, writer and TED speaker. Her award-winning films have shown internationally, and her writing has been published by Teen Vogue, Image Comics and IDW Publishing.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/10/09/che-grayson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2957/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/che-grayson/4040-96306/"
+        }
+      ],
+      "aliases": [
+        "Chelsea Grayson"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "chloe-brailsford",
       "name": "Chloe Brailsford",
       "description": "",
@@ -3342,6 +3365,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "david-wachter",
+      "name": "David Wachter",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4412/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -5527,6 +5566,30 @@
       ]
     },
     {
+      "id": "j-gonzo",
+      "name": "J. Gonzo",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9390129-gonzo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9126/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/j-gonzo/4040-80149/"
+        }
+      ],
+      "aliases": [
+        "Jason Gonzales",
+        "Gonzo"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "j-r-williams",
       "name": "J. R. Williams",
       "description": "",
@@ -5889,6 +5952,26 @@
         "comicvine"
       ],
       "birthYear": 1958
+    },
+    {
+      "id": "jared-cullum",
+      "name": "Jared Cullum",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8462941-a.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9122/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jared-cullum/4040-94042/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "jasmine-alvarez",
@@ -9245,6 +9328,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "matt-emmons",
+      "name": "Matt Emmons",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8938/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/matt-emmons/4040-104638/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
