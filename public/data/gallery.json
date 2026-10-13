@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 317,
+      "id": "minor-arcana-19-1791860725",
+      "title": "Minor Arcana",
+      "slug": "minor-arcana",
+      "issue": 19,
+      "year": 2026,
+      "artist": "Jeff Lemire",
+      "image": "images/minor-arcana/issue-19-1791860725.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-13T03:05:28.601Z"
+    },
+    {
       "seq": 316,
       "id": "minor-arcana-19-1791743145",
       "title": "Minor Arcana",
