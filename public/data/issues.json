@@ -5541,6 +5541,60 @@
       ]
     },
     {
+      "id": "ice-cream-man-chocolate-vanilla-twist-1",
+      "series": "ice-cream-man-chocolate-vanilla-twist",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "w-maxwell-prince",
+          "name": "W. Maxwell Prince",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mart-n-morazzo",
+          "name": "Mart\u00edn Morazzo",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "good-old-neon",
+          "name": "Good Old Neon",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "ashley-walker",
+          "name": "Ashley Walker",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/ice-cream-man-chocolate-vanilla-twist-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "if-destruction-be-our-lot-1",
       "series": "if-destruction-be-our-lot",
       "issue": 1,
