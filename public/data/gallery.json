@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 325,
+      "id": "the-karman-blade-2-1792270869",
+      "title": "The Karman Blade",
+      "slug": "the-karman-blade",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Ian Bertram",
+      "image": "images/the-karman-blade/issue-2-1792270869.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-17T21:01:12.088Z"
+    },
+    {
       "seq": 324,
       "id": "the-nice-house-by-the-sea-12-1792270818",
       "title": "The Nice House By The Sea",
