@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 323,
+      "id": "the-karman-blade-2-1792270751",
+      "title": "The Karman Blade",
+      "slug": "the-karman-blade",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Ian Bertram",
+      "image": "images/the-karman-blade/issue-2-1792270751.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-17T20:59:13.819Z"
+    },
+    {
       "seq": 322,
       "id": "ice-cream-man-chocolate-vanilla-twist-1-1792270720",
       "title": "Ice Cream Man: Chocolate/Vanilla Twist",
