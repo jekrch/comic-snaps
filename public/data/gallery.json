@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 326,
+      "id": "the-nice-house-by-the-sea-12-1792270915",
+      "title": "The Nice House By The Sea",
+      "slug": "the-nice-house-by-the-sea",
+      "issue": 12,
+      "year": 2026,
+      "artist": "Alvaro Martinez Bueno",
+      "image": "images/the-nice-house-by-the-sea/issue-12-1792270915.jpg",
+      "notes": "cover",
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-17T21:01:57.061Z"
+    },
+    {
       "seq": 325,
       "id": "the-karman-blade-2-1792270869",
       "title": "The Karman Blade",
