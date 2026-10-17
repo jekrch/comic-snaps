@@ -2085,6 +2085,27 @@
       ]
     },
     {
+      "id": "ice-cream-man-chocolate-vanilla-twist",
+      "name": "Ice Cream Man: Chocolate/Vanilla Twist",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "if-destruction-be-our-lot",
       "name": "If Destruction Be Our Lot",
       "parentSeries": null,
