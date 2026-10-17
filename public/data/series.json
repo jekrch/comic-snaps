@@ -3924,23 +3924,27 @@
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 1,
+      "issueCount": 2,
       "sources": [
         "comicvine",
         "metron"
       ],
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
-          1
+          1,
+          2
         ]
       },
       "coverImages": [
         "data/covers/the-karman-blade/22c6b987dbb5.jpg",
-        "data/covers/the-karman-blade/fdc83bf6c8e8.jpg"
-      ]
+        "data/covers/the-karman-blade/fdc83bf6c8e8.jpg",
+        "data/covers/the-karman-blade/f87f23f64eb2.jpg"
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-many-deaths-of-laila-starr",
