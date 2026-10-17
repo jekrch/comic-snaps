@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 322,
+      "id": "ice-cream-man-chocolate-vanilla-twist-1-1792270720",
+      "title": "Ice Cream Man: Chocolate/Vanilla Twist",
+      "slug": "ice-cream-man-chocolate-vanilla-twist",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Martin Morazzo",
+      "image": "images/ice-cream-man-chocolate-vanilla-twist/issue-1-1792270720.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-17T20:58:42.452Z"
+    },
+    {
       "seq": 321,
       "id": "the-nice-house-by-the-sea-12-1792270689",
       "title": "The Nice House By The Sea",
