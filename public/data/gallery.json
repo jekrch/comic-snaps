@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 335,
+      "id": "six-of-us-2-1792968132",
+      "title": "Six of Us",
+      "slug": "six-of-us",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Gabriel Hernandez Walta",
+      "image": "images/six-of-us/issue-2-1792968132.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:42:15.201Z"
+    },
+    {
       "seq": 334,
       "id": "bijou-funnies-6-1792968043",
       "title": "Bijou Funnies",
