@@ -8470,6 +8470,66 @@
       ]
     },
     {
+      "id": "redcoat-21",
+      "series": "redcoat",
+      "issue": 21,
+      "credits": [
+        {
+          "artistId": "geoff-johns",
+          "name": "Geoff Johns",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "bryan-hitch",
+          "name": "Bryan Hitch",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-anderson",
+          "name": "Brad Anderson",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rob-leigh",
+          "name": "Rob Leigh",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "brian-cunningham",
+          "name": "Brian Cunningham",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-blackwell",
+          "name": "Steve Blackwell",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/redcoat-2024-21/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "redcoat-22",
       "series": "redcoat",
       "issue": 22,
@@ -10158,6 +10218,44 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/issue/the-eye-collector-2026-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "the-eye-collector-5",
+      "series": "the-eye-collector",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "jonathan-ball",
+          "name": "Jonathan Ball",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "g-m-b-chomichuk",
+          "name": "G. M. B. Chomichuk",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lyndon-radchenka",
+          "name": "Lyndon Radchenka",
+          "roles": [
+            "Letterer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/the-eye-collector-2026-5/"
         }
       ],
       "sources": [

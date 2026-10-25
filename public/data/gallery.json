@@ -40,7 +40,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:35:34.701Z"
+      "addedAt": "2026-10-25T22:35:34.701Z",
+      "width": 846,
+      "height": 1280,
+      "dominantColors": [
+        [
+          67.4,
+          -2.4,
+          0.4
+        ],
+        [
+          47.2,
+          -0.9,
+          1.5
+        ],
+        [
+          14.9,
+          -0.4,
+          0.3
+        ]
+      ],
+      "colorfulness": 6.8,
+      "phash": "bbb925c01d4a5e99",
+      "ahash": "ffc78d09fff70100",
+      "dhash": "5b5f3939d94dab76"
     },
     {
       "seq": 330,
@@ -54,7 +77,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:34:48.179Z"
+      "addedAt": "2026-10-25T22:34:48.179Z",
+      "width": 1280,
+      "height": 323,
+      "dominantColors": [
+        [
+          77.1,
+          -4.8,
+          -7.4
+        ],
+        [
+          61.7,
+          -7.1,
+          -8.4
+        ],
+        [
+          31.6,
+          -3.6,
+          -3.2
+        ]
+      ],
+      "colorfulness": 6.4,
+      "phash": "fbb0958484738c7b",
+      "ahash": "ffec80c1c1fda0fc",
+      "dhash": "c0280b0b2b550968"
     },
     {
       "seq": 329,
@@ -68,7 +114,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:33:19.638Z"
+      "addedAt": "2026-10-25T22:33:19.638Z",
+      "width": 1280,
+      "height": 905,
+      "dominantColors": [
+        [
+          75.8,
+          -2.6,
+          -11.7
+        ],
+        [
+          15.5,
+          -0.8,
+          -2.4
+        ],
+        [
+          42.9,
+          -2.6,
+          -4.3
+        ]
+      ],
+      "colorfulness": 5.6,
+      "phash": "ed8156b896ca2f70",
+      "ahash": "fffbf9f98b919080",
+      "dhash": "6c62f3f3322b2b2c"
     },
     {
       "seq": 328,
@@ -82,7 +151,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:32:02.116Z"
+      "addedAt": "2026-10-25T22:32:02.116Z",
+      "width": 745,
+      "height": 1280,
+      "dominantColors": [
+        [
+          27.9,
+          9.1,
+          1.0
+        ],
+        [
+          49.1,
+          42.1,
+          11.9
+        ],
+        [
+          71.6,
+          5.4,
+          20.2
+        ]
+      ],
+      "colorfulness": 24.7,
+      "phash": "93a43fe507d79414",
+      "ahash": "261f5e3c3efd0804",
+      "dhash": "4679b9e9eaab593d"
     },
     {
       "seq": 327,
@@ -2761,7 +2853,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3096,7 +3188,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -6550,7 +6642,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
