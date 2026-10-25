@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 338,
+      "id": "optic-nerve-1-1792968414",
+      "title": "Optic Nerve",
+      "slug": "optic-nerve",
+      "issue": 1,
+      "year": 1995,
+      "artist": "Adrian Tomine",
+      "image": "images/optic-nerve/issue-1-1792968414.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:46:56.895Z"
+    },
+    {
       "seq": 337,
       "id": "optic-nerve-1-1792968332",
       "title": "Optic Nerve",
@@ -47,7 +61,7 @@
         [
           66.7,
           0.9,
-          -13.0
+          -13
         ],
         [
           54.3,
@@ -60,7 +74,7 @@
           -3.8
         ]
       ],
-      "colorfulness": 22.0,
+      "colorfulness": 22,
       "phash": "88d435ffd13a850e",
       "ahash": "ff33337d7d390049",
       "dhash": "1a66e399d163379b"
@@ -89,12 +103,12 @@
         [
           65.3,
           0.4,
-          1.0
+          1
         ],
         [
           40.7,
           0.9,
-          -4.0
+          -4
         ]
       ],
       "colorfulness": 3.5,
@@ -119,12 +133,12 @@
       "height": 1280,
       "dominantColors": [
         [
-          66.0,
+          66,
           15.6,
           17.4
         ],
         [
-          48.0,
+          48,
           2.6,
           -23.8
         ],
@@ -2964,7 +2978,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3299,7 +3313,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -6753,7 +6767,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
