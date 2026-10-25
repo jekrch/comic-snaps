@@ -2989,6 +2989,41 @@
       ]
     },
     {
+      "id": "optic-nerve",
+      "name": "Optic Nerve",
+      "parentSeries": null,
+      "description": "Second volume of Optic Nerve (1991). Adrian Tomine's one man anthology series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2008174-1.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/optic-nerve/4050-32641/"
+        }
+      ],
+      "startYear": 1995,
+      "publisher": "Drawn & Quarterly",
+      "issueCount": 14,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/optic-nerve/bb1e9c1d004a.jpg",
+        "data/covers/optic-nerve/20b302aa6d20.jpg",
+        "data/covers/optic-nerve/79df81959ddf.jpg",
+        "data/covers/optic-nerve/215638840ae3.jpg"
+      ]
+    },
+    {
       "id": "pacific-presents",
       "name": "Pacific Presents",
       "parentSeries": null,

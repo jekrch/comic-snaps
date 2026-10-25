@@ -156,6 +156,28 @@
       ]
     },
     {
+      "id": "adrian-tomine",
+      "name": "Adrian Tomine",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/37809/1196383-maj_adrian_tomine.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/adrian-tomine/4040-59078/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12022/"
+        }
+      ],
+      "birthYear": 1974,
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "al-williamson",
       "name": "Al Williamson",
       "description": "An American cartoonist, comic book artist and illustrator specializing in adventure, Western, science fiction and fantasy.",

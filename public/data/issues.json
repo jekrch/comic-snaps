@@ -8032,6 +8032,30 @@
       ]
     },
     {
+      "id": "optic-nerve-1",
+      "series": "optic-nerve",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "adrian-tomine",
+          "name": "Adrian Tomine",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/optic-nerve-1/4000-293049/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "pacific-presents-3",
       "series": "pacific-presents",
       "issue": 3,
