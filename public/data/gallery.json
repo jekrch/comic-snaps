@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 337,
+      "id": "optic-nerve-1-1792968332",
+      "title": "Optic Nerve",
+      "slug": "optic-nerve",
+      "issue": 1,
+      "year": 1995,
+      "artist": "Adrian Tomine",
+      "image": "images/optic-nerve/issue-1-1792968332.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:45:34.908Z"
+    },
+    {
       "seq": 336,
       "id": "bijou-funnies-6-1792968261",
       "title": "Bijou Funnies",
