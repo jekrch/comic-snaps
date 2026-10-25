@@ -40,7 +40,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:42:15.201Z"
+      "addedAt": "2026-10-25T22:42:15.201Z",
+      "width": 1225,
+      "height": 1280,
+      "dominantColors": [
+        [
+          66.7,
+          0.9,
+          -13.0
+        ],
+        [
+          54.3,
+          43.1,
+          -13.7
+        ],
+        [
+          15.1,
+          5.1,
+          -3.8
+        ]
+      ],
+      "colorfulness": 22.0,
+      "phash": "88d435ffd13a850e",
+      "ahash": "ff33337d7d390049",
+      "dhash": "1a66e399d163379b"
     },
     {
       "seq": 334,
@@ -54,7 +77,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:40:46.548Z"
+      "addedAt": "2026-10-25T22:40:46.548Z",
+      "width": 889,
+      "height": 1280,
+      "dominantColors": [
+        [
+          85.2,
+          -0.3,
+          1.8
+        ],
+        [
+          65.3,
+          0.4,
+          1.0
+        ],
+        [
+          40.7,
+          0.9,
+          -4.0
+        ]
+      ],
+      "colorfulness": 3.5,
+      "phash": "80ea48c5b7be2d17",
+      "ahash": "797111efff321c1c",
+      "dhash": "d3c3e30b5cc2e9f1"
     },
     {
       "seq": 333,
@@ -68,7 +114,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-10-25T22:37:38.261Z"
+      "addedAt": "2026-10-25T22:37:38.261Z",
+      "width": 1031,
+      "height": 1280,
+      "dominantColors": [
+        [
+          66.0,
+          15.6,
+          17.4
+        ],
+        [
+          48.0,
+          2.6,
+          -23.8
+        ],
+        [
+          18.9,
+          2.8,
+          -0.7
+        ]
+      ],
+      "colorfulness": 20.4,
+      "phash": "e19e0b1d3d011fba",
+      "ahash": "19ffe5c2c22061e1",
+      "dhash": "f3010d963666c78b"
     },
     {
       "seq": 331,
@@ -2895,7 +2964,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3230,7 +3299,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -6684,7 +6753,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,

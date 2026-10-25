@@ -445,7 +445,8 @@
       "sources": [
         "comicvine",
         "metron",
-        "wikipedia"
+        "wikipedia",
+        "metron-series-lookup"
       ],
       "coverSources": {
         "metron": [
@@ -3310,6 +3311,42 @@
         "data/covers/silver-surfer-annual/d85472981f67.jpg",
         "data/covers/silver-surfer-annual/203f6b15b6d7.jpg",
         "data/covers/silver-surfer-annual/27de62154b64.jpg"
+      ]
+    },
+    {
+      "id": "six-of-us",
+      "name": "Six of Us",
+      "parentSeries": null,
+      "description": "Tom King, Gabriel Hern\u00e1ndez Walta, and Jordie Bellaire\u2014creators of the Eisner Award-winning The Vision\u2014deliver a brutal Hollywood noir: a story about grief, ambition, and the lies we tell to keep the show alive.\r\n\r\nFrom Eisner award-winning best-selling author of Helen of Wyndhorn, The Human Target, Supergirl: Woman of Tomorrow, Love Everlasting, Mister Miracle, The Vision, The Sheriff of Babylon!\r\n\r\nSix-issue series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10182069-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/six-of-us/4050-176908/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16613/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Dark Horse Comics",
+      "issueCount": 2,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/six-of-us/ac08f683d04f.jpg",
+        "data/covers/six-of-us/d54f77cc1f07.jpg"
       ]
     },
     {

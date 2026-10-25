@@ -2006,6 +2006,51 @@
       ]
     },
     {
+      "id": "bijou-funnies-6",
+      "series": "bijou-funnies",
+      "issue": 6,
+      "credits": [
+        {
+          "artistId": "jay-lynch",
+          "name": "Jay Lynch",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "justin-green",
+          "name": "Justin Green",
+          "roles": [
+            "Writer",
+            "Penciller",
+            "Letterer",
+            "Inker"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Penciller",
+            "Inker",
+            "Colorist",
+            "Cover"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bijou-funnies-6/4000-332905/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "bijou-funnies-7",
       "series": "bijou-funnies",
       "issue": 7,
@@ -8774,6 +8819,100 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/issue/silver-surfer-annual-1988-4/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "six-of-us-2",
+      "series": "six-of-us",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "tom-king",
+          "name": "Tom King",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "gabriel-hernandez-walta",
+          "name": "Gabriel Hernandez Walta",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "clayton-cowles",
+          "name": "Clayton Cowles",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "jill-thompson",
+          "name": "Jill Thompson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joe-quinones",
+          "name": "Joe Quinones",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "daniel-chabon",
+          "name": "Daniel Chabon",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "foster-r-kupbens",
+          "name": "Foster R. Kupbens",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "chuck-howitt",
+          "name": "Chuck Howitt",
+          "roles": [
+            "Associate Editor"
+          ]
+        },
+        {
+          "artistId": "teddie-sheldon",
+          "name": "Teddie Sheldon",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "conley-presler",
+          "name": "Conley Presler",
+          "roles": [
+            "Digital Art Technician"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/six-of-us-2026-2/"
         }
       ],
       "sources": [

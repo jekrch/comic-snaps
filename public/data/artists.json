@@ -4581,6 +4581,27 @@
       ]
     },
     {
+      "id": "gabriel-hernandez-walta",
+      "name": "Gabriel Hernandez Walta",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10199920-gabriel_hernandez_walta.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/gabriel-hernandez-walta/4040-57507/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1591/"
+        }
+      ],
+      "country": "Spain",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "gardner-fox",
       "name": "Gardner Fox",
       "description": "Gardner Francis Cooper Fox was an American writer known best for creating numerous comic book characters for DC Comics. Comic book historians estimate that he wrote more than 4,000 comics stories, including 1,500 for DC Comics. Gardner was also a science fiction author and wrote many novels and short stories.\r\n\r\nFox is known as the co-creator of DC Comics heroes the Flash, Hawkman, Doctor Fate and the original Sandman, and was the writer who first teamed those and other heroes as the Justice Society of America and later recreated the team as the Justice League of America. Fox introduced the concept of the Multiverse to DC Comics in the 1961 story \"Flash of Two Worlds!\"\r\n\r\n\"Gardner Fox was a prolific comic book writer and novelist, best known today for the many superhero and crime-fighting characters he created for DC Comics and others. He began writing for DC Comics in 1937. By 1940, he was writing for Maxwell C. Gaines's All-American Publications.\r\n\r\nBy 1947, at Gaines's new company, Educational Comics (EC), Fox was writing every feature in International Comics. Shortly before Gaines's death in a boating accident that year, Fox and artist Sheldon Moldoff co-created Moon Girl, an exotic alien princess living on Earth. He also wrote Buckskin Kid and Six-Gun sisters for other titles. Fox wrote for EC's 'New Trend' titles in 1950.\r\n\r\nLater, for DC, Fox co-created Adam Strange, the Atom (second version), and the Justice League of America, and introduced the concept of parallel Earths to DC readers. Fox and other freelancers left DC in 1968 when the company denied them health care and other benefits. Fox wrote novels regularly and also wrote comics for Dell, Marvel, Warren, and others. Fox died in December of 1986.\r\n\r\nFox won four Alley Awards in the 1960s and received the Jules Verne Award 'for life-time achievement' in 1982. He was inducted into the Jack Kirby Hall of Fame in 1998 and the Will Eisner Comic Book Hall of Fame in 1999. He was awarded a Harvey Award in 1998 and the Bill Finger Award for Excellence in Comic Book Writing in 2007.\" -- The Thing From the Grave and Other Stories (Fantagraphics)",
@@ -13210,6 +13231,22 @@
       "country": "United States"
     },
     {
+      "id": "teddie-sheldon",
+      "name": "Teddie Sheldon",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18493/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "terry-dodson",
       "name": "Terry Dodson",
       "description": "Terrence \"Terry\" Dodson is an American comic book artist and penciller. He is best known for his work on titles such as Harley Quinn, Trouble, Marvel Knights Spider-Man, Wonder Woman and Uncanny X-Men. His pencils are usually inked by his wife Rachel Dodson, who is a comic book inker and colorist.",
@@ -13421,6 +13458,28 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "tom-king",
+      "name": "Tom King",
+      "description": "Former CIA Counter Terrorism, turned novelist and comic book writer.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/66303/3946346-knziblbo.jpeg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/25/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tom-king/4040-49258/"
+        }
+      ],
+      "birthYear": 1978,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "tom-muller",
