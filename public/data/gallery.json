@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 334,
+      "id": "bijou-funnies-6-1792968043",
+      "title": "Bijou Funnies",
+      "slug": "bijou-funnies",
+      "issue": 6,
+      "year": 2026,
+      "artist": "Justin Green",
+      "image": "images/bijou-funnies/issue-6-1792968043.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:40:46.548Z"
+    },
+    {
       "seq": 333,
       "id": "six-of-us-2-1792967855",
       "title": "Six of Us",
@@ -158,7 +172,7 @@
         [
           27.9,
           9.1,
-          1.0
+          1
         ],
         [
           49.1,
@@ -2853,7 +2867,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3188,7 +3202,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -6642,7 +6656,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
