@@ -5692,6 +5692,92 @@
       ]
     },
     {
+      "id": "if-destruction-be-our-lot-5",
+      "series": "if-destruction-be-our-lot",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "mark-elijah-rosenberg",
+          "name": "Mark Elijah Rosenberg",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "matthew-rosenberg",
+          "name": "Matthew Rosenberg",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "andy-macdonald",
+          "name": "Andy MacDonald",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "francesco-segala",
+          "name": "Francesco Segala",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "hassan-otsmane-elhaou",
+          "name": "Hassan Otsmane-Elhaou",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "steve-foxe",
+          "name": "Steve Foxe",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "courtney-menard",
+          "name": "Courtney Menard",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "deana-avila",
+          "name": "Deana Avila",
+          "roles": [
+            "Production"
+          ]
+        },
+        {
+          "artistId": "gloria-martinelli",
+          "name": "Gloria Martinelli",
+          "roles": [
+            "Color Assists"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/if-destruction-be-our-lot-2026-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "infernal-hulk-5",
       "series": "infernal-hulk",
       "issue": 5,
