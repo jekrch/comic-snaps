@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 332,
+      "id": "six-of-us-2-1792967829",
+      "title": "Six of Us",
+      "slug": "six-of-us",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Gabriel Hernandez Walta",
+      "image": "images/six-of-us/issue-2-1792967829.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:37:12.168Z"
+    },
+    {
       "seq": 331,
       "id": "redcoat-21-1792967732",
       "title": "Redcoat",
