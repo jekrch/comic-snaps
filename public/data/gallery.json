@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 330,
+      "id": "the-eye-collector-5-1792967686",
+      "title": "The Eye Collector",
+      "slug": "the-eye-collector",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Gmb Chomichuk",
+      "image": "images/the-eye-collector/issue-5-1792967686.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:34:48.179Z"
+    },
+    {
       "seq": 329,
       "id": "the-eye-collector-5-1792967597",
       "title": "The Eye Collector",
