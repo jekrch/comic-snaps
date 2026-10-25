@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 336,
+      "id": "bijou-funnies-6-1792968261",
+      "title": "Bijou Funnies",
+      "slug": "bijou-funnies",
+      "issue": 6,
+      "year": 1971,
+      "artist": "Skip Williamson",
+      "image": "images/bijou-funnies/issue-6-1792968261.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:44:24.947Z"
+    },
+    {
       "seq": 335,
       "id": "six-of-us-2-1792968132",
       "title": "Six of Us",
