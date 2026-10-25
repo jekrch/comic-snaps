@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 329,
+      "id": "the-eye-collector-5-1792967597",
+      "title": "The Eye Collector",
+      "slug": "the-eye-collector",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Gmb Chomichuk",
+      "image": "images/the-eye-collector/issue-5-1792967597.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-10-25T22:33:19.638Z"
+    },
+    {
       "seq": 328,
       "id": "if-destruction-be-our-lot-5-1792967519",
       "title": "If Destruction Be Our Lot",
