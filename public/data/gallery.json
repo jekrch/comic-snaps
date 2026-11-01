@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 346,
+      "id": "absolute-wonder-woman-25-1793574088",
+      "title": "Absolute Wonder Woman",
+      "slug": "absolute-wonder-woman",
+      "issue": 25,
+      "year": 2026,
+      "artist": "Hayden Sherman",
+      "image": "images/absolute-wonder-woman/issue-25-1793574088.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-01T23:01:31.747Z"
+    },
+    {
       "seq": 345,
       "id": "feral-27-1793573973",
       "title": "Feral",
