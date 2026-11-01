@@ -614,6 +614,27 @@
       }
     },
     {
+      "id": "bride-of-frankenstein-lives",
+      "name": "Bride of Frankenstein Lives",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      }
+    },
+    {
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,
