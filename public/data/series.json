@@ -1471,7 +1471,7 @@
       ],
       "startYear": 2024,
       "publisher": "Image",
-      "issueCount": 24,
+      "issueCount": 27,
       "sources": [
         "comicvine",
         "metron"
@@ -1489,7 +1489,8 @@
         "data/covers/feral/a71172c8e606.jpg",
         "data/covers/feral/5d12797515ae.jpg",
         "data/covers/feral/179161b97f36.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "final-cut",

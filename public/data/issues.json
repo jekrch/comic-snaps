@@ -4662,6 +4662,74 @@
       ]
     },
     {
+      "id": "feral-27",
+      "series": "feral",
+      "issue": 27,
+      "credits": [
+        {
+          "artistId": "tony-fleecs",
+          "name": "Tony Fleecs",
+          "roles": [
+            "Writer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tone-rodriguez",
+          "name": "Tone Rodriguez",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "trish-forstner",
+          "name": "Trish Forstner",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-simpson",
+          "name": "Brad Simpson",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "dennis-culver",
+          "name": "Dennis Culver",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "erika-schnatz",
+          "name": "Erika Schnatz",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "lauren-herda",
+          "name": "Lauren Herda",
+          "roles": [
+            "Designer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/feral-2024-27/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "fire-and-ice-darkwolf-1",
       "series": "fire-and-ice-darkwolf",
       "issue": 1,

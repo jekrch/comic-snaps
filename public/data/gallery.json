@@ -26,12 +26,35 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-01T22:59:35.319Z"
+      "addedAt": "2026-11-01T22:59:35.319Z",
+      "width": 960,
+      "height": 1280,
+      "dominantColors": [
+        [
+          61.5,
+          45.9,
+          22.9
+        ],
+        [
+          45.9,
+          32.4,
+          -15.9
+        ],
+        [
+          79.6,
+          9.9,
+          6.7
+        ]
+      ],
+      "colorfulness": 25.5,
+      "phash": "adc21c934b0c4f3f",
+      "ahash": "7ffff3e1e1430300",
+      "dhash": "e19787c70b8bb677"
     },
     {
       "seq": 344,
       "id": "trina-s-women-n-a-1793573911",
-      "title": "Trina’s Women",
+      "title": "Trina\u2019s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -40,12 +63,35 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-01T22:58:34.696Z"
+      "addedAt": "2026-11-01T22:58:34.696Z",
+      "width": 1000,
+      "height": 1280,
+      "dominantColors": [
+        [
+          85.0,
+          10.9,
+          6.4
+        ],
+        [
+          62.5,
+          8.7,
+          5.4
+        ],
+        [
+          12.4,
+          5.9,
+          -2.9
+        ]
+      ],
+      "colorfulness": 6.2,
+      "phash": "e98b92846d39b3c6",
+      "ahash": "df79cdc112efdbde",
+      "dhash": "3adb1913a69ab316"
     },
     {
       "seq": 343,
       "id": "trina-s-women-n-a-1793573764",
-      "title": "Trina’s Women",
+      "title": "Trina\u2019s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -3237,7 +3283,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3572,7 +3618,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7026,7 +7072,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
