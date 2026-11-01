@@ -5490,6 +5490,26 @@
       "country": "United States"
     },
     {
+      "id": "howard-larsen",
+      "name": "Howard Larsen",
+      "description": "Golden Age artist who worked for several publishers during the 40s and 50s.",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10274/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/howard-larsen/4040-44616/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "humberto-ramos",
       "name": "Humberto Ramos",
       "description": "Humberto Ramos is a Mexican comic book penciller, best known for his work on American comic books such as Impulse, Runaways, The Spectacular Spider-Man, The Amazing Spider-Man and his creator-owned series Crimson.",
@@ -5867,6 +5887,33 @@
       ],
       "tags": [
         "ec"
+      ]
+    },
+    {
+      "id": "jack-kamen",
+      "name": "Jack Kamen",
+      "description": "Jack Kamen was an artist who worked in comic books, magazine illustration, and advertising. He is known for his stories in EC comics and his artwork in the film \u201cCreepshow\u201d (1982).\r\n\r\nHis father died when he was 14 years old, prompting him to go to work to help support the family. He attended the Art Students League of New York and broke into comics at the Harry \"A\" Chesler shop. He freelanced for Harvey and Fawcett, then joined the S.M. Iger shop.\r\n\r\nHis career began around 1940, providing illustrations for pulp fiction magazines and working in comics through the Harry \u201cA\u201d Chesler studio. Some of his work was published in Fiction House titles, particularly \u201cFight Comics\u201d.\r\n\r\nKamen was drafted in 1942 and served in World War II where he saw combat in New Guinea and The Philippines. After the war, he joined the Jerry Iger Studio and drew Jo-Jo Congo King and Rulah and Jungle Goddess. His worked appeared in Fiction House again, as well as Fox Features and Harvey.\r\n\r\nHe met Al Feldstein at the Iger studio and in 1950 Feldstein introduced him to Bill Gaines at EC. He was soon working exclusively for Gaines.\r\n\r\nHe was a prolific artist at EC, drawing romance, crime, humor, horror, and science-fiction stories. He appeared regularly in \u201cTales from the Crypt\u201d, \u201cHaunt of Fear\u201d, \u201cCrime SuspenStories\u201d, and the \u201cWeird Science/Fantasy\u201d titles. He drew 160 stories for EC, more than anyone else. His gift for drawing beautiful women (usually with icy hearts and murderous tendencies) was employed to maximum effect in EC's horror and shock titles, for which he is best known.\r\n\r\nKamen suggested the magazine format of the \u2018Picto-Fiction\u2019 titles in response to the creation of the Comics Code Authority, but that and other efforts could not keep EC publishing comic books; by 1956 they had dropped all their four-color comic books to concentrate on their humor magazine, Mad.\r\n\r\nFrom the late 1950s, he worked in advertising art.\r\n\r\nDean Kamen, inventor of the Segway, is his son, and Jack drew the patent renderings of the machine.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/69951/3192602-jack%20kamen.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7697/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jack-kamen/4040-40057/"
+        }
+      ],
+      "birthYear": 1920,
+      "deathYear": 2008,
+      "country": "United States of America",
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Alec Hope",
+        "J. Kamen"
       ]
     },
     {
@@ -14810,6 +14857,32 @@
       ],
       "birthYear": 1990,
       "country": "England"
+    },
+    {
+      "id": "william-gaines",
+      "name": "William Gaines",
+      "description": "William Maxwell Gaines, was an American publisher and co-editor of EC Comics. Following a shift in EC's direction in 1950, Gaines presided over what became an artistically influential and historically important line of mature-audience comics. He published the satirical magazine Mad for over 40 years.\r\n\r\nWilliam Gaines was the son of M.C. Gaines, the founder of EC Comics. Bill Gaines was studying chemistry at New York University when his father died in 1947, leaving him to run the family business. Bill moved to re-invigorate the company by breaking from the educational, humor, kiddy, Western, and romance titles that EC was then known for.\r\n\r\nHe kept Johnny Craig, Al Feldstein, Graham Ingels, and Wallace Wood, and brought in Reed Crandall, Jack Davis, Will Elder, George Evans, Jack Kamen, Bernard Krigstein, Harvey Kurtzman, Joe Orlando, John Severin, Marie Severin, and Al Williamson, among others.\r\n\r\nUnder Bill Gaines, EC became known for its popular horror, crime, war, and science fiction comics, such as Tales From the Crypt, Crime SuspenStories, Two-Fisted Tales, and Weird Science \u2014 and, of course, Mad, which created its own category.\r\n\r\nIn 1954, Gaines badly mishandled his appearance before a Senate subcommittee investigating the alleged link between juvenile delinquency and comic books. Shortly thereafter, EC fell victim to the Comics Code Authority, and organization hastily put together by a group of comic book publishers to head off Congressional pressure.\r\n\r\nBy 1956, EC had dropped all of its titles except Mad. Gaines remained publisher of Mad until his death in 1992. He was inducted into the Will Eisner Hall of Fame in 1993 and the Jack Kirby Hall of Fame in 1997.",
+      "imageUrl": "https://static.metron.cloud/media/creator/2019/05/08/w-gaines.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1876/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1922,
+      "deathYear": 1992,
+      "aliases": [
+        "Bill Gaines",
+        "William Maxwell Gaines",
+        "William M. Gaines",
+        "Adrian",
+        "Amy",
+        "Wm. M. Gaines"
+      ]
     },
     {
       "id": "yasmine-putri",

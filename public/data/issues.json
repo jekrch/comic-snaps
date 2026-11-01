@@ -11828,6 +11828,68 @@
       ]
     },
     {
+      "id": "the-vault-of-horror-21",
+      "series": "the-vault-of-horror",
+      "issue": 21,
+      "credits": [
+        {
+          "artistId": "albert-feldstein",
+          "name": "Albert Feldstein",
+          "roles": [
+            "Writer",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "johnny-craig",
+          "name": "Johnny Craig",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "william-gaines",
+          "name": "William Gaines",
+          "roles": [
+            "Writer",
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "howard-larsen",
+          "name": "Howard Larsen",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jack-davis",
+          "name": "Jack Davis",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "jack-kamen",
+          "name": "Jack Kamen",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/vault-of-horror-1950-21/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "thrillology-1",
       "series": "thrillology",
       "issue": 1,
