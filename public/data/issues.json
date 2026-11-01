@@ -11828,6 +11828,17 @@
       ]
     },
     {
+      "id": "the-vault-of-horror-10",
+      "series": "the-vault-of-horror",
+      "issue": 10,
+      "credits": [],
+      "references": [],
+      "sources": [
+        "metron",
+        "comicvine"
+      ]
+    },
+    {
       "id": "thrillology-1",
       "series": "thrillology",
       "issue": 1,
@@ -12154,6 +12165,275 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/issue/universal-monsters-the-phantom-of-the-opera-2026-3/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "universal-monsters-the-bride-of-frankenstein-lives-1",
+      "series": "universal-monsters-the-bride-of-frankenstein-lives",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "mattia-de-iulis",
+          "name": "Mattia De Iulis",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "aaron-bartling",
+          "name": "Aaron Bartling",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "anna-zhuo",
+          "name": "Anna Zhuo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ariel-diaz",
+          "name": "Ariel Diaz",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "christian-ward",
+          "name": "Christian Ward",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "clayton-crain",
+          "name": "Clayton Crain",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-talaski",
+          "name": "David Talaski",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ingrid-gala",
+          "name": "Ingrid Gala",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jay-ferguson",
+          "name": "Jay Ferguson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "joshua-middleton",
+          "name": "Joshua Middleton",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "katya-sinyukhina",
+          "name": "Katya Sinyukhina",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kevin-tolibao",
+          "name": "Kevin Tolibao",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kyuyong-eom",
+          "name": "Kyuyong Eom",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "leirix-li",
+          "name": "Leirix Li",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "luana-vecchio",
+          "name": "Luana Vecchio",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "martin-a-zavala",
+          "name": "Martin A Zavala",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michelle-dias",
+          "name": "Michelle Dias",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "naomi-griffin",
+          "name": "Naomi Griffin",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nate-melendez",
+          "name": "Nate Melendez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rosemary-valero-o-connell",
+          "name": "Rosemary Valero-O'Connell",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "rudy-ao",
+          "name": "Rudy Ao",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "ryan-sook",
+          "name": "Ryan Sook",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "santa-fung",
+          "name": "Santa Fung",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "stanley-lau",
+          "name": "Stanley Lau",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "suspiria-vilchez",
+          "name": "Suspiria Vilchez",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sveta-shubina",
+          "name": "Sveta Shubina",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "tehani-farr",
+          "name": "Tehani Farr",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "von-randal",
+          "name": "Von Randal",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "wil-shrike",
+          "name": "Wil Shrike",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "zoe-lacchei",
+          "name": "Zoe Lacchei",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "alex-antone",
+          "name": "Alex Antone",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "caitlin-chappell",
+          "name": "Caitlin Chappell",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "jillian-crab",
+          "name": "Jillian Crab",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "cj-han",
+          "name": "CJ Han",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/universal-monsters-the-bride-of-frankenstein-lives-2026-1/"
         }
       ],
       "sources": [

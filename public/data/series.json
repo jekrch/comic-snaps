@@ -4291,25 +4291,6 @@
       "issueCount": 92
     },
     {
-      "id": "the-vault-of-horror",
-      "name": "Vault of Horror",
-      "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/vault-of-horror/4050-11447/"
-        },
-        {
-          "name": "Grand Comics Database",
-          "url": "https://www.comics.org/series/12404/"
-        }
-      ],
-      "startYear": 1950,
-      "sources": []
-    },
-    {
       "id": "thrillology",
       "name": "Thrillogy",
       "parentSeries": null,
@@ -4426,7 +4407,7 @@
       "name": "Trina's Women",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/2629118-trina_s_women.jpg",
       "references": [
         {
           "name": "Comic Vine",
@@ -4437,8 +4418,20 @@
           "url": "https://www.comics.org/series/17185/"
         }
       ],
-      "sources": [],
-      "startYear": 1976
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 1976,
+      "publisher": "Kitchen Sink",
+      "issueCount": 1,
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      },
+      "coverImages": [
+        "data/covers/trina-s-women/17f239b30170.jpg"
+      ]
     },
     {
       "id": "trumpzilla",
@@ -4554,9 +4547,37 @@
       "name": "Universal Monsters: The Bride of Frankenstein Lives",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": []
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10221739-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/universal-monsters-the-bride-of-frankenstein-lives/4050-177734/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/17188/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "startYear": 2026,
+      "publisher": "Image",
+      "issueCount": 1,
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/universal-monsters-the-bride-of-frankenstein-lives/7829201a9eb8.jpg",
+        "data/covers/universal-monsters-the-bride-of-frankenstein-lives/16db85731bad.jpg",
+        "data/covers/universal-monsters-the-bride-of-frankenstein-lives/00c5c3d3526c.jpg"
+      ]
     },
     {
       "id": "universal-monsters-the-invisible-man",
@@ -4591,6 +4612,45 @@
         "data/covers/universal-monsters-the-invisible-man/43c98dab99a3.jpg",
         "data/covers/universal-monsters-the-invisible-man/f6dcc9cf2265.jpg",
         "data/covers/universal-monsters-the-invisible-man/c833d01ba2b2.jpg"
+      ]
+    },
+    {
+      "id": "the-vault-of-horror",
+      "name": "Vault of Horror",
+      "parentSeries": null,
+      "description": "Numbering starts with issue #12, continued from the War Against Crime!\r\n\r\nThe Vault of Horror, Tales from the Crypt, and The Haunt of Fear are three bi-monthly horror comic anthology series published by EC Comics in the early 1950s. The Vault of Horror hit newsstands with its April/May 1950 issue and ceased publication with its December/January 1955 issue, producing a total of twenty-nine issues. The title was popular, but, in the late 1940s and early 1950s, comic books came under attack from moralizing parents, clergymen, schoolteachers, and others who believed the books contributed to illiteracy and juvenile delinquency. In April and June 1954, highly publicized Congressional subcommittee hearings on the effects of comic books upon children left the comics industry shaken. With the imposition of the highly restrictive Comics Code Authority, EC Comics publisher William Maxwell Gaines canceled The Vault of Horror and its two companion titles in September 1954. All three titles have been reprinted at various times since their demise and have been adapted for television and film.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/67699-11447-100697-1-vault-of-horror.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/vault-of-horror/4050-11447/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/12404/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/6740/"
+        }
+      ],
+      "startYear": 1950,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "publisher": "EC",
+      "issueCount": 29,
+      "coverSources": {
+        "metron": [
+          10
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-vault-of-horror/ec9c7d55a507.jpg",
+        "data/covers/the-vault-of-horror/50841c3d459f.jpg",
+        "data/covers/the-vault-of-horror/fd220bd4d585.jpg",
+        "data/covers/the-vault-of-horror/f70e6a39c145.jpg"
       ]
     },
     {

@@ -1,6 +1,26 @@
 {
   "artists": [
     {
+      "id": "aaron-bartling",
+      "name": "Aaron Bartling",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8445825-a.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5613/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/aaron-bartling/4040-107621/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "abel-laxamana",
       "name": "Abel Laxamana",
       "description": "Filipino artist who worked for Warren Publishing in the 1970s.",
@@ -848,6 +868,30 @@
       ]
     },
     {
+      "id": "anna-zhuo",
+      "name": "Anna Zhuo",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2790/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/anna-zhuo/4040-105743/"
+        }
+      ],
+      "aliases": [
+        "AZHUO",
+        "Anna Zhou"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "annalisa-leoni",
       "name": "Annalisa Leoni",
       "description": "",
@@ -922,6 +966,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "ariel-diaz",
+      "name": "Ariel Diaz",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8006/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -1859,6 +1919,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "caitlin-chappell",
+      "name": "Caitlin Chappell",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16233/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -5552,6 +5628,26 @@
       ]
     },
     {
+      "id": "ingrid-gala",
+      "name": "Ingrid Gala",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8320251-a.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5493/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ingrid-gala/4040-105744/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "in-s-amaro",
       "name": "In\u00eas Amaro",
       "description": "",
@@ -6187,6 +6283,27 @@
         "metron",
         "comicvine",
         "wikipedia"
+      ]
+    },
+    {
+      "id": "jay-ferguson",
+      "name": "Jay Ferguson",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973904-jay_ferguson.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7233/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jay-ferguson/4040-105002/"
+        }
+      ],
+      "country": "Canada",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -8012,6 +8129,22 @@
       "country": "USA"
     },
     {
+      "id": "katya-sinyukhina",
+      "name": "Katya Sinyukhina",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/19090/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kaz",
       "name": "Kaz",
       "description": "Artist. Real name: Kazimieras G. Prapuolenis.",
@@ -8347,6 +8480,27 @@
       ]
     },
     {
+      "id": "kevin-tolibao",
+      "name": "Kevin Tolibao",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10117334-kevin_tolibao.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9824/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kevin-tolibao/4040-88106/"
+        }
+      ],
+      "country": "Philippines",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kevin-walker",
       "name": "Kevin Walker",
       "description": "Kevin Walker is a British comics artist and illustrator, based in Leeds, who worked mainly on 2000 AD and Warhammer comics and the collectible card game Magic: The Gathering. He is now working for Marvel Comics.",
@@ -8453,6 +8607,27 @@
         }
       ],
       "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "kyuyong-eom",
+      "name": "Kyuyong Eom",
+      "description": "Freelance digital artist and illustrator",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11141/111414280/10017914-4032793337-55349.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8538/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kyuyong-eom/4040-111859/"
+        }
+      ],
+      "country": "Korea",
       "sources": [
         "comicvine",
         "metron"
@@ -8602,6 +8777,32 @@
       ],
       "birthYear": 1962,
       "country": "U.S.A."
+    },
+    {
+      "id": "leirix-li",
+      "name": "Leirix Li",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11142/111426427/8399768-leirixli.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5575/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/leirix-li/4040-114760/"
+        }
+      ],
+      "country": "Singapore",
+      "aliases": [
+        "Lesley Li",
+        "Leirixi",
+        "Leirex Li"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "leo-fox",
@@ -9338,6 +9539,26 @@
       ]
     },
     {
+      "id": "martin-a-zavala",
+      "name": "Martin A Zavala",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8423996-a.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/15414/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/martin-a-zavala/4040-121538/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "martin-biro",
       "name": "Martin Biro",
       "description": "",
@@ -9936,6 +10157,22 @@
       "country": "Canada"
     },
     {
+      "id": "michelle-dias",
+      "name": "Michelle Dias",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/19828/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "michelle-marchese",
       "name": "Michelle Marchese",
       "description": "",
@@ -10179,6 +10416,38 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
+      ]
+    },
+    {
+      "id": "naomi-griffin",
+      "name": "Naomi Griffin",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/19829/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "nate-melendez",
+      "name": "Nate Melendez",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7843/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -11868,6 +12137,27 @@
       "country": "United States"
     },
     {
+      "id": "rudy-ao",
+      "name": "Rudy Ao",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973928-rudy_ao.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5100/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rudy-ao/4040-117661/"
+        }
+      ],
+      "country": "Indonesia",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "rus-wooton",
       "name": "Rus Wooton",
       "description": "Rus Wooton is a comics letterer who has worked on hundreds of your favorite comics, from INVINCIBLE to THE WALKING DEAD and beyond",
@@ -12251,6 +12541,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "santa-fung",
+      "name": "Santa Fung",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7833/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -12858,6 +13164,30 @@
       ]
     },
     {
+      "id": "stanley-lau",
+      "name": "Stanley Lau",
+      "description": "Born and raised in Hong Kong, Stanley works as an illustrator, designer, concept artist, creative director and co-founder of Imaginary Friends Studios. He has worked with Capcom, DC Comics, Marvel Comics and other well-known companies in the entertainment and gaming industry.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10151467-stanley_lau.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/143/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/stanley-lau/4040-57165/"
+        }
+      ],
+      "country": "China",
+      "aliases": [
+        "Artgerm"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "stevan-subi",
       "name": "Stevan Subi\u0107",
       "description": "",
@@ -13248,6 +13578,30 @@
       ]
     },
     {
+      "id": "suspiria-vilchez",
+      "name": "Suspiria Vilchez",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9475622-suzi.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6732/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/suspiria-vilchez/4040-125555/"
+        }
+      ],
+      "country": "Spain",
+      "aliases": [
+        "Suzi Vilchez"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "sven-elven",
       "name": "Sven Elven",
       "description": "Early Golden Age artist who worked on comic books such as Action Comics and Detective Comics for National Periodicals as well as comic books for Fawcett.",
@@ -13265,6 +13619,27 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "sveta-shubina",
+      "name": "Sveta Shubina",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11141/111414280/9782378-7431666521-61498.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17000/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sveta-shubina/4040-128756/"
+        }
+      ],
+      "country": "Russia",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -13371,6 +13746,22 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/18493/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "tehani-farr",
+      "name": "Tehani Farr",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/18384/"
         }
       ],
       "sources": [
@@ -14103,6 +14494,26 @@
       ]
     },
     {
+      "id": "von-randal",
+      "name": "Von Randal",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973623-von_randal.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7139/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/von-randal/4040-104145/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "w-maxwell-prince",
       "name": "W. Maxwell Prince",
       "description": "W. Maxwell Prince writes in Brooklyn and lives with his wife, daughter, and two cats called Mischief and Mayhem. He is the author of ONE WEEK IN THE LIBRARY (Image), The Electric Sublime (IDW), and Judas: The Last Days (ibid). When not writing, he tries to render all of human experience in chart form.",
@@ -14455,6 +14866,22 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/zabriel-kennedy/4040-124236/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "zoe-lacchei",
+      "name": "Zoe Lacchei",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4041/"
         }
       ],
       "sources": [
