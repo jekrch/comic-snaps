@@ -404,6 +404,30 @@
       ]
     },
     {
+      "id": "alexander-lozano",
+      "name": "Alexander Lozano",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11118/111187046/6498580-13266126_1753401538214808_3215970246860613296_n.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3425/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/alexander-lozano/4040-73626/"
+        }
+      ],
+      "country": "Germany",
+      "aliases": [
+        "Alex Lozano"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "alexis-ziritt",
       "name": "Alexis Ziritt",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/536bb26fe4b0b68ea1c248ff/1423337639184-W9XF60A3ON627CT9TQYP/image-asset.jpeg",
@@ -1061,6 +1085,31 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "babs-tarr",
+      "name": "Babs Tarr",
+      "description": "Barbara Tarr (also known as Babs Tarr) is an American freelance comic book artist currently employed by DC Comics and Image Comics. She is best known for her work on Batgirl and for her Japanese-style illustrations.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/66303/3952373-photo.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2522/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/babs-tarr/4040-79647/"
+        }
+      ],
+      "country": "U.S.A.",
+      "aliases": [
+        "Barbara Tarr"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "birthYear": 1987
     },
     {
       "id": "baldemar-rivas",
@@ -7186,6 +7235,34 @@
       ]
     },
     {
+      "id": "johnny-craig",
+      "name": "Johnny Craig",
+      "description": "Biography Johnny Craig studied at the Art Students League of New York. While attending classes, he worked as an assistant to Harry Lampert, co-creator of All-American Comics' Golden Age superhero the Flash. After Lampert was drafted to serve to World War II, All-American editor Sheldon Mayer kept Craig on as art-department assistant, giving him progressively more responsible art duties. Between 1943 and 1945, Craig served in the Merchant Marines and the U.S. Army.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/2/28071/1198577-art_f976_728_726_620.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/johnny-craig/4040-3934/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1629/"
+        }
+      ],
+      "birthYear": 1926,
+      "deathYear": 2001,
+      "country": "USA",
+      "aliases": [
+        "Jay Taycee",
+        "Jonathan T. Craig",
+        "F.C. Aljohn"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jonas-scharf",
       "name": "Jonas Scharf",
       "description": "",
@@ -9158,6 +9235,28 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "mark-brooks",
+      "name": "Mark Brooks",
+      "description": "Mark Brooks is an artist for Marvel comics. So far, his most notable work was the Dark Reign: Young Avengers mini-series. He is currently working on the Age of Apocalypse arc in Uncanny X-force.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973571-matt_frank.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/22/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mark-brooks/4040-41351/"
+        }
+      ],
+      "birthYear": 1973,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

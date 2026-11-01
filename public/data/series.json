@@ -106,7 +106,7 @@
       ],
       "startYear": 2024,
       "publisher": "DC Comics",
-      "issueCount": 24,
+      "issueCount": 25,
       "sources": [
         "comicvine",
         "metron"
@@ -4289,6 +4289,40 @@
         "data/covers/the-twilight-zone/2c3caaedeb18.jpg"
       ],
       "issueCount": 92
+    },
+    {
+      "id": "the-vault-of-horror",
+      "name": "The Vault of Horror",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9934171-wwww.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/the-vault-of-horror/4050-169160/"
+        }
+      ],
+      "startYear": 2023,
+      "publisher": "Akileos",
+      "issueCount": 10,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "issueCountInferred": true,
+      "coverSources": {
+        "metron": [
+          10
+        ],
+        "comicvine": [
+          10
+        ]
+      },
+      "coverImages": [
+        "data/covers/the-vault-of-horror/3f7c597035f7.jpg",
+        "data/covers/the-vault-of-horror/86acc266179c.jpg"
+      ]
     },
     {
       "id": "thrillology",

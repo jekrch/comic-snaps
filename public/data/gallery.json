@@ -26,7 +26,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-01T23:13:27.055Z"
+      "addedAt": "2026-11-01T23:13:27.055Z",
+      "width": 1280,
+      "height": 1213,
+      "dominantColors": [
+        [
+          40.5,
+          16.2,
+          21.7
+        ],
+        [
+          74.4,
+          14.5,
+          30.5
+        ],
+        [
+          49.9,
+          -26.0,
+          29.7
+        ]
+      ],
+      "colorfulness": 20.9,
+      "phash": "e2e191c4969ceef0",
+      "ahash": "ffede53460110004",
+      "dhash": "cbc98945c5ab9169"
     },
     {
       "seq": 346,
@@ -40,7 +63,30 @@
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-01T23:01:31.747Z"
+      "addedAt": "2026-11-01T23:01:31.747Z",
+      "width": 1002,
+      "height": 1280,
+      "dominantColors": [
+        [
+          67.6,
+          -0.7,
+          7.9
+        ],
+        [
+          51.5,
+          23.5,
+          18.7
+        ],
+        [
+          11.7,
+          7.7,
+          2.3
+        ]
+      ],
+      "colorfulness": 16.9,
+      "phash": "870c0c7f3ac671dc",
+      "ahash": "103b37370fef7f0f",
+      "dhash": "e4e2c6cd7948e95f"
     },
     {
       "seq": 345,
@@ -82,7 +128,7 @@
     {
       "seq": 344,
       "id": "trina-s-women-n-a-1793573911",
-      "title": "Trina’s Women",
+      "title": "Trina\u2019s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -119,7 +165,7 @@
     {
       "seq": 343,
       "id": "trina-s-women-n-a-1793573764",
-      "title": "Trina’s Women",
+      "title": "Trina\u2019s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -3311,7 +3357,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3646,7 +3692,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ibáñez",
+      "artist": "Victor Ib\u00e1\u00f1ez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7100,7 +7146,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It’s Jeff: Brand New Week",
+      "title": "It\u2019s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,

@@ -1111,6 +1111,117 @@
       ]
     },
     {
+      "id": "absolute-wonder-woman-25",
+      "series": "absolute-wonder-woman",
+      "issue": 25,
+      "credits": [
+        {
+          "artistId": "kelly-thompson",
+          "name": "Kelly Thompson",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "hayden-sherman",
+          "name": "Hayden Sherman",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jordie-bellaire",
+          "name": "Jordie Bellaire",
+          "roles": [
+            "Colorist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "becca-carey",
+          "name": "Becca Carey",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "alexander-lozano",
+          "name": "Alexander Lozano",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "babs-tarr",
+          "name": "Babs Tarr",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "brad-anderson",
+          "name": "Brad Anderson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "bryan-hitch",
+          "name": "Bryan Hitch",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mark-brooks",
+          "name": "Mark Brooks",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-conroy",
+          "name": "Chris Conroy",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "ash-padilla",
+          "name": "Ash Padilla",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "marie-javins",
+          "name": "Marie Javins",
+          "roles": [
+            "Editor in Chief"
+          ]
+        },
+        {
+          "artistId": "jim-lee",
+          "name": "Jim Lee",
+          "roles": [
+            "President",
+            "Publisher",
+            "Chief Creative Officer"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/absolute-wonder-woman-2024-25/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "action-comics-1",
       "series": "action-comics",
       "issue": 1,
@@ -11713,6 +11824,16 @@
       ],
       "sources": [
         "metron",
+        "comicvine"
+      ]
+    },
+    {
+      "id": "the-vault-of-horror-10",
+      "series": "the-vault-of-horror",
+      "issue": 10,
+      "credits": [],
+      "references": [],
+      "sources": [
         "comicvine"
       ]
     },
