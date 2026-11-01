@@ -1,18 +1,18 @@
 {
   "panels": [
     {
-      "seq": 350,
-      "id": "bride-of-frankenstein-lives-1-1793576050",
-      "title": "Bride of Frankenstein Lives",
-      "slug": "bride-of-frankenstein-lives",
+      "seq": 349,
+      "id": "universal-monsters-the-bride-of-frankenstein-lives-1-1793576050",
+      "title": "Universal Monsters: The Bride of Frankenstein Lives",
+      "slug": "universal-monsters-the-bride-of-frankenstein-lives",
       "issue": 1,
       "year": 2026,
       "artist": "Mattia Du lulis",
-      "image": "images/bride-of-frankenstein-lives/issue-1-1793576050.jpg",
+      "image": "images/universal-monsters-the-bride-of-frankenstein-lives/issue-1-1793576050.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-01T23:34:13.676Z",
+      "addedAt": "2026-11-01T23:20:25.358Z",
       "width": 1044,
       "height": 1280,
       "dominantColors": [
@@ -36,43 +36,6 @@
       "phash": "91ca2d0a7e5d6f18",
       "ahash": "197f7a7e0f0f0f86",
       "dhash": "fbd5d698999bbe9e"
-    },
-    {
-      "seq": 349,
-      "id": "universal-monsters-the-bride-of-frankenstein-lives-1-1793575222",
-      "title": "Universal Monsters: The Bride of Frankenstein Lives",
-      "slug": "universal-monsters-the-bride-of-frankenstein-lives",
-      "issue": 1,
-      "year": 2026,
-      "artist": "Mattia Du lulis",
-      "image": "images/universal-monsters-the-bride-of-frankenstein-lives/issue-1-1793575222.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-11-01T23:20:25.358Z",
-      "width": 945,
-      "height": 1280,
-      "dominantColors": [
-        [
-          15.1,
-          13.5,
-          14.8
-        ],
-        [
-          67.3,
-          19.4,
-          35.6
-        ],
-        [
-          34.1,
-          22.9,
-          28.3
-        ]
-      ],
-      "colorfulness": 12,
-      "phash": "95ce3e1b62c62b91",
-      "ahash": "1c1e3f7e5e0f0e46",
-      "dhash": "697adac498dade9e"
     },
     {
       "seq": 348,
@@ -113,13 +76,13 @@
     },
     {
       "seq": 347,
-      "id": "the-vault-of-horror-10-1793574803",
+      "id": "the-vault-of-horror-21-1793574803",
       "title": "The Vault of Horror",
       "slug": "the-vault-of-horror",
-      "issue": 10,
+      "issue": 21,
       "year": 1951,
       "artist": "Johnny Craig",
-      "image": "images/the-vault-of-horror/issue-10-1793574803.jpg",
+      "image": "images/the-vault-of-horror/issue-21-1793574803-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -128,25 +91,25 @@
       "height": 1213,
       "dominantColors": [
         [
-          40.5,
-          16.2,
-          21.7
+          66.6,
+          9.9,
+          6.1
         ],
         [
-          74.4,
-          14.5,
-          30.5
+          29.6,
+          7.5,
+          -0.6
         ],
         [
-          49.9,
-          -26,
-          29.7
+          49.2,
+          -32.4,
+          8.1
         ]
       ],
-      "colorfulness": 20.9,
-      "phash": "e2e191c4969ceef0",
-      "ahash": "ffede53460110004",
-      "dhash": "cbc98945c5ab9169"
+      "colorfulness": 21.2,
+      "phash": "c2e191cc969ceef0",
+      "ahash": "e561e53cf0f1482c",
+      "dhash": "cbd98965c5a99149"
     },
     {
       "seq": 346,
