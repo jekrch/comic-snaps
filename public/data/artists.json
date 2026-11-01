@@ -9658,6 +9658,17 @@
       "country": "Italy"
     },
     {
+      "id": "mattia-du-lulis",
+      "name": "Mattia Du lulis",
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "mat-as-bergara",
       "name": "Mat\u00edas Bergara",
       "description": "",

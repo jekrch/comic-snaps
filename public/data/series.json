@@ -197,7 +197,7 @@
       ],
       "startYear": 2026,
       "publisher": "Oni Press",
-      "issueCount": 1,
+      "issueCount": 2,
       "sources": [
         "comicvine",
         "metron",
@@ -611,6 +611,27 @@
       "coverSources": {
         "metron": [],
         "comicvine": []
+      }
+    },
+    {
+      "id": "bride-of-frankenstein-lives",
+      "name": "Bride of Frankenstein Lives",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
       }
     },
     {
