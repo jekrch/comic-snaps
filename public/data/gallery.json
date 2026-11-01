@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 347,
+      "id": "the-vault-of-horror-10-1793574803",
+      "title": "The Vault of Horror",
+      "slug": "the-vault-of-horror",
+      "issue": 10,
+      "year": 1951,
+      "artist": "Johnny Craig",
+      "image": "images/the-vault-of-horror/issue-10-1793574803.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-01T23:13:27.055Z"
+    },
+    {
       "seq": 346,
       "id": "absolute-wonder-woman-25-1793574088",
       "title": "Absolute Wonder Woman",
@@ -54,7 +68,7 @@
     {
       "seq": 344,
       "id": "trina-s-women-n-a-1793573911",
-      "title": "Trina\u2019s Women",
+      "title": "Trina’s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -68,7 +82,7 @@
       "height": 1280,
       "dominantColors": [
         [
-          85.0,
+          85,
           10.9,
           6.4
         ],
@@ -91,7 +105,7 @@
     {
       "seq": 343,
       "id": "trina-s-women-n-a-1793573764",
-      "title": "Trina\u2019s Women",
+      "title": "Trina’s Women",
       "slug": "trina-s-women",
       "issue": "N/A",
       "year": 1976,
@@ -3283,7 +3297,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3618,7 +3632,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7072,7 +7086,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
