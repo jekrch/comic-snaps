@@ -614,27 +614,6 @@
       }
     },
     {
-      "id": "bride-of-frankenstein-lives",
-      "name": "Bride of Frankenstein Lives",
-      "parentSeries": null,
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "coverSources": {
-        "metron": [
-          1
-        ],
-        "comicvine": [
-          1
-        ]
-      }
-    },
-    {
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,
@@ -4313,37 +4292,22 @@
     },
     {
       "id": "the-vault-of-horror",
-      "name": "The Vault of Horror",
+      "name": "Vault of Horror",
       "parentSeries": null,
       "description": "",
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9934171-wwww.jpg",
+      "imageUrl": null,
       "references": [
         {
           "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/the-vault-of-horror/4050-169160/"
+          "url": "https://comicvine.gamespot.com/vault-of-horror/4050-11447/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/12404/"
         }
       ],
-      "startYear": 2023,
-      "publisher": "Akileos",
-      "issueCount": 10,
-      "sources": [
-        "comicvine",
-        "metron",
-        "metron-series-lookup"
-      ],
-      "issueCountInferred": true,
-      "coverSources": {
-        "metron": [
-          10
-        ],
-        "comicvine": [
-          10
-        ]
-      },
-      "coverImages": [
-        "data/covers/the-vault-of-horror/3f7c597035f7.jpg",
-        "data/covers/the-vault-of-horror/86acc266179c.jpg"
-      ]
+      "startYear": 1950,
+      "sources": []
     },
     {
       "id": "thrillology",
@@ -4459,19 +4423,22 @@
     },
     {
       "id": "trina-s-women",
-      "name": "Trina\u2019s Women",
+      "name": "Trina's Women",
       "parentSeries": null,
       "description": "",
       "imageUrl": null,
-      "references": [],
-      "sources": [
-        "comicvine",
-        "metron"
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/trinas-women/4050-52717/"
+        },
+        {
+          "name": "Grand Comics Database",
+          "url": "https://www.comics.org/series/17185/"
+        }
       ],
-      "coverSources": {
-        "metron": [],
-        "comicvine": []
-      }
+      "sources": [],
+      "startYear": 1976
     },
     {
       "id": "trumpzilla",
@@ -4581,6 +4548,15 @@
         "data/covers/universal-monsters-phantom-of-the-opera/d236c1db43c8.jpg",
         "data/covers/universal-monsters-phantom-of-the-opera/ca21a7fa7353.jpg"
       ]
+    },
+    {
+      "id": "universal-monsters-the-bride-of-frankenstein-lives",
+      "name": "Universal Monsters: The Bride of Frankenstein Lives",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": []
     },
     {
       "id": "universal-monsters-the-invisible-man",
