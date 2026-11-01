@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 343,
+      "id": "trina-s-women-n-a-1793573676",
+      "title": "Trina’s Women",
+      "slug": "trina-s-women",
+      "issue": "N/A",
+      "year": 1976,
+      "artist": "Trina Robbins",
+      "image": "images/trina-s-women/issue-n-a-1793573676.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-01T22:54:40.174Z"
+    },
+    {
       "seq": 342,
       "id": "bijou-funnies-6-1792978194",
       "title": "Bijou Funnies",
@@ -24,7 +38,7 @@
         [
           15.5,
           10.3,
-          9.0
+          9
         ],
         [
           64.8,
@@ -3158,7 +3172,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3493,7 +3507,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -6947,7 +6961,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
