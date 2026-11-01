@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 350,
+      "id": "bride-of-frankenstein-lives-1-1793576050",
+      "title": "Bride of Frankenstein Lives",
+      "slug": "bride-of-frankenstein-lives",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Mattia Du lulis",
+      "image": "images/bride-of-frankenstein-lives/issue-1-1793576050.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-01T23:34:13.676Z"
+    },
+    {
       "seq": 349,
       "id": "universal-monsters-the-bride-of-frankenstein-lives-1-1793575222",
       "title": "Universal Monsters: The Bride of Frankenstein Lives",
@@ -32,7 +46,7 @@
           28.3
         ]
       ],
-      "colorfulness": 12.0,
+      "colorfulness": 12,
       "phash": "95ce3e1b62c62b91",
       "ahash": "1c1e3f7e5e0f0e46",
       "dhash": "697adac498dade9e"
@@ -3417,7 +3431,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -3752,7 +3766,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7206,7 +7220,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
