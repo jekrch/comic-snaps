@@ -4402,6 +4402,22 @@
       ]
     },
     {
+      "id": "trina-s-women",
+      "name": "Trina\u2019s Women",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [],
+        "comicvine": []
+      }
+    },
+    {
       "id": "trumpzilla",
       "name": "Trumpzilla",
       "parentSeries": null,
