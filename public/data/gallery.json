@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 348,
+      "id": "archie-2-1793574933",
+      "title": "Archie",
+      "slug": "archie",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Fabio Moon",
+      "image": "images/archie/issue-2-1793574933.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-01T23:15:35.729Z"
+    },
+    {
       "seq": 347,
       "id": "the-vault-of-horror-10-1793574803",
       "title": "The Vault of Horror",
