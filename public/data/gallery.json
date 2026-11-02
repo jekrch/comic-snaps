@@ -489,34 +489,34 @@
       "issue": 6,
       "year": 1971,
       "artist": "Justin Green",
-      "image": "images/bijou-funnies/issue-6-1792968043.jpg",
+      "image": "images/bijou-funnies/issue-6-1792968043-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-10-25T22:40:46.548Z",
-      "width": 889,
+      "width": 900,
       "height": 1280,
       "dominantColors": [
         [
-          85.2,
+          87.9,
+          -0.4,
+          2
+        ],
+        [
+          17.8,
+          -0.1,
+          0.2
+        ],
+        [
+          58.3,
           -0.3,
-          1.8
-        ],
-        [
-          65.3,
-          0.4,
-          1
-        ],
-        [
-          40.7,
-          0.9,
-          -4
+          1.3
         ]
       ],
-      "colorfulness": 3.5,
-      "phash": "80ea48c5b7be2d17",
-      "ahash": "797111efff321c1c",
-      "dhash": "d3c3e30b5cc2e9f1"
+      "colorfulness": 0.8,
+      "phash": "c14b4183b77a0f37",
+      "ahash": "787810efff3b7f3e",
+      "dhash": "d1c2612d4ecab3dc"
     },
     {
       "seq": 333,
