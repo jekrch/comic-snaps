@@ -514,7 +514,9 @@ export default function App() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${import.meta.env.BASE_URL}data/gallery.json`).then((res) => {
+      // Revalidate rather than trust Pages' max-age: a replaced panel's old image
+      // is gone from the deploy, so a stale copy of this file points at a 404.
+      fetch(`${import.meta.env.BASE_URL}data/gallery.json`, { cache: "no-cache" }).then((res) => {
         if (!res.ok) throw new Error(`${res.status}`);
         return res.json() as Promise<Gallery>;
       }),

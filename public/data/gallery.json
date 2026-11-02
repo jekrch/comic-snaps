@@ -230,7 +230,7 @@
       "issue": 6,
       "year": 1971,
       "artist": "Robert Crumb",
-      "image": "images/bijou-funnies/issue-6-1792978194.jpg",
+      "image": "images/bijou-funnies/issue-6-1792978194-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -239,25 +239,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          40.7,
-          21.2,
-          24.3
+          18.8,
+          12,
+          8.2
         ],
         [
-          15.5,
-          10.3,
-          9
+          49.8,
+          2.9,
+          4.5
         ],
         [
-          64.8,
-          30.5,
-          45.8
+          69.1,
+          14.5,
+          31.1
         ]
       ],
-      "colorfulness": 21.3,
-      "phash": "f4b28188da4bcde5",
-      "ahash": "ffc7a284c01002da",
-      "dhash": "8f0c262c14666692"
+      "colorfulness": 20.2,
+      "phash": "f4b68188da4bcdc5",
+      "ahash": "ffc7a284c01000c8",
+      "dhash": "8f0c2e2c14666692"
     },
     {
       "seq": 341,
@@ -304,34 +304,34 @@
       "issue": 1,
       "year": 1995,
       "artist": "Adrian Tomine",
-      "image": "images/optic-nerve/issue-1-1792968685.jpg",
+      "image": "images/optic-nerve/issue-1-1792968685-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-10-25T22:51:28.240Z",
-      "width": 542,
+      "width": 481,
       "height": 1280,
       "dominantColors": [
         [
-          86.4,
-          -0.9,
-          3
+          85.4,
+          -1.6,
+          1.4
         ],
         [
-          67.8,
-          18.4,
-          27.2
+          70.4,
+          19.3,
+          28.9
         ],
         [
-          59.9,
-          1,
-          5.4
+          51.3,
+          5.9,
+          13.4
         ]
       ],
-      "colorfulness": 17,
-      "phash": "bc8238f44b4fe6c1",
-      "ahash": "4707cf096fc38303",
-      "dhash": "9ebebe739eb6b233"
+      "colorfulness": 18.8,
+      "phash": "bda23df4424be0f0",
+      "ahash": "c383c300ef838101",
+      "dhash": "1e372b6b9e223333"
     },
     {
       "seq": 339,
@@ -378,7 +378,7 @@
       "issue": 1,
       "year": 1995,
       "artist": "Adrian Tomine",
-      "image": "images/optic-nerve/issue-1-1792968414.jpg",
+      "image": "images/optic-nerve/issue-1-1792968414-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -387,25 +387,25 @@
       "height": 1192,
       "dominantColors": [
         [
-          82.7,
+          88.7,
+          -0.8,
+          0.2
+        ],
+        [
+          10.3,
+          0,
+          0
+        ],
+        [
+          61.2,
           -0.5,
-          -0.2
-        ],
-        [
-          16.7,
-          -0.6,
-          1.2
-        ],
-        [
-          59.3,
-          -0.2,
-          -0.1
+          0.2
         ]
       ],
-      "colorfulness": 1,
+      "colorfulness": 0.4,
       "phash": "beebc1e6e098d224",
-      "ahash": "ff8b1f1787171f5f",
-      "dhash": "ef3b3f2f2e2c3fbd"
+      "ahash": "ff8b9f9787971f5f",
+      "dhash": "c53b3b262e2c3ebc"
     },
     {
       "seq": 336,
@@ -563,7 +563,7 @@
       "issue": 21,
       "year": 2026,
       "artist": "Bryan Hitch",
-      "image": "images/redcoat/issue-21-1792967732.jpg",
+      "image": "images/redcoat/issue-21-1792967732-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -572,25 +572,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          67.4,
+          66.4,
           -2.4,
           0.4
         ],
         [
-          47.2,
+          44.5,
           -0.9,
           1.5
         ],
         [
-          14.9,
-          -0.4,
-          0.3
+          10.9,
+          -0.2,
+          0.5
         ]
       ],
-      "colorfulness": 6.8,
-      "phash": "bbb925c01d4a5e99",
-      "ahash": "ffc78d09fff70100",
-      "dhash": "5b5f3939d94dab76"
+      "colorfulness": 6.9,
+      "phash": "bbb925c11d4a5e98",
+      "ahash": "efc78d08fff70100",
+      "dhash": "5b5f3939d94dab72"
     },
     {
       "seq": 330,
@@ -711,7 +711,7 @@
       "issue": 5,
       "year": 2026,
       "artist": "Andy MacDonald",
-      "image": "images/if-destruction-be-our-lot/issue-5-1792967478.jpg",
+      "image": "images/if-destruction-be-our-lot/issue-5-1792967478-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -720,25 +720,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          85.5,
-          -1.2,
-          -7.5
-        ],
-        [
-          64.5,
-          -1.6,
-          -6.4
-        ],
-        [
-          22.9,
+          87.7,
           0,
-          -5.2
+          0
+        ],
+        [
+          61.2,
+          0,
+          0
+        ],
+        [
+          12.2,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.9,
+      "colorfulness": 0,
       "phash": "e8835ee1957cb18c",
-      "ahash": "f7f1f9fffbc08080",
-      "dhash": "ce8ba39382933525"
+      "ahash": "f7e1f1fbfbc08080",
+      "dhash": "8e8ba39382933525"
     },
     {
       "seq": 326,
@@ -1451,7 +1451,7 @@
       "issue": 8,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-8-1791159122.jpg",
+      "image": "images/bleeding-hearts/issue-8-1791159122-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -1460,25 +1460,25 @@
       "height": 955,
       "dominantColors": [
         [
-          67.4,
-          13,
-          1.9
+          72.4,
+          10.1,
+          -1.7
         ],
         [
-          59.6,
-          24.5,
+          64.5,
+          21.5,
           40.4
         ],
         [
-          37.4,
-          21.7,
-          29.2
+          38,
+          18.9,
+          26.8
         ]
       ],
-      "colorfulness": 20.7,
+      "colorfulness": 22.5,
       "phash": "efd29531ea0bf180",
-      "ahash": "fff7f5f1e1010313",
-      "dhash": "5824656147477262"
+      "ahash": "fff7f5f1f1011390",
+      "dhash": "58e4656147477262"
     },
     {
       "seq": 304,
@@ -1488,7 +1488,7 @@
       "issue": 8,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-8-1791159081.jpg",
+      "image": "images/bleeding-hearts/issue-8-1791159081-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -1497,25 +1497,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          32.5,
-          11.8,
-          7.9
+          83.6,
+          3.2,
+          12.1
         ],
         [
-          76.8,
-          8.1,
-          14.3
+          21.5,
+          7,
+          3.4
         ],
         [
-          64.3,
-          5.9,
-          2.7
+          50,
+          7.9,
+          4.6
         ]
       ],
-      "colorfulness": 9.8,
-      "phash": "b086669f306f8c97",
+      "colorfulness": 11.3,
+      "phash": "f0e6461f306f8c96",
       "ahash": "f7ffffc70e180000",
-      "dhash": "a4d0b7969c315b9f"
+      "dhash": "a4d037969c315b8f"
     },
     {
       "seq": 303,
@@ -3492,7 +3492,7 @@
       "issue": 5,
       "year": 2019,
       "artist": "Maria Llovet",
-      "image": "images/faithless/issue-5-1787880016.jpg",
+      "image": "images/faithless/issue-5-1787880016-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -3501,24 +3501,24 @@
       "height": 1074,
       "dominantColors": [
         [
-          62.5,
-          -1.8,
-          14.1
+          61.5,
+          -1.9,
+          14.4
         ],
         [
-          29.9,
-          1.6,
-          -1.5
+          26.5,
+          1.7,
+          -1.4
         ],
         [
-          91.5,
+          91.3,
           1.4,
-          0.6
+          0.7
         ]
       ],
-      "colorfulness": 14.6,
+      "colorfulness": 14.8,
       "phash": "f0b8a2c7c74f2a0e",
-      "ahash": "ffdfcfc870c00004",
+      "ahash": "ffdfcfc870e00004",
       "dhash": "849cb010844de989"
     },
     {
@@ -4016,7 +4016,7 @@
       "issue": 1,
       "year": 2021,
       "artist": "Maria Llovet",
-      "image": "images/eros-psyche/issue-1-1786833231.jpg",
+      "image": "images/eros-psyche/issue-1-1786833231-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -4025,25 +4025,25 @@
       "height": 792,
       "dominantColors": [
         [
-          78.9,
-          6.3,
-          7.9
+          81.4,
+          5.8,
+          9.8
         ],
         [
-          52.9,
-          40.3,
-          21.2
+          51.1,
+          40.4,
+          21.1
         ],
         [
-          17.4,
-          10.1,
-          12.4
+          8.2,
+          4.8,
+          2.9
         ]
       ],
-      "colorfulness": 18.3,
-      "phash": "9f3f90d03b2fc520",
-      "ahash": "0f0f1181bcfebffe",
-      "dhash": "783a636369246478"
+      "colorfulness": 18.4,
+      "phash": "9f3f90d03b0fc522",
+      "ahash": "0f0f03018dfebfff",
+      "dhash": "7c3a63636d246478"
     },
     {
       "seq": 235,
@@ -4164,7 +4164,7 @@
       "issue": 7,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-7-1786831169.jpg",
+      "image": "images/bleeding-hearts/issue-7-1786831169-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -4173,25 +4173,25 @@
       "height": 567,
       "dominantColors": [
         [
-          54.7,
-          23.9,
-          30.9
+          52.7,
+          21.6,
+          27
         ],
         [
-          77.8,
-          8.5,
-          12.3
+          79.5,
+          4.2,
+          9.5
         ],
         [
-          34.1,
-          14.7,
-          10.3
+          30.7,
+          13,
+          9.3
         ]
       ],
-      "colorfulness": 18.4,
-      "phash": "bac7afe0908d9c34",
-      "ahash": "fff4148ccccc8004",
-      "dhash": "334d74389c993b1d"
+      "colorfulness": 17,
+      "phash": "fac7afe0908d8c34",
+      "ahash": "fff5148ccccc8000",
+      "dhash": "334d74389c993b19"
     },
     {
       "seq": 231,
@@ -4314,7 +4314,7 @@
       "issue": 3,
       "year": 2026,
       "artist": "Martin Morazzo",
-      "image": "images/the-deadman/issue-3-1786294631.jpg",
+      "image": "images/the-deadman/issue-3-1786294631-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -4323,25 +4323,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          62.3,
-          7.8,
-          2.2
+          54.9,
+          8,
+          1.4
         ],
         [
-          64.9,
-          -13.2,
-          20.6
+          60.1,
+          -15.1,
+          18.7
         ],
         [
-          23.6,
-          5.2,
-          2.9
+          78.5,
+          -6.1,
+          34.6
         ]
       ],
-      "colorfulness": 16.7,
+      "colorfulness": 17.8,
       "phash": "df84f0c90f4bb458",
-      "ahash": "fffff6b0b2e8e0c0",
-      "dhash": "b2cc8c6a66988908"
+      "ahash": "ffffe6b0b2ece0c0",
+      "dhash": "b2cc8c6a66998908"
     },
     {
       "seq": 226,
@@ -5873,7 +5873,7 @@
       "issue": 2,
       "year": 1993,
       "artist": "Esteban Maroto",
-      "image": "images/dracula-vlad-the-impaler/issue-2-1783732043.jpg",
+      "image": "images/dracula-vlad-the-impaler/issue-2-1783732043-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -5882,25 +5882,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          36,
-          19.9,
-          -13.6
+          83.9,
+          1,
+          20.5
         ],
         [
-          87.4,
-          -0.6,
-          28.8
+          47.9,
+          23.8,
+          -12.5
         ],
         [
-          75.2,
-          5.9,
-          4.5
+          19.2,
+          12.5,
+          -9.5
         ]
       ],
-      "colorfulness": 25.1,
+      "colorfulness": 25,
       "phash": "bfb549c8d072b20b",
-      "ahash": "ef8387e7ffc30000",
-      "dhash": "0e660e0c262b2be1"
+      "ahash": "ef8387e7ff830000",
+      "dhash": "0e660e0c262b2bf1"
     },
     {
       "seq": 183,
@@ -8070,7 +8070,7 @@
       "issue": 1,
       "year": 1995,
       "artist": "Scott Berwanger",
-      "image": "images/anubis/issue-1-1779425800.jpg",
+      "image": "images/anubis/issue-1-1779425800-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8079,25 +8079,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          75.3,
-          2.6,
-          -21.2
+          87,
+          0,
+          0
         ],
         [
-          53.5,
-          2.6,
-          -16
+          59.2,
+          0,
+          0
         ],
         [
-          23.6,
-          2.5,
-          -11.4
+          19.9,
+          0,
+          0
         ]
       ],
-      "colorfulness": 4.5,
-      "phash": "96c3e116f9e48c8d",
-      "ahash": "bf2c3e0c0c043fff",
-      "dhash": "5d4df4d87c74453b"
+      "colorfulness": 0,
+      "phash": "924be316f9e48c8d",
+      "ahash": "ac243e0c0c14ffff",
+      "dhash": "5d4df4d87c74452b"
     },
     {
       "seq": 124,
@@ -8107,7 +8107,7 @@
       "issue": 1,
       "year": 1990,
       "artist": "Jim Ryan",
-      "image": "images/buzzard/issue-1-1779425599.jpg",
+      "image": "images/buzzard/issue-1-1779425599-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8116,25 +8116,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          27.4,
-          1,
-          -5.6
+          10.6,
+          0,
+          0
         ],
         [
-          49.9,
-          -0.5,
-          -6.2
+          39.1,
+          0,
+          0
         ],
         [
-          76.4,
-          -1.9,
-          -9.3
+          72.5,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.6,
-      "phash": "91f1f59b41364ccc",
-      "ahash": "efefd2041c3c0000",
-      "dhash": "4a9aa69cf0f97492"
+      "colorfulness": 0,
+      "phash": "d5b5f59341364c4c",
+      "ahash": "efefd0001c3c0040",
+      "dhash": "4a8aa698f0f97492"
     },
     {
       "seq": 123,
@@ -8329,7 +8329,7 @@
       "issue": 2,
       "year": 1970,
       "artist": "Patrick Burk",
-      "image": "images/tasty-comix/issue-2-1778806537.jpg",
+      "image": "images/tasty-comix/issue-2-1778806537-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8338,25 +8338,25 @@
       "height": 1110,
       "dominantColors": [
         [
-          83.5,
-          8.9,
-          31.9
+          89.3,
+          2.8,
+          9.6
         ],
         [
-          64.2,
-          10.2,
-          26.9
+          64.1,
+          1.4,
+          6.5
         ],
         [
-          38.9,
-          7.9,
-          18.4
+          25.8,
+          0.2,
+          2
         ]
       ],
-      "colorfulness": 5.3,
-      "phash": "eca4644cc51bd39b",
-      "ahash": "f3f3cfeff1308080",
-      "dhash": "a627191967471330"
+      "colorfulness": 2.3,
+      "phash": "eca4744cc51bd29b",
+      "ahash": "f3f3cfcf73310998",
+      "dhash": "a627191b67471330"
     },
     {
       "seq": 117,
@@ -10987,7 +10987,7 @@
       "issue": 1,
       "year": 1982,
       "artist": "Gilbert Hernandez",
-      "image": "images/love-and-rockets/issue-1-1773521483.jpg",
+      "image": "images/love-and-rockets/issue-1-1773521483-v2.jpg",
       "notes": null,
       "tags": [
         "title card",
@@ -11000,25 +11000,25 @@
       "height": 472,
       "dominantColors": [
         [
-          17.2,
-          5.7,
-          16.5
+          10.8,
+          0,
+          0.3
         ],
         [
-          78,
-          5.2,
-          16.9
+          84,
+          2.3,
+          8.8
         ],
         [
-          54.1,
-          4.5,
-          12.8
+          54.5,
+          0.8,
+          5.1
         ]
       ],
-      "colorfulness": 6.2,
-      "phash": "a5e09ed0c31f858f",
-      "ahash": "e7c3c3c343438383",
-      "dhash": "a98f968e8a96576b"
+      "colorfulness": 4.1,
+      "phash": "a5e09ed0c31fc58b",
+      "ahash": "e7c3c34343430307",
+      "dhash": "a98f968e8a965f6b"
     },
     {
       "seq": 45,
