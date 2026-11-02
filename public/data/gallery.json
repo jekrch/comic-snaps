@@ -156,34 +156,34 @@
       "issue": "N/A",
       "year": 1976,
       "artist": "Trina Robbins",
-      "image": "images/trina-s-women/issue-n-a-1793573911.jpg",
+      "image": "images/trina-s-women/issue-n-a-1793573911-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-11-01T22:58:34.696Z",
-      "width": 1000,
+      "width": 1043,
       "height": 1280,
       "dominantColors": [
         [
-          85,
-          10.9,
-          6.4
+          89.1,
+          2.9,
+          8.8
         ],
         [
-          62.5,
-          8.7,
-          5.4
+          63.6,
+          1.8,
+          5.9
         ],
         [
-          12.4,
-          5.9,
-          -2.9
+          10.5,
+          0.3,
+          1
         ]
       ],
-      "colorfulness": 6.2,
-      "phash": "e98b92846d39b3c6",
-      "ahash": "df79cdc112efdbde",
-      "dhash": "3adb1913a69ab316"
+      "colorfulness": 2.5,
+      "phash": "e91b92856db996c4",
+      "ahash": "9f7dcdc912ebcfdf",
+      "dhash": "3bd95d1ba6969ba4"
     },
     {
       "seq": 343,
@@ -2639,34 +2639,34 @@
       "issue": 1,
       "year": 2002,
       "artist": "Nate Powell",
-      "image": "images/walkie-talkie/issue-1-1788650964.jpg",
+      "image": "images/walkie-talkie/issue-1-1788650964-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-09-05T23:29:27.180Z",
-      "width": 680,
+      "width": 689,
       "height": 1280,
       "dominantColors": [
         [
-          11,
-          0.9,
-          -7.2
+          6.6,
+          0,
+          0
         ],
         [
-          81.5,
-          -1.6,
-          -10
+          83.3,
+          0,
+          0
         ],
         [
-          49.3,
-          -0.3,
-          -7.5
+          49.4,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.7,
-      "phash": "98831c7e47a1e6b6",
-      "ahash": "181f7f7ff8cd0f00",
-      "dhash": "70b1d7d3283931f1"
+      "colorfulness": 0,
+      "phash": "98011c7e4fa166f7",
+      "ahash": "000f7f7ff8cd9f10",
+      "dhash": "31b497d3283931b3"
     },
     {
       "seq": 272,
@@ -7359,34 +7359,34 @@
       "issue": 7,
       "year": 1972,
       "artist": "Art Spiegelman",
-      "image": "images/bijou-funnies/issue-7-1780176895.jpg",
+      "image": "images/bijou-funnies/issue-7-1780176895-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-05-30T21:35:01.630Z",
       "width": 1280,
-      "height": 1176,
+      "height": 1145,
       "dominantColors": [
         [
-          63.1,
-          0.4,
-          0.3
+          52.5,
+          -0.4,
+          1
         ],
         [
-          90.8,
-          0,
-          2.5
+          88,
+          -0.4,
+          1.7
         ],
         [
-          32.2,
-          1.1,
-          -4
+          15.2,
+          -0.1,
+          0.1
         ]
       ],
-      "colorfulness": 3.5,
-      "phash": "8191fca5e2d296bc",
-      "ahash": "7f0b0e6c2b038bfb",
-      "dhash": "cadab8d9d6e63a13"
+      "colorfulness": 0.7,
+      "phash": "8111fda5e3d286bc",
+      "ahash": "6e0b0e6c2b33dbeb",
+      "dhash": "ca9af8d8d6e63a1b"
     },
     {
       "seq": 143,
@@ -7396,34 +7396,34 @@
       "issue": 7,
       "year": 1972,
       "artist": "Jay Lynch",
-      "image": "images/bijou-funnies/issue-7-1780176381.jpg",
+      "image": "images/bijou-funnies/issue-7-1780176381-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-05-30T21:26:23.607Z",
       "width": 1280,
-      "height": 1178,
+      "height": 1133,
       "dominantColors": [
         [
-          65.6,
-          -0.4,
-          3
+          57.9,
+          -0.5,
+          2.2
         ],
         [
-          84.8,
-          -0.8,
-          2.4
+          83.1,
+          -0.5,
+          3.4
         ],
         [
-          40.8,
-          -0.7,
-          -1.7
+          21.7,
+          -0.2,
+          0.7
         ]
       ],
-      "colorfulness": 4.1,
-      "phash": "8ee29d904636b99d",
-      "ahash": "fffff9a01e0f1f19",
-      "dhash": "b863624554ba7273"
+      "colorfulness": 1.1,
+      "phash": "c5f489b04e66ea99",
+      "ahash": "fffee0e07f4f1f38",
+      "dhash": "a3628344d28df273"
     },
     {
       "seq": 142,
@@ -8031,36 +8031,36 @@
       "issue": 1,
       "year": 2024,
       "artist": "Sandez Rey",
-      "image": "images/trumpzilla/issue-1-1779492671.jpg",
+      "image": "images/trumpzilla/issue-1-1779492671-v2.jpg",
       "notes": null,
       "tags": [
         "Minneapolis"
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-22T23:31:13.844Z",
-      "width": 1205,
+      "width": 1215,
       "height": 1280,
       "dominantColors": [
         [
-          80,
-          2.9,
-          -19.7
+          86.5,
+          0,
+          0
         ],
         [
-          4.6,
-          5.5,
-          -13.8
+          4,
+          0,
+          0
         ],
         [
-          48.6,
-          4.7,
-          -21.2
+          49.3,
+          0,
+          0
         ]
       ],
-      "colorfulness": 7.1,
-      "phash": "bff071c7812c2633",
-      "ahash": "fece87933f368187",
-      "dhash": "c2981c7666646d1b"
+      "colorfulness": 0,
+      "phash": "bff072c5892c26b2",
+      "ahash": "ffcc87933f3a9387",
+      "dhash": "ca981c767664651b"
     },
     {
       "seq": 125,
@@ -8292,34 +8292,34 @@
       "issue": 1,
       "year": 1989,
       "artist": "Dave Cherry",
-      "image": "images/femme-noire/issue-1-1779326287.jpg",
+      "image": "images/femme-noire/issue-1-1779326287-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-05-21T01:18:09.638Z",
-      "width": 1119,
+      "width": 1109,
       "height": 1280,
       "dominantColors": [
         [
-          78.1,
-          -3,
-          -9.8
+          83.9,
+          0,
+          0
         ],
         [
-          50.8,
-          -1.2,
-          -7.8
+          51.9,
+          0,
+          0
         ],
         [
-          13.1,
-          0.6,
-          -6.1
+          14,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.6,
-      "phash": "cee9a1609d5e583c",
-      "ahash": "ffffb8bc383034bf",
-      "dhash": "c261716061e56561"
+      "colorfulness": 0,
+      "phash": "cea1a0609f565c7d",
+      "ahash": "7bffb83c3830b4bc",
+      "dhash": "c2e1716060e56565"
     },
     {
       "seq": 118,
@@ -11570,7 +11570,7 @@
       "issue": 12,
       "year": 1981,
       "artist": "Dominique He",
-      "image": "images/heavy-metal/issue-12-1772412303.jpg",
+      "image": "images/heavy-metal/issue-12-1772412303-v2.jpg",
       "notes": null,
       "tags": [
         "sci-fi",
@@ -11579,29 +11579,29 @@
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-02T00:45:05.322Z",
-      "width": 1012,
+      "width": 1009,
       "height": 1280,
       "dominantColors": [
         [
-          58.4,
-          11.5,
-          18.1
+          82.7,
+          2,
+          8.5
         ],
         [
-          75.1,
-          13.1,
-          24
+          63.7,
+          0.8,
+          5.9
         ],
         [
-          20.6,
-          10.3,
-          12.1
+          20.9,
+          0.2,
+          1.7
         ]
       ],
-      "colorfulness": 4.6,
-      "phash": "8b054af5f678bb02",
-      "ahash": "273f010f2f0f393d",
-      "dhash": "eeebdb5fde7b614d"
+      "colorfulness": 2.3,
+      "phash": "830542f5f67d3f20",
+      "ahash": "273901cf6fab393d",
+      "dhash": "eecbdb1cde5ae1d9"
     },
     {
       "seq": 30,
@@ -12139,7 +12139,7 @@
       "issue": 2,
       "year": 1968,
       "artist": "Rick Griffin",
-      "image": "images/zap-comix/issue-2-1771906187.jpg",
+      "image": "images/zap-comix/issue-2-1771906187-v2.jpg",
       "notes": null,
       "tags": [
         "stippling",
@@ -12149,29 +12149,29 @@
       ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-24T04:09:48.881Z",
-      "width": 960,
+      "width": 970,
       "height": 1280,
-      "phash": "dfc581929548beb8",
-      "ahash": "fff0d0709e8c0800",
-      "dhash": "50c236e33439995a",
+      "phash": "dfc5839a8548b6b8",
+      "ahash": "fff0c070de9cdc8b",
+      "dhash": "52c206e33039995b",
       "dominantColors": [
         [
-          50.2,
-          10.8,
-          21.1
+          82.7,
+          2.3,
+          8.7
         ],
         [
-          73.7,
-          12.4,
-          28.6
+          52.1,
+          0.9,
+          5
         ],
         [
-          24,
-          7.3,
-          14.2
+          19,
+          0.2,
+          1.3
         ]
       ],
-      "colorfulness": 7.1
+      "colorfulness": 3.3
     },
     {
       "seq": 16,
