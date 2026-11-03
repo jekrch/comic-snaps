@@ -3159,7 +3159,7 @@
       "issue": 15,
       "year": 1995,
       "artist": "Daniel Clowes",
-      "image": "images/eightball/issue-15-1788129156.jpg",
+      "image": "images/eightball/issue-15-1788129156-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -3168,25 +3168,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          75.6,
-          9.8,
-          22.9
+          80.5,
+          2.3,
+          9.9
         ],
         [
-          35.3,
-          11.6,
-          5.3
+          36.8,
+          9.6,
+          -3.7
         ],
         [
-          42.9,
-          55.2,
-          45.7
+          42.2,
+          55.5,
+          46.1
         ]
       ],
-      "colorfulness": 24.3,
-      "phash": "ebd2b80f6e629258",
-      "ahash": "cdfffd20312bc1c1",
-      "dhash": "19b20945434b5353"
+      "colorfulness": 27.9,
+      "phash": "abd2381f6e639258",
+      "ahash": "08fffd20392fc1c3",
+      "dhash": "59f2c945434a5353"
     },
     {
       "seq": 258,
@@ -5351,7 +5351,7 @@
       "issue": 1,
       "year": 1986,
       "artist": "Glenn Head",
-      "image": "images/avenue-d/issue-1-1784499278.jpg",
+      "image": "images/avenue-d/issue-1-1784499278-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -5360,25 +5360,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          26.1,
-          5.6,
-          4.7
+          14.9,
+          -0.1,
+          0.2
         ],
         [
-          85.8,
-          0.6,
-          3.1
+          51.4,
+          -0.6,
+          1.5
         ],
         [
-          56.6,
-          2.9,
-          2.3
+          84.7,
+          -0.8,
+          2.2
         ]
       ],
-      "colorfulness": 4.4,
+      "colorfulness": 1,
       "phash": "957b6a640c972cce",
-      "ahash": "00e09ede1a16ff10",
-      "dhash": "a0433e3e3666dce4"
+      "ahash": "00e09e9e1a16ff10",
+      "dhash": "a44b3e3e3666dce4"
     },
     {
       "seq": 197,
@@ -5466,7 +5466,7 @@
       "issue": 3,
       "year": 2026,
       "artist": "Andy MacDonald",
-      "image": "images/if-destruction-be-our-lot/issue-3-1784408227.jpg",
+      "image": "images/if-destruction-be-our-lot/issue-3-1784408227-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -5475,25 +5475,25 @@
       "height": 1202,
       "dominantColors": [
         [
-          84.1,
-          10.7,
-          -1.2
+          89.5,
+          0.2,
+          0.4
         ],
         [
-          62.6,
-          11.8,
-          1.8
+          65.9,
+          2.9,
+          3
         ],
         [
-          25.8,
-          7.4,
-          1.9
+          26.3,
+          2.4,
+          2.4
         ]
       ],
-      "colorfulness": 4.2,
-      "phash": "e19c4a259ed2b966",
-      "ahash": "ffffffff63c3e1e1",
-      "dhash": "f9f59994868a8b8b"
+      "colorfulness": 3.4,
+      "phash": "e19c4a259cf2b966",
+      "ahash": "7f7fffff43c3e1e1",
+      "dhash": "f9fd9994868a8b8b"
     },
     {
       "seq": 194,
@@ -6058,7 +6058,7 @@
       "issue": 0,
       "year": 2024,
       "artist": "Leo Fox",
-      "image": "images/my-body-is-unspooling/issue-0-1783307460.jpg",
+      "image": "images/my-body-is-unspooling/issue-0-1783307460-v2.jpg",
       "notes": null,
       "tags": [
         "oddmart"
@@ -6069,25 +6069,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          30.1,
-          5.8,
-          -7
+          84.3,
+          1,
+          0.4
         ],
         [
-          67.1,
-          13.2,
-          -27
+          19.3,
+          5.4,
+          0.1
         ],
         [
-          77.8,
-          0.5,
-          -12.2
+          56.5,
+          11.8,
+          -3.6
         ]
       ],
-      "colorfulness": 14.1,
-      "phash": "972fac1561e68e13",
-      "ahash": "83063fe00c1e3efe",
-      "dhash": "4f3e6549587464fc"
+      "colorfulness": 11.9,
+      "phash": "d72fac1561e28e13",
+      "ahash": "83061ce00c3efefe",
+      "dhash": "4f3e6548587464bc"
     },
     {
       "seq": 178,
@@ -6730,7 +6730,7 @@
       "issue": 42,
       "year": 2020,
       "artist": "David Lapham",
-      "image": "images/stray-bullets-sunshine-roses/issue-42-1782169164.jpg",
+      "image": "images/stray-bullets-sunshine-roses/issue-42-1782169164-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -6739,25 +6739,25 @@
       "height": 1128,
       "dominantColors": [
         [
-          92,
-          -6.3,
-          -7.6
+          92.9,
+          0,
+          0
         ],
         [
-          72.3,
-          -3.6,
-          -7.9
+          72.9,
+          0,
+          0
         ],
         [
-          38.5,
-          -0.9,
-          -6.6
+          37.1,
+          0,
+          0
         ]
       ],
-      "colorfulness": 4.4,
-      "phash": "d49d2125ea572adc",
-      "ahash": "7efe9cbcde000040",
-      "dhash": "da322870306a6ed5"
+      "colorfulness": 0,
+      "phash": "dcdc2125ea572a9c",
+      "ahash": "0ede9cbc9e000255",
+      "dhash": "98323870306a6ed5"
     },
     {
       "seq": 160,
@@ -6804,7 +6804,7 @@
       "issue": 40,
       "year": 2018,
       "artist": "David Lapham",
-      "image": "images/stray-bullets-sunshine-roses/issue-40-1782155942.jpg",
+      "image": "images/stray-bullets-sunshine-roses/issue-40-1782155942-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -6813,25 +6813,25 @@
       "height": 980,
       "dominantColors": [
         [
-          90.8,
-          7.6,
-          2.7
+          91.4,
+          3.1,
+          1.8
         ],
         [
-          67,
-          8.7,
-          2.9
+          67.8,
+          1.9,
+          1.2
         ],
         [
-          20.7,
-          6.8,
-          3.7
+          18.5,
+          0.3,
+          0.3
         ]
       ],
-      "colorfulness": 4,
-      "phash": "e7b887d26827d90a",
-      "ahash": "ffffe3c3c0e42420",
-      "dhash": "c2f8860705484c4d"
+      "colorfulness": 1.1,
+      "phash": "e6f887d26827d90a",
+      "ahash": "ffffe3c3c0f42727",
+      "dhash": "a6f8860725484c6d"
     },
     {
       "seq": 158,
@@ -7322,7 +7322,7 @@
       "issue": 1,
       "year": 2026,
       "artist": "Josh Cornillon",
-      "image": "images/did-you-hear-about-mimi-green/issue-1-1780180129.jpg",
+      "image": "images/did-you-hear-about-mimi-green/issue-1-1780180129-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -7331,25 +7331,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          68.9,
-          18,
-          -9.2
+          82.3,
+          1.9,
+          0.8
         ],
         [
-          49.3,
-          22.8,
-          26
+          51.3,
+          14.2,
+          31.3
         ],
         [
-          22.5,
-          12.6,
-          17.2
+          18.5,
+          9.3,
+          10.1
         ]
       ],
-      "colorfulness": 18.6,
-      "phash": "cc6c6a9790fc2fa0",
-      "ahash": "f0f0f0f07ef0f0f0",
-      "dhash": "25a42664e46466a4"
+      "colorfulness": 17.6,
+      "phash": "cc6c689790fc6fa0",
+      "ahash": "f0f0f0f0f8f0f0f0",
+      "dhash": "25242624e44464a4"
     },
     {
       "seq": 144,
@@ -7433,7 +7433,7 @@
       "issue": 5,
       "year": 2026,
       "artist": "Anand RK",
-      "image": "images/the-beauty/issue-5-1779691422.jpg",
+      "image": "images/the-beauty/issue-5-1779691422-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -7442,25 +7442,25 @@
       "height": 654,
       "dominantColors": [
         [
-          46.8,
-          19.2,
-          9.3
+          80.5,
+          2.9,
+          3.1
         ],
         [
-          76.2,
-          3.4,
-          7.6
+          44.7,
+          24.5,
+          8.4
         ],
         [
-          54.3,
-          23.2,
-          28.3
+          66.3,
+          19.8,
+          19.6
         ]
       ],
-      "colorfulness": 15,
-      "phash": "aae894959995f2e8",
-      "ahash": "fbf1f169190c140c",
-      "dhash": "d3e783d393597459"
+      "colorfulness": 15.8,
+      "phash": "eae89495999473e8",
+      "ahash": "fbf1f1f9d93c3c2c",
+      "dhash": "c3c783d393597448"
     },
     {
       "seq": 141,
@@ -8557,7 +8557,7 @@
       "issue": 1,
       "year": 1990,
       "artist": "Joe Sacco",
-      "image": "images/buzzard/issue-1-1778705027.jpg",
+      "image": "images/buzzard/issue-1-1778705027-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8566,25 +8566,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          77.6,
-          1.5,
-          -10.6
+          21.4,
+          0,
+          0
         ],
         [
-          30.6,
-          2,
-          -5.5
+          50.3,
+          0,
+          0
         ],
         [
-          53.9,
-          1.7,
-          -6.8
+          78.7,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.9,
-      "phash": "9bce3051e87e4e43",
-      "ahash": "7f1f3f9f0f0e0f07",
-      "dhash": "b8fa6535da7adadf"
+      "colorfulness": 0,
+      "phash": "9a8eb071e87e4e43",
+      "ahash": "5f1f3f9b0b0e0f07",
+      "dhash": "b8fa6535da5adadf"
     },
     {
       "seq": 111,
@@ -8742,7 +8742,7 @@
       "issue": 1,
       "year": 2003,
       "artist": "Scott Mills",
-      "image": "images/seamonsters-and-superheroes/issue-1-1778626837.jpg",
+      "image": "images/seamonsters-and-superheroes/issue-1-1778626837-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8751,25 +8751,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          83.4,
-          8.8,
-          -6.7
+          88.3,
+          0,
+          0
         ],
         [
-          28.8,
-          5.7,
-          -2.1
+          17.9,
+          0,
+          0
         ],
         [
-          62,
-          8.1,
-          -4.4
+          61,
+          0,
+          0
         ]
       ],
-      "colorfulness": 3.6,
-      "phash": "ca953cd434e08fe3",
-      "ahash": "001c3dffffbdf800",
-      "dhash": "3371e18cc971b173"
+      "colorfulness": 0,
+      "phash": "8a951fd035e08fe3",
+      "ahash": "081c3fffffbdf800",
+      "dhash": "3371618ccd71b173"
     },
     {
       "seq": 106,
@@ -8779,7 +8779,7 @@
       "issue": 325,
       "year": 2026,
       "artist": "Paul Kirchner",
-      "image": "images/heavy-metal/issue-325-1778560803.jpg",
+      "image": "images/heavy-metal/issue-325-1778560803-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8788,25 +8788,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          74.2,
-          10.4,
-          27.3
+          88.2,
+          2.7,
+          9.5
         ],
         [
-          51.1,
-          9.6,
-          22.1
+          55.6,
+          1.4,
+          5.7
         ],
         [
-          19.4,
-          7.9,
-          13
+          18,
+          0.3,
+          1.6
         ]
       ],
-      "colorfulness": 7.1,
-      "phash": "cae427549fe3c21c",
-      "ahash": "ffffffff1c000000",
-      "dhash": "c0e5c1c1b4d48a3b"
+      "colorfulness": 3.5,
+      "phash": "cae4375c9be3821c",
+      "ahash": "fffffffd18000000",
+      "dhash": "c0e5c1c1b0918b39"
     },
     {
       "seq": 105,
@@ -8966,7 +8966,7 @@
       "issue": 1,
       "year": 2026,
       "artist": "David Lapham",
-      "image": "images/hank-howard-pizza-detective-a-slice-of-life/issue-1-1778351662.jpg",
+      "image": "images/hank-howard-pizza-detective-a-slice-of-life/issue-1-1778351662-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8975,25 +8975,25 @@
       "height": 669,
       "dominantColors": [
         [
-          76.7,
-          9.3,
-          6.3
+          86.5,
+          2.1,
+          5.2
         ],
         [
-          63.1,
-          8.2,
-          6.1
+          66.7,
+          1.1,
+          3.7
         ],
         [
-          42.4,
-          6,
-          4.8
+          36.2,
+          0.4,
+          1.7
         ]
       ],
-      "colorfulness": 2.8,
+      "colorfulness": 1.4,
       "phash": "d2ca25add335dc0a",
-      "ahash": "fffdfcfcfc9a0204",
-      "dhash": "a9c9a908a92aaec8"
+      "ahash": "fffcfcfcfc9a0204",
+      "dhash": "a9c9a908a92a2ac8"
     },
     {
       "seq": 100,
@@ -9040,7 +9040,7 @@
       "issue": 1,
       "year": 1989,
       "artist": "Junko Hosizawa",
-      "image": "images/street-poet-ray/issue-1-1777759782.jpg",
+      "image": "images/street-poet-ray/issue-1-1777759782-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -9049,25 +9049,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          79.5,
-          6.5,
-          -3
+          90,
+          0,
+          0
         ],
         [
-          63.9,
-          5.5,
-          -1.8
+          10.2,
+          0,
+          0
         ],
         [
-          16.7,
-          2.9,
-          -0.7
+          63.5,
+          0,
+          0
         ]
       ],
-      "colorfulness": 2.3,
+      "colorfulness": 0,
       "phash": "bab0cc46e65893a7",
-      "ahash": "ff8f8fc5a78c9cff",
-      "dhash": "373b1b1d4d1d31cf"
+      "ahash": "ff8f8fc4a78c9cff",
+      "dhash": "353a181d4d1d3183"
     },
     {
       "seq": 98,
@@ -9858,7 +9858,7 @@
       "issue": 2,
       "year": 1992,
       "artist": "Michael Allred",
-      "image": "images/tales-of-ordinary-madness/issue-2-1775373267.jpg",
+      "image": "images/tales-of-ordinary-madness/issue-2-1775373267-v2.jpg",
       "notes": "",
       "tags": [
         "screentone"
@@ -9869,25 +9869,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          77.7,
-          3.2,
-          9.1
+          83.3,
+          2.1,
+          8.2
         ],
         [
-          51.2,
-          3.6,
-          8.9
+          55.3,
+          1,
+          5.1
         ],
         [
-          13.4,
-          2.5,
-          5.9
+          14,
+          0,
+          0.6
         ]
       ],
-      "colorfulness": 5,
-      "phash": "da4ade90957b61a4",
-      "ahash": "f8f8e0e87ef8fcfc",
-      "dhash": "9989c9999090b9b0"
+      "colorfulness": 3.2,
+      "phash": "ca4a5e95957b61a4",
+      "ahash": "f8f8e0e87ffcfcfe",
+      "dhash": "d989c9999291b9b0"
     },
     {
       "seq": 75,
@@ -9971,7 +9971,7 @@
       "issue": 1,
       "year": 1995,
       "artist": "David Lapham",
-      "image": "images/stray-bullets/issue-1-1775345900.jpg",
+      "image": "images/stray-bullets/issue-1-1775345900-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -9980,25 +9980,25 @@
       "height": 974,
       "dominantColors": [
         [
-          75.7,
-          3.7,
-          2.4
+          83.8,
+          0,
+          0
         ],
         [
-          51.8,
-          4.1,
-          3.4
+          56.9,
+          0,
+          0
         ],
         [
-          15.5,
-          5.6,
-          7.2
+          16.8,
+          0,
+          0
         ]
       ],
-      "colorfulness": 5.4,
-      "phash": "a6cd9b2e3259b0e8",
-      "ahash": "fff77b7263030046",
-      "dhash": "26eeaac7c6a6658c"
+      "colorfulness": 0,
+      "phash": "a6cd9b2e225bb0e8",
+      "ahash": "f7f77b7063030047",
+      "dhash": "26eeaac7c6e6658c"
     },
     {
       "seq": 72,
@@ -10119,7 +10119,7 @@
       "issue": 9,
       "year": 2012,
       "artist": "Sean Phillips",
-      "image": "images/fatale/issue-9-1775180803.jpg",
+      "image": "images/fatale/issue-9-1775180803-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -10128,25 +10128,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          74.5,
-          13.6,
-          26.2
+          86.8,
+          4.8,
+          11.7
         ],
         [
-          43.6,
-          10.1,
-          20
+          50.9,
+          4.8,
+          11.9
         ],
         [
-          11.1,
-          8.7,
-          8.5
+          12.2,
+          3,
+          4.2
         ]
       ],
-      "colorfulness": 9.2,
-      "phash": "d2d285a9b93a47c6",
-      "ahash": "ff7c0484800009ff",
-      "dhash": "50ec6c2939d6fbe0"
+      "colorfulness": 7.3,
+      "phash": "d25685a9b93a47c6",
+      "ahash": "ff74008400000fff",
+      "dhash": "53ec6c2931d7dba0"
     },
     {
       "seq": 68,
@@ -11065,7 +11065,7 @@
       "issue": 5,
       "year": 1982,
       "artist": "Enki Bilal",
-      "image": "images/heavy-metal/issue-5-1773107506.jpg",
+      "image": "images/heavy-metal/issue-5-1773107506-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -11074,25 +11074,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          70,
-          11.5,
-          27.9
+          78.9,
+          3.8,
+          15.3
         ],
         [
-          29.3,
-          4.4,
-          13.4
+          27.2,
+          -1.1,
+          6.6
         ],
         [
-          51,
-          9.9,
-          23.6
+          53.3,
+          1.2,
+          14.3
         ]
       ],
-      "colorfulness": 9.2,
-      "phash": "f895834bf8bc86e0",
-      "ahash": "ffffd7c3c0808040",
-      "dhash": "32ce96360f0d1b85"
+      "colorfulness": 7.7,
+      "phash": "fc95834b7cbc06e0",
+      "ahash": "ffffc7c3c0808000",
+      "dhash": "37ce96370f0f1b85"
     },
     {
       "seq": 43,
@@ -12222,7 +12222,7 @@
       "issue": 6,
       "year": 1983,
       "artist": "Jose Martin Sauri",
-      "image": "images/heavy-metal/issue-6-1771820424.jpg",
+      "image": "images/heavy-metal/issue-6-1771820424-v2.jpg",
       "notes": null,
       "tags": [
         "chiaroscuro",
@@ -12235,26 +12235,26 @@
       "width": 1280,
       "height": 731,
       "phash": "83a4fa5ba9c8d41e",
-      "ahash": "e9ef7f6b29282869",
+      "ahash": "e96f7f6b28282869",
       "dhash": "9bdbd3d3dbd9d9d9",
       "dominantColors": [
         [
-          78,
-          13.7,
-          -23.6
+          84.8,
+          0,
+          0
         ],
         [
-          7.6,
-          12,
-          -19.8
+          7.3,
+          0,
+          0
         ],
         [
-          49.1,
-          12.3,
-          -21.4
+          50.3,
+          0,
+          0
         ]
       ],
-      "colorfulness": 3.9
+      "colorfulness": 0
     },
     {
       "seq": 14,
@@ -12264,34 +12264,34 @@
       "issue": 6,
       "year": 1983,
       "artist": "Jeff Jones",
-      "image": "images/heavy-metal/issue-6-1771820134.jpg",
+      "image": "images/heavy-metal/issue-6-1771820134-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
       "addedAt": "2026-02-23T04:15:36.024Z",
       "width": 1010,
       "height": 1280,
-      "phash": "9fc863c61e34f234",
-      "ahash": "f4f9ff1f1fef8302",
-      "dhash": "44f31173754c0e4e",
+      "phash": "bfc8e3c61e30f224",
+      "ahash": "f4f9df1f1fefc383",
+      "dhash": "4c731173774c0e4e",
       "dominantColors": [
         [
-          62.5,
-          5.5,
-          -14.9
+          87.8,
+          0,
+          0
         ],
         [
-          42.1,
-          5.1,
-          -13.9
+          12.1,
+          0,
+          0
         ],
         [
-          10.4,
-          4.3,
-          -9.4
+          54.6,
+          0,
+          0
         ]
       ],
-      "colorfulness": 3.1
+      "colorfulness": 0
     },
     {
       "seq": 13,
