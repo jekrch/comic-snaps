@@ -7,6 +7,7 @@ import { useRowStrip } from "../hooks/useRowStrip";
 import RowBackdrop from "./RowBackdrop";
 import RowTile from "./RowTile";
 import RowHatchTail from "./RowHatchTail";
+import RowBlurb from "./RowBlurb";
 import {
   HEAD_GAP,
   HEAD_H,
@@ -368,14 +369,14 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
    * leaves it altogether: a face at band height is a thumbnail next to three
    * lines of type, where the same face at the head of the strip below is one
    * of the row's images, at their size, on the axis the reader is already
-   * scanning. The band keeps the type and spends the whole width on it —
-   * including for the people with no portrait, whose initial goes down to the
-   * strip with the rest of them rather than being the one thing left stranded
-   * above it.
+   * scanning. The band keeps the type — the facts on the left, the opening of
+   * the description on the right — including for the people with no portrait,
+   * whose initial goes down to the strip with the rest of them rather than
+   * being the one thing left stranded above it.
    */
   const rail = narrow ? (
     <div
-      className="row-rail flex w-full min-w-0 items-stretch gap-2.5 overflow-hidden pl-2.5 pr-2.5"
+      className="row-rail flex w-full min-w-0 items-stretch gap-3 overflow-hidden pl-2.5 pr-2.5"
       style={{ height: RAIL_BAND_H, paddingBottom: NARROW_RAIL_PAD }}
     >
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
@@ -383,6 +384,18 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
         {seriesLine}
         {postedLine}
       </div>
+      {/* The band's right half, as on a series row: four lines of the
+          description beside the facts, centred on them the way the facts are
+          centred in the band. */}
+      {row.artist?.description?.trim() && (
+        <RowBlurb
+          text={row.artist.description}
+          lines={4}
+          onMore={openProfile}
+          label={row.name}
+          className="min-w-0 flex-1 self-center"
+        />
+      )}
     </div>
   ) : (
     <div
@@ -395,6 +408,11 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
       </div>
       {seriesLine && <div className="mt-1">{seriesLine}</div>}
       {postedLine}
+      {/* Two lines, not the series row's three: the portrait takes 84px of
+          this rail where a series row has one line of publisher. */}
+      {row.artist?.description && (
+        <RowBlurb text={row.artist.description} lines={2} onMore={openProfile} label={row.name} />
+      )}
       <div className="mt-auto">{tally}</div>
     </div>
   );

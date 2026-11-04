@@ -10,7 +10,7 @@ import MetricExplainerModal from "./explainer/MetricExplainerModal";
 
 // Lazy so the charting library only loads when the Stats tab is opened
 const StatsTab = lazy(() => import("./stats/StatsTab"));
-import type { StatsFilterPatch } from "./stats/StatsTab";
+import type { StatsFilterPatch, StatsOpenPanel } from "./stats/StatsTab";
 
 // Tab primitives
 
@@ -23,7 +23,7 @@ interface TabDef {
 
 const TABS: TabDef[] = [
   { key: "about", label: "About" },
-  { key: "sorts", label: "Sort Modes" },
+  { key: "sorts", label: "Sort" },
   { key: "stats", label: "Stats" },
 ];
 
@@ -34,53 +34,69 @@ function TabBar({
   activeTab: InfoTab;
   onSelect: (tab: InfoTab) => void;
 }) {
+  const activeIndex = TABS.findIndex((t) => t.key === activeTab);
   return (
-    <div
-      className="flex pr-10 border-b border-[var(--color-border,rgba(74,71,69,0.25))]"
-      role="tablist"
-    >
-      {TABS.map(({ key, label }) => {
-        const active = activeTab === key;
-        return (
-          <button
-            key={key}
-            role="tab"
-            aria-selected={active}
-            onClick={() => onSelect(key)}
-            className="flex-1 bg-transparent border-none cursor-pointer
-                       py-3.5 px-5 text-[11px] tracking-[0.08em] uppercase
-                       text-left transition-colors duration-150"
-            style={{
-              fontFamily: "var(--font-display)",
-              color: active
-                ? "var(--color-ink)"
-                : "var(--color-ink-muted, rgba(160,155,150,0.6))",
-              boxShadow: active
-                ? "inset 0 -2px 0 var(--color-accent, #e97d62)"
-                : "none",
-            }}
-          >
-            {label}
-          </button>
-        );
-      })}
+    <div className="pr-10 border-b border-[var(--color-border,rgba(74,71,69,0.25))]">
+      <div className="relative flex" role="tablist">
+        {TABS.map(({ key, label }) => {
+          const active = activeTab === key;
+          return (
+            <button
+              key={key}
+              role="tab"
+              aria-selected={active}
+              onClick={() => onSelect(key)}
+              className="flex-1 bg-transparent border-none cursor-pointer
+                         py-3.5 px-5 text-[11px] tracking-[0.08em] uppercase
+                         text-left transition-colors duration-200"
+              style={{
+                fontFamily: "var(--font-display)",
+                color: active
+                  ? "var(--color-ink)"
+                  : "var(--color-ink-muted, rgba(160,155,150,0.6))",
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
+        {/* Underline that slides to the active tab. Tabs are equal-width
+            (flex-1), so the indicator is one tab wide and steps by its own
+            width — no measuring needed. */}
+        <span
+          aria-hidden
+          className="info-tab-indicator absolute bottom-0 left-0 h-[2px] pointer-events-none"
+          style={{
+            width: `${100 / TABS.length}%`,
+            transform: `translateX(${activeIndex * 100}%)`,
+            background: "var(--color-accent, #e97d62)",
+          }}
+        />
+      </div>
     </div>
   );
 }
 
 function TabPanel({
   active,
+  animate,
   className = "",
   children,
 }: {
   active: boolean;
+  /** Play the entrance when shown. Off for the tab the modal opens on, which
+   *  already rides in with the card. */
+  animate: boolean;
   className?: string;
   children: React.ReactNode;
 }) {
+  // Panels stay mounted (scroll position and the stats tab survive a switch),
+  // so the entrance restarts by toggling the class: it's only present while
+  // the panel is active.
   return (
     <div
       role="tabpanel"
-      className={`absolute inset-0 ${className}`}
+      className={`absolute inset-0 ${active && animate ? "info-tab-enter" : ""} ${className}`}
       style={{
         visibility: active ? "visible" : "hidden",
         pointerEvents: active ? "auto" : "none",
@@ -356,11 +372,17 @@ interface Props {
   onTabChange?: (tab: InfoTab) => void;
   panels?: Panel[];
   onApplyFilters?: (patch: StatsFilterPatch) => void;
+  /** Opens a panel in the viewer, once this modal has finished closing. */
+  onOpenPanel?: StatsOpenPanel;
 }
 
-export default function InfoModal({ onClose, initialTab = "about", onTabChange, panels, onApplyFilters }: Props) {
+export default function InfoModal({ onClose, initialTab = "about", onTabChange, panels, onApplyFilters, onOpenPanel }: Props) {
   const [closing, setClosing] = useState(false);
   const [activeTab, setActiveTab] = useState<InfoTab>(initialTab);
+  // Which way the last switch travelled (+1 rightward, -1 leftward), so the
+  // incoming tab slides in from the side of the tab it replaced. Null until
+  // the first switch.
+  const [tabDir, setTabDir] = useState<1 | -1 | null>(null);
   // Mount the stats tab (and its lazy chart bundle) only once it's visited
   const [statsMounted, setStatsMounted] = useState(initialTab === "stats");
   const patternId = useId();
@@ -438,6 +460,16 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
     onApplyFilters?.(patch);
     handleClose();
   }, [onApplyFilters, handleClose]);
+
+  // A clicked stat panel opens the viewer, but only after the modal is gone:
+  // both lock the page scroll, and the modal's unlock would land on top of the
+  // viewer's lock if the two overlapped. Same delay as handleClose's, queued
+  // after it, so onClose runs first.
+  const handleStatsOpen = useCallback<StatsOpenPanel>((panel, group) => {
+    if (closing) return;
+    handleClose();
+    setTimeout(() => onOpenPanel?.(panel, group), 300);
+  }, [closing, handleClose, onOpenPanel]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -636,16 +668,26 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
           </button>
 
           <TabBar activeTab={activeTab} onSelect={(tab) => {
+            if (tab === activeTab) return;
+            const from = TABS.findIndex((t) => t.key === activeTab);
+            const to = TABS.findIndex((t) => t.key === tab);
+            setTabDir(to > from ? 1 : -1);
             setActiveTab(tab);
             if (tab === "stats") setStatsMounted(true);
             onTabChange?.(tab);
           }} />
 
           {/* Tab content (fixed height — matches sorts tab) */}
-          <div style={{ height: "min(80vh, 620px)" }} className="relative">
+          <div
+            style={{
+              height: "min(80vh, 620px)",
+              ["--tab-dir" as string]: tabDir ?? 0,
+            }}
+            className="relative overflow-hidden"
+          >
 
             {/* About */}
-            <TabPanel active={activeTab === "about"} className="flex items-center pb-10 justify-center">
+            <TabPanel active={activeTab === "about"} animate={tabDir !== null} className="flex items-center pb-10 justify-center">
               <div className="px-10 text-center">
                 <Bird size={48} strokeWidth={1.5} className="mx-auto mb-4 stroke-accent/70x z-0 stroke-rust bird-hop-quick"  />
                 {/* Title */}
@@ -695,7 +737,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
             </TabPanel>
 
             {/* Sorts */}
-            <TabPanel active={activeTab === "sorts"} className="overflow-y-auto info-modal-scroll">
+            <TabPanel active={activeTab === "sorts"} animate={tabDir !== null} className="overflow-y-auto info-modal-scroll">
               <div className="px-6 pt-5 pb-6">
                 <p
                   className="text-[12px] leading-relaxed mb-5"
@@ -774,7 +816,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
             </TabPanel>
 
             {/* Stats */}
-            <TabPanel active={activeTab === "stats"} className="overflow-y-auto info-modal-scroll">
+            <TabPanel active={activeTab === "stats"} animate={tabDir !== null} className="overflow-y-auto info-modal-scroll">
               {statsMounted && (
                 <Suspense
                   fallback={
@@ -789,6 +831,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                   <StatsTab
                     panels={panels ?? []}
                     onFilter={onApplyFilters ? handleStatsFilter : undefined}
+                    onOpenPanel={onOpenPanel ? handleStatsOpen : undefined}
                   />
                 </Suspense>
               )}

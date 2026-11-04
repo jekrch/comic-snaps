@@ -929,6 +929,42 @@ button,
   }
 }
 
+/* --- Info modal tabs -----------------------------------------------------
+   The underline glides to the chosen tab, and the incoming panel eases in
+   from the side it was travelling toward (--tab-dir is +1 for a tab to the
+   right, -1 for one to the left), a short drift plus a fade. Kept small so it
+   reads as the page settling rather than a carousel. */
+
+.info-tab-indicator {
+  transition: transform 320ms cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.info-tab-enter {
+  animation: infoTabEnter 300ms cubic-bezier(0.22, 0.8, 0.24, 1) both;
+}
+
+@keyframes infoTabEnter {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--tab-dir, 0) * 18px));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-tab-indicator {
+    transition: none;
+  }
+
+  .info-tab-enter {
+    animation: none;
+  }
+}
+
 /* --- The bird's thought balloon -----------------------------------------
    Each part of it is held at nothing until the bird's intro hop lands, then
    drawn on in sequence — the bubble at its head, the next one out, then the
@@ -1961,6 +1997,73 @@ button,
   .view-swap.is-entering .swap-card,
   .view-swap.is-entering .swap-row,
   .view-swap.is-entering .swap-tail {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- Refilter --------------------------------------------------------------
+   A filter applied or cleared, inside one view. The results go out, are
+   swapped while nothing is showing, and come back in place (App.tsx holds the
+   clock: `refilterPhase`).
+
+   Nothing travels. An earlier take slid each surviving card from its old place
+   to its new one, and the masonry made that ugly: a repack sends cards on long
+   diagonals that cross each other, and the page's height (with the tail piece
+   under it) changed in one step while the cards were still on their way. A
+   crossfade has none of that: the geometry changes only while it is invisible.
+
+   Lighter than the view swap in every way, because the reader has not gone
+   anywhere: a third of the offset, a shorter exit, and the same diagonal wave
+   on the way back in so the wall still assembles rather than switching on. */
+/* Only the results stop taking taps. The filter control lives inside the same
+   wrapper, and someone ticking three facets in a row must not lose the second
+   click to the first one's fade. */
+.view-swap.is-refilter-out .swap-card,
+.view-swap.is-refilter-out .swap-row,
+.view-swap.is-refilter-in .swap-card,
+.view-swap.is-refilter-in .swap-row {
+  pointer-events: none;
+}
+
+/* Quick, easing in, no wave: what is going should just be gone. 140ms is what
+   REFILTER_LEAVE_MS in App.tsx waits for. */
+.view-swap.is-refilter-out .swap-card,
+.view-swap.is-refilter-out .swap-row,
+.view-swap.is-refilter-out .swap-tail {
+  opacity: 0;
+  transition: opacity 140ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* The arrival's start state, painted once before the class comes off; from
+   there the objects settle on `.swap-card`'s own transition and wave. They
+   come in from the same rail the view swap uses, at about a third of its
+   reach, so the motion reads as the same gesture made smaller. Each object
+   shifts in only within its own slot, never across the layout. The tail piece
+   only fades, as it does in the swap. */
+.view-swap.is-refilter-in .swap-card,
+.view-swap.is-refilter-in .swap-row,
+.view-swap.is-refilter-in .swap-tail {
+  opacity: 0;
+  transition: none;
+}
+
+.view-swap.is-refilter-in .swap-card {
+  transform: translate(-10px, 4px);
+}
+
+.view-swap.is-refilter-in .swap-row {
+  transform: translateX(-16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-swap.is-refilter-out .swap-card,
+  .view-swap.is-refilter-out .swap-row,
+  .view-swap.is-refilter-out .swap-tail,
+  .view-swap.is-refilter-in .swap-card,
+  .view-swap.is-refilter-in .swap-row,
+  .view-swap.is-refilter-in .swap-tail {
     opacity: 1;
     transform: none;
     transition: none;

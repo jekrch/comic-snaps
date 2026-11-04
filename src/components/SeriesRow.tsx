@@ -7,6 +7,7 @@ import { useRowStrip } from "../hooks/useRowStrip";
 import RowBackdrop from "./RowBackdrop";
 import RowTile from "./RowTile";
 import RowHatchTail from "./RowHatchTail";
+import RowBlurb from "./RowBlurb";
 import { ScoreBirds, formatScore } from "./ScoreMeter";
 import {
   HEAD_GAP,
@@ -263,13 +264,9 @@ function SeriesRowView({
     </div>
   );
 
-  const rail = (
-    <div
-      className={`row-rail flex min-w-0 flex-col gap-1 overflow-hidden pl-2.5 ${
-        narrow ? "w-full pb-1.5" : "w-65 shrink-0 pr-3"
-      }`}
-      style={{ height: narrow ? RAIL_BAND_H : stripHeight }}
-    >
+  /* What the rail says about the book, whichever way the rail is laid out. */
+  const info = (
+    <>
       {row.publisher && <p className="truncate text-xs text-ink-muted">{row.publisher}</p>}
 
       {row.parent && onJumpToParent && (
@@ -295,24 +292,57 @@ function SeriesRowView({
           <span className="truncate tabular-nums text-white/40">{posted}</span>
         </p>
       )}
+    </>
+  );
 
-      {!narrow && (
-        <div className="mt-auto flex flex-col gap-0.5">
-          {score !== null && (
-            <div className="score-row">
-              <ScoreBirds avg={score} animate={animateMeter} />
-            </div>
-          )}
-          {/* The issue scores are rolled up and labelled, never averaged into
-              the series score above them (docs/ratings-plan.md §8). */}
-          {row.issueRating && (
-            <p className="text-[10px] uppercase tracking-widest text-white/25">
-              issues {formatScore(row.issueRating.avg)}
-              <span className="text-white/15"> · {row.issueRating.count}</span>
-            </p>
-          )}
-        </div>
+  // The drawer reads the parent's description when the series has none, so
+  // the blurb does too, and "read more" lands on the same text.
+  const description = row.series?.description || row.parent?.description || "";
+
+  /**
+   * Narrow, the band is as wide as the phone and 96px tall, so the blurb takes
+   * its right half rather than a line under the credits it has no room for:
+   * the facts on the left, the prose beside them, four lines of it. A series
+   * with no description keeps the whole width for the facts.
+   */
+  const rail = narrow ? (
+    <div
+      className="row-rail flex w-full min-w-0 items-stretch gap-3 overflow-hidden px-2.5 pb-1.5"
+      style={{ height: RAIL_BAND_H }}
+    >
+      <div className="flex min-w-0 flex-1 flex-col gap-1">{info}</div>
+      {description.trim() && (
+        <RowBlurb
+          text={description}
+          lines={4}
+          onMore={openSeriesInfo}
+          label={row.title}
+          className="min-w-0 flex-1"
+        />
       )}
+    </div>
+  ) : (
+    <div
+      className="row-rail flex w-65 min-w-0 shrink-0 flex-col gap-1 overflow-hidden pl-2.5 pr-3"
+      style={{ height: stripHeight }}
+    >
+      {info}
+      <RowBlurb text={description} lines={3} onMore={openSeriesInfo} label={row.title} />
+      <div className="mt-auto flex flex-col gap-0.5">
+        {score !== null && (
+          <div className="score-row">
+            <ScoreBirds avg={score} animate={animateMeter} />
+          </div>
+        )}
+        {/* The issue scores are rolled up and labelled, never averaged into
+            the series score above them (docs/ratings-plan.md §8). */}
+        {row.issueRating && (
+          <p className="text-[10px] uppercase tracking-widest text-white/25">
+            issues {formatScore(row.issueRating.avg)}
+            <span className="text-white/15"> · {row.issueRating.count}</span>
+          </p>
+        )}
+      </div>
     </div>
   );
 

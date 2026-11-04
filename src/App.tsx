@@ -51,6 +51,21 @@ const VisualizerOverlay = lazy(() => import("./components/viz/VisualizerOverlay"
  */
 const VIEW_LEAVE_MS = 220;
 
+/**
+ * How long the current results take to fade out when the filters change,
+ * before the new ones are swapped in under cover. Matches the exit in
+ * `.view-swap.is-refilter-out` (index.css).
+ */
+const REFILTER_LEAVE_MS = 140;
+
+/**
+ * How long the swap waits for the new results' sort before showing whatever
+ * it has. Normally they arrive within a tick. The first embedding sort has to
+ * fetch its vectors, though, and a failed fetch would otherwise leave the page
+ * blank.
+ */
+const REFILTER_RESULTS_MS = 1500;
+
 /** Read at click time, so the swap can skip its own timers rather than just
  *  its transitions — a zeroed CSS duration with a live timeout behind it is
  *  190ms of blank page. */
@@ -130,6 +145,20 @@ export default function App() {
   const [seriesSort, setSeriesSort] = useState<SeriesSortMode>(initialSeriesSort);
   const [artistSort, setArtistSort] = useState<ArtistSortMode>(initialArtistSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
+  /**
+   * The filters the results are computed from. Trails `filters` by the
+   * refilter's exit: the controls answer a click at once, and the results
+   * change only once the old ones have faded, so the new layout is never seen
+   * being reached (see `.view-swap.is-refilter-out` in index.css).
+   */
+  const [resultFilters, setResultFilters] = useState<Filters>(initialFilters);
+  /**
+   * "out" while the old results fade, "pending" while the new ones are being
+   * sorted (still hidden), "in" for the frame they are painted hidden in their
+   * new places, "idle" otherwise.
+   */
+  const [refilterPhase, setRefilterPhase] = useState<"idle" | "out" | "pending" | "in">("idle");
+  const refilterTimerRef = useRef<number | null>(null);
   /** The metadata a row is assembled from, kept from the same boot fetch. */
   const [meta, setMeta] = useState<{ artists: Artist[]; series: Series[]; issues: IssueCredits[] }>({
     artists: [],
@@ -367,6 +396,58 @@ export default function App() {
     };
   }, [viewPhase]);
 
+  // The refilter, staged the same way: out, swap unseen, in. The results
+  // follow `filters` through `resultFilters`, so every path that changes the
+  // filters (the control, a stats bar, a browse-by jump, "clear filters") is
+  // staged without each one having to know about it. A second change while one
+  // is in flight restarts the exit; whatever is showing fades from where it is.
+  useEffect(() => {
+    if (filters === resultFilters) return;
+    if (refilterTimerRef.current !== null) {
+      window.clearTimeout(refilterTimerRef.current);
+      refilterTimerRef.current = null;
+    }
+    // Nothing to stage on a cold load (the page fades in as a whole) or under
+    // reduced motion. During a view swap the swap already covers the change,
+    // and a second set of classes would fight it.
+    if (!imagesLoaded || prefersReducedMotion() || viewPhase !== "idle") {
+      setResultFilters(filters);
+      setRefilterPhase("idle");
+      return;
+    }
+    setRefilterPhase("out");
+    refilterTimerRef.current = window.setTimeout(() => {
+      refilterTimerRef.current = null;
+      setResultFilters(filters);
+      setRefilterPhase("pending");
+    }, REFILTER_LEAVE_MS);
+  }, [filters, resultFilters, imagesLoaded, viewPhase]);
+
+  // The new results are sorted asynchronously, so they come in a render or two
+  // after `resultFilters`. This waits for them. Keyed on `sortedPanels` only:
+  // the render that sets "pending" still has the old results in it.
+  useEffect(() => {
+    setRefilterPhase((p) => (p === "pending" ? "in" : p));
+  }, [sortedPanels]);
+
+  useEffect(() => {
+    if (refilterPhase === "pending") {
+      const t = window.setTimeout(() => setRefilterPhase("in"), REFILTER_RESULTS_MS);
+      return () => window.clearTimeout(t);
+    }
+    if (refilterPhase !== "in") return;
+    // Two frames, for the same reason as the view swap's arrival: the new
+    // objects have to be painted hidden once, or there is nothing to fade from.
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setRefilterPhase("idle"));
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, [refilterPhase]);
+
   // The moved cards, picked up where the other view left them. This runs
   // before the browser paints — a layout effect, not an effect — because the
   // whole point is that the new copy is never seen anywhere but the old one's
@@ -582,8 +663,8 @@ export default function App() {
   }, []);
 
   const filteredPanels = useMemo(
-    () => applyFilters(panels, filters),
-    [panels, filters]
+    () => applyFilters(panels, resultFilters),
+    [panels, resultFilters]
   );
 
   useEffect(() => {
@@ -796,7 +877,11 @@ export default function App() {
                   ? " is-leaving"
                   : viewPhase === "entering"
                     ? " is-entering"
-                    : "")
+                    : refilterPhase === "out" || refilterPhase === "pending"
+                      ? " is-refilter-out"
+                      : refilterPhase === "in"
+                        ? " is-refilter-in"
+                        : "")
               }
             >
               {view === "wall" ? (
@@ -849,20 +934,24 @@ export default function App() {
                   onLaunchViz={handleOpenViz}
                 />
               )}
+              {/* Inside the swap's wrapper, and a tail piece to it, so the
+                  message comes and goes with the results it stands in for
+                  rather than popping in under a fade. Read from the filters
+                  the results were computed from, which is what it describes. */}
+              {hasActiveFilters(resultFilters) && sortedPanels.length === 0 && (
+                <div className="swap-tail flex flex-col items-center justify-center py-20 text-center">
+                  <p className="text-ink-muted text-sm font-display tracking-wide">
+                    NO MATCHES
+                  </p>
+                  <button
+                    onClick={() => setFilters(EMPTY_FILTERS)}
+                    className="mt-3 text-xs text-accent hover:text-accent-dim transition-colors font-display tracking-wider uppercase cursor-pointer"
+                  >
+                    CLEAR FILTERS
+                  </button>
+                </div>
+              )}
             </div>
-            {hasActiveFilters(filters) && sortedPanels.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-ink-muted text-sm font-display tracking-wide">
-                  NO MATCHES
-                </p>
-                <button
-                  onClick={() => setFilters(EMPTY_FILTERS)}
-                  className="mt-3 text-xs text-accent hover:text-accent-dim transition-colors font-display tracking-wider uppercase cursor-pointer"
-                >
-                  CLEAR FILTERS
-                </button>
-              </div>
-            )}
           </div>
         )}
       </main>
@@ -874,6 +963,7 @@ export default function App() {
           onTabChange={handleTabChange}
           onClose={handleCloseInfo}
           onApplyFilters={handleStatsFilter}
+          onOpenPanel={handleSelectPanel}
         />
       )}
 
