@@ -123,6 +123,7 @@ export default function PersonProfile({
         : null;
   const metaParts: string[] = [];
   if (years) metaParts.push(years);
+  if (artist?.hometown) metaParts.push(artist.hometown);
   if (artist?.country) metaParts.push(artist.country);
   const meta = metaParts.join(" · ");
 

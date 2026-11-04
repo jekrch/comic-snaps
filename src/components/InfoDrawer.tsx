@@ -22,6 +22,7 @@ function hasProfileInfo(artist: Artist | null): boolean {
       artist.imageUrl ||
       artist.references?.length ||
       artist.birthYear ||
+      artist.hometown ||
       artist.country)
   );
 }
@@ -590,6 +591,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
         : null;
   const artistMetaParts: string[] = [];
   if (artistYears) artistMetaParts.push(artistYears);
+  if (artist?.hometown) artistMetaParts.push(artist.hometown);
   if (artist?.country) artistMetaParts.push(artist.country);
   const artistMeta = artistMetaParts.join(" · ");
 

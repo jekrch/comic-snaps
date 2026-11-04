@@ -102,6 +102,7 @@
       ],
       "birthYear": 1985,
       "country": "Canada",
+      "hometown": "Perth, Ontario",
       "sources": [
         "comicvine",
         "metron"
@@ -205,6 +206,7 @@
       ],
       "birthYear": 1974,
       "country": "USA",
+      "hometown": "Sacramento, California",
       "sources": [
         "comicvine",
         "metron",
@@ -476,6 +478,7 @@
           "url": "https://comicvine.gamespot.com/alexis-ziritt/4040-76798/"
         }
       ],
+      "birthYear": 1975,
       "country": "United States",
       "aliases": [
         "Alexis Zirrit",
@@ -599,6 +602,7 @@
       ],
       "birthYear": 1982,
       "country": "Spain",
+      "hometown": "Torrelavega, Cantabria",
       "sources": [
         "comicvine",
         "metron"
@@ -656,7 +660,9 @@
         "comicvine",
         "metron",
         "wikipedia"
-      ]
+      ],
+      "country": "India",
+      "hometown": "Mumbai"
     },
     {
       "id": "andworld-design",
@@ -778,7 +784,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "Russia"
     },
     {
       "id": "andy-kubert",
@@ -1099,6 +1106,7 @@
       ],
       "birthYear": 1948,
       "country": "Sweden",
+      "hometown": "Queens, New York, United States",
       "sources": [
         "comicvine",
         "metron",
@@ -1605,6 +1613,7 @@
       ],
       "birthYear": 1950,
       "country": "United States",
+      "hometown": "Pasadena, California",
       "sources": [
         "comicvine",
         "metron",
@@ -1694,6 +1703,7 @@
       "birthYear": 1977,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/1812/1882326-brahm1.jpg",
       "country": "USA",
+      "hometown": "San Francisco, California",
       "sources": [
         "comicvine",
         "metron"
@@ -2048,7 +2058,8 @@
         "comicvine",
         "metron"
       ],
-      "birthYear": 1985
+      "birthYear": 1985,
+      "country": "Spain"
     },
     {
       "id": "carlos-lao",
@@ -2220,6 +2231,7 @@
       ],
       "birthYear": 1955,
       "country": "United States",
+      "hometown": "Washington, D.C.",
       "sources": [
         "comicvine",
         "metron",
@@ -2243,6 +2255,7 @@
       ],
       "birthYear": 1951,
       "country": "United States",
+      "hometown": "Lynchburg, Virginia",
       "sources": [
         "comicvine",
         "metron"
@@ -2927,10 +2940,12 @@
           "url": "https://www.danistrips.com"
         }
       ],
+      "birthYear": 1992,
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "Greece"
     },
     {
       "id": "dani-strips",
@@ -3000,6 +3015,7 @@
       ],
       "birthYear": 1961,
       "country": "United States",
+      "hometown": "Chicago, Illinois",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -3142,6 +3158,7 @@
       "birthYear": 1947,
       "deathYear": 2020,
       "country": "USA",
+      "hometown": "Rochester, New York",
       "sources": [
         "comicvine",
         "metron",
@@ -3422,6 +3439,7 @@
       ],
       "birthYear": 1972,
       "country": "Canada",
+      "hometown": "Montreal, Quebec",
       "sources": [
         "comicvine",
         "metron"
@@ -3625,6 +3643,7 @@
       ],
       "birthYear": 1982,
       "country": "Ireland",
+      "hometown": "Ennis, County Clare",
       "sources": [
         "comicvine",
         "metron"
@@ -3856,7 +3875,8 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
-      ]
+      ],
+      "country": "France"
     },
     {
       "id": "don-glassford",
@@ -3895,6 +3915,7 @@
       ],
       "birthYear": 1953,
       "country": "USA",
+      "hometown": "Plainville, Connecticut",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -3992,6 +4013,7 @@
         }
       ],
       "country": "United States",
+      "hometown": "Columbus, Georgia",
       "birthYear": 1976,
       "sources": [
         "comicvine",
@@ -4279,6 +4301,7 @@
       ],
       "birthYear": 1951,
       "country": "Serbia",
+      "hometown": "Belgrade",
       "aliases": [
         "Enes Bilalovi\u0107",
         "\u30a8\u30f3\u30ad\u30fb\u30d3\u30e9\u30eb"
@@ -4421,6 +4444,7 @@
       ],
       "birthYear": 1942,
       "country": "Spain",
+      "hometown": "Madrid",
       "sources": [
         "comicvine",
         "metron",
@@ -4501,6 +4525,7 @@
       ],
       "birthYear": 1976,
       "country": "Brazil",
+      "hometown": "S\u00e3o Paulo",
       "sources": [
         "comicvine",
         "metron",
@@ -4574,7 +4599,9 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
-      ]
+      ],
+      "country": "France",
+      "hometown": "Mayenne"
     },
     {
       "id": "foster-r-kupbens",
@@ -4689,8 +4716,10 @@
           "url": "https://metron.cloud/creator/3407/"
         }
       ],
+      "birthYear": 1975,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9980361-francis_portela.jpg",
       "country": "Spain",
+      "hometown": "Badalona, Barcelona",
       "sources": [
         "comicvine",
         "metron"
@@ -4814,6 +4843,7 @@
       ],
       "birthYear": 1973,
       "country": "Spain",
+      "hometown": "Melilla",
       "sources": [
         "comicvine",
         "metron"
@@ -4879,6 +4909,7 @@
       ],
       "birthYear": 1969,
       "country": "England, United Kingdom",
+      "hometown": "Bristol",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -4928,6 +4959,7 @@
       ],
       "birthYear": 1955,
       "country": "United States",
+      "hometown": "Cedar Rapids, Iowa",
       "sources": [
         "comicvine",
         "metron"
@@ -5061,6 +5093,7 @@
       ],
       "birthYear": 1957,
       "country": "United States",
+      "hometown": "Oxnard, California",
       "aliases": [
         "Beto"
       ],
@@ -5092,6 +5125,7 @@
       ],
       "birthYear": 1940,
       "country": "United States",
+      "hometown": "Houston, Texas",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -5174,7 +5208,9 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "country": "United States",
+      "hometown": "Morristown, New Jersey"
     },
     {
       "id": "gloria-martinelli",
@@ -5374,7 +5410,8 @@
         "metron",
         "comicvine"
       ],
-      "country": "Japan"
+      "country": "Japan",
+      "hometown": "Sapporo"
     },
     {
       "id": "gurihiru-goodman-yamada",
@@ -5551,7 +5588,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "homer-fleming",
@@ -5639,6 +5677,7 @@
       ],
       "birthYear": 1952,
       "country": "United Kingdom",
+      "hometown": "Newcastle upon Tyne",
       "sources": [
         "comicvine",
         "metron"
@@ -5714,6 +5753,7 @@
       ],
       "birthYear": 1978,
       "country": "Greece",
+      "hometown": "Athens",
       "sources": [
         "comicvine",
         "metron",
@@ -5978,6 +6018,7 @@
       "birthYear": 1924,
       "deathYear": 2016,
       "country": "United States",
+      "hometown": "Atlanta, Georgia",
       "sources": [
         "comicvine",
         "metron",
@@ -6239,6 +6280,7 @@
       ],
       "birthYear": 1968,
       "country": "United Kingdom",
+      "hometown": "Horsham, West Sussex",
       "sources": [
         "comicvine",
         "metron"
@@ -6400,6 +6442,7 @@
       ],
       "birthYear": 1972,
       "country": "Spain",
+      "hometown": "Oviedo",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -6479,6 +6522,7 @@
       "birthYear": 1945,
       "deathYear": 2017,
       "country": "USA",
+      "hometown": "Orange, New Jersey",
       "sources": [
         "comicvine",
         "metron",
@@ -6515,6 +6559,7 @@
       "birthYear": 1944,
       "deathYear": 2011,
       "country": "United States",
+      "hometown": "Atlanta, Georgia",
       "aliases": [
         "Jeffrey Catherine Jones",
         "Jeffrey Durwood Jones",
@@ -6552,6 +6597,7 @@
       ],
       "birthYear": 1976,
       "country": "Canada",
+      "hometown": "Woodslee, Ontario",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -6844,6 +6890,7 @@
       ],
       "birthYear": 1975,
       "country": "USA",
+      "hometown": "St. Louis, Missouri",
       "sources": [
         "comicvine",
         "metron"
@@ -6891,7 +6938,8 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "jim-phillips",
@@ -7022,6 +7070,7 @@
       ],
       "birthYear": 1952,
       "country": "U.S.A",
+      "hometown": "Los Angeles, California",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -7223,6 +7272,7 @@
       ],
       "birthYear": 1960,
       "country": "Malta",
+      "hometown": "Kirkop",
       "sources": [
         "comicvine",
         "metron",
@@ -7276,7 +7326,9 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States",
+      "hometown": "Boise, Idaho"
     },
     {
       "id": "john-beatty",
@@ -7387,6 +7439,7 @@
       ],
       "birthYear": 1947,
       "country": "United Kingdom",
+      "hometown": "Liverpool",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -7517,6 +7570,7 @@
       "birthYear": 1926,
       "deathYear": 2001,
       "country": "USA",
+      "hometown": "Pleasantville, New York",
       "aliases": [
         "Jay Taycee",
         "Jonathan T. Craig",
@@ -7598,7 +7652,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "jordan-d-white",
@@ -7728,7 +7783,9 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
-      ]
+      ],
+      "country": "Spain",
+      "hometown": "Barcelona"
     },
     {
       "id": "jose-ortiz",
@@ -7854,7 +7911,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "France"
     },
     {
       "id": "joshua-cassara",
@@ -8028,7 +8086,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "Spain"
     },
     {
       "id": "julian-totino-tedesco",
@@ -8077,6 +8136,7 @@
       ],
       "birthYear": 1965,
       "country": "Canada",
+      "hometown": "Montreal, Quebec",
       "sources": [
         "comicvine",
         "metron",
@@ -8124,6 +8184,7 @@
       ],
       "birthYear": 1992,
       "country": "Senegal",
+      "hometown": "Dakar",
       "sources": [
         "comicvine",
         "metron"
@@ -8143,7 +8204,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "Japan"
     },
     {
       "id": "justin-green",
@@ -8172,6 +8234,7 @@
       "birthYear": 1945,
       "deathYear": 2022,
       "country": "United States",
+      "hometown": "Chicago, Illinois",
       "aliases": [
         "Justin Considine Green",
         "J. Considine Green",
@@ -8218,6 +8281,7 @@
         }
       ],
       "country": "Spain",
+      "hometown": "Barcelona",
       "aliases": [
         "Jose \u00c1ngel Cano L\u00f3pez"
       ],
@@ -8351,6 +8415,7 @@
       "birthYear": 1952,
       "deathYear": 2023,
       "country": "United States",
+      "hometown": "Queens, New York",
       "sources": [
         "comicvine",
         "metron"
@@ -8560,7 +8625,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United Kingdom"
     },
     {
       "id": "kevin-eastman",
@@ -8584,6 +8650,7 @@
       ],
       "birthYear": 1962,
       "country": "United States",
+      "hometown": "Portland, Maine",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -9020,6 +9087,7 @@
         "Massimiliano Leonardo"
       ],
       "country": "Italy",
+      "hometown": "Rome",
       "sources": [
         "comicvine",
         "metron"
@@ -9074,6 +9142,7 @@
       ],
       "birthYear": 1991,
       "country": "Italy",
+      "hometown": "Rome",
       "sources": [
         "comicvine",
         "metron"
@@ -9132,7 +9201,9 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
-      ]
+      ],
+      "country": "Italy",
+      "hometown": "Quadri"
     },
     {
       "id": "lindsey-cohick",
@@ -9209,6 +9280,7 @@
       ],
       "birthYear": 1983,
       "country": "Italy",
+      "hometown": "Frascati",
       "sources": [
         "comicvine",
         "metron"
@@ -9470,6 +9542,7 @@
       "birthYear": 1982,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8058255-4499185697-Featu.jpg",
       "country": "Spain",
+      "hometown": "Barcelona",
       "sources": [
         "comicvine",
         "metron"
@@ -9785,7 +9858,9 @@
           "title": "iFanboy Upstarts: Mart\u00edn Morazzo"
         }
       ],
+      "birthYear": 1977,
       "country": "Argentina",
+      "hometown": "Castelar, Buenos Aires",
       "sources": [
         "comicvine",
         "metron"
@@ -9866,6 +9941,7 @@
       ],
       "birthYear": 1951,
       "country": "USA",
+      "hometown": "Los Angeles, California",
       "sources": [
         "comicvine",
         "metron",
@@ -9979,6 +10055,7 @@
       ],
       "birthYear": 1973,
       "country": "United States of America",
+      "hometown": "Cheektowaga, New York",
       "sources": [
         "comicvine",
         "metron",
@@ -10079,7 +10156,8 @@
         "metron",
         "comicvine"
       ],
-      "country": "Italy"
+      "country": "Italy",
+      "hometown": "Ascoli Piceno"
     },
     {
       "id": "mat-as-bergara",
@@ -10182,7 +10260,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "michael-allred",
@@ -10209,7 +10288,9 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States",
+      "hometown": "Roseburg, Oregon"
     },
     {
       "id": "michael-avon-oeming",
@@ -10232,6 +10313,7 @@
       ],
       "birthYear": 1973,
       "country": "United States",
+      "hometown": "Bordentown, New Jersey",
       "aliases": [
         "Mike Oeming"
       ],
@@ -10617,7 +10699,9 @@
       ],
       "tags": [
         "bande dessin\u00e9e"
-      ]
+      ],
+      "country": "France",
+      "hometown": "Nogent-sur-Marne"
     },
     {
       "id": "naomi-griffin",
@@ -10700,7 +10784,8 @@
         "metron",
         "comicvine"
       ],
-      "country": "United States"
+      "country": "United States",
+      "hometown": "Little Rock, Arkansas"
     },
     {
       "id": "nathan-cosby",
@@ -10913,7 +10998,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "nicoletta-baldari",
@@ -11042,7 +11128,8 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "patrick-satterfield",
@@ -11105,6 +11192,7 @@
       ],
       "birthYear": 1957,
       "country": "United States",
+      "hometown": "Medina, Washington",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -11153,6 +11241,7 @@
       ],
       "birthYear": 1952,
       "country": "United States",
+      "hometown": "New Haven, Connecticut",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -11208,6 +11297,7 @@
       ],
       "birthYear": 1970,
       "country": "United States",
+      "hometown": "Bowling Green, Ohio",
       "aliases": [
         "\u30dd\u30fc\u30eb\u30fb\u30dd\u30fc\u30d7"
       ],
@@ -11309,7 +11399,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "peter-bagge",
@@ -11333,6 +11424,7 @@
       ],
       "birthYear": 1957,
       "country": "U.S.A.",
+      "hometown": "Peekskill, New York",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -11395,10 +11487,12 @@
           "url": "https://metron.cloud/creator/13961/"
         }
       ],
+      "birthYear": 1948,
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "phillip-kennedy-johnson",
@@ -11679,6 +11773,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83113/1628922-xreedpic2_300px2.png",
       "birthYear": 1949,
       "country": "USA",
+      "hometown": "New Richland, Minnesota",
       "sources": [
         "comicvine",
         "metron"
@@ -11812,6 +11907,7 @@
       "birthYear": 1940,
       "deathYear": 2020,
       "country": "U.S.A.",
+      "hometown": "Anderson, Missouri",
       "aliases": [
         "Gore"
       ],
@@ -11915,6 +12011,7 @@
       ],
       "birthYear": 1946,
       "country": "U.S.A.",
+      "hometown": "Wichita, Kansas",
       "sources": [
         "comicvine",
         "metron"
@@ -11938,6 +12035,7 @@
       "birthYear": 1944,
       "deathYear": 1991,
       "country": "USA",
+      "hometown": "Palos Verdes, California",
       "aliases": [
         "Richard Alden Griffin"
       ],
@@ -12058,6 +12156,7 @@
       ],
       "birthYear": 1943,
       "country": "United States",
+      "hometown": "Philadelphia, Pennsylvania",
       "aliases": [
         "R Crumb",
         "R. Crumb",
@@ -12548,6 +12647,7 @@
       "birthYear": 1941,
       "deathYear": 2021,
       "country": "U.S.",
+      "hometown": "Lincoln, Nebraska",
       "sources": [
         "comicvine",
         "metron",
@@ -12663,7 +12763,9 @@
         "wikipedia",
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States",
+      "hometown": "Sacramento, California"
     },
     {
       "id": "sam-kieth",
@@ -12901,7 +13003,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "scott-newman",
@@ -13124,7 +13227,9 @@
           "url": "https://metron.cloud/creator/8437/"
         }
       ],
+      "birthYear": 1984,
       "country": "Canada",
+      "hometown": "Toronto, Ontario",
       "aliases": [
         "Sawn Kuruneru"
       ],
@@ -13311,7 +13416,7 @@
     {
       "id": "skip-williamson",
       "name": "Skip Williamson",
-      "description": "",
+      "description": "Skip Williamson (Mervyn Williamson, 1944\u20132017) was an American underground cartoonist, born in San Antonio, Texas, and raised in Lynchburg, Virginia, and Canton, Missouri. He sold his first cartoon to Harvey Kurtzman's Help! in 1961, while still in high school.\r\n\r\nHe moved to Chicago in 1967 to work with his teenage fanzine correspondent Jay Lynch on The Chicago Mirror, and in 1968 the two turned it into Bijou Funnies, one of the earliest underground comix titles, with Robert Crumb contributing. Its first issue introduced his best-known character, Snappy Sammy Smoot, a naive nice guy exploited by the radicals he admires. A self-described philosophical anarchist, he edited Conspiracy Capers to raise money for the Chicago 8 defense, sketched their trial, and designed the cover of Abbie Hoffman's Steal This Book.\r\n\r\nHe went on to art-direct Gallery and, briefly, Hustler, then spent years at Playboy, where he helped launch Playboy Funnies with Neon Vincent and Nell 'n' Void. After moving to Atlanta in 1994 he concentrated on large political paintings, and he published the autobiography Spontaneous Combustion in 2011.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/8/83392/1634927-n561626469_1225609_8177.jpg",
       "references": [
         {
@@ -13321,6 +13426,14 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/16387/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Skip_Williamson"
+        },
+        {
+          "name": "Comiclopedia",
+          "url": "https://www.lambiek.net/artists/w/williamson_skip.htm"
         },
         {
           "name": "The Comics Journal",
@@ -13334,7 +13447,8 @@
         "metron",
         "comicvine"
       ],
-      "country": "United States"
+      "country": "United States",
+      "hometown": "San Antonio, Texas"
     },
     {
       "id": "soo-lee",
@@ -13354,7 +13468,8 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States"
     },
     {
       "id": "sophie-philips-roberts",
@@ -13582,6 +13697,7 @@
         }
       ],
       "country": "United States",
+      "hometown": "Rochester, New York",
       "birthYear": 1957,
       "sources": [
         "comicvine",
@@ -13700,6 +13816,7 @@
           "title": "Building the 20th Century: Collaboration, Colonialism and Human Tragedies with the Creators of 20th Century Men"
         }
       ],
+      "birthYear": 1973,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9808830-stipan_morian.jpg",
       "country": "Croatia",
       "sources": [
@@ -14047,7 +14164,9 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "Germany",
+      "hometown": "Bytom, Poland"
     },
     {
       "id": "tim-boxell",
@@ -14304,7 +14423,9 @@
       "sources": [
         "comicvine",
         "metron"
-      ]
+      ],
+      "country": "United States",
+      "hometown": "Glendale, California"
     },
     {
       "id": "toni-fejzula",
@@ -14380,6 +14501,7 @@
       ],
       "birthYear": 1956,
       "country": "USA",
+      "hometown": "Gloucester, Massachusetts",
       "sources": [
         "comicvine",
         "metron",
@@ -14424,6 +14546,7 @@
       ],
       "birthYear": 1969,
       "country": "Canada",
+      "hometown": "Leduc, Alberta",
       "sources": [
         "comicvine",
         "metron"
@@ -14482,6 +14605,7 @@
       "birthYear": 1938,
       "deathYear": 2024,
       "country": "United States",
+      "hometown": "Queens, New York",
       "sources": [
         "comicvine",
         "metron",
@@ -14657,6 +14781,7 @@
         }
       ],
       "country": "Spain",
+      "hometown": "Montmel\u00f3, Barcelona",
       "aliases": [
         "Victor Ibanez"
       ],
@@ -14688,6 +14813,7 @@
       ],
       "birthYear": 1936,
       "country": "Spain",
+      "hometown": "Oleiros, Galicia",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -14793,6 +14919,7 @@
         "comicvine"
       ],
       "country": "United States",
+      "hometown": "Menahga, Minnesota",
       "tags": [
         "ec"
       ]

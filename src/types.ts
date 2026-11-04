@@ -16,6 +16,11 @@ export interface Artist {
   birthYear?: number | null;
   deathYear?: number | null;
   country?: string | null;
+  /** Where they're from: the town they grew up in when a source says so,
+   *  otherwise where they were born. "City, State/Province" in the US and
+   *  Canada, the bare city elsewhere; it names a country only when that
+   *  differs from `country`. */
+  hometown?: string | null;
   aliases?: string[] | null;
   tags?: string[] | null;
 }
