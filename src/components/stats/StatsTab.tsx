@@ -57,22 +57,32 @@ interface ColumnDatum {
   filter?: StatsFilterPatch;
 }
 
-interface Swatch {
-  panel: Panel;
-  css: string;
+interface DecadeDatum {
+  label: string;
+  color: number;
+  bw: number;
+  count: number;
+  filter: StatsFilterPatch;
 }
 
-interface PaletteRow {
-  label: string;
-  swatches: Swatch[];
+/** One wedge of the hue wheel: the color panels whose leading hue falls in it. */
+interface HueBin {
+  name: string;
+  /** Wedge start, in CIELAB hue degrees. */
+  start: number;
+  /** An idealized swatch of the wedge's middle hue, not a mean of the panels. */
+  css: string;
+  /** Members in hue order, so paging through them in the viewer is a sweep. */
+  panels: Panel[];
 }
 
 interface ComputedStats {
-  decades: ColumnDatum[];
+  decades: DecadeDatum[];
   colorCount: number;
   bwCount: number;
   tags: NamedCount[];
-  palette: PaletteRow[];
+  hues: HueBin[];
+  huedCount: number;
   oldestPanel: Panel | null;
   career: Career | null;
 }
@@ -111,32 +121,31 @@ const decadeLabel = (d: number) => `'${String(d).slice(2)}s`;
 const labCss = ([L, a, b]: [number, number, number]) => `lab(${L} ${a} ${b})`;
 
 // Chroma a dominant color needs before it counts as the panel's hue — the same
-// cut the COLOR sort uses, so the palette strip reads in the same order.
-const SWATCH_CHROMA = 10;
+// cut the COLOR sort uses, so the wheel agrees with that sort's order.
+const HUE_CHROMA = 10;
 
 /**
- * A panel's slice in the palette strip, and where it sorts within its decade.
- *
- * A color panel is placed by the hue of its first strongly chromatic dominant
- * color. Anything without one (B&W pages, near-neutral color) follows all the
- * hues, light to dark, in its leading color, which on an old B&W page is
- * usually the paper. The yellowing is real, so it's shown rather than hidden.
+ * CIELAB hue (degrees) of a color panel's first strongly chromatic dominant
+ * color, or null for B&W pages and color panels too muted to have one.
  */
-function swatchOf(p: Panel): { css: string; key: number } | null {
-  const colors = p.dominantColors;
-  if (!colors || colors.length === 0) return null;
-  if ((p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD) {
-    for (const c of colors) {
-      if (Math.hypot(c[1], c[2]) >= SWATCH_CHROMA) {
-        const h = Math.atan2(c[2], c[1]);
-        return { css: labCss(c), key: h < 0 ? h + 2 * Math.PI : h };
-      }
+function hueOf(p: Panel): number | null {
+  if ((p.colorfulness ?? 0) < COLORFULNESS_THRESHOLD) return null;
+  for (const [, a, b] of p.dominantColors ?? []) {
+    if (Math.hypot(a, b) >= HUE_CHROMA) {
+      const h = (Math.atan2(b, a) * 180) / Math.PI;
+      return h < 0 ? h + 360 : h;
     }
   }
-  const c = colors[0];
-  // Hue keys stop at 2π (~6.28), so 10+ places these after every hue
-  return { css: labCss(c), key: 10 + (100 - c[0]) / 100 };
+  return null;
 }
+
+// Twelve 30° wedges. Names are for CIELAB hue angles, where red sits near 40°
+// and blue near 300°, not the HSL wheel's 0° and 240°.
+const HUE_NAMES = [
+  "Pink", "Red", "Orange", "Yellow", "Olive", "Green",
+  "Teal", "Cyan", "Azure", "Blue", "Violet", "Magenta",
+];
+const HUE_STEP = 360 / HUE_NAMES.length;
 
 const describePanel = (p: Panel) =>
   `${p.title} ${formatIssue(p.issue)}${p.year ? ` (${p.year})` : ""}${p.artist ? ` · ${p.artist}` : ""}`;
@@ -160,28 +169,40 @@ function computePanelStats(panels: Panel[]): ComputedStats {
     const d = Math.floor(y / 10) * 10;
     byDecade.set(d, (byDecade.get(d) ?? 0) + 1);
   }
-  const decades = [...byDecade.entries()].map(([d, count]) => ({
-    label: decadeLabel(d),
-    count,
-    filter: { decades: [`${d}s`] },
-  }));
-
-  const paletteByDecade = new Map<number, (Swatch & { key: number })[]>();
+  const isColor = (p: Panel) => (p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+  const colorByDecade = new Map<number, number>();
   for (const p of panels) {
-    if (!(p.year > 0)) continue;
-    const s = swatchOf(p);
-    if (!s) continue;
-    const d = Math.floor(p.year / 10) * 10;
-    let list = paletteByDecade.get(d);
-    if (!list) paletteByDecade.set(d, (list = []));
-    list.push({ panel: p, ...s });
+    if (p.year > 0 && isColor(p)) {
+      const d = Math.floor(p.year / 10) * 10;
+      colorByDecade.set(d, (colorByDecade.get(d) ?? 0) + 1);
+    }
   }
-  const palette = [...paletteByDecade.entries()]
-    .sort((a, b) => a[0] - b[0])
-    .map(([d, list]) => ({
+  const decades = [...byDecade.entries()].map(([d, count]) => {
+    const color = colorByDecade.get(d) ?? 0;
+    return {
       label: decadeLabel(d),
-      swatches: list.sort((a, b) => a.key - b.key).map(({ panel, css }) => ({ panel, css })),
-    }));
+      color,
+      bw: count - color,
+      count,
+      filter: { decades: [`${d}s`] },
+    };
+  });
+
+  const binned = HUE_NAMES.map(() => [] as { panel: Panel; hue: number }[]);
+  for (const p of panels) {
+    const hue = hueOf(p);
+    if (hue !== null) binned[Math.floor(hue / HUE_STEP) % HUE_NAMES.length].push({ panel: p, hue });
+  }
+  const hues = HUE_NAMES.map((name, i) => {
+    const mid = ((i + 0.5) * HUE_STEP * Math.PI) / 180;
+    return {
+      name,
+      start: i * HUE_STEP,
+      css: labCss([66, 48 * Math.cos(mid), 48 * Math.sin(mid)]),
+      panels: binned[i].sort((a, b) => a.hue - b.hue).map((x) => x.panel),
+    };
+  });
+  const huedCount = binned.reduce((sum, list) => sum + list.length, 0);
 
   // Oldest by publication year (ties: first posted)
   let oldestPanel: Panel | null = null;
@@ -221,9 +242,7 @@ function computePanelStats(panels: Panel[]): ComputedStats {
   }
 
   let colorCount = 0;
-  for (const p of panels) {
-    if ((p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD) colorCount++;
-  }
+  for (const p of panels) if (isColor(p)) colorCount++;
 
   const tagCounts = new Map<string, number>();
   for (const p of panels) {
@@ -239,7 +258,8 @@ function computePanelStats(panels: Panel[]): ComputedStats {
     colorCount,
     bwCount: panels.length - colorCount,
     tags,
-    palette,
+    hues,
+    huedCount,
     oldestPanel,
     career,
   };
@@ -537,7 +557,7 @@ function HBars({
             tickFormatter={truncate}
             tick={{ fill: "var(--color-ink-muted, #9e9892)", fontSize: 10 }}
           />
-          <Tooltip content={<ChartTip unit={unit} />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Tooltip content={<ChartTip unit={unit} />} shared={false} cursor={false} />
           <Bar
             dataKey="count"
             maxBarSize={13}
@@ -599,7 +619,7 @@ function ColumnChart({
             axisLine={false}
             tick={{ fill: "var(--color-ink-muted, #9e9892)", fontSize: 9 }}
           />
-          <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <Tooltip content={<ChartTip />} shared={false} cursor={false} />
           <Bar
             dataKey="count"
             fill={ACCENT}
@@ -698,63 +718,124 @@ function SuperlativePlaceholder() {
   );
 }
 
-/**
- * One strip per decade, one slice per panel in that decade, sorted by hue with
- * the B&W pages trailing. Every strip is full width, so a strip shows what
- * share of the decade is which color, not how many panels it holds; the count
- * at the end says that.
- */
-function DecadePalette({ rows, onOpen }: { rows: PaletteRow[]; onOpen?: StatsOpenPanel }) {
-  const [hover, setHover] = useState<Panel | null>(null);
+/** A bar segment's outline with only its top corners rounded. */
+function topRoundedPath(x: number, y: number, w: number, h: number, r: number): string {
+  if (!(w > 0) || !(h > 0)) return "";
+  const k = Math.min(r, w / 2, h);
   return (
-    <div onMouseLeave={() => setHover(null)}>
-      <div className="flex flex-col gap-[3px]">
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-center gap-2">
-            <span className="w-7 shrink-0 text-[9px] tabular-nums" style={{ color: INK_MUTED }}>
-              {row.label}
-            </span>
-            <div className="flex flex-1 min-w-0 h-[14px] rounded-[3px] overflow-hidden">
-              {row.swatches.map((s) => (
-                <button
-                  key={s.panel.id}
-                  type="button"
-                  tabIndex={onOpen ? 0 : -1}
-                  aria-label={describePanel(s.panel)}
-                  className="flex-1 min-w-0 p-0 m-0 border-0 transition-opacity hover:opacity-60 focus-visible:opacity-60 outline-none"
-                  style={{ background: s.css, cursor: onOpen ? "pointer" : "default" }}
-                  onMouseEnter={() => setHover(s.panel)}
-                  onFocus={() => setHover(s.panel)}
-                  onBlur={() => setHover(null)}
-                  onClick={() => onOpen?.(s.panel, row.swatches.map((x) => x.panel))}
-                />
-              ))}
-            </div>
-            <span className="w-6 shrink-0 text-right text-[9px] tabular-nums" style={{ color: INK_MUTED }}>
-              {row.swatches.length}
-            </span>
-          </div>
-        ))}
-      </div>
-      {/* Fixed height, one line: the readout never shifts the charts below */}
-      <div className="mt-1.5 h-[14px] leading-[14px] text-[10px] truncate" style={{ color: INK_MUTED }}>
-        {hover
-          ? describePanel(hover)
-          : `Each slice is one panel's leading color.${onOpen ? " Click to page through a decade in color order." : ""}`}
-      </div>
+    `M${x},${y + h} L${x},${y + k} Q${x},${y} ${x + k},${y} ` +
+    `L${x + w - k},${y} Q${x + w},${y} ${x + w},${y + k} L${x + w},${y + h} Z`
+  );
+}
+
+// Surface gap between the color and B&W segments of a stacked bar
+const SEGMENT_GAP = 2;
+const BAR_RADIUS = 3;
+
+function DecadeTip({ active, payload }: any) {
+  if (!active || !payload?.length) return null;
+  const d = payload[0].payload as DecadeDatum;
+  return (
+    <div
+      className="rounded-md px-3 py-2 text-[11px] border"
+      style={{
+        background: "var(--color-surface-hover, #1a1a1a)",
+        borderColor: "var(--color-border, rgba(74,71,69,0.35))",
+        color: "var(--color-ink)",
+      }}
+    >
+      <span>{d.label}</span>
+      <span style={{ color: INK_MUTED }}> · {d.count} panel{d.count === 1 ? "" : "s"}</span>
+      {d.count > 0 && (
+        <div className="mt-0.5" style={{ color: INK_MUTED }}>
+          {d.color} color · {d.bw} B&amp;W
+        </div>
+      )}
     </div>
   );
 }
 
-function ColorSplit({ colorCount, bwCount }: { colorCount: number; bwCount: number }) {
+/**
+ * Panels per decade, each bar split into color (on the baseline) and B&W
+ * stacked on top, so the arrival of color reads straight off the decades.
+ */
+function DecadeColorChart({
+  data,
+  colorCount,
+  bwCount,
+  onFilter,
+}: {
+  data: DecadeDatum[];
+  colorCount: number;
+  bwCount: number;
+  onFilter?: (patch: StatsFilterPatch) => void;
+}) {
   const total = colorCount + bwCount;
-  if (total === 0) return null;
-  const colorPct = Math.round((colorCount / total) * 100);
+  const colorPct = total ? Math.round((colorCount / total) * 100) : 0;
+  const click = (entry: any) => {
+    const filter = entry?.payload?.filter ?? entry?.filter;
+    if (filter && onFilter) onFilter(filter);
+  };
+  const cursor = onFilter ? "pointer" : undefined;
   return (
     <div>
-      <div className="flex rounded-sm overflow-hidden" style={{ gap: 2, height: 13 }}>
-        <div style={{ flex: Math.max(colorCount, 1), background: ACCENT, opacity: 0.9, borderRadius: "2px 3px 3px 2px" }} />
-        <div style={{ flex: Math.max(bwCount, 1), background: NEUTRAL, opacity: 0.55, borderRadius: "3px 2px 2px 3px" }} />
+      <div style={{ height: 160 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 6, right: 4, bottom: 0, left: -22 }} accessibilityLayer={false}>
+            <CartesianGrid stroke={HAIRLINE} vertical={false} />
+            <XAxis
+              dataKey="label"
+              interval={0}
+              tickLine={false}
+              axisLine={{ stroke: HAIRLINE }}
+              tick={{ fill: "var(--color-ink-muted, #9e9892)", fontSize: 9 }}
+            />
+            <YAxis
+              allowDecimals={false}
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: "var(--color-ink-muted, #9e9892)", fontSize: 9 }}
+            />
+            <Tooltip content={<DecadeTip />} shared={false} cursor={false} />
+            <Bar
+              dataKey="color"
+              stackId="decade"
+              maxBarSize={22}
+              isAnimationActive={false}
+              cursor={cursor}
+              onClick={click}
+              shape={(props: any) => (
+                <path
+                  d={topRoundedPath(
+                    props.x, props.y, props.width, props.height,
+                    // Rounded only when nothing is stacked on it
+                    props.payload?.bw > 0 ? 0 : BAR_RADIUS,
+                  )}
+                  fill={ACCENT}
+                  fillOpacity={0.9}
+                />
+              )}
+            />
+            <Bar
+              dataKey="bw"
+              stackId="decade"
+              maxBarSize={22}
+              isAnimationActive={false}
+              cursor={cursor}
+              onClick={click}
+              shape={(props: any) => {
+                const gap = props.payload?.color > 0 ? SEGMENT_GAP : 0;
+                return (
+                  <path
+                    d={topRoundedPath(props.x, props.y, props.width, props.height - gap, BAR_RADIUS)}
+                    fill={NEUTRAL}
+                    fillOpacity={0.55}
+                  />
+                );
+              }}
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
       <div className="flex justify-between mt-1.5 text-[10px]" style={{ color: INK_MUTED }}>
         <span className="inline-flex items-center gap-1.5">
@@ -767,6 +848,111 @@ function ColorSplit({ colorCount, bwCount }: { colorCount: number; bwCount: numb
         </span>
       </div>
     </div>
+  );
+}
+
+/**
+ * Color panels by leading hue, as a rose: one wedge per 30° of CIELAB hue,
+ * painted in that hue, with area (not radius) proportional to the count. A
+ * thin key ring inside shows every hue, so an empty wedge reads as a color the
+ * collection lacks rather than as a gap in the chart.
+ */
+function HueWheel({
+  bins,
+  total,
+  onOpen,
+}: {
+  bins: HueBin[];
+  total: number;
+  onOpen?: StatsOpenPanel;
+}) {
+  const [hover, setHover] = useState<number | null>(null);
+  const C = 100;
+  const R = 94;
+  const R0 = 40;
+  const KEY_IN = 34;
+  const PAD = 1.2;
+  const max = Math.max(1, ...bins.map((b) => b.panels.length));
+
+  const at = (r: number, deg: number) => {
+    const t = ((deg - 90) * Math.PI) / 180;
+    return `${(C + r * Math.cos(t)).toFixed(2)} ${(C + r * Math.sin(t)).toFixed(2)}`;
+  };
+  const sector = (rIn: number, rOut: number, a0: number, a1: number) =>
+    `M${at(rOut, a0)} A${rOut} ${rOut} 0 0 1 ${at(rOut, a1)} ` +
+    `L${at(rIn, a1)} A${rIn} ${rIn} 0 0 0 ${at(rIn, a0)} Z`;
+
+  const open = (i: number) => {
+    const group = bins[i].panels;
+    if (onOpen && group.length > 0) onOpen(group[0], group);
+  };
+  const hovered = hover !== null ? bins[hover] : null;
+  const ink = { fill: "var(--color-ink)" };
+  const muted = { fill: "var(--color-ink-muted, #9e9892)" };
+
+  return (
+    <svg
+      viewBox="0 0 200 200"
+      className="block mx-auto w-full"
+      style={{ maxWidth: 230 }}
+      onMouseLeave={() => setHover(null)}
+      role="group"
+      aria-label={`${total} color panels by leading hue`}
+    >
+      <circle cx={C} cy={C} r={R} fill="none" stroke={HAIRLINE} />
+      {bins.map((b, i) => {
+        const a0 = b.start + PAD;
+        const a1 = b.start + HUE_STEP - PAD;
+        const n = b.panels.length;
+        // Area-true: the wedge's annular area grows linearly with its count
+        const rOut = Math.sqrt(R0 * R0 + ((R * R - R0 * R0) * n) / max);
+        const dim = hover !== null && hover !== i;
+        return (
+          <g key={b.name}>
+            <path d={sector(KEY_IN, R0 - 2, a0, a1)} fill={b.css} fillOpacity={dim ? 0.2 : 0.45} />
+            {n > 0 && (
+              <path
+                d={sector(R0, rOut, a0, a1)}
+                fill={b.css}
+                fillOpacity={dim ? 0.3 : 0.95}
+                style={{ transition: "fill-opacity 120ms" }}
+                pointerEvents="none"
+              />
+            )}
+            {n > 0 && (
+              // Hit target spans the whole wedge, so a one-panel sliver is
+              // as easy to point at as the biggest one
+              <path
+                d={sector(KEY_IN, R, a0, a1)}
+                fill="transparent"
+                tabIndex={onOpen ? 0 : -1}
+                role={onOpen ? "button" : undefined}
+                aria-label={`${b.name}: ${n} panel${n === 1 ? "" : "s"}`}
+                style={{ cursor: onOpen ? "pointer" : "default", outline: "none" }}
+                onMouseEnter={() => setHover(i)}
+                onFocus={() => setHover(i)}
+                onBlur={() => setHover(null)}
+                onClick={() => open(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    open(i);
+                  }
+                }}
+              />
+            )}
+          </g>
+        );
+      })}
+      <text x={C} y={C - 1} textAnchor="middle" fontSize={hovered ? 13 : 17} style={{ ...ink, fontFamily: "var(--font-display)" }}>
+        {hovered ? hovered.name : total}
+      </text>
+      <text x={C} y={C + 12} textAnchor="middle" fontSize={8} style={muted}>
+        {hovered
+          ? `${hovered.panels.length} panel${hovered.panels.length === 1 ? "" : "s"}`
+          : "color panels"}
+      </text>
+    </svg>
   );
 }
 
@@ -891,21 +1077,24 @@ export default function StatsTab({
         )}
 
         <section>
-          <SectionTitle title="PANELS BY DECADE" />
-          <ColumnChart data={stats.decades} onFilter={onFilter} />
+          <SectionTitle title="PANELS BY DECADE" note={`color vs B&W at colorfulness ≥ ${COLORFULNESS_THRESHOLD}`} />
+          <DecadeColorChart
+            data={stats.decades}
+            colorCount={stats.colorCount}
+            bwCount={stats.bwCount}
+            onFilter={onFilter}
+          />
         </section>
 
-        {stats.palette.length > 0 && (
+        {stats.huedCount > 0 && (
           <section>
-            <SectionTitle title="PALETTE BY DECADE" note="sorted by hue, B&W last" />
-            <DecadePalette rows={stats.palette} onOpen={onOpenPanel} />
+            <SectionTitle
+              title="HUES"
+              note={`color panels by leading hue${onOpenPanel ? " · click a wedge to page through it" : ""}`}
+            />
+            <HueWheel bins={stats.hues} total={stats.huedCount} onOpen={onOpenPanel} />
           </section>
         )}
-
-        <section>
-          <SectionTitle title="COLOR VS B&W" note={`colorfulness ≥ ${COLORFULNESS_THRESHOLD}`} />
-          <ColorSplit colorCount={stats.colorCount} bwCount={stats.bwCount} />
-        </section>
 
         {meta && meta.ages.length > 0 && (
           <section>
