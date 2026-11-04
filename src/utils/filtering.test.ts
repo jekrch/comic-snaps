@@ -26,6 +26,7 @@ function filters(over: FilterSpec = {}): Filters {
     credits: new Set(over.credits ?? []),
     postedBy: new Set(over.postedBy ?? []),
     series: new Set(over.series ?? []),
+    ages: new Set(over.ages ?? []),
     searchQuery: over.searchQuery ?? "",
   };
 }
@@ -249,5 +250,29 @@ describe("computeFacets", () => {
       expect(bySeries.seriesCounts.get("Arzach")).toBe(1);
       expect(bySeries.postedByCounts.get("sam")).toBeUndefined();
     });
+  });
+});
+
+describe("artist age filter", () => {
+  const young = makePanel({ id: "young", artistAge: 23 });
+  const mid = makePanel({ id: "mid", artistAge: 34 });
+  const unknown = makePanel({ id: "unknown" });
+  const all = [young, mid, unknown];
+
+  it("keeps only panels whose age falls in a selected bracket", () => {
+    expect(applyFilters(all, filters({ ages: ["20-24"] })).map((p) => p.id)).toEqual(["young"]);
+    expect(applyFilters(all, filters({ ages: ["20-24", "30-34"] })).map((p) => p.id)).toEqual([
+      "young",
+      "mid",
+    ]);
+  });
+
+  it("drops panels with no known age once a bracket is selected", () => {
+    expect(applyFilters(all, filters({ ages: ["30-34"] })).map((p) => p.id)).toEqual(["mid"]);
+  });
+
+  it("counts brackets against every other filter but its own", () => {
+    const { ageCounts } = computeFacets(all, filters({ ages: ["20-24"] }));
+    expect(Object.fromEntries(ageCounts)).toEqual({ "20-24": 1, "30-34": 1 });
   });
 });

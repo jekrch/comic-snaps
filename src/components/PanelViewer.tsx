@@ -392,6 +392,14 @@ export default function PanelViewer({
                       {panel.artist}
                     </button>
                   )}
+                  {panel.artist && panel.artistAge != null && (
+                    <span
+                      className="text-white/30 text-[10px]"
+                      title={`${panel.artist} was ${panel.artistAge} in ${panel.year}`}
+                    >
+                      {" "}· age {panel.artistAge}
+                    </span>
+                  )}
                 </p>
                 <p className="text-[10px] text-white/30 mt-1 leading-snug whitespace-nowrap">
                   {panel.postedBy} ·{" "}

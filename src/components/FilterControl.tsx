@@ -3,6 +3,7 @@ import type { Panel } from "../types";
 import type { Filters, FilterSetKey } from "../utils/filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
 import { comparePersonNames } from "../utils/names";
+import { ageBinOrder, formatAgeBin } from "../utils/artistAge";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
 import { ChevronDown, Search, X, XCircle } from "lucide-react";
@@ -48,7 +49,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, ageCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -115,6 +116,14 @@ export default function FilterControl({
         .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([label, c]) => ({ label, count: c })),
     [seriesCounts]
+  );
+
+  const ageItems = useMemo(
+    () =>
+      Array.from(ageCounts.entries())
+        .sort((a, b) => ageBinOrder(a[0]) - ageBinOrder(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [ageCounts]
   );
 
   const toggleInSet = useCallback(
@@ -278,6 +287,13 @@ export default function FilterControl({
               items={lettererItems}
               selected={filters.letterers}
               onToggle={(v) => toggleInSet("letterers", v)}
+            />
+            <FacetSection
+              title="ARTIST'S AGE"
+              items={ageItems}
+              selected={filters.ages}
+              onToggle={(v) => toggleInSet("ages", v)}
+              renderLabel={formatAgeBin}
             />
             <FacetSection
               title="CREDITED"

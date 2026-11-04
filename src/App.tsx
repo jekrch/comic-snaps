@@ -23,6 +23,7 @@ import type { StatsFilterPatch } from "./components/stats/StatsTab";
 import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates";
 import { useFilterParams } from "./hooks/useFilterParams";
 import { isProductionOnly, loadMetadata } from "./utils/metadata";
+import { artistAgeAt } from "./utils/artistAge";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import PanelViewer from "./components/PanelViewer";
@@ -586,6 +587,7 @@ export default function App() {
         credits: new Set(patch.credits ?? []),
         postedBy: new Set(),
         series: new Set(patch.series ?? []),
+        ages: new Set(patch.ages ?? []),
       };
       setFilters(next);
       syncToURL(next, sortMode, view, seriesSort, artistSort);
@@ -609,7 +611,9 @@ export default function App() {
           if (s.tags?.length) seriesTagMap.set(s.id, s.tags);
         }
         const artistTagMap = new Map<string, string[]>();
+        const artistByName = new Map<string, Artist>();
         for (const a of artists) {
+          artistByName.set(a.name, a);
           if (a.tags?.length) artistTagMap.set(a.name, a.tags);
         }
         const creditMap = new Map<string, { colorists: string[]; letterers: string[]; names: string[] }>();
@@ -633,9 +637,11 @@ export default function App() {
             ...(artistTagMap.get(p.artist) ?? []),
           ];
           const credits = creditMap.get(`${p.slug}|${p.issue}`);
-          if (extra.length === 0 && !credits) return p;
+          const artistAge = artistAgeAt(p.year, artistByName.get(p.artist));
+          if (extra.length === 0 && !credits && artistAge === null) return p;
           return {
             ...p,
+            ...(artistAge !== null && { artistAge }),
             ...(extra.length > 0 && { tags: Array.from(new Set([...(p.tags ?? []), ...extra])) }),
             ...(credits?.colorists.length && { colorists: credits.colorists }),
             ...(credits?.letterers.length && { letterers: credits.letterers }),

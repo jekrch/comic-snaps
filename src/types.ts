@@ -109,6 +109,11 @@ export interface Panel {
   letterers?: string[];
   /** Every person credited on this panel's issue, in any role. */
   credits?: string[];
+  /**
+   * The artist's age in the publication year, derived at load from their
+   * birth year in `artists.json` (see `artistAgeAt`). Absent when unknown.
+   */
+  artistAge?: number;
   /** Manual override for masonry column span; omit to fall back to aspect-ratio detection. */
   columnSpan?: 1 | 2;
   /**

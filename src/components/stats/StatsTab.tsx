@@ -15,6 +15,7 @@ import { PRODUCTION_ROLES, loadMetadata } from "../../utils/metadata";
 import { normalizeCountry } from "../../utils/country";
 import { formatIssue } from "../../utils/issueFormat";
 import { panelImageUrl } from "../../utils/imageUrl";
+import { AGE_BIN, ageBinKey, ageBinStart } from "../../utils/artistAge";
 
 // Chart palette — validated against the app surface (#141414) with the
 // dataviz six-checks script: accent passes all four; gray is the deliberate
@@ -35,7 +36,7 @@ const ISSUE_CREDIT_ROLES = ["Writer", "Colorist", "Letterer"];
 
 /** Gallery filter selections a clicked bar can apply — keys match Filters. */
 export type StatsFilterPatch = Partial<
-  Record<"decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series", string[]>
+  Record<"decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series" | "ages", string[]>
 >;
 
 /** Opens a panel in the viewer; `group` scopes the viewer's prev/next. */
@@ -85,6 +86,11 @@ interface ComputedStats {
   huedCount: number;
   oldestPanel: Panel | null;
   career: Career | null;
+  ages: ColumnDatum[];
+  agedPanelCount: number;
+  medianAge: number | null;
+  youngest: AgePick | null;
+  oldest: AgePick | null;
 }
 
 /** The artist whose panels here span the most years, first to last. */
@@ -106,11 +112,6 @@ interface MetaStats {
   publishers: NamedCount[];
   creditedIssueCount: number;
   creatorCount: number;
-  ages: ColumnDatum[];
-  agedPanelCount: number;
-  medianAge: number | null;
-  youngest: AgePick | null;
-  oldest: AgePick | null;
   countries: NamedCount[];
   countryKnown: number;
   countryTotal: number;
@@ -262,25 +263,16 @@ function computePanelStats(panels: Panel[]): ComputedStats {
     huedCount,
     oldestPanel,
     career,
+    ...computeAgeStats(panels),
   };
 }
 
-// Ages outside this range are bad birth-year records, not prodigies
-const MIN_PLAUSIBLE_AGE = 12;
-const MAX_PLAUSIBLE_AGE = 100;
-const AGE_BIN = 5;
-
-function computeAgeStats(panels: Panel[], artistByName: Map<string, Artist>) {
+/** Artist's age at publication, from the age each panel carries (see
+ *  `artistAgeAt`). Each bar filters the gallery to its age bracket. */
+function computeAgeStats(panels: Panel[]) {
   const aged: AgePick[] = [];
   for (const p of panels) {
-    const a = artistByName.get(p.artist);
-    if (!a?.birthYear || !(p.year > 0)) continue;
-    // A panel published after its artist died is a posthumous printing or a
-    // reprint, so its year isn't when they drew it.
-    if (a.deathYear && p.year > a.deathYear) continue;
-    const age = p.year - a.birthYear;
-    if (age < MIN_PLAUSIBLE_AGE || age > MAX_PLAUSIBLE_AGE) continue;
-    aged.push({ panel: p, age });
+    if (p.artistAge != null) aged.push({ panel: p, age: p.artistAge });
   }
   if (aged.length === 0) {
     return { ages: [], agedPanelCount: 0, medianAge: null, youngest: null, oldest: null };
@@ -299,18 +291,19 @@ function computeAgeStats(panels: Panel[], artistByName: Map<string, Artist>) {
   const medianAge =
     sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
 
-  const lo = Math.floor(youngest.age / AGE_BIN) * AGE_BIN;
-  const hi = Math.floor(oldest.age / AGE_BIN) * AGE_BIN;
+  const lo = ageBinStart(youngest.age);
+  const hi = ageBinStart(oldest.age);
   const bins = new Map<number, number>();
   for (let b = lo; b <= hi; b += AGE_BIN) bins.set(b, 0);
   for (const { age } of aged) {
-    const b = Math.floor(age / AGE_BIN) * AGE_BIN;
+    const b = ageBinStart(age);
     bins.set(b, (bins.get(b) ?? 0) + 1);
   }
   const ages = [...bins.entries()].map(([b, count]) => ({
     label: String(b),
     name: `Age ${b}–${b + AGE_BIN - 1}`,
     count,
+    ...(count > 0 && { filter: { ages: [ageBinKey(b)] } }),
   }));
 
   return { ages, agedPanelCount: aged.length, medianAge, youngest, oldest };
@@ -453,7 +446,6 @@ function computeMetaStats(
     publishers,
     creditedIssueCount: linkedIssueIds.size,
     creatorCount: allCreators.size,
-    ...computeAgeStats(panels, artistByName),
     ...computeCountryStats(panels, artistByName),
   };
 }
@@ -698,23 +690,6 @@ function SuperlativeTile({ s, onOpen }: { s: Superlative; onOpen?: StatsOpenPane
     >
       {body}
     </button>
-  );
-}
-
-/** Same footprint as a SuperlativeTile, held while the metadata loads so the
- *  grid doesn't grow a row under the reader. */
-function SuperlativePlaceholder() {
-  return (
-    <div
-      className="rounded-md p-2 border"
-      style={{ borderColor: "var(--color-border, rgba(74,71,69,0.25))" }}
-      aria-hidden
-    >
-      <div className="aspect-[4/3] rounded-[3px] mb-2" style={{ background: HAIRLINE }} />
-      <div className="h-[9px] mb-1" />
-      <div className="h-[17px]" />
-      <div className="h-[10px] mt-1" />
-    </div>
   );
 }
 
@@ -968,7 +943,6 @@ export default function StatsTab({
   onOpenPanel?: StatsOpenPanel;
 }) {
   const [meta, setMeta] = useState<MetaStats | null>(null);
-  const [metaFailed, setMetaFailed] = useState(false);
 
   const stats = useMemo(
     () => (panels.length > 0 ? computePanelStats(panels) : null),
@@ -981,10 +955,8 @@ export default function StatsTab({
       .then(({ artists, series, issues }) => {
         if (!cancelled) setMeta(computeMetaStats(panels, artists, series, issues));
       })
-      .catch(() => {
-        // metadata is optional — panel-derived stats still render
-        if (!cancelled) setMetaFailed(true);
-      });
+      // metadata is optional — panel-derived stats still render
+      .catch(() => {});
     return () => { cancelled = true; };
   }, [panels]);
 
@@ -1025,8 +997,8 @@ export default function StatsTab({
     });
   }
   for (const [key, label, pick] of [
-    ["youngest-artist", "Youngest artist", meta?.youngest],
-    ["oldest-artist", "Oldest artist", meta?.oldest],
+    ["youngest-artist", "Youngest artist", stats.youngest],
+    ["oldest-artist", "Oldest artist", stats.oldest],
   ] as const) {
     if (!pick) continue;
     superlatives.push({
@@ -1038,7 +1010,6 @@ export default function StatsTab({
       panel: pick.panel,
     });
   }
-  const agePending = !meta && !metaFailed;
 
   return (
     <div className="px-6 pt-5 pb-6">
@@ -1066,12 +1037,6 @@ export default function StatsTab({
               {superlatives.map((s) => (
                 <SuperlativeTile key={s.key} s={s} onOpen={onOpenPanel} />
               ))}
-              {agePending && (
-                <>
-                  <SuperlativePlaceholder />
-                  <SuperlativePlaceholder />
-                </>
-              )}
             </div>
           </section>
         )}
@@ -1096,13 +1061,13 @@ export default function StatsTab({
           </section>
         )}
 
-        {meta && meta.ages.length > 0 && (
+        {stats.ages.length > 0 && (
           <section>
             <SectionTitle
               title="ARTIST'S AGE AT PUBLICATION"
-              note={`median ${meta.medianAge} · ${meta.agedPanelCount} panels with a known birth year`}
+              note={`median ${stats.medianAge} · ${stats.agedPanelCount} panels with a known birth year`}
             />
-            <ColumnChart data={meta.ages} />
+            <ColumnChart data={stats.ages} onFilter={onFilter} />
           </section>
         )}
 
