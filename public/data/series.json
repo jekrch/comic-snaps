@@ -153,7 +153,7 @@
       "id": "anubis",
       "name": "Anubis",
       "parentSeries": null,
-      "description": "Published from 1996 to 1997 with 7 total issues numbered 1-7.\r\n\r\nIssues 1-3 published by SCC Entertainment, 4-5 published by Didactic Chocolate Press, and 6-7 published by Adventure Comics.\r\n\r\nIssues 1-2 collected in Anubis.",
+      "description": "Anubis is a fantasy comic written and drawn by Scott Berwanger in an elaborate, articulated style. When Waldentown faces invasion, its king entrusts the guardianship of Prince Edward to Anubis Peldafar, a councilman and secretary. It began in 1995 from SCC Entertainment and continued under Didactic Chocolate Press from 1996, with later issues from Adventure Comics; numbering restarted along the way and listings disagree on the length of the run.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9054108-anubis1a.jpg",
       "references": [
         {
@@ -163,9 +163,13 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/26480/"
+        },
+        {
+          "name": "Atomic Avenue",
+          "url": "https://atomicavenue.com/atomic/series/21003/ComicBook/Anubis"
         }
       ],
-      "startYear": 1996,
+      "startYear": 1995,
       "publisher": "Didactic Chocolate Press",
       "issueCount": 7,
       "sources": [
@@ -346,7 +350,7 @@
       "id": "beneath-the-trees-where-nobody-sees-halloween-special",
       "name": "Beneath the Trees Where Nobody Sees: Halloween Special",
       "parentSeries": null,
-      "description": "",
+      "description": "Beneath the Trees Where Nobody Sees: Halloween Special is an anthology one-shot published by IDW on October 7, 2026. After Samantha Strong has left Woodbrook, the town's animal residents gather around a campfire to tell scary stories, by series creator Patrick Horvath with James Tynion IV, Tony Fleecs, Dave Wachter, Che Grayson, Jared Cullum and others.",
       "imageUrl": null,
       "references": [
         {
@@ -617,7 +621,7 @@
       "id": "buzz",
       "name": "Buzz",
       "parentSeries": null,
-      "description": "Buzz was a black-and-white humor anthology published by Kitchen Sink Press, beginning in August 1990. Its first issue gathered strips by Daniel Clowes, Drew Friedman, Richard Sala and Jim Woodring alongside early computer-generated art by Mark Landman and a classic George Herriman Krazy Kat reprint.",
+      "description": "Buzz was a black-and-white humor anthology published by Kitchen Sink Press and edited by Mark Landman, running three issues from 1990 to 1991. Its first issue gathered strips by Daniel Clowes, Drew Friedman, Richard Sala and Jim Woodring alongside early computer-generated art by Mark Landman and a classic George Herriman Krazy Kat reprint; Charles Burns also contributed. The Comics Journal noted that its computer-graphics covers set it apart from Kitchen Sink's similar Snarf.",
       "references": [
         {
           "name": "Comic Vine",
@@ -629,6 +633,9 @@
         }
       ],
       "imageUrl": null,
+      "publisher": "Kitchen Sink Press",
+      "startYear": 1990,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron",
@@ -979,7 +986,7 @@
       "id": "crowbound",
       "name": "Crowbound",
       "parentSeries": null,
-      "description": "",
+      "description": "Crowbound is an ongoing dark fantasy series by Jeff Lemire and Dustin Nguyen, the team behind Descender and Ascender, published by Image Comics from September 2026. Rose works in the Factory, a vast coastal structure that divides the world from the ruined settlements beyond it; when her young daughter is abducted, the noncompliant mother makes a dark pact with an ancient, violent Scarecrow Queen. The first issue sold out at the distributor on release and went back to print.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10176543-cover.jpg",
       "references": [
         {
@@ -989,6 +996,10 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16601/"
+        },
+        {
+          "name": "Image Comics",
+          "url": "https://imagecomics.com/press-releases/first-look-at-jeff-lemire-dustin-nguyens-upcoming-crowbound-series-launching-this-september"
         }
       ],
       "startYear": 2026,
@@ -1167,7 +1178,7 @@
       "id": "dracula-vlad-the-impaler",
       "name": "Dracula: Vlad the Impaler",
       "parentSeries": null,
-      "description": "This mini-series recounts the life of Vlad the Impaler and his origin as the vampire Dracula.\r\n\r\nCollected in Dracula: Vlad the Impaler.",
+      "description": "Dracula: Vlad the Impaler is a three-issue miniseries written by Roy Thomas and drawn by Esteban Maroto, with colors by Paul Mounts, published monthly by Topps Comics from February to April 1993. A historically grounded account of Vlad III, it follows him from his youth as a hostage at the Sultan's court, through his war with his brother Radu, a puppet of the Turks, to the assassination from which the vampire legend rises. Some copies were polybagged with trading cards.\r\n\r\nCollected in Dracula: Vlad the Impaler.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/33037-5187-36878-1-dracula-vlad-the-im.jpg",
       "references": [
         {
@@ -1439,6 +1450,9 @@
           "url": "https://en.wikipedia.org/wiki/Cat-Head_Comics"
         }
       ],
+      "publisher": "Cat-Head Comics",
+      "startYear": 1989,
+      "issueCount": 1,
       "sources": [
         "comicvine",
         "metron",
@@ -1606,7 +1620,7 @@
       "id": "frank",
       "name": "Frank",
       "parentSeries": null,
-      "description": "Frank is a cartoon character created by American cartoonist Jim Woodring. Frank is a bipedal, bucktoothed animal of uncertain species whom Woodring described as a \"generic anthropomorph\". The stories and supporting characters appear in a world called the Unifactor.",
+      "description": "Frank is a cartoon character created by American cartoonist Jim Woodring. Frank is a bipedal, bucktoothed animal of uncertain species whom Woodring described as a \"generic anthropomorph\". The stories and supporting characters appear in a world called the Unifactor. Fantagraphics published four issues of Woodring's Frank comic book from September 1996 to February 2001, all but the first with one color story, and The Frank Book (2003) collected nearly all of them along with the conclusion of the serial \"Frank's High Horse,\" left unfinished in the comic.",
       "references": [
         {
           "name": "Wikipedia",
@@ -1617,6 +1631,9 @@
           "url": "https://comicvine.gamespot.com/frank/4050-47391/"
         }
       ],
+      "publisher": "Fantagraphics",
+      "startYear": 1996,
+      "issueCount": 4,
       "sources": [
         "wikipedia",
         "comicvine",
@@ -1709,7 +1726,7 @@
       "id": "grrl-scouts-work-sucks",
       "name": "Grrl Scouts: Work Sucks",
       "parentSeries": null,
-      "description": "",
+      "description": "Grrl Scouts: Work Sucks is a four-issue miniseries written and drawn by Jim Mahfood, published by Image Comics in 2003 as the sequel to his 1999 Oni Press Grrl Scouts. Gwen, Daphne and Rita lose their usual income and have to find day jobs in Freak City; the last issue has them keeping a visiting DJ out of trouble. It was collected as Grrl Scouts Volume 2: Work Sucks with new short stories, a sketchbook and guest pin-ups.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/12/124613/3086941-grrl%20scouts%20-%20work%20sucks%20v2003%20001%20%282003%29%20pagecover.jpg",
       "references": [
         {
@@ -2088,13 +2105,17 @@
     {
       "id": "ice-cream-man-chocolate-vanilla-twist",
       "name": "Ice Cream Man: Chocolate / Vanilla Twist",
-      "parentSeries": null,
-      "description": "",
+      "parentSeries": "ice-cream-man",
+      "description": "Ice Cream Man #1: Chocolate / Vanilla Twist Edition is a black-and-white reprint of the series' 2018 debut by W. Maxwell Prince and Mart\u00edn Morazzo, published by Image Comics on October 14, 2026, with remastered lettering by Good Old Neon, a new short story from the whole creative team, and a decoder-lens cover that reveals hidden messages. It began the run-up to the series' return to a regular schedule and to Ice Cream Man #50 in 2027.",
       "imageUrl": null,
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16926/"
+        },
+        {
+          "name": "Image Comics",
+          "url": "https://imagecomics.com/press-releases/ice-cream-man-1-chocolate-vanilla-twist-edition-to-bring-the-delectable-debut-back-to-shelves-with-new-bonus-story-exciting-lookety-split-decodable-cover-this-october"
         }
       ],
       "sources": [
@@ -2617,7 +2638,7 @@
       "id": "madman-adventures",
       "name": "Madman Adventures",
       "parentSeries": "madman",
-      "description": "Madman Adventures is a three-issue miniseries written and drawn by Mike Allred, published by Tundra in 1993 and the first Madman series in color. It runs from a day in the life of Frank Einstein through a trip back into prehistory and a closing dream, and was preceded by an ashcan edition issued as Hero Premiere Edition #4.",
+      "description": "Madman Adventures is a three-issue miniseries written and drawn by Mike Allred, published by Tundra in 1992 and 1993 and the first Madman series in color. It runs from a day in the life of Frank Einstein through a trip back into prehistory and a closing dream, and was preceded by an ashcan edition issued as Hero Premiere Edition #4. Kitchen Sink reprinted it after absorbing Tundra, and Oni Press collected it in 2002.",
       "references": [
         {
           "name": "Comic Vine",
@@ -2628,6 +2649,9 @@
           "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
         }
       ],
+      "publisher": "Tundra",
+      "startYear": 1992,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron",
@@ -2844,7 +2868,7 @@
     },
     {
       "id": "my-body-is-unspooling",
-      "name": "My Body is Unspooling",
+      "name": "My Body Unspooling",
       "parentSeries": null,
       "description": "My Body Is Unspooling is a minicomic by the UK cartoonist and painter Leo Fox, published by Silver Sprocket in 2024. It follows Lucille, whose body and mind are permanently at odds: Lucille too cold and too resentful for his body, his body too warm and too loud for Lucille. The comic worries at what holds the two together.",
       "imageUrl": null,
@@ -2881,7 +2905,7 @@
       "id": "nut",
       "name": "Nut",
       "parentSeries": null,
-      "description": "A surreal self-published comic book about agency, purpose, and love.",
+      "description": "NUT is a self-published comic by Minneapolis cartoonist Brandon John, issued since 2022 through Row 7. The first issue, In the Gutter and Down the Drain, follows an old, destitute man struggling to provide for himself and his cat until he finds his inner power, and later issues build out the \"Nutverse,\" in which ordinary people must learn to make their own happiness and find a purpose. It is drawn with analog, accessible materials, which John uses to show how few barriers there are to making comics.",
       "imageUrl": "https://images.squarespace-cdn.com/content/v1/633092fa0ba8b06ba49b7fad/b1fa0324-9ad5-4bc6-a3b5-95db10679cdf/NUT+5+cover_PI.png?format=1500w",
       "references": [
         {
@@ -2907,7 +2931,7 @@
         "data/covers/nut/0fb0cf14806f.png",
         "data/covers/nut/0201ed259500.png"
       ],
-      "startYear": 2025,
+      "startYear": 2022,
       "publisher": "Row 7 Publishing",
       "issueCount": 5,
       "issueCountInferred": true
@@ -2992,12 +3016,16 @@
       "id": "optic-nerve",
       "name": "Optic Nerve",
       "parentSeries": null,
-      "description": "Second volume of Optic Nerve (1991). Adrian Tomine's one man anthology series.",
+      "description": "Optic Nerve is Adrian Tomine's one-man anthology comic. He began it as a self-published mini-comic in 1991, while still in high school, and Drawn & Quarterly relaunched it as a regular comic book with a new #1 in April 1995, containing \"Sleepwalk,\" \"Echo Ave.,\" \"Long Distance,\" \"Drop\" and \"Lunch Break.\" Its issues were collected as Sleepwalk and Other Stories (#1\u20134, 1998), Summer Blonde (#5\u20138, 2002), Shortcomings (#9\u201311, 2007), his first multi-issue story, and Killing and Dying (#12\u201314, 2015), the first in color.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2008174-1.jpg",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/optic-nerve/4050-32641/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Optic_Nerve_(comics)"
         }
       ],
       "startYear": 1995,
@@ -3881,12 +3909,16 @@
       "id": "the-demon",
       "name": "The Demon",
       "parentSeries": null,
-      "description": "",
+      "description": "The Demon is a series written and drawn by James Harren, with colors by Dave Stewart and letters by Clayton Cowles, published by DC Comics from October 2026 as part of its Next Level initiative. Beasts from Hell are roaming among us, feasting on humanity's souls and leaving hollow husks behind; only the shattered wanderer Jason Blood can see and banish them, and he must decide whether to unleash the demon Etrigan again.",
       "imageUrl": null,
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16896/"
+        },
+        {
+          "name": "DC",
+          "url": "https://www.dc.com/comics/the-demon-2026/the-demon-2026-1"
         }
       ],
       "startYear": 2026,
@@ -3992,7 +4024,7 @@
       "id": "the-karman-blade",
       "name": "The Karman Blade",
       "parentSeries": null,
-      "description": "",
+      "description": "The Karman Blade is a four-issue dark fantasy miniseries written by Darcy Van Poelgeest and drawn by Ian Bertram, the team behind the Eisner-winning Little Bird, with colors by Matt Hollingsworth and letters by Hassan Otsmane-Elhaou, published by Image Comics from September 2026. In a withering desert realm a young man, Anatta, is chosen by a star-forged sword to slay Kalu, a tyrannical god who hoards the world's water, but must first face his own inner struggles.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10182032-cover.jpg",
       "references": [
         {
@@ -4002,11 +4034,15 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16612/"
+        },
+        {
+          "name": "Image Comics",
+          "url": "https://imagecomics.com/press-releases/from-the-creators-behind-the-eisner-award-winning-miniseries-little-bird-comes-the-all-new-epic-fantasy-the-karman-blade-this-september"
         }
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 2,
+      "issueCount": 4,
       "sources": [
         "comicvine",
         "metron"
@@ -4405,7 +4441,7 @@
       "id": "trina-s-women",
       "name": "Trina's Women",
       "parentSeries": null,
-      "description": "",
+      "description": "Trina's Women is a 1976 one-shot by Trina Robbins from Kitchen Sink. It opens with several Rosie the Riveter pieces, including minute mysteries and a gag, then runs Panthera, a half-human, half-lion heroine serialized in four-page chapters that had begun in the short-lived Comix Book, and closes on assorted odds and ends.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/2629118-trina_s_women.jpg",
       "references": [
         {
@@ -4415,6 +4451,11 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/series/17185/"
+        },
+        {
+          "name": "Kitchen Sink blog",
+          "url": "https://kitchen-sink.kwakk.info/?p=528",
+          "title": "1976: Trina's Women"
         }
       ],
       "sources": [
@@ -4545,7 +4586,7 @@
       "id": "universal-monsters-the-bride-of-frankenstein-lives",
       "name": "Universal Monsters: The Bride of Frankenstein Lives",
       "parentSeries": null,
-      "description": "",
+      "description": "Universal Monsters: The Bride of Frankenstein Lives is a four-issue miniseries written by Kelly Thompson and drawn and colored by Mattia De Iulis, with letters by Becca Carey, published by Skybound and Image Comics from October 2026 and the eighth of Skybound's Universal Monsters series. With no memory of her past or understanding of what she is, the Bride takes her first steps into a strange and dangerous new world. Luana Vecchio's variant covers join into one image across the four issues.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10221739-cover.jpg",
       "references": [
         {
@@ -4555,6 +4596,11 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/17188/"
+        },
+        {
+          "name": "Smash Pages",
+          "url": "https://smashpages.net/2026/07/01/kelly-thompson-mattia-de-iulis-reunite-for-universal-monsters-the-bride-of-frankenstein-lives/",
+          "title": "Kelly Thompson + Mattia De Iulis reunite for 'Universal Monsters: The Bride of Frankenstein Lives'"
         }
       ],
       "sources": [
@@ -4563,7 +4609,7 @@
       ],
       "startYear": 2026,
       "publisher": "Image",
-      "issueCount": 1,
+      "issueCount": 4,
       "coverSources": {
         "metron": [
           1
@@ -4656,12 +4702,17 @@
       "id": "verbatim",
       "name": "Verbatim",
       "parentSeries": null,
-      "description": "",
+      "description": "Verbatim is a two-issue black-and-white comic by Carl Belfast, published by Fantagraphics in 1993\u201394. Billed \"Unbelievably realistic,\" the first issue parodies autobiographical comics in the Harvey Pekar mold with four stories about the author's upbringing, hygiene, daily routine and relationships; the second follows his move to rural Tennessee.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/3808507-ver1.jpg",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/verbatim/4050-73719/"
+        },
+        {
+          "name": "Random Thoughts",
+          "url": "https://lars.ingebrigtsen.no/2016/10/06/ff1993-verbatim/",
+          "title": "FF1993: Verbatim"
         }
       ],
       "startYear": 1993,

@@ -1,6 +1,6 @@
 ---
 name: restore-bw-panel
-description: Restore a phone photo of an old black-and-white comic panel in the comic-snaps gallery. Evens the lighting, seats washed-out ink at black, removes color casts, and swaps the result into gallery.json with its metadata and embeddings handled. Keeps the photo's framing unless the user asks to crop or straighten. Use when asked to improve, fix, clean up, enhance, or restore the image for a black-and-white panel, usually named by series, issue, and artist. For color art, or if you don't know which it is, use restore-color-panel, which checks first.
+description: Restore a phone photo of an old black-and-white comic panel in the comic-snaps gallery. Evens the lighting, seats washed-out ink at black, removes color casts, and swaps the result into gallery.json with its metadata and embeddings handled. Keeps the photo's framing unless the user asks to crop or straighten. Usually reached from restore-panel, which finds the panel and checks it first. Use directly only when the panel is known to be black-and-white. For color art, or if you don't know which it is, use restore-panel.
 ---
 
 # Restoring a black-and-white panel
@@ -27,9 +27,12 @@ or straighten looks worthwhile, mention it when you finish and leave it undone.
 
 ### 1. Find the panel and look at it
 
-Search `public/data/gallery.json` by title, issue, and artist. A series can have
-several panels per issue, so match the artist. Read the image and check that it needs
-this at all: see "Skip it" below.
+If you came from `restore-panel`, this is done: start at step 2 or 3 with the
+`original` it wrote. Otherwise run `restore-panel`'s `find` and `original` steps, which
+match the artist and recover the first-posted photo of a panel restored before. Never
+enhance a `-vN` image again: its stretched blacks compound.
+
+Read the image and check that it needs this at all: see "Skip it" below.
 
 ### 2. Measure the borders, only if asked to reframe
 
@@ -76,6 +79,7 @@ out to be in the photo all along.
 | Halos along the lines | Lower `--sharpen` (default 0.5) |
 | Page tint wrong, or colored stock neutralized | `--tint A,B`, or `--tint 0,0` for neutral |
 | Hard shadow left in a corner | Not fixable here: it's excluded from the paper model. Tell the user, who may want it cropped |
+| Halo around shapes on grey-toned art | The flat-field read the tones as uneven light. Use `restore_color.py enhance --no-balance`, which only sets levels |
 | Show-through from the next page more visible | Expected: it's in the photo and the stretch reveals it. Tell the user |
 
 ### 5. Install

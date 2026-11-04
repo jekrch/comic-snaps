@@ -1,12 +1,13 @@
 ---
 name: restore-color-panel
-description: Restore a phone photo of a color comic panel in the comic-snaps gallery. Takes out the lamp's color cast and falloff, lifts glare off the blacks, keeps the art's own colors, and swaps the result into gallery.json with its metadata and embeddings handled. Keeps the photo's framing unless the user asks to crop or straighten. Use whenever asked to improve, fix, clean up, enhance, or restore a panel's image and the art is in color, or when you don't yet know whether it is, usually named by series, issue, and artist. It checks first and hands black-and-white art to restore-bw-panel.
+description: Restore a phone photo of a color comic panel in the comic-snaps gallery. Takes out the lamp's color cast and falloff, lifts glare off the blacks, keeps the art's own colors, and swaps the result into gallery.json with its metadata and embeddings handled. Keeps the photo's framing unless the user asks to crop or straighten. Usually reached from restore-panel, which finds the panel and checks it first. Use directly when the art is known to be in color, including faded, hand-tinted, or spot-color panels.
 ---
 
 # Restoring a color panel
 
 `restore_color.py` beside this file does the checking and enhancing, from the repo
-root. Measuring edges and installing are shared with `restore-bw-panel/restore.py`.
+root. Measuring edges and installing are shared with `restore-bw-panel/restore.py`, and
+finding panels, recovering originals, and measuring regions with `restore-panel/panel.py`.
 Both need OpenCV (`cv2`), which is installed locally but isn't in
 `scripts/requirements.txt`. Write working files to the scratchpad.
 
@@ -24,10 +25,13 @@ or straighten looks worthwhile, mention it when you finish and leave it undone.
 
 ### 1. Find the panel and look at it
 
-Search `public/data/gallery.json` by title, issue, and artist. A series can have
-several panels per issue, so match the artist. Read the image and note the light (any
-overall tint, one side darker, glare) and whether it needs this at all: see "Skip it"
-below.
+If you came from `restore-panel`, this and step 2 are done: start at step 3 with the
+`original` it wrote. Otherwise run `restore-panel`'s `find` and `original` steps, which
+match the artist and recover the first-posted photo of a panel restored before. Never
+enhance a `-vN` image again.
+
+Read the image and note the light (any overall tint, one side darker, glare) and whether
+it needs this at all: see "Skip it" below.
 
 ### 2. Check that it's color
 
@@ -52,6 +56,10 @@ python3 scripts/skills/restore-color-panel/restore_color.py enhance PHOTO.jpg OU
 `X,Y,W,H` and replaces the full view with those crops. Look at the whole frame once
 too, then zoom on a face, a dark painted area, and the largest black area.
 
+`--anchors ANCHORS.png` shows what it read the light from: white anchors in green, and
+the ink cells it fitted glare to in blue (rejected ones red). Anchors on painted color
+mean the cast is wrong, whatever the output looks like.
+
 If the user did ask to reframe, get edge flags from `measure` as the `restore-bw-panel`
 skill describes, and add only the sides they asked about, with `=`: `--top=-0.01,46.5`.
 
@@ -59,21 +67,52 @@ skill describes, and add only the sides they asked about, with `=`: `--top=-0.01
 
 Read the compare image. Ask whether the art's colors survived, since that's the failure
 that matters: a photo left slightly warm is fine, and repainted art isn't. Compare hues
-in skin, a dark painted area, and any large flat color. A flaw that's also in the source
-is not yours to fix.
+in skin, a dark painted area, and any large flat color, with `restore-panel`'s `probe
+SOURCE --box ... --against OUT`: eyes miss a hue shift in darks. A flaw that's also in
+the source is not yours to fix.
+
+Before changing `--ink-sigmas` in either direction, zoom on the largest dark area and
+decide whether it's ink or paint. Ink is the darkest, most neutral thing in the panel.
+Paint is lighter than the line work and carries hue. They need opposite fixes.
 
 | You see | Do |
 | --- | --- |
-| Art lost its color, or everything shifted toward the opposite hue | The bright areas were paint, not paper. Lower `--strength`, or use `--no-balance` |
-| A warm or sepia palette looks cold | Same: that warmth may be the art. Try `--strength 0.5` |
+| Art lost its color, or everything shifted toward the opposite hue | The bright areas were paint, not paper. Name the real whites with `--white-box`, or lower `--strength`, or use `--no-balance` |
+| A warm or sepia palette looks cold | Same: that warmth may be the art. Try `--white-box`, or `--strength 0.5` |
+| It refused a cast that balloons or other white things visibly share | Large bright flats were read as paper. `--white-box X,Y,W,H` on one or more balloons: see below |
 | Cast clearly remains, with paper visible | `--strength 1`, if the warning says it was limited |
 | Colored page kept when it should be neutral, or the reverse | `--tint A,B`, or `--tint 0,0` for neutral. `--max-warmth` allows more yellow for aged stock |
-| Black areas mottled | Raise `--ink-sigmas` (default 1.5) |
-| Dark painted areas crushed to black | Lower `--ink-sigmas` |
+| True black ink mottled, such as glare on hair | Raise `--ink-sigmas` (default 1.5), up to 4 |
+| Solid painted darks mottled, recolored, or crushed | Raising `--ink-sigmas` makes this worse. Use `--ink-sigmas=-1.5`, down to `-3`, with `--max-veil 0.03` or `0.02` |
+| Dark browns turned red or maroon | `--keep-dark-hue`. The black point doesn't cause this, so `--ink-l` won't fix it |
 | Highlights blown out | Lower `--paper-l` (default 91) |
 | Halos along the lines | Lower `--sharpen` (default 0.35) |
 | Faded art still looks flat | Only if the user asks: `--saturation 1.1`. It invents color, so never by default |
 | Hard glare spot left behind | Not fixable here: the fields are too smooth to follow it. Tell the user |
+
+### Naming the whites
+
+The script can't tell light from a painted flat, so by default it limits how much cast
+it believes. When you can see white things in the panel, like balloons, captions,
+teeth, or eyes, name them, which settles the question:
+
+```bash
+python3 scripts/skills/restore-color-panel/restore_color.py enhance PHOTO.jpg OUT.jpg \
+  --white-box 620,55,230,60 --white-box 10,40,60,180 --anchors ANCHORS.png --compare CMP.jpg
+```
+
+Box the inside of each balloon. Lettering is dropped automatically, and so is the
+outline if it's thin. Then only pixels within chroma 12 of their color anchor the
+light, and the cast limits are lifted. It removes 85% of the cast with an aged-paper
+tint by default. That was the version kept on Bijou Funnies #6, where full removal
+turned a grey shirt blue. `--strength` and `--tint` still override it.
+
+It prints the field's color at the boxes against what they measure. A gap past 8
+means the light varies more than one box can tell it, so box whites in other parts
+of the panel too. Check that `--anchors` shows green only on paper.
+
+Don't name pale paint as white. A cream sky or a yellowed balloon the artist colored
+is art. If the balloons are colored, leave the cast alone.
 
 ### 5. Install
 
@@ -103,8 +142,14 @@ visual call in the app, so don't drive a browser to judge it.
   nothing known to be white, so color can't be corrected safely. It only sets levels.
   This is usually the right result, not a failure.
 - **"this much cast is painted color" / "strong cast read from very little paper".** The
-  bright areas it found are probably art. It only sets levels. Override with `--strength`
-  only if you can see that those areas really are paper.
+  bright areas it found are probably art. It only sets levels. If balloons or other white
+  things show the same cast, name them with `--white-box`, which reads the light from them
+  alone. `--strength` overrides it too, but keeps the wrong field's shape and hue.
+- **"the field doesn't follow the named whites".** The fitted light misses the boxes'
+  color by more than chroma 8. Look at `--anchors`, and box whites where the light differs.
+- **"glare over the ink: up to N of the paper".** The glare it subtracts, against
+  `--max-veil`. At the cap with painted darks in the panel, the cap is probably what's
+  holding them, so lower it rather than raising it.
 - **"removing N% of a strong cast".** The cast is strong enough that full removal risks
   the art, so it's capped and some warmth stays. Look before raising it.
 - **"no solid ink".** There's nothing dark enough to read glare from, so the black point
@@ -132,10 +177,18 @@ Worth knowing before changing the script. The limits were all set by panels it g
   15 it needs 3% coverage (one yellowed balloon turned a face purple). Removal is capped
   at chroma 18, drift across the frame at 8, and brightening at 8 L, which stopped ochre
   backgrounds bleaching out.
+- **Named whites:** `--white-box` gates the anchors to the boxes' color instead of trusting
+  brightness. That fixes the one case the evidence limits get wrong, where real light is
+  stronger than chroma 40. Bijou Funnies #6's yellow flats read as a=26 b=68 while its
+  balloons measured a=22 b=33.
 - **Glare:** a smooth floor fitted under the darkest pixels of each cell, because ink is
   often only thin lines and any solid dark left to vote is paint. Reading a charcoal shape
   as glare turned it navy. Glare takes the white field's color, not the dark pixels',
-  which would strip the blue from a navy sky.
+  which would strip the blue from a navy sky. `--max-veil` caps it, because solid paint
+  lighter than the line work still reads as glare.
+- **Dark hue:** `--keep-dark-hue` keeps the restored L and chroma below source L 38 but
+  turns the hue back to the source's, fully below L 26. It's opt-in because a real cast
+  is also in the source's darks.
 - **Black point:** like the B&W skill's, it sits above the ink's noise. It only applies
   when solid darks are the darkest thing in the panel, since otherwise they're paint.
 - **No saturation boost:** removing glare restores most lost color by itself, and the rest
