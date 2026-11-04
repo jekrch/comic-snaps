@@ -230,7 +230,7 @@
       "issue": 6,
       "year": 1971,
       "artist": "Robert Crumb",
-      "image": "images/bijou-funnies/issue-6-1792978194-v2.jpg",
+      "image": "images/bijou-funnies/issue-6-1792978194-v3.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -239,25 +239,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          18.8,
-          12,
-          8.2
+          19.6,
+          11.9,
+          7.4
         ],
         [
-          49.8,
-          2.9,
-          4.5
+          51.9,
+          1.8,
+          0.6
         ],
         [
-          69.1,
-          14.5,
-          31.1
+          71.4,
+          11,
+          31.6
         ]
       ],
-      "colorfulness": 20.2,
-      "phash": "f4b68188da4bcdc5",
-      "ahash": "ffc7a284c01000c8",
-      "dhash": "8f0c2e2c14666692"
+      "colorfulness": 20.8,
+      "phash": "f4b28188da4bcde5",
+      "ahash": "ffc78284c01206de",
+      "dhash": "8f0c2e2c14666e92"
     },
     {
       "seq": 341,
@@ -1451,7 +1451,7 @@
       "issue": 8,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-8-1791159122-v2.jpg",
+      "image": "images/bleeding-hearts/issue-8-1791159122-v3.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -1460,22 +1460,22 @@
       "height": 955,
       "dominantColors": [
         [
-          72.4,
-          10.1,
-          -1.7
+          72.3,
+          9.2,
+          -4.6
         ],
         [
           64.5,
-          21.5,
-          40.4
+          19.1,
+          38.7
         ],
         [
-          38,
-          18.9,
-          26.8
+          37.9,
+          18,
+          26.2
         ]
       ],
-      "colorfulness": 22.5,
+      "colorfulness": 23,
       "phash": "efd29531ea0bf180",
       "ahash": "fff7f5f1f1011390",
       "dhash": "58e4656147477262"
@@ -7507,7 +7507,7 @@
       "issue": 2,
       "year": 1972,
       "artist": "Jay Lynch",
-      "image": "images/snarf/issue-2-1779687914.jpg",
+      "image": "images/snarf/issue-2-1779687914-v2.jpg",
       "notes": null,
       "tags": [
         "cover"
@@ -7518,25 +7518,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          65.7,
-          13.9,
-          33.6
+          67.5,
+          6.5,
+          24
         ],
         [
-          19.2,
           16.8,
-          12.4
+          11.9,
+          7.8
         ],
         [
-          40.6,
-          58.8,
-          42.2
+          37,
+          54.9,
+          37.4
         ]
       ],
-      "colorfulness": 24.1,
-      "phash": "826466c8fb391b3d",
-      "ahash": "6577070f1f7f0f27",
-      "dhash": "8decdef838f9fecc"
+      "colorfulness": 25.4,
+      "phash": "826466cafa391b3d",
+      "ahash": "6476070f1f3f0f27",
+      "dhash": "8dec5efc39f9fecc"
     },
     {
       "seq": 139,
