@@ -4610,7 +4610,7 @@
       "issue": 8,
       "year": 1978,
       "artist": "Phil Trumbo",
-      "image": "images/heavy-metal/issue-8-1785107497.jpg",
+      "image": "images/heavy-metal/issue-8-1785107497-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -4619,25 +4619,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          51.4,
-          4.2,
-          4
+          40.7,
+          38.2,
+          11.2
         ],
         [
-          44.6,
-          45.7,
-          20.9
+          60.8,
+          2.2,
+          -9.9
         ],
         [
-          75.4,
-          6.3,
-          27.2
+          77.8,
+          0.8,
+          20.2
         ]
       ],
-      "colorfulness": 25.8,
-      "phash": "f190af6bd9311435",
-      "ahash": "effd46fcf0e08107",
-      "dhash": "9ba1a4b880c94b56"
+      "colorfulness": 26.9,
+      "phash": "f110af6bd9391435",
+      "ahash": "effd06f8e0e081ff",
+      "dhash": "9b29a49880090b16"
     },
     {
       "seq": 217,
@@ -6878,7 +6878,7 @@
       "issue": "Vol 8",
       "year": 2013,
       "artist": "Reed Waller",
-      "image": "images/omaha/issue-vol-8-1782027293.jpg",
+      "image": "images/omaha/issue-vol-8-1782027293-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -6887,25 +6887,25 @@
       "height": 630,
       "dominantColors": [
         [
-          84,
-          -0.2,
+          83.8,
+          -0.1,
           2.2
         ],
         [
-          63,
-          0.3,
+          60.8,
+          0.4,
           2.2
         ],
         [
-          23.1,
+          14.6,
           0.1,
           1.5
         ]
       ],
-      "colorfulness": 0.9,
+      "colorfulness": 1,
       "phash": "dc525a3ee91a2d68",
       "ahash": "f8fc7a7fd39f9dd9",
-      "dhash": "8994b6b4966e39b3"
+      "dhash": "8994f6b5966e39b3"
     },
     {
       "seq": 156,
@@ -8479,7 +8479,7 @@
       "issue": 5,
       "year": 2025,
       "artist": "Brandon John",
-      "image": "images/nut/issue-5-1778712250.jpg",
+      "image": "images/nut/issue-5-1778712250-v2.jpg",
       "notes": null,
       "tags": [
         "oddmart",
@@ -8492,25 +8492,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          83.6,
-          -5.8,
-          -2.2
+          82.5,
+          -6,
+          -2
         ],
         [
-          73.6,
-          -13.9,
-          31
+          71.9,
+          -14,
+          31.8
         ],
         [
-          51,
-          28.1,
-          -3.7
+          45.8,
+          30,
+          -3.4
         ]
       ],
-      "colorfulness": 21.1,
-      "phash": "ca913685667a3b95",
+      "colorfulness": 21.9,
+      "phash": "ca913685667e3b15",
       "ahash": "ffffd8f0fff91000",
-      "dhash": "e1d399a5e4f33525"
+      "dhash": "e3d399a5e4f33525"
     },
     {
       "seq": 113,
@@ -8668,7 +8668,7 @@
       "issue": 4,
       "year": 1991,
       "artist": "Steve Carr",
-      "image": "images/silver-surfer-annual/issue-4-1778689238.jpg",
+      "image": "images/silver-surfer-annual/issue-4-1778689238-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -8677,25 +8677,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          32.7,
+          23.8,
           7,
-          -3.9
+          -3.1
         ],
         [
-          59.6,
-          14.3,
-          18.2
+          56,
+          15.5,
+          19.2
         ],
         [
-          73.3,
-          6.2,
+          70.7,
+          6.3,
           -4.9
         ]
       ],
-      "colorfulness": 17.6,
-      "phash": "81b03ce678f2abb1",
-      "ahash": "4e166ffc7a762408",
-      "dhash": "9ceed898d2ecccb3"
+      "colorfulness": 18.2,
+      "phash": "81b03ce678f2aba3",
+      "ahash": "4e066ffc7a762608",
+      "dhash": "9ceed898c2ec4cb3"
     },
     {
       "seq": 108,
@@ -9262,7 +9262,7 @@
       "issue": 1,
       "year": 1938,
       "artist": "Bernard Baily",
-      "image": "images/action-comics/issue-1-1777705520.jpg",
+      "image": "images/action-comics/issue-1-1777705520-v2.jpg",
       "notes": null,
       "tags": [
         "facsimile"
@@ -9273,25 +9273,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          71.5,
-          16.6,
-          34.5
+          32.4,
+          26.5,
+          19.4
         ],
         [
-          34.5,
-          16.5,
-          18
+          79.1,
+          3.8,
+          40.5
         ],
         [
-          40.7,
-          51.4,
-          42.1
+          74.7,
+          7.1,
+          5.7
         ]
       ],
-      "colorfulness": 20.3,
+      "colorfulness": 26.2,
       "phash": "bccca087177ae30d",
-      "ahash": "ffdfd1803e2e0002",
-      "dhash": "ccb6333d6cdc9d2e"
+      "ahash": "ffdfd1803e248587",
+      "dhash": "4d3633396c5c1d2e"
     },
     {
       "seq": 92,
@@ -10491,7 +10491,7 @@
       "issue": 4,
       "year": 1995,
       "artist": "Reed Waller",
-      "image": "images/omaha/issue-4-1774217330.jpg",
+      "image": "images/omaha/issue-4-1774217330-v2.jpg",
       "notes": null,
       "tags": [
         "hatching"
@@ -10502,25 +10502,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          13.1,
-          0.2,
-          2.4
+          12.2,
+          0,
+          0.3
         ],
         [
-          38.6,
-          1.6,
-          3.9
+          42.5,
+          0.4,
+          2.5
         ],
         [
-          65.2,
-          2.3,
-          5.8
+          77.6,
+          1.3,
+          5.1
         ]
       ],
-      "colorfulness": 2.2,
-      "phash": "8dce5ce16a4e4167",
-      "ahash": "383e3f3f1f1a1a0c",
-      "dhash": "e3e2e0e1f3d2f6f4"
+      "colorfulness": 2.1,
+      "phash": "8dce5ce16a6ec145",
+      "ahash": "383e3e1d1b1a1a1e",
+      "dhash": "e3e2e0e5f3d2f6f4"
     },
     {
       "seq": 58,
@@ -10872,7 +10872,7 @@
       "issue": 4,
       "year": 2012,
       "artist": "Sean Phillips",
-      "image": "images/fatale/issue-4-1773887276.jpg",
+      "image": "images/fatale/issue-4-1773887276-v2.jpg",
       "notes": null,
       "tags": [
         "noir"
@@ -10883,25 +10883,25 @@
       "height": 644,
       "dominantColors": [
         [
-          37.2,
-          16.6,
-          20.6
+          35,
+          12.2,
+          16.5
         ],
         [
-          64.6,
-          13.7,
-          20.4
+          70.7,
+          9.2,
+          16.1
         ],
         [
-          12.9,
-          11.4,
-          11.1
+          9.2,
+          6.5,
+          6.1
         ]
       ],
-      "colorfulness": 7.7,
-      "phash": "9c96be751823a78c",
-      "ahash": "9f9e7e7e1a020113",
-      "dhash": "3c34a4f0b2caa276"
+      "colorfulness": 8.5,
+      "phash": "9c963e751d23278c",
+      "ahash": "0f1e3f3e1a02131b",
+      "dhash": "3c34f4f0b2cae276"
     },
     {
       "seq": 48,
@@ -10950,7 +10950,7 @@
       "issue": 2,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-2-1773522336.jpg",
+      "image": "images/bleeding-hearts/issue-2-1773522336-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -10959,25 +10959,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          67.3,
-          8.3,
-          17.1
+          70.9,
+          5.8,
+          11.7
         ],
         [
-          41.4,
-          10.9,
-          13.5
+          43.1,
+          9.5,
+          9.8
         ],
         [
-          14.5,
-          6.8,
-          6.7
+          15,
+          7,
+          5.4
         ]
       ],
-      "colorfulness": 7.5,
-      "phash": "8adff54440f924ad",
-      "ahash": "f8fcbf1c15004303",
-      "dhash": "727879f9f5e5978f"
+      "colorfulness": 6.7,
+      "phash": "cadff54442d924a9",
+      "ahash": "f8fcbf1c3410cbc3",
+      "dhash": "327879f9f5e5978f"
     },
     {
       "seq": 46,
@@ -11937,7 +11937,7 @@
       "issue": 17,
       "year": 2016,
       "artist": "David Lapham",
-      "image": "images/stray-bullets-sunshine-roses/issue-17-1771987399.jpg",
+      "image": "images/stray-bullets-sunshine-roses/issue-17-1771987399-v2.jpg",
       "notes": null,
       "tags": [
         "hand-drawn typography",
@@ -11949,27 +11949,27 @@
       "addedAt": "2026-02-25T02:43:21.060Z",
       "width": 960,
       "height": 1280,
-      "phash": "b70a5bb92de4aa44",
-      "ahash": "850d34370fcfe622",
-      "dhash": "6d6965f66e1ec64a",
+      "phash": "f70a5b392de4aa44",
+      "ahash": "8184b4f383cfe2e2",
+      "dhash": "296965162e1a060a",
       "dominantColors": [
         [
-          77.2,
-          -1.2,
-          -5
+          87.2,
+          0,
+          0
         ],
         [
-          60.8,
-          -0.6,
-          -4.2
+          67.3,
+          0,
+          0
         ],
         [
-          33.1,
-          -0.5,
-          -4.7
+          35.8,
+          0,
+          0
         ]
       ],
-      "colorfulness": 1.3
+      "colorfulness": 0
     },
     {
       "seq": 21,
@@ -12181,7 +12181,7 @@
       "issue": 6,
       "year": 1983,
       "artist": "Paul Kirchner",
-      "image": "images/heavy-metal/issue-6-1771820851.jpg",
+      "image": "images/heavy-metal/issue-6-1771820851-v2.jpg",
       "notes": null,
       "tags": [
         "hatching",
@@ -12193,26 +12193,26 @@
       "width": 1101,
       "height": 1280,
       "phash": "972a8c9f52ccf126",
-      "ahash": "ff07c724048ebf3e",
-      "dhash": "5a6d4d494d5c7870",
+      "ahash": "ff87c724048ebf3e",
+      "dhash": "5a6d4d494d5c7878",
       "dominantColors": [
         [
-          83.1,
-          4.3,
-          10
+          86.7,
+          2.6,
+          8.8
         ],
         [
-          57,
-          4.1,
-          6.3
+          54.6,
+          0.7,
+          4.9
         ],
         [
-          20.6,
-          3.3,
-          3.2
+          12.4,
+          0.1,
+          0.4
         ]
       ],
-      "colorfulness": 3.8
+      "colorfulness": 3.5
     },
     {
       "seq": 15,
@@ -12746,7 +12746,7 @@
       "issue": 2,
       "year": 1992,
       "artist": "Michael Allred",
-      "image": "images/tales-of-ordinary-madness/issue-2-1771797519.jpg",
+      "image": "images/tales-of-ordinary-madness/issue-2-1771797519-v2.jpg",
       "notes": null,
       "tags": [
         "screentone",
@@ -12758,26 +12758,26 @@
       "width": 638,
       "height": 1280,
       "phash": "f2c6529d8d358da1",
-      "ahash": "fcf4f1c3df8704cc",
+      "ahash": "fcf4f1c3dfc786cc",
       "dhash": "54adad16352e1a98",
       "dominantColors": [
         [
-          78,
-          -0.3,
-          5.9
+          85,
+          -0.8,
+          5.8
         ],
         [
-          62.3,
-          -0.3,
-          4.1
+          63.5,
+          -0.7,
+          3.9
         ],
         [
-          28.8,
-          -0.6,
-          1.2
+          16.5,
+          -0.2,
+          0.6
         ]
       ],
-      "colorfulness": 1.9
+      "colorfulness": 1.7
     },
     {
       "seq": 1,
@@ -12787,7 +12787,7 @@
       "issue": 1,
       "year": 1972,
       "artist": "Robert Crumb",
-      "image": "images/xyz-comics/issue-1-1771793421.jpg",
+      "image": "images/xyz-comics/issue-1-1771793421-v2.jpg",
       "notes": null,
       "tags": [
         "sound effects",
@@ -12799,26 +12799,26 @@
       "width": 960,
       "height": 1280,
       "phash": "848d1f1bf0757c61",
-      "ahash": "1f3f72f261070ff3",
-      "dhash": "3263e6868b6d5b87",
+      "ahash": "1f3f32f261070df3",
+      "dhash": "3263e686996d5ba7",
       "dominantColors": [
         [
-          77.5,
-          1.8,
-          1.6
+          75.1,
+          0.8,
+          2.1
         ],
         [
-          54.5,
-          1.7,
-          -1.2
+          48.7,
+          0.3,
+          1.2
         ],
         [
-          27.7,
-          1.4,
-          -2.1
+          18.2,
+          0,
+          0.3
         ]
       ],
-      "colorfulness": 3
+      "colorfulness": 0.9
     }
   ]
 }
