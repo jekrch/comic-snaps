@@ -206,7 +206,8 @@
       "country": "USA",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -1604,7 +1605,8 @@
       "country": "United States",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "aliases": [
         "Robert Armstrong"
@@ -3987,7 +3989,8 @@
       "birthYear": 1976,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -5961,7 +5964,8 @@
       "country": "United States",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "ec"
@@ -8199,7 +8203,8 @@
       "birthYear": 1973,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
@@ -14438,7 +14443,8 @@
       "country": "United States",
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ]
     },
     {
