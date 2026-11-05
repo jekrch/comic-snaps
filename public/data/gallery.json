@@ -1974,7 +1974,7 @@
       "issue": 1,
       "year": 1993,
       "artist": "Carl Belfast",
-      "image": "images/verbatim/issue-1-1789313594.jpg",
+      "image": "images/verbatim/issue-1-1789313594-v2.jpg",
       "notes": null,
       "tags": [
         "sound effects"
@@ -1985,24 +1985,24 @@
       "height": 1280,
       "dominantColors": [
         [
-          91.6,
-          1.1,
-          5.8
+          93,
+          -1.4,
+          5
         ],
         [
-          58.4,
-          2.3,
-          5.4
+          58,
+          -0.8,
+          3.2
         ],
         [
-          16.6,
-          2.1,
+          13.4,
+          -0.2,
           0.8
         ]
       ],
-      "colorfulness": 6.7,
+      "colorfulness": 1.7,
       "phash": "81f461c11a8afe6f",
-      "ahash": "7e723f1f3e7e7800",
+      "ahash": "7e62371f3e7e7b66",
       "dhash": "98866cf8d8d6caca"
     },
     {
