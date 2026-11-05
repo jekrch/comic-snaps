@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """The deterministic half of .github/workflows/restore.yml.
 
-Gemini CLI runs the restore skills in between; this script handles everything
-around that run, so the parts that touch git and Telegram never depend on the model.
+restore_judge.py runs the restore skills with the model judging in between; this
+script handles everything around that run, so the parts that touch git and
+Telegram never depend on the model.
 
   lookup SEQ             panel id, label and image, as GITHUB_OUTPUT lines
   prepare SEQ WORK       write the photo to restore from to WORK/source.jpg and run
-                         the color check on it, so the model starts at the right
-                         skill's enhance step; prints source, check and start
-  collect SEQ BEFORE_IMG OUT
-                         copy the image the model's run installed for the panel to
-                         OUT/restored.jpg; prints installed=true|false
+                         the color check on it; prints source, verdict and check
   verify SEQ BEFORE_IMG  check what the install changed: exits 1 if gallery.json
                          was touched anywhere but this panel's image and
                          metadata, or the new image isn't beside the old one;
@@ -21,7 +18,6 @@ around that run, so the parts that touch git and Telegram never depend on the mo
 import json
 import posixpath
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -68,28 +64,6 @@ def label(panel):
     issue = f"#{issue}" if isinstance(issue, int) else str(issue)
     artist = f" ({panel['artist']})" if panel.get("artist") else ""
     return f"{panel['title']} {issue}{artist}"
-
-
-# The color check's verdict, as restore-panel's routing table reads it.
-ROUTES = {"bw": "restore-bw-panel", "color": "restore-color-panel"}
-
-
-def start_directions(verdict, source):
-    """Where the model starts, given the color check on the source photo.
-
-    This is restore-panel's routing step done ahead of time, so the model never
-    loads that skill: every turn resends what it has loaded.
-    """
-    done = f"with {source} as PHOTO.jpg. Its find, original and check steps are done."
-    skill = ROUTES.get(verdict)
-    if skill:
-        other = ROUTES["color" if verdict == "bw" else "bw"]
-        return (f"The color check says {verdict}, so activate the {skill} skill and follow it from its enhance step, "
-                f"{done} If the notes below say the art is {'in color' if verdict == 'bw' else 'black-and-white'}, "
-                f"use {other} instead.")
-    return (f"The color check is unsure. Look at {source} and choose: any painted color at all, even one spot, "
-            f"goes to restore-color-panel, and one ink on one paper to restore-bw-panel. "
-            f"Activate that skill and follow it from its enhance step, {done}")
 
 
 def gallery_problems(before, after, panel_id):
@@ -145,27 +119,8 @@ def cmd_prepare(seq, work):
 
     rms, patches, verdict = restore_color.classify(source)
     print(f"source={source}")
+    print(f"verdict={verdict}")
     print(f"check={verdict} (unexplained chroma {rms:.2f}, patches {patches:.2f}%)")
-    print(f"start={one_line(start_directions(verdict, source))}")
-
-
-def cmd_collect(seq, before_image, out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    restored = find_seq(load_panels((REPO_ROOT / GALLERY).read_text("utf-8")), seq)
-    if restored is None:
-        sys.exit(f"no panel #{seq}")
-    if restored["image"] == before_image:
-        print("installed=false")
-        return
-    problem = image_path_problem(before_image, restored["image"])
-    if problem:
-        sys.exit(problem)
-    source = REPO_ROOT / "public" / restored["image"]
-    if not source.is_file():
-        sys.exit(f"gallery.json points at {restored['image']}, which doesn't exist")
-    shutil.copyfile(source, out / "restored.jpg")
-    print("installed=true")
 
 
 def cmd_verify(seq, before_image):
@@ -236,8 +191,6 @@ def main(argv):
         cmd_lookup(int(argv[1]))
     elif len(argv) >= 3 and argv[0] == "prepare":
         cmd_prepare(int(argv[1]), argv[2])
-    elif len(argv) >= 4 and argv[0] == "collect":
-        cmd_collect(int(argv[1]), argv[2], argv[3])
     elif len(argv) >= 3 and argv[0] == "verify":
         cmd_verify(int(argv[1]), argv[2])
     elif len(argv) >= 4 and argv[0] == "compare":

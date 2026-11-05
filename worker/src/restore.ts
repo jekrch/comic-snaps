@@ -2,8 +2,9 @@
 //
 // The restore skills need OpenCV and a look-and-adjust loop, so they can't run
 // in the Worker. /restore and /redo dispatch .github/workflows/restore.yml,
-// which runs Gemini CLI with the restore-panel skill, commits the result to its own
-// branch, restore/{seq}, and posts the before/after back to the chat.
+// which runs the restore skills' scripts with Gemini judging the results, commits
+// the result to its own branch, restore/{seq}, and posts the before/after back to
+// the chat.
 //
 // /approve doesn't merge that branch. Its embeddings files are one line each,
 // so any metadata run on main since the branch was cut would conflict with it.
@@ -191,7 +192,7 @@ export async function startRestore(
   }
 
   const lines = [
-    `Restoring #${cmd.seq}, ${panelLabel(panel)}. The before/after comes back here in about 5–10 minutes.`,
+    `Restoring #${cmd.seq}, ${panelLabel(panel)}. The before/after comes back here in a few minutes.`,
   ];
   if (cmd.verb === "redo" && !pending) {
     lines.push("There's no earlier attempt waiting, so this one starts fresh.");
