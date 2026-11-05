@@ -4974,7 +4974,7 @@
       "issue": 5,
       "year": 1970,
       "artist": "Victor Moscoso",
-      "image": "images/zap-comix/issue-5-1785093420.jpg",
+      "image": "images/zap-comix/issue-5-1785093420-v2.jpg",
       "notes": null,
       "tags": [
         "stippling",
@@ -4986,25 +4986,25 @@
       "height": 627,
       "dominantColors": [
         [
-          91.6,
-          -0.1,
-          3
+          91.3,
+          -0.3,
+          2.5
         ],
         [
-          61.3,
-          0.8,
-          1.4
+          59.5,
+          0.4,
+          0.7
         ],
         [
-          28.6,
-          1.4,
-          1.6
+          23.8,
+          0.4,
+          0
         ]
       ],
-      "colorfulness": 4.7,
+      "colorfulness": 3.4,
       "phash": "8acfbf19f0d08634",
-      "ahash": "fd3d347c402045ff",
-      "dhash": "696965c9a5e99587"
+      "ahash": "fd3d347c40204cff",
+      "dhash": "696965c1a5e99587"
     },
     {
       "seq": 210,
