@@ -1083,7 +1083,7 @@
     {
       "id": "art-spiegelman",
       "name": "Art Spiegelman",
-      "description": "Born Arthur Spiegelman\u00a0 on February 15, 1948 in Stockholm, Sweden. \u00a0 He now lives in New York (downtown Manhattan), married with a wife and two kids.",
+      "description": "Art Spiegelman is a Polish-American cartoonist, editor, and comics advocate best known for his graphic novel Maus. Starting at the trading card company Topps in the mid-1960s, he co-created the parodic series Wacky Packages and Garbage Pail Kids. In the late 1960s and 1970s, his comics appeared in underground titles such as Bijou Funnies, Gothic Blimp Works, Short Order Comix, and Young Lust, and he gained prominence with short, experimental, and autobiographical strips, a selection of which was collected in Breakdowns (1977).\r\n\r\nSpiegelman co-edited the comics anthology Arcade (1975\u20131976) with Bill Griffith and the alternative comics magazine Raw (1980\u20131991) with his wife, Fran\u00e7oise Mouly. Serialized in Raw and published in two volumes in 1986 and 1991, Maus portrays his father's experiences as a Polish Jewish Holocaust survivor, depicting Jews as mice and Germans as cats. The work won a special Pulitzer Prize in 1992. From 1992 he spent ten years as a contributing artist for The New Yorker, and later created In the Shadow of No Towers (2004), about the September 11 attacks, and the companion book MetaMaus (2011). In 2022, he was named the recipient of the National Book Foundation's Medal for Distinguished Contribution to American Letters.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/19151/648622-art_spiegelman__2007_.jpg",
       "references": [
         {
@@ -1102,6 +1102,11 @@
           "name": "The Comics Journal",
           "url": "https://www.tcj.com/an-art-spiegelman-interview/",
           "title": "\"It's Only One Book\": An Art Spiegelman Interview"
+        },
+        {
+          "name": "The Comics Journal",
+          "url": "https://www.tcj.com/art/",
+          "title": "Art"
         }
       ],
       "birthYear": 1948,
