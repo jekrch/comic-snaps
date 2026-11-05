@@ -8269,7 +8269,8 @@
       ],
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ],
       "birthYear": 1945,
       "deathYear": 2022,
