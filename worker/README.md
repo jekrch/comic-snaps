@@ -24,10 +24,11 @@ The bot also handles text commands:
 - `/tag_series {ref} // {tags}`, `/tag_artist {ref} // {tags}` — add tags to a series or artist
 - `/rename_series {ref} // {new name} [// {start year}]` — renames a whole series: every panel's title and the `series.json` name. The old name is kept as an alias, the slug stays the same, and the lookup markers (`sources`, `coverSources`) are cleared so the metadata job searches Metron and Comic Vine again under the new name.
 - `/resolve metron:series // {name} // {id}` (or `metron:creator`) — picks the right candidate in `disambiguation.json`
+- `/describe_series {ref}` or `/describe_artist {ref}`, with the description on the following lines (blank lines between paragraphs) and an optional `Sources:` block of `- {name} | {url} [| {article title}]` lines — replaces the entry's description and appends any sources not already in its references. The agent proposes these from web research (below); they can also be typed.
 - `/rate`, `/rate_series` — ratings (see `/help`)
 - `/help` — replies with usage instructions and examples
 
-The edit commands (`/update`, `/tag_*`, `/rename_series`, `/resolve`) all run through `src/edits.ts`. It reads every file at one commit, applies the commands in memory, and lands all the changes as a single commit through the Git Data API. If `main` moved in the meantime, it re-applies against the newer files. When a commit doesn't touch `gallery.json` (the only path the metadata job watches), the Worker starts `compute-image-metadata.yml` itself.
+The edit commands (`/update`, `/tag_*`, `/rename_series`, `/resolve`, `/describe_*`) all run through `src/edits.ts`. It reads every file at one commit, applies the commands in memory, and lands all the changes as a single commit through the Git Data API. If `main` moved in the meantime, it re-applies against the newer files. When a commit doesn't touch `gallery.json` (the only path the metadata job watches), the Worker starts `compute-image-metadata.yml` itself.
 
 ## Agent
 
@@ -35,9 +36,22 @@ For the user ids in `ALLOWED_USER_IDS`, the bot runs a Gemini agent modelled on 
 
 - `/ask {question or request}` answers from a rollup of the whole collection, with Metron and Comic Vine lookup tools. When the answer implies changes, it proposes a numbered list of the edit commands above. `/ask1`, `/ask2` and `/ask3` pick the model tier (bare `/ask` is the strongest).
 - `/resp {follow-up}` continues the thread, `/confirm` runs every proposal (or `/confirm 1 3` runs some) as one commit, `/cancel` drops them, and `/cost` reports spend.
+- `/ask write a new description for {artist or series}` researches one on the web, in plain English with any directions: a URL to work from, a point to focus on, what to fix. See below.
 - Post a photo captioned `/ask {description}` (or any caption that isn't in the caption format) and the agent writes the canonical caption, looking up the series name the databases use. `/confirm` posts it the same way a typed caption is posted, and `/resp` corrects it.
 
-The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/rename_series` and `/resolve`, and never `/delete` or `/rate`. Model calls run inline for up to 10s, then move to the `comic-snaps-jobs` queue.
+The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/rename_series`, `/resolve` and (only through research) `/describe_*`, and never `/delete` or `/rate`. Model calls run inline for up to 10s, then move to the `comic-snaps-jobs` queue.
+
+### Researched descriptions
+
+`/ask` has a `research_description` tool (`src/research.ts`) for any request to write, rewrite or source an artist's or series' description. It always runs on the strongest model tier, whatever `/ask1`-`/ask3` picked, and goes like this:
+
+1. **Search.** A Gemini call with Google Search grounding finds pages about the subject. Only the links are kept, not its summary.
+2. **Read.** The Worker fetches the pages itself as plain text (`src/sources.ts`, Wikipedia through its plain-text extract API): links the user gave first, then the entry's existing article references, then the search results, then its Metron/Comic Vine pages. It reads at most 8 and keeps up to 6. It skips shops, social media and fan wikis, and drops any page that never names the subject. A link the user gave is always read, and is reported if it can't be.
+3. **Write.** The model drafts one to three paragraphs in the house style from those texts alone. Each sentence comes with the source number and a verbatim quote backing it.
+4. **Check.** Every quote has to appear in its source word for word, ignoring case, punctuation and accents. A separate fact-check call then reads each sentence against its quotes and the text around them, and fails anything that says more than they do (an added date, a stronger claim, a namesake).
+5. **Repair once.** Failed sentences go back to the writer with the reason. Anything that still fails is dropped and listed.
+
+The proposal shows the draft with `[n]` marks, the numbered sources, anything left out and any link that couldn't be read. On `/confirm` the description is stored without the marks, and the cited sources are added to the entry's references, named the way the data files already name them ("Wikipedia", "Comiclopedia", "The Comics Journal" plus the article title). `/resp make it shorter` or `/resp also use {url}` runs the research again with the new directions. Each run is about 4 to 6 model calls; the cost line covers them, but Google Search grounding is billed per search query on top of tokens, and that isn't counted. Pages that need JavaScript, or that block bots (comics.org, Bédéthèque, IMDb), can't be read.
 
 ## Restorations
 

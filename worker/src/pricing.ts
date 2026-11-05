@@ -58,8 +58,28 @@ export function formatUsd(cost: number): string {
 
 /** `[$0.0123 | 1,200 cached, 15,000 in / 300 out]`, or "" for an unpriced model. */
 export function formatCostLine(model: string, usage: Usage): string {
-  const cost = estimateCost(model, usage);
-  if (cost === null) return "";
-  const cacheNote = usage.cached > 0 ? ` ${usage.cached.toLocaleString()} cached,` : "";
-  return `[${formatUsd(cost)} |${cacheNote} ${usage.prompt.toLocaleString()} in / ${usage.output.toLocaleString()} out]`;
+  return formatSpendLine([{ model, usage }]);
+}
+
+/**
+ * One cost line for calls that may span models (an /ask turn plus the research
+ * it started): costs and tokens summed, unpriced models left out. "" if none
+ * are priced.
+ */
+export function formatSpendLine(parts: { model: string; usage: Usage }[]): string {
+  let cost = 0;
+  const total: Usage = { prompt: 0, cached: 0, output: 0 };
+  let priced = false;
+  for (const { model, usage } of parts) {
+    const c = estimateCost(model, usage);
+    if (c === null) continue;
+    priced = true;
+    cost += c;
+    total.prompt += usage.prompt;
+    total.cached += usage.cached;
+    total.output += usage.output;
+  }
+  if (!priced) return "";
+  const cacheNote = total.cached > 0 ? ` ${total.cached.toLocaleString()} cached,` : "";
+  return `[${formatUsd(cost)} |${cacheNote} ${total.prompt.toLocaleString()} in / ${total.output.toLocaleString()} out]`;
 }

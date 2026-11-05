@@ -5,11 +5,20 @@
 import type { PanelMetadata } from "./types";
 import { parseCaption } from "./caption";
 import { EDIT_VERBS, commandVerb, parseEditCommand } from "./edits";
+import { DESCRIBE_VERBS } from "./descriptions";
 
 export interface ProposedCommand {
   command: string;
   rationale: string;
+  /** Shown in the proposals list instead of the command, when the command is too long to read there. */
+  display?: string;
 }
+
+/**
+ * Verbs the model may write itself. A description only reaches a proposal
+ * through research_description, which checks it against its sources.
+ */
+const PROPOSABLE_VERBS = EDIT_VERBS.filter((v) => !(DESCRIBE_VERBS as readonly string[]).includes(v));
 
 export interface SanitizedProposals {
   accepted: ProposedCommand[];
@@ -33,8 +42,13 @@ export function sanitizeProposals(raw: unknown): SanitizedProposals {
     const command = typeof r.command === "string" ? r.command.trim().replace(/\s*\n\s*/g, " ") : "";
     const rationale = typeof r.rationale === "string" ? r.rationale.trim() : "";
     if (!command) continue;
-    if (!(EDIT_VERBS as readonly string[]).includes(commandVerb(command))) {
-      rejected.push({ command, reason: `not an allowed verb (${EDIT_VERBS.join(", ")})` });
+    const verb = commandVerb(command);
+    if ((DESCRIBE_VERBS as readonly string[]).includes(verb)) {
+      rejected.push({ command, reason: "descriptions come only from research_description" });
+      continue;
+    }
+    if (!(PROPOSABLE_VERBS as readonly string[]).includes(verb)) {
+      rejected.push({ command, reason: `not an allowed verb (${PROPOSABLE_VERBS.join(", ")})` });
       continue;
     }
     const parsed = parseEditCommand(command);

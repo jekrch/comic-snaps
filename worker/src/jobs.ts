@@ -119,7 +119,9 @@ export async function runOrEnqueue(env: Env, job: JobRecord): Promise<"inline" |
     if (run.phase === "abandoned") throw new Error("abandoned after the inline timeout");
     run.phase = "claimed";
   };
-  const work = runJob(env, job, claim).then(
+  // Lets a long model run notice it was abandoned and stop spending.
+  const alive = () => run.phase !== "abandoned";
+  const work = runJob(env, job, claim, alive).then(
     () => ({ ok: true as const }),
     (err: unknown) => ({ ok: false as const, err })
   );
@@ -147,13 +149,19 @@ export async function runOrEnqueue(env: Env, job: JobRecord): Promise<"inline" |
   return "inline";
 }
 
-function formatProposals(reply: string, proposals: { command: string; rationale: string }[]): string {
+export function formatProposals(
+  reply: string,
+  proposals: { command: string; rationale: string; display?: string }[]
+): string {
   if (proposals.length === 0) return reply;
+  const indent = (text: string) => text.replace(/\n/g, "\n     ");
   return [
     reply,
     "",
     "Proposed commands:",
-    proposals.map((p, i) => `  ${i + 1}. ${p.command}\n     ${p.rationale}`).join("\n"),
+    proposals
+      .map((p, i) => `  ${i + 1}. ${indent(p.display ?? p.command)}\n     ${p.rationale}`)
+      .join("\n"),
     "",
     "Reply /confirm to run all, /confirm 1 3 to run a subset, or /cancel to drop.",
   ].join("\n");
@@ -161,12 +169,17 @@ function formatProposals(reply: string, proposals: { command: string; rationale:
 
 // `claim` is called before the job's first side effect and throws if the run
 // has been abandoned (see runOrEnqueue). Queue runs never abandon.
-async function runJob(env: Env, job: JobRecord, claim: () => void = () => {}): Promise<void> {
+async function runJob(
+  env: Env,
+  job: JobRecord,
+  claim: () => void = () => {},
+  alive: () => boolean = () => true
+): Promise<void> {
   const reply = (text: string) =>
     sendReply(env.TELEGRAM_BOT_TOKEN, job.chatId, job.messageId, text);
 
   if (job.kind === "ask") {
-    const result = await answerQuestion(env, job.request ?? "", job.model, job.history ?? []);
+    const result = await answerQuestion(env, job.request ?? "", job.model, job.history ?? [], alive);
     claim();
     // Each turn's proposals replace the last turn's, an empty list included: a
     // follow-up that changes course mustn't leave the old ones for /confirm.

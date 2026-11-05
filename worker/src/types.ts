@@ -110,7 +110,8 @@ export interface SeriesEntry {
   startYear?: number | null;
   publisher?: string | null;
   issueCount?: number | null;
-  references?: { name: string; url: string }[];
+  description?: string;
+  references?: { name: string; url: string; title?: string }[];
   /** Which metadata sources have already processed this entry (Python pipeline). */
   sources?: string[];
   /** Per-source cover lookup snapshots (Python pipeline). */
@@ -132,6 +133,8 @@ export interface ArtistEntry {
   name: string;
   aliases?: string[];
   tags?: string[];
+  description?: string;
+  references?: { name: string; url: string; title?: string }[];
   [key: string]: unknown;
 }
 

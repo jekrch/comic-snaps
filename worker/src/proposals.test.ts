@@ -25,6 +25,12 @@ describe("sanitizeProposals", () => {
     expect(out.rejected[0].reason).toContain("not an allowed verb");
   });
 
+  it("rejects a description the model wrote itself", () => {
+    const out = sanitizeProposals([{ command: "/describe_series saga\nSaga is great.", rationale: "" }]);
+    expect(out.accepted).toEqual([]);
+    expect(out.rejected[0].reason).toContain("research_description");
+  });
+
   it("rejects malformed commands with the parser's reason", () => {
     const out = sanitizeProposals([{ command: "/update 5 slug x", rationale: "" }]);
     expect(out.rejected[0].reason).toBe(

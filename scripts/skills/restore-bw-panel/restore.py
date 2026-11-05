@@ -8,6 +8,7 @@ Subcommands (see SKILL.md for the workflow):
 """
 import argparse
 import json
+import os
 import re
 import shutil
 import sys
@@ -26,6 +27,10 @@ MAX_COLORFULNESS = 8.0  # Old B&W panels measure under 6; this discards all chro
 MAX_PATCHY_CHROMA = 3.0
 STRONG_TINT = 15.0  # Lab chroma past which a page's color may be the stock, not the light.
 EDGE_INSET = 1  # Lands the crop on the border ink, not a hairline of page.
+# The restore workflow sets this to shrink --compare sheets. There, a model reads
+# every sheet, and each one it has read is resent with every later turn. Unset,
+# sheets keep full resolution.
+COMPARE_MAX_ENV = "RESTORE_COMPARE_MAX"
 
 
 def load_gray(path):
@@ -288,6 +293,25 @@ def cmd_enhance(args):
         write_compare(args, warped, out8)
 
 
+def compare_max():
+    """The long-side cap for --compare sheets, or None for full resolution."""
+    value = os.environ.get(COMPARE_MAX_ENV, "").strip()
+    if not value:
+        return None
+    if not value.isdigit() or int(value) < 256:
+        sys.exit(f"{COMPARE_MAX_ENV} must be a whole number of pixels, at least 256; got {value!r}")
+    return int(value)
+
+
+def fit_long_side(image, cap):
+    """Shrink `image` so its long side is at most `cap`. It is never enlarged."""
+    long_side = max(image.shape[:2])
+    if cap is None or long_side <= cap:
+        return image
+    f = cap / long_side
+    return cv2.resize(image, None, fx=f, fy=f, interpolation=cv2.INTER_AREA)
+
+
 def write_compare(args, before, after):
     """Rectified source beside the result. They're pixel-aligned, so zooms line up."""
     gutter = np.full((after.shape[0], 12, 3), 128, np.uint8)
@@ -300,7 +324,8 @@ def write_compare(args, before, after):
         rows = rows[1:]  # Zooms answer a specific question; the whole frame just shrinks them.
     width = max(r.shape[1] for r in rows)
     rows = [np.pad(r, ((0, 12), (0, width - r.shape[1]), (0, 0)), constant_values=128) for r in rows]
-    cv2.imwrite(str(args.compare), np.vstack(rows))
+    sheet = fit_long_side(np.vstack(rows), compare_max())
+    cv2.imwrite(str(args.compare), sheet)
     print(f"wrote {args.compare}")
 
 

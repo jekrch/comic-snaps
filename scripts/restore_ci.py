@@ -5,6 +5,9 @@ Gemini CLI runs the restore skills in between; this script handles everything
 around that run, so the parts that touch git and Telegram never depend on the model.
 
   lookup SEQ             panel id, label and image, as GITHUB_OUTPUT lines
+  prepare SEQ WORK       write the photo to restore from to WORK/source.jpg and run
+                         the color check on it, so the model starts at the right
+                         skill's enhance step; prints source, check and start
   collect SEQ BEFORE_IMG OUT
                          copy the image the model's run installed for the panel to
                          OUT/restored.jpg; prints installed=true|false
@@ -24,6 +27,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+SKILLS = REPO_ROOT / "scripts" / "skills"
 GALLERY = "public/data/gallery.json"
 EMBEDDINGS = ("embeddings.json", "embeddings-dino.json", "embeddings-gram.json")
 
@@ -66,6 +70,28 @@ def label(panel):
     return f"{panel['title']} {issue}{artist}"
 
 
+# The color check's verdict, as restore-panel's routing table reads it.
+ROUTES = {"bw": "restore-bw-panel", "color": "restore-color-panel"}
+
+
+def start_directions(verdict, source):
+    """Where the model starts, given the color check on the source photo.
+
+    This is restore-panel's routing step done ahead of time, so the model never
+    loads that skill: every turn resends what it has loaded.
+    """
+    done = f"with {source} as PHOTO.jpg. Its find, original and check steps are done."
+    skill = ROUTES.get(verdict)
+    if skill:
+        other = ROUTES["color" if verdict == "bw" else "bw"]
+        return (f"The color check says {verdict}, so activate the {skill} skill and follow it from its enhance step, "
+                f"{done} If the notes below say the art is {'in color' if verdict == 'bw' else 'black-and-white'}, "
+                f"use {other} instead.")
+    return (f"The color check is unsure. Look at {source} and choose: any painted color at all, even one spot, "
+            f"goes to restore-color-panel, and one ink on one paper to restore-bw-panel. "
+            f"Activate that skill and follow it from its enhance step, {done}")
+
+
 def gallery_problems(before, after, panel_id):
     """Why the gallery change isn't a clean one-panel restoration, if it isn't."""
     problems = []
@@ -97,6 +123,30 @@ def cmd_lookup(seq):
     print(f"id={one_line(panel['id'])}")
     print(f"label={one_line(label(panel))}")
     print(f"image={one_line(panel['image'])}")
+
+
+def cmd_prepare(seq, work):
+    found = find_seq(load_panels((REPO_ROOT / GALLERY).read_text("utf-8")), seq)
+    if found is None:
+        sys.exit(f"no panel #{seq}")
+    sys.path[:0] = [str(SKILLS / "restore-panel"), str(SKILLS / "restore-color-panel")]
+    import panel as panel_tool
+    import restore_color
+
+    # The photo as first posted, even for a panel restored before: a -vN image
+    # is never restored again. The same recovery as `panel.py original`.
+    data, origin = panel_tool.original_bytes(found["image"])
+    if data is None:
+        sys.exit(f"can't find the original of {found['image']} in the working tree or git history")
+    source = Path(work) / "source.jpg"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_bytes(data)
+    print(f"{panel_tool.original_image(found['image'])} from {origin}", file=sys.stderr)
+
+    rms, patches, verdict = restore_color.classify(source)
+    print(f"source={source}")
+    print(f"check={verdict} (unexplained chroma {rms:.2f}, patches {patches:.2f}%)")
+    print(f"start={one_line(start_directions(verdict, source))}")
 
 
 def cmd_collect(seq, before_image, out_dir):
@@ -184,6 +234,8 @@ def cmd_compare(before_path, after_path, out_path):
 def main(argv):
     if len(argv) >= 2 and argv[0] == "lookup":
         cmd_lookup(int(argv[1]))
+    elif len(argv) >= 3 and argv[0] == "prepare":
+        cmd_prepare(int(argv[1]), argv[2])
     elif len(argv) >= 4 and argv[0] == "collect":
         cmd_collect(int(argv[1]), argv[2], argv[3])
     elif len(argv) >= 3 and argv[0] == "verify":

@@ -2,7 +2,8 @@
 // described photos (a caption written from plain English). Both run one Gemini
 // tool loop over the same collection rollup and lookup tools. Neither writes
 // anything: /ask ends in proposals and a description ends in a caption, and a
-// person has to /confirm either one.
+// person has to /confirm either one. /ask can also research a new artist or
+// series description from the web (research.ts), which ends in a proposal too.
 
 import { FunctionCallingConfigMode, GoogleGenAI, Type } from "@google/genai";
 import type { Content, FunctionDeclaration, Part } from "@google/genai";
@@ -24,8 +25,9 @@ import {
   type PanelFields,
   type ProposedCommand,
 } from "./proposals";
-import { DEFAULT_MODEL, DESCRIBE_MODEL, formatCostLine, type Usage } from "./pricing";
+import { DEFAULT_MODEL, DESCRIBE_MODEL, formatCostLine, formatSpendLine, type Usage } from "./pricing";
 import { recordCost } from "./cost";
+import { researchDescription, type ModelSpend } from "./research";
 
 /** Rounds of tool calls before a final round with tools off. */
 export const MAX_TOOL_ITERATIONS = 6;
@@ -152,6 +154,33 @@ const PROPOSE_PANEL: FunctionDeclaration = {
   },
 };
 
+const RESEARCH_DESCRIPTION: FunctionDeclaration = {
+  name: "research_description",
+  description:
+    "Write a new description for one artist or series from web research: searches the web, reads the pages (and any URLs the user gave), drafts a description in the site's style, and checks every sentence against a verbatim quote from its source. Unsupported sentences are dropped. The result becomes a proposal with its sources, for the user to /confirm. Takes a minute or two. Use it for any request to write, rewrite, improve, expand, correct or source a description.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      kind: { type: Type.STRING, enum: ["artist", "series"], description: "Which kind of entry." },
+      ref: {
+        type: Type.STRING,
+        description: "The series id, or the artist's name, exactly as in the rollup.",
+      },
+      instructions: {
+        type: Type.STRING,
+        description:
+          "The user's directions in their own words: what to focus on, emphasise, add, fix or leave out, and length. Include corrections from follow-ups. Empty if none.",
+      },
+      urls: {
+        type: Type.ARRAY,
+        items: { type: Type.STRING },
+        description: "Every URL the user gave as a source, copied exactly. Empty if none.",
+      },
+    },
+    required: ["kind", "ref", "instructions", "urls"],
+  },
+};
+
 function lookupDeclarations(env: Env): FunctionDeclaration[] {
   const out: FunctionDeclaration[] = [GET_SERIES];
   if (metronConfigured(env)) out.push(SEARCH_METRON, GET_METRON);
@@ -192,6 +221,7 @@ const COMMANDS = `# Commands you can propose
 /resolve metron:series // {name as searched} // {metron id}
 /resolve metron:creator // {name as searched} // {metron id}
   Picks the right candidate for an unresolved disambiguation row. Verify with get_metron_series first.
+/describe_artist and /describe_series (a new description with sources) come only from research_description, which proposes them for you.
 Nothing else can be proposed. /delete and /rate are never proposed; mention them in prose if relevant.`;
 
 const RULES = `# Rules
@@ -200,6 +230,7 @@ const RULES = `# Rules
 - Don't propose no-ops: a tag already present, a name already correct.
 - When an answer implies changes, call propose_commands once with the full list, then reply with a short summary. The numbered list is appended for you; don't repeat the commands in your text.
 - For read-only questions don't call propose_commands.
+- To write or rewrite an artist's or series' description, call research_description, once per entry, passing the user's directions and any URLs they gave. Never write description text yourself, and never state facts about a creator or work from memory as if sourced. Afterwards reply in a line or two; the draft, its sources and anything left out are shown to the user for you. For a revision on /resp, call it again with the new directions added to the old.
 - Never claim to have run anything. The user runs /confirm.
 - Captions for a new photo use: Title // Issue // Year // Artist // notes // tags (artist can be left off for a series already in the gallery). A photo captioned "/ask" and a description also works.
 - Reply in plain text, no Markdown. Keep it under ${TELEGRAM_MAX_LEN} characters.`;
@@ -243,7 +274,8 @@ async function runToolLoop(
   systemInstruction: string,
   contents: Content[],
   declarations: FunctionDeclaration[],
-  handlers: Record<string, ToolHandler>
+  handlers: Record<string, ToolHandler>,
+  alive: () => boolean = () => true
 ): Promise<LoopResult> {
   if (!env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY isn't configured.");
   const client = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
@@ -258,6 +290,8 @@ async function runToolLoop(
     // thread whose last turn is a call with no response, which every later
     // /resp would have to send back.
     const final = i >= MAX_TOOL_ITERATIONS;
+    // Abandoned inline runs are re-run from the queue; don't keep paying for this one.
+    if (!alive()) throw new Error("abandoned after the inline timeout");
     const response = await client.models.generateContent({
       model,
       contents,
@@ -345,10 +379,15 @@ export async function answerQuestion(
   env: Env,
   question: string,
   model: string = DEFAULT_MODEL,
-  history: Content[] = []
+  history: Content[] = [],
+  alive: () => boolean = () => true
 ): Promise<AnswerResult> {
   const docs = await currentCollection(env);
   let proposals: ProposedCommand[] = [];
+  // Kept apart from propose_commands' list, which each call replaces. Keyed by
+  // entry, so researching the same one twice keeps the later draft.
+  const researched = new Map<string, ProposedCommand>();
+  const spend: ModelSpend[] = [];
 
   const handlers: Record<string, ToolHandler> = {
     ...lookupHandlers(env, docs),
@@ -361,6 +400,30 @@ export async function answerQuestion(
         : "";
       return `Recorded ${accepted.length} proposal(s).${rejectedNote} Otherwise, reply with a short plain-text summary for the user.`;
     },
+    research_description: async (a) => {
+      const kind = a.kind === "artist" ? "artist" : a.kind === "series" ? "series" : null;
+      if (!kind) return 'kind must be "artist" or "series".';
+      try {
+        const result = await researchDescription(
+          env,
+          docs,
+          {
+            kind,
+            ref: String(a.ref ?? ""),
+            instructions: typeof a.instructions === "string" ? a.instructions : "",
+            urls: Array.isArray(a.urls) ? a.urls.filter((u): u is string => typeof u === "string") : [],
+          },
+          alive
+        );
+        spend.push(...result.spend);
+        if (result.key && result.proposal) researched.set(result.key, result.proposal);
+        return result.toolResult;
+      } catch (err) {
+        if ((err as Error).message.startsWith("abandoned")) throw err;
+        console.log(`[agent] research_description failed: ${(err as Error).message}`);
+        return `Research failed: ${(err as Error).message.split("\n")[0]}. Tell the user; don't write a description yourself.`;
+      }
+    },
   };
 
   const contents: Content[] = [...history, { role: "user", parts: [{ text: question }] }];
@@ -369,16 +432,17 @@ export async function answerQuestion(
     model,
     askSystemPrompt(buildRollup(docs)),
     contents,
-    [...lookupDeclarations(env), PROPOSE_COMMANDS],
-    handlers
+    [...lookupDeclarations(env), PROPOSE_COMMANDS, RESEARCH_DESCRIPTION],
+    handlers,
+    alive
   );
 
-  const costLine = formatCostLine(model, result.usage);
+  const costLine = formatSpendLine([{ model, usage: result.usage }, ...spend]);
   const body = truncateForTelegram(result.text || "No response.", 1200);
   return {
     reply: costLine ? `${body}\n${costLine}` : body,
     thread: { model, history: trimHistory(result.contents), updatedAt: new Date().toISOString() },
-    proposals,
+    proposals: [...proposals, ...researched.values()],
   };
 }
 

@@ -1,5 +1,6 @@
 // The data-editing commands — /update, /tag_series, /tag_artist,
-// /rename_series, /resolve — as pure edits over in-memory documents.
+// /rename_series, /resolve, /describe_artist, /describe_series — as pure edits
+// over in-memory documents.
 //
 // Typed directly or confirmed from an agent proposal, they run through
 // runCommands: every file is read at one base commit, each command is applied in
@@ -29,6 +30,13 @@ import {
   serializeDataFile,
 } from "./github";
 import { byName, resolveSeries } from "./series";
+import {
+  DESCRIBE_VERBS,
+  mergeReferences,
+  parseDescribeArgs,
+  type DescribeCommand,
+  type DescribeReference,
+} from "./descriptions";
 
 export const GALLERY_PATH = "public/data/gallery.json";
 export const SERIES_PATH = "public/data/series.json";
@@ -135,7 +143,8 @@ export type EditCommand =
   | { verb: "update"; seq: number; field: UpdatableField; value: string }
   | { verb: "tag_series" | "tag_artist"; ref: string; tags: string[] }
   | { verb: "rename_series"; ref: string; name: string; startYear: number | null }
-  | { verb: "resolve"; key: string; name: string; id: number };
+  | { verb: "resolve"; key: string; name: string; id: number }
+  | DescribeCommand;
 
 /** Every verb runCommands understands, as typed. */
 export const EDIT_VERBS = [
@@ -144,6 +153,7 @@ export const EDIT_VERBS = [
   "/tag_artist",
   "/rename_series",
   "/resolve",
+  ...DESCRIBE_VERBS,
 ] as const;
 
 const RENAME_USAGE =
@@ -166,9 +176,9 @@ export function parseEditCommand(text: string): EditCommand | { error: string } 
   const rest = trimmed.slice(trimmed.split(/\s+/)[0].length).trim();
   // Names, titles, tags and ids are single-line everywhere they end up (the
   // caption format, the agent's rollup, the restore workflow's outputs), so
-  // only a panel's notes may span lines.
+  // only a panel's notes and a description may span lines.
   const multiline = /[\r\n]/.test(rest);
-  const ONE_LINE = "Keep the command on one line (only notes can span lines).";
+  const ONE_LINE = "Keep the command on one line (only notes and descriptions can span lines).";
 
   switch (verb) {
     case "/update": {
@@ -224,6 +234,10 @@ export function parseEditCommand(text: string): EditCommand | { error: string } 
       if (!/^\d+$/.test(parts[2])) return { error: `Invalid id: "${parts[2]}"` };
       return { verb: "resolve", key, name: parts[1], id: parseInt(parts[2], 10) };
     }
+
+    case "/describe_artist":
+    case "/describe_series":
+      return parseDescribeArgs(verb === "/describe_artist" ? "artist" : "series", rest);
 
     default:
       return null;
@@ -459,6 +473,43 @@ async function applyResolve(
   return { reply: lines.join("\n"), summary: `Update disambiguation: ${c.key} ${name} → ${c.id}` };
 }
 
+async function applyDescribe(ws: Workspace, c: DescribeCommand): Promise<Applied> {
+  const isSeries = c.kind === "series";
+  const path = isSeries ? SERIES_PATH : ARTISTS_PATH;
+  const entry = isSeries
+    ? findSeries((await ws.series()).series, c.ref)
+    : findArtist((await ws.artists()).artists, c.ref);
+  if (!entry) {
+    // The metadata job creates entries for newly posted names; until it has
+    // run there is nothing here to describe.
+    throw new CommandError(
+      `No ${c.kind} found matching "${c.ref}" in ${isSeries ? "series" : "artists"}.json. If it was just posted, try again after the metadata job runs.`
+    );
+  }
+
+  // Stored the way the pipeline stores them: paragraphs split by a blank CRLF line.
+  const description = c.paragraphs.join("\r\n\r\n");
+  const changed = entry.description !== description;
+  entry.description = description;
+  const references = (entry.references ??= []) as DescribeReference[];
+  const added = mergeReferences(references, c.references);
+
+  if (!changed && added === 0) {
+    return { reply: `${entry.name} already has that description and those sources.`, summary: null };
+  }
+  ws.touch(path);
+  const lines = [`Described ${c.kind} ${entry.name}:`];
+  lines.push(changed ? `  Description set (${description.length} characters)` : "  Description unchanged");
+  if (c.references.length > 0) {
+    lines.push(
+      added === c.references.length
+        ? `  Added ${added} reference(s)`
+        : `  Added ${added} reference(s); ${c.references.length - added} were already listed`
+    );
+  }
+  return { reply: lines.join("\n"), summary: `Update ${c.kind}: describe ${entry.name}` };
+}
+
 /** Apply one edit command to the workspace. Throws CommandError when it can't. */
 export async function applyCommand(ws: Workspace, text: string): Promise<Applied> {
   const parsed = parseEditCommand(text);
@@ -474,6 +525,8 @@ export async function applyCommand(ws: Workspace, text: string): Promise<Applied
       return applyRename(ws, parsed);
     case "resolve":
       return applyResolve(ws, parsed);
+    case "describe":
+      return applyDescribe(ws, parsed);
   }
 }
 
@@ -570,7 +623,7 @@ export function formatRun(result: RunResult): string {
     body = `Ran ${outcomes.length} command(s):\n${outcomes
       .map(
         (o, i) =>
-          `${i + 1}. ${o.command}\n   ${o.ok ? "OK" : "FAIL"}: ${o.reply.split("\n")[0]}`
+          `${i + 1}. ${o.command.split("\n")[0]}\n   ${o.ok ? "OK" : "FAIL"}: ${o.reply.split("\n")[0]}`
       )
       .join("\n")}`;
   }

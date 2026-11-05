@@ -61,3 +61,19 @@ def test_lookup_values_stay_on_one_line():
     assert restore_ci.one_line("Saga\nimage=../x") == "Saga image=../x"
     assert restore_ci.label(panel(title="Saga\r\n")) == "Saga\r\n #4 (Fiona Staples)"
     assert restore_ci.one_line(restore_ci.label(panel(title="Saga\r\n"))) == "Saga #4 (Fiona Staples)"
+
+
+def test_a_clear_check_starts_at_that_skill():
+    bw = restore_ci.start_directions("bw", "/w/source.jpg")
+    assert "activate the restore-bw-panel skill" in bw and "use restore-color-panel instead" in bw
+    color = restore_ci.start_directions("color", "/w/source.jpg")
+    assert "activate the restore-color-panel skill" in color and "use restore-bw-panel instead" in color
+    for text in (bw, color):
+        assert "/w/source.jpg as PHOTO.jpg" in text and "enhance step" in text
+
+
+def test_an_unsure_check_leaves_the_choice_to_the_model():
+    text = restore_ci.start_directions("unsure", "/w/source.jpg")
+    assert "restore-color-panel" in text and "restore-bw-panel" in text
+    assert "activate the" not in text  # No skill is named as the answer.
+    assert "/w/source.jpg as PHOTO.jpg" in text

@@ -58,6 +58,9 @@ Commands:
   /tag_artist {ref} // {tags} — Add tags to an artist (ref = id, name, or alias)
   /rename_series {ref} // {new name} [// {start year}] — Rename a series
   /resolve metron:series // {name} // {metron id} — Pick a Metron match
+  /describe_series {ref} (or /describe_artist {ref}), then the description
+    on the following lines, then optionally "Sources:" and lines of
+    "- {name} | {url}" — Replace a description and add its sources
 
 Updatable fields: title, issue, year, artist, notes, tags
 Setting title moves that panel to the series the title names.
@@ -90,6 +93,12 @@ Agent (for allowlisted users):
   Examples:
     /ask which series never matched Metron, and what should they be called?
     /ask tag every Hellboy panel with mignolaverse
+    /ask write a new description for Paul Pope, focus on his manga work
+    /ask rewrite the Saga description from https://example.com/saga-review
+
+  Description requests are researched on the web: every sentence is
+  checked against a quote from its source, and you see the draft and
+  its sources before /confirm. Takes a minute or two.
 
 Restorations (for allowlisted users):
   /restore {id} [directions] — Clean up a panel's photo: evens the light,

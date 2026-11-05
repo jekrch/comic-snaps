@@ -12,7 +12,7 @@ vi.mock("./agent", () => ({
   describePanel: vi.fn(),
 }));
 
-const { MAX_ATTEMPTS, processJobBatch } = await import("./jobs");
+const { MAX_ATTEMPTS, formatProposals, processJobBatch } = await import("./jobs");
 const { PENDING_DO_KEY } = await import("./keys");
 
 function kv() {
@@ -102,6 +102,18 @@ describe("an /ask job", () => {
     await processJobBatch({ messages: [last] } as never, env);
     expect(last.ack).toHaveBeenCalled();
     expect(sent[sent.length - 1]).toContain("model down");
+  });
+});
+
+describe("formatProposals", () => {
+  it("shows a proposal's display text, indented, in place of a long command", () => {
+    const out = formatProposals("Drafted it.", [
+      { command: "/tag_series saga // x", rationale: "asked" },
+      { command: "/describe_series saga\nLong text.", rationale: "sourced", display: "New description:\n\nSaga is. [1]" },
+    ]);
+    expect(out).toContain("  1. /tag_series saga // x\n     asked");
+    expect(out).toContain("  2. New description:\n     \n     Saga is. [1]\n     sourced");
+    expect(out).not.toContain("Long text.");
   });
 });
 

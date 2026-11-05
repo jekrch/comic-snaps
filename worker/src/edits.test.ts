@@ -365,6 +365,69 @@ describe("applyCommand: /resolve", () => {
   });
 });
 
+describe("applyCommand: /describe_*", () => {
+  const command = [
+    "/describe_series hellboy",
+    "Hellboy is a comic series by Mike Mignola.",
+    "",
+    "It began in 1994.",
+    "",
+    "Sources:",
+    "- Wikipedia | https://en.wikipedia.org/wiki/Hellboy",
+    "- The Comics Journal | https://www.tcj.com/mignola/ | A Mignola interview",
+  ].join("\n");
+
+  it("sets the description with CRLF paragraphs and appends new references", async () => {
+    const files = baseFiles();
+    (files[SERIES_PATH] as { series: SeriesEntry[] }).series[0].references = [
+      { name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Hellboy/" },
+    ];
+    const { ws } = workspace(files);
+    const out = await applyCommand(ws, command);
+    const entry = (await ws.series()).series.find((s) => s.id === "hellboy")!;
+    expect(entry.description).toBe("Hellboy is a comic series by Mike Mignola.\r\n\r\nIt began in 1994.");
+    expect(entry.references).toEqual([
+      { name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Hellboy/" },
+      { name: "The Comics Journal", url: "https://www.tcj.com/mignola/", title: "A Mignola interview" },
+    ]);
+    expect(out.reply).toContain("Added 1 reference(s); 1 were already listed");
+    expect(out.summary).toBe("Update series: describe Hellboy");
+    expect(ws.dirtyFiles().map((f) => f.path)).toEqual([SERIES_PATH]);
+  });
+
+  it("describes an artist found by alias, creating the references list", async () => {
+    const { ws } = workspace(baseFiles());
+    await applyCommand(ws, "/describe_artist Moebius\nA French cartoonist.\nSources:\n- Comiclopedia | https://www.lambiek.net/artists/g/giraud.htm");
+    const artist = (await ws.artists()).artists[0];
+    expect(artist.description).toBe("A French cartoonist.");
+    expect(artist.references).toEqual([{ name: "Comiclopedia", url: "https://www.lambiek.net/artists/g/giraud.htm" }]);
+  });
+
+  it("changes nothing when run twice", async () => {
+    const { ws } = workspace(baseFiles());
+    await applyCommand(ws, command);
+    expect((await applyCommand(ws, command)).summary).toBeNull();
+  });
+
+  it("fails for an entry that isn't in the data files yet", async () => {
+    const { ws } = workspace(baseFiles());
+    await expect(applyCommand(ws, "/describe_artist Nobody\nText.")).rejects.toThrow(/No artist found/);
+  });
+
+  it("lists a multi-line command by its first line in a run summary", () => {
+    const text = formatRun({
+      outcomes: [
+        { command, ok: true, reply: "Described series Hellboy:" },
+        { command: "/tag_series saga // x", ok: true, reply: "Tagged" },
+      ],
+      commitSha: "abc",
+      followUp: null,
+    });
+    expect(text).toContain("1. /describe_series hellboy\n   OK");
+    expect(text).not.toContain("It began");
+  });
+});
+
 describe("Workspace", () => {
   it("loads each file once and writes only the ones that changed", async () => {
     const { ws, loader } = workspace(baseFiles());
