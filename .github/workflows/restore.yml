@@ -145,6 +145,10 @@ jobs:
           # The action runs the CLI with --yolo, so nothing asks before a tool
           # runs: tools.core is the whole allowlist. Shell commands are matched
           # by prefix, and each part of a chained command is checked on its own.
+          # A prefix matches whole words only: it must be followed by a space or
+          # the end of the command (gemini-cli policy/utils.ts). So each script is
+          # listed by its full path; a folder like scripts/skills/ matches nothing
+          # beneath it, which left the model unable to run any of them.
           # Redaction keeps secret-looking variables out of the commands' env.
           # Skills are activated from their absolute path, so the model may run
           # their scripts that way too; both forms are allowed.
@@ -169,10 +173,18 @@ jobs:
                   "list_directory",
                   "glob",
                   "grep_search",
-                  "run_shell_command(python3 scripts/skills/)",
-                  "run_shell_command(python scripts/skills/)",
-                  "run_shell_command(python3 ${{ github.workspace }}/scripts/skills/)",
-                  "run_shell_command(python ${{ github.workspace }}/scripts/skills/)",
+                  "run_shell_command(python3 scripts/skills/restore-bw-panel/restore.py)",
+                  "run_shell_command(python3 scripts/skills/restore-color-panel/restore_color.py)",
+                  "run_shell_command(python3 scripts/skills/restore-panel/panel.py)",
+                  "run_shell_command(python scripts/skills/restore-bw-panel/restore.py)",
+                  "run_shell_command(python scripts/skills/restore-color-panel/restore_color.py)",
+                  "run_shell_command(python scripts/skills/restore-panel/panel.py)",
+                  "run_shell_command(python3 ${{ github.workspace }}/scripts/skills/restore-bw-panel/restore.py)",
+                  "run_shell_command(python3 ${{ github.workspace }}/scripts/skills/restore-color-panel/restore_color.py)",
+                  "run_shell_command(python3 ${{ github.workspace }}/scripts/skills/restore-panel/panel.py)",
+                  "run_shell_command(python ${{ github.workspace }}/scripts/skills/restore-bw-panel/restore.py)",
+                  "run_shell_command(python ${{ github.workspace }}/scripts/skills/restore-color-panel/restore_color.py)",
+                  "run_shell_command(python ${{ github.workspace }}/scripts/skills/restore-panel/panel.py)",
                   "run_shell_command(git status)",
                   "run_shell_command(git diff)",
                   "run_shell_command(ls)",
