@@ -157,7 +157,7 @@ jobs:
                 "enabled": true,
                 "target": "local",
                 "outfile": "${{ runner.temp }}/gemini-telemetry.log",
-                "logPrompts": false
+                "logPrompts": true
               },
               "context": { "includeDirectories": ["${{ runner.temp }}/restore"] },
               "security": { "environmentVariableRedaction": { "enabled": true } },
@@ -206,7 +206,9 @@ jobs:
             ${{ steps.previous.outputs.context }}
 
       # From the CLI's telemetry: tokens per model, and every tool call with its
-      # arguments and whether it ran. Prompts and responses aren't logged.
+      # arguments and whether it ran. The CLI only records a tool's arguments
+      # with logPrompts on, so the file also holds the prompts and responses; it
+      # stays in the runner's temp dir, and only the lines below are printed.
       - name: Usage
         if: always()
         continue-on-error: true  # A report; it never decides the run.
