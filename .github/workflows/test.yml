@@ -6,6 +6,8 @@ on:
     paths:
       - "src/**"
       - "worker/src/**"
+      - "worker/package.json"
+      - "worker/bun.lock"
       - "scripts/**"
       - "package.json"
       - "tsconfig*.json"
@@ -24,6 +26,12 @@ jobs:
       - uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # The worker's tests import its modules, and those import the worker's
+      # own dependencies (the Gemini SDK), which the root install doesn't cover.
+      - name: Install worker dependencies
+        working-directory: worker
         run: bun install --frozen-lockfile
 
       # The app build and the test suite are typechecked as separate projects
