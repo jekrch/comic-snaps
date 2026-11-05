@@ -84,7 +84,9 @@
       "artist": "Johnny Craig",
       "image": "images/the-vault-of-horror/issue-21-1793574803-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "horror"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-11-01T23:13:27.055Z",
       "width": 1280,
@@ -158,7 +160,9 @@
       "artist": "Trina Robbins",
       "image": "images/trina-s-women/issue-n-a-1793573911-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-11-01T22:58:34.696Z",
       "width": 1043,
@@ -232,7 +236,9 @@
       "artist": "Robert Crumb",
       "image": "images/bijou-funnies/issue-6-1792978194-v3.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-26T01:29:57.529Z",
       "width": 943,
@@ -269,7 +275,10 @@
       "artist": "Adrian Tomine",
       "image": "images/optic-nerve/issue-1-1792972812.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects",
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-26T00:00:14.957Z",
       "width": 1280,
@@ -343,7 +352,10 @@
       "artist": "Adrian Tomine",
       "image": "images/optic-nerve/issue-1-1792968544.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card",
+        "architecture"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-25T22:49:06.636Z",
       "width": 1280,
@@ -380,7 +392,9 @@
       "artist": "Adrian Tomine",
       "image": "images/optic-nerve/issue-1-1792968414-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-25T22:46:56.895Z",
       "width": 1280,
@@ -491,7 +505,9 @@
       "artist": "Justin Green",
       "image": "images/bijou-funnies/issue-6-1792968043-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-25T22:40:46.548Z",
       "width": 900,
@@ -935,7 +951,9 @@
       "artist": "Martin Morazzo",
       "image": "images/ice-cream-man-chocolate-vanilla-twist/issue-1-1792270720-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "static camera"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-17T20:58:42.452Z",
       "width": 1280,
@@ -1009,7 +1027,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-19-1791863635.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-13T03:53:57.866Z",
       "width": 1280,
@@ -1046,7 +1066,9 @@
       "artist": "Dustin Nguyen",
       "image": "images/crowbound/issue-2-1791861043.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-13T03:10:47.063Z",
       "width": 940,
@@ -1083,7 +1105,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-19-1791860725.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-13T03:05:28.601Z",
       "width": 811,
@@ -1120,7 +1144,9 @@
       "artist": "Shawn Kuruneru",
       "image": "images/minor-arcana/issue-19-1791743145.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-11T18:25:47.622Z",
       "width": 1280,
@@ -1157,7 +1183,9 @@
       "artist": "Patrick Horvath",
       "image": "images/beneath-the-trees-where-nobody-sees-halloween-special/issue-1-1791742675.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-11T18:17:57.588Z",
       "width": 1280,
@@ -1194,7 +1222,9 @@
       "artist": "Patrick Horvath",
       "image": "images/beneath-the-trees-where-nobody-sees-halloween-special/issue-1-1791742456.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-11T18:14:18.916Z",
       "width": 1152,
@@ -1231,7 +1261,9 @@
       "artist": "Dustin Nguyen",
       "image": "images/crowbound/issue-2-1791735326.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-11T16:15:28.989Z",
       "width": 971,
@@ -1416,7 +1448,9 @@
       "artist": "Matt Kindt",
       "image": "images/mind-mgmt-new-improved/issue-4-1791159333.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-05T00:15:36.073Z",
       "width": 1023,
@@ -1453,7 +1487,9 @@
       "artist": "Stipan Morian",
       "image": "images/bleeding-hearts/issue-8-1791159122-v3.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-10-05T00:12:04.774Z",
       "width": 1280,
@@ -1527,7 +1563,9 @@
       "artist": "Geof Darrow",
       "image": "images/the-shaolin-cowboy-staying-a-i-live/issue-3-1790535160.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "line-work"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-27T18:52:43.626Z",
       "width": 1280,
@@ -1938,7 +1976,9 @@
       "artist": "Carl Belfast",
       "image": "images/verbatim/issue-1-1789313594.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-13T15:33:16.853Z",
       "width": 897,
@@ -2234,7 +2274,9 @@
       "artist": "Nate Powell",
       "image": "images/walkie-talkie/issue-1-1788755586.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-07T04:33:09.783Z",
       "width": 1128,
@@ -2382,7 +2424,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-18-1788736869.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-06T23:21:11.999Z",
       "width": 1280,
@@ -2419,7 +2463,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-18-1788736628.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-06T23:17:10.991Z",
       "width": 771,
@@ -2456,7 +2502,9 @@
       "artist": "Dustin Nguyen",
       "image": "images/crowbound/issue-1-1788735586.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-06T22:59:48.973Z",
       "width": 531,
@@ -2493,7 +2541,9 @@
       "artist": "Dustin Nguyen",
       "image": "images/crowbound/issue-1-1788734954.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-06T22:49:16.872Z",
       "width": 1280,
@@ -2641,7 +2691,9 @@
       "artist": "Nate Powell",
       "image": "images/walkie-talkie/issue-1-1788650964-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-05T23:29:27.180Z",
       "width": 689,
@@ -2678,7 +2730,9 @@
       "artist": "Nate Powell",
       "image": "images/walkie-talkie/issue-1-1788650004.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-05T23:13:27.320Z",
       "width": 1280,
@@ -2939,7 +2993,10 @@
       "artist": "Bob Armstrong",
       "image": "images/mickey-rat/issue-2-1788647187.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card",
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-05T22:26:29.320Z",
       "width": 1159,
@@ -2976,7 +3033,9 @@
       "artist": "Bob Armstrong",
       "image": "images/mickey-rat/issue-2-1788646904.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-05T22:21:47.614Z",
       "width": 1280,
@@ -3013,7 +3072,9 @@
       "artist": "Charles Burns",
       "image": "images/final-cut/issue-n-a-1788324138.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "duotone"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-02T04:42:21.493Z",
       "width": 1226,
@@ -3050,7 +3111,9 @@
       "artist": "Daniel Clowes",
       "image": "images/eightball/issue-15-1788323794.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-09-02T04:36:38.061Z",
       "width": 901,
@@ -3087,7 +3150,9 @@
       "artist": "Matt Kindt",
       "image": "images/mind-mgmt-new-improved/issue-3-1788150719.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-31T04:32:02.868Z",
       "width": 880,
@@ -3198,7 +3263,9 @@
       "artist": "Matt Kindt",
       "image": "images/mind-mgmt-new-improved/issue-3-1788114731.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-30T18:32:14.159Z",
       "width": 1280,
@@ -3235,7 +3302,9 @@
       "artist": "Matt Kindt",
       "image": "images/mind-mgmt-new-improved/issue-3-1788114551.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-30T18:29:14.780Z",
       "width": 839,
@@ -3420,7 +3489,9 @@
       "artist": "Paul Chadwick",
       "image": "images/concrete-stars-over-sand/issue-3-1788030630.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "layering"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-29T19:10:33.880Z",
       "width": 1256,
@@ -3681,7 +3752,10 @@
       "artist": "Bryan Hitch",
       "image": "images/redcoat/issue-22-1787434628.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "architecture",
+        "smoke"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-22T21:37:13.626Z",
       "width": 1280,
@@ -3833,7 +3907,9 @@
       "artist": "Jim Mahfood",
       "image": "images/grrl-scouts-stone-ghost/issue-1-1787427048.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "ink splatter"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-22T19:30:51.278Z",
       "width": 567,
@@ -3944,7 +4020,9 @@
       "artist": "Brahm Revel",
       "image": "images/just-brutal/issue-5-1786901695.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-16T17:34:58.081Z",
       "width": 1091,
@@ -4055,7 +4133,10 @@
       "artist": "Geof Darrow",
       "image": "images/the-shaolin-cowboy-staying-a-i-live/issue-2-1786832752.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "line-work",
+        "architecture"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-15T22:25:55.062Z",
       "width": 1125,
@@ -4092,7 +4173,10 @@
       "artist": "Geof Darrow",
       "image": "images/the-shaolin-cowboy-staying-a-i-live/issue-2-1786832600.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "line-work",
+        "architecture"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-15T22:23:23.630Z",
       "width": 564,
@@ -4279,7 +4363,9 @@
       "artist": "Jamie Hewlett",
       "image": "images/deadline/issue-20-1786295442.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "cover"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-09T17:10:44.511Z",
       "width": 992,
@@ -4316,7 +4402,9 @@
       "artist": "Martin Morazzo",
       "image": "images/the-deadman/issue-3-1786294631-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "grid"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-09T16:57:13.227Z",
       "width": 1242,
@@ -4390,7 +4478,9 @@
       "artist": "Geof Darrow",
       "image": "images/the-shaolin-cowboy-staying-a-i-live/issue-1-1785620257.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "line-work"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-01T21:37:39.037Z",
       "width": 1280,
@@ -4427,7 +4517,10 @@
       "artist": "Geof Darrow",
       "image": "images/the-shaolin-cowboy-staying-a-i-live/issue-1-1785616450.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "line-work",
+        "architecture"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-08-01T20:34:12.552Z",
       "width": 968,
@@ -4575,7 +4668,9 @@
       "artist": "Moebius",
       "image": "images/heavy-metal/issue-8-1785117226.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-27T01:53:48.905Z",
       "width": 1280,
@@ -4649,7 +4744,10 @@
       "artist": "Robert Crumb",
       "image": "images/motor-city-comics/issue-2-1785106539.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card",
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T22:55:41.575Z",
       "width": 942,
@@ -4723,7 +4821,9 @@
       "artist": "Moebius",
       "image": "images/heavy-metal/issue-8-1785105241.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "clear line"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T22:34:03.507Z",
       "width": 1139,
@@ -4797,7 +4897,9 @@
       "artist": "Enki Bilal",
       "image": "images/heavy-metal/issue-8-1785096993.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sci-fi"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T20:16:35.159Z",
       "width": 870,
@@ -4835,7 +4937,9 @@
       "image": "images/mind-mgmt-new-improved/issue-2-1785094478.jpg",
       "columnSpan": 1,
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T19:34:40.022Z",
       "width": 1280,
@@ -4872,7 +4976,10 @@
       "artist": "Victor Moscoso",
       "image": "images/zap-comix/issue-5-1785093420.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling",
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T19:17:02.326Z",
       "width": 1280,
@@ -4946,7 +5053,9 @@
       "artist": "Richard Corben",
       "image": "images/eerie/issue-90-1785026846.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T00:47:28.175Z",
       "width": 1280,
@@ -4983,7 +5092,9 @@
       "artist": "Richard Corben",
       "image": "images/eerie/issue-90-1785025385.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-26T00:23:07.420Z",
       "width": 1280,
@@ -5168,7 +5279,9 @@
       "artist": "Jim Philips",
       "image": "images/juice-city/issue-1-1785019038.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-25T22:37:20.076Z",
       "width": 1139,
@@ -5279,7 +5392,9 @@
       "artist": "Steve Lafler",
       "image": "images/buzzard/issue-5-1784505716.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-20T00:02:02.119Z",
       "width": 1223,
@@ -5353,7 +5468,9 @@
       "artist": "Glenn Head",
       "image": "images/avenue-d/issue-1-1784499278-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-19T22:14:40.150Z",
       "width": 825,
@@ -5468,7 +5585,9 @@
       "artist": "Andy MacDonald",
       "image": "images/if-destruction-be-our-lot/issue-3-1784408227-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-18T20:57:09.508Z",
       "width": 1280,
@@ -5505,7 +5624,9 @@
       "artist": "Ryan Ottley",
       "image": "images/battle-beast/issue-11-1784408098.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-18T20:55:00.515Z",
       "width": 802,
@@ -5838,7 +5959,9 @@
       "artist": "Robert Crumb",
       "image": "images/zap-comix/issue-0-1783792666.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-11T17:57:48.746Z",
       "width": 968,
@@ -5912,7 +6035,10 @@
       "artist": "Elsa Charretier",
       "image": "images/the-city-beneath-her-feet/issue-3-1783729702.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "smoke",
+        "static camera"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-11T00:28:23.782Z",
       "width": 457,
@@ -5986,7 +6112,10 @@
       "artist": "Steve Lafler",
       "image": "images/buzzard/issue-4-1783309323.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects",
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-06T03:42:05.735Z",
       "width": 1280,
@@ -6023,7 +6152,9 @@
       "artist": "Ken Brown",
       "image": "images/buzzard/issue-4-1783308201.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-06T03:23:23.350Z",
       "width": 1280,
@@ -6136,7 +6267,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-16-1783293873.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-05T23:24:35.451Z",
       "width": 831,
@@ -6362,7 +6495,9 @@
       "artist": "Robert Crumb",
       "image": "images/hup/issue-1-1783236637.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-05T07:30:38.680Z",
       "width": 1280,
@@ -6399,7 +6534,9 @@
       "artist": "Julie Doucet",
       "image": "images/buzzard/issue-4-1783113460.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-07-03T21:17:42.619Z",
       "width": 1280,
@@ -6695,7 +6832,9 @@
       "artist": "Matt Kindt",
       "image": "images/mind-mgmt-new-improved/issue-1-1782605083.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-06-28T00:04:45.221Z",
       "width": 1280,
@@ -6732,7 +6871,9 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets-sunshine-roses/issue-42-1782169164-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-06-22T22:59:26.442Z",
       "width": 1280,
@@ -6806,7 +6947,9 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets-sunshine-roses/issue-40-1782155942-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-06-22T19:19:03.873Z",
       "width": 1280,
@@ -6991,7 +7134,9 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets-sunshine-roses/issue-40-1781895383.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-06-19T18:56:25.396Z",
       "width": 1280,
@@ -7213,7 +7358,9 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets-sunshine-roses/issue-29-1780706289.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-06-06T00:38:11.060Z",
       "width": 859,
@@ -7324,7 +7471,9 @@
       "artist": "Josh Cornillon",
       "image": "images/did-you-hear-about-mimi-green/issue-1-1780180129-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "smoke"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-30T22:28:51.355Z",
       "width": 1217,
@@ -7361,7 +7510,9 @@
       "artist": "Art Spiegelman",
       "image": "images/bijou-funnies/issue-7-1780176895-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-30T21:35:01.630Z",
       "width": 1280,
@@ -7472,7 +7623,10 @@
       "artist": "Steve Lafler",
       "image": "images/buzzard/issue-2-1779689119.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card",
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-25T06:05:21.235Z",
       "width": 968,
@@ -7661,7 +7815,9 @@
       "artist": "Keith Giffen",
       "image": "images/trencher/issue-2-1779586384.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-24T01:33:06.310Z",
       "width": 562,
@@ -7698,7 +7854,9 @@
       "artist": "Victor Moscoso",
       "image": "images/zap-comix/issue-3-1779581665.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-24T00:14:35.693Z",
       "width": 1103,
@@ -7772,7 +7930,9 @@
       "artist": "S. Clay Wilson",
       "image": "images/zap-comix/issue-3-1779576267.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-23T22:44:28.814Z",
       "width": 1280,
@@ -7809,7 +7969,9 @@
       "artist": "Robert Crumb",
       "image": "images/uneeda-comix/issue-0-1779575370.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-23T22:29:32.454Z",
       "width": 1280,
@@ -7922,7 +8084,9 @@
       "artist": "Victor Moscoso",
       "image": "images/zap-comix/issue-3-1779568464.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-23T20:34:26.298Z",
       "width": 942,
@@ -7959,7 +8123,9 @@
       "artist": "Javier Rodriguez",
       "image": "images/absolute-martian-manhunter/issue-11-1779494398.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "smoke"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-23T00:00:00.617Z",
       "width": 825,
@@ -8109,7 +8275,9 @@
       "artist": "Jim Ryan",
       "image": "images/buzzard/issue-1-1779425599-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-22T04:53:21.529Z",
       "width": 1160,
@@ -8257,7 +8425,9 @@
       "artist": "Javier Rodriguez",
       "image": "images/absolute-martian-manhunter/issue-11-1779326493.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "smoke"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-21T01:21:35.254Z",
       "width": 838,
@@ -8522,7 +8692,9 @@
       "artist": "Tim Conrad",
       "image": "images/pacific-presents/issue-3-1778708406.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-13T21:40:08.672Z",
       "width": 616,
@@ -8559,7 +8731,9 @@
       "artist": "Joe Sacco",
       "image": "images/buzzard/issue-1-1778705027-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-13T20:43:49.588Z",
       "width": 1019,
@@ -8633,7 +8807,9 @@
       "artist": "Jack Davis",
       "image": "images/panic/issue-4-1778689340.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-13T16:22:22.814Z",
       "width": 935,
@@ -8781,7 +8957,9 @@
       "artist": "Paul Kirchner",
       "image": "images/heavy-metal/issue-325-1778560803-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-12T04:40:05.185Z",
       "width": 1203,
@@ -8855,7 +9033,9 @@
       "artist": "Ilias Kyriazis",
       "image": "images/heavy-metal/issue-325-1778560544.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "stippling"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-12T04:35:46.030Z",
       "width": 1160,
@@ -8892,7 +9072,10 @@
       "artist": "Roger Langridge",
       "image": "images/the-muppets-noir/issue-3-1778430453.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "infographic",
+        "callout"
+      ],
       "postedBy": "Jenny",
       "addedAt": "2026-05-10T16:27:34.837Z",
       "width": 1280,
@@ -9005,7 +9188,9 @@
       "artist": "Lorenzo De Felici",
       "image": "images/red-roots/issue-1-1777795249.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-03T08:00:51.240Z",
       "width": 1072,
@@ -9042,7 +9227,9 @@
       "artist": "Junko Hosizawa",
       "image": "images/street-poet-ray/issue-1-1777759782-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "spot blacks"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-02T22:09:44.088Z",
       "width": 1146,
@@ -9116,7 +9303,9 @@
       "artist": "Tony Millionaire",
       "image": "images/the-oddball-s-odyssey/issue-1-1777758868.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "hatching"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-05-02T21:54:30.786Z",
       "width": 1042,
@@ -9303,7 +9492,9 @@
       "artist": "Martin Simmonds",
       "image": "images/universal-monsters-phantom-of-the-opera/issue-3-1777233060.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "painting"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-26T19:51:02.212Z",
       "width": 937,
@@ -9340,7 +9531,9 @@
       "artist": "Martin Simmonds",
       "image": "images/universal-monsters-phantom-of-the-opera/issue-3-1777232387.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "painting"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-26T19:39:49.781Z",
       "width": 1036,
@@ -9377,7 +9570,9 @@
       "artist": "Anand RK",
       "image": "images/the-beauty/issue-5-1777178136.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "screentone"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-26T04:35:38.406Z",
       "width": 955,
@@ -9453,7 +9648,9 @@
       "artist": "Sean Phillips",
       "image": "images/fatale/issue-17-1776701288.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "noir"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-20T16:08:10.084Z",
       "width": 1280,
@@ -9490,7 +9687,9 @@
       "artist": "Martin Morazzo",
       "image": "images/ice-cream-man/issue-45-1776654817.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "lettering"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-20T03:13:38.467Z",
       "width": 1280,
@@ -9527,7 +9726,10 @@
       "artist": "Martin Morazzo",
       "image": "images/ice-cream-man/issue-45-1776633700.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "architecture",
+        "diegetic panel border"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-19T21:21:42.053Z",
       "width": 1016,
@@ -9601,7 +9803,9 @@
       "artist": "Nicole Goux",
       "image": "images/the-twilight-zone/issue-6-1776620277.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "screentone"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-19T17:37:58.888Z",
       "width": 858,
@@ -9899,7 +10103,10 @@
       "artist": "Tyler Crook",
       "image": "images/harrow-county/issue-25-1775364760.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "static camera",
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-05T04:52:41.393Z",
       "width": 1280,
@@ -9936,7 +10143,9 @@
       "artist": "David Lapham",
       "image": "images/stray-bullets/issue-23-1775346554.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-04T23:49:16.220Z",
       "width": 1033,
@@ -10010,7 +10219,10 @@
       "artist": "Paul Pope",
       "image": "images/100/issue-5-1775339463.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects",
+        "bold brushwork"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-04T21:51:04.790Z",
       "width": 1093,
@@ -10047,7 +10259,9 @@
       "artist": "Tyler Crook",
       "image": "images/harrow-county/issue-25-1775334726.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-04T20:32:07.869Z",
       "width": 1280,
@@ -10084,7 +10298,9 @@
       "artist": "Paul Pope",
       "image": "images/100/issue-5-1775331302.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "bold brushwork"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-04T19:35:04.039Z",
       "width": 1024,
@@ -10121,7 +10337,9 @@
       "artist": "Sean Phillips",
       "image": "images/fatale/issue-9-1775180803-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "noir"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-04-03T01:46:44.711Z",
       "width": 1046,
@@ -10345,7 +10563,11 @@
       "artist": "Javier Rodriguez",
       "image": "images/absolute-martian-manhunter/issue-10-1774742607.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "smoke",
+        "sound effects",
+        "hand-drawn typography"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-29T00:03:29.460Z",
       "width": 1043,
@@ -10382,7 +10604,9 @@
       "artist": "Jeff Lemire",
       "image": "images/minor-arcana/issue-15-1774730563.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-28T20:42:45.086Z",
       "width": 1192,
@@ -10456,7 +10680,9 @@
       "artist": "Sean Phillips",
       "image": "images/criminal-special-edition/issue-0-1774321106.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "noir"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-24T02:58:28.326Z",
       "width": 1018,
@@ -10800,7 +11026,9 @@
       "artist": "Paul Pope",
       "image": "images/100/issue-2-1773890854.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "bold brushwork"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-19T03:27:35.779Z",
       "width": 1280,
@@ -10837,7 +11065,10 @@
       "artist": "Sean Phillips",
       "image": "images/criminal-special-edition/issue-0-1773888551.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "noir",
+        "smoke"
+      ],
       "postedBy": "Jenny",
       "addedAt": "2026-03-19T02:49:11.501Z",
       "width": 902,
@@ -11067,7 +11298,9 @@
       "artist": "Enki Bilal",
       "image": "images/heavy-metal/issue-5-1773107506-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-10T01:51:47.250Z",
       "width": 810,
@@ -11141,7 +11374,10 @@
       "artist": "Floch",
       "image": "images/heavy-metal/issue-5-1773105715.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "clear line",
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-10T01:21:58.290Z",
       "width": 1136,
@@ -11338,7 +11574,10 @@
       "artist": "Patrick Horvath",
       "image": "images/beneath-the-trees-where-nobody-sees-rite-of-spring/issue-6-1773012198.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "watercolor",
+        "sound effects"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-03-08T23:23:20.184Z",
       "width": 1280,
@@ -12266,7 +12505,9 @@
       "artist": "Jeff Jones",
       "image": "images/heavy-metal/issue-6-1771820134-v2.jpg",
       "notes": null,
-      "tags": [],
+      "tags": [
+        "title card"
+      ],
       "postedBy": "Jacob",
       "addedAt": "2026-02-23T04:15:36.024Z",
       "width": 1010,
