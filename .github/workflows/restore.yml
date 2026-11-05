@@ -25,7 +25,8 @@ name: Restore Panel
 # Cost: every turn of the Gemini session resends everything so far, including
 # each image it has read, so the cost grows with turns times context. Hence the
 # routing done before it starts, the turn cap, the budget in the prompt, and the
-# smaller compare sheets. The "Token usage" step prints what a run used.
+# smaller compare sheets. The "Usage" step prints what a run used, from
+# telemetry the CLI writes outside the model's reach, so a failed run has it too.
 
 on:
   workflow_dispatch:
@@ -145,9 +146,19 @@ jobs:
           # runs: tools.core is the whole allowlist. Shell commands are matched
           # by prefix, and each part of a chained command is checked on its own.
           # Redaction keeps secret-looking variables out of the commands' env.
+          # Skills are activated from their absolute path, so the model may run
+          # their scripts that way too; both forms are allowed.
+          # A turn is one model call. A restore within the prompt's budget takes
+          # about 25; the cap stops a run that loops.
           settings: |
             {
-              "model": { "maxSessionTurns": 40 },
+              "model": { "maxSessionTurns": 50 },
+              "telemetry": {
+                "enabled": true,
+                "target": "local",
+                "outfile": "${{ runner.temp }}/gemini-telemetry.log",
+                "logPrompts": false
+              },
               "context": { "includeDirectories": ["${{ runner.temp }}/restore"] },
               "security": { "environmentVariableRedaction": { "enabled": true } },
               "tools": {
@@ -160,6 +171,8 @@ jobs:
                   "grep_search",
                   "run_shell_command(python3 scripts/skills/)",
                   "run_shell_command(python scripts/skills/)",
+                  "run_shell_command(python3 ${{ github.workspace }}/scripts/skills/)",
+                  "run_shell_command(python ${{ github.workspace }}/scripts/skills/)",
                   "run_shell_command(git status)",
                   "run_shell_command(git diff)",
                   "run_shell_command(ls)",
@@ -180,6 +193,7 @@ jobs:
             - Keep the framing. Don't crop, straighten, or reframe unless the notes below ask for it.
             - Repainting the art is the worst outcome. A photo left a little warm is fine; a face turned purple isn't. When unsure, take less.
             - To measure regions of the source against a result: python3 scripts/skills/restore-panel/panel.py probe SOURCE --box X,Y,W,H --against OUT
+            - Shell commands are limited to running the skills' scripts (python3 scripts/skills/...), git status, git diff, ls, and mkdir, from the repo root. Anything else is refused: no cd, cp, cat, python3 -c, and no pipes, &&, or redirects, since each part of a chained command is checked on its own. Use read_file, write_file and list_directory for files. If a command is refused, don't retry variants or look into why: use an allowed one.
             - Budget: try at most three sets of settings. Look at the whole frame once, on the first, and use zooms after that. Read each image once, and don't read one again unless it changed. If the third set doesn't clearly beat the photo, install nothing.
             - Install at most once, with the install command the skill gives, and only when the result is a clear gain that keeps the art's own colors. If the skill says to skip this kind of panel, or nothing you try beats the photo, install nothing.
             - Change the repo only through that install command. Don't edit scripts, skills, or data files, and don't commit or push: the workflow does that after checking your work.
@@ -191,12 +205,24 @@ jobs:
 
             ${{ steps.previous.outputs.context }}
 
-      # The CLI's JSON output stays in the workspace after the action; print just
-      # its stats (tokens per model, tool calls), not the response.
-      - name: Token usage
-        if: always() && hashFiles('gemini-artifacts/stdout.log') != ''
+      # From the CLI's telemetry: tokens per model, and every tool call with its
+      # arguments and whether it ran. Prompts and responses aren't logged.
+      - name: Usage
+        if: always()
+        continue-on-error: true  # A report; it never decides the run.
         run: |
-          jq '.stats' gemini-artifacts/stdout.log || echo "(stdout wasn't JSON)"
+          log="$RUNNER_TEMP/gemini-telemetry.log"
+          [ -s "$log" ] || { echo "(no telemetry written)"; exit 0; }
+          # The file is a stream of JSON records; keep the CLI's events.
+          jq -c '.attributes? // empty | select(type == "object" and (.["event.name"] // "" | startswith("gemini_cli.")))' "$log" > "$RUNNER_TEMP/events.jsonl" || true
+          echo "Tokens by model:"
+          jq -rs '[.[] | select(.["event.name"] == "gemini_cli.api_response")] | group_by(.model) | .[] |
+            "  \(.[0].model): \(length) calls, \(map(.input_token_count // 0) | add) in (\(map(.cached_content_token_count // 0) | add) cached), \(map(.output_token_count // 0) | add) out, \(map(.thoughts_token_count // 0) | add) thinking"' "$RUNNER_TEMP/events.jsonl"
+          echo "API errors:"
+          jq -r 'select(.["event.name"] == "gemini_cli.api_error") | "  \(.status_code // "?") \(.error // "" | tostring | .[0:200])"' "$RUNNER_TEMP/events.jsonl"
+          echo "Tool calls:"
+          jq -r 'select(.["event.name"] == "gemini_cli.tool_call") |
+            "  \(if .success then "ok    " else "FAILED" end) \(.function_name) \(.function_args // "" | tostring | .[0:240])\(if .success then "" else " -> \(.error // "" | tostring | .[0:160])" end)"' "$RUNNER_TEMP/events.jsonl"
 
       # Only the installed image and the summary leave this job. The publish job
       # installs the image itself, so nothing else the model changed here matters.
