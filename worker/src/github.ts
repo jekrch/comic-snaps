@@ -1,14 +1,10 @@
 import type {
-  ArtistEntry,
-  ArtistsFile,
   Env,
   Gallery,
   GitHubContentsResponse,
   PanelEntry,
   SeriesEntry,
-  SeriesFile,
 } from "./types";
-import { parseIssue } from "./caption";
 
 // Display form for an issue identifier (e.g. `#5` for a number, `VOL 1` as-is).
 export function formatIssue(issue: number | string): string {
@@ -58,6 +54,24 @@ function base64ToUtf8(base64: string): string {
   return new TextDecoder().decode(bytes);
 }
 
+/**
+ * A file's text from a contents-API response. That JSON form carries the file
+ * only up to 1 MB. Past that `content` comes back empty (encoding "none"), so
+ * the text is fetched as the blob the response names, which also keeps the
+ * returned sha exactly the one that was read.
+ */
+async function contentsText(env: Env, meta: GitHubContentsResponse): Promise<string> {
+  if (meta.content || meta.encoding !== "none") {
+    return base64ToUtf8((meta.content ?? "").replace(/\n/g, ""));
+  }
+  const [owner, repo] = env.GITHUB_REPO.split("/");
+  const resp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/git/blobs/${meta.sha}`, {
+    headers: { ...githubHeaders(env.GITHUB_TOKEN), Accept: "application/vnd.github.raw+json" },
+  });
+  if (!resp.ok) throw new Error(`Failed to read blob ${meta.sha} (${resp.status}): ${await resp.text()}`);
+  return resp.text();
+}
+
 /** Commit a single file to the repository. */
 export async function commitFile(
   env: Env,
@@ -101,8 +115,7 @@ export async function readGalleryJson(
   if (getResp.ok) {
     const data: GitHubContentsResponse = await getResp.json();
     sha = data.sha;
-    const content = base64ToUtf8(data.content.replace(/\n/g, ""));
-    gallery = JSON.parse(content);
+    gallery = JSON.parse(await contentsText(env, data));
   } else if (getResp.status !== 404) {
     const err = await getResp.text();
     throw new Error(`Failed to read gallery.json (${getResp.status}): ${err}`);
@@ -244,20 +257,40 @@ export async function deletePanel(
   return removed;
 }
 
-const UPDATABLE_FIELDS = ["title", "issue", "year", "artist", "notes", "tags"] as const;
-type UpdatableField = typeof UPDATABLE_FIELDS[number];
+/**
+ * Files the Python pipeline writes: `json.dumps(indent=2)` with its default
+ * `ensure_ascii`, plus a trailing newline. A bot write has to reproduce that
+ * byte for byte or it re-lines the whole file. gallery.json is the exception —
+ * the bot has always written it, as plain `JSON.stringify`.
+ */
+const PYTHON_FORMAT_PATHS = new Set([
+  "public/data/series.json",
+  "public/data/artists.json",
+  "public/data/disambiguation.json",
+  "public/data/issues.json",
+  "public/data/ratings.json",
+]);
 
-export function isUpdatableField(field: string): field is UpdatableField {
-  return (UPDATABLE_FIELDS as readonly string[]).includes(field);
+/** Serialise a data file in the exact format the file is already stored in. */
+export function serializeDataFile(path: string, data: unknown): string {
+  const json = JSON.stringify(data, null, 2);
+  if (!PYTHON_FORMAT_PATHS.has(path)) return json;
+  const escaped = json.replace(
+    /[\u0080-￿]/g,
+    (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`
+  );
+  return `${escaped}\n`;
 }
 
-/** Generic JSON file read from GitHub. */
+/** Generic JSON file read from GitHub, at `ref` (a commit sha) or the default branch. */
 export async function readJsonFile<T>(
   env: Env,
-  path: string
+  path: string,
+  ref?: string
 ): Promise<{ data: T | null; sha: string | null }> {
   const [owner, repo] = env.GITHUB_REPO.split("/");
-  const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}`;
+  const query = ref ? `?ref=${encodeURIComponent(ref)}` : "";
+  const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}${query}`;
 
   const resp = await fetch(url, { headers: githubHeaders(env.GITHUB_TOKEN) });
 
@@ -268,8 +301,7 @@ export async function readJsonFile<T>(
   }
 
   const meta: GitHubContentsResponse = await resp.json();
-  const content = base64ToUtf8(meta.content.replace(/\n/g, ""));
-  return { data: JSON.parse(content) as T, sha: meta.sha };
+  return { data: JSON.parse(await contentsText(env, meta)) as T, sha: meta.sha };
 }
 
 /** A failed write to GitHub, carrying the status so conflicts can be retried. */
@@ -298,7 +330,7 @@ export async function writeJsonFile(
 
   const body: Record<string, string> = {
     message: commitMessage,
-    content: utf8ToBase64(JSON.stringify(data, null, 2)),
+    content: utf8ToBase64(serializeDataFile(path, data)),
     branch: "main",
   };
   if (sha) body.sha = sha;
@@ -362,159 +394,163 @@ export function findSeries(list: SeriesEntry[], ref: string): SeriesEntry | unde
   );
 }
 
-/** Match an artist by id, name, or alias (all case-insensitive). */
-function findArtist(list: ArtistEntry[], ref: string): ArtistEntry | undefined {
-  const r = normalize(ref);
-  return (
-    list.find((a) => normalize(a.id) === r) ??
-    list.find((a) => normalize(a.name) === r) ??
-    list.find((a) => a.aliases?.some((alias) => normalize(alias) === r))
-  );
-}
+// ---------------------------------------------------------------------------
+// Multi-file commits (Git Data API)
+// ---------------------------------------------------------------------------
+//
+// The contents API commits one file at a time. A rename touches gallery.json
+// and series.json, and two commits would let the metadata job check out between
+// them and then collide with the second on its push. So edits read every file at
+// one commit, apply in memory, and land as a single commit on top of it.
 
-/** Merge new tags into an entry's tag array, returning only the newly added tags. */
-function mergeTags(entry: { tags?: string[] }, incoming: string[]): string[] {
-  const existing = new Set(entry.tags ?? []);
-  const added: string[] = [];
-  for (const t of incoming) {
-    if (!existing.has(t)) {
-      existing.add(t);
-      added.push(t);
-    }
+/** `main` moved between reading the base commit and updating the ref. */
+export class RefMovedError extends Error {
+  constructor() {
+    super("main moved while the commit was being built");
+    this.name = "RefMovedError";
   }
-  entry.tags = Array.from(existing);
-  return added;
 }
 
-export interface TagAddResult {
-  entry: { id: string; name: string } | null;
-  addedTags: string[];
-  allTags: string[];
-}
-
-/** Add tags to a series identified by id or name. Returns result with diff. */
-export async function addSeriesTags(
+async function githubJson<T>(
   env: Env,
-  ref: string,
-  newTags: string[]
-): Promise<TagAddResult> {
-  if (newTags.length === 0) {
-    return { entry: null, addedTags: [], allTags: [] };
+  path: string,
+  init: { method?: string; body?: unknown } = {}
+): Promise<{ status: number; ok: boolean; data: T | null; text: string }> {
+  const [owner, repo] = env.GITHUB_REPO.split("/");
+  const resp = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/${path}`, {
+    method: init.method ?? "GET",
+    headers: githubHeaders(env.GITHUB_TOKEN),
+    body: init.body === undefined ? undefined : JSON.stringify(init.body),
+  });
+  const text = await resp.text();
+  let data: T | null = null;
+  try {
+    data = text ? (JSON.parse(text) as T) : null;
+  } catch {
+    /* error bodies aren't always JSON */
   }
-  const { data, sha } = await readJsonFile<SeriesFile>(env, "public/data/series.json");
-  if (!data) return { entry: null, addedTags: [], allTags: [] };
-
-  const entry = findSeries(data.series, ref);
-  if (!entry) return { entry: null, addedTags: [], allTags: [] };
-
-  const added = mergeTags(entry, newTags);
-  if (added.length === 0) {
-    return {
-      entry: { id: entry.id, name: entry.name },
-      addedTags: [],
-      allTags: entry.tags ?? [],
-    };
-  }
-
-  await writeJsonFile(
-    env,
-    "public/data/series.json",
-    data,
-    sha,
-    `Update series: tag ${entry.name} (${added.join(", ")})`
-  );
-
-  return {
-    entry: { id: entry.id, name: entry.name },
-    addedTags: added,
-    allTags: entry.tags ?? [],
-  };
+  return { status: resp.status, ok: resp.ok, data, text };
 }
 
-/** Add tags to an artist identified by id, name, or alias. Returns result with diff. */
-export async function addArtistTags(
-  env: Env,
-  ref: string,
-  newTags: string[]
-): Promise<TagAddResult> {
-  if (newTags.length === 0) {
-    return { entry: null, addedTags: [], allTags: [] };
-  }
-  const { data, sha } = await readJsonFile<ArtistsFile>(env, "public/data/artists.json");
-  if (!data) return { entry: null, addedTags: [], allTags: [] };
-
-  const entry = findArtist(data.artists, ref);
-  if (!entry) return { entry: null, addedTags: [], allTags: [] };
-
-  const added = mergeTags(entry, newTags);
-  if (added.length === 0) {
-    return {
-      entry: { id: entry.id, name: entry.name },
-      addedTags: [],
-      allTags: entry.tags ?? [],
-    };
-  }
-
-  await writeJsonFile(
-    env,
-    "public/data/artists.json",
-    data,
-    sha,
-    `Update artist: tag ${entry.name} (${added.join(", ")})`
-  );
-
-  return {
-    entry: { id: entry.id, name: entry.name },
-    addedTags: added,
-    allTags: entry.tags ?? [],
-  };
+/** The commit a branch points at, or null when there's no such branch. */
+export async function getBranchSha(env: Env, branch: string): Promise<string | null> {
+  const r = await githubJson<{ object: { sha: string } }>(env, `git/ref/heads/${branch}`);
+  if (r.status === 404) return null;
+  if (!r.ok || !r.data) throw new Error(`Failed to read ${branch} (${r.status}): ${r.text}`);
+  return r.data.object.sha;
 }
 
-/** Update a single field on a panel by seq ID. Returns the updated entry or null. */
-export async function updatePanel(
-  env: Env,
-  seq: number,
-  field: string,
-  value: string
-): Promise<PanelEntry | null> {
-  if (!isUpdatableField(field)) {
-    throw new Error(
-      `Cannot update "${field}". Updatable fields: ${UPDATABLE_FIELDS.join(", ")}`
-    );
-  }
+/** The commit `main` currently points at. */
+export async function getHeadSha(env: Env): Promise<string> {
+  const sha = await getBranchSha(env, "main");
+  if (!sha) throw new Error("Failed to read main: no such branch");
+  return sha;
+}
 
-  const { gallery, sha } = await readGalleryJson(env);
-  const panel = gallery.panels.find((p) => p.seq === seq);
-  if (!panel) return null;
+/** Delete a branch. Returns false when it was already gone. */
+export async function deleteBranch(env: Env, branch: string): Promise<boolean> {
+  const r = await githubJson(env, `git/refs/heads/${branch}`, { method: "DELETE" });
+  if (r.status === 404 || r.status === 422) return false;
+  if (!r.ok) throw new Error(`Failed to delete ${branch} (${r.status}): ${r.text}`);
+  return true;
+}
 
-  switch (field) {
-    case "title":
-      panel.title = value;
-      break;
-    case "issue":
-      panel.issue = parseIssue(value);
-      break;
-    case "year":
-      panel.year = parseInt(value, 10);
-      if (isNaN(panel.year)) throw new Error(`Invalid year: "${value}"`);
-      break;
-    case "artist":
-      panel.artist = value;
-      break;
-    case "notes":
-      panel.notes = value || null;
-      break;
-    case "tags":
-      panel.tags = value.split(",").map((t) => t.trim()).filter((t) => t.length > 0);
-      break;
-  }
+/** A commit's full message. */
+export async function getCommitMessage(env: Env, sha: string): Promise<string> {
+  const r = await githubJson<{ message: string }>(env, `git/commits/${sha}`);
+  if (!r.ok || !r.data) throw new Error(`Failed to read commit ${sha} (${r.status}): ${r.text}`);
+  return r.data.message;
+}
 
-  await writeGalleryJson(
+/** The blob sha of a file at `ref`, or null when it isn't there. */
+export async function getFileSha(env: Env, path: string, ref: string): Promise<string | null> {
+  const r = await githubJson<{ sha: string; type: string }>(
     env,
-    gallery,
-    sha,
-    `Update gallery: edit ${panel.title} ${formatIssue(panel.issue)} (${field})`
+    `contents/${path}?ref=${encodeURIComponent(ref)}`
   );
+  if (r.status === 404) return null;
+  if (!r.ok || !r.data) throw new Error(`Failed to read ${path} (${r.status}): ${r.text}`);
+  return r.data.type === "file" ? r.data.sha : null;
+}
 
-  return panel;
+/**
+ * A file's text at `ref`, or null when it isn't there. Unlike readJsonFile this
+ * asks for the raw bytes, which the contents API serves up to 100 MB; its JSON
+ * form stops carrying content at 1 MB, and the embeddings files are past that.
+ */
+export async function readRawFile(env: Env, path: string, ref: string): Promise<string | null> {
+  const [owner, repo] = env.GITHUB_REPO.split("/");
+  const url = `${GITHUB_API}/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(ref)}`;
+  const resp = await fetch(url, {
+    headers: { ...githubHeaders(env.GITHUB_TOKEN), Accept: "application/vnd.github.raw+json" },
+  });
+  if (resp.status === 404) return null;
+  if (!resp.ok) throw new Error(`Failed to read ${path} (${resp.status}): ${await resp.text()}`);
+  return resp.text();
+}
+
+/**
+ * One change in a commit: a file's new text, an existing blob placed at a path
+ * (`sha`), or a deletion (`sha: null`).
+ */
+export type TreeChange = { path: string; content: string } | { path: string; sha: string | null };
+
+/**
+ * Commit `files` (full text contents) on top of `baseSha` and fast-forward
+ * `main` to it. Throws RefMovedError when `main` is no longer `baseSha`, so the
+ * caller can re-read and re-apply against the newer tree.
+ */
+export async function commitFiles(
+  env: Env,
+  baseSha: string,
+  files: TreeChange[],
+  message: string
+): Promise<string> {
+  const base = await githubJson<{ tree: { sha: string } }>(env, `git/commits/${baseSha}`);
+  if (!base.ok || !base.data) {
+    throw new Error(`Failed to read commit ${baseSha} (${base.status}): ${base.text}`);
+  }
+
+  const tree = await githubJson<{ sha: string }>(env, "git/trees", {
+    method: "POST",
+    body: {
+      base_tree: base.data.tree.sha,
+      tree: files.map((f) => ({ mode: "100644", type: "blob", ...f })),
+    },
+  });
+  if (!tree.ok || !tree.data) throw new Error(`Failed to write tree (${tree.status}): ${tree.text}`);
+
+  const commit = await githubJson<{ sha: string }>(env, "git/commits", {
+    method: "POST",
+    body: { message, tree: tree.data.sha, parents: [baseSha] },
+  });
+  if (!commit.ok || !commit.data) {
+    throw new Error(`Failed to write commit (${commit.status}): ${commit.text}`);
+  }
+
+  const ref = await githubJson(env, "git/refs/heads/main", {
+    method: "PATCH",
+    body: { sha: commit.data.sha, force: false },
+  });
+  // A non-fast-forward update is refused with 422 ("Update is not a fast forward").
+  if (ref.status === 422 || ref.status === 409) throw new RefMovedError();
+  if (!ref.ok) throw new Error(`Failed to update main (${ref.status}): ${ref.text}`);
+  return commit.data.sha;
+}
+
+/**
+ * Start a workflow on main. Returns null on success, or why it couldn't — most
+ * often a token without Actions write access, which the caller reports rather
+ * than treats as a failed edit.
+ */
+export async function dispatchWorkflow(
+  env: Env,
+  workflowFile: string,
+  inputs?: Record<string, string | boolean>
+): Promise<string | null> {
+  const r = await githubJson(env, `actions/workflows/${workflowFile}/dispatches`, {
+    method: "POST",
+    body: inputs ? { ref: "main", inputs } : { ref: "main" },
+  });
+  return r.ok ? null : `HTTP ${r.status}`;
 }

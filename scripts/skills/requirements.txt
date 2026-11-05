@@ -1,0 +1,13 @@
+# What the restore skills need: the scripts themselves (OpenCV, numpy) and
+# `restore.py install`, which recomputes a panel's image metadata through
+# scripts/metadata/image_metadata.py. Used by .github/workflows/restore.yml.
+#
+# Pinned to the versions the skills were tuned and earlier restorations were
+# installed with: the restorers' output depends on OpenCV's, and the restore
+# workflow installs these in jobs holding the Claude and repo-write tokens.
+numpy==2.2.6
+opencv-python-headless==4.10.0.84
+Pillow==12.1.1
+ImageHash==4.3.2
+scikit-learn==1.7.2
+scikit-image==0.25.2

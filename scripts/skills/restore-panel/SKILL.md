@@ -74,7 +74,7 @@ version unless they've said. Settings that worked last time may be in memory.
 | `color` | Use `restore-color-panel` |
 | `unsure` | View the source. B&W under a colored lamp lands here, and so do subtle or spot color. Any painted color at all goes to `restore-color-panel`. Ask if you can't tell |
 
-Load the chosen skill with the Skill tool and follow it from its enhance step, using
+Load (activate) the chosen skill and follow it from its enhance step, using
 `source.jpg` as `PHOTO.jpg`. Its "find the panel" step is done.
 
 Grey-toned art (wash, heavy zipatone) is B&W, but the B&W flat-field can halo around

@@ -5,3 +5,37 @@ compatibility_date = "2024-12-01"
 [vars]
 TELEGRAM_ALLOWED_CHAT_ID = "-5111065293"
 GITHUB_REPO = "jekrch/comic-snaps"
+# Telegram user ids allowed to use the model-backed commands (/ask, /resp,
+# /confirm, described photos) and restorations (/restore, /redo, /approve,
+# /reject), comma-separated. Unset means nobody; the plain
+# commands stay open to the whole chat. Find yours via @userinfobot.
+ALLOWED_USER_IDS = "8510422630"
+
+# Agent state: /ask threads, pending proposals and described photos, rate
+# limits, the /cost ledger, and jobs too big for a queue message. Create once:
+#   bunx wrangler kv namespace create BOT_STATE
+#   bunx wrangler kv namespace create BOT_STATE --preview
+# and paste the ids here. Deploys fail until they're filled in.
+[[kv_namespaces]]
+binding = "BOT_STATE"
+id = "ab76f996240048caace5bbe5d1f45ad7"
+preview_id = "5313a0e2475b40adbf51808d6c18b761"
+
+# Model calls and /confirm runs that outlive the webhook: started inline by
+# runOrEnqueue, moved here past 10s, drained by the queue handler in
+# src/index.ts (see src/jobs.ts). Create once:
+#   bunx wrangler queues create comic-snaps-jobs
+[[queues.producers]]
+queue = "comic-snaps-jobs"
+binding = "JOBS"
+
+[[queues.consumers]]
+queue = "comic-snaps-jobs"
+# One job per invocation, so each gets a fresh subrequest budget; one at a
+# time, so /confirm runs never race each other's commits.
+max_batch_size = 1
+max_concurrency = 1
+# MAX_ATTEMPTS in src/jobs.ts is the retry budget; this must be at least that,
+# so a job whose attempts all crashed gets one more delivery that reports the
+# failure. Checked by src/jobs.test.ts.
+max_retries = 2

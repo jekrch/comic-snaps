@@ -1,6 +1,6 @@
-import type { Env, PanelEntry, TelegramMessage, TelegramUpdate } from "./types";
-import { parseCaption, parseTags, slugify } from "./caption";
-import { downloadFile, sendReply } from "./telegram";
+import type { Env, TelegramMessage, TelegramUpdate } from "./types";
+import { parseCaption } from "./caption";
+import { makeReplier, type Replier } from "./telegram";
 import {
   formatAggregate,
   invalidateSourceCache,
@@ -10,20 +10,20 @@ import {
   type RatingTarget,
   type UpsertResult,
 } from "./ratings";
+import { deletePanel, formatIssue } from "./github";
+import { EDIT_VERBS, commandVerb, formatRun, parseEditCommand, runCommands } from "./edits";
+import { ingestPanel } from "./ingest";
+import { processJobBatch, type JobMessage } from "./jobs";
+import { checkDailyLimit } from "./keys";
+import { approveRestore, parseRestoreCommand, rejectRestore, startRestore } from "./restore";
 import {
-  addArtistTags,
-  addSeriesTags,
-  arrayBufferToBase64,
-  commitFile,
-  deletePanel,
-  formatIssue,
-  isUpdatableField,
-  lastArtistForSlug,
-  nextSeq,
-  readGalleryJson,
-  updateGalleryJson,
-  updatePanel,
-} from "./github";
+  handleAsk,
+  handleCancel,
+  handleConfirm,
+  handleCost,
+  handleDescribedPhoto,
+  handleResp,
+} from "./session";
 
 const HELP_TEXT = `Comic Snaps Bot — Commands:
 
@@ -37,6 +37,9 @@ Add a panel:
   that series:
   Saga // 2 // 2012
 
+  A title that matches an existing series by name or alias joins that
+  series, whatever the casing.
+
   Tags accept prefixes:
     tag    → panel tag
     +tag   → series tag (applied to the matching series)
@@ -45,13 +48,24 @@ Add a panel:
   Example:
   Saga // 1 // 2012 // Fiona Staples // great spread // sci-fi, +space opera, ++indie
 
+  Or describe it instead, and the bot writes the caption for you to confirm:
+  (photo) /ask Saga issue 4, Fiona Staples, the robot prince one
+
 Commands:
   /delete {id} — Delete a panel by its numeric ID
   /update {id} {field} {value} — Update a field on a panel
   /tag_series {ref} // {tags} — Add tags to a series (ref = id or name)
   /tag_artist {ref} // {tags} — Add tags to an artist (ref = id, name, or alias)
+  /rename_series {ref} // {new name} [// {start year}] — Rename a series
+  /resolve metron:series // {name} // {metron id} — Pick a Metron match
 
 Updatable fields: title, issue, year, artist, notes, tags
+Setting title moves that panel to the series the title names.
+
+/rename_series retitles every panel in the series, keeps the old name as
+an alias, and clears the lookup markers so the metadata job searches
+Metron and Comic Vine again under the new name. Use the name exactly as
+Metron lists it, without the (year).
 
 Examples:
   /delete 5
@@ -59,6 +73,36 @@ Examples:
   /update 3 tags sci-fi, space opera
   /tag_series Saga // sci-fi, space opera
   /tag_artist Fiona Staples // canadian
+  /rename_series thrillology // Thrillogy
+  /rename_series 247 // Legion of Super-Heroes // 1989
+
+Agent (for allowlisted users):
+  /ask {question or request} — Ask about the gallery, or describe a change;
+    it answers and proposes commands to run
+  /resp {follow-up} — Continue the last /ask, or correct a described photo
+  /confirm — Run all proposals (or post the described photo)
+  /confirm 1 3 — Run only those proposals
+  /cancel — Drop pending proposals and any described photo
+  /cost — Model spend today and this month
+  /ask1, /ask2, /ask3 (and /resp1-3) pick a cheaper or stronger model;
+  bare /ask uses the strongest.
+
+  Examples:
+    /ask which series never matched Metron, and what should they be called?
+    /ask tag every Hellboy panel with mignolaverse
+
+Restorations (for allowlisted users):
+  /restore {id} [directions] — Clean up a panel's photo: evens the light,
+    takes out the lamp's color cast, and seats the blacks. The before/after
+    comes back here in a few minutes; nothing changes on the site yet.
+  /redo {id} {what to change} — Try again, told what was wrong
+  /approve {id} — Put the restoration on the site
+  /reject {id} — Drop it
+
+  Examples:
+    /restore 247
+    /restore 247 the sky is painted yellow, keep it
+    /redo 247 the face went purple, take less
 
 Ratings (1-10):
   /rate {ref} {score} — Rate the issue a reference points at
@@ -82,44 +126,8 @@ Ratings (1-10):
   no name attached. Add --me to sign one with your Telegram first name;
   --us hands it back to the group and drops the name again.`;
 
-/**
- * Handle `/tag_series` and `/tag_artist`. Argument form: `ref // tag1, tag2, ...`
- * Tags may carry `+`/`++` prefixes but the prefix is stripped — the target type
- * is determined by the command, not the prefix.
- */
-async function handleTagCommand(
-  env: Env,
-  argument: string,
-  type: "series" | "artist"
-): Promise<string> {
-  const sepIdx = argument.indexOf("//");
-  if (sepIdx === -1) {
-    return `Expected format:\n/tag_${type} {ref} // tag1, tag2`;
-  }
-
-  const ref = argument.slice(0, sepIdx).trim();
-  const rawTags = argument.slice(sepIdx + 2).trim();
-
-  if (!ref) return `Missing ${type} reference.`;
-  if (!rawTags) return `No tags provided.`;
-
-  const buckets = parseTags(rawTags);
-  const tags = [...buckets.tags, ...buckets.seriesTags, ...buckets.artistTags];
-  if (tags.length === 0) return `No tags provided.`;
-
-  const result =
-    type === "series"
-      ? await addSeriesTags(env, ref, tags)
-      : await addArtistTags(env, ref, tags);
-
-  if (!result.entry) {
-    return `No ${type} found matching "${ref}".`;
-  }
-  if (result.addedTags.length === 0) {
-    return `${result.entry.name}: all tags already present.\n  Tags: ${result.allTags.join(", ")}`;
-  }
-  return `Tagged ${type} ${result.entry.name}:\n  Added: ${result.addedTags.join(", ")}\n  Tags: ${result.allTags.join(", ")}`;
-}
+const NO_CAPTION_HELP =
+  "Photo received but no caption found.\n\nExpected format:\nTitle // Issue // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera\n\nThe artist can be left off for a series already in the gallery:\nSaga // 2 // 2012\n\nOr caption it /ask with a description and the bot will write the caption.";
 
 // ---------------------------------------------------------------------------
 // Ratings
@@ -243,250 +251,226 @@ async function upsertAndDescribe(
   return lines.join("\n");
 }
 
+
+// ---------------------------------------------------------------------------
+// Access
+// ---------------------------------------------------------------------------
+
+type AgentAccess = "ok" | "not-allowed" | "no-secret";
+
+/**
+ * Whether this person may use the model-backed commands and restorations. Fails
+ * closed: an unset ALLOWED_USER_IDS means nobody, since every call costs money.
+ * So does an unset WEBHOOK_SECRET. The sender id is only as trustworthy as the
+ * request it came in, and without the secret anyone can POST an update naming
+ * an allowlisted id (they're public in wrangler.toml). The plain commands stay
+ * open to the whole chat, as they always have been.
+ */
+function agentAccess(message: TelegramMessage, env: Env): AgentAccess {
+  if (!env.WEBHOOK_SECRET) return "no-secret";
+  const id = message.from?.id;
+  if (id === undefined || !env.ALLOWED_USER_IDS) return "not-allowed";
+  return env.ALLOWED_USER_IDS.split(",").some((s) => s.trim() === String(id))
+    ? "ok"
+    : "not-allowed";
+}
+
+const ACCESS_DENIED: Record<Exclude<AgentAccess, "ok">, string> = {
+  "not-allowed": "The agent commands are only enabled for allowlisted users.",
+  "no-secret":
+    "The agent commands are off until the webhook has a secret (WEBHOOK_SECRET), since without one the sender can't be trusted.",
+};
+const AGENT_NOT_CONFIGURED = "The agent isn't configured yet (no GEMINI_API_KEY).";
+
+const RESTORE_DAILY_LIMIT = 10;
+const RESTORE_RATE_LIMITED = `Rate limit reached: ${RESTORE_DAILY_LIMIT} restorations per person per day.`;
+
+// Constant-time comparison, so a wrong webhook secret can't be recovered byte
+// by byte from response timing. The length check leaks only the length.
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+// ---------------------------------------------------------------------------
+// Routing
+// ---------------------------------------------------------------------------
+
+/** `/ask2 rest` → { alias: "2", text: "rest" }; null when it isn't that verb. */
+function matchAgentVerb(text: string, verb: "ask" | "resp"): { alias?: string; text: string } | null {
+  const m = text.match(new RegExp(`^\\/${verb}([123])?(?:@\\w+)?(?:\\s+([\\s\\S]*))?$`, "i"));
+  if (!m) return null;
+  return { alias: m[1], text: (m[2] ?? "").trim() };
+}
+
+async function handleText(
+  text: string,
+  message: TelegramMessage,
+  env: Env,
+  reply: Replier
+): Promise<void> {
+  if (/^\/(help|start)(?:@\w+)?$/i.test(text)) {
+    await reply(HELP_TEXT);
+    return;
+  }
+
+  const deleteMatch = text.match(/^\/delete(?:@\w+)?\s+(\d+)$/);
+  if (deleteMatch) {
+    const seq = parseInt(deleteMatch[1], 10);
+    const removed = await deletePanel(env, seq);
+    await invalidateSourceCache();
+    await reply(
+      removed
+        ? `Deleted panel #${seq}: ${removed.title} ${formatIssue(removed.issue)}`
+        : `No panel found with ID ${seq}.`
+    );
+    return;
+  }
+
+  const rateMatch = text.match(/^\/(rate|rate_series)(?:@\w+)?(?:\s+([\s\S]+))?$/);
+  if (rateMatch) {
+    const forceSeries = rateMatch[1] === "rate_series";
+    await reply(await handleRateCommand(env, message, rateMatch[2] ?? "", forceSeries));
+    return;
+  }
+
+  const verb = commandVerb(text);
+  if ((EDIT_VERBS as readonly string[]).includes(verb)) {
+    // A malformed command is answered without touching GitHub.
+    const parsed = parseEditCommand(text);
+    if (parsed && "error" in parsed) {
+      await reply(parsed.error);
+      return;
+    }
+    const result = await runCommands(env, [text]);
+    if (result.commitSha) await invalidateSourceCache();
+    await reply(formatRun(result));
+    return;
+  }
+
+  const restore = parseRestoreCommand(text);
+  if (restore) {
+    const access = agentAccess(message, env);
+    if (access !== "ok") await reply(ACCESS_DENIED[access]);
+    else if ("error" in restore) await reply(restore.error);
+    else if (restore.verb === "approve") {
+      const result = await approveRestore(env, restore.seq);
+      if (result.commitSha) await invalidateSourceCache();
+      await reply(result.reply);
+    } else if (restore.verb === "reject") {
+      await reply(await rejectRestore(env, restore.seq));
+    } else if (restore.verb === "restore" || restore.verb === "redo") {
+      // Each run is up to half an hour of the strongest Gemini model, and runs
+      // for different panels go in parallel.
+      if (!(await checkDailyLimit(env, "restore", message.from!.id, RESTORE_DAILY_LIMIT))) {
+        await reply(RESTORE_RATE_LIMITED);
+      } else {
+        await reply(
+          await startRestore(env, restore, { chatId: message.chat.id, messageId: message.message_id })
+        );
+      }
+    }
+    return;
+  }
+
+  const ask = matchAgentVerb(text, "ask");
+  const resp = matchAgentVerb(text, "resp");
+  const confirm = text.match(/^\/confirm(?:@\w+)?(\s[\s\S]*)?$/i);
+  const isAgent = ask || resp || confirm || /^\/(cancel|cost)(?:@\w+)?$/i.test(text);
+  if (!isAgent) return; // unknown text: ignore
+
+  const access = agentAccess(message, env);
+  if (access !== "ok") {
+    await reply(ACCESS_DENIED[access]);
+    return;
+  }
+  if ((ask || resp) && !env.GEMINI_API_KEY) {
+    await reply(AGENT_NOT_CONFIGURED);
+    return;
+  }
+  if (ask) await handleAsk(ask, message, env, reply);
+  else if (resp) await handleResp(resp, message, env, reply);
+  else if (confirm) await handleConfirm(confirm[1] ?? "", message, env, reply);
+  else if (/^\/cancel/i.test(text)) await handleCancel(message, env, reply);
+  else await handleCost(env, reply);
+}
+
+async function handlePhoto(message: TelegramMessage, env: Env, reply: Replier): Promise<void> {
+  const caption = message.caption?.trim();
+  if (!caption) {
+    await reply(NO_CAPTION_HELP);
+    return;
+  }
+
+  const access = agentAccess(message, env);
+  const canDescribe = access === "ok" && Boolean(env.GEMINI_API_KEY);
+  const ask = matchAgentVerb(caption, "ask");
+  if (ask) {
+    if (access !== "ok") await reply(ACCESS_DENIED[access]);
+    else if (!env.GEMINI_API_KEY) await reply(AGENT_NOT_CONFIGURED);
+    else await handleDescribedPhoto(ask.text, message, env, reply);
+    return;
+  }
+
+  try {
+    parseCaption(caption);
+  } catch (err) {
+    if (!canDescribe) throw err;
+    // Not the caption format: read it as a description instead.
+    await reply("That isn't in the caption format, so I'm reading it as a description.");
+    await handleDescribedPhoto(caption, message, env, reply);
+    return;
+  }
+
+  const photo = message.photo![message.photo!.length - 1];
+  const postedBy = message.from?.first_name || message.from?.username || "unknown";
+  await reply(await ingestPanel(env, caption, photo.file_id, postedBy));
+}
+
+async function handleUpdate(update: TelegramUpdate, env: Env): Promise<void> {
+  const message = update.message;
+  if (!message) return;
+  // Silently ignore messages from other chats
+  if (String(message.chat.id) !== env.TELEGRAM_ALLOWED_CHAT_ID) return;
+
+  const reply = makeReplier(env, message);
+  try {
+    if (message.text) await handleText(message.text.trim(), message, env, reply);
+    else if (message.photo) await handlePhoto(message, env, reply);
+  } catch (err) {
+    await reply(`Error: ${err instanceof Error ? err.message : "Unknown error"}`);
+  }
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (request.method !== "POST") {
       return new Response("OK", { status: 200 });
     }
 
     // Verify webhook secret (if configured)
-    const secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token");
-    if (env.WEBHOOK_SECRET && secret !== env.WEBHOOK_SECRET) {
-      return new Response("Unauthorized", { status: 403 });
+    if (env.WEBHOOK_SECRET) {
+      const secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token") ?? "";
+      if (!timingSafeEqual(secret, env.WEBHOOK_SECRET)) {
+        return new Response("Unauthorized", { status: 403 });
+      }
     }
 
     const update: TelegramUpdate = await request.json();
-
-    const message = update.message;
-
-    if (!message) {
-      return new Response("OK");
-    }
-
-    // Silently ignore messages from other chats
-    if (String(message.chat.id) !== env.TELEGRAM_ALLOWED_CHAT_ID) {
-      return new Response("OK");
-    }
-
-    // Handle text commands
-    if (message.text) {
-      const text = message.text.trim();
-
-      try {
-        if (text === "/help" || text === "/start") {
-          await sendReply(
-            env.TELEGRAM_BOT_TOKEN,
-            message.chat.id,
-            message.message_id,
-            HELP_TEXT
-          );
-          return new Response("OK");
-        }
-
-        const deleteMatch = text.match(/^\/delete\s+(\d+)$/);
-        if (deleteMatch) {
-          const seq = parseInt(deleteMatch[1], 10);
-          const removed = await deletePanel(env, seq);
-          await invalidateSourceCache();
-          if (!removed) {
-            await sendReply(
-              env.TELEGRAM_BOT_TOKEN,
-              message.chat.id,
-              message.message_id,
-              `No panel found with ID ${seq}.`
-            );
-          } else {
-            await sendReply(
-              env.TELEGRAM_BOT_TOKEN,
-              message.chat.id,
-              message.message_id,
-              `Deleted panel #${seq}: ${removed.title} ${formatIssue(removed.issue)}`
-            );
-          }
-          return new Response("OK");
-        }
-
-        const rateMatch = text.match(/^\/(rate|rate_series)(?:@\w+)?(?:\s+([\s\S]+))?$/);
-        if (rateMatch) {
-          const forceSeries = rateMatch[1] === "rate_series";
-          const reply = await handleRateCommand(
-            env,
-            message,
-            rateMatch[2] ?? "",
-            forceSeries
-          );
-          await sendReply(env.TELEGRAM_BOT_TOKEN, message.chat.id, message.message_id, reply);
-          return new Response("OK");
-        }
-
-        const tagSeriesMatch = text.match(/^\/tag_series\s+([\s\S]+)$/);
-        if (tagSeriesMatch) {
-          const reply = await handleTagCommand(env, tagSeriesMatch[1], "series");
-          await sendReply(env.TELEGRAM_BOT_TOKEN, message.chat.id, message.message_id, reply);
-          return new Response("OK");
-        }
-
-        const tagArtistMatch = text.match(/^\/tag_artist\s+([\s\S]+)$/);
-        if (tagArtistMatch) {
-          const reply = await handleTagCommand(env, tagArtistMatch[1], "artist");
-          await sendReply(env.TELEGRAM_BOT_TOKEN, message.chat.id, message.message_id, reply);
-          return new Response("OK");
-        }
-
-        const updateMatch = text.match(/^\/update\s+(\d+)\s+(\S+)\s+([\s\S]+)$/);
-        if (updateMatch) {
-          const seq = parseInt(updateMatch[1], 10);
-          const field = updateMatch[2];
-          const value = updateMatch[3].trim();
-
-          if (!isUpdatableField(field)) {
-            await sendReply(
-              env.TELEGRAM_BOT_TOKEN,
-              message.chat.id,
-              message.message_id,
-              `Invalid field "${field}". Updatable fields: title, issue, year, artist, notes, tags`
-            );
-            return new Response("OK");
-          }
-
-          const updated = await updatePanel(env, seq, field, value);
-          await invalidateSourceCache();
-          if (!updated) {
-            await sendReply(
-              env.TELEGRAM_BOT_TOKEN,
-              message.chat.id,
-              message.message_id,
-              `No panel found with ID ${seq}.`
-            );
-          } else {
-            await sendReply(
-              env.TELEGRAM_BOT_TOKEN,
-              message.chat.id,
-              message.message_id,
-              `Updated panel #${seq}: set ${field} to "${value}"\n→ ${updated.title} ${formatIssue(updated.issue)}`
-            );
-          }
-          return new Response("OK");
-        }
-      } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Unknown error";
-        await sendReply(
-          env.TELEGRAM_BOT_TOKEN,
-          message.chat.id,
-          message.message_id,
-          `Error: ${errorMessage}`
-        );
-        return new Response("OK");
-      }
-
-      // Unknown text — ignore
-      return new Response("OK");
-    }
-
-    // Photo without caption → remind the sender of the expected format
-    if (message.photo && !message.caption) {
-      await sendReply(
-        env.TELEGRAM_BOT_TOKEN,
-        message.chat.id,
-        message.message_id,
-        "Photo received but no caption found.\n\nExpected format:\nTitle // Issue // Year // Artist // notes // tags\n\nExample:\nSaga // 1 // 2012 // Fiona Staples // great spread // sci-fi, space opera\n\nThe artist can be left off for a series already in the gallery:\nSaga // 2 // 2012"
-      );
-      return new Response("OK");
-    }
-
-    // Ignore anything that isn't a photo with a caption
-    if (!message.photo || !message.caption) {
-      return new Response("OK");
-    }
-
-    try {
-      // 1. Parse caption
-      const metadata = parseCaption(message.caption);
-
-      // 2. Extract poster info
-      const postedBy =
-        message.from?.first_name || message.from?.username || "unknown";
-
-      // 3. Generate paths and IDs
-      const timestamp = Math.floor(Date.now() / 1000);
-      const slug = slugify(metadata.title);
-      const issueSlug = slugify(String(metadata.issue));
-      const filename = `issue-${issueSlug}-${timestamp}.jpg`;
-      const repoImagePath = `public/images/${slug}/${filename}`;
-      const browserImagePath = `images/${slug}/${filename}`;
-      const id = `${slug}-${issueSlug}-${timestamp}`;
-
-      // 4. Read the gallery up front — a caption with no artist inherits the
-      //    one from the series' most recent panel, and that has to resolve
-      //    before anything is committed.
-      const { gallery } = await readGalleryJson(env);
-      const seq = nextSeq(gallery);
-
-      let artist = metadata.artist;
-      let inheritedArtist = false;
-      if (!artist) {
-        artist = lastArtistForSlug(gallery, slug);
-        if (!artist) {
-          throw new Error(
-            `No artist given and "${metadata.title}" isn't in the gallery yet.\n\nInclude the artist:\n${metadata.title} // ${metadata.issue} // ${metadata.year} // Artist Name`
-          );
-        }
-        inheritedArtist = true;
-      }
-
-      // 5. Download the largest resolution photo from Telegram
-      const photo = message.photo[message.photo.length - 1];
-      const imageBytes = await downloadFile(photo.file_id, env.TELEGRAM_BOT_TOKEN);
-
-      // 6. Commit image file to GitHub
-      const base64Image = arrayBufferToBase64(imageBytes);
-      await commitFile(
-        env,
-        repoImagePath,
-        base64Image,
-        `Add panel: ${metadata.title} ${formatIssue(metadata.issue)}`
-      );
-
-      // 7. Append entry to gallery.json
-      const entry: PanelEntry = {
-        seq,
-        id,
-        title: metadata.title,
-        slug,
-        issue: metadata.issue,
-        year: metadata.year,
-        artist,
-        image: browserImagePath,
-        notes: metadata.notes,
-        tags: metadata.tags,
-        postedBy,
-        addedAt: new Date().toISOString(),
-      };
-      await updateGalleryJson(env, entry);
-      await invalidateSourceCache();
-
-      // 8. Confirm via Telegram
-      const artistLine = `\n  Artist: ${artist}${inheritedArtist ? " (from last post in series)" : ""}`;
-      const notesLine = metadata.notes ? `\n  Notes: ${metadata.notes}` : "";
-      const tagsLine = metadata.tags.length > 0 ? `\n  Tags: ${metadata.tags.join(", ")}` : "";
-      await sendReply(
-        env.TELEGRAM_BOT_TOKEN,
-        message.chat.id,
-        message.message_id,
-        `Added to gallery (ID: ${seq}):\n  ${metadata.title} ${formatIssue(metadata.issue)} (${metadata.year})${artistLine}${notesLine}${tagsLine}\n  → ${browserImagePath}`
-      );
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Unknown error";
-      await sendReply(
-        env.TELEGRAM_BOT_TOKEN,
-        message.chat.id,
-        message.message_id,
-        `Error: ${errorMessage}`
-      );
-    }
-
+    // Ack straight away so Telegram doesn't time out and resend the update while
+    // a model call or commit is still running; the work finishes in the
+    // background.
+    ctx.waitUntil(
+      handleUpdate(update, env).catch((err) =>
+        console.log(`handleUpdate failed: ${(err as Error).message}`)
+      )
+    );
     return new Response("OK");
   },
-};
+
+  async queue(batch: MessageBatch<JobMessage>, env: Env): Promise<void> {
+    await processJobBatch(batch, env);
+  },
+} satisfies ExportedHandler<Env, JobMessage>;

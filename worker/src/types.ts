@@ -6,6 +6,21 @@ export interface Env {
   WEBHOOK_SECRET?: string;
   /** Salt for the opaque rater ids published in ratings.json. */
   RATINGS_SALT?: string;
+  /**
+   * Comma-separated Telegram user ids allowed to use the model-backed commands
+   * (/ask, /resp, /confirm, described photos) and the restorations (/restore,
+   * /redo, /approve, /reject). Unset means nobody: the plain
+   * commands keep working for the whole chat either way.
+   */
+  ALLOWED_USER_IDS?: string;
+  GEMINI_API_KEY?: string;
+  METRON_USERNAME?: string;
+  METRON_PASSWORD?: string;
+  COMIC_VINE_API_KEY?: string;
+  /** Agent threads, pending proposals, rate limits, the cost ledger, parked jobs. */
+  BOT_STATE: KVNamespace;
+  /** Model calls and /confirm runs that outlive the webhook. */
+  JOBS: Queue;
 }
 
 export interface TelegramUser {
@@ -49,7 +64,9 @@ export interface TelegramFileResponse {
 }
 
 export interface GitHubContentsResponse {
+  /** Base64, or "" for a file over 1 MB (then `encoding` is "none"). */
   content: string;
+  encoding?: string;
   sha: string;
 }
 
@@ -90,8 +107,25 @@ export interface SeriesEntry {
   tags?: string[];
   aliases?: string[] | null;
   parentSeries?: string | null;
+  startYear?: number | null;
+  publisher?: string | null;
+  issueCount?: number | null;
+  references?: { name: string; url: string }[];
+  /** Which metadata sources have already processed this entry (Python pipeline). */
+  sources?: string[];
+  /** Per-source cover lookup snapshots (Python pipeline). */
+  coverSources?: Record<string, number[]>;
   [key: string]: unknown;
 }
+
+/** One unresolved (or hand-resolved) name in disambiguation.json. */
+export interface DisambiguationEntry {
+  id: number | null;
+  candidates: { id: number | null; name: string | null }[];
+}
+
+/** disambiguation.json: `"source:resource"` → name → entry. */
+export type DisambiguationFile = Record<string, Record<string, DisambiguationEntry>>;
 
 export interface ArtistEntry {
   id: string;

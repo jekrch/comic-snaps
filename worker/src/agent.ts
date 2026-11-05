@@ -1,0 +1,486 @@
+// The model-backed side of the bot: /ask (questions and proposed edits) and
+// described photos (a caption written from plain English). Both run one Gemini
+// tool loop over the same collection rollup and lookup tools. Neither writes
+// anything: /ask ends in proposals and a description ends in a caption, and a
+// person has to /confirm either one.
+
+import { FunctionCallingConfigMode, GoogleGenAI, Type } from "@google/genai";
+import type { Content, FunctionDeclaration, Part } from "@google/genai";
+import type { Env } from "./types";
+import { Workspace } from "./edits";
+import { readJsonFile } from "./github";
+import { buildRollup, loadCollection, seriesDetail, type CollectionDocs } from "./rollup";
+import { resolveSeries } from "./series";
+import {
+  comicVineConfigured,
+  getMetronSeries,
+  metronConfigured,
+  searchComicVineVolumes,
+  searchMetronSeries,
+} from "./lookup";
+import {
+  buildPanelCaption,
+  sanitizeProposals,
+  type PanelFields,
+  type ProposedCommand,
+} from "./proposals";
+import { DEFAULT_MODEL, DESCRIBE_MODEL, formatCostLine, type Usage } from "./pricing";
+import { recordCost } from "./cost";
+
+/** Rounds of tool calls before a final round with tools off. */
+export const MAX_TOOL_ITERATIONS = 6;
+const TELEGRAM_MAX_LEN = 4096;
+/** /resp threads keep this many exchanges, so each follow-up doesn't cost more than the last. */
+export const MAX_THREAD_EXCHANGES = 8;
+
+export interface Thread {
+  model: string;
+  history: Content[];
+  updatedAt: string;
+}
+
+// ---------------------------------------------------------------------------
+// Tool declarations
+// ---------------------------------------------------------------------------
+
+const SEARCH_METRON: FunctionDeclaration = {
+  name: "search_metron_series",
+  description:
+    "Search Metron for series whose name contains the given text. Returns id, name (the form the metadata pipeline matches on), display name with start year, start year and issue count.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: { name: { type: Type.STRING, description: "Part of the series name" } },
+    required: ["name"],
+  },
+};
+
+const GET_METRON: FunctionDeclaration = {
+  name: "get_metron_series",
+  description:
+    "Fetch one Metron series by id: publisher, start and end year, issue count, type, description. Use it to tell apart series that share a name.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: { id: { type: Type.INTEGER, description: "Metron series id" } },
+    required: ["id"],
+  },
+};
+
+const SEARCH_COMICVINE: FunctionDeclaration = {
+  name: "search_comicvine_volumes",
+  description:
+    "Search Comic Vine for volumes (series) matching the text. Use when Metron doesn't have the series.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: { name: { type: Type.STRING, description: "Series name to search for" } },
+    required: ["name"],
+  },
+};
+
+const GET_SERIES: FunctionDeclaration = {
+  name: "get_series",
+  description:
+    "Fetch one gallery series' full series.json entry (description, references, sources, startYear, publisher) and its panels.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: { ref: { type: Type.STRING, description: "Series id, name or alias" } },
+    required: ["ref"],
+  },
+};
+
+const PROPOSE_COMMANDS: FunctionDeclaration = {
+  name: "propose_commands",
+  description:
+    "Submit bot commands for the user to confirm. Call this whenever your answer involves changing data, once per turn with the full list. The user sees a numbered list and replies /confirm.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      commands: {
+        type: Type.ARRAY,
+        description: "Ordered proposals. Empty means no actions.",
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            command: {
+              type: Type.STRING,
+              description: "The literal slash command, e.g. '/rename_series thrillology // Thrillogy'",
+            },
+            rationale: { type: Type.STRING, description: "One line: why, grounded in the data." },
+          },
+          required: ["command", "rationale"],
+        },
+      },
+    },
+    required: ["commands"],
+  },
+};
+
+const PROPOSE_PANEL: FunctionDeclaration = {
+  name: "propose_panel",
+  description:
+    "Submit the gallery entry for the described photo. Call once; call again only if it is rejected or the user corrects it.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      title: {
+        type: Type.STRING,
+        description:
+          "Series name. For an existing series, its name exactly as in the rollup. For a new one, the database name without the (year).",
+      },
+      existingSeriesId: {
+        type: Type.STRING,
+        description: "The rollup series id when this is an existing series, else empty.",
+      },
+      issue: { type: Type.STRING, description: "Issue number (e.g. 4) or text (e.g. Annual 2)." },
+      year: { type: Type.INTEGER, description: "Cover year of that issue." },
+      artist: {
+        type: Type.STRING,
+        description:
+          "Who drew the panel. Empty only for an existing series when the user didn't name one (it is inherited).",
+      },
+      notes: { type: Type.STRING, description: "A note the user wants kept with the panel, else empty." },
+      tags: {
+        type: Type.ARRAY,
+        items: { type: Type.STRING },
+        description: "Panel tags the user asked for, lowercase. Usually empty.",
+      },
+      assumptions: {
+        type: Type.STRING,
+        description: "Anything you looked up, guessed or changed, in one or two short sentences.",
+      },
+    },
+    required: ["title", "issue", "year", "artist", "assumptions"],
+  },
+};
+
+function lookupDeclarations(env: Env): FunctionDeclaration[] {
+  const out: FunctionDeclaration[] = [GET_SERIES];
+  if (metronConfigured(env)) out.push(SEARCH_METRON, GET_METRON);
+  if (comicVineConfigured(env)) out.push(SEARCH_COMICVINE);
+  return out;
+}
+
+type ToolHandler = (args: Record<string, unknown>) => Promise<string>;
+
+function lookupHandlers(env: Env, docs: CollectionDocs): Record<string, ToolHandler> {
+  return {
+    get_series: async (a) => seriesDetail(docs, String(a.ref ?? "")),
+    search_metron_series: async (a) => searchMetronSeries(env, String(a.name ?? "")),
+    get_metron_series: async (a) => getMetronSeries(env, Number(a.id)),
+    search_comicvine_volumes: async (a) => searchComicVineVolumes(env, String(a.name ?? "")),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Prompts
+// ---------------------------------------------------------------------------
+
+const ABOUT = `Comic Snaps is a gallery of phone photos of comic book panels, posted by a small group through this Telegram bot. Each panel belongs to a series (grouped by a fixed series id, the slug of the name it was first posted under) and an issue. A metadata pipeline in CI enriches series, artists and issues from Wikipedia, Metron and Comic Vine.`;
+
+const NAMING = `# How series names reach Metron and Comic Vine
+The pipeline searches each database by the series name and accepts a result only if its name equals ours exactly, ignoring case but not punctuation or spacing ("Chocolate/Vanilla" does not match "Chocolate / Vanilla"). Metron results display as "Name (1987)"; the comparable name is the part before the year. If a series has a startYear, results starting in a different year are thrown out, which is how relaunches that share a name are told apart.
+The pipeline marks an entry in "sources" once a lookup has run, even if it found nothing, and never searches again on its own. So a series whose sources include metron or comicvine but whose references lack Metron or Comic Vine is one that didn't match, usually because our name differs from theirs. /rename_series clears the markers so the next run searches again.
+To find the right name: search_metron_series with a distinctive part of the name (it is a contains-search, so a short fragment works), compare start year and issue count against the issues posted, and use get_metron_series to settle a tie. If Metron doesn't have it, try search_comicvine_volumes. If neither has it, say so and don't rename.`;
+
+const COMMANDS = `# Commands you can propose
+/rename_series {series id} // {new name}
+/rename_series {series id} // {new name} // {start year}
+  Renames a whole series: every panel's title, the series.json name (the old name is kept as an alias), and clears the lookup markers so the pipeline searches again. Add the start year when it is what distinguishes the right database series.
+/update {seq} {field} {value}
+  Fields: title, issue, year, artist, notes, tags (comma-separated, replaces the list). Setting title moves that one panel to the series the title names.
+/tag_series {series id} // tag1, tag2
+/tag_artist {artist name} // tag1, tag2
+/resolve metron:series // {name as searched} // {metron id}
+/resolve metron:creator // {name as searched} // {metron id}
+  Picks the right candidate for an unresolved disambiguation row. Verify with get_metron_series first.
+Nothing else can be proposed. /delete and /rate are never proposed; mention them in prose if relevant.`;
+
+const RULES = `# Rules
+- Never invent panel seqs, series ids or artist names; copy them exactly from the rollup.
+- Rename a series with /rename_series, never with /update title on each panel.
+- Don't propose no-ops: a tag already present, a name already correct.
+- When an answer implies changes, call propose_commands once with the full list, then reply with a short summary. The numbered list is appended for you; don't repeat the commands in your text.
+- For read-only questions don't call propose_commands.
+- Never claim to have run anything. The user runs /confirm.
+- Captions for a new photo use: Title // Issue // Year // Artist // notes // tags (artist can be left off for a series already in the gallery). A photo captioned "/ask" and a description also works.
+- Reply in plain text, no Markdown. Keep it under ${TELEGRAM_MAX_LEN} characters.`;
+
+function askSystemPrompt(rollup: string): string {
+  return [ABOUT, NAMING, COMMANDS, RULES, "# Collection rollup", rollup].join("\n\n");
+}
+
+function describeSystemPrompt(rollup: string): string {
+  return [
+    ABOUT,
+    `# Your job
+The user is posting a panel photo and has described it in plain English instead of writing the caption. Turn it into one gallery entry and call propose_panel. The photo is attached; use it only to confirm or fill gaps (a visible title, a signature). The description wins.
+- TRUST what the user says. Don't second-guess a plausible identification.
+- If the series is already in the gallery (match by name, alias, or an obvious misspelling), use its name exactly as in the rollup and set existingSeriesId.
+- For a new series, find the name the databases use (below) so the pipeline will match it, and use that, minus the (year).
+- Issue: a number, or text like "Annual 2". Year: the cover year of that issue. If they didn't give it, work it out from the series run (get_metron_series), and say so in assumptions.
+- Artist: who drew the panel. For an existing series you may leave it empty when the user didn't name one (it is inherited from the series' last panel). A new series needs one; if you can't establish it, give your best guess and say so.
+- Notes and tags only when the user asked for them. Tags are lowercase.
+- If propose_panel is rejected, fix what it says and call it again.
+- After propose_panel, reply with one short line (or nothing). Plain text, no Markdown.`,
+    NAMING,
+    "# Collection rollup",
+    rollup,
+  ].join("\n\n");
+}
+
+// ---------------------------------------------------------------------------
+// Tool loop
+// ---------------------------------------------------------------------------
+
+interface LoopResult {
+  text: string;
+  contents: Content[];
+  usage: Usage;
+}
+
+async function runToolLoop(
+  env: Env,
+  model: string,
+  systemInstruction: string,
+  contents: Content[],
+  declarations: FunctionDeclaration[],
+  handlers: Record<string, ToolHandler>
+): Promise<LoopResult> {
+  if (!env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY isn't configured.");
+  const client = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+  // The rollup-heavy system prompt is a stable prefix, so Gemini's implicit
+  // caching discounts repeat calls on its own.
+  const config = { systemInstruction, tools: [{ functionDeclarations: declarations }] };
+  const usage: Usage = { prompt: 0, cached: 0, output: 0 };
+
+  for (let i = 0; ; i++) {
+    // The last round runs with tools off, so a turn always ends on text. Ending
+    // on a call would drop it unrun (a propose_commands with it) and save a
+    // thread whose last turn is a call with no response, which every later
+    // /resp would have to send back.
+    const final = i >= MAX_TOOL_ITERATIONS;
+    const response = await client.models.generateContent({
+      model,
+      contents,
+      config: final
+        ? { ...config, toolConfig: { functionCallingConfig: { mode: FunctionCallingConfigMode.NONE } } }
+        : config,
+    });
+    const meta = response.usageMetadata;
+    if (meta) {
+      usage.prompt += meta.promptTokenCount ?? 0;
+      usage.cached += meta.cachedContentTokenCount ?? 0;
+      usage.output += (meta.candidatesTokenCount ?? 0) + (meta.thoughtsTokenCount ?? 0);
+    }
+
+    const returned: Part[] = response.candidates?.[0]?.content?.parts ?? [];
+    // A call in the final round can't be answered, so it doesn't go into
+    // history. Everything else goes back in full, thought signatures included,
+    // which multi-turn function calling requires.
+    const parts = final ? returned.filter((p) => !p.functionCall) : returned;
+    if (parts.length > 0) contents.push({ role: "model", parts });
+    const calls = parts.filter((p) => p.functionCall);
+
+    if (calls.length === 0) {
+      await recordCost(env, model, usage).catch((err) =>
+        console.log(`[agent] recordCost failed: ${(err as Error).message}`)
+      );
+      const text = parts
+        .filter((p) => p.text && !p.thought)
+        .map((p) => p.text)
+        .join("\n")
+        .trim();
+      return { text, contents, usage };
+    }
+
+    const results: Part[] = await Promise.all(
+      calls.map(async (p) => {
+        const name = p.functionCall?.name ?? "";
+        const args = (p.functionCall?.args ?? {}) as Record<string, unknown>;
+        const handler = handlers[name];
+        const result = handler ? await handler(args) : `Unknown tool: ${name}`;
+        return { functionResponse: { name, response: { result } } };
+      })
+    );
+    contents.push({ role: "user", parts: results });
+  }
+}
+
+/**
+ * The last `max` exchanges of a thread. An exchange starts at a user turn that
+ * carries text; tool results are user turns too, but carry only
+ * functionResponse parts, so a cut never separates a call from its response.
+ */
+export function trimHistory(contents: Content[], max = MAX_THREAD_EXCHANGES): Content[] {
+  const starts = contents.flatMap((c, i) =>
+    c.role === "user" && c.parts?.some((p) => typeof p.text === "string") ? [i] : []
+  );
+  return starts.length <= max ? contents : contents.slice(starts[starts.length - max]);
+}
+
+function truncateForTelegram(text: string, reserve = 0): string {
+  const max = TELEGRAM_MAX_LEN - reserve;
+  if (text.length <= max) return text;
+  const cutoff = text.lastIndexOf("\n", max - 30);
+  const pos = cutoff > max / 2 ? cutoff : max - 30;
+  return `${text.slice(0, pos)}\n[...truncated]`;
+}
+
+/** The collection as it is on main right now. */
+async function currentCollection(env: Env): Promise<CollectionDocs> {
+  return loadCollection(new Workspace(async (path) => (await readJsonFile(env, path)).data));
+}
+
+// ---------------------------------------------------------------------------
+// /ask
+// ---------------------------------------------------------------------------
+
+export interface AnswerResult {
+  reply: string;
+  thread: Thread;
+  proposals: ProposedCommand[];
+}
+
+/** Answer a question about the collection, proposing edit commands when it implies some. */
+export async function answerQuestion(
+  env: Env,
+  question: string,
+  model: string = DEFAULT_MODEL,
+  history: Content[] = []
+): Promise<AnswerResult> {
+  const docs = await currentCollection(env);
+  let proposals: ProposedCommand[] = [];
+
+  const handlers: Record<string, ToolHandler> = {
+    ...lookupHandlers(env, docs),
+    // Last call wins if the model proposes twice in one turn.
+    propose_commands: async (a) => {
+      const { accepted, rejected } = sanitizeProposals(a.commands);
+      proposals = accepted;
+      const rejectedNote = rejected.length
+        ? ` Rejected ${rejected.length}: ${rejected.map((r) => `${r.command} (${r.reason})`).join("; ")}. Call propose_commands again with the full corrected list if they matter.`
+        : "";
+      return `Recorded ${accepted.length} proposal(s).${rejectedNote} Otherwise, reply with a short plain-text summary for the user.`;
+    },
+  };
+
+  const contents: Content[] = [...history, { role: "user", parts: [{ text: question }] }];
+  const result = await runToolLoop(
+    env,
+    model,
+    askSystemPrompt(buildRollup(docs)),
+    contents,
+    [...lookupDeclarations(env), PROPOSE_COMMANDS],
+    handlers
+  );
+
+  const costLine = formatCostLine(model, result.usage);
+  const body = truncateForTelegram(result.text || "No response.", 1200);
+  return {
+    reply: costLine ? `${body}\n${costLine}` : body,
+    thread: { model, history: trimHistory(result.contents), updatedAt: new Date().toISOString() },
+    proposals,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Described photos
+// ---------------------------------------------------------------------------
+
+export interface PanelProposal {
+  caption: string;
+  /** The series it resolved to, and whether that series is already in the gallery. */
+  seriesTitle: string;
+  seriesSlug: string;
+  existing: boolean;
+  assumptions: string;
+}
+
+export interface DescribeResult {
+  body: string;
+  proposal: PanelProposal | null;
+}
+
+/**
+ * Turn a photo plus a plain-English description into one caption. `prompts`
+ * holds every description and correction so far, oldest first; `priorCaption`
+ * is what the last turn proposed, if anything.
+ */
+export async function describePanel(
+  env: Env,
+  imageBase64: string,
+  prompts: string[],
+  priorCaption: string | null
+): Promise<DescribeResult> {
+  const docs = await currentCollection(env);
+  let proposal: PanelProposal | null = null;
+
+  const handlers: Record<string, ToolHandler> = {
+    ...lookupHandlers(env, docs),
+    propose_panel: async (a) => {
+      const built = buildPanelCaption(a as PanelFields);
+      if ("error" in built) return `Rejected: ${built.error}. Fix it and call propose_panel again.`;
+      const resolved = resolveSeries(built.metadata.title, docs.series.series, docs.gallery.panels);
+      if (!resolved.existing && !built.metadata.artist) {
+        return `Rejected: "${resolved.title}" is a new series, so it needs an artist. Find or estimate one and call propose_panel again.`;
+      }
+      proposal = {
+        caption: built.caption,
+        seriesTitle: resolved.title,
+        seriesSlug: resolved.slug,
+        existing: resolved.existing,
+        assumptions: typeof a.assumptions === "string" ? a.assumptions.trim() : "",
+      };
+      return "Recorded. Reply with one short line, or nothing.";
+    },
+  };
+
+  const [first, ...corrections] = prompts;
+  const lines = [`The user's description: "${first || "(none)"}"`];
+  if (priorCaption) lines.push(`Your last proposal: ${priorCaption}`);
+  corrections.forEach((c, i) =>
+    lines.push(`${i === corrections.length - 1 ? "Their correction now" : `Earlier correction ${i + 1}`}: "${c}"`)
+  );
+
+  const contents: Content[] = [
+    {
+      role: "user",
+      parts: [
+        { text: lines.join("\n") },
+        { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
+      ],
+    },
+  ];
+  const result = await runToolLoop(
+    env,
+    DESCRIBE_MODEL,
+    describeSystemPrompt(buildRollup(docs)),
+    contents,
+    [...lookupDeclarations(env), PROPOSE_PANEL],
+    handlers
+  );
+
+  const costLine = formatCostLine(DESCRIBE_MODEL, result.usage);
+  const final = proposal as PanelProposal | null;
+  if (!final) {
+    const why = result.text || "Couldn't turn that into a gallery entry.";
+    return {
+      body: `${why}\n\nReply /resp {more detail} to try again (series, issue, year, artist), or /cancel.${costLine ? `\n${costLine}` : ""}`,
+      proposal: null,
+    };
+  }
+
+  const out = [
+    "Proposed caption:",
+    `  ${final.caption}`,
+    final.existing
+      ? `  Joins existing series "${final.seriesTitle}"`
+      : `  Starts a new series "${final.seriesTitle}" (${final.seriesSlug})`,
+  ];
+  if (final.assumptions) out.push(`  ${final.assumptions}`);
+  out.push(
+    "",
+    "Reply /confirm to post it, /resp {correction} to revise, or /cancel to drop it."
+  );
+  if (costLine) out.push(costLine);
+  return { body: out.join("\n"), proposal: final };
+}

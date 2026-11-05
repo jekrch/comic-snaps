@@ -1,21 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   GitHubWriteError,
-  addArtistTags,
-  addSeriesTags,
   arrayBufferToBase64,
   commitFile,
   deletePanel,
   findSeries,
   formatIssue,
-  isUpdatableField,
   lastArtistForSlug,
   mutateJsonFile,
   nextSeq,
   readGalleryJson,
   readJsonFile,
+  serializeDataFile,
   updateGalleryJson,
-  updatePanel,
   writeJsonFile,
 } from "./github";
 import type { Env, Gallery, PanelEntry } from "./types";
@@ -192,20 +189,6 @@ describe("lastArtistForSlug", () => {
   });
 });
 
-describe("isUpdatableField", () => {
-  it("accepts the editable fields", () => {
-    for (const f of ["title", "issue", "year", "artist", "notes", "tags"]) {
-      expect(isUpdatableField(f)).toBe(true);
-    }
-  });
-
-  it("rejects anything else, including derived fields", () => {
-    for (const f of ["seq", "id", "slug", "image", "phash", "postedBy", ""]) {
-      expect(isUpdatableField(f)).toBe(false);
-    }
-  });
-});
-
 describe("findSeries", () => {
   const list = [
     { id: "love-rockets", name: "Love & Rockets", aliases: ["L&R"] },
@@ -283,6 +266,27 @@ describe("readJsonFile", () => {
     expect(headers.Authorization).toBe("Bearer tok");
     expect(headers["User-Agent"]).toBe("comic-panel-bot");
   });
+
+  it("fetches a file over 1 MB as its blob, since the JSON form leaves content empty", async () => {
+    const fetchMock = vi.fn(async (url: string) =>
+      String(url).includes("/git/blobs/")
+        ? { ok: true, status: 200, text: async () => '{"big":true}' }
+        : {
+            ok: true,
+            status: 200,
+            json: async () => ({ sha: "blob-sha", content: "", encoding: "none" }),
+          },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const out = await readJsonFile<{ big: boolean }>(env, "data/artists.json", "abc");
+    expect(out).toEqual({ data: { big: true }, sha: "blob-sha" });
+    expect(String(fetchMock.mock.calls[1][0])).toBe(
+      "https://api.github.com/repos/owner/repo/git/blobs/blob-sha",
+    );
+    const headers = (fetchMock.mock.calls[1] as unknown as [string, RequestInit])[1]
+      .headers as Record<string, string>;
+    expect(headers.Accept).toBe("application/vnd.github.raw+json");
+  });
 });
 
 describe("writeJsonFile", () => {
@@ -316,6 +320,41 @@ describe("writeJsonFile", () => {
       name: "GitHubWriteError",
       status: 409,
     });
+  });
+});
+
+describe("serializeDataFile", () => {
+  const data = { name: "Moebius — Jean Giraud", tags: ["café"], n: 1 };
+
+  it("writes Python-owned files the way json.dumps(indent=2) does", () => {
+    // ensure_ascii escapes, lowercase hex, trailing newline.
+    expect(serializeDataFile("public/data/series.json", data)).toBe(
+      '{\n  "name": "Moebius \\u2014 Jean Giraud",\n  "tags": [\n    "caf\\u00e9"\n  ],\n  "n": 1\n}\n',
+    );
+  });
+
+  it("covers every file the pipeline writes", () => {
+    for (const f of ["series", "artists", "disambiguation", "issues", "ratings"]) {
+      expect(serializeDataFile(`public/data/${f}.json`, data).endsWith("}\n")).toBe(true);
+    }
+  });
+
+  it("writes gallery.json as plain JSON.stringify, as the bot always has", () => {
+    expect(serializeDataFile("public/data/gallery.json", data)).toBe(JSON.stringify(data, null, 2));
+  });
+
+  it("escapes characters outside the BMP as surrogate pairs, like Python", () => {
+    expect(serializeDataFile("public/data/artists.json", { e: "😀" })).toContain('"\\ud83d\\ude00"');
+  });
+});
+
+describe("writeJsonFile format", () => {
+  it("writes a Python-owned file in its stored format", async () => {
+    const { writes } = githubStub();
+    await writeJsonFile(env, "public/data/series.json", { a: "é" }, null, "msg");
+    expect(Buffer.from(writes[0].body.content, "base64").toString("utf8")).toBe(
+      '{\n  "a": "\\u00e9"\n}\n',
+    );
   });
 });
 
@@ -470,53 +509,6 @@ describe("updateGalleryJson", () => {
   });
 });
 
-describe("updatePanel", () => {
-  const gallery = () => ({ "public/data/gallery.json": { panels: [panel({ seq: 1 })] } });
-
-  it("refuses a field that is not updatable", async () => {
-    githubStub(gallery());
-    await expect(updatePanel(env, 1, "slug", "x")).rejects.toThrow(/Cannot update "slug"/);
-  });
-
-  it("is null for a panel that does not exist", async () => {
-    githubStub(gallery());
-    expect(await updatePanel(env, 999, "title", "x")).toBeNull();
-  });
-
-  it("updates a text field", async () => {
-    githubStub(gallery());
-    expect((await updatePanel(env, 1, "title", "New Title"))!.title).toBe("New Title");
-  });
-
-  it("parses an issue the same way the caption parser does", async () => {
-    githubStub(gallery());
-    expect((await updatePanel(env, 1, "issue", "4"))!.issue).toBe(4);
-    githubStub(gallery());
-    expect((await updatePanel(env, 1, "issue", "VOL 1"))!.issue).toBe("VOL 1");
-  });
-
-  it("rejects a year that is not a number", async () => {
-    githubStub(gallery());
-    await expect(updatePanel(env, 1, "year", "soon")).rejects.toThrow(/Invalid year/);
-  });
-
-  it("clears notes when given an empty value", async () => {
-    githubStub(gallery());
-    expect((await updatePanel(env, 1, "notes", ""))!.notes).toBeNull();
-  });
-
-  it("splits, trims and compacts a tag list", async () => {
-    githubStub(gallery());
-    expect((await updatePanel(env, 1, "tags", " a , ,b "))!.tags).toEqual(["a", "b"]);
-  });
-
-  it("names the panel and the field in the commit message", async () => {
-    const { writes } = githubStub(gallery());
-    await updatePanel(env, 1, "title", "New");
-    expect(writes[0].body.message).toBe("Update gallery: edit New #1 (title)");
-  });
-});
-
 describe("deletePanel", () => {
   const files = () => ({
     "public/data/gallery.json": { panels: [panel({ seq: 1 }), panel({ seq: 2 })] },
@@ -555,107 +547,6 @@ describe("deletePanel", () => {
     });
     expect((await deletePanel(env, 1))!.seq).toBe(1);
     expect((store.get("public/data/gallery.json")!.content as Gallery).panels).toEqual([]);
-  });
-});
-
-describe("addSeriesTags", () => {
-  const files = () => ({
-    "public/data/series.json": {
-      series: [{ id: "saga", name: "Saga", tags: ["existing"] }],
-    },
-  });
-
-  it("adds a new tag and reports the diff", async () => {
-    const { store } = githubStub(files());
-    const out = await addSeriesTags(env, "Saga", ["new"]);
-    expect(out.entry).toEqual({ id: "saga", name: "Saga" });
-    expect(out.addedTags).toEqual(["new"]);
-    expect(out.allTags).toEqual(["existing", "new"]);
-    const saved = store.get("public/data/series.json")!.content as {
-      series: { tags: string[] }[];
-    };
-    expect(saved.series[0].tags).toEqual(["existing", "new"]);
-  });
-
-  it("reports only the tags that were actually new", async () => {
-    githubStub(files());
-    const out = await addSeriesTags(env, "Saga", ["existing", "new"]);
-    expect(out.addedTags).toEqual(["new"]);
-  });
-
-  it("writes nothing when every tag is already there", async () => {
-    const { writes } = githubStub(files());
-    const out = await addSeriesTags(env, "Saga", ["existing"]);
-    expect(out.addedTags).toEqual([]);
-    expect(out.allTags).toEqual(["existing"]);
-    expect(writes).toHaveLength(0);
-  });
-
-  it("does nothing for an empty tag list", async () => {
-    const { fetchMock } = githubStub(files());
-    expect(await addSeriesTags(env, "Saga", [])).toEqual({
-      entry: null,
-      addedTags: [],
-      allTags: [],
-    });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it("reports no entry for an unknown series", async () => {
-    githubStub(files());
-    expect((await addSeriesTags(env, "nope", ["x"])).entry).toBeNull();
-  });
-
-  it("reports no entry when series.json does not exist", async () => {
-    githubStub();
-    expect((await addSeriesTags(env, "Saga", ["x"])).entry).toBeNull();
-  });
-
-  it("names the series and the tags in the commit message", async () => {
-    const { writes } = githubStub(files());
-    await addSeriesTags(env, "Saga", ["a", "b"]);
-    expect(writes[0].body.message).toBe("Update series: tag Saga (a, b)");
-  });
-});
-
-describe("addArtistTags", () => {
-  const files = () => ({
-    "public/data/artists.json": {
-      artists: [{ id: "jean-giraud", name: "Jean Giraud", aliases: ["Moebius"] }],
-    },
-  });
-
-  it("matches an artist through an alias", async () => {
-    githubStub(files());
-    const out = await addArtistTags(env, "moebius", ["sci-fi"]);
-    expect(out.entry).toEqual({ id: "jean-giraud", name: "Jean Giraud" });
-    expect(out.addedTags).toEqual(["sci-fi"]);
-  });
-
-  it("creates the tag list on an entry that has none", async () => {
-    const { store } = githubStub(files());
-    await addArtistTags(env, "jean-giraud", ["sci-fi"]);
-    const saved = store.get("public/data/artists.json")!.content as {
-      artists: { tags: string[] }[];
-    };
-    expect(saved.artists[0].tags).toEqual(["sci-fi"]);
-  });
-
-  it("does nothing for an empty tag list", async () => {
-    const { fetchMock } = githubStub(files());
-    expect((await addArtistTags(env, "moebius", [])).entry).toBeNull();
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it("reports no entry for an unknown artist", async () => {
-    githubStub(files());
-    expect((await addArtistTags(env, "nobody", ["x"])).entry).toBeNull();
-  });
-
-  it("names the artist in the commit message", async () => {
-    const { writes } = githubStub(files());
-    await addArtistTags(env, "moebius", ["sci-fi"]);
-    expect(writes[0].body.message).toBe("Update artist: tag Jean Giraud (sci-fi)");
   });
 });
 
