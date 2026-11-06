@@ -3,7 +3,8 @@
 // tool loop over the same collection rollup and lookup tools. Neither writes
 // anything: /ask ends in proposals and a description ends in a caption, and a
 // person has to /confirm either one. /ask can also research a new artist or
-// series description from the web (research.ts), which ends in a proposal too.
+// series description from the web, or sources for the current one
+// (research.ts), and each ends in a proposal too.
 
 import { FunctionCallingConfigMode, GoogleGenAI, Type } from "@google/genai";
 import type { Content, FunctionDeclaration, Part } from "@google/genai";
@@ -27,7 +28,15 @@ import {
 } from "./proposals";
 import { DEFAULT_MODEL, DESCRIBE_MODEL, formatCostLine, formatSpendLine, type Usage } from "./pricing";
 import { recordCost } from "./cost";
-import { researchDescription, type ModelSpend } from "./research";
+import {
+  researchDescription,
+  researchSources,
+  resolveResearchKind,
+  type ModelSpend,
+  type ResearchArgs,
+  type ResearchMode,
+  type ResearchResult,
+} from "./research";
 
 /** Rounds of tool calls before a final round with tools off. */
 export const MAX_TOOL_ITERATIONS = 6;
@@ -157,7 +166,7 @@ const PROPOSE_PANEL: FunctionDeclaration = {
 const RESEARCH_DESCRIPTION: FunctionDeclaration = {
   name: "research_description",
   description:
-    "Write a new description for one artist or series from web research: searches the web, reads the pages (and any URLs the user gave), drafts a description in the site's style, and checks every sentence against a verbatim quote from its source. Unsupported sentences are dropped. The result becomes a proposal with its sources, for the user to /confirm. Takes a minute or two. Use it for any request to write, rewrite, improve, expand, correct or source a description.",
+    "Write a new description for one artist or series from web research: searches the web, reads the pages (and any URLs the user gave), drafts a description in the site's style, and checks every sentence against a verbatim quote from its source. Unsupported sentences are dropped. The result becomes a proposal with its sources, for the user to /confirm. Takes a minute or two. Use it for any request to write, rewrite, improve, expand or correct a description. For sources alone, use research_sources.",
   parameters: {
     type: Type.OBJECT,
     properties: {
@@ -180,6 +189,51 @@ const RESEARCH_DESCRIPTION: FunctionDeclaration = {
     required: ["kind", "ref", "instructions", "urls"],
   },
 };
+
+const RESEARCH_SOURCES: FunctionDeclaration = {
+  name: "research_sources",
+  description:
+    "Find web sources for one artist's or series' description as it stands, without changing it: searches the web, reads pages not already in its references (and any URLs the user gave), and ties each sentence of the description to verbatim quotes, which are checked against the pages and fact-checked. The pages behind the sentences that pass become a proposal adding them to its references, for the user to /confirm. Takes a minute or two. Use it for any request to source, cite, back up or find references for a description.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      kind: { type: Type.STRING, enum: ["artist", "series"], description: "Which kind of entry." },
+      ref: {
+        type: Type.STRING,
+        description: "The series id, or the artist's name, exactly as in the rollup.",
+      },
+      instructions: {
+        type: Type.STRING,
+        description: "What kinds of sources the user wants (interviews, reviews, a publisher's page), in their own words. Empty if none.",
+      },
+      urls: {
+        type: Type.ARRAY,
+        items: { type: Type.STRING },
+        description: "Every URL the user gave to check, copied exactly. Empty if none.",
+      },
+    },
+    required: ["kind", "ref", "instructions", "urls"],
+  },
+};
+
+/** research_description or research_sources, with the arguments the /ask model passed. */
+function runResearch(
+  env: Env,
+  docs: CollectionDocs,
+  mode: ResearchMode,
+  a: Record<string, unknown>,
+  alive: () => boolean
+): Promise<ResearchResult> | null {
+  const kind = a.kind === "artist" ? "artist" : a.kind === "series" ? "series" : null;
+  if (!kind) return null;
+  const req = {
+    kind,
+    ref: String(a.ref ?? ""),
+    instructions: typeof a.instructions === "string" ? a.instructions : "",
+    urls: Array.isArray(a.urls) ? a.urls.filter((u): u is string => typeof u === "string") : [],
+  } as const;
+  return mode === "sources" ? researchSources(env, docs, req, alive) : researchDescription(env, docs, req, alive);
+}
 
 function lookupDeclarations(env: Env): FunctionDeclaration[] {
   const out: FunctionDeclaration[] = [GET_SERIES];
@@ -207,7 +261,7 @@ const ABOUT = `Comic Snaps is a gallery of phone photos of comic book panels, po
 
 const NAMING = `# How series names reach Metron and Comic Vine
 The pipeline searches each database by the series name and accepts a result only if its name equals ours exactly, ignoring case but not punctuation or spacing ("Chocolate/Vanilla" does not match "Chocolate / Vanilla"). Metron results display as "Name (1987)"; the comparable name is the part before the year. If a series has a startYear, results starting in a different year are thrown out, which is how relaunches that share a name are told apart.
-The pipeline marks an entry in "sources" once a lookup has run, even if it found nothing, and never searches again on its own. So a series whose sources include metron or comicvine but whose references lack Metron or Comic Vine is one that didn't match, usually because our name differs from theirs. /rename_series clears the markers so the next run searches again.
+The pipeline looks each series up once, even if it finds nothing, and never searches again on its own. The rollup's last series column lists the databases whose lookup ran without a match, usually because our name differs from theirs. /rename_series clears that so the next run searches again.
 To find the right name: search_metron_series with a distinctive part of the name (it is a contains-search, so a short fragment works), compare start year and issue count against the issues posted, and use get_metron_series to settle a tie. If Metron doesn't have it, try search_comicvine_volumes. If neither has it, say so and don't rename.`;
 
 const COMMANDS = `# Commands you can propose
@@ -221,16 +275,18 @@ const COMMANDS = `# Commands you can propose
 /resolve metron:series // {name as searched} // {metron id}
 /resolve metron:creator // {name as searched} // {metron id}
   Picks the right candidate for an unresolved disambiguation row. Verify with get_metron_series first.
-/describe_artist and /describe_series (a new description with sources) come only from research_description, which proposes them for you.
+/describe_artist and /describe_series (a new description with sources) come only from research_description, and /add_sources_artist and /add_sources_series (sources for the current description) only from research_sources. Each proposes its command for you.
 Nothing else can be proposed. /delete and /rate are never proposed; mention them in prose if relevant.`;
 
 const RULES = `# Rules
 - Never invent panel seqs, series ids or artist names; copy them exactly from the rollup.
 - Rename a series with /rename_series, never with /update title on each panel.
 - Don't propose no-ops: a tag already present, a name already correct.
+- The rollup leaves out aliases, tags, notes and who posted. Call get_series when a question needs them, and always before /update {seq} tags, since it replaces the panel's whole list.
 - When an answer implies changes, call propose_commands once with the full list, then reply with a short summary. The numbered list is appended for you; don't repeat the commands in your text.
 - For read-only questions don't call propose_commands.
 - To write or rewrite an artist's or series' description, call research_description, once per entry, passing the user's directions and any URLs they gave. Never write description text yourself, and never state facts about a creator or work from memory as if sourced. Afterwards reply in a line or two; the draft, its sources and anything left out are shown to the user for you. For a revision on /resp, call it again with the new directions added to the old.
+- To find sources for a description without changing it, call research_sources, once per entry, the same way. Prefer it whenever the user asks only for sources, citations or references.
 - Never claim to have run anything. The user runs /confirm.
 - Captions for a new photo use: Title // Issue // Year // Artist // notes // tags (artist can be left off for a series already in the gallery). A photo captioned "/ask" and a description also works.
 - Reply in plain text, no Markdown. Keep it under ${TELEGRAM_MAX_LEN} characters.`;
@@ -245,7 +301,7 @@ function describeSystemPrompt(rollup: string): string {
     `# Your job
 The user is posting a panel photo and has described it in plain English instead of writing the caption. Turn it into one gallery entry and call propose_panel. The photo is attached; use it only to confirm or fill gaps (a visible title, a signature). The description wins.
 - TRUST what the user says. Don't second-guess a plausible identification.
-- If the series is already in the gallery (match by name, alias, or an obvious misspelling), use its name exactly as in the rollup and set existingSeriesId.
+- If the series is already in the gallery (match by name or an obvious misspelling; get_series also matches aliases), use its name exactly as in the rollup and set existingSeriesId.
 - For a new series, find the name the databases use (below) so the pipeline will match it, and use that, minus the (year).
 - Issue: a number, or text like "Annual 2". Year: the cover year of that issue. If they didn't give it, work it out from the series run (get_metron_series), and say so in assumptions.
 - Artist: who drew the panel. For an existing series you may leave it empty when the user didn't name one (it is inherited from the series' last panel). A new series needs one; if you can't establish it, give your best guess and say so.
@@ -400,31 +456,25 @@ export async function answerQuestion(
         : "";
       return `Recorded ${accepted.length} proposal(s).${rejectedNote} Otherwise, reply with a short plain-text summary for the user.`;
     },
-    research_description: async (a) => {
-      const kind = a.kind === "artist" ? "artist" : a.kind === "series" ? "series" : null;
-      if (!kind) return 'kind must be "artist" or "series".';
-      try {
-        const result = await researchDescription(
-          env,
-          docs,
-          {
-            kind,
-            ref: String(a.ref ?? ""),
-            instructions: typeof a.instructions === "string" ? a.instructions : "",
-            urls: Array.isArray(a.urls) ? a.urls.filter((u): u is string => typeof u === "string") : [],
-          },
-          alive
-        );
-        spend.push(...result.spend);
-        if (result.key && result.proposal) researched.set(result.key, result.proposal);
-        return result.toolResult;
-      } catch (err) {
-        if ((err as Error).message.startsWith("abandoned")) throw err;
-        console.log(`[agent] research_description failed: ${(err as Error).message}`);
-        return `Research failed: ${(err as Error).message.split("\n")[0]}. Tell the user; don't write a description yourself.`;
-      }
-    },
+    research_description: (a) => research("describe", a),
+    research_sources: (a) => research("sources", a),
   };
+
+  async function research(mode: ResearchMode, a: Record<string, unknown>): Promise<string> {
+    try {
+      const run = runResearch(env, docs, mode, a, alive);
+      if (!run) return 'kind must be "artist" or "series".';
+      const result = await run;
+      spend.push(...result.spend);
+      if (result.key && result.proposal) researched.set(result.key, result.proposal);
+      return result.toolResult;
+    } catch (err) {
+      if ((err as Error).message.startsWith("abandoned")) throw err;
+      const tool = mode === "sources" ? "research_sources" : "research_description";
+      console.log(`[agent] ${tool} failed: ${(err as Error).message}`);
+      return `Research failed: ${(err as Error).message.split("\n")[0]}. Tell the user; don't write ${mode === "sources" ? "sources" : "a description"} yourself.`;
+    }
+  }
 
   const contents: Content[] = [...history, { role: "user", parts: [{ text: question }] }];
   const result = await runToolLoop(
@@ -432,7 +482,7 @@ export async function answerQuestion(
     model,
     askSystemPrompt(buildRollup(docs)),
     contents,
-    [...lookupDeclarations(env), PROPOSE_COMMANDS, RESEARCH_DESCRIPTION],
+    [...lookupDeclarations(env), PROPOSE_COMMANDS, RESEARCH_DESCRIPTION, RESEARCH_SOURCES],
     handlers,
     alive
   );
@@ -444,6 +494,57 @@ export async function answerQuestion(
     thread: { model, history: trimHistory(result.contents), updatedAt: new Date().toISOString() },
     proposals: [...proposals, ...researched.values()],
   };
+}
+
+// ---------------------------------------------------------------------------
+// /research and /source
+// ---------------------------------------------------------------------------
+
+export interface ResearchReply {
+  reply: string;
+  proposal: ProposedCommand | null;
+}
+
+/**
+ * A research run on its own, for /research (mode "describe") and /source
+ * (mode "sources"). Skips the /ask model, whose system prompt carries the
+ * whole collection rollup on every turn.
+ */
+export async function researchCommand(
+  env: Env,
+  args: ResearchArgs,
+  alive: () => boolean = () => true,
+  mode: ResearchMode = "describe"
+): Promise<ResearchReply> {
+  const docs = await currentCollection(env);
+  const verb = mode === "sources" ? "source" : "research";
+  let kind = args.kind;
+  if (!kind) {
+    const resolved = resolveResearchKind(docs, args.ref, verb);
+    if ("error" in resolved) return { reply: resolved.error, proposal: null };
+    kind = resolved.kind;
+  }
+  const req = { kind, ref: args.ref, instructions: args.instructions, urls: args.urls };
+  const result =
+    mode === "sources" ? await researchSources(env, docs, req, alive) : await researchDescription(env, docs, req, alive);
+  const costLine = formatSpendLine(result.spend);
+  const lines = [result.message];
+  if (result.proposal) {
+    lines.push(
+      mode === "sources"
+        ? `To look again, run /source ${kind} ${args.ref} // {directions or a URL}.`
+        : `To revise it, run /research ${kind} ${args.ref} // {directions} again.`
+    );
+  } else if (result.key) {
+    // Got as far as reading pages: a page to start from is usually the fix.
+    lines.push(
+      mode === "sources"
+        ? `Name a page to check: /source ${kind} ${args.ref} https://…`
+        : `Name a page to work from: /research ${kind} ${args.ref} // https://…`
+    );
+  }
+  if (costLine) lines.push(costLine);
+  return { reply: lines.join("\n"), proposal: result.proposal };
 }
 
 // ---------------------------------------------------------------------------

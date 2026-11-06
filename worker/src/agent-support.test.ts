@@ -87,21 +87,29 @@ const docs: CollectionDocs = {
 
 describe("buildRollup", () => {
   const rollup = buildRollup(docs);
+  const lines = rollup.split("\n");
 
-  it("has one line per series with its lookup state and what's posted", () => {
-    expect(rollup).toContain(
-      "saga | Saga | SAGA | 2012 | Image | Metron | wikipedia,metron | #1, #4 | Fiona Staples",
-    );
+  it("has one line per series, then its panels by seq", () => {
+    const at = lines.indexOf("saga | Saga | 2012 | Image | -");
+    expect(at).toBeGreaterThan(-1);
+    expect(lines.slice(at + 1, at + 3)).toEqual(["  1 | #1 | 2012 | Fiona Staples", "  2 | #4 | 2012 | Fiona Staples"]);
+  });
+
+  it("leaves out aliases, tags, notes and posters", () => {
+    for (const absent of ["SAGA", "sci-fi", "robot", "Jacob"]) expect(rollup).not.toContain(absent);
+  });
+
+  it("flags a lookup that ran without a match", () => {
+    const unmatched = buildRollup({
+      ...docs,
+      series: { series: [{ ...docs.series.series[0], sources: ["metron", "comicvine"] }] },
+    });
+    expect(unmatched).toContain("saga | Saga | 2012 | Image | comicvine");
   });
 
   it("lists series posted since the metadata job last ran", () => {
-    expect(rollup).toContain("hup | Hup | - | - | - | (not in series.json yet) | - | #1 | R. Crumb");
-  });
-
-  it("lists panels by seq, flattening anything that would break a row", () => {
-    const lines = rollup.split("\n");
-    const first = lines.findIndex((l) => l.startsWith("1 | saga"));
-    expect(lines[first + 1]).toBe("2 | saga | #4 | 2012 | Fiona Staples | sci-fi | the robot | prince scene | Jacob");
+    const at = lines.indexOf("hup | Hup | - | - | (not in series.json yet)");
+    expect(lines[at + 1]).toBe("  3 | #1 | 2012 | R. Crumb");
   });
 
   it("lists artists with aliases and only unresolved disambiguation rows", () => {

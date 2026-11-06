@@ -106,7 +106,7 @@ def test_a_whole_run_against_a_scripted_model(tmp_path, monkeypatch):
     out = tmp_path / "work" / "out"
     assert (out / "restored.jpg").read_bytes() == (tmp_path / "work" / "round2.jpg").read_bytes()
     summary = (out / "summary.txt").read_text()
-    assert summary.startswith("restore-bw-panel, --ink-sigmas=3 (round 2 of 2 run).")
+    assert summary.startswith("restore-bw-panel, --ink-sigmas=3 (round 2 of 3, 2 script runs).")
     assert "Blacks are solid now." in summary
 
     texts = ["\n".join(p["text"] for p in c["parts"] if "text" in p) for c in seen]
@@ -115,3 +115,119 @@ def test_a_whole_run_against_a_scripted_model(tmp_path, monkeypatch):
     assert "ran the bw script with defaults" in texts[0]
     assert "with --ink-sigmas=3" in texts[1] and "Probe" in texts[1] and "probe: box 'bad'" in texts[1]
     assert "nothing was rerun" in texts[2]
+
+
+# --- The checks on what a reply actually does ---------------------------------
+
+
+def test_a_retry_that_names_flags_only_in_its_notes_is_sent_back():
+    reply = {"decision": "retry", "script": "color", "flags": [],
+             "notes": "Setting --tint 0,0 and --strength 1 to whiten the page; --zoom isn't needed."}
+    issues = rj.retry_issues(reply, "color", ("color", []), (800, 1200))
+    assert len(issues) == 1
+    assert "--tint, --strength" in issues[0] and "--zoom" not in issues[0]
+
+
+def test_a_retry_that_changes_nothing_is_sent_back():
+    same = {"decision": "retry", "flags": [{"name": "ink-sigmas", "value": "3"}], "notes": "again"}
+    assert "changes nothing" in rj.retry_issues(same, "bw", ("bw", ["--ink-sigmas=3"]), (800, 1200))[0]
+    # Looking closer at the same result is a real change.
+    assert rj.retry_issues({**same, "zoom": ["0,0,500,500"]}, "bw", ("bw", ["--ink-sigmas=3"]), (800, 1200)) == []
+    assert rj.retry_issues({**same, "flags": [{"name": "gamma", "value": "9"}]}, "bw", None, (800, 1200)) == [
+        "flags rejected: --gamma 9 is outside 0.5 to 1.5"]
+    assert rj.retry_issues({"decision": "install", "notes": "--tint 0,0 worked"}, "color", None, (800, 1200)) == []
+
+
+def test_force_is_offered_for_bw_only():
+    assert rj.build_flags("bw", [{"name": "force", "value": "true"}], (800, 1200)) == (["--force"], "--force")
+    with pytest.raises(ValueError):
+        rj.build_flags("color", [{"name": "force", "value": "true"}], (800, 1200))
+
+
+def test_auto_zoom_boxes_find_the_blacks_and_the_detail():
+    np = pytest.importorskip("numpy")
+    cv2 = pytest.importorskip("cv2")
+    page = np.full((400, 400, 3), 230, np.uint8)
+    page[0:100, 300:400] = 10  # A solid black, top right.
+    for x in range(0, 100, 6):  # Fine hatching, bottom left.
+        cv2.line(page, (x, 300), (x, 400), (20, 20, 20), 1)
+    dark, busy = rj.auto_zoom_boxes(page)
+    assert dark == (0, 750, 250, 1000)
+    assert busy == (750, 0, 1000, 250)
+
+
+def _page(tmp_path, colored=False):
+    cv2 = pytest.importorskip("cv2")
+    np = pytest.importorskip("numpy")
+    page = np.full((400, 300, 3), 205, np.uint8)
+    page[:, :, 0] = 190  # A warm cast.
+    cv2.rectangle(page, (40, 60), (260, 120), (20, 20, 20), -1)
+    cv2.putText(page, "POW", (60, 300), cv2.FONT_HERSHEY_SIMPLEX, 2, (25, 25, 25), 5)
+    if colored:
+        cv2.rectangle(page, (20, 150), (140, 240), (40, 40, 220), -1)  # Painted red.
+        cv2.rectangle(page, (160, 150), (280, 240), (220, 90, 30), -1)  # Painted blue.
+    source = tmp_path / "source.jpg"
+    cv2.imwrite(str(source), page)
+    return source
+
+
+def _script(monkeypatch, replies):
+    replies, seen = iter(replies), []
+
+    def fake_call(model, key, system, contents, schema, usage):
+        seen.append(contents[-1])
+        reply = next(replies)
+        return reply, json.dumps(reply)
+
+    monkeypatch.setattr(rj, "call_model", fake_call)
+    return seen
+
+
+def _texts(seen):
+    return ["\n".join(p["text"] for p in c["parts"] if "text" in p) for c in seen]
+
+
+def test_flags_left_in_the_notes_are_corrected_in_the_same_round(tmp_path, monkeypatch):
+    source = _page(tmp_path)
+    seen = _script(monkeypatch, [
+        {"decision": "retry", "flags": [], "notes": "page too warm, setting --tint 0,0"},
+        {"decision": "retry", "flags": [{"name": "tint", "value": "0,0"}], "zoom": ["0,0,500,500"], "notes": "fixed"},
+        {"decision": "install", "notes": "neutral now", "summary": "Page is neutral."},
+    ])
+    assert rj.judge(source, "bw", "Test #1", tmp_path / "work", "fake", "key") == "install"
+    texts = _texts(seen)
+    assert len(seen) == 3
+    assert "only flags is read" in texts[1] and "Before anything runs" in texts[1]
+    assert "ran the bw script with --tint=0,0" in texts[2]
+    summary = (tmp_path / "work" / "out" / "summary.txt").read_text()
+    assert summary.startswith("restore-bw-panel, --tint=0,0 (round 2 of 2, 2 script runs).")
+
+
+def test_an_install_waits_for_a_zoom_look(tmp_path, monkeypatch):
+    source = _page(tmp_path)
+    seen = _script(monkeypatch, [
+        {"decision": "install", "notes": "looks good", "summary": "Cleaner."},
+        {"decision": "install", "notes": "holds up close", "summary": "Cleaner, lettering intact."},
+    ])
+    assert rj.judge(source, "bw", "Test #1", tmp_path / "work", "fake", "key") == "install"
+    texts = _texts(seen)
+    images = [sum("inlineData" in p for p in c["parts"]) for c in seen]
+    assert images == [2, 2]  # Source and result, then the two chosen zoom pairs.
+    assert "hasn't been seen zoomed" in texts[1] and "darkest and the most detailed" in texts[1]
+    assert "source left, result of round 1 right" in texts[1]
+    summary = (tmp_path / "work" / "out" / "summary.txt").read_text()
+    assert summary.startswith("restore-bw-panel, defaults (round 1 of 2, 1 script run).")
+    assert "lettering intact" in summary
+
+
+def test_a_bw_refusal_runs_color_in_the_same_round(tmp_path, monkeypatch):
+    source = _page(tmp_path, colored=True)
+    seen = _script(monkeypatch, [
+        {"decision": "skip", "notes": "n", "summary": "Left alone."},
+    ])
+    rj.judge(source, "bw", "Test #1", tmp_path / "work", "fake", "key")
+    text = _texts(seen)[0]
+    assert "looks colored" in text
+    assert "color script was run with defaults in the same round" in text
+    assert "Image 2: the result of round 1." in text
+    assert (tmp_path / "work" / "round1-color.jpg").is_file()

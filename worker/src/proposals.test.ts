@@ -31,6 +31,14 @@ describe("sanitizeProposals", () => {
     expect(out.rejected[0].reason).toContain("research_description");
   });
 
+  it("rejects sources the model wrote itself", () => {
+    const out = sanitizeProposals([
+      { command: "/add_sources_artist charles-burns\n- Blog | https://example.com/", rationale: "" },
+    ]);
+    expect(out.accepted).toEqual([]);
+    expect(out.rejected[0].reason).toContain("research_sources");
+  });
+
   it("rejects malformed commands with the parser's reason", () => {
     const out = sanitizeProposals([{ command: "/update 5 slug x", rationale: "" }]);
     expect(out.rejected[0].reason).toBe(

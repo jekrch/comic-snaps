@@ -428,6 +428,53 @@ describe("applyCommand: /describe_*", () => {
   });
 });
 
+describe("applyCommand: /add_sources_*", () => {
+  const command = [
+    "/add_sources_series hellboy",
+    "- Wikipedia | https://en.wikipedia.org/wiki/Hellboy/",
+    "- The Comics Journal | https://www.tcj.com/mignola/ | A Mignola interview",
+  ].join("\n");
+
+  it("appends the new references and leaves the description alone", async () => {
+    const files = baseFiles();
+    const series = (files[SERIES_PATH] as { series: SeriesEntry[] }).series[0];
+    series.description = "Hellboy is a comic series by Mike Mignola.";
+    series.references = [{ name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Hellboy" }];
+    const { ws } = workspace(files);
+    const out = await applyCommand(ws, command);
+    const entry = (await ws.series()).series.find((s) => s.id === "hellboy")!;
+    expect(entry.description).toBe("Hellboy is a comic series by Mike Mignola.");
+    expect(entry.references).toEqual([
+      { name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Hellboy" },
+      { name: "The Comics Journal", url: "https://www.tcj.com/mignola/", title: "A Mignola interview" },
+    ]);
+    expect(out.reply).toBe("Added 1 source(s) to series Hellboy; 1 were already listed. The description is unchanged.");
+    expect(out.summary).toBe("Update series: add 1 source(s) to Hellboy");
+    expect(ws.dirtyFiles().map((f) => f.path)).toEqual([SERIES_PATH]);
+  });
+
+  it("adds to an artist found by alias, creating the references list", async () => {
+    const { ws } = workspace(baseFiles());
+    await applyCommand(ws, "/add_sources_artist Moebius\n- Comiclopedia | https://www.lambiek.net/artists/g/giraud.htm");
+    expect((await ws.artists()).artists[0].references).toEqual([
+      { name: "Comiclopedia", url: "https://www.lambiek.net/artists/g/giraud.htm" },
+    ]);
+  });
+
+  it("changes nothing when every source is already listed", async () => {
+    const { ws } = workspace(baseFiles());
+    await applyCommand(ws, command);
+    const again = await applyCommand(ws, command);
+    expect(again.summary).toBeNull();
+    expect(again.reply).toBe("Hellboy already lists those sources.");
+  });
+
+  it("fails for an entry that isn't in the data files yet", async () => {
+    const { ws } = workspace(baseFiles());
+    await expect(applyCommand(ws, "/add_sources_artist Nobody\n- X | https://x.example/")).rejects.toThrow(/No artist found/);
+  });
+});
+
 describe("Workspace", () => {
   it("loads each file once and writes only the ones that changed", async () => {
     const { ws, loader } = workspace(baseFiles());

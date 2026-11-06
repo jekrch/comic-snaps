@@ -1,6 +1,7 @@
 // The data-editing commands — /update, /tag_series, /tag_artist,
-// /rename_series, /resolve, /describe_artist, /describe_series — as pure edits
-// over in-memory documents.
+// /rename_series, /resolve, /describe_artist, /describe_series,
+// /add_sources_artist, /add_sources_series — as pure edits over in-memory
+// documents.
 //
 // Typed directly or confirmed from an agent proposal, they run through
 // runCommands: every file is read at one base commit, each command is applied in
@@ -31,10 +32,14 @@ import {
 } from "./github";
 import { byName, resolveSeries } from "./series";
 import {
+  ADD_SOURCES_VERBS,
   DESCRIBE_VERBS,
   mergeReferences,
+  parseAddSourcesArgs,
   parseDescribeArgs,
+  type AddSourcesCommand,
   type DescribeCommand,
+  type DescribeKind,
   type DescribeReference,
 } from "./descriptions";
 
@@ -144,7 +149,8 @@ export type EditCommand =
   | { verb: "tag_series" | "tag_artist"; ref: string; tags: string[] }
   | { verb: "rename_series"; ref: string; name: string; startYear: number | null }
   | { verb: "resolve"; key: string; name: string; id: number }
-  | DescribeCommand;
+  | DescribeCommand
+  | AddSourcesCommand;
 
 /** Every verb runCommands understands, as typed. */
 export const EDIT_VERBS = [
@@ -154,6 +160,7 @@ export const EDIT_VERBS = [
   "/rename_series",
   "/resolve",
   ...DESCRIBE_VERBS,
+  ...ADD_SOURCES_VERBS,
 ] as const;
 
 const RENAME_USAGE =
@@ -238,6 +245,10 @@ export function parseEditCommand(text: string): EditCommand | { error: string } 
     case "/describe_artist":
     case "/describe_series":
       return parseDescribeArgs(verb === "/describe_artist" ? "artist" : "series", rest);
+
+    case "/add_sources_artist":
+    case "/add_sources_series":
+      return parseAddSourcesArgs(verb === "/add_sources_artist" ? "artist" : "series", rest);
 
     default:
       return null;
@@ -473,19 +484,26 @@ async function applyResolve(
   return { reply: lines.join("\n"), summary: `Update disambiguation: ${c.key} ${name} → ${c.id}` };
 }
 
-async function applyDescribe(ws: Workspace, c: DescribeCommand): Promise<Applied> {
-  const isSeries = c.kind === "series";
-  const path = isSeries ? SERIES_PATH : ARTISTS_PATH;
-  const entry = isSeries
-    ? findSeries((await ws.series()).series, c.ref)
-    : findArtist((await ws.artists()).artists, c.ref);
+/** The series.json or artists.json entry a /describe_* or /add_sources_* names, and its file. */
+async function describedEntry(
+  ws: Workspace,
+  kind: DescribeKind,
+  ref: string
+): Promise<{ entry: SeriesEntry | ArtistEntry; path: string }> {
+  const isSeries = kind === "series";
+  const entry = isSeries ? findSeries((await ws.series()).series, ref) : findArtist((await ws.artists()).artists, ref);
   if (!entry) {
     // The metadata job creates entries for newly posted names; until it has
     // run there is nothing here to describe.
     throw new CommandError(
-      `No ${c.kind} found matching "${c.ref}" in ${isSeries ? "series" : "artists"}.json. If it was just posted, try again after the metadata job runs.`
+      `No ${kind} found matching "${ref}" in ${isSeries ? "series" : "artists"}.json. If it was just posted, try again after the metadata job runs.`
     );
   }
+  return { entry, path: isSeries ? SERIES_PATH : ARTISTS_PATH };
+}
+
+async function applyDescribe(ws: Workspace, c: DescribeCommand): Promise<Applied> {
+  const { entry, path } = await describedEntry(ws, c.kind, c.ref);
 
   // Stored the way the pipeline stores them: paragraphs split by a blank CRLF line.
   const description = c.paragraphs.join("\r\n\r\n");
@@ -510,6 +528,21 @@ async function applyDescribe(ws: Workspace, c: DescribeCommand): Promise<Applied
   return { reply: lines.join("\n"), summary: `Update ${c.kind}: describe ${entry.name}` };
 }
 
+async function applyAddSources(ws: Workspace, c: AddSourcesCommand): Promise<Applied> {
+  const { entry, path } = await describedEntry(ws, c.kind, c.ref);
+  const references = (entry.references ??= []) as DescribeReference[];
+  const added = mergeReferences(references, c.references);
+  if (added === 0) return { reply: `${entry.name} already lists those sources.`, summary: null };
+  ws.touch(path);
+  const already = c.references.length - added;
+  return {
+    reply:
+      `Added ${added} source(s) to ${c.kind} ${entry.name}` +
+      `${already ? `; ${already} were already listed` : ""}. The description is unchanged.`,
+    summary: `Update ${c.kind}: add ${added} source(s) to ${entry.name}`,
+  };
+}
+
 /** Apply one edit command to the workspace. Throws CommandError when it can't. */
 export async function applyCommand(ws: Workspace, text: string): Promise<Applied> {
   const parsed = parseEditCommand(text);
@@ -527,6 +560,8 @@ export async function applyCommand(ws: Workspace, text: string): Promise<Applied
       return applyResolve(ws, parsed);
     case "describe":
       return applyDescribe(ws, parsed);
+    case "add_sources":
+      return applyAddSources(ws, parsed);
   }
 }
 

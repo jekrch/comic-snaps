@@ -15,6 +15,13 @@
 //   - The Comics Journal | https://www.tcj.com/... | Article title
 //
 // The first line names the entry; the "Sources:" block is optional.
+//
+// /add_sources_artist and /add_sources_series add references and leave the
+// description alone. The agent's research_sources tool builds these from pages
+// that back the description as it stands; a person can also type one:
+//
+//   /add_sources_artist charles-burns
+//   - Toons Mag | https://www.toonsmag.com/charles-burns/ | Article title
 
 export type DescribeKind = "artist" | "series";
 
@@ -33,7 +40,15 @@ export interface DescribeCommand {
   references: DescribeReference[];
 }
 
+export interface AddSourcesCommand {
+  verb: "add_sources";
+  kind: DescribeKind;
+  ref: string;
+  references: DescribeReference[];
+}
+
 export const DESCRIBE_VERBS = ["/describe_artist", "/describe_series"] as const;
+export const ADD_SOURCES_VERBS = ["/add_sources_artist", "/add_sources_series"] as const;
 
 /** Longer than any description in the data, and short enough to read in one Telegram message. */
 export const MAX_DESCRIPTION_CHARS = 3000;
@@ -46,6 +61,13 @@ Sources:
 - {source name} | {url} | {article title}
 
 (/describe_artist {artist} works the same way. Sources are optional.)`;
+
+export const ADD_SOURCES_USAGE = `Expected format:
+/add_sources_series {series}
+- {source name} | {url}
+- {source name} | {url} | {article title}
+
+(/add_sources_artist {artist} works the same way. The description isn't changed.)`;
 
 const SOURCES_HEADER = /^sources:?$/i;
 const SOURCE_LINE = /^[-*•]\s*(.+)$/;
@@ -72,12 +94,46 @@ export function buildDescribeCommand(
     lines.push(
       "",
       "Sources:",
-      ...references.map(
-        (r) => `- ${cell(r.name)} | ${r.url.trim()}${r.title ? ` | ${cell(r.title)}` : ""}`
-      )
+      ...references.map(sourceLine)
     );
   }
   return lines.join("\n");
+}
+
+function sourceLine(r: DescribeReference): string {
+  return `- ${cell(r.name)} | ${r.url.trim()}${r.title ? ` | ${cell(r.title)}` : ""}`;
+}
+
+/** Build an /add_sources_* command. Like a description, the model never writes it. */
+export function buildAddSourcesCommand(kind: DescribeKind, ref: string, references: DescribeReference[]): string {
+  return [`/add_sources_${kind} ${oneLine(ref)}`, ...references.map(sourceLine)].join("\n");
+}
+
+/** `- {name} | {url} [| {title}]`, or the message to send back. */
+function parseSourceLine(line: string): DescribeReference | { error: string } {
+  const m = line.trim().match(SOURCE_LINE);
+  const [name, url, ...title] = (m ? m[1] : "").split("|").map((s) => s.trim());
+  if (!name || !url || !URL_RE.test(url)) {
+    return { error: `Can't read source line "${line.trim()}". Use: - {name} | {url} [| {title}]` };
+  }
+  const t = title.join(" - ").trim();
+  return t ? { name, url, title: t } : { name, url };
+}
+
+/** Everything after an /add_sources_* verb: the entry on the first line, then source lines. */
+export function parseAddSourcesArgs(kind: DescribeKind, rest: string): AddSourcesCommand | { error: string } {
+  const lines = rest.replace(/\r\n?/g, "\n").split("\n");
+  const ref = (lines.shift() ?? "").trim();
+  if (!ref) return { error: `Missing ${kind} reference.\n\n${ADD_SOURCES_USAGE}` };
+  const references: DescribeReference[] = [];
+  for (const line of lines) {
+    if (!line.trim() || SOURCES_HEADER.test(line.trim())) continue;
+    const r = parseSourceLine(line);
+    if ("error" in r) return r;
+    references.push(r);
+  }
+  if (references.length === 0) return { error: `No sources given.\n\n${ADD_SOURCES_USAGE}` };
+  return { verb: "add_sources", kind, ref, references };
 }
 
 /**
@@ -113,14 +169,10 @@ export function parseDescribeArgs(kind: DescribeKind, rest: string): DescribeCom
 
   const references: DescribeReference[] = [];
   for (const line of lines.slice(split + 1)) {
-    const m = line.trim().match(SOURCE_LINE);
-    if (!m) continue;
-    const [name, url, ...title] = m[1].split("|").map((s) => s.trim());
-    if (!name || !url || !URL_RE.test(url)) {
-      return { error: `Can't read source line "${line.trim()}". Use: - {name} | {url} [| {title}]` };
-    }
-    const t = title.join(" - ").trim();
-    references.push(t ? { name, url, title: t } : { name, url });
+    if (!SOURCE_LINE.test(line.trim())) continue;
+    const r = parseSourceLine(line);
+    if ("error" in r) return r;
+    references.push(r);
   }
 
   return { verb: "describe", kind, ref, paragraphs, references };

@@ -9,8 +9,9 @@ name: Restore Panel
 #
 # The model never runs anything. It answers in JSON, and the judge checks every
 # flag against a fixed list with ranges before using it. That's also what keeps
-# the cost down: one API call per round and at most four rounds, against the
-# 30 to 50 turns, each resending the whole session, that an agent took.
+# the cost down: one API call per round (two when a retry has to be corrected)
+# and at most four rounds, against the 30 to 50 turns, each resending the whole
+# session, that an agent took.
 #
 # Separate jobs, because the model reads text anyone in the chat can write (the
 # panel's title and notes, the photo itself). The restore job holds nothing

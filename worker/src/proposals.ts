@@ -5,7 +5,7 @@
 import type { PanelMetadata } from "./types";
 import { parseCaption } from "./caption";
 import { EDIT_VERBS, commandVerb, parseEditCommand } from "./edits";
-import { DESCRIBE_VERBS } from "./descriptions";
+import { ADD_SOURCES_VERBS, DESCRIBE_VERBS } from "./descriptions";
 
 export interface ProposedCommand {
   command: string;
@@ -15,10 +15,12 @@ export interface ProposedCommand {
 }
 
 /**
- * Verbs the model may write itself. A description only reaches a proposal
- * through research_description, which checks it against its sources.
+ * Verbs the model may write itself. A description or a source only reaches a
+ * proposal through research_description or research_sources, which check it
+ * against the pages it came from.
  */
-const PROPOSABLE_VERBS = EDIT_VERBS.filter((v) => !(DESCRIBE_VERBS as readonly string[]).includes(v));
+const RESEARCHED_VERBS: readonly string[] = [...DESCRIBE_VERBS, ...ADD_SOURCES_VERBS];
+const PROPOSABLE_VERBS = EDIT_VERBS.filter((v) => !RESEARCHED_VERBS.includes(v));
 
 export interface SanitizedProposals {
   accepted: ProposedCommand[];
@@ -45,6 +47,10 @@ export function sanitizeProposals(raw: unknown): SanitizedProposals {
     const verb = commandVerb(command);
     if ((DESCRIBE_VERBS as readonly string[]).includes(verb)) {
       rejected.push({ command, reason: "descriptions come only from research_description" });
+      continue;
+    }
+    if ((ADD_SOURCES_VERBS as readonly string[]).includes(verb)) {
+      rejected.push({ command, reason: "sources come only from research_sources" });
       continue;
     }
     if (!(PROPOSABLE_VERBS as readonly string[]).includes(verb)) {

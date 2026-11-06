@@ -28,28 +28,33 @@ function cell(value: unknown): string {
   return String(value).replace(/[\r\n|]+/g, " ").trim() || "-";
 }
 
-function clip(text: string | null | undefined, max: number): string {
-  if (!text) return "-";
-  const flat = text.replace(/\s+/g, " ").trim();
-  return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat;
+/** Panels in posting order. */
+function bySeq(panels: Gallery["panels"]): Gallery["panels"] {
+  return [...panels].sort((a, b) => a.seq - b.seq);
 }
 
-/** Distinct issues, numbers ascending, then named issues ("Annual 2") alphabetically. */
-function issueList(panels: Gallery["panels"]): string {
-  const issues = [...new Set(panels.map((p) => p.issue))].sort((a, b) => {
-    if (typeof a === "number" && typeof b === "number") return a - b;
-    if (typeof a === "number") return -1;
-    if (typeof b === "number") return 1;
-    return a.localeCompare(b);
-  });
-  return issues.map(formatIssue).join(", ");
+// What the pipeline's "sources" markers and the references would otherwise
+// both have to be sent for: a database whose lookup ran but found nothing,
+// usually because our name differs from theirs. /rename_series fixes these.
+const LOOKUPS: [source: string, reference: string][] = [
+  ["metron", "Metron"],
+  ["comicvine", "Comic Vine"],
+];
+
+function unmatchedLookups(s: SeriesEntry): string {
+  const sources = new Set(s.sources ?? []);
+  const refs = new Set((s.references ?? []).map((r) => r.name));
+  const missing = LOOKUPS.filter(([src, ref]) => sources.has(src) && !refs.has(ref)).map(([src]) => src);
+  return missing.length ? missing.join(", ") : "-";
 }
 
-function referenceNames(s: SeriesEntry): string {
-  const names = (s.references ?? []).map((r) => r.name);
-  return names.length ? names.join(", ") : "-";
+function panelLine(p: Gallery["panels"][number]): string {
+  return `  ${[p.seq, cell(formatIssue(p.issue)), cell(p.year), cell(p.artist)].join(" | ")}`;
 }
 
+// Kept to what /ask needs on every turn: ids, names and seqs to copy into
+// commands, and enough to answer "what's posted". Aliases, tags, notes,
+// posters and full references come from get_series when a question needs them.
 export function buildRollup(docs: CollectionDocs): string {
   const { gallery, series, artists, disambiguation } = docs;
   const panelsBySlug = new Map<string, Gallery["panels"]>();
@@ -60,52 +65,23 @@ export function buildRollup(docs: CollectionDocs): string {
   }
 
   const seriesLines: string[] = [];
+  let seriesCount = 0;
   const known = new Set<string>();
   for (const s of series.series) {
     known.add(s.id);
-    const panels = panelsBySlug.get(s.id) ?? [];
-    const issues = issueList(panels);
-    const panelArtists = [...new Set(panels.map((p) => p.artist))].join(", ");
+    seriesCount++;
     seriesLines.push(
-      [
-        s.id,
-        cell(s.name),
-        cell((s.aliases ?? []).join("; ")),
-        cell(s.startYear),
-        cell(s.publisher),
-        referenceNames(s),
-        cell((s.sources ?? []).join(",")),
-        cell(issues),
-        cell(panelArtists),
-      ].join(" | ")
+      [s.id, cell(s.name), cell(s.startYear), cell(s.publisher), unmatchedLookups(s)].join(" | ")
     );
+    seriesLines.push(...bySeq(panelsBySlug.get(s.id) ?? []).map(panelLine));
   }
   // Posted since the metadata job last ran, so not in series.json yet.
   for (const [slug, panels] of panelsBySlug) {
     if (known.has(slug)) continue;
-    const issues = issueList(panels);
-    const panelArtists = [...new Set(panels.map((p) => p.artist))].join(", ");
-    seriesLines.push(
-      [slug, cell(panels[0].title), "-", "-", "-", "(not in series.json yet)", "-", issues, panelArtists].join(
-        " | "
-      )
-    );
+    seriesCount++;
+    seriesLines.push([slug, cell(panels[0].title), "-", "-", "(not in series.json yet)"].join(" | "));
+    seriesLines.push(...bySeq(panels).map(panelLine));
   }
-
-  const panelLines = [...gallery.panels]
-    .sort((a, b) => a.seq - b.seq)
-    .map((p) =>
-      [
-        p.seq,
-        p.slug,
-        cell(formatIssue(p.issue)),
-        cell(p.year),
-        cell(p.artist),
-        cell(p.tags.join(", ")),
-        clip(p.notes, 80),
-        cell(p.postedBy),
-      ].join(" | ")
-    );
 
   const artistLines = artists.artists.map((a) => {
     const aliases = (a.aliases ?? []).slice(0, 3);
@@ -124,13 +100,10 @@ export function buildRollup(docs: CollectionDocs): string {
   }
 
   return [
-    `# Series (${seriesLines.length})`,
-    "# id | name | aliases | startYear | publisher | references | sources (pipeline markers) | issues posted | artists posted",
+    `# Series (${seriesCount}) with their panels (${gallery.panels.length})`,
+    "# id | name | startYear | publisher | lookups that ran without a match",
+    "#   panel seq | issue | year | artist",
     ...seriesLines,
-    "",
-    `# Panels (${panelLines.length})`,
-    "# seq | series id | issue | year | artist | tags | notes | posted by",
-    ...panelLines,
     "",
     `# Artists (${artistLines.length})`,
     ...artistLines,

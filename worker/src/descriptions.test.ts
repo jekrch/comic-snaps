@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   MAX_DESCRIPTION_CHARS,
+  buildAddSourcesCommand,
   buildDescribeCommand,
   mergeReferences,
+  parseAddSourcesArgs,
   parseDescribeArgs,
   urlKey,
 } from "./descriptions";
@@ -51,6 +53,48 @@ describe("/describe_* command text", () => {
     });
     expect(parseDescribeArgs("series", `saga\n${"x".repeat(MAX_DESCRIPTION_CHARS + 1)}`)).toMatchObject({
       error: expect.stringContaining("limit"),
+    });
+  });
+});
+
+describe("/add_sources_* command text", () => {
+  const refs = [
+    { name: "Toons Mag", url: "https://www.toonsmag.com/charles-burns/", title: "Charles Burns | the artist" },
+    { name: "Grand Comics Database", url: "https://www.comics.org/creator/2064/" },
+  ];
+
+  it("round-trips sources through build and parse, keeping a | out of the title", () => {
+    const text = buildAddSourcesCommand("artist", "charles-burns", refs);
+    expect(text).toBe(
+      "/add_sources_artist charles-burns\n" +
+        "- Toons Mag | https://www.toonsmag.com/charles-burns/ | Charles Burns - the artist\n" +
+        "- Grand Comics Database | https://www.comics.org/creator/2064/"
+    );
+    expect(parseEditCommand(text)).toEqual({
+      verb: "add_sources",
+      kind: "artist",
+      ref: "charles-burns",
+      references: [{ ...refs[0], title: "Charles Burns - the artist" }, refs[1]],
+    });
+  });
+
+  it("takes a typed Sources: header and blank lines", () => {
+    expect(parseAddSourcesArgs("series", "saga\n\nSources:\n- Wikipedia | https://en.wikipedia.org/wiki/Saga_(comics)")).toEqual({
+      verb: "add_sources",
+      kind: "series",
+      ref: "saga",
+      references: [{ name: "Wikipedia", url: "https://en.wikipedia.org/wiki/Saga_(comics)" }],
+    });
+  });
+
+  it("explains what's wrong with a bad command", () => {
+    expect(parseAddSourcesArgs("artist", "")).toEqual({ error: expect.stringContaining("Missing artist reference") });
+    expect(parseAddSourcesArgs("artist", "charles-burns")).toEqual({ error: expect.stringContaining("No sources given") });
+    expect(parseAddSourcesArgs("artist", "charles-burns\nsome prose")).toEqual({
+      error: expect.stringContaining('Can\'t read source line "some prose"'),
+    });
+    expect(parseAddSourcesArgs("artist", "charles-burns\n- TCJ | not a url")).toEqual({
+      error: expect.stringContaining("Can't read source line"),
     });
   });
 });

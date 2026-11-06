@@ -22,6 +22,7 @@ import {
   handleConfirm,
   handleCost,
   handleDescribedPhoto,
+  handleResearch,
   handleResp,
 } from "./session";
 
@@ -61,6 +62,8 @@ Commands:
   /describe_series {ref} (or /describe_artist {ref}), then the description
     on the following lines, then optionally "Sources:" and lines of
     "- {name} | {url}" — Replace a description and add its sources
+  /add_sources_series {ref} (or /add_sources_artist {ref}), then lines of
+    "- {name} | {url}" — Add sources and leave the description as it is
 
 Updatable fields: title, issue, year, artist, notes, tags
 Setting title moves that panel to the series the title names.
@@ -86,6 +89,12 @@ Agent (for allowlisted users):
   /confirm — Run all proposals (or post the described photo)
   /confirm 1 3 — Run only those proposals
   /cancel — Drop pending proposals and any described photo
+  /research [artist|series] {name} [// directions] — Write a new
+    description from the web, without going through /ask (cheaper).
+    URLs anywhere in it are read first. Run it again to revise.
+  /source [artist|series] {name} [// directions] — Find pages that back
+    the description as it stands and add them to its sources. The
+    description isn't changed. URLs anywhere in it are checked first.
   /cost — Model spend today and this month
   /ask1, /ask2, /ask3 (and /resp1-3) pick a cheaper or stronger model;
   bare /ask uses the strongest.
@@ -93,12 +102,14 @@ Agent (for allowlisted users):
   Examples:
     /ask which series never matched Metron, and what should they be called?
     /ask tag every Hellboy panel with mignolaverse
-    /ask write a new description for Paul Pope, focus on his manga work
-    /ask rewrite the Saga description from https://example.com/saga-review
+    /research Paul Pope // focus on his manga work
+    /research series saga // https://example.com/saga-review
+    /source Charles Burns
+    /ask find sources for the Black Hole description, interviews if you can
 
-  Description requests are researched on the web: every sentence is
-  checked against a quote from its source, and you see the draft and
-  its sources before /confirm. Takes a minute or two.
+  Description and source requests are researched on the web: every
+  sentence is checked against a quote from its source, and you see the
+  draft or the sources before /confirm. Takes a minute or two.
 
 Restorations (for allowlisted users):
   /restore {id} [directions] — Clean up a panel's photo: evens the light,
@@ -387,7 +398,8 @@ async function handleText(
   const ask = matchAgentVerb(text, "ask");
   const resp = matchAgentVerb(text, "resp");
   const confirm = text.match(/^\/confirm(?:@\w+)?(\s[\s\S]*)?$/i);
-  const isAgent = ask || resp || confirm || /^\/(cancel|cost)(?:@\w+)?$/i.test(text);
+  const research = /^\/(research|source)(?:@\w+)?(?:\s|$)/i.test(text);
+  const isAgent = ask || resp || research || confirm || /^\/(cancel|cost)(?:@\w+)?$/i.test(text);
   if (!isAgent) return; // unknown text: ignore
 
   const access = agentAccess(message, env);
@@ -395,11 +407,12 @@ async function handleText(
     await reply(ACCESS_DENIED[access]);
     return;
   }
-  if ((ask || resp) && !env.GEMINI_API_KEY) {
+  if ((ask || resp || research) && !env.GEMINI_API_KEY) {
     await reply(AGENT_NOT_CONFIGURED);
     return;
   }
   if (ask) await handleAsk(ask, message, env, reply);
+  else if (research) await handleResearch(text, message, env, reply);
   else if (resp) await handleResp(resp, message, env, reply);
   else if (confirm) await handleConfirm(confirm[1] ?? "", message, env, reply);
   else if (/^\/cancel/i.test(text)) await handleCancel(message, env, reply);

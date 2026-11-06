@@ -15,7 +15,8 @@ vi.mock("@google/genai", async (importOriginal) => ({
   },
 }));
 
-const { researchDescription } = await import("./research");
+const { parseResearchCommand, parseSourceCommand, researchDescription, researchSources, resolveResearchKind, splitSentences } =
+  await import("./research");
 const { parseEditCommand } = await import("./edits");
 
 const env = {
@@ -197,5 +198,201 @@ describe("researchDescription", () => {
       researchDescription(env, docs, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] }, () => false)
     ).rejects.toThrow(/abandoned/);
     expect(generateContent).not.toHaveBeenCalled();
+  });
+});
+
+describe("researchSources", () => {
+  const sourced: CollectionDocs = {
+    ...docs,
+    artists: {
+      artists: [
+        {
+          id: "paul-pope",
+          name: "Paul Pope",
+          description:
+            "Paul Pope is an American cartoonist known for THB and Battling Boy. Pope worked for the Japanese publisher Kodansha in the 1990s.\r\n\r\nHe won three Eisner Awards.",
+          references: [{ name: "The Comics Journal", url: "https://www.tcj.com/old/" }],
+        },
+      ],
+    },
+  };
+  const searchHit = {
+    candidates: [
+      {
+        content: { role: "model", parts: [{ text: "summary" }] },
+        groundingMetadata: {
+          groundingChunks: [
+            { web: { uri: "https://www.tcj.com/old/" } },
+            { web: { uri: "https://garden.example.com/" } },
+            { web: { uri: "https://www.tcj.com/pope/" } },
+          ],
+        },
+      },
+    ],
+  } as GenerateContentResponse;
+  const first = { sentence: 1, citations: [{ source: 1, quote: good.citations[0].quote }] };
+
+  it("adds only the new pages behind sentences that pass both checks, and never touches the description", async () => {
+    generateContent
+      .mockResolvedValueOnce(searchHit)
+      // match: sentence 2's quote is invented, sentence 3 has no support
+      .mockResolvedValueOnce(
+        json({ matches: [first, { sentence: 2, citations: [{ source: 1, quote: "Pope worked for Kodansha for ten years" }] }] })
+      )
+      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: true }] }))
+      // repair: sentence 2 now quotes the page exactly
+      .mockResolvedValueOnce(
+        json({
+          matches: [
+            first,
+            { sentence: 2, citations: [{ source: 1, quote: "Pope worked for the Japanese publisher Kodansha in the 1990s" }] },
+          ],
+        })
+      )
+      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: true }] }));
+
+    const result = await researchSources(env, sourced, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
+
+    expect(generateContent).toHaveBeenCalledTimes(5);
+    expect(JSON.stringify(generateContent.mock.calls[0][0].contents)).toContain("He won three Eisner Awards.");
+    const brief = JSON.stringify(generateContent.mock.calls[1][0].contents);
+    expect(brief).toContain("#3: He won three Eisner Awards.");
+    expect(brief).not.toContain("gardening");
+    // Only sentence 2's failure goes back; sentence 3 simply had no support.
+    const repair = JSON.stringify(generateContent.mock.calls[3][0].contents);
+    expect(repair).toContain("Sentence #2");
+    expect(repair).toContain("isn't in source 1 word for word");
+    expect(repair).not.toContain("Sentence #3");
+    // A page already in its references is never fetched.
+    expect(fetchMock.mock.calls.map((c) => String(c[0]))).not.toContain("https://www.tcj.com/old/");
+
+    expect(result.key).toBe("sources:artist:paul-pope");
+    expect(parseEditCommand(result.proposal!.command)).toEqual({
+      verb: "add_sources",
+      kind: "artist",
+      ref: "paul-pope",
+      references: [{ name: "The Comics Journal", url: "https://www.tcj.com/pope/", title: "Paul Pope" }],
+    });
+    const display = result.proposal!.display!;
+    expect(display).toContain("The description stays as it is");
+    expect(display).toContain("Backs 2 of 3 sentence(s).");
+    expect(display).toContain('No new page backs:\n- "He won three Eisner Awards."');
+    expect(result.message).toContain("backing 2 of 3 sentence(s)");
+  });
+
+  it("proposes nothing when no sentence is backed", async () => {
+    generateContent
+      .mockResolvedValueOnce(searchHit)
+      .mockResolvedValueOnce(json({ matches: [first] }))
+      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: false, problem: "Battling Boy isn't named" }] }))
+      .mockResolvedValueOnce(json({ matches: [] }));
+    const result = await researchSources(env, sourced, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
+    expect(result.proposal).toBeNull();
+    expect(result.message).toContain("backed a sentence of its description well enough to add");
+  });
+
+  it("says when a link the user gave is already listed, and needs a description to work from", async () => {
+    generateContent.mockResolvedValueOnce({ candidates: [{ content: { role: "model", parts: [] as Part[] } }] } as GenerateContentResponse);
+    const listed = await researchSources(env, sourced, {
+      kind: "artist",
+      ref: "Paul Pope",
+      instructions: "",
+      urls: ["https://tcj.com/old"],
+    });
+    expect(listed.proposal).toBeNull();
+    expect(listed.message).toContain("https://tcj.com/old (already in its references)");
+
+    generateContent.mockReset();
+    const empty: CollectionDocs = { ...docs, artists: { artists: [{ id: "paul-pope", name: "Paul Pope", description: "" }] } };
+    const none = await researchSources(env, empty, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
+    expect(none.message).toContain("has no description yet");
+    expect(generateContent).not.toHaveBeenCalled();
+  });
+});
+
+describe("splitSentences", () => {
+  it("splits by paragraph and sentence, keeping closing quotes", () => {
+    expect(splitSentences('He drew "Black Hole." It ran 12 issues!\r\n\r\nIs it done? 2005 saw it collected.')).toEqual([
+      'He drew "Black Hole."',
+      "It ran 12 issues!",
+      "Is it done?",
+      "2005 saw it collected.",
+    ]);
+  });
+
+  it("doesn't split after initials or common abbreviations", () => {
+    expect(splitSentences("J. R. Williams lives in St. Louis with Dr. Smith. He draws Vol. 2 now.")).toEqual([
+      "J. R. Williams lives in St. Louis with Dr. Smith.",
+      "He draws Vol. 2 now.",
+    ]);
+  });
+});
+
+describe("parseSourceCommand", () => {
+  it("reads like /research, and isn't /research", () => {
+    expect(parseSourceCommand("/source series saga https://a.example/x // interviews")).toEqual({
+      kind: "series",
+      ref: "saga",
+      instructions: "interviews",
+      urls: ["https://a.example/x"],
+    });
+    expect(parseSourceCommand("/research saga")).toBeNull();
+    expect(parseSourceCommand("/sources saga")).toBeNull();
+    expect(parseSourceCommand("/source")).toEqual({ error: expect.stringContaining("Usage: /source") });
+  });
+});
+
+describe("parseResearchCommand", () => {
+  it("isn't /research for other verbs", () => {
+    expect(parseResearchCommand("/researcher x")).toBeNull();
+    expect(parseResearchCommand("/ask research Paul Pope")).toBeNull();
+  });
+
+  it("takes a bare name, leaving the kind to the data", () => {
+    expect(parseResearchCommand("/research Charles Burns")).toEqual({
+      kind: null,
+      ref: "Charles Burns",
+      instructions: "",
+      urls: [],
+    });
+  });
+
+  it("takes a kind, directions after //, and URLs from anywhere", () => {
+    expect(
+      parseResearchCommand(
+        "/research@comicbot Series saga https://a.example/saga // the publishing history, see https://b.example/x."
+      )
+    ).toEqual({
+      kind: "series",
+      ref: "saga",
+      instructions: "the publishing history, see",
+      urls: ["https://a.example/saga", "https://b.example/x"],
+    });
+  });
+
+  it("answers with usage when there's no name", () => {
+    for (const text of ["/research", "/research artist", "/research // focus on X"]) {
+      expect(parseResearchCommand(text)).toEqual({ error: expect.stringContaining("Usage: /research") });
+    }
+  });
+});
+
+describe("resolveResearchKind", () => {
+  const both: CollectionDocs = {
+    ...docs,
+    series: { series: [{ id: "paul-pope", name: "Paul Pope" } as CollectionDocs["series"]["series"][number]] },
+  };
+
+  it("finds the artist or series a bare name means", () => {
+    expect(resolveResearchKind(docs, "paul pope")).toEqual({ kind: "artist" });
+  });
+
+  it("asks which, when the name is both, in the command that was used", () => {
+    expect(resolveResearchKind(both, "Paul Pope")).toEqual({ error: expect.stringContaining("/research artist Paul Pope") });
+    expect(resolveResearchKind(both, "Paul Pope", "source")).toEqual({ error: expect.stringContaining("/source artist Paul Pope") });
+  });
+
+  it("says when it's neither", () => {
+    expect(resolveResearchKind(docs, "Moebius")).toEqual({ error: expect.stringContaining('No artist or series matching "Moebius"') });
   });
 });

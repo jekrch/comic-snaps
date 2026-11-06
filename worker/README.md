@@ -25,10 +25,11 @@ The bot also handles text commands:
 - `/rename_series {ref} // {new name} [// {start year}]` — renames a whole series: every panel's title and the `series.json` name. The old name is kept as an alias, the slug stays the same, and the lookup markers (`sources`, `coverSources`) are cleared so the metadata job searches Metron and Comic Vine again under the new name.
 - `/resolve metron:series // {name} // {id}` (or `metron:creator`) — picks the right candidate in `disambiguation.json`
 - `/describe_series {ref}` or `/describe_artist {ref}`, with the description on the following lines (blank lines between paragraphs) and an optional `Sources:` block of `- {name} | {url} [| {article title}]` lines — replaces the entry's description and appends any sources not already in its references. The agent proposes these from web research (below); they can also be typed.
+- `/add_sources_series {ref}` or `/add_sources_artist {ref}`, with `- {name} | {url} [| {article title}]` lines below it — appends any sources not already in the entry's references and leaves its description alone. The agent proposes these from `/source` (below); they can also be typed.
 - `/rate`, `/rate_series` — ratings (see `/help`)
 - `/help` — replies with usage instructions and examples
 
-The edit commands (`/update`, `/tag_*`, `/rename_series`, `/resolve`, `/describe_*`) all run through `src/edits.ts`. It reads every file at one commit, applies the commands in memory, and lands all the changes as a single commit through the Git Data API. If `main` moved in the meantime, it re-applies against the newer files. When a commit doesn't touch `gallery.json` (the only path the metadata job watches), the Worker starts `compute-image-metadata.yml` itself.
+The edit commands (`/update`, `/tag_*`, `/rename_series`, `/resolve`, `/describe_*`, `/add_sources_*`) all run through `src/edits.ts`. It reads every file at one commit, applies the commands in memory, and lands all the changes as a single commit through the Git Data API. If `main` moved in the meantime, it re-applies against the newer files. When a commit doesn't touch `gallery.json` (the only path the metadata job watches), the Worker starts `compute-image-metadata.yml` itself.
 
 ## Agent
 
@@ -37,13 +38,15 @@ For the user ids in `ALLOWED_USER_IDS`, the bot runs a Gemini agent modelled on 
 - `/ask {question or request}` answers from a rollup of the whole collection, with Metron and Comic Vine lookup tools. When the answer implies changes, it proposes a numbered list of the edit commands above. `/ask1`, `/ask2` and `/ask3` pick the model tier (bare `/ask` is the strongest).
 - `/resp {follow-up}` continues the thread, `/confirm` runs every proposal (or `/confirm 1 3` runs some) as one commit, `/cancel` drops them, and `/cost` reports spend.
 - `/ask write a new description for {artist or series}` researches one on the web, in plain English with any directions: a URL to work from, a point to focus on, what to fix. See below.
+- `/research [artist|series] {name} [// directions]` runs the same research without `/ask` in front of it, so it skips the rollup the `/ask` model reads every turn. URLs anywhere in the message are read first. It always goes to the queue, since a run takes longer than the 10s inline window. Run it again with new directions to revise.
+- `/source [artist|series] {name} [// directions]`, or `/ask find sources for {artist or series}`, finds pages that back the description as it stands and proposes adding them to its references. The description isn't changed. See below.
 - Post a photo captioned `/ask {description}` (or any caption that isn't in the caption format) and the agent writes the canonical caption, looking up the series name the databases use. `/confirm` posts it the same way a typed caption is posted, and `/resp` corrects it.
 
-The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/rename_series`, `/resolve` and (only through research) `/describe_*`, and never `/delete` or `/rate`. Model calls run inline for up to 10s, then move to the `comic-snaps-jobs` queue.
+The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/rename_series`, `/resolve` and (only through research) `/describe_*` and `/add_sources_*`, and never `/delete` or `/rate`. Model calls run inline for up to 10s, then move to the `comic-snaps-jobs` queue.
 
 ### Researched descriptions
 
-`/ask` has a `research_description` tool (`src/research.ts`) for any request to write, rewrite or source an artist's or series' description. It always runs on the strongest model tier, whatever `/ask1`-`/ask3` picked, and goes like this:
+`/ask` has a `research_description` tool (`src/research.ts`) for any request to write or rewrite an artist's or series' description. It always runs on the strongest model tier, whatever `/ask1`-`/ask3` picked, and goes like this:
 
 1. **Search.** A Gemini call with Google Search grounding finds pages about the subject. Only the links are kept, not its summary.
 2. **Read.** The Worker fetches the pages itself as plain text (`src/sources.ts`, Wikipedia through its plain-text extract API): links the user gave first, then the entry's existing article references, then the search results, then its Metron/Comic Vine pages. It reads at most 8 and keeps up to 6. It skips shops, social media and fan wikis, and drops any page that never names the subject. A link the user gave is always read, and is reported if it can't be.
@@ -53,9 +56,19 @@ The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/renam
 
 The proposal shows the draft with `[n]` marks, the numbered sources, anything left out and any link that couldn't be read. On `/confirm` the description is stored without the marks, and the cited sources are added to the entry's references, named the way the data files already name them ("Wikipedia", "Comiclopedia", "The Comics Journal" plus the article title). `/resp make it shorter` or `/resp also use {url}` runs the research again with the new directions. Each run is about 4 to 6 model calls; the cost line covers them, but Google Search grounding is billed per search query on top of tokens, and that isn't counted. Pages that need JavaScript, or that block bots (comics.org, Bédéthèque, IMDb), can't be read.
 
+### Sources for an existing description
+
+`/source` and the `research_sources` tool run the same search, read and checks over the description as it stands, for when the text is fine but has nothing behind it. The model never writes or changes the description.
+
+1. **Search and read** as above, but only pages not already in the entry's references (a link the user gave that's already listed is reported, not read).
+2. **Match.** The description is split into sentences, and the model points each one at verbatim quotes in those pages, or leaves it out when no page covers all of it.
+3. **Check and repair once**, with the same quote and fact-check steps as a new description. A sentence the model found no support for isn't sent back.
+
+The pages behind the sentences that pass both checks become an `/add_sources_*` proposal. It lists each page with the sentences it backs, how many of the description's sentences are now backed, and the ones no new page backs. On `/confirm` they're appended to the references, named as above, and the description is untouched.
+
 ## Restorations
 
-Also for allowlisted users, `/restore {id} [directions]` cleans up a panel's photo with the `restore-panel` skill (`scripts/skills/`). The skills need OpenCV and a look-and-adjust loop, so they run in GitHub Actions, not here: the Worker dispatches `.github/workflows/restore.yml`. `scripts/restore_judge.py` runs the skill's scripts in a job with a read-only token and no secret but its Gemini key, and asks Gemini only to judge each result, in at most four calls; the model picks flags from a checked list and never runs anything itself, since it reads text anyone in the chat can write. A second job takes only the restored image from it, installs that with the repo's own install command, checks that only that panel's image and metadata changed (`scripts/restore_ci.py`), commits to a `restore/{id}` branch, and posts a before/after to the chat. Each person can start 10 restorations a day.
+Also for allowlisted users, `/restore {id} [directions]` cleans up a panel's photo with the `restore-panel` skill (`scripts/skills/`). The skills need OpenCV and a look-and-adjust loop, so they run in GitHub Actions, not here: the Worker dispatches `.github/workflows/restore.yml`. `scripts/restore_judge.py` runs the skill's scripts in a job with a read-only token and no secret but its Gemini key, and asks Gemini only to judge each result, in at most four rounds of one call each (plus one to send back a retry that would change nothing, such as flags named only in its notes). It installs only a result it has seen zoomed, and when the black-and-white script refuses a panel as colored it runs the color script in the same round. The model picks flags from a checked list and never runs anything itself, since it reads text anyone in the chat can write. A second job takes only the restored image from it, installs that with the repo's own install command, checks that only that panel's image and metadata changed (`scripts/restore_ci.py`), commits to a `restore/{id}` branch, and posts a before/after to the chat. Each person can start 10 restorations a day.
 
 - `/redo {id} {what to change}` runs it again, showing the model the previous attempt's summary along with the directions.
 - `/approve {id}` puts it on the site. It writes only a new image beside the panel's old one, and refuses a branch whose gallery points anywhere else. It doesn't merge the branch, whose one-line embeddings files would conflict with any metadata run since. `src/restore.ts` replays the install onto current `main` in one commit instead: the branch's image blob, that panel's image fields, the old image's removal, and the panel's embedding entries dropped so the metadata job re-embeds it. The push comes from the Worker's token, so it starts that job, which a push from the workflow's own token wouldn't.

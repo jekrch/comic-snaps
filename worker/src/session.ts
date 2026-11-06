@@ -5,7 +5,8 @@
 import type { Env, TelegramMessage } from "./types";
 import type { Replier } from "./telegram";
 import type { Thread } from "./agent";
-import { checkAskRateLimit, runOrEnqueue } from "./jobs";
+import { checkAskRateLimit, enqueueJob, runOrEnqueue } from "./jobs";
+import { parseResearchCommand, parseSourceCommand } from "./research";
 import { ingestPanel } from "./ingest";
 import { parseConfirmIndices } from "./proposals";
 import { readCostTotals, formatCostReport } from "./cost";
@@ -58,6 +59,46 @@ export async function handleAsk(
     createdAt: new Date().toISOString(),
   });
   if (status === "queued") await reply("Taking a moment. The reply will arrive shortly.");
+}
+
+/**
+ * `/research [artist|series] {ref} [// directions]`, or `/source` with the same
+ * arguments. Always queued: a run takes a minute or two, so starting it inline
+ * would only pay for a search the timeout then throws away.
+ */
+export async function handleResearch(
+  text: string,
+  message: TelegramMessage,
+  env: Env,
+  reply: Replier
+): Promise<void> {
+  const source = parseSourceCommand(text);
+  const args = source ?? parseResearchCommand(text);
+  if (!args) return;
+  if ("error" in args) {
+    await reply(args.error);
+    return;
+  }
+  const userId = message.from!.id;
+  if (!(await checkAskRateLimit(userId, env))) {
+    await reply(RATE_LIMITED);
+    return;
+  }
+  await enqueueJob(env, {
+    id: `${source ? "source" : "research"}-${userId}-${message.message_id}`,
+    kind: source ? "source" : "research",
+    chatId: message.chat.id,
+    messageId: message.message_id,
+    userId,
+    research: args,
+    createdAt: new Date().toISOString(),
+  });
+  const subject = `${args.kind ? `${args.kind} ` : ""}${args.ref}`;
+  await reply(
+    source
+      ? `Looking for sources for ${subject}. They'll arrive in a minute or two.`
+      : `Researching ${subject}. The draft will arrive in a minute or two.`
+  );
 }
 
 /** A photo captioned `/ask {description}`, or with a caption that didn't parse. */

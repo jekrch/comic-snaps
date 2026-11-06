@@ -1,5 +1,5 @@
-// Work that can outlive the webhook: model calls (/ask, /resp, described
-// photos) and /confirm runs. Ported from plantyJ's worker.
+// Work that can outlive the webhook: model calls (/ask, /resp, /research, /source,
+// described photos) and /confirm runs. Ported from plantyJ's worker.
 //
 // A job first runs inline for INLINE_TIMEOUT_MS; past that it moves to the JOBS
 // queue, whose consumer runs one job per invocation (max_batch_size = 1 in
@@ -14,7 +14,8 @@
 import type { Content } from "@google/genai";
 import type { Env } from "./types";
 import { sendReply, downloadFile } from "./telegram";
-import { answerQuestion, describePanel } from "./agent";
+import { answerQuestion, describePanel, researchCommand } from "./agent";
+import type { ResearchArgs } from "./research";
 import { arrayBufferToBase64 } from "./github";
 import { formatRun, runCommands } from "./edits";
 import { invalidateSourceCache } from "./ratings";
@@ -55,7 +56,7 @@ export function checkAskRateLimit(userId: number, env: Env): Promise<boolean> {
   return checkDailyLimit(env, "ask", userId, ASK_DAILY_LIMIT);
 }
 
-type JobKind = "ask" | "describe" | "confirm";
+type JobKind = "ask" | "describe" | "research" | "source" | "confirm";
 
 export interface JobRecord {
   id: string;
@@ -73,6 +74,8 @@ export interface JobRecord {
   postedBy?: string;
   prompts?: string[];
   priorCaption?: string | null;
+  // research and source
+  research?: ResearchArgs;
   // confirm
   commands?: string[];
 }
@@ -222,6 +225,24 @@ async function runJob(
       expirationTtl: PENDING_TTL_SECONDS,
     });
     await reply(body);
+    return;
+  }
+
+  if (job.kind === "research" || job.kind === "source") {
+    const result = await researchCommand(env, job.research!, alive, job.kind === "source" ? "sources" : "describe");
+    claim();
+    // A draft replaces whatever was pending, as a new /ask turn's proposals
+    // would. A run that proposes nothing leaves earlier proposals alone.
+    if (result.proposal) {
+      await env.BOT_STATE.put(
+        PENDING_DO_KEY(job.userId),
+        JSON.stringify({ proposals: [result.proposal], createdAt: new Date().toISOString() }),
+        { expirationTtl: PENDING_TTL_SECONDS }
+      );
+      await reply(formatProposals(result.reply, [result.proposal]));
+    } else {
+      await reply(result.reply);
+    }
     return;
   }
 

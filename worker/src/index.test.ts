@@ -57,7 +57,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("the allowlisted commands", () => {
   it("are off without a webhook secret, since the sender id could be forged", async () => {
-    for (const text of ["/ask hi", "/restore 7", "/approve 7", "/confirm"]) {
+    for (const text of ["/ask hi", "/research Paul Pope", "/restore 7", "/approve 7", "/confirm"]) {
       const { replies } = await send(env(), text);
       expect(replies).toEqual([expect.stringContaining("WEBHOOK_SECRET")]);
     }
@@ -71,6 +71,13 @@ describe("the allowlisted commands", () => {
   it("let an allowlisted sender through once the secret checks out", async () => {
     const { replies } = await send(env({ WEBHOOK_SECRET: "s" }), "/ask hi", { secret: "s" });
     expect(replies).toEqual([expect.stringContaining("no GEMINI_API_KEY")]);
+  });
+
+  it("include /research and /source, which need the model too", async () => {
+    for (const text of ["/research Paul Pope", "/source Paul Pope"]) {
+      const { replies } = await send(env({ WEBHOOK_SECRET: "s" }), text, { secret: "s" });
+      expect(replies).toEqual([expect.stringContaining("no GEMINI_API_KEY")]);
+    }
   });
 
   it("reject a request with the wrong secret before reading it", async () => {
