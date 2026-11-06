@@ -402,7 +402,8 @@ function siteFor(host: string, list: { host: string; name: string }[]): string |
 /** A page title minus a trailing " | Site" or " - Site" when that names the site. */
 function articleTitle(title: string, site: string): string {
   const t = title.replace(/\s+/g, " ").trim();
-  const m = t.match(/^(.*?)\s+[|–—-]\s+([^|–—-]+)$/);
+  // The last " | ", " - ", " – ", " — ", " · " or " :: " splits off the site name.
+  const m = t.match(/^(.*)\s+(?:[|–—·-]|::)\s+(.+)$/);
   if (!m) return t;
   const suffix = normalizeForMatch(m[2]);
   const name = normalizeForMatch(site);

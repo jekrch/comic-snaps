@@ -3,8 +3,8 @@
 // tool loop over the same collection rollup and lookup tools. Neither writes
 // anything: /ask ends in proposals and a description ends in a caption, and a
 // person has to /confirm either one. /ask can also research a new artist or
-// series description from the web, or sources for the current one
-// (research.ts), and each ends in a proposal too.
+// series description from the web, or find further reading to add to an
+// entry's sources (research.ts), and each ends in a proposal too.
 
 import { FunctionCallingConfigMode, GoogleGenAI, Type } from "@google/genai";
 import type { Content, FunctionDeclaration, Part } from "@google/genai";
@@ -193,7 +193,7 @@ const RESEARCH_DESCRIPTION: FunctionDeclaration = {
 const RESEARCH_SOURCES: FunctionDeclaration = {
   name: "research_sources",
   description:
-    "Find web sources for one artist's or series' description as it stands, without changing it: searches the web, reads pages not already in its references (and any URLs the user gave), and ties each sentence of the description to verbatim quotes, which are checked against the pages and fact-checked. The pages behind the sentences that pass become a proposal adding them to its references, for the user to /confirm. Takes a minute or two. Use it for any request to source, cite, back up or find references for a description.",
+    "Find further reading for one artist or series and add it to the entry's sources, without changing its description: searches the web for interviews, criticism, essays and the like, reads pages not already in its sources (and any URLs the user gave), and picks the ones worth reading, with a line on what each holds. They become a proposal adding them to its sources, for the user to /confirm. Takes a minute or two. Use it for any request to find or add sources, links, articles, interviews, reviews or further reading.",
   parameters: {
     type: Type.OBJECT,
     properties: {
@@ -209,7 +209,7 @@ const RESEARCH_SOURCES: FunctionDeclaration = {
       urls: {
         type: Type.ARRAY,
         items: { type: Type.STRING },
-        description: "Every URL the user gave to check, copied exactly. Empty if none.",
+        description: "Every URL the user gave to add, copied exactly. Empty if none.",
       },
     },
     required: ["kind", "ref", "instructions", "urls"],
@@ -275,7 +275,7 @@ const COMMANDS = `# Commands you can propose
 /resolve metron:series // {name as searched} // {metron id}
 /resolve metron:creator // {name as searched} // {metron id}
   Picks the right candidate for an unresolved disambiguation row. Verify with get_metron_series first.
-/describe_artist and /describe_series (a new description with sources) come only from research_description, and /add_sources_artist and /add_sources_series (sources for the current description) only from research_sources. Each proposes its command for you.
+/describe_artist and /describe_series (a new description with sources) come only from research_description, and /add_sources_artist and /add_sources_series (further reading added to an entry's sources) only from research_sources. Each proposes its command for you.
 Nothing else can be proposed. /delete and /rate are never proposed; mention them in prose if relevant.`;
 
 const RULES = `# Rules
@@ -286,7 +286,7 @@ const RULES = `# Rules
 - When an answer implies changes, call propose_commands once with the full list, then reply with a short summary. The numbered list is appended for you; don't repeat the commands in your text.
 - For read-only questions don't call propose_commands.
 - To write or rewrite an artist's or series' description, call research_description, once per entry, passing the user's directions and any URLs they gave. Never write description text yourself, and never state facts about a creator or work from memory as if sourced. Afterwards reply in a line or two; the draft, its sources and anything left out are shown to the user for you. For a revision on /resp, call it again with the new directions added to the old.
-- To find sources for a description without changing it, call research_sources, once per entry, the same way. Prefer it whenever the user asks only for sources, citations or references.
+- To add sources, links, articles, interviews or further reading to an entry, call research_sources, once per entry, the same way. Prefer it whenever the user wants sources and not a new description.
 - Never claim to have run anything. The user runs /confirm.
 - Captions for a new photo use: Title // Issue // Year // Artist // notes // tags (artist can be left off for a series already in the gallery). A photo captioned "/ask" and a description also works.
 - Reply in plain text, no Markdown. Keep it under ${TELEGRAM_MAX_LEN} characters.`;
@@ -539,7 +539,7 @@ export async function researchCommand(
     // Got as far as reading pages: a page to start from is usually the fix.
     lines.push(
       mode === "sources"
-        ? `Name a page to check: /source ${kind} ${args.ref} https://…`
+        ? `Name a page to add: /source ${kind} ${args.ref} https://…`
         : `Name a page to work from: /research ${kind} ${args.ref} // https://…`
     );
   }

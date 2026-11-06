@@ -15,7 +15,7 @@ vi.mock("@google/genai", async (importOriginal) => ({
   },
 }));
 
-const { parseResearchCommand, parseSourceCommand, researchDescription, researchSources, resolveResearchKind, splitSentences } =
+const { parseResearchCommand, parseSourceCommand, researchDescription, researchSources, resolveResearchKind } =
   await import("./research");
 const { parseEditCommand } = await import("./edits");
 
@@ -209,8 +209,7 @@ describe("researchSources", () => {
         {
           id: "paul-pope",
           name: "Paul Pope",
-          description:
-            "Paul Pope is an American cartoonist known for THB and Battling Boy. Pope worked for the Japanese publisher Kodansha in the 1990s.\r\n\r\nHe won three Eisner Awards.",
+          description: "Paul Pope is an American cartoonist.",
           references: [{ name: "The Comics Journal", url: "https://www.tcj.com/old/" }],
         },
       ],
@@ -225,46 +224,44 @@ describe("researchSources", () => {
             { web: { uri: "https://www.tcj.com/old/" } },
             { web: { uri: "https://garden.example.com/" } },
             { web: { uri: "https://www.tcj.com/pope/" } },
+            { web: { uri: "https://www.amazon.com/dp/1" } },
           ],
         },
       },
     ],
   } as GenerateContentResponse;
-  const first = { sentence: 1, citations: [{ source: 1, quote: good.citations[0].quote }] };
 
-  it("adds only the new pages behind sentences that pass both checks, and never touches the description", async () => {
+  it("adds the pages the picker chose, with its notes shown but not saved, and never touches the description", async () => {
     generateContent
       .mockResolvedValueOnce(searchHit)
-      // match: sentence 2's quote is invented, sentence 3 has no support
-      .mockResolvedValueOnce(
-        json({ matches: [first, { sentence: 2, citations: [{ source: 1, quote: "Pope worked for Kodansha for ten years" }] }] })
-      )
-      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: true }] }))
-      // repair: sentence 2 now quotes the page exactly
+      // Page 9 doesn't exist and page 1 is picked twice; both are ignored.
       .mockResolvedValueOnce(
         json({
-          matches: [
-            first,
-            { sentence: 2, citations: [{ source: 1, quote: "Pope worked for the Japanese publisher Kodansha in the 1990s" }] },
+          picks: [
+            { source: 1, about: "Profile covering THB and his Kodansha years." },
+            { source: 9, about: "made up" },
+            { source: 1, about: "again" },
           ],
         })
-      )
-      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: true }] }));
+      );
 
-    const result = await researchSources(env, sourced, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
+    const result = await researchSources(env, sourced, {
+      kind: "artist",
+      ref: "Paul Pope",
+      instructions: "interviews",
+      urls: [],
+    });
 
-    expect(generateContent).toHaveBeenCalledTimes(5);
-    expect(JSON.stringify(generateContent.mock.calls[0][0].contents)).toContain("He won three Eisner Awards.");
+    expect(generateContent).toHaveBeenCalledTimes(2);
+    expect(JSON.stringify(generateContent.mock.calls[0][0].contents)).toContain("interviews");
     const brief = JSON.stringify(generateContent.mock.calls[1][0].contents);
-    expect(brief).toContain("#3: He won three Eisner Awards.");
+    expect(brief).toContain("Paul Pope is an American cartoonist.");
+    expect(brief).toContain("[1] Paul Pope | The Comics Journal");
+    // The off-topic page never reaches the picker; a listed page is never fetched.
     expect(brief).not.toContain("gardening");
-    // Only sentence 2's failure goes back; sentence 3 simply had no support.
-    const repair = JSON.stringify(generateContent.mock.calls[3][0].contents);
-    expect(repair).toContain("Sentence #2");
-    expect(repair).toContain("isn't in source 1 word for word");
-    expect(repair).not.toContain("Sentence #3");
-    // A page already in its references is never fetched.
-    expect(fetchMock.mock.calls.map((c) => String(c[0]))).not.toContain("https://www.tcj.com/old/");
+    const fetched = fetchMock.mock.calls.map((c) => String(c[0]));
+    expect(fetched).not.toContain("https://www.tcj.com/old/");
+    expect(fetched).not.toContain("https://www.amazon.com/dp/1");
 
     expect(result.key).toBe("sources:artist:paul-pope");
     expect(parseEditCommand(result.proposal!.command)).toEqual({
@@ -273,58 +270,45 @@ describe("researchSources", () => {
       ref: "paul-pope",
       references: [{ name: "The Comics Journal", url: "https://www.tcj.com/pope/", title: "Paul Pope" }],
     });
+    expect(result.proposal!.command).not.toContain("Kodansha");
     const display = result.proposal!.display!;
-    expect(display).toContain("The description stays as it is");
-    expect(display).toContain("Backs 2 of 3 sentence(s).");
-    expect(display).toContain('No new page backs:\n- "He won three Eisner Awards."');
-    expect(result.message).toContain("backing 2 of 3 sentence(s)");
+    expect(display).toContain("The description isn't changed");
+    expect(display).toContain("https://www.tcj.com/pope/\n    Profile covering THB and his Kodansha years.");
+    expect(display).toContain("Picked 1 of 1 new page(s) read.");
+    expect(display).toContain("1 page(s) never named the subject");
+    expect(result.message).toContain("Found 1 page(s) worth adding");
   });
 
-  it("proposes nothing when no sentence is backed", async () => {
-    generateContent
-      .mockResolvedValueOnce(searchHit)
-      .mockResolvedValueOnce(json({ matches: [first] }))
-      .mockResolvedValueOnce(json({ results: [{ id: 1, supported: false, problem: "Battling Boy isn't named" }] }))
-      .mockResolvedValueOnce(json({ matches: [] }));
+  it("proposes nothing when the picker finds nothing worth adding", async () => {
+    generateContent.mockResolvedValueOnce(searchHit).mockResolvedValueOnce(json({ picks: [] }));
     const result = await researchSources(env, sourced, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
     expect(result.proposal).toBeNull();
-    expect(result.message).toContain("backed a sentence of its description well enough to add");
+    expect(result.message).toContain("none looked worth adding");
   });
 
-  it("says when a link the user gave is already listed, and needs a description to work from", async () => {
-    generateContent.mockResolvedValueOnce({ candidates: [{ content: { role: "model", parts: [] as Part[] } }] } as GenerateContentResponse);
-    const listed = await researchSources(env, sourced, {
+  it("always adds a page the user gave, says when one is already listed, and works without a description", async () => {
+    const empty: CollectionDocs = {
+      ...docs,
+      artists: {
+        artists: [
+          { id: "paul-pope", name: "Paul Pope", description: "", references: [{ name: "Metron", url: "https://metron.cloud/creator/9/" }] },
+        ],
+      },
+    };
+    generateContent
+      .mockResolvedValueOnce({ candidates: [{ content: { role: "model", parts: [] as Part[] } }] } as GenerateContentResponse)
+      .mockResolvedValueOnce(json({ picks: [] }));
+    const result = await researchSources(env, empty, {
       kind: "artist",
       ref: "Paul Pope",
       instructions: "",
-      urls: ["https://tcj.com/old"],
+      urls: ["https://www.tcj.com/pope/", "https://metron.cloud/creator/9"],
     });
-    expect(listed.proposal).toBeNull();
-    expect(listed.message).toContain("https://tcj.com/old (already in its references)");
-
-    generateContent.mockReset();
-    const empty: CollectionDocs = { ...docs, artists: { artists: [{ id: "paul-pope", name: "Paul Pope", description: "" }] } };
-    const none = await researchSources(env, empty, { kind: "artist", ref: "Paul Pope", instructions: "", urls: [] });
-    expect(none.message).toContain("has no description yet");
-    expect(generateContent).not.toHaveBeenCalled();
-  });
-});
-
-describe("splitSentences", () => {
-  it("splits by paragraph and sentence, keeping closing quotes", () => {
-    expect(splitSentences('He drew "Black Hole." It ran 12 issues!\r\n\r\nIs it done? 2005 saw it collected.')).toEqual([
-      'He drew "Black Hole."',
-      "It ran 12 issues!",
-      "Is it done?",
-      "2005 saw it collected.",
-    ]);
-  });
-
-  it("doesn't split after initials or common abbreviations", () => {
-    expect(splitSentences("J. R. Williams lives in St. Louis with Dr. Smith. He draws Vol. 2 now.")).toEqual([
-      "J. R. Williams lives in St. Louis with Dr. Smith.",
-      "He draws Vol. 2 now.",
-    ]);
+    expect(JSON.stringify(generateContent.mock.calls[1][0].contents)).not.toContain("already has");
+    expect(parseEditCommand(result.proposal!.command)).toMatchObject({
+      references: [{ url: "https://www.tcj.com/pope/" }],
+    });
+    expect(result.proposal!.display).toContain("https://metron.cloud/creator/9 (already in its sources)");
   });
 });
 

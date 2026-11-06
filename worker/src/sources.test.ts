@@ -81,6 +81,13 @@ describe("referenceFor and isSkippedSource", () => {
       url: "https://www.tcj.com/pope/",
       title: "Paul Pope interview",
     });
+    expect(
+      referenceFor(doc("https://www.darkhorse.com/i/", "Interview with Paul Pope :: Dark Horse Comics", "Dark Horse Comics"), "Paul Pope")
+    ).toEqual({ name: "Dark Horse", url: "https://www.darkhorse.com/i/", title: "Interview with Paul Pope" });
+    // Only a separator with spaces around it splits; a hyphenated word doesn't.
+    expect(referenceFor(doc("https://blog.example.org/q", "Pope's Battling-Boy", "Example Blog"), "Paul Pope").title).toBe(
+      "Pope's Battling-Boy"
+    );
     expect(referenceFor(doc("https://blog.example.org/p", "On Pope", "Example Blog"), "Paul Pope")).toEqual({
       name: "Example Blog",
       url: "https://blog.example.org/p",

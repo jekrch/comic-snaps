@@ -39,7 +39,7 @@ For the user ids in `ALLOWED_USER_IDS`, the bot runs a Gemini agent modelled on 
 - `/resp {follow-up}` continues the thread, `/confirm` runs every proposal (or `/confirm 1 3` runs some) as one commit, `/cancel` drops them, and `/cost` reports spend.
 - `/ask write a new description for {artist or series}` researches one on the web, in plain English with any directions: a URL to work from, a point to focus on, what to fix. See below.
 - `/research [artist|series] {name} [// directions]` runs the same research without `/ask` in front of it, so it skips the rollup the `/ask` model reads every turn. URLs anywhere in the message are read first. It always goes to the queue, since a run takes longer than the 10s inline window. Run it again with new directions to revise.
-- `/source [artist|series] {name} [// directions]`, or `/ask find sources for {artist or series}`, finds pages that back the description as it stands and proposes adding them to its references. The description isn't changed. See below.
+- `/source [artist|series] {name} [// directions]`, or `/ask find sources for {artist or series}`, finds interviews, criticism and other pages worth reading and proposes adding them to its sources. The description isn't changed. See below.
 - Post a photo captioned `/ask {description}` (or any caption that isn't in the caption format) and the agent writes the canonical caption, looking up the series name the databases use. `/confirm` posts it the same way a typed caption is posted, and `/resp` corrects it.
 
 The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/rename_series`, `/resolve` and (only through research) `/describe_*` and `/add_sources_*`, and never `/delete` or `/rate`. Model calls run inline for up to 10s, then move to the `comic-snaps-jobs` queue.
@@ -56,15 +56,15 @@ The agent never writes anything itself. It proposes `/update`, `/tag_*`, `/renam
 
 The proposal shows the draft with `[n]` marks, the numbered sources, anything left out and any link that couldn't be read. On `/confirm` the description is stored without the marks, and the cited sources are added to the entry's references, named the way the data files already name them ("Wikipedia", "Comiclopedia", "The Comics Journal" plus the article title). `/resp make it shorter` or `/resp also use {url}` runs the research again with the new directions. Each run is about 4 to 6 model calls; the cost line covers them, but Google Search grounding is billed per search query on top of tokens, and that isn't counted. Pages that need JavaScript, or that block bots (comics.org, Bédéthèque, IMDb), can't be read.
 
-### Sources for an existing description
+### Further reading
 
-`/source` and the `research_sources` tool run the same search, read and checks over the description as it stands, for when the text is fine but has nothing behind it. The model never writes or changes the description.
+`/source` and the `research_sources` tool add pages worth reading to an entry's sources: interviews, profiles, criticism, essays, retrospectives, the creators' own sites. It doesn't check them against the description, and it never writes or changes the description. An entry with no description works too.
 
-1. **Search and read** as above, but only pages not already in the entry's references (a link the user gave that's already listed is reported, not read).
-2. **Match.** The description is split into sentences, and the model points each one at verbatim quotes in those pages, or leaves it out when no page covers all of it.
-3. **Check and repair once**, with the same quote and fact-check steps as a new description. A sentence the model found no support for isn't sent back.
+1. **Search.** A Google Search grounded call looks for further reading about the subject, past the encyclopedia entries, following any directions ("interviews", "something on the 1990s run").
+2. **Read** as above, but only pages not already in the entry's sources (a link the user gave that's already listed is reported, not read). It keeps up to 8. Every page proposed has loaded and, unless the user gave it, names the subject.
+3. **Pick.** One call reads the start of each page and picks up to 5 worth reading, leaving out shop listings, bare database pages, near-duplicates and namesakes, with a line on what each holds. A page the user gave is always included.
 
-The pages behind the sentences that pass both checks become an `/add_sources_*` proposal. It lists each page with the sentences it backs, how many of the description's sentences are now backed, and the ones no new page backs. On `/confirm` they're appended to the references, named as above, and the description is untouched.
+The proposal lists each page with its line. On `/confirm` the pages are appended to the references, named as above; the one-line notes aren't saved. A run is two model calls.
 
 ## Restorations
 

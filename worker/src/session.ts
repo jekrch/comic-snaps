@@ -96,7 +96,7 @@ export async function handleResearch(
   const subject = `${args.kind ? `${args.kind} ` : ""}${args.ref}`;
   await reply(
     source
-      ? `Looking for sources for ${subject}. They'll arrive in a minute or two.`
+      ? `Looking for further reading on ${subject}. It'll arrive in a minute or two.`
       : `Researching ${subject}. The draft will arrive in a minute or two.`
   );
 }

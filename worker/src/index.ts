@@ -92,9 +92,9 @@ Agent (for allowlisted users):
   /research [artist|series] {name} [// directions] — Write a new
     description from the web, without going through /ask (cheaper).
     URLs anywhere in it are read first. Run it again to revise.
-  /source [artist|series] {name} [// directions] — Find pages that back
-    the description as it stands and add them to its sources. The
-    description isn't changed. URLs anywhere in it are checked first.
+  /source [artist|series] {name} [// directions] — Find interviews,
+    criticism and other pages worth reading and add them to its sources.
+    The description isn't changed. URLs anywhere in it are added too.
   /cost — Model spend today and this month
   /ask1, /ask2, /ask3 (and /resp1-3) pick a cheaper or stronger model;
   bare /ask uses the strongest.
@@ -105,11 +105,12 @@ Agent (for allowlisted users):
     /research Paul Pope // focus on his manga work
     /research series saga // https://example.com/saga-review
     /source Charles Burns
-    /ask find sources for the Black Hole description, interviews if you can
+    /ask find some good interviews with Charles Burns to add as sources
 
-  Description and source requests are researched on the web: every
-  sentence is checked against a quote from its source, and you see the
-  draft or the sources before /confirm. Takes a minute or two.
+  Description and source requests are researched on the web. Every
+  sentence of a description is checked against a quote from its source;
+  a source is a page that loaded and names the subject. You see the draft
+  or the sources before /confirm. Takes a minute or two.
 
 Restorations (for allowlisted users):
   /restore {id} [directions] — Clean up a panel's photo: evens the light,

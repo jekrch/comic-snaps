@@ -17,8 +17,8 @@
 // The first line names the entry; the "Sources:" block is optional.
 //
 // /add_sources_artist and /add_sources_series add references and leave the
-// description alone. The agent's research_sources tool builds these from pages
-// that back the description as it stands; a person can also type one:
+// description alone. The agent's research_sources tool builds these from
+// further reading it found on the web; a person can also type one:
 //
 //   /add_sources_artist charles-burns
 //   - Toons Mag | https://www.toonsmag.com/charles-burns/ | Article title
