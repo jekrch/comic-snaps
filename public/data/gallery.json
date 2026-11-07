@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 350,
+      "id": "archie-in-hell-1-1794077043",
+      "title": "Archie In Hell",
+      "slug": "archie-in-hell",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Tyler Crook",
+      "image": "images/archie-in-hell/issue-1-1794077043.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-07T18:44:06.171Z"
+    },
+    {
       "seq": 349,
       "id": "universal-monsters-the-bride-of-frankenstein-lives-1-1793576050",
       "title": "Universal Monsters: The Bride of Frankenstein Lives",
