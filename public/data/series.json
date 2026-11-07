@@ -224,6 +224,42 @@
       "issueCountInferred": true
     },
     {
+      "id": "archie-in-hell",
+      "name": "Archie In Hell",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10226811-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/archie-in-hell/4050-177870/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/17284/"
+        }
+      ],
+      "startYear": 2026,
+      "publisher": "Oni Press",
+      "issueCount": 1,
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "coverSources": {
+        "metron": [
+          1
+        ],
+        "comicvine": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/archie-in-hell/9741aafc1606.jpg",
+        "data/covers/archie-in-hell/bb8a929c814d.jpg"
+      ]
+    },
+    {
       "id": "assorted-crisis-events",
       "name": "Assorted Crisis Events",
       "parentSeries": null,

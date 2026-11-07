@@ -880,6 +880,26 @@
       "country": "United States"
     },
     {
+      "id": "angie-knowles",
+      "name": "Angie Knowles",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883313-angie_knowles.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4058/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/angie-knowles/4040-98292/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "ann-gray",
       "name": "Ann Gray",
       "description": "",
@@ -1441,6 +1461,26 @@
       "country": "United States",
       "aliases": [
         "Glenda Carol"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "bess-pallares",
+      "name": "Bess Pallares",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883307-bess_pallares.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6604/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bess-pallares/4040-83100/"
+        }
       ],
       "sources": [
         "comicvine",
@@ -2029,6 +2069,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "carey-soucy",
+      "name": "Carey Soucy",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883308-carey_soucy.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9880/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/carey-soucy/4040-131391/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -2949,6 +3009,26 @@
       ]
     },
     {
+      "id": "dan-parent",
+      "name": "Dan Parent",
+      "description": "Writer at Archie Comics and co-creator of comic series, \"Die Kitty Die\" at Chapterhouse Comics.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320202-3821697738-Dan-P.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3052/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dan-parent/4040-1703/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "dani",
       "name": "Dani",
       "description": "",
@@ -3150,6 +3230,22 @@
       "description": "",
       "imageUrl": null,
       "references": [],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "dave-chisholm",
+      "name": "Dave Chisholm",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12175/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"
@@ -6868,6 +6964,26 @@
       "country": "United States"
     },
     {
+      "id": "jesse-lonergan",
+      "name": "Jesse Lonergan",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11131/111313233/7338448-9671945272-MoCCA.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5980/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/jesse-lonergan/4040-65156/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "jill-thompson",
       "name": "Jill Thompson",
       "description": "Jill Thompson is an American comic book writer and illustrator who has worked for stage, film, and television. Well known for her work on Neil Gaiman's The Sandman characters and her own Scary Godmother series, she has worked on The Invisibles, Swamp Thing, and Wonder Woman as well.",
@@ -7386,6 +7502,26 @@
       "country": "Canada",
       "aliases": [
         "JoSh"
+      ]
+    },
+    {
+      "id": "joelena-despard",
+      "name": "Joelena Despard",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9974765-joelena_despard.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/16243/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joelena-despard/4040-138469/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -9552,6 +9688,31 @@
       ]
     },
     {
+      "id": "mahmud-a-asrar",
+      "name": "Mahmud A. Asrar",
+      "description": "Best known for his creator-owned series Dynamo 5 from Image, with writer Jay Faerber, Asrar has also worked at both Marvel and DC on titles like Shadowland: Power Man and Atom.\r\n\r\nDuring his student time at the Anatolian University in Eskisehir, he and his friends founded \"Capa Cizgiroman Grubu\" (one of these friends is Yildiray Cinar). During this time (1996 - 2000) he created Vasak and\u00a0Glittergirl (Pirilkiz).\r\n\r\nHe is also the artist of Star Wars: Jedi - The Dark Side (written by Scott Allie) and the new Supergirl series.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9978036-mahmud_asrar.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1050/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/mahmud-a-asrar/4040-45251/"
+        }
+      ],
+      "birthYear": 1976,
+      "country": "Turkey",
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Mahmud Asrar"
+      ]
+    },
+    {
       "id": "malcolm-bourne",
       "name": "Malcolm Bourne",
       "description": "",
@@ -10986,6 +11147,26 @@
       "country": "Germany"
     },
     {
+      "id": "nick-cagnetti",
+      "name": "Nick Cagnetti",
+      "description": "Nick Cagnetti is an American comic book artist.",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/7989/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/nick-cagnetti/4040-102854/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "nick-filardi",
       "name": "Nick Filardi",
       "description": "",
@@ -11274,6 +11455,26 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/patrick-thorpe/4040-56636/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "paul-azaceta",
+      "name": "Paul Azaceta",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/308/99785-37357-paul-azaceta.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1547/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/paul-azaceta/4040-42672/"
         }
       ],
       "sources": [
@@ -11948,6 +12149,27 @@
         "comicvine"
       ],
       "country": "United States of America"
+    },
+    {
+      "id": "rian-hughes",
+      "name": "Rian Hughes",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/31666/2476716-rian_hughes.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/545/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rian-hughes/4040-1693/"
+        }
+      ],
+      "country": "United Kingdom",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "rich-young",
@@ -12783,6 +13005,22 @@
         }
       ],
       "country": "France",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "sabrina-del-grosso",
+      "name": "Sabrina Del Grosso",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6146/"
+        }
+      ],
       "sources": [
         "comicvine",
         "metron"

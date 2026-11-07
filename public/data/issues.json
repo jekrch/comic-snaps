@@ -1382,6 +1382,166 @@
       ]
     },
     {
+      "id": "archie-in-hell-1",
+      "series": "archie-in-hell",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "patrick-horvath",
+          "name": "Patrick Horvath",
+          "roles": [
+            "Writer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "francesco-segala",
+          "name": "Francesco Segala",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "tyler-crook",
+          "name": "Tyler Crook",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chloe-brailsford",
+          "name": "Chloe Brailsford",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dan-parent",
+          "name": "Dan Parent",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dave-chisholm",
+          "name": "Dave Chisholm",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jesse-lonergan",
+          "name": "Jesse Lonergan",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "kano",
+          "name": "Kano",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mahmud-a-asrar",
+          "name": "Mahmud A. Asrar",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "matthew-wilson",
+          "name": "Matthew Wilson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mirka-andolfo",
+          "name": "Mirka Andolfo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nick-cagnetti",
+          "name": "Nick Cagnetti",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paul-azaceta",
+          "name": "Paul Azaceta",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "joelena-despard",
+          "name": "Joelena Despard",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "angie-knowles",
+          "name": "Angie Knowles",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "carey-soucy",
+          "name": "Carey Soucy",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "rian-hughes",
+          "name": "Rian Hughes",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "bess-pallares",
+          "name": "Bess Pallares",
+          "roles": [
+            "Group Editor"
+          ]
+        },
+        {
+          "artistId": "sabrina-del-grosso",
+          "name": "Sabrina Del Grosso",
+          "roles": [
+            "Color Flats"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/archie-in-hell-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "assorted-crisis-events-8",
       "series": "assorted-crisis-events",
       "issue": 8,
