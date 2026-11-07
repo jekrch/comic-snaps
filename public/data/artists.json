@@ -10322,6 +10322,10 @@
         {
           "name": "Comiclopedia",
           "url": "https://www.lambiek.net/artists/k/kindt_matt.htm"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1468/"
         }
       ],
       "birthYear": 1973,
@@ -10533,6 +10537,27 @@
         "metron"
       ],
       "country": "United States"
+    },
+    {
+      "id": "melanie-ujimori",
+      "name": "Melanie Ujimori",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883294-melanie_ujimori.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9324/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/melanie-ujimori/4040-90348/"
+        }
+      ],
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "michael-allred",
@@ -15560,6 +15585,26 @@
         "Adrian",
         "Amy",
         "Wm. M. Gaines"
+      ]
+    },
+    {
+      "id": "winston-gambro",
+      "name": "Winston Gambro",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9626220-winstongambro.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/10895/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/winston-gambro/4040-97056/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {

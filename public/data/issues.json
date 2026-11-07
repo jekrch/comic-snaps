@@ -7560,6 +7560,66 @@
       ]
     },
     {
+      "id": "mind-mgmt-new-improved-5",
+      "series": "mind-mgmt-new-improved",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "matt-kindt",
+          "name": "Matt Kindt",
+          "roles": [
+            "Writer",
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "michael-del-mundo",
+          "name": "Michael Del Mundo",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "joelena-despard",
+          "name": "Joelena Despard",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "winston-gambro",
+          "name": "Winston Gambro",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "melanie-ujimori",
+          "name": "Melanie Ujimori",
+          "roles": [
+            "Production"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/mind-mgmt-new-improved-2026-5/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "minor-arcana-14",
       "series": "minor-arcana",
       "issue": 14,
