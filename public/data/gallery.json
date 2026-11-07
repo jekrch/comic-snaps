@@ -22,11 +22,34 @@
       "issue": 1,
       "year": 2026,
       "artist": "Tyler Crook",
-      "image": "images/archie-in-hell/issue-1-1794077043.jpg",
+      "image": "images/archie-in-hell/issue-1-1794077043-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-07T18:44:06.171Z"
+      "addedAt": "2026-11-07T18:44:06.171Z",
+      "dhash": "c082794da1b39ad9",
+      "height": 1261,
+      "dominantColors": [
+        [
+          83.3,
+          -0.6,
+          0.9
+        ],
+        [
+          59.9,
+          -0.6,
+          2
+        ],
+        [
+          16.8,
+          2.3,
+          2.2
+        ]
+      ],
+      "colorfulness": 8,
+      "ahash": "00ff1f20d17b4b6c",
+      "width": 1280,
+      "phash": "c05fd1607e311f39"
     },
     {
       "seq": 349,
