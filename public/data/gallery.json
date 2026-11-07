@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 352,
+      "id": "mind-mgmt-new-improved-5-1794079652",
+      "title": "Mind MGMT: New & Improved",
+      "slug": "mind-mgmt-new-improved",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Matt Kindt",
+      "image": "images/mind-mgmt-new-improved/issue-5-1794079652.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-07T19:27:34.808Z"
+    },
+    {
       "seq": 351,
       "id": "archie-in-hell-1-1794077199",
       "title": "Archie In Hell",
