@@ -227,7 +227,7 @@
       "id": "archie-in-hell",
       "name": "Archie In Hell",
       "parentSeries": null,
-      "description": "",
+      "description": "Archie in Hell is an ongoing monthly horror comic book series written by Patrick Horvath and illustrated by Tyler Crook. Announced in December 2025 for a November 2026 release, the title is published through a partnership between Oni Press and Archie Comics coinciding with the 85th anniversary of Archie Andrews's 1941 debut. It is edited by Oni Press Editor-in-Chief Sierra Hahn alongside Senior Editor Bess Pallares and Editor Megan Brown, with input from Archie Comics editors Jamie Rotante and Vincent Lovallo. Covers for the first issue were contributed by Crook, Horvath, Paul Azaceta, Jesse Lonergan, Kano, Dan Parent, Mirka Andolfo, and Mahmud Asrar.\r\n\r\nConnecting Riverdale's colonial history to the present day, the story follows an ancient cult that has infiltrated the town and chosen local football champion Archie Andrews as the final human sacrifice needed to summon a demon lord. When a coven of local witches intervenes during the ritual, Archie is left cursed and displaced from time and space.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10226811-cover.jpg",
       "references": [
         {
@@ -237,6 +237,24 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/17284/"
+        },
+        {
+          "name": "Wikipedia: Archie Comics",
+          "url": "https://en.wikipedia.org/wiki/Archie_Comics"
+        },
+        {
+          "name": "Wikipedia: Archie (comic book)",
+          "url": "https://en.wikipedia.org/wiki/Archie_(comic_book)"
+        },
+        {
+          "name": "ONI PRESS - EST. 1997",
+          "url": "https://www.onipress.com/news/r3e6zwd2noj3y9l67e83z66f0unuat",
+          "title": "Archie Comics and Oni Press Begin New Era for America\u2019s Favorite Teenager with Ambitious and Wide-Ranging Publishing Partnership \u2014 ONI PRESS"
+        },
+        {
+          "name": "ONI PRESS - EST. 1997",
+          "url": "https://www.onipress.com/news/first-look-patrick-horvath-amp-tyler-crook-condemn-archie-in-hell-1-coming-in-novembernbsp",
+          "title": "First Look: Patrick Horvath & Tyler Crook Condemn ARCHIE IN HELL #1 \u2013 Coming in November! \u2014 ONI PRESS"
         }
       ],
       "startYear": 2026,
