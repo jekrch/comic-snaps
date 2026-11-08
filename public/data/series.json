@@ -4041,7 +4041,8 @@
       "issueCount": 3,
       "coverSources": {
         "metron": [
-          1
+          1,
+          2
         ],
         "comicvine": [
           1
@@ -4050,7 +4051,8 @@
       "coverImages": [
         "data/covers/the-demon/75323d001399.jpg",
         "data/covers/the-demon/ab358d6380af.jpg",
-        "data/covers/the-demon/41a122a74ff9.jpg"
+        "data/covers/the-demon/41a122a74ff9.jpg",
+        "data/covers/the-demon/54320e45d514.jpg"
       ]
     },
     {
