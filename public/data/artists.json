@@ -8366,6 +8366,22 @@
       "country": "Spain"
     },
     {
+      "id": "jules-mamone",
+      "name": "Jules Mamone",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12006/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "julian-totino-tedesco",
       "name": "Julian Totino Tedesco",
       "description": "",
