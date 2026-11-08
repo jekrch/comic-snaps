@@ -8,7 +8,7 @@
       "issue": 20,
       "year": 2026,
       "artist": "Letizia Cadonici",
-      "image": "images/minor-arcana/issue-20-1794166220.jpg",
+      "image": "images/minor-arcana/issue-20-1794166220-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -17,25 +17,25 @@
       "height": 844,
       "dominantColors": [
         [
-          66.5,
-          5.8,
-          -6.4
+          74.3,
+          0.2,
+          0.4
         ],
         [
-          69.2,
-          10.8,
-          1.3
+          80.1,
+          6.9,
+          6.9
         ],
         [
-          41.2,
-          9.0,
-          5.9
+          42.2,
+          4.9,
+          8.3
         ]
       ],
-      "colorfulness": 6.1,
-      "phash": "98b830c7c7c3cf83",
-      "ahash": "dccedcfc38387838",
-      "dhash": "91b0b1a87062e2f2"
+      "colorfulness": 5,
+      "phash": "9838b0c7c7c3cf43",
+      "ahash": "c98f8ddd9bbb7b7b",
+      "dhash": "913db1a97662a3b2"
     },
     {
       "seq": 359,
@@ -3856,7 +3856,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -4196,7 +4196,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7721,7 +7721,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
