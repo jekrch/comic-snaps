@@ -4386,7 +4386,7 @@
         "metron"
       ],
       "startYear": 2026,
-      "issueCount": 3,
+      "issueCount": 4,
       "coverSources": {
         "metron": [
           1,
@@ -4403,7 +4403,8 @@
         "data/covers/the-shaolin-cowboy-staying-a-i-live/939d2a13c441.jpg",
         "data/covers/the-shaolin-cowboy-staying-a-i-live/1a40dd827e74.jpg",
         "data/covers/the-shaolin-cowboy-staying-a-i-live/32ea503aa0aa.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-twilight-zone",
