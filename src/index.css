@@ -1038,6 +1038,121 @@ button,
   will-change: transform;
 }
 
+/* ── The header's view switch: the plates' miniatures, beside the bird ──────
+   All three are inked in the bird's rust. The current view is at full strength;
+   the other two are lighter. They mount once the bird has landed and hop out
+   to the right one at a time, keeping the rhythm of its intro hops. */
+
+.view-switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 10px;
+}
+
+.view-switch-btn {
+  display: flex;
+  align-items: center;
+  padding: 7px 5px;
+  border-radius: 2px;
+  color: var(--color-rust);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 160ms ease-out;
+}
+.view-switch-btn[aria-pressed="true"] {
+  opacity: 1;
+}
+.view-switch-btn:focus-visible {
+  outline: 1px solid var(--color-rust-ink);
+  outline-offset: 0;
+}
+@media (hover: hover) {
+  .view-switch-btn:hover:not([aria-pressed="true"]) {
+    opacity: 0.85;
+  }
+}
+
+.view-switch-mini {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 13px;
+  /* The entrance runs on the drawing, not the button, so it doesn't fight the
+     button's own opacity. Each icon makes one hop rightward, from the slot to
+     its left (the first one from behind the bird) into its own, on the bird's
+     own cadence: its intro lands a hop about every 460ms, so the switch opens
+     on that beat and keeps it. */
+  --hop: 30px; /* one slot: the 28px button plus the 2px gap */
+  animation: view-switch-hop 460ms ease-in-out both;
+  animation-delay: calc(var(--i, 0) * 460ms);
+}
+/* The bird's hop, at icon size: up and right, a tilt into the leap, a small
+   squash on landing, then square. */
+@keyframes view-switch-hop {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--hop))) translateY(0) rotate(0deg);
+  }
+  20% {
+    opacity: 1;
+  }
+  48% {
+    transform: translateX(calc(-0.45 * var(--hop))) translateY(-7px) rotate(-8deg);
+  }
+  82% {
+    transform: translateX(0) translateY(1px) rotate(4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view-switch-mini {
+    animation: none;
+  }
+}
+/* The rust is set on the blocks themselves. Inheriting it through
+   `currentColor` doesn't work here: the base layer's `*` rule gives every
+   element its own grey `color`, so the blocks came out grey. */
+.view-switch-mini i {
+  position: absolute;
+  background: var(--color-rust);
+  border-radius: 0.5px;
+}
+.view-switch-mini i.is-face {
+  border-radius: 50%;
+}
+
+/* The name of the hovered view, off to the right. Absolute, so showing it never
+   moves anything; mouse only, since a tap would just flash it. */
+.view-switch-readout {
+  display: none;
+}
+@media (hover: hover) {
+  .view-switch-readout {
+    display: block;
+    position: absolute;
+    left: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--color-rust-ink);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 140ms ease-out;
+  }
+  .view-switch-readout.is-shown {
+    opacity: 1;
+  }
+}
+
+
 /* Intro: bird descends from above in front of title, hops across to final spot */
 @keyframes bird-hop-intro {
   0% {
@@ -2080,5 +2195,423 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .echo-field {
     transition: none;
+  }
+}
+
+/* The details drawer's margins: the series' other panels as two small
+   sidecars stacked down either side of the text column, scrolling with the
+   page. See DetailsFlank. */
+.details-flank {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.details-flank-side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 280ms ease-out;
+}
+.details-flank-side.is-shown {
+  opacity: 1;
+  transition: opacity 360ms ease-out 120ms;
+}
+
+.details-flank-item {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: var(--flank-alpha);
+  pointer-events: none;
+  transition: opacity 260ms ease-out;
+}
+.details-flank-side.is-shown .details-flank-item {
+  pointer-events: auto;
+}
+.details-flank-item:hover,
+.details-flank-item:focus-visible {
+  opacity: 0.95;
+  outline: none;
+}
+
+/* Dealt down the stack, one after another, on every change of panel. */
+.details-flank-body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: details-flank-in 440ms cubic-bezier(0.25, 0.1, 0.25, 1) var(--flank-delay, 0ms) both;
+}
+@keyframes details-flank-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.details-flank-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+  user-select: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  filter: grayscale(0.4) brightness(0.88);
+  transition: filter 260ms ease-out;
+}
+.details-flank-item:hover .details-flank-img,
+.details-flank-item:focus-visible .details-flank-img {
+  filter: none;
+}
+.details-flank-item:focus-visible .details-flank-img {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Under the panel, aligned to the edge that faces the column. Out of flow, so
+   hover never moves anything. */
+.details-flank-label {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 200ms ease-out;
+}
+.details-flank-item.is-left .details-flank-label {
+  right: 0;
+}
+.details-flank-item.is-right .details-flank-label {
+  left: 0;
+}
+.details-flank-year {
+  color: rgba(255, 255, 255, 0.4);
+}
+.details-flank-item:hover .details-flank-label,
+.details-flank-item:focus-visible .details-flank-label {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .details-flank-side,
+  .details-flank-side.is-shown,
+  .details-flank-item,
+  .details-flank-img,
+  .details-flank-label {
+    transition: none;
+  }
+  .details-flank-body {
+    animation: none;
+  }
+}
+
+/* The panel beside the colours read from it, in the palette's left column.
+   It fills the column from the first swatch to the foot of the list rather
+   than setting the list's height. See PanelPalette. */
+.details-palette-source {
+  position: absolute;
+  top: 0.25rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 0.25rem);
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  opacity: 0.85;
+  user-select: none;
+}
+
+/* The panel, faint behind the right of the viewer's header while the details
+   drawer has pushed its art off the screen: a reference to where the reader
+   came from. The anchor sits in the header actions, just left of the close
+   button, with no width of its own; the picture hangs off it to the left and
+   up to the top of the bar, behind everything else in it (the bar is its own
+   stacking context, so -1 still paints over the bar's gradient). */
+.viewer-origin {
+  position: relative;
+  z-index: -1;
+  align-self: stretch;
+  width: 0;
+  margin-right: 0.5rem;
+  pointer-events: none;
+}
+.viewer-origin img {
+  position: absolute;
+  top: -0.75rem;
+  right: 0;
+  height: 4.75rem;
+  width: clamp(80px, 24vw, 240px);
+  max-width: none;
+  object-fit: cover;
+  object-position: center 35%;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+  /* In from nothing on the title's side, out again just before the close
+     button, and gone by the foot of the bar. */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 60%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, #000 35%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 60%, #000 86%, transparent 100%),
+    linear-gradient(to bottom, #000 35%, transparent 100%);
+  mask-composite: intersect;
+}
+@media (min-width: 640px) {
+  .viewer-origin img {
+    top: -1rem;
+    height: 5.5rem;
+  }
+}
+.viewer-origin.is-shown img {
+  opacity: 0.42;
+  animation: viewer-origin-in 700ms ease-out 150ms both;
+}
+@keyframes viewer-origin-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer-origin img {
+    transition: none;
+  }
+  .viewer-origin.is-shown img {
+    animation: none;
+  }
+}
+
+/* An artist sidecar's label names the book, cut to the panel's width. */
+.details-flank-label .details-flank-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.02em;
+}
+.details-flank-item:hover .details-flank-title,
+.details-flank-item:focus-visible .details-flank-title {
+  color: inherit;
+}
+
+/* --- Search palette (Ctrl/⌘+F) -------------------------------------------
+   A single field floated over the page. The scrim is a wash from the top that
+   is gone by mid-screen, so the results refiling under it stay readable while
+   the reader types; it is only there to seat the field. In: the wash fades and
+   the bar drops a few pixels into place. Out: the same, quicker. */
+
+.search-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.search-palette-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 10, 0.78) 0%,
+    rgba(10, 10, 10, 0.45) 28%,
+    rgba(10, 10, 10, 0.12) 55%,
+    rgba(10, 10, 10, 0) 80%
+  );
+  animation: scrimIn 220ms ease-out both;
+}
+
+.search-palette-bar {
+  position: absolute;
+  left: 50%;
+  top: max(12px, calc(env(safe-area-inset-top) + 12px));
+  width: min(560px, calc(100% - 32px));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 14px;
+  height: 48px;
+  border-radius: 10px;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--color-surface-raised) 86%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 18px 48px -12px rgba(0, 0, 0, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  transform-origin: 50% 0;
+  animation: searchPaletteIn 280ms cubic-bezier(0.22, 0.8, 0.24, 1) both;
+  transition: box-shadow 180ms ease-out;
+}
+
+@media (min-width: 640px) {
+  .search-palette-bar {
+    top: 14vh;
+    height: 52px;
+  }
+}
+
+.search-palette-bar:focus-within {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 45%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 10%, transparent),
+    0 18px 48px -12px rgba(0, 0, 0, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.search-palette-icon {
+  color: var(--color-ink-muted);
+  transition: color 180ms ease-out;
+}
+
+.search-palette-bar:focus-within .search-palette-icon {
+  color: var(--color-accent);
+}
+
+/* 16px everywhere: any smaller and iOS zooms the page in on focus. */
+.search-palette-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--color-ink);
+}
+
+.search-palette-input::placeholder {
+  color: var(--color-ink-faint);
+}
+
+.search-palette-count {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+
+/* Keyed on the count, so each change of it ticks in rather than swapping. */
+.search-palette-count > span {
+  display: inline-block;
+  animation: searchCountTick 220ms cubic-bezier(0.22, 0.8, 0.24, 1) both;
+}
+
+.search-palette-count > span.is-empty {
+  color: var(--color-rust-ink);
+}
+
+.search-palette-clear {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: color 120ms, background-color 120ms;
+}
+
+.search-palette-clear:hover {
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.search-palette-kbd {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+@media (pointer: coarse) {
+  .search-palette-kbd {
+    display: none;
+  }
+}
+
+.search-palette.is-leaving {
+  pointer-events: none;
+}
+
+.search-palette.is-leaving .search-palette-scrim {
+  animation: scrimOut 170ms ease-in both;
+}
+
+.search-palette.is-leaving .search-palette-bar {
+  animation: searchPaletteOut 170ms ease-in both;
+}
+
+@keyframes searchPaletteIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes searchPaletteOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -6px) scale(0.98);
+  }
+}
+
+@keyframes searchCountTick {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-palette-scrim,
+  .search-palette-bar,
+  .search-palette-count > span,
+  .search-palette.is-leaving .search-palette-scrim,
+  .search-palette.is-leaving .search-palette-bar {
+    animation: none;
   }
 }

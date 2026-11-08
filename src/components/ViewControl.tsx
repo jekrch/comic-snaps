@@ -23,7 +23,7 @@ interface Props {
  * arrangements hold the same six blocks in the same order, so switching views
  * moves them rather than replacing them.
  */
-interface Block {
+export interface Block {
   x: number;
   y: number;
   w: number;
@@ -70,6 +70,9 @@ const ROSTER: Block[] = [
   { x: 0, y: 78, w: 11, h: 22, face: true },
   { x: 17, y: 81, w: 83, h: 16 },
 ];
+
+/** Each reading's miniature, for anything else that draws the way to it. */
+export const VIEW_BLOCKS: Record<GalleryView, Block[]> = { wall: WALL, series: SHELF, artists: ROSTER };
 
 const DESTINATION: Record<ViewTarget, { blocks: Block[]; label: string; aria: string }> = {
   series: { blocks: SHELF, label: "by series", aria: "Show one row per series" },

@@ -2,8 +2,10 @@ import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, use
 import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
+import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
+import DetailsFlank from "./DetailsFlank";
 import { ScoreBirds } from "./ScoreMeter";
 import PanelPalette from "./PanelPalette";
 import ReferenceLinks from "./ReferenceLinks";
@@ -149,6 +151,11 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const hasCovers = coverImages.length > 0;
   const resolveCover = (url: string) =>
     url.startsWith("http") ? url : `${import.meta.env.BASE_URL}${url}`;
+  // The panel itself, kept in the page beside the colours read from it while
+  // the drawer has pushed its art off the screen. A cover is the series' own
+  // art, shown in its own section, and a portrait is the person, shown on
+  // their card.
+  const sourceUrl = panel.cover || panel.portrait ? null : panelImageUrl(panel.image);
   // Series images come only from Comic Vine (Metron series carry none), so a
   // series it didn't match falls back to its first downloaded cover.
   const seriesImageUrl = series?.imageUrl || parentSeries?.imageUrl
@@ -228,6 +235,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const slideTrackRef = useRef<HTMLDivElement | null>(null);
   const coverContainerRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
+  // The column's scroller and the text column in it, for the series strip in
+  // the margins to measure against.
+  const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
+  const [columnEl, setColumnEl] = useState<HTMLDivElement | null>(null);
   const swipeOffsetRef = useRef(0);
   const commitLockRef = useRef(false);
   const dragRef = useRef({
@@ -644,11 +655,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       onClick={(e) => e.stopPropagation()}
     >
     <div
+      ref={setScrollEl}
       className="absolute inset-0 overflow-y-auto info-modal-scroll"
       style={{ pointerEvents: personOpen ? "none" : undefined }}
       inert={personOpen}
     >
       <div
+        ref={setColumnEl}
         className={`px-6 py-6 sm:px-10 sm:py-8 space-y-5 max-w-lg lg:max-w-xl mx-auto w-full${
           overViz ? " viz-read-scrim min-h-full" : ""
         }`}
@@ -974,7 +987,12 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           <>
           <div className="border-t border-white/8" />
 
-          <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+          {/* Where the margins' series stacks stop and the artist's begin. */}
+          <div
+            data-flank-anchor="artist"
+            className="relative overflow-hidden rounded"
+            style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+          >
             {artist?.imageUrl && (
               <div className="absolute inset-0 pointer-events-none">
                 <img
@@ -1090,7 +1108,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
         {panel.dominantColors && panel.dominantColors.length > 0 && (
           <>
             <div className="border-t border-white/8" />
-            <PanelPalette colors={panel.dominantColors} />
+            <PanelPalette
+              colors={panel.dominantColors}
+              source={sourceUrl ? { src: sourceUrl, alt: `${panel.title} ${formatIssue(panel.issue)}` } : null}
+            />
           </>
         )}
 
@@ -1108,6 +1129,17 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           </a>
         </div>
       </div>
+
+      {/* Beside the column, in the scroller, so it scrolls with the page. */}
+      <DetailsFlank
+        panel={panel}
+        allPanels={allPanels}
+        scrollEl={scrollEl}
+        columnEl={columnEl}
+        shown={detailsShown}
+        overViz={overViz}
+        onSelectPanel={onSelectPanel}
+      />
     </div>
 
     <PersonProfile

@@ -414,6 +414,15 @@ export default function PanelViewer({
           </div>
         )
       }
+      // With the details up, the art they're about has been pushed off the
+      // screen, so it stays on as a faint reference behind the right of the
+      // header, just left of the close button. It's out of the bar's flow, so
+      // coming and going never moves the title.
+      renderHeaderActions={() => (
+        <span className={`viewer-origin ${drawerOpen ? "is-shown" : ""}`} aria-hidden>
+          <img key={panel.id} src={panelImageUrl(panel.image)} alt="" draggable={false} decoding="async" />
+        </span>
+      )}
       renderNavStart={
         hasContent
           ? () => (

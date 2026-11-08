@@ -434,8 +434,25 @@ export default function MasonryGrid({
   // That continuity is the point: fillers collapse smoothly and panels flow
   // between columns in a way no single transition can express. It is affordable
   // because a pass is now O(n) and only repaints the ~25 windowed items.
+  //
+  // Only a change of height re-packs, since height is all the pass reads from
+  // these two. A view switch carries the cards in by widening them frame by
+  // frame (see App), and re-packing the whole wall on each of those frames
+  // was work for nothing, done right while the move needed the main thread.
+  // Window resizes have their own listener above.
   useEffect(() => {
-    const observer = new ResizeObserver(() => layout());
+    const heights = new WeakMap<Element, number>();
+    const observer = new ResizeObserver((entries) => {
+      let changed = false;
+      for (const entry of entries) {
+        const h = entry.contentRect.height;
+        if (heights.get(entry.target) !== h) {
+          heights.set(entry.target, h);
+          changed = true;
+        }
+      }
+      if (changed) layout();
+    });
     if (filterRef.current) observer.observe(filterRef.current);
     if (sortRef.current) observer.observe(sortRef.current);
     return () => observer.disconnect();

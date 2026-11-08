@@ -22,8 +22,17 @@ const COPIED_MS = 1200;
  * width of `#e55c37`, and a three-column strip would have to truncate the very
  * string the section exists to hand over. Stacked, every format is readable at
  * every drawer width, and the chips still read left-to-right as a palette.
+ *
+ * Given the panel's image, it stands in a column to the left of the rows, as
+ * tall as they are: the colours next to the picture they were read from.
  */
-export default function PanelPalette({ colors }: { colors: [number, number, number][] }) {
+export default function PanelPalette({
+  colors,
+  source = null,
+}: {
+  colors: [number, number, number][];
+  source?: { src: string; alt: string } | null;
+}) {
   const [format, setFormat] = useState<ColorFormat>("hex");
   const [copied, setCopied] = useState<number | "all" | null>(null);
   const timer = useRef<number | null>(null);
@@ -81,51 +90,69 @@ export default function PanelPalette({ colors }: { colors: [number, number, numb
         </div>
       </div>
 
-      <div className="space-y-1">
-        {swatches.map((s, i) => {
-          const value = values[i];
-          const done = copied === i;
-          return (
-            <button
-              key={`${s.hex}-${i}`}
-              type="button"
-              onClick={() => copy(value, i)}
-              title={`Copy ${value}`}
-              className="group flex w-full items-center gap-2.5 rounded-sm px-1 py-1 text-left hover:bg-white/5 transition-colors"
-            >
-              {/* The value rides on the swatch, so the colour is never
-                  described at arm's length from itself. */}
-              <span
-                className="flex h-7 flex-1 min-w-0 items-center justify-center overflow-hidden rounded-sm px-2 ring-1 ring-inset ring-white/10 group-hover:ring-white/25 transition-colors"
-                style={{ backgroundColor: s.hex }}
-              >
-                <span
-                  className="truncate font-mono text-[9.5px] leading-none tracking-tight"
-                  style={{ color: s.darkInk ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.75)" }}
+      <div className={source ? "flex gap-3" : undefined}>
+        {/* Out of flow inside its column, so the picture takes the rows' height
+            rather than setting it. */}
+        {source && (
+          <div className="relative w-20 sm:w-24 shrink-0">
+            <img
+              src={source.src}
+              alt={source.alt}
+              title={source.alt}
+              draggable={false}
+              decoding="async"
+              className="details-palette-source"
+            />
+          </div>
+        )}
+        <div className={source ? "min-w-0 flex-1" : undefined}>
+          <div className="space-y-1">
+            {swatches.map((s, i) => {
+              const value = values[i];
+              const done = copied === i;
+              return (
+                <button
+                  key={`${s.hex}-${i}`}
+                  type="button"
+                  onClick={() => copy(value, i)}
+                  title={`Copy ${value}`}
+                  className="group flex w-full items-center gap-2.5 rounded-sm px-1 py-1 text-left hover:bg-white/5 transition-colors"
                 >
-                  {value}
-                </span>
-              </span>
-              <span
-                className={`shrink-0 transition-colors ${
-                  done ? "text-accent" : "text-white/20 group-hover:text-white/50"
-                }`}
-              >
-                {done ? <Check size={12} /> : <Copy size={12} />}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+                  {/* The value rides on the swatch, so the colour is never
+                      described at arm's length from itself. */}
+                  <span
+                    className="flex h-7 flex-1 min-w-0 items-center justify-center overflow-hidden rounded-sm px-2 ring-1 ring-inset ring-white/10 group-hover:ring-white/25 transition-colors"
+                    style={{ backgroundColor: s.hex }}
+                  >
+                    <span
+                      className="truncate font-mono text-[9.5px] leading-none tracking-tight"
+                      style={{ color: s.darkInk ? "rgba(0,0,0,0.65)" : "rgba(255,255,255,0.75)" }}
+                    >
+                      {value}
+                    </span>
+                  </span>
+                  <span
+                    className={`shrink-0 transition-colors ${
+                      done ? "text-accent" : "text-white/20 group-hover:text-white/50"
+                    }`}
+                  >
+                    {done ? <Check size={12} /> : <Copy size={12} />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-      <button
-        type="button"
-        onClick={() => copy(values.join("\n"), "all")}
-        className="mt-1.5 ml-1 inline-flex items-center gap-1.5 text-[10px] text-accent hover:text-accent-dim transition-colors"
-      >
-        {copied === "all" ? <Check size={11} /> : <Copy size={11} />}
-        {copied === "all" ? "Copied all" : "Copy all"}
-      </button>
+          <button
+            type="button"
+            onClick={() => copy(values.join("\n"), "all")}
+            className="mt-1.5 ml-1 inline-flex items-center gap-1.5 text-[10px] text-accent hover:text-accent-dim transition-colors"
+          >
+            {copied === "all" ? <Check size={11} /> : <Copy size={11} />}
+            {copied === "all" ? "Copied all" : "Copy all"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

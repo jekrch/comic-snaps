@@ -26,7 +26,9 @@ import { isProductionOnly, loadMetadata } from "./utils/metadata";
 import { artistAgeAt } from "./utils/artistAge";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
+import HeaderViewSwitch from "./components/HeaderViewSwitch";
 import PanelViewer from "./components/PanelViewer";
+import SearchPalette from "./components/SearchPalette";
 import VizLaunchModal from "./components/viz/VizLaunchModal";
 //import VizThought from "./components/viz/VizThought";
 import type { VizLaunchOptions } from "./components/viz/VizLaunchModal";
@@ -92,6 +94,27 @@ function prefersReducedMotion() {
 const PERSISTENT = "[data-persist]";
 const CHROME_MS = 420;
 
+/** A CSS `cubic-bezier()` as a function of progress, for motion run from JS. */
+function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
+  const at = (a: number, b: number, t: number) =>
+    3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t;
+  return (x: number) => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    // x(t) is monotonic for control points inside [0, 1], so bisect for t.
+    let lo = 0;
+    let hi = 1;
+    for (let i = 0; i < 24; i++) {
+      const mid = (lo + hi) / 2;
+      if (at(x1, x2, mid) < x) lo = mid;
+      else hi = mid;
+    }
+    return at(y1, y2, (lo + hi) / 2);
+  };
+}
+
+const CHROME_EASE = cubicBezier(0.2, 0.7, 0.2, 1);
+
 function measurePersistent() {
   const rects = new Map<string, DOMRect>();
   for (const el of document.querySelectorAll<HTMLElement>(PERSISTENT)) {
@@ -102,8 +125,8 @@ function measurePersistent() {
 
 export default function App() {
   const birdRef = useRef<BirdHandle>(null);
-  /** The bird has finished its intro hop, so its thought can form. */
-  //const [ setBirdLanded] = useState(false);
+  /** The bird has finished its intro hop, so the view switch can follow it in. */
+  const [birdLanded, setBirdLanded] = useState(false);
   const [panels, setPanels] = useState<Panel[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -141,8 +164,8 @@ export default function App() {
   const viewSwapRef = useRef<number | null>(null);
   /** Where the persistent cards were sitting in the view that is leaving. */
   const chromeRectsRef = useRef<Map<string, DOMRect> | null>(null);
-  /** Timers that put the moved cards' own styles back once they have landed. */
-  const chromeTimersRef = useRef<number[]>([]);
+  /** Stops the cards' move in flight and puts their own styles back. */
+  const chromeMoveRef = useRef<(() => void) | null>(null);
   const [seriesSort, setSeriesSort] = useState<SeriesSortMode>(initialSeriesSort);
   const [artistSort, setArtistSort] = useState<ArtistSortMode>(initialArtistSort);
   const [filters, setFilters] = useState<Filters>(initialFilters);
@@ -462,10 +485,8 @@ export default function App() {
     chromeRectsRef.current = null;
     if (!from) return;
 
-    for (const t of chromeTimersRef.current) window.clearTimeout(t);
-    chromeTimersRef.current = [];
+    chromeMoveRef.current?.();
 
-    let raf = 0;
     let dropped = false;
 
     // The view that just mounted measures itself in its own layout effect, and
@@ -475,17 +496,39 @@ export default function App() {
     // settled, and still nothing painted.
     queueMicrotask(() => {
       if (dropped) return;
-      const moved: { el: HTMLElement; width: number; prev: Record<string, string> }[] = [];
+      // Where each card should *appear* is interpolated in page coordinates,
+      // from the old view's rect to the new one's. The translate is whatever
+      // closes the gap between that and where layout actually puts the card
+      // at the width it has that frame — read back, not assumed. The two
+      // views anchor these cards differently: the wall pins its sort card by
+      // `left`, so widening it leaves its box where it is, but the shelf's sits
+      // at the end of a justify-between row, so its box moves with every pixel
+      // of width. One fixed offset fits only the first; on the way back to a
+      // shelf it doubled up with the box's own motion and the card jumped
+      // left by the width difference before sliding home. Measured, the move
+      // is the same in both directions and at every column count.
+      const sx0 = window.scrollX;
+      const sy0 = window.scrollY;
+      const moved: {
+        el: HTMLElement;
+        was: DOMRect;
+        now: DOMRect;
+        tx: number;
+        ty: number;
+        prev: Record<string, string>;
+      }[] = [];
       for (const el of document.querySelectorAll<HTMLElement>(PERSISTENT)) {
         const was = el.dataset.persist ? from.get(el.dataset.persist) : undefined;
         if (!was) continue;
         const now = el.getBoundingClientRect();
-        const dx = was.left - now.left;
-        const dy = was.top - now.top;
-        const dw = was.width - now.width;
         // A card the two layouts happen to agree about is left alone rather
         // than handed a transition with nothing to travel.
-        if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(dw) < 1) continue;
+        if (
+          Math.abs(was.left - now.left) < 1 &&
+          Math.abs(was.top - now.top) < 1 &&
+          Math.abs(was.width - now.width) < 1
+        )
+          continue;
 
         // Whatever the view had set itself — the wall sizes its columns inline,
         // the shelf sizes its own in a class — is put back at the end, so this
@@ -496,43 +539,84 @@ export default function App() {
           width: el.style.width,
         };
         el.style.transition = "none";
-        el.style.transform = `translate(${dx}px, ${dy}px)`;
-        el.style.width = `${was.width}px`;
-        moved.push({ el, width: now.width, prev });
+        el.style.transform = "none";
+        moved.push({ el, was, now, tx: 0, ty: 0, prev });
       }
       if (moved.length === 0) return;
 
-      // One frame with the start state on it, then let go — the same reason the
-      // arriving cards and rows need theirs painted before their class comes
-      // off.
-      raf = requestAnimationFrame(() => {
-        for (const { el, width } of moved) {
-          el.style.transition = `transform ${CHROME_MS}ms cubic-bezier(0.2, 0.7, 0.2, 1), width ${CHROME_MS}ms cubic-bezier(0.2, 0.7, 0.2, 1)`;
-          el.style.transform = "";
-          el.style.width = `${width}px`;
+      // Widths first, then one read of where they landed, then the offsets, so
+      // a frame costs one layout however many cards there are. Rects are taken
+      // into page coordinates so that a scroll mid-move carries the card with
+      // the page instead of holding it to the screen.
+      const apply = (k: number) => {
+        for (const m of moved) {
+          m.el.style.width = `${m.was.width + (m.now.width - m.was.width) * k}px`;
         }
-        chromeTimersRef.current.push(
-          window.setTimeout(() => {
-            for (const { el, prev } of moved) {
-              el.style.transition = prev.transition;
-              el.style.transform = prev.transform;
-              el.style.width = prev.width;
-            }
-          }, CHROME_MS)
-        );
-      });
+        const sx = window.scrollX;
+        const sy = window.scrollY;
+        const boxes = moved.map(({ el, tx, ty }) => {
+          const r = el.getBoundingClientRect();
+          return { x: r.left + sx - tx, y: r.top + sy - ty };
+        });
+        moved.forEach((m, i) => {
+          const x = m.was.left + (m.now.left - m.was.left) * k + sx0;
+          const y = m.was.top + (m.now.top - m.was.top) * k + sy0;
+          m.tx = x - boxes[i].x;
+          m.ty = y - boxes[i].y;
+          m.el.style.transform = `translate(${m.tx}px, ${m.ty}px)`;
+        });
+      };
+      apply(0);
+
+      // The offset and the width are run off one clock, written together each
+      // frame, rather than as two CSS transitions. They have to stay in step:
+      // the sort card's label is right-aligned, and its right edge only holds
+      // still while the slide and the widening cancel out exactly. As
+      // transitions they don't — the browser runs a transform on the
+      // compositor and a width on the main thread, which is busy mounting the
+      // incoming view, so the width lagged the slide and the label shook from
+      // side to side. Here a slow frame stalls both at once.
+      //
+      // The first frame repeats the start state, so it is painted once before
+      // anything moves — the same reason the arriving cards and rows need
+      // theirs painted before their class comes off.
+      let raf = 0;
+      let t0 = -1;
+      const finish = () => {
+        cancelAnimationFrame(raf);
+        for (const { el, prev } of moved) {
+          el.style.transition = prev.transition;
+          el.style.transform = prev.transform;
+          el.style.width = prev.width;
+        }
+        if (chromeMoveRef.current === finish) chromeMoveRef.current = null;
+      };
+      const step = (ts: number) => {
+        if (t0 < 0) t0 = ts;
+        const p = Math.min(1, (ts - t0) / CHROME_MS);
+        if (p >= 1) {
+          finish();
+          return;
+        }
+        apply(CHROME_EASE(p));
+        raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+      chromeMoveRef.current = finish;
     });
 
+    // Only the measurement is dropped here. This effect is torn down when the
+    // phase goes idle two frames in, long before the move has landed, so the
+    // move itself is stopped only by the next swap or an unmount.
     return () => {
       dropped = true;
-      cancelAnimationFrame(raf);
     };
   }, [viewPhase]);
 
   useEffect(
     () => () => {
       if (viewSwapRef.current !== null) window.clearTimeout(viewSwapRef.current);
-      for (const t of chromeTimersRef.current) window.clearTimeout(t);
+      chromeMoveRef.current?.();
     },
     []
   );
@@ -812,6 +896,44 @@ export default function App() {
     return viewerPanels.findIndex((p) => p.id === openPanelId);
   }, [openPanelId, viewerPanels]);
 
+  // Ctrl/⌘+F searches the gallery, but only from the wall or a shelf: over the
+  // viewer, the info modal or a visualizer run, the browser's own find is left
+  // alone. A second press while the palette is up closes it and lets the
+  // browser's find through, so that is never more than one keystroke away.
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchAllowed = status === "ready" && !showInfo && openIndex < 0 && !vizPrompt && !vizRun;
+
+  useEffect(() => {
+    if (!searchAllowed) {
+      setSearchOpen(false);
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+      if (e.key !== "f" && e.key !== "F") return;
+      if (searchOpen) {
+        setSearchOpen(false);
+        return;
+      }
+      e.preventDefault();
+      setSearchOpen(true);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [searchAllowed, searchOpen]);
+
+  const handleCloseSearch = useCallback(() => setSearchOpen(false), []);
+  const handleSearchQuery = useCallback(
+    (searchQuery: string) => handleFiltersChange({ ...filters, searchQuery }),
+    [filters, handleFiltersChange]
+  );
+  // Live, not staged through `resultFilters`: the count answers the keystroke
+  // that was just typed, while the page catches up behind it.
+  const searchCount = useMemo(
+    () => (searchOpen ? applyFilters(panels, filters).length : 0),
+    [searchOpen, panels, filters]
+  );
+
   return (
     <div className="min-h-screen bg-surface relative">
       <BackgroundEchoes panelPositions={panelPositions} />
@@ -824,9 +946,12 @@ export default function App() {
             >
               C0MIC SNAPS
             </h1>
-            <BirdIcon ref={birdRef} 
-            //onIntroComplete={() => setBirdLanded(true)} 
-            />
+            <BirdIcon ref={birdRef} onIntroComplete={() => setBirdLanded(true)} />
+            {/* Held back until the bird lands, then dealt in as the last beat of
+                its intro. */}
+            {birdLanded && status === "ready" && panels.length > 0 && (
+              <HeaderViewSwitch view={view} onViewChange={handleViewChange} />
+            )}
             {/* The thought only forms once the bird has settled — a balloon
                 trailing off a bird still mid-hop reads as two unrelated things
                 that happen to be animating. */}
@@ -961,6 +1086,14 @@ export default function App() {
           </div>
         )}
       </main>
+
+      <SearchPalette
+        open={searchOpen && searchAllowed}
+        query={filters.searchQuery}
+        onQueryChange={handleSearchQuery}
+        onClose={handleCloseSearch}
+        resultCount={searchCount}
+      />
 
       {showInfo && (
         <InfoModal
