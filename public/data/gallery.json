@@ -8,11 +8,34 @@
       "issue": 5,
       "year": 1982,
       "artist": "Harry S. Robins",
-      "image": "images/weirdo/issue-5-1794121453.jpg",
+      "image": "images/weirdo/issue-5-1794121453-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-08T07:04:15.601Z"
+      "addedAt": "2026-11-08T07:04:15.601Z",
+      "width": 781,
+      "height": 1280,
+      "dominantColors": [
+        [
+          15.3,
+          0,
+          0.7
+        ],
+        [
+          46.4,
+          0.2,
+          4.1
+        ],
+        [
+          83.6,
+          2,
+          8.7
+        ]
+      ],
+      "colorfulness": 3.4,
+      "phash": "ca726069e16e9d0f",
+      "ahash": "4004bffdb91810ff",
+      "dhash": "95b9617953716551"
     },
     {
       "seq": 354,
