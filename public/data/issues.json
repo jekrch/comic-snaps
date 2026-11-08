@@ -12897,6 +12897,64 @@
       ]
     },
     {
+      "id": "weirdo-5",
+      "series": "weirdo",
+      "issue": 5,
+      "credits": [
+        {
+          "artistId": "aline-kominsky-crumb",
+          "name": "Aline Kominsky-Crumb",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "drew-friedman",
+          "name": "Drew Friedman",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "harry-s-robins",
+          "name": "Harry S. Robins",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "macedonio-garcia",
+          "name": "Macedonio Garcia",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "robert-crumb",
+          "name": "Robert Crumb",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "terry-boyce",
+          "name": "Terry Boyce",
+          "roles": [
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/weirdo-5/4000-231309/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "weirdo-10",
       "series": "weirdo",
       "issue": 10,

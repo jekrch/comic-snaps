@@ -5629,6 +5629,32 @@
       ]
     },
     {
+      "id": "harry-s-robins",
+      "name": "Harry S. Robins",
+      "description": "Voice actor, screenwriter and cartoonist.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10065661-harry_robins.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/harry-s-robins/4040-55159/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/20211/"
+        }
+      ],
+      "birthYear": 1950,
+      "country": "United States",
+      "aliases": [
+        "Harry Scifres Robins",
+        "Harry Robins"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "harvey-kurtzman",
       "name": "Harvey Kurtzman",
       "description": "",
@@ -9669,6 +9695,22 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "macedonio-garcia",
+      "name": "Macedonio Garcia",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/macedonio-garcia/4040-59829/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -14471,6 +14513,22 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/18384/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "terry-boyce",
+      "name": "Terry Boyce",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/terry-boyce/4040-59686/"
         }
       ],
       "sources": [
