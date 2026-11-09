@@ -4725,7 +4725,7 @@
     {
       "id": "floch",
       "name": "Floch",
-      "description": "",
+      "description": "Jean-Claude Floch (French pronunciation: [\u0292\u0251\u0303 klod fl\u0254k]; born September 25, 1953), known as Floc'h is a French illustrator, comics artist, and writer. He is known for his use of the style known as ligne claire. His older brother Jean-Louis Floch was also a cartoonist and illustrator.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Floch.jpg/500px-Floch.jpg",
       "references": [
         {
@@ -4740,7 +4740,8 @@
       "birthYear": 1953,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "tags": [
         "bande dessin\u00e9e"
@@ -7594,7 +7595,7 @@
     {
       "id": "joelle-jones",
       "name": "Joelle Jones",
-      "description": "",
+      "description": "Jo\u00eblle Jones (born February 20, 1980) is an American comic book artist and writer, best known for her work on Lady Killer, a series published in 2015\u20132017 by Dark Horse Comics, for her cover work on various Marvel Comics series, and for her work writing and illustrating DC Comics series including Batman and Catwoman.",
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Joelle_Jones_by_Gage_Skidmore.jpg/500px-Joelle_Jones_by_Gage_Skidmore.jpg",
       "references": [
         {
@@ -7605,7 +7606,8 @@
       "birthYear": 1980,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "wikipedia"
       ],
       "country": "United States",
       "hometown": "Boise, Idaho"

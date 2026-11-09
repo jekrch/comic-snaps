@@ -9,9 +9,19 @@
         "AAA Pop Comics"
       ],
       "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/9/97318/1763149-pop.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/aaa-pop/4010-2105/"
+        }
+      ],
+      "ids": {
+        "comicvine": 2105
+      },
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "ablaze",
@@ -22,9 +32,20 @@
         "Ablaze Publishing"
       ],
       "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7385327-6246220378-64758.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ablaze/4010-9144/"
+        }
+      ],
+      "ids": {
+        "comicvine": 9144
+      },
+      "location": "Portland, Oregon",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "absolute-universe",
@@ -51,12 +72,28 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Bad Idea"
+        "Bad Idea",
+        "Bad Idea Corp",
+        "Bad Idea Corp.",
+        "Cincinnati Kid LLC.",
+        "B-Side Comics",
+        "Bad Idea Two"
       ],
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "description": "Bad Idea is an independent comic books publisher that was founded by Dinesh Shamdasani, Warren Simons, and Hunter Gorinson in late 2019. All three had previously worked together at Valiant Entertainment from 2011 to 2017.\r\n\r\nThe company's first ever publication was the promotional Hero Trade #1 distributed in September 2020. In March 2021, they started publishing monthly comics with ENIAC, a four-issue mini-series written by Matt Kindt, illustrated by Doug Braithwaite, and covers from Lewis LaRosa.\r\n\r\nBad Idea's publishing strategy is to produce only 2 different comic books per month, print copies only, with no plans to collect the single issues later on. The only way to purchase Bad Idea books is through their partner stores, some of which offering mail orders. All books would feature a main story and a backup short story. Since the early beginning, Bad Idea was confronted with haters and even more haters who didn't like the idea of their somewhat limited (!) and elitist ways of distribution.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7843535-1787992921-bad-i.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bad-idea-comics/4010-10122/"
+        }
+      ],
+      "ids": {
+        "comicvine": 10122
+      },
+      "location": "Los Angeles, California",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "black-mask-studios",
@@ -65,7 +102,7 @@
       "parent": null,
       "aliases": [],
       "description": "Black Mask Studios is a comic book and graphic novel publishing company formed by Matt Pizzolo, Steve Niles and Brett Gurewitz, designed as a new infrastructure to support comic book creators and a new pipeline for transgressive art.\r\n\r\nBlack Mask is known for the miniseries Elisa Romboli's Alice In Leatherland, Matthew Rosenberg's 4 Kids Walk Into A Bank, Magdalene Visaggio's Kim & Kim, Matt Miner's Liberator, Tini Howard's The Skeptics, Vita Ayala's The Wilds, Curt Pires's Mayday, Amancay Nahuelpan's Clandestino, Fabian Rangel Jr.'s Space Riders, and Kwanza Osajyefo's White.\r\n\r\nComic book writer Matthew Rosenberg, the writer of Uncanny X-Men and Batman whose first comic book 4 Kids Walk Into A Bank was published by BM, appeared on the Word Balloon podcast with John Siuntres and he said:\r\n\r\n\"There's going to be a moment in this industry when Matt Pizzolo is really viewed as one of the great eyes for talent. Up there with, I don't want to say up there with Karen Berger just to not throw myself in with that, but regarding the talent that came out of Black Mask versus other indie publishers: so many good people got their start there. Tini Howard's first creator owned book is at Black Mask. Vita Ayala's first creator owned book is at Black Mask. My first creator owned book is at Black Mask. Alexis Ziritt. So many people doing great work. Like Tony Patrick and Mags Visaggio. Curt Pires. Zac Thompson and Lonnie Nadler. All these people who are doing great, fascinating, cool books. All these people who are doing stuff that I love can point to Black Mask as that was the first door that was opened. I think in the history books Black Mask is not going to dominate sales anytime soon, but the eye for talent has been really impeccable.\"\r\n\r\nHost John Siuntres agreed. \"It's a great roster and responsible for a lot of the great new voices in comics.\"\r\n\r\nAccording to publicly available data, Black Mask's top five bestselling series include Calexit , Godkiller , Black , 4 Kids Walk Into A Bank , and Rogue State . Black Mask's top reviewed debut issue of a new series is currently Young Terrorists #1 followed by a tie between Ballistic #1 and CalExit #1 , and its top reviewed collected standalone story is currently a three-way tie between 4 Kids Walk Into A Bank , We Can Never Go Home , and The Dregs . The first Black Mask series to be adapted into a feature film is 4 Kids Walk Into A Bank starring Liam Neeson, to be released by Amazon Studios in 2026.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/115351/3040559-black_mask_studios.jpg",
       "founders": [
         {
           "artistId": null,
@@ -84,12 +121,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Black_Mask_Studios"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/black-mask-studios/4010-4266/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 4266
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "New York City, New York"
     },
     {
       "id": "boom-studios",
@@ -97,10 +142,12 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "BOOM! Studios"
+        "BOOM! Studios",
+        "Kaboom!",
+        "Boom Kids!"
       ],
       "description": "Boom! Studios (stylized as BOOM! Studios), is an American comic book and graphic novel publisher. They are headquartered in Los Angeles, California, United States. As of September 2024, the company is a subsidiary division of Penguin Random House.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2019/01/23/boom.png",
       "founders": [
         {
           "artistId": null,
@@ -115,12 +162,28 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Boom!_Studios"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/boom-studios/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/boom-studios/4010-1868/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 20,
+        "comicvine": 1868
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 2005,
+      "country": "United States",
+      "location": "Los Angeles, California"
     },
     {
       "id": "caliber-comics",
@@ -128,10 +191,14 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Caliber Press"
+        "Caliber Press",
+        "Tapestry",
+        "Gauntlet Comics",
+        "Iconografix",
+        "Tome Press"
       ],
       "description": "Caliber Comics or Caliber Press is an American comic book publisher founded in 1989 by Gary Reed. Featuring primarily creator-owned comics, Caliber published over 1,300 comics in the decade following its inception and is ranked as one of America's leading independent publishers. Caliber ceased publishing in 2000, but resumed operations in 2015, and continued after Reed died in 2016.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8615777-caliber.jpg",
       "founders": [
         {
           "artistId": null,
@@ -142,11 +209,18 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Caliber_Comics"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/caliber-comics/4010-573/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 573
+      },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -156,7 +230,7 @@
       "parent": null,
       "aliases": [],
       "description": "Cat-Head Comics was an American alternative/underground comics publisher that operated from 1980 to 1998. Founded by cartoonist Steve Lafler as a vehicle for his own work, Cat-Head was later joined by writer/poet/editor Stephen Beaupre. Cat-Head's longest-running title was the anthology Buzzard, which lasted 20 issues.\r\n\r\nIn addition to Lafler and Beaupre, creators published by Cat-Head included R. L. Crabb, Lloyd Dangle, Krystine Kryttre, and J. R. Williams.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8637118-cat-head.jpg",
       "founders": [
         {
           "artistId": "steve-lafler",
@@ -167,11 +241,18 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Cat-Head_Comics"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/cat-head-comics/4010-3276/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 3276
+      },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -180,10 +261,12 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Dark Horse"
+        "Dark Horse",
+        "Dark Horse Manga",
+        "Project Black Sky"
       ],
       "description": "Dark Horse Comics (stylized as DARK HORSE COMICS), is an American comic book, graphic novel, and art book publisher founded in Milwaukie, Oregon, by Mike Richardson in 1986. The company was created using funds earned from Richardson's chain of Portland, Oregon, comic book shops known as Pegasus Books and founded in 1980.\r\n\r\nDark Horse Comics is the fourth-largest comic publishing company in the United States. Dividing profits with artists and writers, as well as supporting artistic and creative rights in the comic book industry, Dark Horse Comics has become a proponent of publishing licensed material that may not fit into mainstream media. Several titles include: Sin City, Hellboy, Buffy the Vampire Slayer, 300, Ninja Gaiden, Masters of the Universe and Star Wars.\r\n\r\nIn December 2021, Swedish gaming company Embracer Group launched its acquisition of Dark Horse Media, Dark Horse Comics' parent company, and completed the buyout in March 2022.\r\n\r\nDark Horse Comics created Dark Horse Direct, a division for high-end collectible figures. Made primarily from resin, vinyl and PVC, their statues are available through a direct-to-consumer model.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2018/11/16/dark-horse.jpg",
       "founders": [
         {
           "artistId": "mike-richardson",
@@ -198,18 +281,32 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/512/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/dark-horse-comics/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dark-horse-comics/4010-364/"
         }
       ],
       "ids": {
-        "gcd": 512
+        "gcd": 512,
+        "metron": 3,
+        "comicvine": 364
       },
       "sources": [
         "wikipedia",
-        "gcd"
+        "gcd",
+        "metron",
+        "comicvine"
       ],
       "activeFrom": 1986,
       "country": "United States",
-      "website": "https://www.darkhorse.com"
+      "website": "https://www.darkhorse.com",
+      "foundedYear": 1986,
+      "location": "Milwaukie, Oregon"
     },
     {
       "id": "dc-comics",
@@ -217,10 +314,22 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "DC"
+        "DC",
+        "National Comics",
+        "Detective Comics Inc.",
+        "National Periodical Publications",
+        "National Allied Publications",
+        "Nicholson Publishing",
+        "All-American Publications",
+        "DC Entertainment",
+        "DC Nation",
+        "Johnny DC",
+        "National Comics Publishing",
+        "National Comics Publications",
+        "MAD Books"
       ],
       "description": "DC Comics (originally DC Comics, Inc., and also known simply as DC) is an American comic book publisher owned by Skydance under Skydance Products & Publishing. DC is an initialism for Detective Comics, a comic book series first published in 1937. DC Comics is one of the largest and oldest American comic book companies, the first comic under the DC banner being published in 1937.\r\n\r\nMost of its published stories are set in the fictional DC Universe and feature numerous culturally iconic heroic characters, such as Superman, Batman, Wonder Woman, and the Flash; as well as famous fictional teams, including the Justice League, the Teen Titans, the Suicide Squad, and the Legion of Super-Heroes. The universe contains an assortment of well-known supervillains, such as Lex Luthor, the Joker, Darkseid, and the antiheroic Catwoman. The company has published non-DC Universe-related material, including Watchmen, V for Vendetta, Fables, and many other titles, under the alternative imprints Vertigo and DC Black Label.\r\n\r\nOriginally at 432 Fourth Avenue in Manhattan, New York City, the company offices have been located at 480 and later 575 Lexington Avenue, 909 Third Avenue, 75 Rockefeller Plaza, 666 Fifth Avenue, and 1325 Avenue of the Americas. DC Comics was located at 1700 Broadway in Midtown Manhattan until April 2015, when DC Entertainment transferred its headquarters to Burbank, California.\r\n\r\nIn 2017, approximately 70% of the American comic book market was shared by DC Comics and its long-time major competitor Marvel Comics, though this figure may be distorted because sales of graphic novels are excluded. As of 2025, in the comic book shop market, DC is the second-largest publisher of comic books, after Marvel, and Image Comics is third. In the bookstore market, DC is the second largest publisher of comic books, after Viz Media, and Marvel is third.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/03/01/DC_Comics.png",
       "founders": [
         {
           "artistId": null,
@@ -235,18 +344,32 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/54/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/dc-comics/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dc-comics/4010-10/"
         }
       ],
       "ids": {
-        "gcd": 54
+        "gcd": 54,
+        "metron": 2,
+        "comicvine": 10
       },
       "sources": [
         "wikipedia",
-        "gcd"
+        "gcd",
+        "metron",
+        "comicvine"
       ],
       "activeFrom": 1935,
       "country": "United States",
-      "website": "http://www.dccomics.com/"
+      "website": "http://www.dccomics.com/",
+      "foundedYear": 1934,
+      "location": "Burbank, California"
     },
     {
       "id": "deadline-publications",
@@ -256,8 +379,8 @@
       "aliases": [
         "Deadline Publications"
       ],
-      "description": "",
-      "imageUrl": null,
+      "description": "This company published Deadline Magazine from October 1988 when in the issue #1 Tank Girl appeared for the first time. Besides the comic strips, the magazine was popular as well for its focus on indie music and related topics until its last issue #71 in 1995.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8501873-deadline.jpg",
       "founders": [
         {
           "artistId": null,
@@ -268,8 +391,18 @@
           "name": "Steve Dillon"
         }
       ],
-      "references": [],
-      "ids": {}
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/deadline-publications-ltd/4010-2589/"
+        }
+      ],
+      "ids": {
+        "comicvine": 2589
+      },
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "didactic-chocolate-press",
@@ -283,16 +416,22 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/4048/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/didactic-chocolate-press/4010-3969/"
         }
       ],
       "ids": {
-        "gcd": 4048
+        "gcd": 4048,
+        "comicvine": 3969
       },
       "activeFrom": 1996,
       "activeUntil": 1997,
       "country": "United States",
       "sources": [
-        "gcd"
+        "gcd",
+        "comicvine"
       ]
     },
     {
@@ -304,7 +443,7 @@
         "D+Q"
       ],
       "description": "Drawn & Quarterly (D+Q) is a publishing company based in Montreal, Quebec, Canada, specializing in comics. It publishes primarily comic books, graphic novels and comic strip collections. The books it publishes are noted for their artistic content, as well as the quality of printing and design. The name of the company is a pun on \"drawing\", \"quarterly\", and the practice of hanging, drawing and quartering.\r\n\r\nInitially it specialized in underground and alternative comics, but has since expanded into classic reprints and translations of foreign works. Drawn & Quarterly was the company's flagship quarterly anthology during the 1990s.\r\n\r\nIt is currently the most successful and prominent comics publisher in Canada, publishing well-known comic artists such as Lynda Barry, Kate Beaton, Marc Bell, Chester Brown, Daniel Clowes, Michael DeForge, Guy Delisle, Julie Doucet, Mary Fleener, Joe Matt, Shigeru Mizuki, Rutu Modan, Joe Sacco, Seth, Elise Gravel, Yoshihiro Tatsumi, Adrian Tomine and Chris Ware. In 2006, Drawn & Quarterly began publishing the Moomin comic strips of Finnish writer and artist Tove Jansson, in book format, in the series Moomin: The Complete Tove Jansson Comic Strip. Drawn & Quarterly has a strong reputation in the comics community and its anthologies have won a number of Harvey Awards.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6563690-5219658391-389_t.jpg",
       "founders": [
         {
           "artistId": null,
@@ -315,12 +454,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Drawn_%26_Quarterly"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/drawn-quarterly/4010-2041/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 2041
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "Montreal, Quebec"
     },
     {
       "id": "dstlry",
@@ -329,17 +476,32 @@
       "parent": null,
       "aliases": [],
       "description": "DSTLRY (stylized DSTLRY and pronounced \"Distillery\") is an independent creator-owned American comic book publisher founded in 2023 by David Steinberger and Chip Mosher.\r\n\r\nDSTLRY releases miniseries, usually with three or four issues. The single issues are 48-page, magazine-sized, and perfect bound. Once a series is completed, it will be released in a hardcover collection. Additionally, DSTLRY produces merchandize such as card games, soundtracks and vinyl figures.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2023/12/21/DSTLRY.jpg",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/DSTLRY"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/dstlry/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dstlry/4010-11245/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 83,
+        "comicvine": 11245
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 2023,
+      "country": "United States"
     },
     {
       "id": "dynamite-entertainment",
@@ -350,7 +512,7 @@
         "Dynamite"
       ],
       "description": "Dynamite Entertainment is an American comic book publisher founded in 2004 by Nick Barrucci in Mount Laurel, New Jersey, known for publishing comic book adaptations of licensed feature film properties, such as Army of Darkness, Terminator, and RoboCop; licensed or public domain literary properties such as Zorro, Dracula, Sherlock Holmes, Alice in Wonderland, Red Sonja, Tarzan, and John Carter of Mars; and superhero books including Project Superpowers, which revived classic public domain characters, and original creator-owned comics like The Boys.\r\n\r\nCreators who have produced Dynamite's books include Alex Ross, John Cassaday, Matt Wagner, Garth Ennis, Howard Chaykin and Frank Miller. Dynamic Forces, a distribution of Dynamite's comics and books, announced a partnership with Diamond Distribution in 2008, when Diamond had the rights to publishing the international versions of books made by Dynamite Entertainment. Dynamite would later leave Diamond after the Diamond bankruptcy and go to Lunar Distribution. Dynamite would also sign a deal with Simon & Schuster which distribute their graphic novels and other items to wider market.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2019/01/30/dynamite.png",
       "founders": [
         {
           "artistId": null,
@@ -361,12 +523,28 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Dynamite_Entertainment"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/dynamite-entertainment/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/dynamite-entertainment/4010-1859/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 21,
+        "comicvine": 1859
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 2005,
+      "country": "United States",
+      "location": "Mt. Laurel, New Jersey"
     },
     {
       "id": "ec-comics",
@@ -379,7 +557,7 @@
         "E.C. Publications"
       ],
       "description": "E.C. Publications, Inc. (doing business as EC Comics), is an American comic book publisher. It specialized in horror fiction, crime fiction, satire, military fiction, dark fantasy, and science fiction from the 1940s through the mid-1950s, notably the Tales from the Crypt series. Initially, EC was founded as Educational Comics by Maxwell Gaines and specialized in educational and child-oriented stories. After Max Gaines died in a boating accident in 1947, his son William Gaines took over the company and renamed it Entertaining Comics. He printed more mature stories, delving into horror, war, fantasy, science-fiction, adventure, and other genres. Noted for their high quality and shock endings, these stories were also unique in their socially conscious, progressive themes (including racial equality, anti-war advocacy, nuclear disarmament, and environmentalism) that anticipated the Civil Rights Movement and the dawn of the 1960s counterculture. In 1954\u201355, censorship pressures prompted it to concentrate on the humor magazine Mad, leading to the company's greatest and most enduring success. Consequently, by 1956, the company ceased publishing all its comic lines except Mad.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2024/01/07/ec-logo.jpg",
       "founders": [
         {
           "artistId": null,
@@ -390,12 +568,28 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/EC_Comics"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/ec/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ec/4010-89/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 91,
+        "comicvine": 89
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 1944,
+      "country": "United States",
+      "location": "New York City, New York"
     },
     {
       "id": "epic-comics",
@@ -424,10 +618,11 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Fantagraphics Books"
+        "Fantagraphics Books",
+        "Monster Comics"
       ],
       "description": "Fantagraphics (previously Fantagraphics Books) is an American publisher of alternative comics, classic comic strip anthologies, manga, magazines, graphic novels, and (formerly) the erotic Eros Comix imprint. They have managed several awards for achievement in comic books.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2021/07/28/fantagraphics.jpg",
       "founders": [
         {
           "artistId": "gary-groth",
@@ -446,18 +641,32 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/445/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/fantagraphics/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/fantagraphics/4010-309/"
         }
       ],
       "ids": {
-        "gcd": 445
+        "gcd": 445,
+        "metron": 42,
+        "comicvine": 309
       },
       "sources": [
         "wikipedia",
-        "gcd"
+        "gcd",
+        "metron",
+        "comicvine"
       ],
       "activeFrom": 1972,
       "country": "United States",
-      "website": "http://www.fantagraphics.com/"
+      "website": "http://www.fantagraphics.com/",
+      "foundedYear": 1976,
+      "location": "Seattle, Washington"
     },
     {
       "id": "flux-house",
@@ -503,16 +712,23 @@
       "parent": "image-comics",
       "aliases": [],
       "description": "Ghost Machine (founded and previously known as Mad Ghost Productions) is an American cooperative media company founded in October 2023, which publishes creator-owned comics through Image Comics, and was founded to help the participating creators to benefit from the development of its intellectual properties. The company was announced on October 12, 2023 at the New York Comic Con. Its founding writers and artists, who are exclusive to the company, are Brad Meltzer, Jason Fabok, Gary Frank, Bryan Hitch, Geoff Johns, Francis Manapul, Peter J. Tomasi, Lamont Magee, Maytal Zchut, Brad Anderson and Rob Leigh.\r\n\r\nAt its launch, the creators stressed that unlike the work they had done in the past for publishers such as DC Comics, the books of the four shared universes established by the company's first official release in January 2024, Ghost Machine #1, would not be set in the superhero genre, but in other genres such as science fiction, historical fantasy, post-apocalyptic fiction, and horror.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/imprint/2026/05/12/387110663_122119170344040082_6116092821001476979_n.jpg",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Ghost_Machine_(company)"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/imprint/ghost-machine/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 48
+      },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "metron"
       ]
     },
     {
@@ -529,8 +745,18 @@
           "name": "Terry Zwigoff"
         }
       ],
-      "references": [],
-      "ids": {}
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/golden-gate-publishing-company/4010-3737/"
+        }
+      ],
+      "ids": {
+        "comicvine": 3737
+      },
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "heavy-metal-international",
@@ -538,12 +764,33 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Heavy Metal"
+        "Heavy Metal",
+        "HM Communications",
+        "Metal Mammoth, Inc."
       ],
       "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "imageUrl": "https://static.metron.cloud/media/publisher/2019/09/24/heavy-metal-logo.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/heavy-metal/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/heavy-metal/4010-536/"
+        }
+      ],
+      "ids": {
+        "metron": 25,
+        "comicvine": 536
+      },
+      "foundedYear": 1977,
+      "country": "United States",
+      "sources": [
+        "metron",
+        "comicvine"
+      ],
+      "location": "Rockville Centre, New York"
     },
     {
       "id": "icon-comics",
@@ -554,17 +801,25 @@
         "Icon Comics"
       ],
       "description": "Icon Comics was an imprint of Marvel Comics for creator-owned titles, designed to keep select \"A-list\" creators producing for Marvel rather than seeing them take creator-owned work to other publishers.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/imprint/2026/03/01/Icon.png",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Icon_Comics"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/imprint/icon-comics/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 3
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron"
+      ],
+      "foundedYear": 2004
     },
     {
       "id": "idw-publishing",
@@ -572,10 +827,11 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "IDW"
+        "IDW",
+        "Soulcraft Media"
       ],
       "description": "IDW Publishing is an American publisher of comic books, graphic novels, art books, and comic strip collections. It was founded in 1999 as the publishing division of Idea and Design Works, LLC (IDW) and is the fifth-largest comic book publisher in the United States, behind Marvel, DC, Dark Horse, and Image Comics. The company is known for its licensed comic book adaptations of films, television shows, video games, and cartoons.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/01/12/IDW_Publishing.png",
       "founders": [
         {
           "artistId": null,
@@ -598,12 +854,28 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/IDW_Publishing"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/idw-publishing/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/idw-publishing/4010-1190/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 6,
+        "comicvine": 1190
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 1999,
+      "country": "United States",
+      "location": "San Diego, California"
     },
     {
       "id": "ignition-press",
@@ -611,10 +883,30 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "description": "Ignition Press is dedicated to empowering vibrant creativity through creator-driven original stories, told with integrity and commitment, that meet their audience where they are.",
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/06/07/ig-press-logo.png",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/ignition-press/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ignition-press/4010-11649/"
+        }
+      ],
+      "ids": {
+        "metron": 197,
+        "comicvine": 11649,
+        "gcd": 19180
+      },
+      "foundedYear": 2025,
+      "country": "United States",
+      "sources": [
+        "metron",
+        "comicvine"
+      ],
+      "location": "Los Angeles, California"
     },
     {
       "id": "image-comics",
@@ -622,10 +914,11 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Image"
+        "Image",
+        "Image Comics, Inc."
       ],
       "description": "Image Comics is an American independent comic book publisher and is the third largest direct market comic book and graphic novel publisher in the industry by market share. Its best-known publications include Spawn, The Walking Dead, Kick-Ass, Invincible, Jupiter's Legacy, Witchblade, The Maxx, Savage Dragon, Bitter Root, Descender, Saga, East of West, Monstress, Radiant Black, Firebreather, and Stray Dogs.\r\n\r\nIt was founded in 1992 by several high-profile illustrators as a venue for creator-owned properties, in which comics creators could publish material of their own creation without giving up the copyrights to those properties. Normally this is not the case in the work-for-hire-dominated American comics industry, where the legal author is a publisher, such as Marvel Comics or DC Comics, and the creator is an employee of that publisher. Its output was originally dominated by superhero and fantasy titles from the studios of the founding Image partners, but now includes comics in many genres by numerous independent creators.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/01/12/Image.png",
       "founders": [
         {
           "artistId": null,
@@ -664,18 +957,32 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/709/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/image-comics/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/image/4010-513/"
         }
       ],
       "ids": {
-        "gcd": 709
+        "gcd": 709,
+        "metron": 4,
+        "comicvine": 513
       },
       "sources": [
         "wikipedia",
-        "gcd"
+        "gcd",
+        "metron",
+        "comicvine"
       ],
       "activeFrom": 1992,
       "country": "United States",
-      "website": "https://imagecomics.com"
+      "website": "https://imagecomics.com",
+      "foundedYear": 1992,
+      "location": "Berkeley, California"
     },
     {
       "id": "kitchen-sink-press",
@@ -683,10 +990,12 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Kitchen Sink"
+        "Kitchen Sink",
+        "Kitchen Sink Comix",
+        "Kitchen Sink Books"
       ],
       "description": "Kitchen Sink Press was a comic book publishing company founded by Denis Kitchen in 1970. Kitchen Sink Press was a pioneering publisher of underground comics, and was also responsible for numerous republications of classic comic strips in hardcover and softcover volumes. One of their best-known products was the first full reprint of Will Eisner's The Spirit\u2014first in magazine format, then in standard comic book format. The company closed in 1999.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/14/148518/3016589-ksplogo.gif",
       "founders": [
         {
           "artistId": "denis-kitchen",
@@ -701,18 +1010,25 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/349/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/kitchen-sink/4010-236/"
         }
       ],
       "ids": {
-        "gcd": 349
+        "gcd": 349,
+        "comicvine": 236
       },
       "sources": [
         "wikipedia",
-        "gcd"
+        "gcd",
+        "comicvine"
       ],
       "activeFrom": 1969,
       "activeUntil": 1999,
-      "country": "United States"
+      "country": "United States",
+      "location": "Northampton, Massachusetts"
     },
     {
       "id": "last-gasp",
@@ -723,7 +1039,7 @@
         "Last Gasp Eco-Funnies"
       ],
       "description": "Last Gasp is a San Francisco\u2013based book publisher with a lowbrow art and counterculture focus. Owned and operated by Ron Turner, for most of its existence Last Gasp was a publisher, distributor, and wholesaler of underground comix and books of all types.\r\n\r\nLast Gasp was established in 1970. Although the company came onto the scene a bit later than some of the other underground publishers, Last Gasp continued publishing comics far longer than most of its competitors. In addition to publishing notable original titles like Slow Death, Wimmen's Comix, Binky Brown Meets the Holy Virgin Mary, and Weirdo, it also picked up the publishing reins of important titles\u2014such as Zap Comix and Young Lust\u2014from rivals who had gone out of business.\r\n\r\nAlthough Last Gasp no longer publishes \"floppy\" comics; the company continues to publish art and photography books, graphic novels, fiction, and poetry, producing 10\u201315 new titles per year.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7100268-4370860903-TgeRK.jpg",
       "founders": [
         {
           "artistId": null,
@@ -734,12 +1050,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Last_Gasp_(publisher)"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/last-gasp/4010-233/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 233
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "San Francisco, California"
     },
     {
       "id": "marvel-comics",
@@ -747,10 +1071,25 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Marvel"
+        "Marvel",
+        "Marvel Comics Group",
+        "Marvel Entertainment",
+        "Marvel Worldwide Inc.",
+        "Marvel Publishing Inc.",
+        "Gem Publications",
+        "Non-Pareil Publishing Corp.",
+        "Red Circle Magazines",
+        "Male Publishing Corp.",
+        "Visual Varieties, Inc.",
+        "Humorama",
+        "Timely Publications",
+        "Timely Comics",
+        "Atlas",
+        "Curtis Magazines",
+        "Magazine Management"
       ],
       "description": "Marvel Comics is an American comic book publisher, a property of the Walt Disney Company since December 31, 2009, and a subsidiary of Disney Publishing Worldwide since March 2023. Marvel was founded in 1939 by Martin Goodman as Timely Comics, and by 1951 had generally become known as Atlas Comics. The Marvel era began in August 1961 with the launch of The Fantastic Four and other superhero titles created by Stan Lee, Jack Kirby, Steve Ditko, and numerous others. The Marvel brand, which had been used over the years and decades, was solidified as the company's primary brand. Comics editor Stephen Wacker is the current editor-in-chief, serving since July 2026.\r\n\r\nMarvel counts among its characters such well-known superheroes as Spider-Man, Wolverine, the Hulk, Captain America, Iron Man, Thor, Daredevil, Black Panther, Doctor Strange, and Captain Marvel, as well as popular superhero teams such as the Avengers, X-Men, Fantastic Four, and Guardians of the Galaxy. Its stable of well-known supervillains includes Doctor Doom, Magneto, Green Goblin, Kingpin, Red Skull, Loki, Ultron, Thanos, Apocalypse, and Galactus. Most of Marvel's fictional characters operate in a single reality known as the Marvel Universe, with most locations mirroring real-life places; many major characters are based in New York City. Additionally, Marvel has published many comics based on licensed properties. This includes Star Wars comics, first from 1977 to 1987, when the franchise was independently owned, and again beginning in 2015 by which time Star Wars and Marvel were both owned by Disney.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2018/11/11/marvel.jpg",
       "founders": [
         {
           "artistId": null,
@@ -761,21 +1100,40 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Marvel_Comics"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/marvel/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/marvel/4010-31/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 1,
+        "comicvine": 31,
+        "gcd": 78
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 1939,
+      "country": "United States",
+      "location": "New York, New York"
     },
     {
       "id": "oni-press",
       "name": "Oni Press",
       "kind": "publisher",
       "parent": null,
-      "aliases": [],
+      "aliases": [
+        "Limerence Press"
+      ],
       "description": "Oni Press is an American independent comic book and graphic novel publisher based in Portland, Oregon, best known for publishing such series as Scott Pilgrim and Rick and Morty. In 2019, it became an imprint label following the company's merger with Lion Forge Comics. The merged company, Oni\u2013Lion Forge Publishing Group (OLFPG), is owned by Polarity. Oni Press has remained the \"predominant name used for publishing comics\" by OLFPG.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/03/01/Oni_Press.png",
       "founders": [
         {
           "artistId": null,
@@ -790,21 +1148,39 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Oni_Press"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/oni-press/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/oni-press/4010-682/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 31,
+        "comicvine": 682
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 1997,
+      "country": "United States",
+      "location": "OR"
     },
     {
       "id": "pacific-comics",
       "name": "Pacific Comics",
       "kind": "publisher",
       "parent": null,
-      "aliases": [],
+      "aliases": [
+        "Blue Dolphin Enterprises"
+      ],
       "description": "Pacific Comics was a comic book distributor and publisher active from 1971 to 1984. The company began as a San Diego, California, comic book shop owned by brothers Bill and Steve Schanes, later moving into comics distribution and then publishing. \r\n\r\nAs a publisher, starting in 1981, Pacific took early advantage of the growing direct market, attracting a number of writers and artists from DC Comics and Marvel Comics to produce creator-owned titles, which were not subject to the Comics Code, and thus were free to feature more mature content.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/34986/1047384-vanity_1_0001.jpg",
       "founders": [
         {
           "artistId": null,
@@ -819,12 +1195,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Pacific_Comics"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/pacific-comics/4010-2509/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 2509
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "San Diego, California"
     },
     {
       "id": "pantheon-books",
@@ -833,7 +1217,7 @@
       "parent": null,
       "aliases": [],
       "description": "Pantheon Books is an American book publishing imprint. Founded in 1942 as an independent publishing house in New York City by Kurt and Helen Wolff, it specialized in introducing progressive European works to American readers. In 1961, it was acquired by Random House, and Andr\u00e9 Schiffrin was hired as executive editor, who continued to publish important works, by both European and American writers, until he was forced to resign in 1990 by Random House owner Samuel Irving Newhouse, Jr. and president Alberto Vitale. Several editors resigned in protest, and multiple Pantheon authors including Studs Terkel, Kurt Vonnegut, and Barbara Ehrenreich held a protest outside Random House. In 1998, Bertelsmann purchased Random House, and the imprint has undergone a number of corporate restructurings since then. It is now part of the Knopf Doubleday Publishing Group under Penguin Random House.\r\n\r\nDan Frank was Editorial Director from 1996 until his death in May 2021. Lisa Lucas joined the imprint from 2020-2024 as Senior Vice President and Publisher.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/111746/5955651-c73.gif",
       "founders": [
         {
           "artistId": null,
@@ -848,12 +1232,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Pantheon_Books"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/pantheon-books/4010-1938/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 1938
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "New York, New York"
     },
     {
       "id": "print-mint",
@@ -864,7 +1256,7 @@
         "The Print Mint"
       ],
       "description": "The Print Mint, Inc. was a major publisher and distributor of underground comix based in the San Francisco Bay Area during the genre's late 1960s-early 1970s heyday. Starting as a retailer of psychedelic posters, the Print Mint soon evolved into a publisher, printer, and distributor. It was \"ground zero\" for the psychedelic poster. The Print Mint was originally owned by poet Don Schenker and his wife Alice, who later partnered in the business with Bob and Peggy Rita.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9625144-printmint.jpg",
       "founders": [
         {
           "artistId": null,
@@ -879,12 +1271,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Print_Mint"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/print-mint/4010-2439/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 2439
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "San Francisco, California"
     },
     {
       "id": "rip-off-press",
@@ -893,7 +1293,7 @@
       "parent": null,
       "aliases": [],
       "description": "Rip Off Press Inc. is a comic book mail order retailer and distributor, better known as the former publisher of adult-themed series like The Fabulous Furry Freak Brothers and Rip Off Comix, as well as many other seminal publications from the underground comix era. Founded in 1969 in San Francisco by four friends from Austin, Texas \u2014 cartoonists Gilbert Shelton and Jack Jackson, and Fred Todd and Dave Moriaty \u2014 Rip Off Press is now run in Auburn, California, by Todd.\r\n\r\nRip Off Press is notable for being the first company to publish the fourth edition of the Principia Discordia, a Discordian religious text written by Gregory Hill and Kerry Thornley. It was also an early publisher of a booklet on drug manufacturing, Psychedelic Chemistry.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8519229-ripoff.jpg",
       "founders": [
         {
           "artistId": "gilbert-shelton",
@@ -916,12 +1316,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Rip_Off_Press"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/rip-off-press/4010-1932/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 1932
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "Auburn, California"
     },
     {
       "id": "row-7-publishing",
@@ -932,11 +1340,22 @@
         "Row7 Publishing",
         "Row 7"
       ],
-      "description": "",
-      "imageUrl": null,
+      "description": "Row 7 is a self-publishing company ran by the two creators Ajna Wulou and Brandon John. They can be found at https://row7.squarespace.com",
+      "imageUrl": "https://static.metron.cloud/media/publisher/2025/09/24/Row_7_Logo.webp",
       "website": "https://row7.squarespace.com/",
-      "references": [],
-      "ids": {}
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/row-7-publishing/"
+        }
+      ],
+      "ids": {
+        "metron": 172
+      },
+      "country": "United States",
+      "sources": [
+        "metron"
+      ]
     },
     {
       "id": "sandez-rey",
@@ -1007,7 +1426,7 @@
         "Skybound Entertainment"
       ],
       "description": "Skybound Entertainment is an American multiplatform entertainment company founded by Robert Kirkman and David Alpert. It operates in concert with Image Comics.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/imprint/2024/11/30/graphix.png",
       "founders": [
         {
           "artistId": "robert-kirkman",
@@ -1022,12 +1441,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Skybound_Entertainment"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/imprint/graphix/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 18
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron"
+      ],
+      "foundedYear": 2005
     },
     {
       "id": "slg-publishing",
@@ -1036,10 +1463,12 @@
       "parent": null,
       "aliases": [
         "Slave Labor Graphics",
-        "SLG"
+        "SLG",
+        "Slave Labor",
+        "Slave Labor Graphic"
       ],
       "description": "Slave Labor Graphics (now mostly known by the acronym SLG) is an American independent comic book publisher, well known for publishing darkly humorous, offbeat adult comics. Creators associated with SLG over the years include Evan Dorkin, Roman Dirge, Sarah Dyer, Woodrow Phoenix, Jhonen Vasquez, and Andi Watson.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4161946-logo.jpg",
       "founders": [
         {
           "artistId": null,
@@ -1050,12 +1479,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Slave_Labor_Graphics"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/slg-publishing/4010-383/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 383
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "San Jose, California"
     },
     {
       "id": "topps-comics",
@@ -1064,17 +1501,25 @@
       "parent": null,
       "aliases": [],
       "description": "Topps Comics was a division of Topps that published comic books from 1993 to 1998, beginning its existence during a short-lived comics industry boom that attracted many investors and created many companies. It was based in New York City, first at 254 36th Street, Brooklyn, and then at One Whitehall Street, in Manhattan.\r\n\r\nThe company specialized in licensed titles, particularly film and TV series tie-ins, such as The X-Files, based on the Fox TV series, and the films Bram Stoker's Dracula and Jurassic Park. It also licensed such literary properties as Zorro, and published a smattering of original series, including Cadillacs and Dinosaurs and several based on concepts by the then-retired comics industry legend Jack Kirby.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58245/1100265-topps_logo.gif",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Topps_Comics"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/topps-comics/4010-519/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 519
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "New York City, New York"
     },
     {
       "id": "tucker-petertil",
@@ -1099,10 +1544,11 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [
-        "Tundra"
+        "Tundra",
+        "Tundra Publishing Ltd."
       ],
       "description": "Tundra Publishing was a Northampton, Massachusetts-based comic book publisher founded by Kevin Eastman in 1990. The company was founded to provide a venue for adventurous, creator-owned work by talented cartoonists and illustrators. Its publications were noted in the trade for their high production values, including glossy paper stock, full-color printing, and square binding. Tundra was one of the earlier creator-owned companies, before the formation of Image Comics and Dark Horse Comics' Legends imprint.\r\n\r\nCreators and projects involved with Tundra included Alan Moore and Bill Sienkiewicz's Big Numbers, Moore & Eddie Campbell's From Hell, Moore & Melinda Gebbie's Lost Girls (these last two original serialised in Stephen R. Bissette's Taboo anthology, which was also part-published by Tundra), The Crow, Mike Allred's Madman and Dave McKean's Cages.\r\n\r\nDespite its ambitious start, Tundra never became a profitable enterprise. It closed its doors in 1993 after burning through $14 million in three years. Kitchen Sink Press acquired its holdings; it reprinted popular Tundra publications such as Understanding Comics and continued to publish some Tundra series such as Taboo.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/19151/636288-35_20061218183257_publisher.jpg",
       "founders": [
         {
           "artistId": "kevin-eastman",
@@ -1113,12 +1559,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Tundra_Publishing"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tundra/4010-481/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "comicvine": 481
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "comicvine"
+      ],
+      "location": "Northampton, Massachusetts"
     },
     {
       "id": "vault-comics",
@@ -1127,17 +1581,34 @@
       "parent": null,
       "aliases": [],
       "description": "Vault Comics is an American publisher of comic books. The company is known for its horror, fantasy, and science fiction titles, with a focus on diversity and cross-media properties.\r\n\r\nA private family-owned company, Vault Comics is based in Missoula, Montana.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2019/10/18/vault.jpg",
       "references": [
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Vault_Comics"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/vault-comics/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/vault-comics/4010-7801/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 28,
+        "comicvine": 7801,
+        "gcd": 11896
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 2016,
+      "country": "United States",
+      "location": "Bethesda, Maryland"
     },
     {
       "id": "vertigo",
@@ -1149,7 +1620,7 @@
         "Vertigo Comics"
       ],
       "description": "DC Vertigo, also known as Vertigo Comics or simply Vertigo, is an imprint of the American comic book publisher DC Comics. Vertigo publishes comics with adult content, such as nudity, drug use, profanity, and graphic violence, that do not fit the restrictions of DC's main line. Its comics include company-owned series set in the DC Universe, such as The Sandman, Swamp Thing, and Hellblazer, and creator-owned works, such as Preacher, Y: The Last Man, and Fables.\r\n\r\nVertigo originated from DC's 1980s adult comic line, which began after DC stopped submitting The Saga of the Swamp Thing for approval by the Comics Code Authority. Following the success of two adult-oriented 1986 limited series, Batman: The Dark Knight Returns and Watchmen, DC's output of adult comics, edited by Karen Berger, grew. By 1992, DC's mature readers' line was editorially separate from its main line and Berger received permission to manage them under a separate imprint. Vertigo was launched in January 1993 with a mix of existing DC ongoing series and new series.\r\n\r\nAlthough its initial publications were primarily in the horror and fantasy genres, Vertigo expanded to publish works dealing with crime, social commentary, speculative fiction, biography, and other genres. Vertigo also reprinted comics previously published by DC under other imprints, such as V for Vendetta and Transmetropolitan. In North America, Vertigo pioneered a publishing model in which monthly series are periodically collected into editions for bookstore sale. Vertigo became DC's most popular and enduring imprint; several Vertigo series have won the comics industry's Eisner Award and have been adapted to film and television.\r\n\r\nVertigo began to decline in the 2010s, as certain properties like Hellblazer and Swamp Thing were re-integrated into DC's main comic books, while Berger departed in 2013. Berger's departure was followed by a series of editorial restructures. An attempted relaunch in 2018 suffered a multitude of setbacks, including numerous cancellations. DC discontinued Vertigo in January 2020 as part of a plan to publish all comics under a single banner. Most Vertigo series moved to DC Black Label until 2024, when DC revived the imprint.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/imprint/2024/08/12/vertigo.jpg",
       "founders": [
         {
           "artistId": null,
@@ -1160,12 +1631,20 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Vertigo_Comics"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/imprint/vertigo-comics/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 1
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron"
+      ],
+      "foundedYear": 1993
     },
     {
       "id": "virus",
@@ -1174,9 +1653,19 @@
       "parent": "heavy-metal-international",
       "aliases": [],
       "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7411812-1318829812-875.j.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/virus/4010-9613/"
+        }
+      ],
+      "ids": {
+        "comicvine": 9613
+      },
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "warren-publishing",
@@ -1187,7 +1676,7 @@
         "Warren"
       ],
       "description": "Warren Publishing was an American magazine company founded by James Warren, who published his first magazines in 1957 and continued in the business for decades. Magazines published by Warren include After Hours, Creepy, Eerie, Famous Monsters of Filmland, Help!, and Vampirella.\r\n\r\nInitially based in Philadelphia, Pennsylvania, the company moved by 1965 to New York City.",
-      "imageUrl": null,
+      "imageUrl": "https://static.metron.cloud/media/publisher/2026/01/12/Warren.png",
       "founders": [
         {
           "artistId": "james-warren",
@@ -1198,12 +1687,28 @@
         {
           "name": "Wikipedia",
           "url": "https://en.wikipedia.org/wiki/Warren_Publishing"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/publisher/warren/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/warren/4010-173/"
         }
       ],
-      "ids": {},
+      "ids": {
+        "metron": 95,
+        "comicvine": 173,
+        "gcd": 279
+      },
       "sources": [
-        "wikipedia"
-      ]
+        "wikipedia",
+        "metron",
+        "comicvine"
+      ],
+      "foundedYear": 1957,
+      "country": "United States"
     },
     {
       "id": "washington-free-community",
@@ -1211,10 +1716,21 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "",
-      "imageUrl": null,
-      "references": [],
-      "ids": {}
+      "description": "Underground publisher from Washington, D.C.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/4585791-wash.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/washington-free-community/4010-6648/"
+        }
+      ],
+      "ids": {
+        "comicvine": 6648
+      },
+      "location": "Washington D.C., Washington D.C.",
+      "sources": [
+        "comicvine"
+      ]
     },
     {
       "id": "yahoo-production",
@@ -1230,16 +1746,22 @@
         {
           "name": "Grand Comics Database",
           "url": "https://www.comics.org/publisher/2704/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/yahoo-production/4010-3537/"
         }
       ],
       "ids": {
-        "gcd": 2704
+        "gcd": 2704,
+        "comicvine": 3537
       },
       "activeFrom": 1971,
       "activeUntil": 1971,
       "country": "United States",
       "sources": [
-        "gcd"
+        "gcd",
+        "comicvine"
       ]
     }
   ]
