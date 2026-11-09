@@ -71,6 +71,29 @@ export function usePublisherIndex(): PublisherIndex {
   );
 }
 
+/**
+ * Every series by id, for pages that range over many of them (a publisher's
+ * covers). Loaded once from the shared metadata cache.
+ */
+export function useSeriesById(): Map<string, Series> {
+  const [series, setSeries] = useState<Series[] | null>(() => getCachedMetadata().series);
+
+  useEffect(() => {
+    if (series) return;
+    let cancelled = false;
+    loadMetadata()
+      .then((data) => {
+        if (!cancelled) setSeries(data.series);
+      })
+      .catch(() => {
+        // silently ignore — pages just go without covers
+      });
+    return () => { cancelled = true; };
+  }, [series]);
+
+  return useMemo(() => new Map((series ?? []).map((s) => [s.id, s])), [series]);
+}
+
 type Loaded = { artists: Artist[]; series: Series[]; issues: IssueCredits[] };
 
 /**

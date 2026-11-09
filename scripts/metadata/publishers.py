@@ -23,10 +23,19 @@ Each publisher, imprint or self-publishing label is now one registry entry:
       "country": "United States", "location": "Princeton, Wisconsin",
       "website": "...",
       "founders": [{"artistId": "denis-kitchen", "name": "Denis Kitchen"}],
+      "editors": [{"artistId": null, "name": "...", "role": "Editor-in-chief",
+                   "from": 1981, "until": 1992}],
+      "events": [{"year": 1993, "text": "Merged with Tundra..."}],
+      "logos": [{"url": "...", "from": 1977, "until": 2005, "source": "..."}],
       "references": [...],
       "ids": {"metron": 12, "comicvine": 1234, "gcd": 56},
       "sources": ["wikipedia", "metron"]
     }
+
+`editors`, `events` (milestones, oldest first) and `logos` (marks by the
+years they were in use; `imageUrl` stays the current one) are filled by hand
+from the publishers' Wikipedia articles and Wikimedia files. No pass here
+writes them; they ride through every run untouched.
 
 A series points at it with `publisherId` and, for an imprint, `imprintId`. The
 `publisher` string stays on the series as the display name of the parent

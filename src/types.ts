@@ -75,10 +75,41 @@ export interface Publisher {
   location?: string | null;
   website?: string | null;
   founders?: { artistId: string | null; name: string }[];
+  /** Editors and publishers who shaped the line, apart from its founders.
+   *  Hand-researched, like `events` and `logos`. */
+  editors?: PublisherPerson[];
+  /** Milestones in the company's history, oldest first. */
+  events?: PublisherEvent[];
+  /** Marks the company has used, each with the years it was in use, so a
+   *  panel can show the one on its cover's era. Only set when there is more
+   *  than one; `imageUrl` stays the current mark. */
+  logos?: PublisherLogo[];
   references: Reference[];
   /** Source ids: Metron, Comic Vine and GCD. */
   ids: Partial<Record<"metron" | "comicvine" | "gcd", number>>;
   tags?: string[] | null;
+}
+
+export interface PublisherEvent {
+  year: number;
+  text: string;
+}
+
+export interface PublisherPerson {
+  artistId: string | null;
+  name: string;
+  role: string;
+  from?: number | null;
+  until?: number | null;
+}
+
+export interface PublisherLogo {
+  url: string;
+  /** First and last years in use; open-ended when absent. */
+  from?: number | null;
+  until?: number | null;
+  /** The file's description page, for attribution. */
+  source?: string;
 }
 
 export interface IssueCredit {

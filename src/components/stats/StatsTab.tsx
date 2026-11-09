@@ -16,6 +16,8 @@ import { normalizeCountry } from "../../utils/country";
 import { formatIssue } from "../../utils/issueFormat";
 import { panelImageUrl } from "../../utils/imageUrl";
 import { AGE_BIN, ageBinKey, ageBinStart } from "../../utils/artistAge";
+import { wallTimeline } from "../../utils/publishers";
+import type { WallEvent } from "../../utils/publishers";
 
 // Chart palette — validated against the app surface (#141414) with the
 // dataviz six-checks script: accent passes all four; gray is the deliberate
@@ -754,6 +756,106 @@ function SuperlativeTile({ s, onOpen }: { s: Superlative; onOpen?: StatsOpenPane
 }
 
 /**
+ * The houses on the wall in one chronology, a decade at a time. The decades
+ * are tabs, each with its count of milestones and a tick under it scaled to
+ * that decade's panels, so the history reads against the collection. It
+ * opens on the decade the wall holds most panels from. A house's name filters
+ * the gallery to it.
+ */
+function PublishingHistory({
+  events,
+  panels,
+  onFilter,
+}: {
+  events: WallEvent[];
+  panels: Panel[];
+  onFilter?: (patch: StatsFilterPatch) => void;
+}) {
+  const decades = useMemo(() => {
+    const eventCounts = new Map<number, number>();
+    for (const e of events) {
+      const d = Math.floor(e.year / 10) * 10;
+      eventCounts.set(d, (eventCounts.get(d) ?? 0) + 1);
+    }
+    const panelCounts = new Map<number, number>();
+    for (const p of panels) {
+      if (!(p.year > 0)) continue;
+      const d = Math.floor(p.year / 10) * 10;
+      panelCounts.set(d, (panelCounts.get(d) ?? 0) + 1);
+    }
+    return [...eventCounts.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([decade, n]) => ({ decade, events: n, panels: panelCounts.get(decade) ?? 0 }));
+  }, [events, panels]);
+
+  const fallback = useMemo(
+    () => decades.reduce((best, d) => (d.panels > best.panels ? d : best), decades[0])?.decade ?? null,
+    [decades],
+  );
+  const [picked, setPicked] = useState<number | null>(null);
+  const selected = picked !== null && decades.some((d) => d.decade === picked) ? picked : fallback;
+  const maxPanels = Math.max(1, ...decades.map((d) => d.panels));
+  const shown = events.filter((e) => Math.floor(e.year / 10) * 10 === selected);
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-x-1 gap-y-1.5 mb-3" role="tablist" aria-label="Decades">
+        {decades.map((d) => {
+          const on = d.decade === selected;
+          return (
+            <button
+              key={d.decade}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              onClick={() => setPicked(d.decade)}
+              title={`${d.decade}s · ${d.events} milestone${d.events === 1 ? "" : "s"} · ${d.panels} panel${d.panels === 1 ? "" : "s"} on the wall`}
+              className="flex flex-col items-stretch gap-1 rounded px-1.5 pt-1 pb-1.5 transition-colors hover:bg-white/5"
+            >
+              <span
+                className="text-[10px] tabular-nums"
+                style={{ color: on ? ACCENT : INK_MUTED }}
+              >
+                {decadeLabel(d.decade)}
+                <span style={{ opacity: 0.6 }}> {d.events}</span>
+              </span>
+              <span className="block h-0.75 rounded-full" style={{ background: HAIRLINE }}>
+                <span
+                  className="block h-full rounded-full"
+                  style={{
+                    width: `${(d.panels / maxPanels) * 100}%`,
+                    background: on ? ACCENT : NEUTRAL,
+                    opacity: on ? 1 : 0.6,
+                  }}
+                />
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <ol className="flex flex-col gap-1.5" role="tabpanel">
+        {shown.map((e, i) => (
+          <li key={`${e.publisher}-${e.year}-${i}`} className="grid gap-x-2.5 text-[11px] leading-snug" style={{ gridTemplateColumns: "2.5rem minmax(0, 1fr)" }}>
+            <span className="tabular-nums" style={{ color: INK_MUTED }}>{e.year}</span>
+            <span className="text-ink">
+              <button
+                type="button"
+                disabled={!onFilter}
+                onClick={() => onFilter?.({ publishers: [e.publisher] })}
+                className={`mr-1.5 font-medium text-ink transition-colors ${onFilter ? "cursor-pointer hover:text-accent" : ""}`}
+              >
+                {e.publisher}
+              </button>
+              <span style={{ opacity: 0.7 }}>{e.text}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/**
  * Publishers by decade, as a dot grid: one row per publisher, one column per
  * decade, each dot's area the publisher's share of that decade's panels. The
  * share, not the count — the 2020s hold most of the collection, and counted
@@ -1137,6 +1239,7 @@ export default function StatsTab({
   onOpenPanel?: StatsOpenPanel;
 }) {
   const [meta, setMeta] = useState<MetaStats | null>(null);
+  const [history, setHistory] = useState<WallEvent[]>([]);
 
   const stats = useMemo(
     () => (panels.length > 0 ? computePanelStats(panels) : null),
@@ -1146,8 +1249,10 @@ export default function StatsTab({
   useEffect(() => {
     let cancelled = false;
     loadMetadata()
-      .then(({ artists, issues }) => {
-        if (!cancelled) setMeta(computeMetaStats(panels, artists, issues));
+      .then(({ artists, issues, publishers }) => {
+        if (cancelled) return;
+        setMeta(computeMetaStats(panels, artists, issues));
+        setHistory(wallTimeline(panels, publishers));
       })
       // metadata is optional — panel-derived stats still render
       .catch(() => {});
@@ -1309,6 +1414,16 @@ export default function StatsTab({
               note="dot size: share of that decade's panels"
             />
             <PublisherDecadeGrid data={meta.publisherDecades} onFilter={onFilter} />
+          </section>
+        )}
+
+        {history.length > 0 && (
+          <section>
+            <SectionTitle
+              title="PUBLISHING HISTORY"
+              note={`milestones of the houses on the wall${onFilter ? " · click a house to filter" : ""}`}
+            />
+            <PublishingHistory events={history} panels={panels} onFilter={onFilter} />
           </section>
         )}
 

@@ -2,7 +2,7 @@ import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, use
 import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
-import { publisherKindLabel, publisherYears, resolveSeriesPublisher } from "../utils/publishers";
+import { publisherKindLabel, publisherLogoFor, publisherYears, resolveSeriesPublisher } from "../utils/publishers";
 import type { PublisherIndex } from "../utils/publishers";
 import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
@@ -639,6 +639,9 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   // The closing card's line: the imprint this book came out under (a link of
   // its own), then the house's years and country.
   const publisherEntry = published.publisherEntry;
+  // The mark that was on covers the year this panel came out, where the
+  // registry knows the house's logos by era; its current one otherwise.
+  const publisherLogo = publisherLogoFor(publisherEntry, panel.year)?.url ?? publisherEntry?.imageUrl ?? null;
   const publisherCardMeta = [
     publisherEntry ? publisherYears(publisherEntry) : null,
     publisherEntry?.country ?? null,
@@ -1226,11 +1229,11 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
           <>
             <div className="border-t border-white/8" />
             <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-              {publisherEntry?.imageUrl && (
+              {publisherLogo && (
                 <div className="absolute inset-0 pointer-events-none">
                   {/* A logo is a mark, not a photograph: contained, never cropped. */}
                   <img
-                    src={publisherEntry.imageUrl}
+                    src={publisherLogo}
                     alt=""
                     className="absolute right-3 top-1/2 -translate-y-1/2 h-3/4 w-1/3 object-contain object-right"
                     style={{ opacity: 0.3 }}
@@ -1314,6 +1317,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       name={activePublisher ?? ""}
       publisher={activePublisher ? publisherIndex.byName.get(activePublisher.toLowerCase()) ?? null : null}
       index={publisherIndex}
+      artistIndex={artistIndex}
       allPanels={allPanels}
       currentPanelId={panel.id}
       onSelectPanel={onSelectPanel}

@@ -22,6 +22,20 @@
           "name": "Laura Allred"
         }
       ],
+      "events": [
+        {
+          "year": 2000,
+          "text": "Launched with the Allreds' monthly The Atomics."
+        },
+        {
+          "year": 2002,
+          "text": "Published Madman Picture Exhibition for Madman's tenth anniversary."
+        },
+        {
+          "year": 2004,
+          "text": "Began The Golden Plates, which ran into 2005."
+        }
+      ],
       "references": [
         {
           "name": "Comic Vine",
@@ -78,6 +92,16 @@
           "name": "Rich Young"
         }
       ],
+      "events": [
+        {
+          "year": 2019,
+          "text": "Rich Young started it in Portland; Charlie Adlard's Vampire State Building was the first title."
+        },
+        {
+          "year": 2025,
+          "text": "Bought NBM, the New York graphic novel house founded in 1976, which carries on as an imprint."
+        }
+      ],
       "sources": [
         "comicvine"
       ]
@@ -92,6 +116,20 @@
       "imageUrl": null,
       "foundedYear": 2024,
       "country": "United States",
+      "events": [
+        {
+          "year": 2024,
+          "text": "Launched in October with the DC All-In Special."
+        },
+        {
+          "year": 2024,
+          "text": "Absolute Batman finished as the best-selling comic of the year."
+        },
+        {
+          "year": 2025,
+          "text": "The line passed 8.5 million copies sold by December."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -102,6 +140,53 @@
       "sources": [
         "wikipedia"
       ]
+    },
+    {
+      "id": "apex-novelties",
+      "name": "Apex Novelties",
+      "kind": "publisher",
+      "parent": null,
+      "aliases": [],
+      "description": "Apex Novelties was Don Donahue's San Francisco underground comix imprint. Donahue published the first run of Zap Comix in 1968, starting with Robert Crumb's Zap #1, before the title moved to the Print Mint. Apex went on to publish Snatch Comics, Mr. Natural, Funny Aminals and other early comix, most of them between 1968 and 1974. Its last comix title was Crumb's Best Buy Comics in 1979.",
+      "imageUrl": null,
+      "foundedYear": 1968,
+      "activeUntil": 1979,
+      "country": "United States",
+      "founders": [
+        {
+          "artistId": null,
+          "name": "Don Donahue"
+        }
+      ],
+      "events": [
+        {
+          "year": 1968,
+          "text": "Don Donahue traded a hi-fi tape player to get Robert Crumb's Zap Comix #1 printed."
+        },
+        {
+          "year": 1969,
+          "text": "Moved to a storefront at 1417 Valencia Street after a fire nearly destroyed its building."
+        },
+        {
+          "year": 1970,
+          "text": "Susan Goodrick became Donahue's partner in the company, staying until 1978."
+        },
+        {
+          "year": 1971,
+          "text": "Published Crumb's Your Hytone Comics; Black and White Comics followed in 1973."
+        }
+      ],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Don_Donahue"
+        }
+      ],
+      "ids": {},
+      "sources": [
+        "wikipedia"
+      ],
+      "location": "San Francisco, California"
     },
     {
       "id": "bad-idea",
@@ -128,6 +213,20 @@
         "comicvine": 10122
       },
       "location": "Los Angeles, California",
+      "events": [
+        {
+          "year": 2019,
+          "text": "Founded by Valiant veterans Dinesh Shamdasani, Warren Simons and Hunter Gorinson."
+        },
+        {
+          "year": 2020,
+          "text": "Its first book was the promotional giveaway Hero Trade #1."
+        },
+        {
+          "year": 2021,
+          "text": "Monthly comics began in March with ENIAC by Matt Kindt and Doug Braithwaite."
+        }
+      ],
       "sources": [
         "comicvine"
       ]
@@ -154,6 +253,16 @@
         {
           "artistId": null,
           "name": "Brett Gurewitz"
+        }
+      ],
+      "events": [
+        {
+          "year": 2012,
+          "text": "Formed to publish Occupy Comics, a benefit book for Occupy Wall Street."
+        },
+        {
+          "year": 2013,
+          "text": "Unveiled its first slate on February 14, sold to shops and directly to fans."
         }
       ],
       "references": [
@@ -196,6 +305,43 @@
         {
           "artistId": null,
           "name": "Andrew Cosby"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Mark Waid",
+          "role": "Editor-in-chief",
+          "from": 2007,
+          "until": 2010
+        },
+        {
+          "artistId": null,
+          "name": "Matt Gagnon",
+          "role": "Editor-in-chief",
+          "from": 2010
+        }
+      ],
+      "events": [
+        {
+          "year": 2005,
+          "text": "Its first book, the anthology Zombie Tales #1, came out on June 29."
+        },
+        {
+          "year": 2007,
+          "text": "Named Mark Waid editor-in-chief."
+        },
+        {
+          "year": 2009,
+          "text": "Launched its first imprint, Boom! Kids."
+        },
+        {
+          "year": 2017,
+          "text": "20th Century Fox bought a minority stake."
+        },
+        {
+          "year": 2024,
+          "text": "Penguin Random House completed its purchase of the company in September."
         }
       ],
       "references": [
@@ -249,6 +395,24 @@
           "name": "Gary Reed"
         }
       ],
+      "events": [
+        {
+          "year": 1991,
+          "text": "Started the literary imprint Tome Press."
+        },
+        {
+          "year": 1993,
+          "text": "Merged with Paul Burke's Stabur Press."
+        },
+        {
+          "year": 2000,
+          "text": "Released its last titles as Gary Reed turned to teaching."
+        },
+        {
+          "year": 2015,
+          "text": "Reed relaunched Caliber; it carried on after his death the next year."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -282,6 +446,36 @@
         {
           "artistId": "steve-lafler",
           "name": "Steve Lafler"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": "steve-beaupre",
+          "name": "Steve Beaupre",
+          "role": "Co-publisher; editor of Buzzard",
+          "from": 1989
+        }
+      ],
+      "events": [
+        {
+          "year": 1980,
+          "text": "Steve Lafler started it just after graduating from UMass Amherst."
+        },
+        {
+          "year": 1983,
+          "text": "Lafler's Dog Boy became its first ongoing series."
+        },
+        {
+          "year": 1984,
+          "text": "Moved from Eugene to Portland, Oregon."
+        },
+        {
+          "year": 1989,
+          "text": "Stephen Beaupre became co-publisher."
+        },
+        {
+          "year": 1990,
+          "text": "Moved to Hudson, Massachusetts, and launched the Buzzard anthology."
         }
       ],
       "references": [
@@ -318,6 +512,40 @@
         {
           "artistId": "mike-richardson",
           "name": "Mike Richardson"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Dave Marshall",
+          "role": "Editor-in-chief",
+          "from": 2015
+        }
+      ],
+      "events": [
+        {
+          "year": 1986,
+          "text": "Dark Horse Presents #1 debuted Paul Chadwick's Concrete and sold about 50,000 copies."
+        },
+        {
+          "year": 1988,
+          "text": "Published its first Aliens comic."
+        },
+        {
+          "year": 1991,
+          "text": "Frank Miller introduced Sin City in Dark Horse Presents."
+        },
+        {
+          "year": 1994,
+          "text": "Mike Mignola's Hellboy arrived in Seed of Destruction."
+        },
+        {
+          "year": 2013,
+          "text": "Took over the EC Archives reprints of 1950s EC comics."
+        },
+        {
+          "year": 2022,
+          "text": "Embracer Group completed its purchase of the company in March."
         }
       ],
       "references": [
@@ -377,10 +605,105 @@
       ],
       "description": "DC Comics (originally DC Comics, Inc., and also known simply as DC) is an American comic book publisher owned by Skydance under Skydance Products & Publishing. DC is an initialism for Detective Comics, a comic book series first published in 1937. DC Comics is one of the largest and oldest American comic book companies, the first comic under the DC banner being published in 1937.\r\n\r\nMost of its published stories are set in the fictional DC Universe and feature numerous culturally iconic heroic characters, such as Superman, Batman, Wonder Woman, and the Flash; as well as famous fictional teams, including the Justice League, the Teen Titans, the Suicide Squad, and the Legion of Super-Heroes. The universe contains an assortment of well-known supervillains, such as Lex Luthor, the Joker, Darkseid, and the antiheroic Catwoman. The company has published non-DC Universe-related material, including Watchmen, V for Vendetta, Fables, and many other titles, under the alternative imprints Vertigo and DC Black Label.\r\n\r\nOriginally at 432 Fourth Avenue in Manhattan, New York City, the company offices have been located at 480 and later 575 Lexington Avenue, 909 Third Avenue, 75 Rockefeller Plaza, 666 Fifth Avenue, and 1325 Avenue of the Americas. DC Comics was located at 1700 Broadway in Midtown Manhattan until April 2015, when DC Entertainment transferred its headquarters to Burbank, California.\r\n\r\nIn 2017, approximately 70% of the American comic book market was shared by DC Comics and its long-time major competitor Marvel Comics, though this figure may be distorted because sales of graphic novels are excluded. As of 2025, in the comic book shop market, DC is the second-largest publisher of comic books, after Marvel, and Image Comics is third. In the bookstore market, DC is the second largest publisher of comic books, after Viz Media, and Marvel is third.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2026/03/01/DC_Comics.png",
+      "logos": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/DC_Bullet_%28SVG%29.svg/500px-DC_Bullet_%28SVG%29.svg.png",
+          "from": 1977,
+          "until": 2005,
+          "source": "https://commons.wikimedia.org/wiki/File:DC_Bullet_(SVG).svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/DC_Comics_logo.svg/500px-DC_Comics_logo.svg.png",
+          "from": 2016,
+          "until": 2024,
+          "source": "https://commons.wikimedia.org/wiki/File:DC_Comics_logo.svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/DC_Bullet_%28SVG%29.svg/500px-DC_Bullet_%28SVG%29.svg.png",
+          "from": 2024,
+          "source": "https://commons.wikimedia.org/wiki/File:DC_Bullet_(SVG).svg"
+        }
+      ],
       "founders": [
         {
           "artistId": null,
           "name": "Malcolm Wheeler-Nicholson"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Julius Schwartz",
+          "role": "Editor"
+        },
+        {
+          "artistId": null,
+          "name": "Jenette Kahn",
+          "role": "Publisher",
+          "from": 1976
+        },
+        {
+          "artistId": null,
+          "name": "Dick Giordano",
+          "role": "Managing editor"
+        },
+        {
+          "artistId": null,
+          "name": "Paul Levitz",
+          "role": "Vice president, later publisher"
+        },
+        {
+          "artistId": null,
+          "name": "Dan DiDio",
+          "role": "Co-publisher",
+          "from": 2010,
+          "until": 2020
+        }
+      ],
+      "events": [
+        {
+          "year": 1935,
+          "text": "New Fun #1, cover-dated February, was its first comic."
+        },
+        {
+          "year": 1938,
+          "text": "Action Comics #1 introduced Superman."
+        },
+        {
+          "year": 1939,
+          "text": "Batman debuted in Detective Comics #27."
+        },
+        {
+          "year": 1956,
+          "text": "Showcase #4 reimagined the Flash and opened the Silver Age."
+        },
+        {
+          "year": 1967,
+          "text": "Kinney National bought the company, which became part of Warner."
+        },
+        {
+          "year": 1977,
+          "text": "Milton Glaser's \"DC bullet\" logo appeared, and the company officially became DC Comics."
+        },
+        {
+          "year": 1985,
+          "text": "Crisis on Infinite Earths reset its continuity."
+        },
+        {
+          "year": 1993,
+          "text": "Launched the Vertigo imprint for mature readers."
+        },
+        {
+          "year": 2011,
+          "text": "Relaunched every title as The New 52."
+        },
+        {
+          "year": 2015,
+          "text": "Moved its headquarters from New York to Burbank."
+        },
+        {
+          "year": 2024,
+          "text": "Brought back an updated bullet logo in July."
         }
       ],
       "references": [
@@ -441,6 +764,16 @@
           "name": "Steve Dillon"
         }
       ],
+      "events": [
+        {
+          "year": 1988,
+          "text": "Deadline #1 introduced Tank Girl in October."
+        },
+        {
+          "year": 1995,
+          "text": "The magazine ended with issue #71."
+        }
+      ],
       "references": [
         {
           "name": "Comic Vine",
@@ -479,6 +812,12 @@
       "activeFrom": 1996,
       "activeUntil": 1997,
       "country": "United States",
+      "events": [
+        {
+          "year": 1996,
+          "text": "Took over Scott Berwanger's Anubis from SCC Entertainment."
+        }
+      ],
       "sources": [
         "gcd",
         "comicvine"
@@ -500,6 +839,46 @@
         {
           "artistId": null,
           "name": "Chris Oliveros"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Peggy Burns",
+          "role": "Publisher",
+          "from": 2015
+        },
+        {
+          "artistId": null,
+          "name": "Tom Devlin",
+          "role": "Executive editor",
+          "from": 2015
+        }
+      ],
+      "events": [
+        {
+          "year": 1990,
+          "text": "Chris Oliveros, 23, launched the Drawn & Quarterly anthology in April on $2,000 borrowed from his father."
+        },
+        {
+          "year": 2004,
+          "text": "Started Petit Livre, an imprint for art books."
+        },
+        {
+          "year": 2006,
+          "text": "Began collecting Tove Jansson's Moomin strips."
+        },
+        {
+          "year": 2007,
+          "text": "Opened its bookshop in Mile End, Montreal."
+        },
+        {
+          "year": 2015,
+          "text": "Oliveros stepped down; Peggy Burns became publisher."
+        },
+        {
+          "year": 2023,
+          "text": "Oliveros sold the company to Burns, Tom Devlin, Tracy Hurren and Julia Pohl-Miranda."
         }
       ],
       "references": [
@@ -555,7 +934,21 @@
       ],
       "foundedYear": 2023,
       "country": "United States",
-      "website": "https://www.dstlry.co/"
+      "website": "https://www.dstlry.co/",
+      "events": [
+        {
+          "year": 2023,
+          "text": "Announced in April by comiXology veterans David Steinberger and Chip Mosher."
+        },
+        {
+          "year": 2023,
+          "text": "Its first title, Jock's Gone, came out in October."
+        },
+        {
+          "year": 2025,
+          "text": "Moved to Penguin Random House distribution after Diamond's bankruptcy."
+        }
+      ]
     },
     {
       "id": "dynamite-entertainment",
@@ -571,6 +964,24 @@
         {
           "artistId": null,
           "name": "Nick Barrucci"
+        }
+      ],
+      "events": [
+        {
+          "year": 2004,
+          "text": "Nick Barrucci started it with an Army of Darkness miniseries."
+        },
+        {
+          "year": 2007,
+          "text": "Picked up The Boys after DC's WildStorm cancelled it."
+        },
+        {
+          "year": 2010,
+          "text": "Began its Green Hornet comics with a series written by Kevin Smith."
+        },
+        {
+          "year": 2013,
+          "text": "Announced a line of revived Gold Key heroes: Magnus, Solar, Turok and Doctor Spektor."
         }
       ],
       "references": [
@@ -617,6 +1028,48 @@
         {
           "artistId": null,
           "name": "Max Gaines"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Al Feldstein",
+          "role": "Editor"
+        },
+        {
+          "artistId": "harvey-kurtzman",
+          "name": "Harvey Kurtzman",
+          "role": "Editor; created Mad"
+        }
+      ],
+      "events": [
+        {
+          "year": 1945,
+          "text": "Max Gaines left All-American, keeping Picture Stories from the Bible to build EC on."
+        },
+        {
+          "year": 1947,
+          "text": "Bill Gaines took over after his father's death and renamed it Entertaining Comics."
+        },
+        {
+          "year": 1950,
+          "text": "Its new horror, crime and science fiction titles took over the line."
+        },
+        {
+          "year": 1952,
+          "text": "Harvey Kurtzman's Mad debuted."
+        },
+        {
+          "year": 1954,
+          "text": "Gaines ended his horror and SuspenStories titles on September 14."
+        },
+        {
+          "year": 1956,
+          "text": "Stopped publishing everything except Mad."
+        },
+        {
+          "year": 2024,
+          "text": "Oni Press revived the EC name."
         }
       ],
       "references": [
@@ -666,6 +1119,28 @@
           "name": "Jim Shooter"
         }
       ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Archie Goodwin",
+          "role": "Co-editor"
+        },
+        {
+          "artistId": null,
+          "name": "Al Milgrom",
+          "role": "Co-editor"
+        }
+      ],
+      "events": [
+        {
+          "year": 1982,
+          "text": "Launched as a spin-off of Epic Illustrated, starting with Jim Starlin's Dreadstar."
+        },
+        {
+          "year": 1996,
+          "text": "Marvel closed the imprint."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -688,6 +1163,18 @@
       ],
       "description": "Fantagraphics (previously Fantagraphics Books) is an American publisher of alternative comics, classic comic strip anthologies, manga, magazines, graphic novels, and (formerly) the erotic Eros Comix imprint. They have managed several awards for achievement in comic books.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2021/07/28/fantagraphics.jpg",
+      "logos": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Fantagraphics_logo.png/500px-Fantagraphics_logo.png",
+          "until": 2020,
+          "source": "https://commons.wikimedia.org/wiki/File:Fantagraphics_logo.png"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/en/8/82/Fantagraphics_logo_2020.png",
+          "from": 2020,
+          "source": "https://en.wikipedia.org/wiki/File:Fantagraphics_logo_2020.png"
+        }
+      ],
       "founders": [
         {
           "artistId": "gary-groth",
@@ -696,6 +1183,52 @@
         {
           "artistId": null,
           "name": "Mike Catron"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Kim Thompson",
+          "role": "Co-publisher",
+          "from": 1977,
+          "until": 2013
+        },
+        {
+          "artistId": null,
+          "name": "Tom Spurgeon",
+          "role": "Editor, The Comics Journal",
+          "from": 1994,
+          "until": 1999
+        }
+      ],
+      "events": [
+        {
+          "year": 1976,
+          "text": "Gary Groth and Michael Catron started it in College Park, Maryland."
+        },
+        {
+          "year": 1977,
+          "text": "Kim Thompson joined, using his inheritance to keep the company afloat."
+        },
+        {
+          "year": 1988,
+          "text": "Started the Harvey Awards, named for Harvey Kurtzman."
+        },
+        {
+          "year": 1989,
+          "text": "Settled in Seattle."
+        },
+        {
+          "year": 1990,
+          "text": "Launched the Eros Comix line, which helped it avoid bankruptcy."
+        },
+        {
+          "year": 2013,
+          "text": "After Thompson's death, raised $150,000 on Kickstarter in four days."
+        },
+        {
+          "year": 2020,
+          "text": "Dropped \"Books\" from its name and took a new pen-nib-and-torch logo."
         }
       ],
       "references": [
@@ -749,6 +1282,20 @@
           "name": "Matt Kindt"
         }
       ],
+      "events": [
+        {
+          "year": 2022,
+          "text": "Launched at Dark Horse in July with MIND MGMT: Bootleg."
+        },
+        {
+          "year": 2025,
+          "text": "Matt Kindt moved the imprint to Oni Press."
+        },
+        {
+          "year": 2026,
+          "text": "The Oni line opened in June with MIND MGMT: New and Improved."
+        }
+      ],
       "references": [
         {
           "name": "Dark Horse",
@@ -783,6 +1330,16 @@
           "name": "Nate Powell"
         }
       ],
+      "events": [
+        {
+          "year": 1992,
+          "text": "Nate Powell, 14, photocopied his first comic, D.O.A., with Mike Lierly."
+        },
+        {
+          "year": 2000,
+          "text": "Began Walkie Talkie, the first issue funded by a self-publishing grant."
+        }
+      ],
       "references": [
         {
           "name": "Comiclopedia",
@@ -806,6 +1363,16 @@
       "foundedYear": 2023,
       "country": "United States",
       "website": "https://ghostmachinepro.com/",
+      "events": [
+        {
+          "year": 2023,
+          "text": "Announced at New York Comic Con on October 12."
+        },
+        {
+          "year": 2024,
+          "text": "Ghost Machine #1 opened its four shared universes in January."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -837,6 +1404,12 @@
         {
           "artistId": null,
           "name": "Terry Zwigoff"
+        }
+      ],
+      "events": [
+        {
+          "year": 1972,
+          "text": "Printed the first edition of Crumb's The People's Comics, in which Fritz the Cat is killed."
         }
       ],
       "references": [
@@ -893,7 +1466,76 @@
         "comicvine"
       ],
       "location": "Rockville Centre, New York",
-      "website": "https://www.heavymetal.com/"
+      "website": "https://www.heavymetal.com/",
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Sean Kelly",
+          "role": "Founding editor",
+          "from": 1977,
+          "until": 1979
+        },
+        {
+          "artistId": null,
+          "name": "Valerie Marchant",
+          "role": "Founding editor",
+          "from": 1977,
+          "until": 1979
+        },
+        {
+          "artistId": null,
+          "name": "Ted White",
+          "role": "Editor",
+          "from": 1979
+        },
+        {
+          "artistId": null,
+          "name": "Julie Simmons-Lynch",
+          "role": "Editor-in-chief",
+          "from": 1981,
+          "until": 1992
+        },
+        {
+          "artistId": "kevin-eastman",
+          "name": "Kevin Eastman",
+          "role": "Owner and editor-in-chief",
+          "from": 1992
+        }
+      ],
+      "events": [
+        {
+          "year": 1977,
+          "text": "Launched in April as the American edition of France's M\u00e9tal hurlant."
+        },
+        {
+          "year": 1980,
+          "text": "Cut ties with M\u00e9tal hurlant after its French partner went bankrupt."
+        },
+        {
+          "year": 1981,
+          "text": "Julie Simmons-Lynch became editor, a post she held for more than eleven years."
+        },
+        {
+          "year": 1986,
+          "text": "Went from monthly to quarterly."
+        },
+        {
+          "year": 1992,
+          "text": "Kevin Eastman bought the magazine for $500,000."
+        },
+        {
+          "year": 2014,
+          "text": "Eastman sold it to David Boxenbaum and Jeff Krelitz."
+        },
+        {
+          "year": 2023,
+          "text": "The magazine was cancelled; #320 was the last issue."
+        },
+        {
+          "year": 2025,
+          "text": "Relaunched under a new company, Heavy Metal International."
+        }
+      ]
     },
     {
       "id": "icon-comics",
@@ -924,7 +1566,17 @@
       ],
       "foundedYear": 2004,
       "activeUntil": 2017,
-      "country": "United States"
+      "country": "United States",
+      "events": [
+        {
+          "year": 2004,
+          "text": "Launched with Powers and Kabuki, both moved over from Image."
+        },
+        {
+          "year": 2017,
+          "text": "Went dormant after Brian Michael Bendis left for DC."
+        }
+      ]
     },
     {
       "id": "idw-publishing",
@@ -937,6 +1589,18 @@
       ],
       "description": "IDW Publishing is an American publisher of comic books, graphic novels, art books, and comic strip collections. It was founded in 1999 as the publishing division of Idea and Design Works, LLC (IDW) and is the fifth-largest comic book publisher in the United States, behind Marvel, DC, Dark Horse, and Image Comics. The company is known for its licensed comic book adaptations of films, television shows, video games, and cartoons.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2026/01/12/IDW_Publishing.png",
+      "logos": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/IDW_Publishing_logo.svg/500px-IDW_Publishing_logo.svg.png",
+          "until": 2024,
+          "source": "https://commons.wikimedia.org/wiki/File:IDW_Publishing_logo.svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/IDW_Publishing_logo_2025.svg/500px-IDW_Publishing_logo_2025.svg.png",
+          "from": 2024,
+          "source": "https://commons.wikimedia.org/wiki/File:IDW_Publishing_logo_2025.svg"
+        }
+      ],
       "founders": [
         {
           "artistId": null,
@@ -953,6 +1617,28 @@
         {
           "artistId": null,
           "name": "Robbie Robbins"
+        }
+      ],
+      "events": [
+        {
+          "year": 1999,
+          "text": "Formed by four managers and artists who had met at WildStorm."
+        },
+        {
+          "year": 2007,
+          "text": "IDT Corporation bought a 53 percent stake."
+        },
+        {
+          "year": 2011,
+          "text": "Began a new Teenage Mutant Ninja Turtles series."
+        },
+        {
+          "year": 2015,
+          "text": "Acquired Top Shelf Productions."
+        },
+        {
+          "year": 2024,
+          "text": "Rebranded with a new logo in October."
         }
       ],
       "references": [
@@ -1036,6 +1722,16 @@
           "artistId": null,
           "name": "Eric Gitter"
         }
+      ],
+      "events": [
+        {
+          "year": 2024,
+          "text": "Unveiled at New York Comic Con in October."
+        },
+        {
+          "year": 2025,
+          "text": "Its first books came out in September."
+        }
       ]
     },
     {
@@ -1077,6 +1773,51 @@
         {
           "artistId": null,
           "name": "Whilce Portacio"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Larry Marder",
+          "role": "Executive director",
+          "from": 1993,
+          "until": 1999
+        },
+        {
+          "artistId": null,
+          "name": "Eric Stephenson",
+          "role": "Publisher",
+          "from": 2008
+        }
+      ],
+      "events": [
+        {
+          "year": 1992,
+          "text": "Rob Liefeld's Youngblood #1 was the first Image comic, in April."
+        },
+        {
+          "year": 1992,
+          "text": "Todd McFarlane's Spawn #1 shipped 1.7 million copies in May."
+        },
+        {
+          "year": 1996,
+          "text": "Liefeld resigned as a partner."
+        },
+        {
+          "year": 1998,
+          "text": "Jim Lee sold WildStorm to DC."
+        },
+        {
+          "year": 2003,
+          "text": "Robert Kirkman and Tony Moore's The Walking Dead debuted."
+        },
+        {
+          "year": 2008,
+          "text": "Eric Stephenson became publisher."
+        },
+        {
+          "year": 2012,
+          "text": "Brian K. Vaughan and Fiona Staples's Saga debuted."
         }
       ],
       "references": [
@@ -1133,6 +1874,32 @@
           "name": "Denis Kitchen"
         }
       ],
+      "events": [
+        {
+          "year": 1970,
+          "text": "Denis Kitchen founded it in Milwaukee as an artists' cooperative."
+        },
+        {
+          "year": 1973,
+          "text": "Began a long run with Will Eisner by reprinting The Spirit."
+        },
+        {
+          "year": 1977,
+          "text": "Took over Warren's Spirit magazine, keeping its numbering."
+        },
+        {
+          "year": 1993,
+          "text": "Merged with Tundra and moved to Northampton, Massachusetts."
+        },
+        {
+          "year": 1994,
+          "text": "Sold to a Los Angeles investment group."
+        },
+        {
+          "year": 1999,
+          "text": "Dissolved."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -1177,6 +1944,24 @@
         {
           "artistId": null,
           "name": "Ron Turner"
+        }
+      ],
+      "events": [
+        {
+          "year": 1970,
+          "text": "Ron Turner launched it with Slow Death Funnies for the first Earth Day."
+        },
+        {
+          "year": 1970,
+          "text": "Followed with It Ain't Me, Babe, the all-women comic led by Trina Robbins."
+        },
+        {
+          "year": 1972,
+          "text": "Began taking over titles from other houses, starting with Young Lust."
+        },
+        {
+          "year": 2016,
+          "text": "Ended its comics distribution business to focus on books."
         }
       ],
       "references": [
@@ -1224,10 +2009,102 @@
       ],
       "description": "Marvel Comics is an American comic book publisher, a property of the Walt Disney Company since December 31, 2009, and a subsidiary of Disney Publishing Worldwide since March 2023. Marvel was founded in 1939 by Martin Goodman as Timely Comics, and by 1951 had generally become known as Atlas Comics. The Marvel era began in August 1961 with the launch of The Fantastic Four and other superhero titles created by Stan Lee, Jack Kirby, Steve Ditko, and numerous others. The Marvel brand, which had been used over the years and decades, was solidified as the company's primary brand. Comics editor Stephen Wacker is the current editor-in-chief, serving since July 2026.\r\n\r\nMarvel counts among its characters such well-known superheroes as Spider-Man, Wolverine, the Hulk, Captain America, Iron Man, Thor, Daredevil, Black Panther, Doctor Strange, and Captain Marvel, as well as popular superhero teams such as the Avengers, X-Men, Fantastic Four, and Guardians of the Galaxy. Its stable of well-known supervillains includes Doctor Doom, Magneto, Green Goblin, Kingpin, Red Skull, Loki, Ultron, Thanos, Apocalypse, and Galactus. Most of Marvel's fictional characters operate in a single reality known as the Marvel Universe, with most locations mirroring real-life places; many major characters are based in New York City. Additionally, Marvel has published many comics based on licensed properties. This includes Star Wars comics, first from 1977 to 1987, when the franchise was independently owned, and again beginning in 2015 by which time Star Wars and Marvel were both owned by Disney.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2018/11/11/marvel.jpg",
+      "logos": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/Marvel_Comics_1990_logo.svg/500px-Marvel_Comics_1990_logo.svg.png",
+          "from": 1990,
+          "until": 2000,
+          "source": "https://en.wikipedia.org/wiki/File:Marvel_Comics_1990_logo.svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Marvel_logo_%282000%E2%80%932012%29.svg/500px-Marvel_logo_%282000%E2%80%932012%29.svg.png",
+          "from": 2000,
+          "until": 2012,
+          "source": "https://commons.wikimedia.org/wiki/File:Marvel_logo_(2000%E2%80%932012).svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Marvel_Logo.svg/500px-Marvel_Logo.svg.png",
+          "from": 2012,
+          "source": "https://commons.wikimedia.org/wiki/File:Marvel_Logo.svg"
+        }
+      ],
       "founders": [
         {
           "artistId": null,
           "name": "Martin Goodman"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Joe Simon",
+          "role": "First editor",
+          "until": 1941
+        },
+        {
+          "artistId": null,
+          "name": "Stan Lee",
+          "role": "Editor, then editor-in-chief",
+          "from": 1941,
+          "until": 1972
+        },
+        {
+          "artistId": null,
+          "name": "Jim Shooter",
+          "role": "Editor-in-chief",
+          "from": 1978,
+          "until": 1987
+        },
+        {
+          "artistId": null,
+          "name": "Joe Quesada",
+          "role": "Editor-in-chief",
+          "from": 2000,
+          "until": 2011
+        },
+        {
+          "artistId": null,
+          "name": "C. B. Cebulski",
+          "role": "Editor-in-chief",
+          "from": 2017
+        }
+      ],
+      "events": [
+        {
+          "year": 1939,
+          "text": "Martin Goodman founded it as Timely Publications."
+        },
+        {
+          "year": 1941,
+          "text": "Joe Simon and Jack Kirby's Captain America Comics #1."
+        },
+        {
+          "year": 1951,
+          "text": "Took the Atlas globe as its emblem."
+        },
+        {
+          "year": 1961,
+          "text": "The Fantastic Four opened the Marvel Age."
+        },
+        {
+          "year": 1978,
+          "text": "Jim Shooter became editor-in-chief."
+        },
+        {
+          "year": 1982,
+          "text": "Launched Epic Comics for creator-owned work."
+        },
+        {
+          "year": 1996,
+          "text": "Filed for bankruptcy in December."
+        },
+        {
+          "year": 1997,
+          "text": "Toy Biz bought the company out of bankruptcy."
+        },
+        {
+          "year": 2009,
+          "text": "The Walt Disney Company bought Marvel."
         }
       ],
       "references": [
@@ -1277,6 +2154,56 @@
         {
           "artistId": null,
           "name": "Bob Schreck"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "role": "Co-owner and editor",
+          "from": 1999,
+          "until": 2004
+        },
+        {
+          "artistId": null,
+          "name": "Sarah Gaydos",
+          "role": "Editor-in-chief",
+          "from": 2019,
+          "until": 2021
+        },
+        {
+          "artistId": null,
+          "name": "Hunter Gorinson",
+          "role": "Publisher and president",
+          "from": 2022
+        },
+        {
+          "artistId": "sierra-hahn",
+          "name": "Sierra Hahn",
+          "role": "Editor-in-chief",
+          "from": 2023
+        }
+      ],
+      "events": [
+        {
+          "year": 1997,
+          "text": "Bob Schreck and Joe Nozemack founded it."
+        },
+        {
+          "year": 2016,
+          "text": "Launched Limerence Press."
+        },
+        {
+          "year": 2019,
+          "text": "Merged with Lion Forge Comics."
+        },
+        {
+          "year": 2024,
+          "text": "Revived the EC Comics name."
+        },
+        {
+          "year": 2025,
+          "text": "Became the home of Matt Kindt's Flux House imprint."
         }
       ],
       "references": [
@@ -1330,6 +2257,24 @@
           "name": "Bill Schanes"
         }
       ],
+      "events": [
+        {
+          "year": 1971,
+          "text": "Brothers Steve and Bill Schanes, 17 and 13, started it as a mail-order business."
+        },
+        {
+          "year": 1974,
+          "text": "Opened its first store, in Pacific Beach."
+        },
+        {
+          "year": 1981,
+          "text": "Began publishing creator-owned books for the direct market."
+        },
+        {
+          "year": 1984,
+          "text": "Went into liquidation in September; many of its titles moved to Eclipse."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -1367,6 +2312,44 @@
         {
           "artistId": null,
           "name": "Helen Wolff"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Andr\u00e9 Schiffrin",
+          "role": "Executive editor",
+          "from": 1961,
+          "until": 1990
+        },
+        {
+          "artistId": null,
+          "name": "Dan Frank",
+          "role": "Editorial director",
+          "from": 1996,
+          "until": 2021
+        }
+      ],
+      "events": [
+        {
+          "year": 1942,
+          "text": "Kurt and Helen Wolff, refugees from fascism, founded it in New York."
+        },
+        {
+          "year": 1961,
+          "text": "Random House bought it and hired Andr\u00e9 Schiffrin."
+        },
+        {
+          "year": 1986,
+          "text": "Published Art Spiegelman's Maus."
+        },
+        {
+          "year": 1990,
+          "text": "Schiffrin was forced out."
+        },
+        {
+          "year": 1998,
+          "text": "Bertelsmann bought Random House."
         }
       ],
       "references": [
@@ -1410,6 +2393,42 @@
         {
           "artistId": null,
           "name": "Alice Schenker"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": "art-spiegelman",
+          "name": "Art Spiegelman",
+          "role": "Co-editor, Arcade",
+          "from": 1975
+        },
+        {
+          "artistId": "bill-griffith",
+          "name": "Bill Griffith",
+          "role": "Co-editor, Arcade",
+          "from": 1975
+        }
+      ],
+      "events": [
+        {
+          "year": 1965,
+          "text": "Don and Alice Schenker opened a poster shop in Berkeley in December."
+        },
+        {
+          "year": 1966,
+          "text": "Its first comic was a reprint of Joel Beck's Lenny of Laredo."
+        },
+        {
+          "year": 1969,
+          "text": "Underground comix became its main business; Gilbert Shelton and others left to start Rip Off Press."
+        },
+        {
+          "year": 1975,
+          "text": "Launched Arcade: The Comix Revue, edited by Art Spiegelman and Bill Griffith."
+        },
+        {
+          "year": 1978,
+          "text": "Stopped publishing comics."
         }
       ],
       "references": [
@@ -1456,7 +2475,25 @@
         },
         {
           "artistId": null,
-          "name": "Dave Moriarty"
+          "name": "Dave Moriaty"
+        }
+      ],
+      "events": [
+        {
+          "year": 1969,
+          "text": "Founded January 17 by four Texans; its first books included Crumb's Big Ass Comics."
+        },
+        {
+          "year": 1977,
+          "text": "Launched the anthology Rip Off Comix."
+        },
+        {
+          "year": 1984,
+          "text": "Gilbert Shelton moved to France for good."
+        },
+        {
+          "year": 1999,
+          "text": "Moved into the Todds' home, selling mostly by mail and online."
         }
       ],
       "references": [
@@ -1511,6 +2548,12 @@
           "name": "Brandon John"
         }
       ],
+      "events": [
+        {
+          "year": 2022,
+          "text": "Began publishing Brandon John's NUT comics."
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -1555,6 +2598,28 @@
           "name": "Avi Ehrlich"
         }
       ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Ari Yarwood",
+          "role": "Managing editor",
+          "from": 2021
+        }
+      ],
+      "events": [
+        {
+          "year": 2007,
+          "text": "Avi Ehrlich of Springman Records founded it."
+        },
+        {
+          "year": 2017,
+          "text": "Opened a shop on Haight Street in San Francisco."
+        },
+        {
+          "year": 2021,
+          "text": "Hired Ari Yarwood as its first managing editor."
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -1580,6 +2645,16 @@
         {
           "artistId": "jonathan-sims",
           "name": "Jonathan Sims"
+        }
+      ],
+      "events": [
+        {
+          "year": 2012,
+          "text": "Jonathan Sims self-published Floating BunnyHead."
+        },
+        {
+          "year": 2016,
+          "text": "Began the yearly zine comic Absolutely Not For Kids."
         }
       ],
       "references": [
@@ -1608,6 +2683,20 @@
         {
           "artistId": null,
           "name": "David Alpert"
+        }
+      ],
+      "events": [
+        {
+          "year": 2010,
+          "text": "Robert Kirkman and David Alpert founded it."
+        },
+        {
+          "year": 2018,
+          "text": "Finished Telltale's Walking Dead game after Telltale collapsed."
+        },
+        {
+          "year": 2022,
+          "text": "Its Skybound Comet line for younger readers opened with Tillie Walden's Clementine."
         }
       ],
       "references": [
@@ -1650,6 +2739,24 @@
         {
           "artistId": null,
           "name": "Dan Vado"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Jennifer de Guzman",
+          "role": "Editor-in-chief",
+          "until": 2012
+        }
+      ],
+      "events": [
+        {
+          "year": 1986,
+          "text": "Dan Vado started it; Samurai Penguin #1 sold 58,000 copies."
+        },
+        {
+          "year": 2005,
+          "text": "Partnered with Disney on Haunted Mansion, Gargoyles and other titles."
         }
       ],
       "references": [
@@ -1700,7 +2807,34 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "New York City, New York"
+      "location": "New York City, New York",
+      "editors": [
+        {
+          "artistId": "jim-salicrup",
+          "name": "Jim Salicrup",
+          "role": "Editor-in-chief",
+          "from": 1992
+        },
+        {
+          "artistId": null,
+          "name": "Len Brown",
+          "role": "Editor"
+        }
+      ],
+      "events": [
+        {
+          "year": 1992,
+          "text": "Announced in March, with Jim Salicrup at its head."
+        },
+        {
+          "year": 1993,
+          "text": "Launched the Kirbyverse, built from Jack Kirby's unused concepts."
+        },
+        {
+          "year": 1998,
+          "text": "Closed."
+        }
+      ]
     },
     {
       "id": "tucker-petertil",
@@ -1716,6 +2850,12 @@
         {
           "artistId": null,
           "name": "Tucker Petertil"
+        }
+      ],
+      "events": [
+        {
+          "year": 1977,
+          "text": "Juice City #1 came out in December, about 3,000 copies."
         }
       ],
       "references": [
@@ -1744,6 +2884,16 @@
         {
           "artistId": "kevin-eastman",
           "name": "Kevin Eastman"
+        }
+      ],
+      "events": [
+        {
+          "year": 1990,
+          "text": "Kevin Eastman founded it in Northampton, Massachusetts."
+        },
+        {
+          "year": 1993,
+          "text": "Kitchen Sink bought it out after it lost as much as $14 million."
         }
       ],
       "references": [
@@ -1800,7 +2950,17 @@
       "foundedYear": 2016,
       "country": "United States",
       "location": "Missoula, Montana",
-      "website": "https://vaultcomics.com/"
+      "website": "https://vaultcomics.com/",
+      "events": [
+        {
+          "year": 2016,
+          "text": "Founded by brothers Damian and Adrian Wassel and their cousin Nathan Gooden."
+        },
+        {
+          "year": 2025,
+          "text": "Aethon Books bought a majority share."
+        }
+      ]
     },
     {
       "id": "vertigo",
@@ -1813,10 +2973,71 @@
       ],
       "description": "DC Vertigo, also known as Vertigo Comics or simply Vertigo, is an imprint of the American comic book publisher DC Comics. Vertigo publishes comics with adult content, such as nudity, drug use, profanity, and graphic violence, that do not fit the restrictions of DC's main line. Its comics include company-owned series set in the DC Universe, such as The Sandman, Swamp Thing, and Hellblazer, and creator-owned works, such as Preacher, Y: The Last Man, and Fables.\r\n\r\nVertigo originated from DC's 1980s adult comic line, which began after DC stopped submitting The Saga of the Swamp Thing for approval by the Comics Code Authority. Following the success of two adult-oriented 1986 limited series, Batman: The Dark Knight Returns and Watchmen, DC's output of adult comics, edited by Karen Berger, grew. By 1992, DC's mature readers' line was editorially separate from its main line and Berger received permission to manage them under a separate imprint. Vertigo was launched in January 1993 with a mix of existing DC ongoing series and new series.\r\n\r\nAlthough its initial publications were primarily in the horror and fantasy genres, Vertigo expanded to publish works dealing with crime, social commentary, speculative fiction, biography, and other genres. Vertigo also reprinted comics previously published by DC under other imprints, such as V for Vendetta and Transmetropolitan. In North America, Vertigo pioneered a publishing model in which monthly series are periodically collected into editions for bookstore sale. Vertigo became DC's most popular and enduring imprint; several Vertigo series have won the comics industry's Eisner Award and have been adapted to film and television.\r\n\r\nVertigo began to decline in the 2010s, as certain properties like Hellblazer and Swamp Thing were re-integrated into DC's main comic books, while Berger departed in 2013. Berger's departure was followed by a series of editorial restructures. An attempted relaunch in 2018 suffered a multitude of setbacks, including numerous cancellations. DC discontinued Vertigo in January 2020 as part of a plan to publish all comics under a single banner. Most Vertigo series moved to DC Black Label until 2024, when DC revived the imprint.",
       "imageUrl": "https://static.metron.cloud/media/imprint/2024/08/12/vertigo.jpg",
+      "logos": [
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Vertigo-Comics-Logo.svg/500px-Vertigo-Comics-Logo.svg.png",
+          "from": 1993,
+          "until": 2018,
+          "source": "https://commons.wikimedia.org/wiki/File:Vertigo-Comics-Logo.svg"
+        },
+        {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/DC_Vertigo_Logo.svg/500px-DC_Vertigo_Logo.svg.png",
+          "from": 2018,
+          "source": "https://commons.wikimedia.org/wiki/File:DC_Vertigo_Logo.svg"
+        }
+      ],
       "founders": [
         {
           "artistId": null,
           "name": "Karen Berger"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": "shelly-bond",
+          "name": "Shelly Bond",
+          "role": "Executive editor",
+          "from": 2013,
+          "until": 2016
+        },
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich",
+          "role": "Group editor",
+          "from": 2016,
+          "until": 2017
+        },
+        {
+          "artistId": "mark-doyle",
+          "name": "Mark Doyle",
+          "role": "Editor",
+          "from": 2017
+        }
+      ],
+      "events": [
+        {
+          "year": 1993,
+          "text": "Launched in January, taking over Sandman, Hellblazer, Swamp Thing and others."
+        },
+        {
+          "year": 2009,
+          "text": "Started Vertigo Crime, a line of black-and-white hardcovers."
+        },
+        {
+          "year": 2013,
+          "text": "Karen Berger left; Shelly Bond took over."
+        },
+        {
+          "year": 2018,
+          "text": "Relaunched as DC Vertigo."
+        },
+        {
+          "year": 2020,
+          "text": "DC discontinued the imprint in January."
+        },
+        {
+          "year": 2024,
+          "text": "DC revived it."
         }
       ],
       "references": [
@@ -1849,6 +3070,12 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7411812-1318829812-875.j.jpg",
       "foundedYear": 2020,
       "country": "United States",
+      "events": [
+        {
+          "year": 2020,
+          "text": "Launched April 29 with weekly creator-owned books printed on demand."
+        }
+      ],
       "references": [
         {
           "name": "Comic Vine",
@@ -1886,6 +3113,57 @@
         {
           "artistId": "james-warren",
           "name": "James Warren"
+        }
+      ],
+      "editors": [
+        {
+          "artistId": null,
+          "name": "Russ Jones",
+          "role": "Founding editor, Creepy",
+          "from": 1964
+        },
+        {
+          "artistId": null,
+          "name": "Archie Goodwin",
+          "role": "Editor",
+          "from": 1965,
+          "until": 1967
+        },
+        {
+          "artistId": "bill-dubay",
+          "name": "Bill DuBay",
+          "role": "Editor",
+          "from": 1973,
+          "until": 1976
+        },
+        {
+          "artistId": null,
+          "name": "Louise Jones",
+          "role": "Editor",
+          "from": 1976,
+          "until": 1980
+        }
+      ],
+      "events": [
+        {
+          "year": 1957,
+          "text": "James Warren published his first magazines."
+        },
+        {
+          "year": 1964,
+          "text": "Launched Creepy, a black-and-white horror magazine; Eerie followed."
+        },
+        {
+          "year": 1969,
+          "text": "Vampirella premiered."
+        },
+        {
+          "year": 1974,
+          "text": "Began reprinting Will Eisner's The Spirit."
+        },
+        {
+          "year": 1983,
+          "text": "Went bankrupt; Harris Publications bought its assets at auction."
         }
       ],
       "references": [
@@ -1942,6 +3220,20 @@
         "comicvine": 6648
       },
       "location": "Washington, D.C.",
+      "events": [
+        {
+          "year": 1966,
+          "text": "Students from five Washington colleges founded the Washington Free Press."
+        },
+        {
+          "year": 1967,
+          "text": "An editorial collective revived the paper in March."
+        },
+        {
+          "year": 1969,
+          "text": "Its artists' co-op produced Tasty Comix."
+        }
+      ],
       "sources": [
         "comicvine"
       ]
