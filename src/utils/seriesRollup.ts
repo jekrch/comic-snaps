@@ -24,7 +24,9 @@ export interface SeriesRow {
   writers: string[];
   artists: string[];
   year: number | null;
+  /** The parent publisher's name, and the imprint's when there is one. */
   publisher: string | null;
+  imprint: string | null;
   rating: TargetRatings | null;
   /** Rolled up from this series' issue scores, and never averaged into `rating`. */
   issueRating: { avg: number; count: number } | null;
@@ -201,7 +203,10 @@ export function buildSeriesRows(
       writers: rankNames(writerCounts),
       artists: rankNames(artistCounts),
       year: series?.startYear ?? (Number.isFinite(minYear) ? minYear : null),
-      publisher: series ? publisherLabel(series) : null,
+      // Read off the panel, where the boot merge has already resolved it
+      // against the registry and a child series' parent.
+      publisher: rowPanels[0].publisher ?? series?.publisher ?? null,
+      imprint: rowPanels[0].imprint ?? series?.imprint ?? null,
       rating: lookupRatings(ratings, "series", slug),
       issueRating,
       firstPostedAt: Number.isFinite(firstPostedAt) ? firstPostedAt : 0,

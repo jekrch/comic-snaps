@@ -3,6 +3,7 @@ import type { Panel } from "../types";
 import type { Filters, FilterSetKey } from "../utils/filtering";
 import { hasActiveFilters, activeFilterCount, computeFacets, EMPTY_FILTERS } from "../utils/filtering";
 import { comparePersonNames } from "../utils/names";
+import { titleSortKey } from "../utils/seriesSorting";
 import { ageBinOrder, formatAgeBin } from "../utils/artistAge";
 import FacetSection from "./FacetSection";
 import DecadeLabel from "./DecadeLabel";
@@ -49,7 +50,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, ageCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, seriesCounts, publisherCounts, ageCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -60,14 +61,6 @@ export default function FilterControl({
         .sort((a, b) => b[0].localeCompare(a[0]))
         .map(([label, c]) => ({ label, count: c })),
     [decadeCounts]
-  );
-
-  const postedByItems = useMemo(
-    () =>
-      Array.from(postedByCounts.entries())
-        .sort((a, b) => comparePersonNames(a[0], b[0]))
-        .map(([label, c]) => ({ label, count: c })),
-    [postedByCounts]
   );
 
   const tagItems = useMemo(
@@ -117,6 +110,40 @@ export default function FilterControl({
         .map(([label, c]) => ({ label, count: c })),
     [seriesCounts]
   );
+
+  // Which names are imprints, and whose. Read off every panel rather than the
+  // filtered set, so an imprint still files under its parent when the parent
+  // itself has been filtered down to nothing.
+  const imprintParent = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const p of panels) {
+      if (p.imprint && p.publisher) map.set(p.imprint, p.publisher);
+    }
+    return map;
+  }, [panels]);
+
+  // Publishers by name, each followed by its own imprints.
+  const publisherItems = useMemo(() => {
+    const byName = (a: string, b: string) =>
+      titleSortKey(a).localeCompare(titleSortKey(b), undefined, { sensitivity: "base" });
+    const parents = [...publisherCounts.keys()].filter((n) => !imprintParent.has(n)).sort(byName);
+    const imprints = [...publisherCounts.keys()].filter((n) => imprintParent.has(n)).sort(byName);
+    const items: { label: string; count: number }[] = [];
+    const placed = new Set<string>();
+    for (const parent of parents) {
+      items.push({ label: parent, count: publisherCounts.get(parent) ?? 0 });
+      for (const imprint of imprints) {
+        if (imprintParent.get(imprint) !== parent) continue;
+        items.push({ label: imprint, count: publisherCounts.get(imprint) ?? 0 });
+        placed.add(imprint);
+      }
+    }
+    // An imprint whose parent has no count of its own under the filters.
+    for (const imprint of imprints) {
+      if (!placed.has(imprint)) items.push({ label: imprint, count: publisherCounts.get(imprint) ?? 0 });
+    }
+    return items;
+  }, [publisherCounts, imprintParent]);
 
   const ageItems = useMemo(
     () =>
@@ -265,6 +292,22 @@ export default function FilterControl({
               onToggle={(v) => toggleInSet("series", v)}
             />
             <FacetSection
+              title="PUBLISHER"
+              items={publisherItems}
+              selected={filters.publishers}
+              onToggle={(v) => toggleInSet("publishers", v)}
+              renderLabel={(label) =>
+                imprintParent.has(label) ? (
+                  <>
+                    <span aria-hidden className="mr-1 text-ink-faint">↳</span>
+                    {label}
+                  </>
+                ) : (
+                  label
+                )
+              }
+            />
+            <FacetSection
               title="TAGS"
               items={tagItems}
               selected={filters.tags}
@@ -300,12 +343,6 @@ export default function FilterControl({
               items={creditItems}
               selected={filters.credits}
               onToggle={(v) => toggleInSet("credits", v)}
-            />
-            <FacetSection
-              title="POSTED BY"
-              items={postedByItems}
-              selected={filters.postedBy}
-              onToggle={(v) => toggleInSet("postedBy", v)}
             />
 
             {/* Actions on the narrowed set, so they close the list. The two

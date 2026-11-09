@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import type { Panel } from "../types";
+import type { BrowseDimension } from "../utils/filtering";
 import { buildCoverPanels, type SeriesRow as SeriesRowData } from "../utils/seriesRollup";
 import { panelImageUrl } from "../utils/imageUrl";
 import { useNearViewport } from "../hooks/useNearViewport";
@@ -116,8 +117,8 @@ interface Props {
   stripHeight: number;
   /** Below 620px the rail stacks above the strip instead of shrinking (§1.1). */
   narrow: boolean;
-  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean; publisher?: string }) => void;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
   /** Present only when the parent series also has a row in the current set. */
   onJumpToParent?: () => void;
 }
@@ -163,6 +164,12 @@ function SeriesRowView({
    */
   const openSeriesInfo = useCallback(
     () => onSelectPanel(hero, group, { info: true }),
+    [onSelectPanel, hero, group],
+  );
+
+  /** A publisher or imprint name opens the same way, onto that label's page. */
+  const openPublisher = useCallback(
+    (name: string) => onSelectPanel(hero, group, { info: true, publisher: name }),
     [onSelectPanel, hero, group],
   );
 
@@ -267,7 +274,29 @@ function SeriesRowView({
   /* What the rail says about the book, whichever way the rail is laid out. */
   const info = (
     <>
-      {row.publisher && <p className="truncate text-xs text-ink-muted">{row.publisher}</p>}
+      {row.publisher && (
+        <p className="truncate text-xs text-ink-muted">
+          <button
+            type="button"
+            onClick={() => openPublisher(row.publisher!)}
+            className="cursor-pointer hover:text-accent transition-colors"
+          >
+            {row.publisher}
+          </button>
+          {row.imprint && (
+            <>
+              <span className="text-white/20"> / </span>
+              <button
+                type="button"
+                onClick={() => openPublisher(row.imprint!)}
+                className="cursor-pointer hover:text-accent transition-colors"
+              >
+                {row.imprint}
+              </button>
+            </>
+          )}
+        </p>
+      )}
 
       {row.parent && onJumpToParent && (
         <button

@@ -5,9 +5,10 @@ import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import { setViewerOpen } from "../hooks/useViewerOpen";
-import { useArtistIndex, useMetadata, useRatings } from "../hooks/useMetadata";
+import { useArtistIndex, useMetadata, usePublisherIndex, useRatings } from "../hooks/useMetadata";
 import SimilarityGraph from "./graph/SimilarityGraph";
-import InfoDrawer, { type PersonRequest } from "./InfoDrawer";
+import InfoDrawer, { type PersonRequest, type PublisherRequest } from "./InfoDrawer";
+import type { BrowseDimension } from "../utils/filtering";
 
 interface Props {
   panel: Panel;
@@ -18,12 +19,14 @@ interface Props {
   openWithInfo?: boolean;
   /** Opened for a *person* — the drawer starts out with their profile over it. */
   openWithPerson?: string | null;
+  /** Opened for a *publisher* — the drawer starts out with its page over it. */
+  openWithPublisher?: string | null;
   /** Opened on top of a running visualizer, which keeps playing underneath. */
   overViz?: boolean;
   onClose: () => void;
   onNavigate: (index: number) => void;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
 }
 
 /**
@@ -38,6 +41,7 @@ function ViewerOverlay({
   allPanels,
   drawerOpen,
   personRequest,
+  publisherRequest,
   onDismissDrawer,
   graphOpen,
   drawerSlideDir,
@@ -55,6 +59,7 @@ function ViewerOverlay({
   allPanels: Panel[];
   drawerOpen: boolean;
   personRequest: PersonRequest | null;
+  publisherRequest: PublisherRequest | null;
   onDismissDrawer: () => void;
   graphOpen: boolean;
   drawerSlideDir: "left" | "right" | null;
@@ -65,11 +70,12 @@ function ViewerOverlay({
   closing: boolean;
   overViz: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
   setContentShift: (transform: string | null, animate?: boolean) => void;
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
   const artistIndex = useArtistIndex();
+  const publisherIndex = usePublisherIndex();
   const { issue: issueRatings, series: seriesRatings } = useRatings(panel);
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
@@ -126,9 +132,11 @@ function ViewerOverlay({
         issueRatings={issueRatings}
         seriesRatings={seriesRatings}
         artistIndex={artistIndex}
+        publisherIndex={publisherIndex}
         onBrowse={onBrowse}
         searchUrl={searchUrl}
         personRequest={personRequest}
+        publisherRequest={publisherRequest}
         onDismiss={onDismissDrawer}
         topOffset={topOffset}
         bottomOffset={bottomOffset}
@@ -162,6 +170,7 @@ export default function PanelViewer({
   currentIndex,
   openWithInfo = false,
   openWithPerson = null,
+  openWithPublisher = null,
   overViz = false,
   onClose,
   onNavigate,
@@ -183,6 +192,9 @@ export default function PanelViewer({
   // the drawer shows, and closing it lands on the drawer's details.
   const [personRequest, setPersonRequest] = useState<PersonRequest | null>(() =>
     openWithPerson ? { name: openWithPerson, seq: 1, returnTo: "details" } : null
+  );
+  const [publisherRequest] = useState<PublisherRequest | null>(() =>
+    openWithPublisher ? { name: openWithPublisher, seq: 1, returnTo: "details" } : null
   );
 
   const items = useMemo(
@@ -475,6 +487,7 @@ export default function PanelViewer({
           allPanels={allPanels}
           drawerOpen={drawerOpen}
           personRequest={personRequest}
+          publisherRequest={publisherRequest}
           onDismissDrawer={closeDrawer}
           graphOpen={graphOpen}
           drawerSlideDir={drawerSlideDir}

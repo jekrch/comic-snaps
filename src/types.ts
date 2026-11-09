@@ -149,6 +149,13 @@ export interface Panel {
   /** Every person credited on this panel's issue, in any role. */
   credits?: string[];
   /**
+   * The parent publisher's display name, and the imprint's when the series
+   * came out under one. Derived at load from series.json and publishers.json
+   * (see `resolveSeriesPublisher`). Absent when unknown.
+   */
+  publisher?: string;
+  imprint?: string;
+  /**
    * The artist's age in the publication year, derived at load from their
    * birth year in `artists.json` (see `artistAgeAt`). Absent when unknown.
    */

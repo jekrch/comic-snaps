@@ -10,6 +10,9 @@ export interface Filters {
   credits: Set<string>;
   postedBy: Set<string>;
   series: Set<string>;
+  /** Publisher or imprint names. A parent matches its imprints' panels too,
+   *  since a panel carries both (see `Panel.publisher`). */
+  publishers: Set<string>;
   /** Artist's age at publication, as brackets like "30-34" (see `ageBinOf`). */
   ages: Set<string>;
   /** Free text, matched across every field a panel carries (see `panelHaystack`). */
@@ -28,8 +31,12 @@ export const FILTER_SET_KEYS: FilterSetKey[] = [
   "credits",
   "postedBy",
   "series",
+  "publishers",
   "ages",
 ];
+
+/** The facets a name elsewhere in the app can jump to the gallery by. */
+export type BrowseDimension = "artists" | "colorists" | "letterers" | "credits" | "publishers";
 
 export const EMPTY_FILTERS: Filters = {
   decades: new Set(),
@@ -40,6 +47,7 @@ export const EMPTY_FILTERS: Filters = {
   credits: new Set(),
   postedBy: new Set(),
   series: new Set(),
+  publishers: new Set(),
   ages: new Set(),
   searchQuery: "",
 };
@@ -58,6 +66,7 @@ export function activeFilterCount(filters: Filters): number {
     filters.credits.size +
     filters.postedBy.size +
     filters.series.size +
+    filters.publishers.size +
     filters.ages.size +
     (filters.searchQuery.trim() ? 1 : 0)
   );
@@ -67,6 +76,11 @@ export function activeFilterCount(filters: Filters): number {
 export function getAgeBin(panel: Panel): string | null {
   return panel.artistAge != null ? ageBinOf(panel.artistAge) : null;
 }
+
+const matchesPublisher = (panel: Panel, publishers: Set<string>) =>
+  publishers.size === 0 ||
+  (!!panel.publisher && publishers.has(panel.publisher)) ||
+  (!!panel.imprint && publishers.has(panel.imprint));
 
 const matchesAge = (panel: Panel, ages: Set<string>) => {
   if (ages.size === 0) return true;
@@ -89,6 +103,8 @@ function panelHaystack(panel: Panel): string {
     getDecade(panel.year),
     panel.artist,
     panel.postedBy,
+    panel.publisher,
+    panel.imprint,
     panel.notes,
     ...(panel.tags ?? []),
     ...(panel.colorists ?? []),
@@ -120,6 +136,7 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
     if (filters.credits.size > 0 && !(p.credits ?? []).some((c) => filters.credits.has(c))) return false;
     if (filters.postedBy.size > 0 && !filters.postedBy.has(p.postedBy)) return false;
     if (filters.series.size > 0 && !filters.series.has(p.title)) return false;
+    if (!matchesPublisher(p, filters.publishers)) return false;
     if (!matchesAge(p, filters.ages)) return false;
     if (filters.tags.size > 0) {
       const panelTags = p.tags ?? [];
@@ -140,6 +157,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
   const creditCounts = new Map<string, number>();
   const postedByCounts = new Map<string, number>();
   const seriesCounts = new Map<string, number>();
+  const publisherCounts = new Map<string, number>();
   const ageCounts = new Map<string, number>();
 
   for (const p of panels) {
@@ -154,6 +172,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
       credits: filters.credits.size === 0 || (p.credits ?? []).some((c) => filters.credits.has(c)),
       postedBy: filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy),
       series: filters.series.size === 0 || filters.series.has(p.title),
+      publishers: matchesPublisher(p, filters.publishers),
       ages: matchesAge(p, filters.ages),
       // Not a facet of its own, so nothing skips it: the query narrows every
       // count, the same as it narrows the grid.
@@ -196,11 +215,16 @@ export function computeFacets(panels: Panel[], filters: Filters) {
     if (passAllExcept("series")) {
       seriesCounts.set(p.title, (seriesCounts.get(p.title) ?? 0) + 1);
     }
+    if (passAllExcept("publishers")) {
+      for (const name of [p.publisher, p.imprint]) {
+        if (name) publisherCounts.set(name, (publisherCounts.get(name) ?? 0) + 1);
+      }
+    }
     if (passAllExcept("ages")) {
       const bin = getAgeBin(p);
       if (bin) ageCounts.set(bin, (ageCounts.get(bin) ?? 0) + 1);
     }
   }
 
-  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, ageCounts };
+  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, publisherCounts, ageCounts };
 }

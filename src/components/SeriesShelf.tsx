@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import type { Panel } from "../types";
-import type { Filters } from "../utils/filtering";
+import type { BrowseDimension, Filters } from "../utils/filtering";
 import type { SeriesRow as SeriesRowData } from "../utils/seriesRollup";
 import type { SeriesSortMode } from "../utils/seriesSorting";
 import { SERIES_SORT_OPTIONS } from "../utils/seriesSorting";
@@ -19,8 +19,8 @@ interface Props {
   onViewChange: (view: GalleryView) => void;
   filters: Filters;
   onFiltersChange: (filters: Filters) => void;
-  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean }) => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  onSelectPanel: (panel: Panel, group?: Panel[], opts?: { info?: boolean; publisher?: string }) => void;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
   onLayoutReady?: () => void;
   /** The page has already faded in, so the first-paint check has nothing to do. */
   layoutReady?: boolean;

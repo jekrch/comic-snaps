@@ -6,6 +6,7 @@ import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import ReferenceLinks from "./ReferenceLinks";
 import CollaboratorGraph from "./CollaboratorGraph";
+import type { BrowseDimension } from "../utils/filtering";
 
 interface Props {
   open: boolean;
@@ -15,7 +16,7 @@ interface Props {
   currentPanelId: string;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   onClose: () => void;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
   /** Put a collaborator's page up in place of this one. */
   onOpenPerson?: (name: string) => void;
   /** Viewer is over a running visualizer — the column takes the drawer's scrim. */

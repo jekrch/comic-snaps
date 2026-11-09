@@ -21,6 +21,7 @@ function row(over: Partial<SeriesRow> & { title: string }): SeriesRow {
     artists: [],
     year: null,
     publisher: null,
+    imprint: null,
     rating: null,
     issueRating: null,
     firstPostedAt: 0,
@@ -172,5 +173,33 @@ describe("sortSeriesRows", () => {
 
   it("handles an empty set in every mode", () => {
     for (const { value } of SERIES_SORT_OPTIONS) expect(sortSeriesRows([], value)).toEqual([]);
+  });
+});
+
+describe("sortSeriesRows: publisher", () => {
+  it("groups by publisher, the parent's own books before its imprints', oldest first", () => {
+    const rows = [
+      row({ title: "Sandman", publisher: "DC Comics", imprint: "Vertigo", year: 1989 }),
+      row({ title: "Love and Rockets", publisher: "Fantagraphics", year: 1982 }),
+      row({ title: "Batman", publisher: "DC Comics", year: 1940 }),
+      row({ title: "Preacher", publisher: "DC Comics", imprint: "Vertigo", year: 1995 }),
+      row({ title: "Absolute Batman", publisher: "DC Comics", imprint: "Absolute Universe", year: 2024 }),
+      row({ title: "Mystery Book" }),
+      row({ title: "Hellboy", publisher: "Dark Horse Comics", year: 1994 }),
+    ];
+    expect(sortSeriesRows(rows, "publisher").map((r) => r.title)).toEqual([
+      "Hellboy",
+      "Batman",
+      "Absolute Batman",
+      "Sandman",
+      "Preacher",
+      "Love and Rockets",
+      "Mystery Book",
+    ]);
+  });
+
+  it("is offered as a sort", () => {
+    expect(isSeriesSortMode("publisher")).toBe(true);
+    expect(SERIES_SORT_OPTIONS.some((o) => o.value === "publisher")).toBe(true);
   });
 });

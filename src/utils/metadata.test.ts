@@ -54,8 +54,8 @@ describe("loadMetadata", () => {
     expect(first.issues).toHaveLength(1);
 
     await mod.loadMetadata();
-    // Three files, fetched once between the two calls.
-    expect(mock).toHaveBeenCalledTimes(3);
+    // Four files, fetched once between the two calls.
+    expect(mock).toHaveBeenCalledTimes(4);
   });
 
   it("treats a missing issues.json as an empty credit set", async () => {
@@ -93,12 +93,34 @@ describe("loadMetadata", () => {
     });
     const mod = await import("./metadata");
     await Promise.all([mod.loadMetadata(), mod.loadMetadata(), mod.loadMetadata()]);
-    expect(mock).toHaveBeenCalledTimes(3);
+    expect(mock).toHaveBeenCalledTimes(4);
+  });
+
+  it("reads publishers.json, and treats a missing one as empty", async () => {
+    const pubs = { publishers: [{ id: "vertigo", name: "Vertigo", kind: "imprint", parent: "dc-comics" }] };
+    stubFetch((url) => {
+      if (url.includes("artists")) return { ok: true, json: async () => artists };
+      if (url.includes("series")) return { ok: true, json: async () => series };
+      if (url.includes("publishers")) return { ok: true, json: async () => pubs };
+      return { ok: true, json: async () => ({ issues: [] }) };
+    });
+    const mod = await import("./metadata");
+    expect((await mod.loadMetadata()).publishers).toHaveLength(1);
+
+    vi.resetModules();
+    stubFetch((url) => {
+      if (url.includes("artists")) return { ok: true, json: async () => artists };
+      if (url.includes("series")) return { ok: true, json: async () => series };
+      if (url.includes("publishers")) return { ok: false, status: 404, json: async () => ({}) };
+      return { ok: true, json: async () => ({ issues: [] }) };
+    });
+    const fresh = await import("./metadata");
+    expect((await fresh.loadMetadata()).publishers).toEqual([]);
   });
 
   it("reports nothing cached before the first load", async () => {
     const mod = await import("./metadata");
-    expect(mod.getCachedMetadata()).toEqual({ artists: null, series: null, issues: null });
+    expect(mod.getCachedMetadata()).toEqual({ artists: null, series: null, issues: null, publishers: null });
   });
 
   it("exposes the loaded data through the cache accessor", async () => {

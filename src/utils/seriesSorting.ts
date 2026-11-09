@@ -7,7 +7,7 @@ import type { SeriesRow } from "./seriesRollup";
  * (docs/series-view-plan.md §3.1). Both sorts stay live at once — the panel
  * sort still orders the strips.
  */
-export type SeriesSortMode = "rating" | "name" | "newest" | "year" | "panels";
+export type SeriesSortMode = "rating" | "name" | "newest" | "year" | "panels" | "publisher";
 
 /**
  * `newest` is named LAST POSTED on screen because that is the question it
@@ -20,6 +20,7 @@ export const SERIES_SORT_OPTIONS: { value: SeriesSortMode; label: string }[] = [
   { value: "rating", label: "RATING" },
   { value: "panels", label: "PANELS" },
   { value: "year", label: "YEAR" },
+  { value: "publisher", label: "PUBLISHER" },
   { value: "name", label: "NAME" },
 ];
 
@@ -46,10 +47,36 @@ export function titleSortKey(title: string): string {
     .trim();
 }
 
+function compareKeys(a: string, b: string): number {
+  return titleSortKey(a).localeCompare(titleSortKey(b), undefined, { sensitivity: "base" });
+}
+
 function byName(a: SeriesRow, b: SeriesRow): number {
-  return titleSortKey(a.title).localeCompare(titleSortKey(b.title), undefined, {
-    sensitivity: "base",
-  });
+  return compareKeys(a.title, b.title);
+}
+
+/**
+ * Grouped by publisher, A to Z, with each imprint's books together after the
+ * parent's own, and each group in the order its runs started — so the shelf
+ * reads as each label's history. Rows with no publisher go last.
+ */
+function byPublisher(a: SeriesRow, b: SeriesRow): number {
+  if (a.publisher !== b.publisher) {
+    if (a.publisher === null) return 1;
+    if (b.publisher === null) return -1;
+    return compareKeys(a.publisher, b.publisher);
+  }
+  if (a.imprint !== b.imprint) {
+    if (a.imprint === null) return -1;
+    if (b.imprint === null) return 1;
+    return compareKeys(a.imprint, b.imprint);
+  }
+  if (a.year !== b.year) {
+    if (a.year === null) return 1;
+    if (b.year === null) return -1;
+    return a.year - b.year;
+  }
+  return byName(a, b);
 }
 
 /**
@@ -93,6 +120,10 @@ export function sortSeriesRows(rows: SeriesRow[], mode: SeriesSortMode): SeriesR
 
     case "panels":
       sorted.sort((a, b) => b.panels.length - a.panels.length || byName(a, b));
+      break;
+
+    case "publisher":
+      sorted.sort(byPublisher);
       break;
   }
 

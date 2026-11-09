@@ -2,14 +2,17 @@ import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, use
 import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
-import { publisherLabel } from "../utils/seriesRollup";
+import { publisherKindLabel, publisherYears, resolveSeriesPublisher } from "../utils/publishers";
+import type { PublisherIndex } from "../utils/publishers";
 import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
+import PublisherProfile from "./PublisherProfile";
 import DetailsFlank from "./DetailsFlank";
 import { ScoreBirds } from "./ScoreMeter";
 import PanelPalette from "./PanelPalette";
 import ReferenceLinks from "./ReferenceLinks";
+import type { BrowseDimension } from "../utils/filtering";
 
 interface PersonFacets {
   artists: number;
@@ -111,6 +114,9 @@ export interface PersonRequest {
   returnTo: "details" | "art";
 }
 
+/** The same ask, for a publisher's page (a series row's publisher line). */
+export type PublisherRequest = PersonRequest;
+
 interface Props {
   open: boolean;
   panel: Panel;
@@ -123,11 +129,14 @@ interface Props {
   issueRatings: TargetRatings | null;
   seriesRatings: TargetRatings | null;
   artistIndex: ArtistIndex;
-  onBrowse: (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => void;
+  publisherIndex: PublisherIndex;
+  onBrowse: (dimension: BrowseDimension, value: string) => void;
   searchUrl: string;
   /** A person to show — an artist row's name, or the viewer header's — put up
    *  as soon as the drawer is open. */
   personRequest?: PersonRequest | null;
+  /** A publisher to show, put up the same way. */
+  publisherRequest?: PublisherRequest | null;
   /** Close the whole drawer; a person page opened for the art returns there. */
   onDismiss?: () => void;
   topOffset?: number;
@@ -138,7 +147,7 @@ interface Props {
   overViz?: boolean;
 }
 
-export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, onBrowse, searchUrl, personRequest = null, onDismiss, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
+export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, artist, series, parentSeries, issueCredits, issueRatings, seriesRatings, artistIndex, publisherIndex, onBrowse, searchUrl, personRequest = null, publisherRequest = null, onDismiss, topOffset = 0, bottomOffset = 0, closing = false, slideDir = null, overViz = false }: Props) {
   const seriesPanels = allPanels.filter((p) => p.slug === panel.slug && p.id !== panel.id);
   const artistPanels = allPanels.filter((p) => p.artist === panel.artist && p.id !== panel.id);
   // Full groups (including the current panel) that scope the viewer's prev/next
@@ -164,7 +173,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
 
   const [activePerson, setActivePerson] = useState<{ name: string; artist: Artist | null } | null>(null);
   const [personOpen, setPersonOpen] = useState(false);
-  const [personReturn, setPersonReturn] = useState<PersonRequest["returnTo"]>("details");
+  // A founder's page opened from a publisher's goes back to the publisher.
+  const [personReturn, setPersonReturn] = useState<PersonRequest["returnTo"] | "publisher">("details");
+  const [activePublisher, setActivePublisher] = useState<string | null>(null);
+  const [publisherOpen, setPublisherOpen] = useState(false);
+  const [publisherReturn, setPublisherReturn] = useState<PublisherRequest["returnTo"]>("details");
+  /** Either page is up over the details. */
+  const pageOpen = personOpen || publisherOpen;
   const [selectedCoverIdx, setSelectedCoverIdx] = useState<number | null>(null);
   const [animPhase, setAnimPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
 
@@ -214,9 +229,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   );
 
   const openPerson = useCallback(
-    (name: string, artistId?: string | null, returnTo: PersonRequest["returnTo"] = "details") => {
+    (name: string, artistId?: string | null, returnTo: PersonRequest["returnTo"] | "publisher" = "details") => {
       setActivePerson({ name, artist: resolvePerson(name, artistId) });
       setPersonReturn(returnTo);
+      setPublisherOpen(false);
       setPersonOpen(true);
     },
     [resolvePerson]
@@ -225,9 +241,29 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   const closePerson = useCallback(() => {
     // The profile stays up and rides the drawer down; the `open` effect below
     // clears it once it is out of sight.
-    if (personReturn === "art" && onDismiss) onDismiss();
+    if (personReturn === "publisher") {
+      setPersonOpen(false);
+      setPublisherOpen(true);
+    } else if (personReturn === "art" && onDismiss) onDismiss();
     else setPersonOpen(false);
   }, [personReturn, onDismiss]);
+
+  const openPublisher = useCallback(
+    (name: string, returnTo?: PublisherRequest["returnTo"]) => {
+      setActivePublisher(name);
+      // Paging from one publisher to another (an imprint, its parent) keeps
+      // where the first one was going back to.
+      if (returnTo) setPublisherReturn(returnTo);
+      setPersonOpen(false);
+      setPublisherOpen(true);
+    },
+    []
+  );
+
+  const closePublisher = useCallback(() => {
+    if (publisherReturn === "art" && onDismiss) onDismiss();
+    else setPublisherOpen(false);
+  }, [publisherReturn, onDismiss]);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [slideOutSettled, setSlideOutSettled] = useState(false);
   const thumbRectRef = useRef<DOMRect | null>(null);
@@ -266,6 +302,8 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     setAnimPhase("idle");
     setActivePerson(null);
     setPersonOpen(false);
+    setActivePublisher(null);
+    setPublisherOpen(false);
     thumbRectRef.current = null;
   }, [panel.id]);
 
@@ -274,7 +312,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   // sliding away, since the profile is on it and goes down with it.
   useEffect(() => {
     if (open) return;
-    const t = setTimeout(() => setPersonOpen(false), 400);
+    const t = setTimeout(() => {
+      setPersonOpen(false);
+      setPublisherOpen(false);
+    }, 400);
     return () => clearTimeout(t);
   }, [open]);
 
@@ -290,6 +331,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     lastRequest.current = personRequest.seq;
     openPerson(personRequest.name, null, personRequest.returnTo);
   }, [open, personRequest, openPerson]);
+
+  const lastPublisherRequest = useRef<number | null>(null);
+  useEffect(() => {
+    if (!open || !publisherRequest || publisherRequest.seq === lastPublisherRequest.current) return;
+    lastPublisherRequest.current = publisherRequest.seq;
+    openPublisher(publisherRequest.name, publisherRequest.returnTo);
+  }, [open, publisherRequest, openPublisher]);
 
   // After the slide-out animation completes, snap the drawer to its closed
   // position (off-screen bottom) without transition. This prevents a diagonal
@@ -585,16 +633,55 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     creditGroups.push(...byRole.entries());
   }
 
-  const seriesMetaParts: string[] = [];
+  // The publisher and imprint are links to their pages, so the line is built
+  // from parts rather than joined into one string.
+  const published = resolveSeriesPublisher(series, parentSeries, publisherIndex);
+  // The closing card's line: the imprint this book came out under (a link of
+  // its own), then the house's years and country.
+  const publisherEntry = published.publisherEntry;
+  const publisherCardMeta = [
+    publisherEntry ? publisherYears(publisherEntry) : null,
+    publisherEntry?.country ?? null,
+  ].filter((part): part is string => !!part);
+  const seriesMetaParts: React.ReactNode[] = [];
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
-  const publisherLine = effectiveSeries ? publisherLabel(effectiveSeries) : null;
-  if (publisherLine) seriesMetaParts.push(publisherLine);
+  if (published.publisher) {
+    const link = (label: string) => (
+      <button
+        key={label}
+        type="button"
+        onClick={() => openPublisher(label, "details")}
+        className="hover:text-accent underline decoration-white/15 decoration-dotted underline-offset-2 hover:decoration-accent transition-colors"
+      >
+        {label}
+      </button>
+    );
+    seriesMetaParts.push(
+      <Fragment key="publisher">
+        {link(published.publisher)}
+        {published.imprint && (
+          <>
+            {" / "}
+            {link(published.imprint)}
+          </>
+        )}
+      </Fragment>
+    );
+  }
   if (effectiveSeries?.issueCount) {
     const count = effectiveSeries.issueCount;
     const plural = count === 1 && !effectiveSeries.issueCountInferred ? "" : "s";
     seriesMetaParts.push(`${count}${effectiveSeries.issueCountInferred ? "+" : ""} issue${plural}`);
   }
-  const seriesMeta = seriesMetaParts.join(" · ");
+  const seriesMeta =
+    seriesMetaParts.length > 0
+      ? seriesMetaParts.map((part, i) => (
+          <Fragment key={i}>
+            {i > 0 && " · "}
+            {part}
+          </Fragment>
+        ))
+      : null;
 
   const artistYears =
     artist?.birthYear && artist?.deathYear
@@ -623,13 +710,13 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   // come back in just behind it leaving. Entering (the drawer rising, or the
   // page handing back) waits a beat for the other to clear; leaving to the
   // person is quick, so the two never read as stacked.
-  const detailsShown = show && !personOpen;
+  const detailsShown = show && !pageOpen;
   const detailsStyle = {
     opacity: detailsShown ? 1 : 0,
-    transform: !show ? "translateY(12px)" : personOpen ? "translateX(-24px)" : "none",
+    transform: !show ? "translateY(12px)" : pageOpen ? "translateX(-24px)" : "none",
     transition: !show
       ? "opacity 0.25s ease-out 0.15s, transform 0.25s ease-out 0.15s"
-      : personOpen
+      : pageOpen
         ? "opacity 0.12s ease-in, transform 0.22s cubic-bezier(0.3, 0, 0.8, 0.15)"
         : "opacity 0.25s ease-out 0.12s, transform 0.34s cubic-bezier(0.2, 0, 0, 1) 0.08s",
   };
@@ -659,8 +746,8 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
     <div
       ref={setScrollEl}
       className="absolute inset-0 overflow-y-auto info-modal-scroll"
-      style={{ pointerEvents: personOpen ? "none" : undefined }}
-      inert={personOpen}
+      style={{ pointerEvents: pageOpen ? "none" : undefined }}
+      inert={pageOpen}
     >
       <div
         ref={setColumnEl}
@@ -1130,6 +1217,71 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
             Search for {panel.title} {formatIssue(panel.issue)}
           </a>
         </div>
+
+        {/* Publisher — the house behind the book, closing out the drawer the
+            way the series card opens it. A short card: the whole entry lives
+            on the publisher's page, which the name opens. Left off a portrait
+            for the same reason the series card is. */}
+        {!panel.portrait && published.publisher && (
+          <>
+            <div className="border-t border-white/8" />
+            <div className="relative overflow-hidden rounded" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+              {publisherEntry?.imageUrl && (
+                <div className="absolute inset-0 pointer-events-none">
+                  {/* A logo is a mark, not a photograph: contained, never cropped. */}
+                  <img
+                    src={publisherEntry.imageUrl}
+                    alt=""
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-3/4 w-1/3 object-contain object-right"
+                    style={{ opacity: 0.3 }}
+                  />
+                </div>
+              )}
+              <div className="relative z-10 px-4 py-3">
+                <p className="text-[10px] uppercase tracking-widest text-white/30 mb-1.5">
+                  {publisherEntry ? publisherKindLabel(publisherEntry, publisherIndex) : "Publisher"}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => openPublisher(published.publisher!, "details")}
+                  className="font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
+                >
+                  {published.publisher}
+                </button>
+                {(published.imprint || publisherCardMeta.length > 0) && (
+                  <p className="text-[10px] text-white/40 mt-0.5">
+                    {published.imprint && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => openPublisher(published.imprint!, "details")}
+                          className="hover:text-accent underline decoration-white/15 decoration-dotted underline-offset-2 hover:decoration-accent transition-colors"
+                        >
+                          {published.imprint}
+                        </button>
+                        {" imprint"}
+                        {publisherCardMeta.length > 0 && " · "}
+                      </>
+                    )}
+                    {publisherCardMeta.join(" · ")}
+                  </p>
+                )}
+                {publisherEntry?.description && (
+                  <p className="text-xs text-white/55 mt-1.5 leading-relaxed line-clamp-3">
+                    {publisherEntry.description}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => openPublisher(published.publisher!, "details")}
+                  className="mt-2 text-[10px] text-accent hover:text-accent-dim transition-colors"
+                >
+                  {publisherEntry?.description ? "More about this publisher →" : "Series and panels from them →"}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Beside the column, in the scroller, so it scrolls with the page. */}
@@ -1154,6 +1306,22 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
       onClose={closePerson}
       onBrowse={onBrowse}
       onOpenPerson={(n) => openPerson(n, null, personReturn)}
+      overViz={overViz}
+    />
+
+    <PublisherProfile
+      open={publisherOpen}
+      name={activePublisher ?? ""}
+      publisher={activePublisher ? publisherIndex.byName.get(activePublisher.toLowerCase()) ?? null : null}
+      index={publisherIndex}
+      allPanels={allPanels}
+      currentPanelId={panel.id}
+      onSelectPanel={onSelectPanel}
+      onClose={closePublisher}
+      onBrowse={onBrowse}
+      onOpenPublisher={(n) => openPublisher(n)}
+      onOpenPerson={(n, id) => openPerson(n, id, "publisher")}
+      isPersonInteractive={isPersonInteractive}
       overViz={overViz}
     />
     </div>

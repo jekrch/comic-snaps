@@ -26,6 +26,7 @@ function filters(over: FilterSpec = {}): Filters {
     credits: new Set(over.credits ?? []),
     postedBy: new Set(over.postedBy ?? []),
     series: new Set(over.series ?? []),
+    publishers: new Set(over.publishers ?? []),
     ages: new Set(over.ages ?? []),
     searchQuery: over.searchQuery ?? "",
   };
@@ -274,5 +275,32 @@ describe("artist age filter", () => {
   it("counts brackets against every other filter but its own", () => {
     const { ageCounts } = computeFacets(all, filters({ ages: ["20-24"] }));
     expect(Object.fromEntries(ageCounts)).toEqual({ "20-24": 1, "30-34": 1 });
+  });
+});
+
+describe("publishers", () => {
+  const sandman = makePanel({ id: "s", title: "Sandman", publisher: "DC Comics", imprint: "Vertigo" });
+  const batman = makePanel({ id: "b", title: "Batman", publisher: "DC Comics" });
+  const saga = makePanel({ id: "g", title: "Saga", publisher: "Image Comics" });
+  const unknown = makePanel({ id: "u", title: "Mystery" });
+  const all = [sandman, batman, saga, unknown];
+
+  it("a parent matches its imprints' panels, an imprint only its own", () => {
+    expect(applyFilters(all, filters({ publishers: ["DC Comics"] })).map((p) => p.id)).toEqual(["s", "b"]);
+    expect(applyFilters(all, filters({ publishers: ["Vertigo"] })).map((p) => p.id)).toEqual(["s"]);
+  });
+
+  it("counts a panel under both its publisher and its imprint", () => {
+    const { publisherCounts } = computeFacets(all, filters());
+    expect(Object.fromEntries(publisherCounts)).toEqual({ "DC Comics": 2, Vertigo: 1, "Image Comics": 1 });
+  });
+
+  it("is found by free text, imprint included", () => {
+    expect(applyFilters(all, filters({ searchQuery: "vertigo" })).map((p) => p.id)).toEqual(["s"]);
+    expect(applyFilters(all, filters({ searchQuery: "image" })).map((p) => p.id)).toEqual(["g"]);
+  });
+
+  it("is counted as an active filter", () => {
+    expect(activeFilterCount(filters({ publishers: ["Vertigo"] }))).toBe(1);
   });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState, useMemo, useCallback, useRef, lazy, Suspense } from "react";
-import type { Artist, Gallery, IssueCredits, Panel, RatingsIndex, Series } from "./types";
+import type { Artist, Gallery, IssueCredits, Panel, Publisher, RatingsIndex, Series } from "./types";
 import { SortMode, sortPanelsAsync } from "./utils/sorting.ts";
-import type { Filters } from "./utils/filtering.ts";
+import type { BrowseDimension, Filters } from "./utils/filtering.ts";
 import { applyFilters, hasActiveFilters, EMPTY_FILTERS } from "./utils/filtering.ts";
 import MasonryGrid from "./components/MasonryGrid";
 import SeriesShelf from "./components/SeriesShelf";
@@ -24,6 +24,7 @@ import { SpinnerState, ErrorState, EmptyState } from "./components/StatusStates"
 import { useFilterParams } from "./hooks/useFilterParams";
 import { isProductionOnly, loadMetadata } from "./utils/metadata";
 import { artistAgeAt } from "./utils/artistAge";
+import { buildPublisherIndex, resolveSeriesPublisher } from "./utils/publishers";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import HeaderViewSwitch from "./components/HeaderViewSwitch";
@@ -184,10 +185,16 @@ export default function App() {
   const [refilterPhase, setRefilterPhase] = useState<"idle" | "out" | "pending" | "in">("idle");
   const refilterTimerRef = useRef<number | null>(null);
   /** The metadata a row is assembled from, kept from the same boot fetch. */
-  const [meta, setMeta] = useState<{ artists: Artist[]; series: Series[]; issues: IssueCredits[] }>({
+  const [meta, setMeta] = useState<{
+    artists: Artist[];
+    series: Series[];
+    issues: IssueCredits[];
+    publishers: Publisher[];
+  }>({
     artists: [],
     series: [],
     issues: [],
+    publishers: [],
   });
   const [ratings, setRatings] = useState<RatingsIndex | null>(getCachedRatings);
   const [sortedPanels, setSortedPanels] = useState<Panel[]>([]);
@@ -202,6 +209,8 @@ export default function App() {
   const [viewerInfo, setViewerInfo] = useState(false);
   /** …and for an artist row's name, the person whose profile it opens on. */
   const [viewerPerson, setViewerPerson] = useState<string | null>(null);
+  /** …and for a series row's publisher, the publisher page it opens on. */
+  const [viewerPublisher, setViewerPublisher] = useState<string | null>(null);
   // The launch button opens a chooser; a `?viz=1` link skips it and runs the
   // preset the URL names, since the link already carries the choice.
   const [vizPrompt, setVizPrompt] = useState(false);
@@ -671,6 +680,7 @@ export default function App() {
         credits: new Set(patch.credits ?? []),
         postedBy: new Set(),
         series: new Set(patch.series ?? []),
+        publishers: new Set(patch.publishers ?? []),
         ages: new Set(patch.ages ?? []),
       };
       setFilters(next);
@@ -689,10 +699,26 @@ export default function App() {
       }),
       loadMetadata(),
     ])
-      .then(([gallery, { artists, series, issues }]) => {
+      .then(([gallery, { artists, series, issues, publishers }]) => {
         const seriesTagMap = new Map<string, string[]>();
+        const seriesById = new Map<string, Series>();
         for (const s of series) {
+          seriesById.set(s.id, s);
           if (s.tags?.length) seriesTagMap.set(s.id, s.tags);
+        }
+        // Who published each series, resolved once: the filter, the search
+        // and the stats all read it off the panel.
+        const publisherIndex = buildPublisherIndex(publishers);
+        const publisherMap = new Map<string, { publisher?: string; imprint?: string }>();
+        for (const s of series) {
+          const parent = s.parentSeries ? seriesById.get(s.parentSeries) : null;
+          const { publisher, imprint } = resolveSeriesPublisher(s, parent, publisherIndex);
+          if (publisher || imprint) {
+            publisherMap.set(s.id, {
+              ...(publisher && { publisher }),
+              ...(imprint && { imprint }),
+            });
+          }
         }
         const artistTagMap = new Map<string, string[]>();
         const artistByName = new Map<string, Artist>();
@@ -722,9 +748,11 @@ export default function App() {
           ];
           const credits = creditMap.get(`${p.slug}|${p.issue}`);
           const artistAge = artistAgeAt(p.year, artistByName.get(p.artist));
-          if (extra.length === 0 && !credits && artistAge === null) return p;
+          const published = publisherMap.get(p.slug);
+          if (extra.length === 0 && !credits && artistAge === null && !published) return p;
           return {
             ...p,
+            ...published,
             ...(artistAge !== null && { artistAge }),
             ...(extra.length > 0 && { tags: Array.from(new Set([...(p.tags ?? []), ...extra])) }),
             ...(credits?.colorists.length && { colorists: credits.colorists }),
@@ -736,7 +764,7 @@ export default function App() {
         setPanels(merged);
         // The rows are assembled from the same three bundles the wall already
         // fetches at boot — nothing in the series view needs a new request.
-        setMeta({ artists, series, issues });
+        setMeta({ artists, series, issues, publishers });
         setStatus("ready");
       })
       .catch(() => setStatus("error"));
@@ -806,6 +834,7 @@ export default function App() {
     setViewerScope("filtered");
     setViewerInfo(false);
     setViewerPerson(null);
+    setViewerPublisher(null);
     setOpenPanelId(panel.id);
   }, []);
 
@@ -815,15 +844,18 @@ export default function App() {
     setCustomViewerPanels(null);
     setViewerInfo(false);
     setViewerPerson(null);
+    setViewerPublisher(null);
   }, []);
 
   const handleSelectPanel = useCallback(
-    (panel: Panel, group?: Panel[], opts?: { info?: boolean; person?: string }) => {
+    (panel: Panel, group?: Panel[], opts?: { info?: boolean; person?: string; publisher?: string }) => {
       setViewerInfo(!!opts?.info);
       // An artist row's name opens on the person rather than on the panel's own
       // card — the profile is where their portrait, dates and work in every
-      // role already live.
+      // role already live. A series row's publisher does the same for the
+      // publisher.
       setViewerPerson(opts?.person ?? null);
+      setViewerPublisher(opts?.publisher ?? null);
       // A related-panel group (e.g. a whole series or an artist's panels)
       // scopes prev/next to just that group via the custom list.
       if (group && group.length > 0) {
@@ -844,7 +876,7 @@ export default function App() {
   // return to the top of the masonry. A run is left as well — the destination
   // is the grid, which a full-screen visualizer would be sitting on top of.
   const handleBrowseBy = useCallback(
-    (dimension: "artists" | "colorists" | "letterers" | "credits", value: string) => {
+    (dimension: BrowseDimension, value: string) => {
       const next: Filters = { ...EMPTY_FILTERS, [dimension]: new Set([value]) };
       handleFiltersChange(next);
       setOpenPanelId(null);
@@ -1114,6 +1146,7 @@ export default function App() {
           currentIndex={openIndex}
           openWithInfo={viewerInfo}
           openWithPerson={viewerPerson}
+          openWithPublisher={viewerPublisher}
           overViz={vizRun !== null}
           onClose={handleCloseViewer}
           onNavigate={handleNavigateViewer}

@@ -38,6 +38,7 @@ function parseFiltersFromURL(): {
     credits: new Set(params.get("credits")?.split(",").filter(Boolean) ?? []),
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
     series: new Set(params.get("series")?.split(",").filter(Boolean) ?? []),
+    publishers: new Set(params.get("publishers")?.split(",").filter(Boolean) ?? []),
     ages: new Set(params.get("ages")?.split(",").filter(Boolean) ?? []),
     searchQuery: params.get("q") ?? "",
   };

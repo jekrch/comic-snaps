@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { Artist, Panel, IssueCredits, Series } from "../../types";
+import type { Artist, Panel, IssueCredits } from "../../types";
 import { PRODUCTION_ROLES, loadMetadata } from "../../utils/metadata";
 import { normalizeCountry } from "../../utils/country";
 import { formatIssue } from "../../utils/issueFormat";
@@ -36,7 +36,10 @@ const ISSUE_CREDIT_ROLES = ["Writer", "Colorist", "Letterer"];
 
 /** Gallery filter selections a clicked bar can apply — keys match Filters. */
 export type StatsFilterPatch = Partial<
-  Record<"decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series" | "ages", string[]>
+  Record<
+    "decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series" | "publishers" | "ages",
+    string[]
+  >
 >;
 
 /** Opens a panel in the viewer; `group` scopes the viewer's prev/next. */
@@ -47,7 +50,19 @@ interface NamedCount {
   count: number;
   roles?: string[];
   isOther?: boolean;
+  /** A part of the bar above it (an imprint under its publisher): drawn
+   *  lighter, and labelled with a hook so it reads as a breakdown. */
+  isPart?: boolean;
   filter?: StatsFilterPatch;
+}
+
+/** Publishers down, decades across: each cell the publisher's share of that
+ *  decade's panels. */
+interface PublisherDecades {
+  decades: number[];
+  /** Panels per decade, across every publisher. */
+  totals: number[];
+  rows: { name: string; counts: number[]; total: number }[];
 }
 
 interface ColumnDatum {
@@ -110,6 +125,7 @@ interface MetaStats {
   credited: NamedCount[];
   roles: NamedCount[];
   publishers: NamedCount[];
+  publisherDecades: PublisherDecades | null;
   creditedIssueCount: number;
   creatorCount: number;
   countries: NamedCount[];
@@ -330,18 +346,59 @@ function computeCountryStats(panels: Panel[], artistByName: Map<string, Artist>)
   return { countries, countryKnown, countryTotal: names.size };
 }
 
+/** How many publishers the decade chart has rows for. */
+const DECADE_PUBLISHERS = 12;
+
+/**
+ * The most-collected publishers by decade. Rows run in order of each
+ * publisher's median panel year, so the eras read down the diagonal: the
+ * undergrounds, the direct-market houses, then Image and after.
+ */
+function computePublisherDecades(panels: Panel[]): PublisherDecades | null {
+  const dated = panels.filter((p) => p.year > 0 && p.publisher);
+  if (dated.length === 0) return null;
+  const decadeOf = (y: number) => Math.floor(y / 10) * 10;
+  const years = dated.map((p) => p.year);
+  const first = decadeOf(Math.min(...years));
+  const last = decadeOf(Math.max(...years));
+  const decades: number[] = [];
+  for (let d = first; d <= last; d += 10) decades.push(d);
+
+  const totals = decades.map(() => 0);
+  const byPublisher = new Map<string, number[]>();
+  for (const p of dated) {
+    const i = (decadeOf(p.year) - first) / 10;
+    totals[i]++;
+    let years = byPublisher.get(p.publisher!);
+    if (!years) byPublisher.set(p.publisher!, (years = []));
+    years.push(p.year);
+  }
+
+  const median = (ys: number[]) => {
+    const sorted = [...ys].sort((a, b) => a - b);
+    return sorted[Math.floor(sorted.length / 2)];
+  };
+  const rows = [...byPublisher.entries()]
+    .sort((a, b) => b[1].length - a[1].length)
+    .slice(0, DECADE_PUBLISHERS)
+    .sort((a, b) => median(a[1]) - median(b[1]) || b[1].length - a[1].length)
+    .map(([name, ys]) => {
+      const counts = decades.map(() => 0);
+      for (const y of ys) counts[(decadeOf(y) - first) / 10]++;
+      return { name, counts, total: ys.length };
+    });
+  return { decades, totals, rows };
+}
+
 function computeMetaStats(
   panels: Panel[],
   artists: Artist[],
-  series: Series[],
   issues: IssueCredits[],
 ): MetaStats {
   const artistByName = new Map<string, Artist>();
   for (const a of artists) artistByName.set(a.name, a);
   const issueByKey = new Map<string, IssueCredits>();
   for (const i of issues) issueByKey.set(`${i.series}|${i.issue}`, i);
-  const seriesById = new Map<string, Series>();
-  for (const s of series) seriesById.set(s.id, s);
 
   // People weighted by how many collected panels come from issues they're
   // credited on — the panel is the unit of the site, so it's the honest weight.
@@ -350,7 +407,7 @@ function computeMetaStats(
   const linkedIssueIds = new Set<string>();
   const allCreators = new Set<string>();
   const publisherCounts = new Map<string, number>();
-  const publisherTitles = new Map<string, Set<string>>();
+  const publisherImprints = new Map<string, Map<string, number>>();
 
   const addRole = (name: string, role: string) => {
     let roles = personRoles.get(name);
@@ -387,29 +444,28 @@ function computeMetaStats(
       }
     }
 
-    // Some pipeline runs left a comics.org API URL in the publisher field —
-    // treat those like a missing publisher rather than charting the URL.
-    const publisherOf = (s?: Series) =>
-      s?.publisher && !/^https?:\/\//.test(s.publisher) ? s.publisher : null;
-
-    let s = seriesById.get(p.slug);
-    if (s && !publisherOf(s) && s.parentSeries) {
-      s = seriesById.get(s.parentSeries) ?? s;
-    }
-    const pub = publisherOf(s) ?? "Unknown";
+    // Resolved once at boot (App), against the registry and a child series'
+    // parent, so the chart and the filter agree on every name.
+    const pub = p.publisher ?? "Unknown";
     publisherCounts.set(pub, (publisherCounts.get(pub) ?? 0) + 1);
-    let titles = publisherTitles.get(pub);
-    if (!titles) publisherTitles.set(pub, (titles = new Set()));
-    titles.add(p.title);
+    if (p.publisher && p.imprint) {
+      let imprints = publisherImprints.get(pub);
+      if (!imprints) publisherImprints.set(pub, (imprints = new Map()));
+      imprints.set(p.imprint, (imprints.get(p.imprint) ?? 0) + 1);
+    }
   }
 
-  const publishers = topWithOther(publisherCounts, 8);
-  for (const p of publishers) {
+  const publishers: NamedCount[] = [];
+  for (const p of topWithOther(publisherCounts, 8)) {
     // "Unknown" is a non-entity like "Other" — render it in the neutral gray
     if (p.name === "Unknown") p.isOther = true;
-    // There's no publisher facet, so a label filters as its set of series
-    const titles = publisherTitles.get(p.name);
-    if (!p.isOther && titles) p.filter = { series: [...titles] };
+    if (!p.isOther) p.filter = { publishers: [p.name] };
+    publishers.push(p);
+    // Each imprint right under its publisher, as part of that bar's count.
+    const imprints = [...(publisherImprints.get(p.name) ?? [])].sort((a, b) => b[1] - a[1]);
+    for (const [name, count] of imprints) {
+      publishers.push({ name, count, isPart: true, filter: { publishers: [name] } });
+    }
   }
 
   const credited: NamedCount[] = [...personPanels.entries()]
@@ -444,6 +500,7 @@ function computeMetaStats(
     credited,
     roles,
     publishers,
+    publisherDecades: computePublisherDecades(panels),
     creditedIssueCount: linkedIssueIds.size,
     creatorCount: allCreators.size,
     ...computeCountryStats(panels, artistByName),
@@ -546,7 +603,10 @@ function HBars({
             width={116}
             tickLine={false}
             axisLine={false}
-            tickFormatter={truncate}
+            tickFormatter={(v: string, i: number) =>
+              // Two characters shorter, to leave room for the hook
+              data[i]?.isPart ? `↳ ${v.length > 15 ? `${v.slice(0, 14)}…` : v}` : truncate(v)
+            }
             tick={{ fill: "var(--color-ink-muted, #9e9892)", fontSize: 10 }}
           />
           <Tooltip content={<ChartTip unit={unit} />} shared={false} cursor={false} />
@@ -564,7 +624,7 @@ function HBars({
               <Cell
                 key={d.name}
                 fill={d.isOther ? NEUTRAL : ACCENT}
-                fillOpacity={d.isOther ? 0.55 : 0.9}
+                fillOpacity={d.isOther ? 0.55 : d.isPart ? 0.45 : 0.9}
                 cursor={d.filter && onFilter ? "pointer" : undefined}
               />
             ))}
@@ -690,6 +750,140 @@ function SuperlativeTile({ s, onOpen }: { s: Superlative; onOpen?: StatsOpenPane
     >
       {body}
     </button>
+  );
+}
+
+/**
+ * Publishers by decade, as a dot grid: one row per publisher, one column per
+ * decade, each dot's area the publisher's share of that decade's panels. The
+ * share, not the count — the 2020s hold most of the collection, and counted
+ * raw every earlier decade shrinks to specks.
+ *
+ * One hue throughout, since nothing here is categorical: size carries the
+ * magnitude and the row label carries the identity. The readout under the
+ * grid has a fixed height, so pointing at a cell never moves the page.
+ */
+function PublisherDecadeGrid({
+  data,
+  onFilter,
+}: {
+  data: PublisherDecades;
+  onFilter?: (patch: StatsFilterPatch) => void;
+}) {
+  const [hover, setHover] = useState<{ row: number; col: number } | null>(null);
+  const LABEL_W = 116;
+  const CELL_H = 22;
+  const MAX_R = 9;
+  const MIN_R = 2;
+
+  const readout = (() => {
+    if (!hover) return "Point at a dot for its count";
+    const row = data.rows[hover.row];
+    const n = row.counts[hover.col];
+    const total = data.totals[hover.col];
+    const decade = `${data.decades[hover.col]}s`;
+    if (n === 0) return `${row.name} · none from the ${decade}`;
+    return `${row.name} · ${decade} · ${n} of ${total} panel${total === 1 ? "" : "s"} (${Math.round((n / total) * 100)}%)`;
+  })();
+
+  return (
+    <div onMouseLeave={() => setHover(null)}>
+      <div
+        className="grid items-center"
+        style={{ gridTemplateColumns: `${LABEL_W}px repeat(${data.decades.length}, minmax(0, 1fr))` }}
+        role="table"
+        aria-label="Panels by publisher and decade"
+      >
+        <div role="row" className="contents">
+          <span role="columnheader" />
+          {data.decades.map((d) => (
+            <span
+              key={d}
+              role="columnheader"
+              className="text-center text-[9px] pb-1 tabular-nums"
+              style={{ color: "var(--color-ink-muted, #9e9892)" }}
+            >
+              {decadeLabel(d)}
+            </span>
+          ))}
+        </div>
+        {data.rows.map((row, r) => (
+          <div key={row.name} role="row" className="contents">
+            <button
+              type="button"
+              role="rowheader"
+              disabled={!onFilter}
+              onClick={() => onFilter?.({ publishers: [row.name] })}
+              className={`truncate text-left text-[10px] pr-2 transition-colors ${onFilter ? "cursor-pointer hover:text-ink" : ""}`}
+              style={{
+                height: CELL_H,
+                color: hover?.row === r ? "var(--color-ink)" : "var(--color-ink-muted, #9e9892)",
+              }}
+              title={row.name}
+            >
+              {row.name}
+            </button>
+            {row.counts.map((n, c) => {
+              const share = data.totals[c] ? n / data.totals[c] : 0;
+              // Area-true: radius grows with the square root of the share
+              const radius = n > 0 ? Math.max(MIN_R, MAX_R * Math.sqrt(share)) : 0;
+              const lit = hover !== null && hover.row === r && hover.col === c;
+              const dim = hover !== null && !lit;
+              const label = `${row.name}, ${data.decades[c]}s: ${n} panel${n === 1 ? "" : "s"}`;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  role="cell"
+                  aria-label={label}
+                  // Not `disabled`: Chrome sends no pointer events to a disabled
+                  // button, and an empty cell still answers in the readout.
+                  aria-disabled={n === 0 || !onFilter}
+                  onMouseEnter={() => setHover({ row: r, col: c })}
+                  onFocus={() => setHover({ row: r, col: c })}
+                  onBlur={() => setHover(null)}
+                  onClick={() => {
+                    if (n > 0) onFilter?.({ publishers: [row.name], decades: [`${data.decades[c]}s`] });
+                  }}
+                  className={`relative flex items-center justify-center outline-none ${
+                    n > 0 && onFilter ? "cursor-pointer" : "cursor-default"
+                  }`}
+                  style={{
+                    height: CELL_H,
+                    // A hairline under each row, so a row's dots read across.
+                    backgroundImage: `linear-gradient(${HAIRLINE}, ${HAIRLINE})`,
+                    backgroundSize: "100% 1px",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  {n > 0 && (
+                    <span
+                      className="block rounded-full"
+                      style={{
+                        width: radius * 2,
+                        height: radius * 2,
+                        background: ACCENT,
+                        opacity: dim ? 0.35 : 0.9,
+                        boxShadow: lit ? "0 0 0 2px var(--color-surface, #141414), 0 0 0 3px var(--color-ink)" : undefined,
+                        transition: "opacity 120ms",
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+      <div
+        className="mt-1.5 h-4 overflow-hidden truncate text-[10px] leading-4"
+        style={{ color: INK_MUTED }}
+        aria-live="polite"
+      >
+        {readout}
+      </div>
+    </div>
   );
 }
 
@@ -952,8 +1146,8 @@ export default function StatsTab({
   useEffect(() => {
     let cancelled = false;
     loadMetadata()
-      .then(({ artists, series, issues }) => {
-        if (!cancelled) setMeta(computeMetaStats(panels, artists, series, issues));
+      .then(({ artists, issues }) => {
+        if (!cancelled) setMeta(computeMetaStats(panels, artists, issues));
       })
       // metadata is optional — panel-derived stats still render
       .catch(() => {});
@@ -1103,8 +1297,18 @@ export default function StatsTab({
 
         {meta && meta.publishers.length > 0 && (
           <section>
-            <SectionTitle title="PUBLISHERS" note="panels per label" />
+            <SectionTitle title="PUBLISHERS" note="panels per label · ↳ its imprints" />
             <HBars data={meta.publishers} onFilter={onFilter} />
+          </section>
+        )}
+
+        {meta?.publisherDecades && meta.publisherDecades.rows.length > 1 && (
+          <section>
+            <SectionTitle
+              title="PUBLISHERS BY DECADE"
+              note="dot size: share of that decade's panels"
+            />
+            <PublisherDecadeGrid data={meta.publisherDecades} onFilter={onFilter} />
           </section>
         )}
 

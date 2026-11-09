@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Artist, IssueCredits, Panel, RatingsIndex, Series, TargetRatings } from "../types";
 import { getCachedMetadata, loadMetadata } from "../utils/metadata";
+import { EMPTY_PUBLISHER_INDEX, buildPublisherIndex } from "../utils/publishers";
+import type { PublisherIndex } from "../utils/publishers";
 import { getCachedRatings, issueTargetId, loadRatings, lookupRatings, seriesTargetId } from "../utils/ratings";
 
 export interface ArtistIndex {
@@ -41,6 +43,32 @@ export function useArtistIndex(): ArtistIndex {
     }
     return { byId, byName };
   }, [artists]);
+}
+
+/**
+ * The publisher registry, indexed by id and by name, so a publisher name can
+ * open its page. Loaded once from the shared metadata cache.
+ */
+export function usePublisherIndex(): PublisherIndex {
+  const [publishers, setPublishers] = useState(() => getCachedMetadata().publishers);
+
+  useEffect(() => {
+    if (publishers) return;
+    let cancelled = false;
+    loadMetadata()
+      .then((data) => {
+        if (!cancelled) setPublishers(data.publishers);
+      })
+      .catch(() => {
+        // silently ignore — publisher pages just show the name and panels
+      });
+    return () => { cancelled = true; };
+  }, [publishers]);
+
+  return useMemo(
+    () => (publishers ? buildPublisherIndex(publishers) : EMPTY_PUBLISHER_INDEX),
+    [publishers],
+  );
 }
 
 type Loaded = { artists: Artist[]; series: Series[]; issues: IssueCredits[] };
