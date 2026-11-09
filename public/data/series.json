@@ -5391,7 +5391,8 @@
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "comicvine-publisher"
       ],
       "coverSources": {
         "metron": [

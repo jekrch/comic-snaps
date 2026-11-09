@@ -55,7 +55,8 @@
         "comicvine": 2105
       },
       "sources": [
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ]
     },
     {
@@ -288,7 +289,8 @@
         "comicvine": 3397
       },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -1222,7 +1224,8 @@
         "comicvine": 692
       },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -1588,7 +1591,8 @@
       "country": "United States",
       "sources": [
         "metron",
-        "comicvine"
+        "comicvine",
+        "wikipedia"
       ],
       "location": "Rockville Centre, New York",
       "website": "https://www.heavymetal.com/",
@@ -2161,7 +2165,8 @@
         "comicvine": 3310
       },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
@@ -2969,7 +2974,7 @@
         "Steel Dragon Press"
       ],
       "description": "SteelDragon Press was a small Minneapolis publishing house run by the fantasy writers Will Shetterly and Emma Bull, who started it in the early 1980s to publish comic books and limited-edition hardcovers. Its comics include the first two issues of Reed Waller's \"Omaha\" the Cat Dancer, starting in 1984; the series stalled when Waller got stuck on the story, and Kitchen Sink Press picked it up from #3, with Kate Worley writing, and reprinted the SteelDragon issues.",
-      "imageUrl": null,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8469517-steeldragon.jpg",
       "country": "United States",
       "location": "Minneapolis, Minnesota",
       "founders": [
@@ -3011,7 +3016,8 @@
         "comicvine": 3849
       },
       "sources": [
-        "wikipedia"
+        "wikipedia",
+        "comicvine"
       ]
     },
     {
