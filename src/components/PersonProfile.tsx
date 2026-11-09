@@ -7,6 +7,7 @@ import { panelImageUrl } from "../utils/imageUrl";
 import ReferenceLinks from "./ReferenceLinks";
 import CollaboratorGraph from "./CollaboratorGraph";
 import type { BrowseDimension } from "../utils/filtering";
+import { attachDragScroll } from "../hooks/useDragScroll";
 
 interface Props {
   open: boolean;
@@ -245,7 +246,7 @@ export default function PersonProfile({
                   </button>
                 </div>
                 {others.length > 0 && (
-                  <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+                  <div ref={attachDragScroll} className="flex gap-2 overflow-x-auto pb-1 info-related-scroll drag-scroll">
                     {others.map((p) => (
                       <button
                         key={p.id}

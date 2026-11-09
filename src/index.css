@@ -1610,6 +1610,42 @@ button,
   }
 }
 
+/* A mouse can grab any horizontal image strip and throw it
+   (`attachDragScroll`): the shelf rows, and the "more in this series / by this
+   artist" strips, covers and logos in the drawer and profiles. Nothing in a
+   strip is text worth selecting, and a selection started by a press would
+   follow the drag across the row. The tiles keep their pointer cursor, because
+   a click still opens them. The gaps between them show the grab hand on a strip
+   that has somewhere to go. */
+@media (hover: hover) and (pointer: fine) {
+  .drag-scroll {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .drag-scroll--overflows {
+    cursor: grab;
+  }
+}
+
+/* Every cursor in the strip is the closed hand while it is held, tiles too, and
+   no tile reacts to being passed over: the hand is moving the row, not
+   pointing at anything in it. */
+.drag-scroll--dragging,
+.drag-scroll--dragging * {
+  cursor: grabbing !important;
+}
+
+.drag-scroll--dragging > * {
+  pointer-events: none;
+}
+
+/* Snapping pulls programmatic scrolls toward tile edges too, so it is off from
+   the first drag until a wheel or arrow key steps the strip again. */
+.drag-scroll.drag-scroll--free {
+  scroll-snap-type: none;
+}
+
 /* Applied whenever the row overflows at all — a property of the row, not of
    where it is scrolled to, so the mask is never switched on and off under a
    moving finger. What the scroll drives is `--strip-fade`, the width of the

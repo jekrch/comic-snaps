@@ -111,3 +111,44 @@ def test_white_gate_excludes_painted_flats(color):
     assert ungated[:, 70:].any()
     assert not gated[:, 70:].any()
     assert gated[:, 5:50].all()
+
+
+def glared_paint():
+    """Textured blue paint with an ink line, a dark red drip, and pale specks, under
+    a soft warm streak added on top, like a lamp's reflection."""
+    import numpy as np
+
+    rng = np.random.default_rng(0)
+    H, W = 200, 160
+    art = np.empty((H, W, 3))
+    art[:] = (0.45, 0.12, 0.10)  # BGR, linear: a mid blue.
+    art *= 1 + 0.08 * rng.standard_normal((H, W, 1))
+    art[:, 70:73] = 0.003  # An ink line through the streak.
+    art[60:90, 30:45] = (0.01, 0.02, 0.09)  # A dark red drip under it.
+    for y, x in rng.integers(20, 180, size=(25, 2)):
+        art[y:y + 2, x:x + 2] = (0.7, 0.5, 0.4)  # Pale specks.
+    xx = np.arange(W)
+    streak = 0.12 * np.exp(-0.5 * ((xx - 60) / 10.0) ** 2)
+    rows = np.clip((np.arange(H) - 30) / 20.0, 0, 1) * np.clip((170 - np.arange(H)) / 20.0, 0, 1)
+    glare = (rows[:, None] * streak[None, :])[..., None] * np.array([0.8, 0.85, 1.0])
+    return art, art + glare
+
+
+def test_remove_glare_takes_off_the_streak_and_keeps_the_art(color):
+    pytest.importorskip("scipy")
+    import numpy as np
+
+    art, photo = glared_paint()
+    to8 = lambda lin: np.clip(color.linear_to_srgb(lin) * 255 + 0.5, 0, 255).astype(np.uint8)
+    out = color.remove_glare(to8(photo), (15, 5, 125, 195))  # Corners, as parse_box gives.
+    L_art, L_photo, L_out = (color.to_lab(im)[..., 0] for im in (to8(art), to8(photo), out))
+
+    core = np.s_[80:120, 55:66]
+    assert np.median(L_photo[core] - L_art[core]) > 10  # The streak is real...
+    assert abs(np.median(L_out[core] - L_art[core])) < 3  # ...and gone.
+    clean = np.s_[80:120, 135:155]  # Outside the box.
+    assert np.array_equal(out[clean], to8(photo)[clean])
+    drip = np.s_[65:85, 33:42]
+    drip_out, drip_art = color.to_lab(out)[drip], color.to_lab(to8(art))[drip]
+    assert np.median(drip_out[..., 1]) > 0.8 * np.median(drip_art[..., 1])  # Keeps its red.
+    assert np.median(L_out[drip]) > 0.6 * np.median(L_art[drip])  # Isn't crushed.

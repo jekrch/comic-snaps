@@ -51,6 +51,15 @@ NAMED_WHITE_STRENGTH = 0.85
 # --keep-dark-hue: the source hue is kept fully below this L, fading out by the next.
 DARK_HUE_FULL_L = 26.0
 DARK_HUE_NONE_L = 38.0
+# --glare-box: the paint around the box is read from this far out, and the field
+# fades to nothing over the last few pixels inside each side that isn't the frame.
+GLARE_MARGIN = 40
+GLARE_FEATHER = 12
+GLARE_MEDIAN = 13  # Wider than specks and thin lines, narrower than the glare's peak.
+GLARE_PAINT_CHROMA = 12.0  # Margin pixels this close to its commonest color count as paint.
+GLARE_PAINT_L = 18.0
+GLARE_NOISE_SIGMAS = 3.0  # Darker than the paint's texture allows means ink or other art.
+GLARE_AT_EDGE = 0.35  # Of the peak; more than this at a box side means the box is too small.
 
 
 def srgb_to_linear(c):
@@ -266,13 +275,197 @@ def write_anchors(path, small, white_mask, ink_cells, boxes, scale):
 LUMA = np.array([0.0722, 0.7152, 0.2126])  # BGR
 
 
+def membrane(values, known):
+    """Fill the unknown pixels with the smoothest surface through the known ones.
+
+    A Laplace fill with free edges where the image ends. Unlike a polynomial it
+    can't overshoot what it's given: a quadratic fitted around The Demon #2's glare
+    extrapolated to the frame edge and darkened clean paint by 9 L.
+    """
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.linalg import spsolve
+
+    h, w = known.shape
+    unknown = ~known
+    n = int(unknown.sum())
+    if n == 0:
+        return values.copy()
+    index = np.full((h, w), -1)
+    index[unknown] = np.arange(n)
+    ys, xs = np.nonzero(unknown)
+    rows, cols, data = [], [], []
+    degree = np.zeros(n)
+    rhs = np.zeros((n, values.shape[-1]))
+    for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        ny, nx = ys + dy, xs + dx
+        inside = (ny >= 0) & (ny < h) & (nx >= 0) & (nx < w)
+        degree += inside
+        k = np.nonzero(inside)[0]
+        ny, nx = ny[k], nx[k]
+        fixed = known[ny, nx]
+        np.add.at(rhs, k[fixed], values[ny[fixed], nx[fixed]])
+        rows.append(k[~fixed])
+        cols.append(index[ny[~fixed], nx[~fixed]])
+        data.append(np.full(int((~fixed).sum()), -1.0))
+    rows.append(np.arange(n))
+    cols.append(np.arange(n))
+    data.append(degree)
+    A = coo_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n)).tocsr()
+    out = values.copy()
+    out[unknown] = spsolve(A, rhs).reshape(n, -1)
+    return out
+
+
+def remove_glare(bgr, box, map_path=None):
+    """Take a soft additive glare off the paint inside one box, keeping its texture.
+
+    Glare is the lamp reflecting off the page, so it adds light on top of the art:
+    photo = art + glare. The box must reach clean paint on every side that isn't the
+    frame edge, because the glare is taken as zero there. Inside, the art is taken
+    as that paint (filled smoothly across), and the lift above it is the glare,
+    read only from pixels the lift could explain: ink, other colors, and specks are
+    filled from around them. A dark pixel caps the glare on and near it, since added
+    light can't leave anything darker than itself; the cap scales the glare's
+    strength, not one channel, so a red drip under it keeps its red.
+    """
+    from scipy.ndimage import median_filter
+
+    H, W = bgr.shape[:2]
+    x0, y0, x1, y1 = box
+    X0, Y0 = max(x0 - GLARE_MARGIN, 0), max(y0 - GLARE_MARGIN, 0)
+    X1, Y1 = min(x1 + GLARE_MARGIN, W), min(y1 + GLARE_MARGIN, H)
+    crop = bgr[Y0:Y1, X0:X1]
+    ch, cw = crop.shape[:2]
+    lin = srgb_to_linear(crop.astype(np.float64) / 255.0)
+    lab = to_lab(crop)
+    inside = np.zeros((ch, cw), bool)
+    inside[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = True
+    label = f"glare box {x0},{y0},{x1 - x0},{y1 - y0}"
+
+    # The paint around the box is its margin's commonest color: a median would
+    # mix it with the ink and figures the margin also crosses.
+    pick = ~inside & (lab[..., 0] > 15)
+    if pick.sum() < 200:
+        print(f"{label}: no margin to read the paint from: left alone")
+        return bgr
+    bins = np.floor(lab[pick][:, 1:] / 6).astype(int)
+    keys, counts = np.unique(bins, axis=0, return_counts=True)
+    mode = (keys[counts.argmax()] + 0.5) * 6
+    near = pick & (np.hypot(lab[..., 1] - mode[0], lab[..., 2] - mode[1]) < 10)
+    paint_lab = np.median(lab[near], axis=0)
+    paint = (
+        ~inside
+        & (np.hypot(lab[..., 1] - paint_lab[1], lab[..., 2] - paint_lab[2]) < GLARE_PAINT_CHROMA)
+        & (np.abs(lab[..., 0] - paint_lab[0]) < GLARE_PAINT_L)
+    )
+    paint = cv2.erode(paint.astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
+    print(f"{label}: paint around it L {paint_lab[0]:.1f} a {paint_lab[1]:.1f} b {paint_lab[2]:.1f} ({paint.sum()} px)")
+    if paint.sum() < 200:
+        print("  <-- too little clean paint around the box: widen it, or move it off the figures")
+        return bgr
+
+    # The paint with its texture averaged out, filled across the box at quarter size.
+    weight = paint.astype(np.float32)
+    density = cv2.GaussianBlur(weight, (0, 0), 4)
+    averaged = cv2.GaussianBlur((lin * weight[..., None]).astype(np.float32), (0, 0), 4) / np.maximum(density, 1e-4)[..., None]
+    sw, sh = (cw + 3) // 4, (ch + 3) // 4
+    known = cv2.resize(np.where(density > 0.5, weight, 0), (sw, sh), interpolation=cv2.INTER_AREA) > 0.6
+    filled = membrane(cv2.resize(averaged, (sw, sh), interpolation=cv2.INTER_AREA).astype(np.float64), known)
+    reference = cv2.resize(filled.astype(np.float32), (cw, ch), interpolation=cv2.INTER_LINEAR).astype(np.float64)
+    lift = lin - reference
+
+    # Only pixels no darker than the paint's texture allows can say how much light
+    # was added. A one-sided test (every channel up) kept only the upward noise and
+    # darkened clean paint, so the threshold scales with that texture.
+    texture = (lin - averaged)[paint]
+    noise = 1.4826 * np.median(np.abs(texture - np.median(texture, axis=0)), axis=0)
+    soft = cv2.GaussianBlur(lift.astype(np.float32), (0, 0), 1.5)
+    usable = inside & np.all(soft > -GLARE_NOISE_SIGMAS * noise, axis=-1)
+    weight = usable.astype(np.float32)
+    density = cv2.GaussianBlur(weight, (0, 0), 8)
+    near = cv2.GaussianBlur((lift * weight[..., None]).astype(np.float32), (0, 0), 8) / np.maximum(density, 1e-4)[..., None]
+    far = cv2.GaussianBlur((lift * weight[..., None]).astype(np.float32), (0, 0), 32) / np.maximum(
+        cv2.GaussianBlur(weight, (0, 0), 32), 1e-4
+    )[..., None]
+    alpha = np.clip(density / 0.3, 0, 1)[..., None]
+    glare = alpha * near + (1 - alpha) * far
+    # A local median follows the glare's peak, where a blur alone flattened it, and
+    # ignores the specks the usable pixels still include.
+    for _ in range(3):
+        guess = np.where(usable[..., None], lift, glare)
+        glare = np.stack(
+            [cv2.GaussianBlur(median_filter(guess[..., c], size=GLARE_MEDIAN).astype(np.float32), (0, 0), 3) for c in range(3)],
+            axis=-1,
+        )
+    glare = np.clip(glare, 0, None)
+
+    uncapped_y = glare @ LUMA
+    glared = inside & (uncapped_y > 0.25 * max(float(np.percentile(uncapped_y[inside], 99.5)), 1e-6))
+    floor = cv2.erode(lin.astype(np.float32), np.ones((5, 5), np.uint8))
+    cap = np.min(floor / np.maximum(glare, 1e-3), axis=-1)
+    cap = np.clip(np.where(glare.max(axis=-1) > 2e-3, cap, 1.0), 0, 1).astype(np.float32)
+    cap = np.minimum(cap, cv2.GaussianBlur(cv2.erode(cap, np.ones((9, 9), np.uint8)), (0, 0), 4))
+    glare *= cap[..., None]
+
+    # Fade out toward each side that isn't the frame, where the glare is taken as zero.
+    yy, xx = np.mgrid[0:ch, 0:cw]
+    far_away = np.full((ch, cw), 10**6)
+    to_side = np.minimum.reduce([
+        xx - (x0 - X0) if x0 > 0 else far_away,
+        (x1 - X0) - 1 - xx if x1 < W else far_away,
+        yy - (y0 - Y0) if y0 > 0 else far_away,
+        (y1 - Y0) - 1 - yy if y1 < H else far_away,
+    ]).astype(np.float32)
+    fade = np.clip(to_side / GLARE_FEATHER, 0, 1)
+    # Only where the glare was read, not filled in under art that sits on the side.
+    rim = usable & (to_side >= GLARE_FEATHER) & (to_side < GLARE_FEATHER + 4)
+    glare_y = glare @ LUMA
+    peak = float(np.percentile(glare_y[inside], 99.5))
+    glare *= (fade * fade * (3 - 2 * fade) * inside)[..., None]
+
+    out = np.clip(lin - glare, 0, 1)
+    out8 = np.clip(linear_to_srgb(out) * 255 + 0.5, 0, 255).astype(np.uint8)
+    drop = (lab[..., 0] - to_lab(out8)[..., 0])[inside]
+    print(
+        f"  took off up to {np.percentile(drop, 99.5):.1f} L (median {np.median(drop):.1f}); "
+        f"read from {usable[inside].mean():.0%} of the box; dark pixels capped {(cap[glared] < 0.95).mean():.0%} of the glare"
+    )
+    if rim.any() and peak > 0 and float(np.percentile(glare_y[rim], 95)) > GLARE_AT_EDGE * peak:
+        print("  <-- the glare reaches a side of the box: widen it until that side is clean paint")
+    blown = inside & (crop.max(axis=-1) >= 250) & (crop.min(axis=-1) >= 235)
+    if blown.mean() > 0.002:
+        print(f"  <-- {blown.mean():.1%} of the box is blown out to white: nothing is left there to recover")
+
+    result = bgr.copy()
+    result[Y0:Y1, X0:X1] = out8
+    if map_path:
+        shade = (np.clip(glare_y / max(peak, 1e-6), 0, 1) * 255).astype(np.uint8)
+        view = (crop // 2).astype(np.uint8)
+        view[usable] = (view[usable] * 0.6 + [0, 90, 0]).astype(np.uint8)
+        view[paint] = (view[paint] * 0.6 + [90, 60, 0]).astype(np.uint8)
+        view[..., 2] = np.maximum(view[..., 2], shade)
+        cv2.rectangle(view, (x0 - X0, y0 - Y0), (x1 - X0 - 1, y1 - Y0 - 1), (0, 255, 255), 1)
+        cv2.imwrite(str(map_path), cv2.resize(view, None, fx=2, fy=2, interpolation=cv2.INTER_NEAREST))
+        print(f"  wrote {map_path}: red = glare taken off, green = pixels it was read from, blue = paint it was measured against")
+    return result
+
+
 def cmd_enhance(args):
     bgr = cv2.imread(str(args.image), cv2.IMREAD_COLOR)
     if bgr is None:
         sys.exit(f"cannot read {args.image}")
 
-    warped = bw.rectify(args, bgr)
-    H, W = warped.shape[:2]
+    source = bw.rectify(args, bgr)
+    H, W = source.shape[:2]
+    # Glare comes off first: it's light on the page, and left in it would read as
+    # paper to the white field and as lifted ink to the black point.
+    warped = source
+    for i, text in enumerate(args.glare_box or []):
+        map_path = None
+        if args.glare_map:
+            p = Path(args.glare_map)
+            map_path = p if len(args.glare_box) == 1 else p.with_name(f"{p.stem}-{i + 1}{p.suffix}")
+        warped = remove_glare(warped, parse_box(text, W, H), map_path)
     lin = srgb_to_linear(warped.astype(np.float64) / 255.0)
     yy, xx = np.mgrid[0:H, 0:W]
     full_basis = basis(xx / W - 0.5, yy / H - 0.5)
@@ -415,7 +608,7 @@ def cmd_enhance(args):
     )
     print(f"wrote {args.output} ({Path(args.output).stat().st_size // 1024} KB)")
     if args.compare:
-        bw.write_compare(args, warped, out8)
+        bw.write_compare(args, source, out8)
 
 
 def white_lab_at(white, box, W, H):
@@ -441,6 +634,9 @@ def main():
     e.add_argument("--no-balance", action="store_true", help="leave color alone, only set levels")
     e.add_argument("--white-box", action="append", help="X,Y,W,H of something known white, like a balloon; repeatable. "
                    "Only pixels near its color anchor the light, and it overrides the cast limits")
+    e.add_argument("--glare-box", action="append", help="X,Y,W,H around a soft glare streak or patch, reaching clean paint on every "
+                   "side that isn't the frame edge; repeatable. Takes the glare off before anything else")
+    e.add_argument("--glare-map", help="write what --glare-box took off and read from (numbered when there are several boxes)")
     e.add_argument("--keep-dark-hue", action="store_true", help="keep the source hue in dark painted color, which glare removal pulls toward red")
     e.add_argument("--max-veil", type=float, default=MAX_VEIL, help="most glare taken off the ink, as a share of the paper; 0.02-0.03 for painted darks")
     e.add_argument("--anchors", help="write the white anchors and ink cells it fitted, over the source")

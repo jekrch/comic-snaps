@@ -516,7 +516,7 @@
       "id": "bijou-funnies",
       "name": "Bijou Funnies",
       "parentSeries": null,
-      "description": "Bijou Funnies was an American underground comix anthology that ran for eight issues between 1968 and 1973. Edited by Chicago cartoonist Jay Lynch, it grew out of the underground newspaper The Chicago Mirror and featured Lynch, Skip Williamson, Robert Crumb and Jay Kinney alongside contributors including Art Spiegelman, Gilbert Shelton, Justin Green and Kim Deitch.\r\n\r\nHeavily indebted to Mad, it is regarded alongside Zap as one of the titles that launched the underground comix movement. Print Mint distributed it until 1970, after which Denis Kitchen's Kitchen Sink Press took it over.",
+      "description": "Bijou Funnies was an American underground comix anthology that ran for eight issues between 1968 and 1973. Edited by Chicago cartoonist Jay Lynch, it grew out of the underground newspaper The Chicago Mirror and featured Lynch, Skip Williamson, Robert Crumb and Jay Kinney alongside contributors including Art Spiegelman, Gilbert Shelton, Justin Green and Kim Deitch.\r\n\r\nHeavily indebted to Mad, it is regarded alongside Zap as one of the titles that launched the underground comix movement. Lynch's own Bijou Publishing Empire put out the first issue in 1968; the Print Mint published #2\u20134 and Denis Kitchen's Kitchen Sink Press #5\u20138, though the indicia named Bijou as publisher throughout.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2302660-bij4.jpg",
       "references": [
         {
@@ -538,8 +538,8 @@
         }
       ],
       "startYear": 1968,
-      "publisher": "Kitchen Sink Press",
-      "publisherId": "kitchen-sink-press",
+      "publisher": "Bijou Publishing Empire",
+      "publisherId": "bijou-publishing-empire",
       "issueCount": 8,
       "sources": [
         "comicvine",
@@ -2986,8 +2986,8 @@
         }
       ],
       "startYear": 1972,
-      "publisher": "Last Gasp",
-      "publisherId": "last-gasp",
+      "publisher": "Los Angeles Comic Book Company",
+      "publisherId": "los-angeles-comic-book-company",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3258,7 +3258,7 @@
       "id": "omaha",
       "name": "Omaha",
       "parentSeries": null,
-      "description": "\"Omaha\" the Cat Dancer is an erotic comic strip and later comic book created by artist Reed Waller and writer Kate Worley. Set in fictional Mipple City, Minnesota (derived from \"MPLS\", the old postal abbreviation for Minneapolis) in a universe populated by anthropomorphic animal characters, the strip is a soap opera focusing on Omaha, a feline exotic dancer, and her lover, Chuck, the son of a business tycoon.\r\n\r\nThe strip debuted in the funny animal magazine Vootie, and it was subsequently published in a number of underground comix in the late 1970s and early 1980s.\r\n\r\n\"Omaha\" the Cat Dancer became the subject of the eponymous comic book series published from 1984 to 1993 by Kitchen Sink Press; it was relaunched by Fantagraphics Books through 1995. The final chapters of the strip's storyline were published in Sizzle magazine, beginning in 2006.\r\n\r\n\"Omaha\" the Cat Dancer was the first of several comic books published in the early 1980s which integrated explicit sex into their storylines, rather than using sex for shock value. The comic was the subject of a number of obscenity controversies, and it was nominated for multiple Eisner Awards in 1989 and 1991.",
+      "description": "\"Omaha\" the Cat Dancer is an erotic comic strip and later comic book created by artist Reed Waller and writer Kate Worley. Set in fictional Mipple City, Minnesota (derived from \"MPLS\", the old postal abbreviation for Minneapolis) in a universe populated by anthropomorphic animal characters, the strip is a soap opera focusing on Omaha, a feline exotic dancer, and her lover, Chuck, the son of a business tycoon.\r\n\r\nThe strip debuted in the funny animal magazine Vootie, and it was subsequently published in a number of underground comix in the late 1970s and early 1980s.\r\n\r\n\"Omaha\" the Cat Dancer became the subject of the eponymous comic book series in 1984, when SteelDragon Press published its first two issues; Kitchen Sink Press took over with #3 and published it until 1993; it was relaunched by Fantagraphics Books through 1995. The final chapters of the strip's storyline were published in Sizzle magazine, beginning in 2006.\r\n\r\n\"Omaha\" the Cat Dancer was the first of several comic books published in the early 1980s which integrated explicit sex into their storylines, rather than using sex for shock value. The comic was the subject of a number of obscenity controversies, and it was nominated for multiple Eisner Awards in 1989 and 1991.",
       "references": [
         {
           "name": "Wikipedia",
@@ -3266,14 +3266,14 @@
         },
         {
           "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/omaha/4050-42338/"
+          "url": "https://comicvine.gamespot.com/omaha-the-cat-dancer/4050-6940/"
         }
       ],
-      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2002973-1.jpg",
-      "startYear": 1990,
-      "publisher": "Kitchen Sink Press",
-      "publisherId": "kitchen-sink-press",
-      "issueCount": 9,
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/2792768-01.jpg",
+      "startYear": 1984,
+      "publisher": "SteelDragon Press",
+      "publisherId": "steeldragon-press",
+      "issueCount": 20,
       "sources": [
         "wikipedia",
         "comicvine",
@@ -3954,8 +3954,8 @@
         }
       ],
       "startYear": 1995,
-      "publisher": "Image Comics",
-      "publisherId": "image-comics",
+      "publisher": "El Capitan Books",
+      "publisherId": "el-capitan-books",
       "issueCount": 41,
       "sources": [
         "wikipedia",

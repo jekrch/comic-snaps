@@ -435,7 +435,7 @@ function ArtistRowView({ row, stripHeight, narrow, onSelectPanel, onBrowseSeries
           role="group"
           aria-label={`${row.name} panels`}
           onKeyDown={handleStripKey}
-          className={`row-strip flex min-w-0 flex-1 items-stretch overflow-x-auto overflow-y-hidden ${
+          className={`row-strip drag-scroll flex min-w-0 flex-1 items-stretch overflow-x-auto overflow-y-hidden ${
             overflows ? "row-strip--masked" : ""
           }`}
           style={{ height: stripHeight, gap: TILE_GAP }}

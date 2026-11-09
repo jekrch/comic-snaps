@@ -232,6 +232,66 @@
       ]
     },
     {
+      "id": "bijou-publishing-empire",
+      "name": "Bijou Publishing Empire",
+      "kind": "publisher",
+      "parent": null,
+      "aliases": [
+        "Bijou Publishing Empire, Inc.",
+        "Bijou Publishing"
+      ],
+      "description": "Bijou Publishing Empire was Jay Lynch's Chicago label for Bijou Funnies. Lynch and Skip Williamson had been making The Chicago Mirror, an underground paper; after seeing Robert Crumb's Zap Comix #1, Lynch turned it into a comic book and published Bijou Funnies #1 under the Bijou name in the summer of 1968. The Print Mint published issues #2\u20134 (1969\u20131970) and Kitchen Sink Press issues #5\u20138 (1970\u20131973), but the indicia kept naming Bijou Publishing Empire as the publisher, crediting the Print Mint and Krupp Comic Works only as national distributors. The title ended with #8 in November 1973.",
+      "imageUrl": null,
+      "foundedYear": 1968,
+      "activeUntil": 1973,
+      "country": "United States",
+      "location": "Chicago, Illinois",
+      "founders": [
+        {
+          "artistId": "jay-lynch",
+          "name": "Jay Lynch"
+        }
+      ],
+      "events": [
+        {
+          "year": 1967,
+          "text": "Lynch and Skip Williamson began The Chicago Mirror, which ran three issues."
+        },
+        {
+          "year": 1968,
+          "text": "Published Bijou Funnies #1 after Lynch saw Crumb's Zap Comix #1."
+        },
+        {
+          "year": 1969,
+          "text": "The Print Mint took over printing with #2; the indicia still named Bijou."
+        },
+        {
+          "year": 1970,
+          "text": "Kitchen Sink Press took over the title with #5."
+        },
+        {
+          "year": 1973,
+          "text": "Bijou Funnies #8, in full color with a Harvey Kurtzman cover, was the last."
+        }
+      ],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Bijou_Funnies"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/bijou-publishing-empire/4010-3397/"
+        }
+      ],
+      "ids": {
+        "comicvine": 3397
+      },
+      "sources": [
+        "wikipedia"
+      ]
+    },
+    {
       "id": "black-mask-studios",
       "name": "Black Mask Studios",
       "kind": "publisher",
@@ -1099,6 +1159,71 @@
       "country": "United States",
       "location": "New York City, New York",
       "website": "https://www.eccomics.com/"
+    },
+    {
+      "id": "el-capitan-books",
+      "name": "El Capitan Books",
+      "kind": "self-published",
+      "parent": null,
+      "aliases": [
+        "El Capitan"
+      ],
+      "description": "El Capitan Books is the company David and Maria Lapham set up in 1995 so David could self-publish Stray Bullets, which he wrote, drew and lettered himself. It put out the first forty issues of the series between 1995 and 2005, the Amy Racecar Color Special, and the nine-issue Murder Me Dead (2000\u20132001), along with the Stray Bullets collections in album-size hardcovers and softcovers. It stopped publishing after Stray Bullets #40 in 2005, when freelance work paid better. In 2014 the Laphams moved the series to Image Comics, which published the run's forty-first and final issue and has published Stray Bullets since.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8633222-elcapitan.jpg",
+      "foundedYear": 1995,
+      "country": "United States",
+      "founders": [
+        {
+          "artistId": "david-lapham",
+          "name": "David Lapham"
+        },
+        {
+          "artistId": null,
+          "name": "Maria Lapham"
+        }
+      ],
+      "events": [
+        {
+          "year": 1995,
+          "text": "Founded by David and Maria Lapham; Stray Bullets #1 came out that year."
+        },
+        {
+          "year": 1996,
+          "text": "Stray Bullets won the Eisner Award for Best Writer/Artist: Drama."
+        },
+        {
+          "year": 1997,
+          "text": "The Innocence of Nihilism collection won the Eisner for Best Graphic Album: Reprint."
+        },
+        {
+          "year": 2000,
+          "text": "Lapham paused Stray Bullets to make the nine-issue Murder Me Dead."
+        },
+        {
+          "year": 2005,
+          "text": "Published Stray Bullets #40, its last issue, before the series went on hiatus."
+        },
+        {
+          "year": 2014,
+          "text": "Stray Bullets moved to Image Comics, which published the final issue, #41."
+        }
+      ],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/David_Lapham"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/el-capitan/4010-692/"
+        }
+      ],
+      "ids": {
+        "comicvine": 692
+      },
+      "sources": [
+        "wikipedia"
+      ]
     },
     {
       "id": "epic-comics",
@@ -1985,6 +2110,61 @@
       "website": "https://lastgasp.com/"
     },
     {
+      "id": "los-angeles-comic-book-company",
+      "name": "Los Angeles Comic Book Company",
+      "kind": "publisher",
+      "parent": null,
+      "aliases": [
+        "Los Angeles Comic Book Co.",
+        "L.A. Comic Book Company"
+      ],
+      "description": "The Los Angeles Comic Book Company was an underground comix publisher formed in 1971 by Bill Spicer, the editor of Graphic Story Magazine, with Michael Moore and Fred Walker. Its L.A. Comics #1 (December 1971) introduced Robert Armstrong's Mickey Rat, and it published Mickey Rat #1 in 1972, scripted by Chester C. Crill. It also published Mutants of the Metropolis and the full-color Weird Fantasies.",
+      "imageUrl": null,
+      "foundedYear": 1971,
+      "country": "United States",
+      "location": "Los Angeles, California",
+      "founders": [
+        {
+          "artistId": "bill-spicer",
+          "name": "Bill Spicer"
+        },
+        {
+          "artistId": null,
+          "name": "Michael Moore"
+        },
+        {
+          "artistId": null,
+          "name": "Fred Walker"
+        }
+      ],
+      "events": [
+        {
+          "year": 1971,
+          "text": "Founded; L.A. Comics #1 introduced Robert Armstrong's Mickey Rat."
+        },
+        {
+          "year": 1972,
+          "text": "Published Mickey Rat #1, written by Chester C. Crill."
+        }
+      ],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Bill_Spicer"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/los-angeles-comic-book-co/4010-3310/"
+        }
+      ],
+      "ids": {
+        "comicvine": 3310
+      },
+      "sources": [
+        "wikipedia"
+      ]
+    },
+    {
       "id": "marvel-comics",
       "name": "Marvel Comics",
       "kind": "publisher",
@@ -2778,6 +2958,61 @@
       ],
       "location": "San Jose, California",
       "website": "https://slgpubs.com/"
+    },
+    {
+      "id": "steeldragon-press",
+      "name": "SteelDragon Press",
+      "kind": "publisher",
+      "parent": null,
+      "aliases": [
+        "Steeldragon Press",
+        "Steel Dragon Press"
+      ],
+      "description": "SteelDragon Press was a small Minneapolis publishing house run by the fantasy writers Will Shetterly and Emma Bull, who started it in the early 1980s to publish comic books and limited-edition hardcovers. Its comics include the first two issues of Reed Waller's \"Omaha\" the Cat Dancer, starting in 1984; the series stalled when Waller got stuck on the story, and Kitchen Sink Press picked it up from #3, with Kate Worley writing, and reprinted the SteelDragon issues.",
+      "imageUrl": null,
+      "country": "United States",
+      "location": "Minneapolis, Minnesota",
+      "founders": [
+        {
+          "artistId": null,
+          "name": "Will Shetterly"
+        },
+        {
+          "artistId": null,
+          "name": "Emma Bull"
+        }
+      ],
+      "events": [
+        {
+          "year": 1984,
+          "text": "Published \"Omaha\" the Cat Dancer #1, the strip's first comic book."
+        },
+        {
+          "year": 1986,
+          "text": "Kitchen Sink Press took over Omaha from #3 and reprinted SteelDragon's two issues."
+        }
+      ],
+      "references": [
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/%22Omaha%22_the_Cat_Dancer"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/steeldragon-press/4010-3849/"
+        },
+        {
+          "name": "DemiCon",
+          "url": "https://www.demicon.org/15/Guest_of_Honor_-_Will_Shetterly.html",
+          "title": "Guest of Honor - Will Shetterly"
+        }
+      ],
+      "ids": {
+        "comicvine": 3849
+      },
+      "sources": [
+        "wikipedia"
+      ]
     },
     {
       "id": "topps-comics",

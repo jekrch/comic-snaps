@@ -82,7 +82,7 @@
       "issue": 2,
       "year": 2026,
       "artist": "James Harren",
-      "image": "images/the-demon/issue-2-1794165742.jpg",
+      "image": "images/the-demon/issue-2-1794165742-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -91,24 +91,24 @@
       "height": 1280,
       "dominantColors": [
         [
-          45.5,
-          14.5,
-          -41
+          48.4,
+          14.6,
+          -43.2
         ],
         [
-          8.2,
-          1.8,
-          -4.3
+          23.7,
+          -0.4,
+          2.8
         ],
         [
-          48.3,
-          -1.5,
-          7.8
+          28,
+          9.3,
+          -26.4
         ]
       ],
-      "colorfulness": 24.6,
+      "colorfulness": 24.4,
       "phash": "ea98d862c29f3f48",
-      "ahash": "ffdf8f35e080f1f1",
+      "ahash": "ffdf8f356080f1f1",
       "dhash": "f13c3165c74f2303"
     },
     {

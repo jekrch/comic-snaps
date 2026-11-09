@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { FADE_W } from "../components/rowGeometry";
+import { useDragScroll } from "./useDragScroll";
 
 /** A couple of tiles' worth of travel per arrow press, near enough. */
 function scrollStep(el: HTMLElement): number {
@@ -27,6 +28,10 @@ export function useRowStrip(deps: unknown[]) {
   const [overflows, setOverflows] = useState(false);
   /** How far the strip can travel; recomputed on layout, not on scroll. */
   const maxScrollRef = useRef(0);
+
+  // A mouse can grab and throw the strip, so the thin desktop scrollbar is no
+  // longer the only way along it.
+  useDragScroll(stripRef);
 
   /**
    * Close the dissolve over the last stretch of travel.

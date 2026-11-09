@@ -10,6 +10,7 @@ import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import { useSeriesById } from "../hooks/useMetadata";
 import ReferenceLinks from "./ReferenceLinks";
+import { attachDragScroll } from "../hooks/useDragScroll";
 
 interface Props {
   open: boolean;
@@ -390,7 +391,8 @@ export default function PublisherProfile({
             the order the series started, each opening its panels. */}
         {covers.length > 0 && (
           <div
-            className="profile-rise mt-4 flex gap-1.5 overflow-x-auto pb-1 info-related-scroll"
+            ref={attachDragScroll}
+            className="profile-rise mt-4 flex gap-1.5 overflow-x-auto pb-1 info-related-scroll drag-scroll"
             style={rise(slot++)}
             aria-label="Covers"
           >
@@ -491,7 +493,7 @@ export default function PublisherProfile({
           {logos.length > 1 && (
             <section className="profile-rise" style={rise(slot++)}>
               <SectionHead label="Logos" />
-              <div className="flex gap-3 overflow-x-auto pb-1 info-related-scroll">
+              <div ref={attachDragScroll} className="flex gap-3 overflow-x-auto pb-1 info-related-scroll drag-scroll">
                 {logos.map((logo, i) => {
                   const span = yearSpan(logo.from, logo.until);
                   const here = logo === currentLogo;
@@ -688,7 +690,7 @@ export default function PublisherProfile({
                   </button>
                 </div>
                 {others.length > 0 && (
-                  <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+                  <div ref={attachDragScroll} className="flex gap-2 overflow-x-auto pb-1 info-related-scroll drag-scroll">
                     {others.map((p) => (
                       <button
                         key={p.id}

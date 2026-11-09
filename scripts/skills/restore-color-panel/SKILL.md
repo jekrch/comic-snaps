@@ -88,7 +88,7 @@ Paint is lighter than the line work and carries hue. They need opposite fixes.
 | Highlights blown out | Lower `--paper-l` (default 91) |
 | Halos along the lines | Lower `--sharpen` (default 0.35) |
 | Faded art still looks flat | Only if the user asks: `--saturation 1.1`. It invents color, so never by default |
-| Hard glare spot left behind | Not fixable here: the fields are too smooth to follow it. Tell the user |
+| Hard glare spot left behind | The whole-frame fields are too smooth to follow it. When working locally, `--glare-box` takes off a soft streak or patch: see "Taking off glare" below. Glare blown out to white can't be recovered: tell the user |
 
 ### Naming the whites
 
@@ -135,6 +135,49 @@ Add `--root COPY_OF_REPO` to rehearse against a copy. Check `git status` and
 
 Don't commit or stage. Tell the user what changed and what to look at. They make the
 visual call in the app, so don't drive a browser to judge it.
+
+## Taking off glare
+
+Local runs only: the `/restore` judge in Actions can't set this flag. A lamp reflecting
+off the page leaves a soft, pale streak or patch: lighter, less saturated, and tinted
+toward the lamp. `--glare-box X,Y,W,H` takes one off before anything else runs:
+
+```bash
+python3 scripts/skills/restore-color-panel/restore_color.py enhance PHOTO.jpg OUT.jpg \
+  --glare-box 0,250,95,850 --glare-map MAP.png --compare CMP.jpg --zoom 0,230,220,420
+```
+
+1. **Find it with numbers.** Print median-filtered Lab along rows across the streak, or
+   `probe` boxes on it and beside it. Glare raises L and pulls a and b toward the lamp's
+   color. On The Demon #2 it added up to 17 L to blue paint, and its b went from -38 to
+   about -10.
+2. **Box it generously.** The box must reach clean paint on every side that isn't the
+   frame edge, because the glare is taken as zero there. A side on the frame edge is
+   fine. If the paint just past one side is still lighter or warmer, extend the box past
+   it: there, the box's top first sat in glare and left the core 2 L lighter.
+3. **Check `--glare-map`.** Red is what came off, green the pixels it read the glare
+   from, blue the paint around the box that it measured against. Red should follow the
+   streak and fade out before the yellow outline.
+4. **Probe the result** in the streak's core, on clean paint beside it, and on any art
+   inside the box. The core should land within a few L of the paint beside it, and the
+   clean paint and other art shouldn't move.
+
+Several boxes are fine; maps get numbered. What it prints:
+
+- **"took off up to N L".** The 99.5th percentile drop in the box. A few L means there
+  was little glare. Twenty or more means check the map.
+- **"dark pixels capped N% of the glare".** Added light can't leave a pixel darker than
+  itself, so ink and dark paint under the glare cap it there and close by. A high share
+  next to a dark shape is expected.
+- **"the glare reaches a side of the box".** Widen the box on that side.
+- **"too little clean paint around the box".** Most of the margin is figures or ink, so
+  there's nothing to measure against. Move or widen the box.
+- **"blown out to white".** Those pixels hold no art. What's around them still comes
+  off, but the clipped core stays pale.
+
+It reads the paint as one smooth color across the box, so a box over a hard color
+change (sky into wall) takes the difference for glare. Keep each box on one paint, or
+split it into boxes that each are.
 
 ## What its warnings mean
 
@@ -186,6 +229,15 @@ Worth knowing before changing the script. The limits were all set by panels it g
   as glare turned it navy. Glare takes the white field's color, not the dark pixels',
   which would strip the blue from a navy sky. `--max-veil` caps it, because solid paint
   lighter than the line work still reads as glare.
+- **Local glare (`--glare-box`):** photo = art + glare inside the box. The art is taken as
+  the margin's commonest paint color, filled across the box by a Laplace membrane. A
+  quadratic overshot at the frame edge and darkened clean paint by 9 L. The glare is the
+  lift above that paint, read per channel so its tint can change along the streak. It's
+  read only from pixels no darker than the paint's texture allows: a one-sided "every
+  channel rose" test kept only upward noise and over-corrected. A 13 px median follows
+  the peak where a blur flattened it. Dark pixels cap the glare's strength, not a single
+  channel, on and near them: per-channel caps left the drip olive, and with no cap the
+  drip went from L 17 to 6.
 - **Dark hue:** `--keep-dark-hue` keeps the restored L and chroma below source L 38 but
   turns the hue back to the source's, fully below L 26. It's opt-in because a real cast
   is also in the source's darks.

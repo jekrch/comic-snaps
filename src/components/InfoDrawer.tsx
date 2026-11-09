@@ -13,6 +13,7 @@ import { ScoreBirds } from "./ScoreMeter";
 import PanelPalette from "./PanelPalette";
 import ReferenceLinks from "./ReferenceLinks";
 import type { BrowseDimension } from "../utils/filtering";
+import { attachDragScroll } from "../hooks/useDragScroll";
 
 interface PersonFacets {
   artists: number;
@@ -1046,7 +1047,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 <span>More in this series</span>
                 <span className="text-white/20 normal-case tracking-normal">· {seriesPanels.length}</span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+              <div ref={attachDragScroll} className="flex gap-2 overflow-x-auto pb-1 info-related-scroll drag-scroll">
                 {seriesPanels.map((p) => (
                   <button
                     key={p.id}
@@ -1137,7 +1138,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 <span>More by this artist</span>
                 <span className="text-white/20 normal-case tracking-normal">· {artistPanels.length}</span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 info-related-scroll">
+              <div ref={attachDragScroll} className="flex gap-2 overflow-x-auto pb-1 info-related-scroll drag-scroll">
                 {artistPanels.map((p) => (
                   <button
                     key={p.id}
