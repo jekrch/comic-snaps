@@ -17,9 +17,9 @@ because the chromatic channels have almost no *variance* even if their mean is
 slightly nonzero. Richly colored panels typically score 15+.
 
 In addition to metadata, this script orchestrates backfill steps that enrich
-artists.json and series.json from Wikipedia, Comic Vine, Metron, and the Grand
-Comics Database, and downloads cover images. Each integration lives in its own
-module under the `metadata/` package.
+artists.json, series.json and publishers.json from Wikipedia, Comic Vine,
+Metron, and the Grand Comics Database, and downloads cover images. Each
+integration lives in its own module under the `metadata/` package.
 """
 
 import argparse
@@ -32,7 +32,8 @@ from pathlib import Path
 from metadata.covers import backfill_cover_images, localize_cover_images
 from metadata.credits import backfill_issue_credits
 from metadata.image_metadata import compute_metadata, needs_update
-from metadata.paths import ARTISTS_PATH, GALLERY_PATH, IMAGE_ROOT, SERIES_PATH
+from metadata.paths import ARTISTS_PATH, GALLERY_PATH, IMAGE_ROOT, PUBLISHERS_PATH, SERIES_PATH
+from metadata.publishers import backfill_publishers
 from metadata.seed import issue_one_years, seed_artists, seed_series, sync_issue_counts
 from metadata.sources.comicvine import backfill_comicvine
 from metadata.sources.gcd import backfill_gcd
@@ -132,6 +133,20 @@ def main():
             print(f"Processed {gcd_updated} series via GCD.")
         else:
             print("No GCD entries needed processing.")
+
+    # Link every series to the publisher registry (publishers.json) and
+    # enrich the registry. Runs after the series backfills, which are what
+    # fill in a new series' publisher name; the lookups reuse the series ids
+    # those backfills stored in the references.
+    print("Backfilling publishers...")
+    metron_user = os.environ.get("METRON_USERNAME")
+    metron_pass = os.environ.get("METRON_PASSWORD")
+    backfill_publishers(
+        SERIES_PATH, PUBLISHERS_PATH,
+        metron_creds=(metron_user, metron_pass) if metron_user and metron_pass else None,
+        comic_vine_key=os.environ.get("COMIC_VINE_API_KEY") or None,
+        skip_gcd=args.skip_gcd,
+    )
 
     # Raise stale issue counts to match the issues we actually own panels
     # from. Runs after the source backfills so a freshly-fetched count is the

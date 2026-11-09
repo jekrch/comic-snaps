@@ -109,6 +109,10 @@ export interface SeriesEntry {
   parentSeries?: string | null;
   startYear?: number | null;
   publisher?: string | null;
+  /** publishers.json ids and the imprint's display name (Python pipeline). */
+  publisherId?: string | null;
+  imprintId?: string | null;
+  imprint?: string | null;
   issueCount?: number | null;
   description?: string;
   references?: { name: string; url: string; title?: string }[];

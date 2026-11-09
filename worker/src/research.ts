@@ -198,6 +198,7 @@ function seriesSubject(docs: CollectionDocs, entry: SeriesEntry): Subject {
   const lines = [`Comic series: ${entry.name}`];
   if (entry.aliases?.length) lines.push(`Also known as: ${entry.aliases.join("; ")}`);
   if (entry.publisher) lines.push(`Publisher: ${entry.publisher}`);
+  if (entry.imprint) lines.push(`Imprint: ${entry.imprint}`);
   if (entry.startYear) lines.push(`First published: ${entry.startYear}`);
   if (entry.issueCount) lines.push(`Issues: ${entry.issueCount}`);
   if (artists.length) lines.push(`Artists of the panels in the gallery: ${artists.join(", ")}`);

@@ -33,7 +33,14 @@ export interface Series {
   imageUrl?: string | null;
   references: Reference[];
   startYear?: number | null;
+  /** Display name of the parent publisher. The registry entry it names is
+   *  `publisherId` in publishers.json; the pipeline keeps the two in line. */
   publisher?: string | null;
+  publisherId?: string | null;
+  /** Set when the series came out under an imprint (Vertigo, Skybound):
+   *  its publishers.json id and display name. */
+  imprintId?: string | null;
+  imprint?: string | null;
   issueCount?: number | null;
   /** issueCount was raised to the highest issue we own a panel from, because
    *  the count recorded when the series was first looked up went stale. It is
@@ -45,6 +52,33 @@ export interface Series {
   /** Manually marked: a multi-creator anthology, where the panel's assigned
    *  artist is the only meaningful attribution. Suppresses issue credits. */
   anthology?: boolean;
+}
+
+/** One entry in publishers.json: a publisher, an imprint, or a
+ *  self-publishing label. See scripts/metadata/publishers.py. */
+export interface Publisher {
+  id: string;
+  name: string;
+  kind: "publisher" | "imprint" | "self-published";
+  /** An imprint's publisher id. */
+  parent: string | null;
+  aliases: string[];
+  description: string;
+  imageUrl: string | null;
+  /** When the company was founded (Metron). */
+  foundedYear?: number | null;
+  /** The span of its books in the Grand Comics Database, which can start
+   *  before the founding. activeUntil is null while it is still publishing. */
+  activeFrom?: number | null;
+  activeUntil?: number | null;
+  country?: string | null;
+  location?: string | null;
+  website?: string | null;
+  founders?: { artistId: string | null; name: string }[];
+  references: Reference[];
+  /** Source ids: Metron, Comic Vine and GCD. */
+  ids: Partial<Record<"metron" | "comicvine" | "gcd", number>>;
+  tags?: string[] | null;
 }
 
 export interface IssueCredit {

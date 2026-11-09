@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COVER_ISSUE, buildCoverPanels, buildSeriesRows, type SeriesMeta } from "./seriesRollup";
+import { COVER_ISSUE, buildCoverPanels, buildSeriesRows, publisherLabel, type SeriesMeta } from "./seriesRollup";
 import type { IssueCredits, RatingsIndex, Series } from "../types";
 import { makePanel } from "./testPanel";
 
@@ -257,6 +257,20 @@ describe("buildSeriesRows", () => {
 
   it("returns no rows for no panels", () => {
     expect(buildSeriesRows([], EMPTY_META, null)).toEqual([]);
+  });
+});
+
+describe("publisherLabel", () => {
+  it("joins the publisher and its imprint", () => {
+    expect(publisherLabel({ publisher: "DC Comics", imprint: "Vertigo" })).toBe("DC Comics / Vertigo");
+  });
+
+  it("is the publisher alone without an imprint", () => {
+    expect(publisherLabel({ publisher: "Fantagraphics" })).toBe("Fantagraphics");
+  });
+
+  it("is null when neither is known", () => {
+    expect(publisherLabel({ publisher: null, imprint: null })).toBeNull();
   });
 });
 

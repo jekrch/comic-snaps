@@ -26,11 +26,15 @@
       ],
       "startYear": 2002,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "vertigo",
+      "imprint": "Vertigo",
       "issueCount": 5,
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/100/4e180f72efcf.jpg",
@@ -65,10 +69,14 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9668380-wwww.jpg",
       "startYear": 2025,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "absolute-universe",
+      "imprint": "Absolute Universe",
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "issueCount": 12,
       "coverImages": [
@@ -106,10 +114,14 @@
       ],
       "startYear": 2024,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "absolute-universe",
+      "imprint": "Absolute Universe",
       "issueCount": 25,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/absolute-wonder-woman/877b6081a60a.jpg",
@@ -137,6 +149,7 @@
       ],
       "startYear": 1938,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "issueCount": 864,
       "sources": [
         "comicvine",
@@ -171,10 +184,12 @@
       ],
       "startYear": 1995,
       "publisher": "Didactic Chocolate Press",
+      "publisherId": "didactic-chocolate-press",
       "issueCount": 7,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/anubis/2d84d3f7ae89.jpg",
@@ -201,6 +216,7 @@
       ],
       "startYear": 2026,
       "publisher": "Oni Press",
+      "publisherId": "oni-press",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -259,6 +275,7 @@
       ],
       "startYear": 2026,
       "publisher": "Oni Press",
+      "publisherId": "oni-press",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -303,11 +320,13 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9655759-cover.jpg",
       "startYear": 2025,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 9,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/assorted-crisis-events/35bd6340062b.jpg",
@@ -338,11 +357,13 @@
       ],
       "startYear": 1991,
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "issueCount": 1,
       "sources": [
         "comicvine",
         "metron",
-        "metron-series-lookup"
+        "metron-series-lookup",
+        "gcd-publisher"
       ],
       "coverSources": {
         "metron": [
@@ -377,7 +398,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverSources": {
         "metron": [
@@ -392,6 +414,9 @@
       },
       "startYear": 2025,
       "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "skybound",
+      "imprint": "Skybound",
       "issueCount": 12,
       "coverImages": [
         "data/covers/battle-beast/e689d32306d6.jpg",
@@ -418,6 +443,7 @@
         }
       ],
       "publisher": "IDW Publishing",
+      "publisherId": "idw-publishing",
       "sources": [
         "comicvine",
         "metron"
@@ -454,6 +480,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9785259-cover.jpg",
       "startYear": 2025,
       "publisher": "IDW Publishing",
+      "publisherId": "idw-publishing",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -498,7 +525,8 @@
         }
       ],
       "startYear": 1968,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 8,
       "sources": [
         "comicvine",
@@ -546,11 +574,13 @@
         }
       ],
       "startYear": 1972,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 10,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverSources": {
         "metron": [
@@ -587,10 +617,14 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985132-cover.jpg",
       "startYear": 2026,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "vertigo",
+      "imprint": "Vertigo",
       "issueCount": 8,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/bleeding-hearts/818d07f62939.jpg",
@@ -618,7 +652,8 @@
       ],
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverSources": {
         "metron": [
@@ -632,7 +667,10 @@
         ]
       },
       "startYear": 2026,
-      "publisher": "Skybound",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "skybound",
+      "imprint": "Skybound",
       "issueCount": 3,
       "coverImages": [
         "data/covers/blood-of-the-wolf-man/a12ceda907cd.jpg",
@@ -669,7 +707,9 @@
       "coverSources": {
         "metron": [],
         "comicvine": []
-      }
+      },
+      "publisher": "Silver Sprocket",
+      "publisherId": "silver-sprocket"
     },
     {
       "id": "buzz",
@@ -688,6 +728,7 @@
       ],
       "imageUrl": null,
       "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "startYear": 1990,
       "issueCount": 3,
       "sources": [
@@ -741,6 +782,7 @@
       ],
       "startYear": 1990,
       "publisher": "Cat-Head Comics",
+      "publisherId": "cat-head-comics",
       "issueCount": 19,
       "sources": [
         "comicvine",
@@ -779,10 +821,12 @@
       ],
       "startYear": 1972,
       "publisher": "Yahoo Production",
+      "publisherId": "yahoo-production",
       "issueCount": 1,
       "sources": [
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverSources": {
         "metron": [],
@@ -821,11 +865,13 @@
       ],
       "startYear": 1987,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 10,
       "sources": [
         "wikipedia",
         "comicvine",
-        "metron"
+        "metron",
+        "gcd-publisher"
       ],
       "coverImages": [
         "data/covers/concrete/2d8093191346.jpg",
@@ -852,6 +898,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/462/469591-concretefragilecreature1.jpg",
       "startYear": 1992,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 4,
       "sources": [
         "gcd",
@@ -883,6 +930,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/35185-5106-39306-1-concrete-killer-smi.jpg",
       "startYear": 1993,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -913,6 +961,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -958,6 +1007,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/978/100394-18313-107226-1-creatures-of-the-id.jpg",
       "startYear": 1990,
       "publisher": "Caliber Comics",
+      "publisherId": "caliber-comics",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -1001,7 +1051,10 @@
         }
       ],
       "startYear": 2006,
-      "publisher": "Marvel",
+      "publisher": "Marvel Comics",
+      "publisherId": "marvel-comics",
+      "imprintId": "icon-comics",
+      "imprint": "Icon",
       "issueCount": 10,
       "sources": [
         "wikipedia",
@@ -1033,7 +1086,8 @@
       "startYear": 2015,
       "issueCount": 1,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4413328-d08cced6-0b23-410a-86c3-8076ee1ee60c.jpg",
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "sources": [
         "comicvine",
         "metron"
@@ -1071,7 +1125,8 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -1112,6 +1167,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11143/111431054/8584954-darkspaces-wildfire01%28of05%29-000.jpg",
       "startYear": 2022,
       "publisher": "IDW Publishing",
+      "publisherId": "idw-publishing",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -1151,6 +1207,7 @@
       ],
       "startYear": 1988,
       "publisher": "Deadline Publications Ltd.",
+      "publisherId": "deadline-publications",
       "issueCount": 71,
       "sources": [
         "comicvine",
@@ -1190,6 +1247,9 @@
       ],
       "startYear": 2006,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "vertigo",
+      "imprint": "Vertigo",
       "issueCount": 13,
       "sources": [
         "comicvine",
@@ -1225,6 +1285,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -1260,6 +1321,7 @@
       ],
       "startYear": 1993,
       "publisher": "Topps Comics",
+      "publisherId": "topps-comics",
       "issueCount": 3,
       "sources": [
         "comicvine",
@@ -1302,7 +1364,8 @@
         }
       ],
       "startYear": 1966,
-      "publisher": "Warren",
+      "publisher": "Warren Publishing",
+      "publisherId": "warren-publishing",
       "issueCount": 139,
       "sources": [
         "wikipedia",
@@ -1344,6 +1407,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/43700-7153-51089-1-eightball.jpg",
       "startYear": 1989,
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "issueCount": 23,
       "sources": [
         "wikipedia",
@@ -1379,6 +1443,7 @@
       ],
       "startYear": 2021,
       "publisher": "Ablaze",
+      "publisherId": "ablaze",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -1420,6 +1485,7 @@
       ],
       "startYear": 2019,
       "publisher": "Boom! Studios",
+      "publisherId": "boom-studios",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -1455,6 +1521,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7417959-01a-main.jpg",
       "startYear": 2020,
       "publisher": "Boom! Studios",
+      "publisherId": "boom-studios",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -1488,7 +1555,8 @@
         }
       ],
       "startYear": 2012,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 24,
       "sources": [
         "wikipedia",
@@ -1519,6 +1587,7 @@
         }
       ],
       "publisher": "Cat-Head Comics",
+      "publisherId": "cat-head-comics",
       "startYear": 1989,
       "issueCount": 1,
       "sources": [
@@ -1552,7 +1621,8 @@
         }
       ],
       "startYear": 2024,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 27,
       "sources": [
         "comicvine",
@@ -1600,6 +1670,7 @@
       ],
       "startYear": 2024,
       "publisher": "Pantheon Books",
+      "publisherId": "pantheon-books",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -1630,6 +1701,7 @@
         }
       ],
       "publisher": "Dynamite Entertainment",
+      "publisherId": "dynamite-entertainment",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -1682,7 +1754,9 @@
       "coverImages": [
         "data/covers/floating-bunnyhead-bonus-levels-collection/d4a07cadaea9.jpg",
         "data/covers/floating-bunnyhead-bonus-levels-collection/80db76f7c454.jpg"
-      ]
+      ],
+      "publisher": "Skelenaut",
+      "publisherId": "skelenaut"
     },
     {
       "id": "frank",
@@ -1700,6 +1774,7 @@
         }
       ],
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "startYear": 1996,
       "issueCount": 4,
       "sources": [
@@ -1742,7 +1817,10 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9320236-cover.jpg",
       "startYear": 2024,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "ghost-machine",
+      "imprint": "Ghost Machine",
       "issueCount": 22,
       "sources": [
         "comicvine",
@@ -1772,7 +1850,8 @@
         }
       ],
       "startYear": 2021,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -1807,7 +1886,8 @@
         }
       ],
       "startYear": 2003,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -1847,6 +1927,7 @@
       ],
       "startYear": 2026,
       "publisher": "Bad Idea Comics",
+      "publisherId": "bad-idea",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -1884,6 +1965,7 @@
       ],
       "startYear": 2025,
       "publisher": "Dynamite Entertainment",
+      "publisherId": "dynamite-entertainment",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -1918,6 +2000,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4559059-5248350691-26606.jpg",
       "startYear": 2015,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 32,
       "sources": [
         "wikipedia",
@@ -1954,6 +2037,7 @@
       ],
       "startYear": 2022,
       "publisher": "Vault Comics",
+      "publisherId": "vault-comics",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -1993,6 +2077,9 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/10162/217436-19317-115960-1-heavy-liquid.jpg",
       "startYear": 1999,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "vertigo",
+      "imprint": "Vertigo",
       "issueCount": 5,
       "sources": [
         "wikipedia",
@@ -2039,6 +2126,7 @@
       ],
       "startYear": 2013,
       "publisher": "Heavy Metal International",
+      "publisherId": "heavy-metal-international",
       "coverSources": {
         "metron": [
           5,
@@ -2082,6 +2170,7 @@
       ],
       "startYear": 1986,
       "publisher": "Last Gasp",
+      "publisherId": "last-gasp",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -2122,7 +2211,10 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9498349-cover.jpg",
       "startYear": 2024,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "ghost-machine",
+      "imprint": "Ghost Machine",
       "issueCount": 11,
       "sources": [
         "comicvine",
@@ -2157,7 +2249,8 @@
         }
       ],
       "startYear": 2018,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 45,
       "sources": [
         "comicvine",
@@ -2192,6 +2285,7 @@
       ],
       "startYear": 2026,
       "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 1,
       "coverSources": {
         "metron": [
@@ -2222,7 +2316,8 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -2266,7 +2361,8 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9923000-cover.jpg",
       "startYear": 2026,
-      "publisher": "Marvel",
+      "publisher": "Marvel Comics",
+      "publisherId": "marvel-comics",
       "issueCount": 10,
       "sources": [
         "gcd",
@@ -2310,7 +2406,8 @@
         ]
       },
       "startYear": 2026,
-      "publisher": "Marvel",
+      "publisher": "Marvel Comics",
+      "publisherId": "marvel-comics",
       "issueCount": 1,
       "coverImages": [
         "data/covers/it-s-jeff-brand-new-week/531c638dc79f.jpg"
@@ -2334,6 +2431,9 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4923786-01.jpg",
       "startYear": 2015,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
+      "imprintId": "vertigo",
+      "imprint": "Vertigo",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -2385,7 +2485,9 @@
       ],
       "tags": [
         "underground"
-      ]
+      ],
+      "publisher": "Tucker Petertil",
+      "publisherId": "tucker-petertil"
     },
     {
       "id": "just-brutal",
@@ -2405,6 +2507,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9985196-cover.jpg",
       "startYear": 2026,
       "publisher": "Ignition Press",
+      "publisherId": "ignition-press",
       "issueCount": 6,
       "sources": [
         "comicvine",
@@ -2447,7 +2550,8 @@
         }
       ],
       "startYear": 2021,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 58,
       "sources": [
         "comicvine",
@@ -2483,6 +2587,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -2529,6 +2634,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4313687-01.jpg",
       "startYear": 2015,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 5,
       "sources": [
         "wikipedia",
@@ -2556,6 +2662,7 @@
       ],
       "startYear": 2026,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -2593,6 +2700,7 @@
       ],
       "startYear": 1993,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "issueCount": 66,
       "sources": [
         "comicvine",
@@ -2647,6 +2755,7 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/4/62782-7000-95778-1-love-and-rockets.jpg",
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "issueCount": 50,
       "coverSources": {
         "metron": [
@@ -2685,7 +2794,8 @@
         }
       ],
       "startYear": 1992,
-      "publisher": "Tundra",
+      "publisher": "Tundra Publishing",
+      "publisherId": "tundra-publishing",
       "issueCount": 3,
       "sources": [
         "wikipedia",
@@ -2717,7 +2827,8 @@
           "url": "https://en.wikipedia.org/wiki/Madman_(Mike_Allred_character)"
         }
       ],
-      "publisher": "Tundra",
+      "publisher": "Tundra Publishing",
+      "publisherId": "tundra-publishing",
       "startYear": 1992,
       "issueCount": 3,
       "sources": [
@@ -2752,6 +2863,7 @@
       ],
       "startYear": 2002,
       "publisher": "AAA Pop",
+      "publisherId": "aaa-pop",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -2803,6 +2915,7 @@
       ],
       "startYear": 1972,
       "publisher": "Last Gasp",
+      "publisherId": "last-gasp",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -2841,6 +2954,9 @@
         }
       ],
       "publisher": "Oni Press",
+      "publisherId": "oni-press",
+      "imprintId": "flux-house",
+      "imprint": "Flux House",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -2888,6 +3004,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9466557-6820814136-B0CW1.jpg",
       "startYear": 2024,
       "publisher": "Boom! Studios",
+      "publisherId": "boom-studios",
       "issueCount": 20,
       "sources": [
         "comicvine",
@@ -2923,6 +3040,7 @@
       ],
       "startYear": 1969,
       "publisher": "Rip Off Press",
+      "publisherId": "rip-off-press",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -2976,7 +3094,9 @@
         "comicvine": [
           0
         ]
-      }
+      },
+      "publisher": "Silver Sprocket",
+      "publisherId": "silver-sprocket"
     },
     {
       "id": "nut",
@@ -3010,6 +3130,7 @@
       ],
       "startYear": 2022,
       "publisher": "Row 7 Publishing",
+      "publisherId": "row-7-publishing",
       "issueCount": 5,
       "issueCountInferred": true
     },
@@ -3030,7 +3151,8 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "sources": [
         "comicvine",
         "metron"
@@ -3072,6 +3194,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/9116/2002973-1.jpg",
       "startYear": 1990,
       "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 9,
       "sources": [
         "wikipedia",
@@ -3115,6 +3238,7 @@
       ],
       "startYear": 1995,
       "publisher": "Drawn & Quarterly",
+      "publisherId": "drawn-and-quarterly",
       "issueCount": 14,
       "sources": [
         "comicvine",
@@ -3159,6 +3283,7 @@
       ],
       "startYear": 1982,
       "publisher": "Pacific Comics",
+      "publisherId": "pacific-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3189,7 +3314,8 @@
         }
       ],
       "startYear": 1954,
-      "publisher": "EC",
+      "publisher": "EC Comics",
+      "publisherId": "ec-comics",
       "issueCount": 12,
       "sources": [
         "comicvine",
@@ -3233,6 +3359,7 @@
       ],
       "startYear": 1972,
       "publisher": "Golden Gate Publishing Company",
+      "publisherId": "golden-gate-publishing-company",
       "issueCount": 1,
       "coverSources": {
         "metron": [
@@ -3264,6 +3391,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9887543-cover.jpg",
       "startYear": 2025,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3293,7 +3421,8 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -3336,7 +3465,10 @@
         }
       ],
       "startYear": 2024,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "ghost-machine",
+      "imprint": "Ghost Machine",
       "issueCount": 22,
       "sources": [
         "comicvine",
@@ -3381,6 +3513,7 @@
       ],
       "startYear": 1977,
       "publisher": "Rip Off Press",
+      "publisherId": "rip-off-press",
       "issueCount": 31,
       "sources": [
         "comicvine",
@@ -3420,6 +3553,7 @@
       ],
       "startYear": 2003,
       "publisher": "SLG Publishing",
+      "publisherId": "slg-publishing",
       "issueCount": 8,
       "sources": [
         "comicvine",
@@ -3449,7 +3583,8 @@
         }
       ],
       "startYear": 1988,
-      "publisher": "Marvel",
+      "publisher": "Marvel Comics",
+      "publisherId": "marvel-comics",
       "issueCount": 7,
       "sources": [
         "comicvine",
@@ -3480,6 +3615,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -3515,7 +3651,8 @@
         }
       ],
       "startYear": 2025,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 8,
       "sources": [
         "comicvine",
@@ -3549,7 +3686,8 @@
         }
       ],
       "startYear": 1972,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 15,
       "sources": [
         "comicvine",
@@ -3592,6 +3730,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4774946-01.jpg",
       "startYear": 2015,
       "publisher": "Black Mask Studios",
+      "publisherId": "black-mask-studios",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3622,6 +3761,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/5773001-01.jpg",
       "startYear": 2017,
       "publisher": "Black Mask Studios",
+      "publisherId": "black-mask-studios",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3652,6 +3792,7 @@
       ],
       "startYear": 2019,
       "publisher": "Black Mask Studios",
+      "publisherId": "black-mask-studios",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3719,7 +3860,8 @@
         }
       ],
       "startYear": 1995,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 41,
       "sources": [
         "wikipedia",
@@ -3750,7 +3892,8 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/4370533-sbsr01solicitcvr.jpg",
       "startYear": 2015,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 42,
       "aliases": [
         "Stray Bullets: Sunshine and Roses"
@@ -3783,7 +3926,10 @@
         }
       ],
       "startYear": 1990,
-      "publisher": "Marvel",
+      "publisher": "Marvel Comics",
+      "publisherId": "marvel-comics",
+      "imprintId": "epic-comics",
+      "imprint": "Epic Comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3813,7 +3959,8 @@
         }
       ],
       "startYear": 1997,
-      "publisher": "EC",
+      "publisher": "EC Comics",
+      "publisherId": "ec-comics",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -3856,6 +4003,7 @@
       ],
       "startYear": 1992,
       "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -3886,6 +4034,7 @@
       ],
       "startYear": 1969,
       "publisher": "Washington Free Community",
+      "publisherId": "washington-free-community",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -3926,7 +4075,8 @@
         }
       ],
       "startYear": 2015,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 29,
       "sources": [
         "comicvine",
@@ -3957,6 +4107,7 @@
       ],
       "startYear": 2024,
       "publisher": "DSTLRY",
+      "publisherId": "dstlry",
       "issueCount": 3,
       "sources": [
         "comicvine",
@@ -3994,6 +4145,7 @@
       ],
       "startYear": 2026,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -4038,6 +4190,7 @@
         "metron"
       ],
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "issueCount": 3,
       "coverSources": {
         "metron": [
@@ -4072,6 +4225,7 @@
         }
       ],
       "publisher": "Ignition Press",
+      "publisherId": "ignition-press",
       "issueCount": 3,
       "sources": [
         "comicvine",
@@ -4112,7 +4266,10 @@
         }
       ],
       "startYear": 2021,
-      "publisher": "VIRUS",
+      "publisher": "Heavy Metal International",
+      "publisherId": "heavy-metal-international",
+      "imprintId": "virus",
+      "imprint": "VIRUS",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -4154,7 +4311,8 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -4199,6 +4357,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7928449-01a.jpg",
       "startYear": 2021,
       "publisher": "Boom! Studios",
+      "publisherId": "boom-studios",
       "issueCount": 5,
       "sources": [
         "comicvine",
@@ -4232,7 +4391,8 @@
         }
       ],
       "startYear": 1993,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 35,
       "sources": [
         "wikipedia",
@@ -4264,6 +4424,7 @@
       ],
       "startYear": 2026,
       "publisher": "Dynamite Entertainment",
+      "publisherId": "dynamite-entertainment",
       "issueCount": 3,
       "sources": [
         "comicvine",
@@ -4307,6 +4468,7 @@
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/110017/9421875-wwww.jpg",
       "startYear": 2024,
       "publisher": "DC Comics",
+      "publisherId": "dc-comics",
       "sources": [
         "wikipedia",
         "comicvine",
@@ -4340,6 +4502,7 @@
       ],
       "startYear": 2026,
       "publisher": "Bad Idea Comics",
+      "publisherId": "bad-idea",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -4406,7 +4569,9 @@
         "data/covers/the-shaolin-cowboy-staying-a-i-live/1a40dd827e74.jpg",
         "data/covers/the-shaolin-cowboy-staying-a-i-live/32ea503aa0aa.jpg"
       ],
-      "issueCountInferred": true
+      "issueCountInferred": true,
+      "publisher": "Dark Horse Comics",
+      "publisherId": "dark-horse-comics"
     },
     {
       "id": "the-twilight-zone",
@@ -4426,6 +4591,7 @@
       ],
       "startYear": 2026,
       "publisher": "IDW Publishing",
+      "publisherId": "idw-publishing",
       "sources": [
         "comicvine",
         "metron"
@@ -4468,6 +4634,7 @@
       ],
       "startYear": 1984,
       "publisher": "Pacific Comics",
+      "publisherId": "pacific-comics",
       "issueCount": 1,
       "coverSources": {
         "metron": [
@@ -4501,7 +4668,8 @@
         "underground"
       ],
       "startYear": 1993,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -4537,7 +4705,8 @@
         }
       ],
       "startYear": 1993,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -4576,7 +4745,8 @@
         "metron"
       ],
       "startYear": 1976,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 1,
       "coverSources": {
         "metron": [],
@@ -4614,7 +4784,9 @@
         "comicvine": [
           1
         ]
-      }
+      },
+      "publisher": "Sandez Rey",
+      "publisherId": "sandez-rey"
     },
     {
       "id": "uneeda-comix",
@@ -4638,6 +4810,7 @@
       ],
       "startYear": 1970,
       "publisher": "Print Mint",
+      "publisherId": "print-mint",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -4675,7 +4848,10 @@
         }
       ],
       "startYear": 2026,
-      "publisher": "Skybound",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "skybound",
+      "imprint": "Skybound",
       "issueCount": 4,
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9998215-cover.jpg",
       "sources": [
@@ -4721,7 +4897,10 @@
         "metron"
       ],
       "startYear": 2026,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "skybound",
+      "imprint": "Skybound",
       "issueCount": 4,
       "coverSources": {
         "metron": [
@@ -4754,7 +4933,10 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/9843153-cover.jpg",
       "startYear": 2025,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "imprintId": "skybound",
+      "imprint": "Skybound",
       "issueCount": 4,
       "sources": [
         "comicvine",
@@ -4797,7 +4979,8 @@
         "comicvine",
         "metron"
       ],
-      "publisher": "EC",
+      "publisher": "EC Comics",
+      "publisherId": "ec-comics",
       "issueCount": 29,
       "coverSources": {
         "metron": [
@@ -4830,6 +5013,7 @@
       ],
       "startYear": 1993,
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "issueCount": 2,
       "sources": [
         "comicvine",
@@ -4866,7 +5050,8 @@
         }
       ],
       "startYear": 2023,
-      "publisher": "Image",
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
       "issueCount": 20,
       "sources": [
         "comicvine",
@@ -4918,7 +5103,8 @@
         ]
       },
       "startYear": 2000,
-      "publisher": "Food Chain (self-published)",
+      "publisher": "Food Chain",
+      "publisherId": "food-chain",
       "issueCount": 4,
       "coverImages": [
         "data/covers/walkie-talkie/bf7814e245e4.jpg",
@@ -4949,6 +5135,7 @@
       "anthology": true,
       "startYear": 1981,
       "publisher": "Last Gasp",
+      "publisherId": "last-gasp",
       "issueCount": 28,
       "sources": [
         "comicvine",
@@ -4989,6 +5176,7 @@
       ],
       "startYear": 2024,
       "publisher": "DSTLRY",
+      "publisherId": "dstlry",
       "issueCount": 3,
       "sources": [
         "comicvine",
@@ -5029,7 +5217,8 @@
       ],
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/2147651-xyz.jpg",
       "startYear": 1972,
-      "publisher": "Kitchen Sink",
+      "publisher": "Kitchen Sink Press",
+      "publisherId": "kitchen-sink-press",
       "issueCount": 1,
       "sources": [
         "comicvine",
@@ -5071,6 +5260,7 @@
       ],
       "startYear": 1968,
       "publisher": "Fantagraphics",
+      "publisherId": "fantagraphics",
       "issueCount": 17,
       "sources": [
         "wikipedia",

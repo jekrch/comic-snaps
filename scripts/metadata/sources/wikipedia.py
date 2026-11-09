@@ -3,6 +3,7 @@ import re
 import sys
 import time
 from pathlib import Path
+from urllib.parse import unquote
 
 import requests
 
@@ -17,14 +18,21 @@ WIKIPEDIA_HEADERS = {"User-Agent": "comic-snaps/1.0"}
 _SESSION = requests.Session()
 _SESSION.headers.update(WIKIPEDIA_HEADERS)
 
-# MediaWiki accepts up to 50 titles in a single ``titles=|`` query.
-WIKIPEDIA_BATCH_SIZE = 50
+# MediaWiki accepts 50 titles in a ``titles=|`` query, but returns at most
+# 20 intro extracts per request (``exlimit``'s ceiling with ``exintro``).
+# Past 20, the remaining pages come back with no extract and were marked
+# processed as if they had no intro, so a batch is capped at 20.
+WIKIPEDIA_BATCH_SIZE = 20
 
 
 def get_wikipedia_title(url: str) -> str | None:
-    """Extract the article title from a Wikipedia URL."""
+    """Extract the article title from a Wikipedia URL.
+
+    Percent-escapes are decoded: MediaWiki looks up "Drawn & Quarterly", not
+    "Drawn %26 Quarterly", and finds no page for the escaped form.
+    """
     m = re.match(r"https?://en\.wikipedia\.org/wiki/(.+)", url)
-    return m.group(1) if m else None
+    return unquote(m.group(1)) if m else None
 
 
 def _clean_wikipedia_extract(text: str) -> str:
@@ -49,8 +57,10 @@ def fetch_wikipedia_intros_batch(
     from the result.
 
     The MediaWiki ``titles=`` parameter accepts up to 50 page titles
-    pipe-separated.  ``exintro|explaintext`` give the same intro section
-    that the single-title fetch returned, so post-processing is identical.
+    pipe-separated, but extracts come back for at most 20 of them, so pass
+    no more than WIKIPEDIA_BATCH_SIZE.  ``exintro|explaintext`` give the same
+    intro section that the single-title fetch returned, so post-processing is
+    identical.
     """
     if not titles:
         return {}
@@ -71,6 +81,7 @@ def fetch_wikipedia_intros_batch(
         "prop": "extracts",
         "exintro": True,
         "explaintext": True,
+        "exlimit": "max",
         "format": "json",
         "redirects": 1,
     }

@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, use
 import { Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { Panel, Artist, Series, IssueCredit, IssueCredits, TargetRatings } from "../types";
 import { formatIssue } from "../utils/issueFormat";
+import { publisherLabel } from "../utils/seriesRollup";
 import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
 import PersonProfile from "./PersonProfile";
@@ -586,7 +587,8 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
 
   const seriesMetaParts: string[] = [];
   if (effectiveSeries?.startYear) seriesMetaParts.push(String(effectiveSeries.startYear));
-  if (effectiveSeries?.publisher) seriesMetaParts.push(effectiveSeries.publisher);
+  const publisherLine = effectiveSeries ? publisherLabel(effectiveSeries) : null;
+  if (publisherLine) seriesMetaParts.push(publisherLine);
   if (effectiveSeries?.issueCount) {
     const count = effectiveSeries.issueCount;
     const plural = count === 1 && !effectiveSeries.issueCountInferred ? "" : "s";

@@ -94,6 +94,15 @@ function bump(counts: Map<string, number>, name: string) {
 }
 
 /**
+ * The publisher line for a series: "DC Comics / Vertigo" when it came out
+ * under an imprint, else the publisher alone. Null when neither is known.
+ */
+export function publisherLabel(series: Pick<Series, "publisher" | "imprint">): string | null {
+  const parts = [series.publisher, series.imprint].filter((p): p is string => !!p);
+  return parts.length ? parts.join(" / ") : null;
+}
+
+/**
  * Group already-filtered panels into rows.
  *
  * A row is a view of *the filtered set*: a filter that matches one panel of a
@@ -192,7 +201,7 @@ export function buildSeriesRows(
       writers: rankNames(writerCounts),
       artists: rankNames(artistCounts),
       year: series?.startYear ?? (Number.isFinite(minYear) ? minYear : null),
-      publisher: series?.publisher ?? null,
+      publisher: series ? publisherLabel(series) : null,
       rating: lookupRatings(ratings, "series", slug),
       issueRating,
       firstPostedAt: Number.isFinite(firstPostedAt) ? firstPostedAt : 0,
