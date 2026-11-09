@@ -1244,7 +1244,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 <button
                   type="button"
                   onClick={() => openPublisher(published.publisher!, "details")}
-                  className="font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
+                  className="block font-display text-sm text-white/90 leading-snug text-left hover:text-accent transition-colors"
                 >
                   {published.publisher}
                 </button>
@@ -1274,7 +1274,7 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
                 <button
                   type="button"
                   onClick={() => openPublisher(published.publisher!, "details")}
-                  className="mt-2 text-[10px] text-accent hover:text-accent-dim transition-colors"
+                  className="block mt-2 text-[10px] text-accent hover:text-accent-dim transition-colors"
                 >
                   {publisherEntry?.description ? "More about this publisher →" : "Series and panels from them →"}
                 </button>

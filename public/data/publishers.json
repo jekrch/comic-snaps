@@ -8,12 +8,33 @@
       "aliases": [
         "AAA Pop Comics"
       ],
-      "description": "",
+      "description": "AAA Pop is the self-publishing label of Mike and Laura Allred, set up to launch their monthly series The Atomics in 2000 after Madman's runs at Tundra and Dark Horse. It also published Madman Picture Exhibition (2002), a gallery of Madman pin-ups by other artists marking the character's tenth anniversary, and The Golden Plates (2004\u20132005). The Allreds later returned to Image Comics for their regular books, and AAA Pop remains the home of their properties, among them Madman, The Atomics, Red Rocket 7 and X-Ray Robot.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/9/97318/1763149-pop.jpg",
+      "country": "United States",
+      "website": "https://www.aaapop.com/",
+      "founders": [
+        {
+          "artistId": "mike-allred",
+          "name": "Mike Allred"
+        },
+        {
+          "artistId": "laura-allred",
+          "name": "Laura Allred"
+        }
+      ],
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/aaa-pop/4010-2105/"
+        },
+        {
+          "name": "The Comics Journal",
+          "url": "https://www.tcj.com/put-your-raygun-to-my-head-an-interview-with-michael-allred/",
+          "title": "Put Your Raygun to My Head: An Interview with Michael Allred"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Atomics_(comics)"
         }
       ],
       "ids": {
@@ -31,18 +52,32 @@
       "aliases": [
         "Ablaze Publishing"
       ],
-      "description": "",
+      "description": "Ablaze is a Portland, Oregon comics publisher founded by Rich Young in 2019. Its first title was Charlie Adlard's Vampire State Building, and its list mixes original series with English editions of European bande dessin\u00e9e, manga, manhwa and webtoons, among them Maria Llovet's Eros/Psyche. In December 2025 it bought NBM, the New York graphic novel publisher founded in 1976, which carries on as an imprint within Ablaze.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7385327-6246220378-64758.jpg",
+      "foundedYear": 2019,
+      "country": "United States",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/ablaze/4010-9144/"
+        },
+        {
+          "name": "Publishers Weekly",
+          "url": "https://www.publishersweekly.com/pw/by-topic/industrynews/publisher-news/article/99331-ablaze-publishing-acquires-nbm.html",
+          "title": "Ablaze Publishing Acquires NBM"
         }
       ],
       "ids": {
         "comicvine": 9144
       },
       "location": "Portland, Oregon",
+      "website": "https://ablaze.net/",
+      "founders": [
+        {
+          "artistId": "rich-young",
+          "name": "Rich Young"
+        }
+      ],
       "sources": [
         "comicvine"
       ]
@@ -55,6 +90,8 @@
       "aliases": [],
       "description": "The Absolute Universe (AU) is an imprint of American comic books published by DC Comics. The comics take place in a shared universe designated Alpha-World as part of the DC Comics multiverse, featuring reimagined and modernized versions of the company's superhero characters from the DC Universe. The line is overseen by writer Scott Snyder.\r\n\r\nThe imprint is part of the DC All In initiative, debuting in the aftermath of the 2024 \"Absolute Power\" storyline. It was launched that year with the publication of the ongoing series Absolute Batman, Absolute Wonder Woman and Absolute Superman.",
       "imageUrl": null,
+      "foundedYear": 2024,
+      "country": "United States",
       "references": [
         {
           "name": "Wikipedia",
@@ -103,6 +140,8 @@
       "aliases": [],
       "description": "Black Mask Studios is a comic book and graphic novel publishing company formed by Matt Pizzolo, Steve Niles and Brett Gurewitz, designed as a new infrastructure to support comic book creators and a new pipeline for transgressive art.\r\n\r\nBlack Mask is known for the miniseries Elisa Romboli's Alice In Leatherland, Matthew Rosenberg's 4 Kids Walk Into A Bank, Magdalene Visaggio's Kim & Kim, Matt Miner's Liberator, Tini Howard's The Skeptics, Vita Ayala's The Wilds, Curt Pires's Mayday, Amancay Nahuelpan's Clandestino, Fabian Rangel Jr.'s Space Riders, and Kwanza Osajyefo's White.\r\n\r\nComic book writer Matthew Rosenberg, the writer of Uncanny X-Men and Batman whose first comic book 4 Kids Walk Into A Bank was published by BM, appeared on the Word Balloon podcast with John Siuntres and he said:\r\n\r\n\"There's going to be a moment in this industry when Matt Pizzolo is really viewed as one of the great eyes for talent. Up there with, I don't want to say up there with Karen Berger just to not throw myself in with that, but regarding the talent that came out of Black Mask versus other indie publishers: so many good people got their start there. Tini Howard's first creator owned book is at Black Mask. Vita Ayala's first creator owned book is at Black Mask. My first creator owned book is at Black Mask. Alexis Ziritt. So many people doing great work. Like Tony Patrick and Mags Visaggio. Curt Pires. Zac Thompson and Lonnie Nadler. All these people who are doing great, fascinating, cool books. All these people who are doing stuff that I love can point to Black Mask as that was the first door that was opened. I think in the history books Black Mask is not going to dominate sales anytime soon, but the eye for talent has been really impeccable.\"\r\n\r\nHost John Siuntres agreed. \"It's a great roster and responsible for a lot of the great new voices in comics.\"\r\n\r\nAccording to publicly available data, Black Mask's top five bestselling series include Calexit , Godkiller , Black , 4 Kids Walk Into A Bank , and Rogue State . Black Mask's top reviewed debut issue of a new series is currently Young Terrorists #1 followed by a tie between Ballistic #1 and CalExit #1 , and its top reviewed collected standalone story is currently a three-way tie between 4 Kids Walk Into A Bank , We Can Never Go Home , and The Dregs . The first Black Mask series to be adapted into a feature film is 4 Kids Walk Into A Bank starring Liam Neeson, to be released by Amazon Studios in 2026.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/115351/3040559-black_mask_studios.jpg",
+      "foundedYear": 2012,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -134,7 +173,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "New York City, New York"
+      "location": "Los Angeles, California",
+      "website": "https://blackmaskstudios.com/"
     },
     {
       "id": "boom-studios",
@@ -183,7 +223,8 @@
       ],
       "foundedYear": 2005,
       "country": "United States",
-      "location": "Los Angeles, California"
+      "location": "Los Angeles, California",
+      "website": "https://www.boom-studios.com/"
     },
     {
       "id": "caliber-comics",
@@ -199,6 +240,9 @@
       ],
       "description": "Caliber Comics or Caliber Press is an American comic book publisher founded in 1989 by Gary Reed. Featuring primarily creator-owned comics, Caliber published over 1,300 comics in the decade following its inception and is ranked as one of America's leading independent publishers. Caliber ceased publishing in 2000, but resumed operations in 2015, and continued after Reed died in 2016.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8615777-caliber.jpg",
+      "foundedYear": 1989,
+      "country": "United States",
+      "website": "https://calibercomics.com/",
       "founders": [
         {
           "artistId": null,
@@ -231,6 +275,9 @@
       "aliases": [],
       "description": "Cat-Head Comics was an American alternative/underground comics publisher that operated from 1980 to 1998. Founded by cartoonist Steve Lafler as a vehicle for his own work, Cat-Head was later joined by writer/poet/editor Stephen Beaupre. Cat-Head's longest-running title was the anthology Buzzard, which lasted 20 issues.\r\n\r\nIn addition to Lafler and Beaupre, creators published by Cat-Head included R. L. Crabb, Lloyd Dangle, Krystine Kryttre, and J. R. Williams.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8637118-cat-head.jpg",
+      "foundedYear": 1980,
+      "activeUntil": 1998,
+      "country": "United States",
       "founders": [
         {
           "artistId": "steve-lafler",
@@ -367,7 +414,7 @@
       ],
       "activeFrom": 1935,
       "country": "United States",
-      "website": "http://www.dccomics.com/",
+      "website": "https://www.dc.com/",
       "foundedYear": 1934,
       "location": "Burbank, California"
     },
@@ -381,6 +428,9 @@
       ],
       "description": "This company published Deadline Magazine from October 1988 when in the issue #1 Tank Girl appeared for the first time. Besides the comic strips, the magazine was popular as well for its focus on indie music and related topics until its last issue #71 in 1995.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8501873-deadline.jpg",
+      "foundedYear": 1988,
+      "activeUntil": 1995,
+      "country": "United Kingdom",
       "founders": [
         {
           "artistId": null,
@@ -410,7 +460,7 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "",
+      "description": "Didactic Chocolate Press was a small American comics publisher active in 1996 and 1997. It is known for Scott Berwanger's fantasy series Anubis, which it took over from SCC Entertainment in 1996 before later issues moved to Adventure Comics.",
       "imageUrl": null,
       "references": [
         {
@@ -444,6 +494,8 @@
       ],
       "description": "Drawn & Quarterly (D+Q) is a publishing company based in Montreal, Quebec, Canada, specializing in comics. It publishes primarily comic books, graphic novels and comic strip collections. The books it publishes are noted for their artistic content, as well as the quality of printing and design. The name of the company is a pun on \"drawing\", \"quarterly\", and the practice of hanging, drawing and quartering.\r\n\r\nInitially it specialized in underground and alternative comics, but has since expanded into classic reprints and translations of foreign works. Drawn & Quarterly was the company's flagship quarterly anthology during the 1990s.\r\n\r\nIt is currently the most successful and prominent comics publisher in Canada, publishing well-known comic artists such as Lynda Barry, Kate Beaton, Marc Bell, Chester Brown, Daniel Clowes, Michael DeForge, Guy Delisle, Julie Doucet, Mary Fleener, Joe Matt, Shigeru Mizuki, Rutu Modan, Joe Sacco, Seth, Elise Gravel, Yoshihiro Tatsumi, Adrian Tomine and Chris Ware. In 2006, Drawn & Quarterly began publishing the Moomin comic strips of Finnish writer and artist Tove Jansson, in book format, in the series Moomin: The Complete Tove Jansson Comic Strip. Drawn & Quarterly has a strong reputation in the comics community and its anthologies have won a number of Harvey Awards.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6563690-5219658391-389_t.jpg",
+      "foundedYear": 1990,
+      "country": "Canada",
       "founders": [
         {
           "artistId": null,
@@ -467,7 +519,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "Montreal, Quebec"
+      "location": "Montreal, Quebec",
+      "website": "https://drawnandquarterly.com/"
     },
     {
       "id": "dstlry",
@@ -501,7 +554,8 @@
         "comicvine"
       ],
       "foundedYear": 2023,
-      "country": "United States"
+      "country": "United States",
+      "website": "https://www.dstlry.co/"
     },
     {
       "id": "dynamite-entertainment",
@@ -544,7 +598,8 @@
       ],
       "foundedYear": 2005,
       "country": "United States",
-      "location": "Mt. Laurel, New Jersey"
+      "location": "Mt. Laurel, New Jersey",
+      "website": "https://dynamite.com/"
     },
     {
       "id": "ec-comics",
@@ -589,7 +644,8 @@
       ],
       "foundedYear": 1944,
       "country": "United States",
-      "location": "New York City, New York"
+      "location": "New York City, New York",
+      "website": "https://www.eccomics.com/"
     },
     {
       "id": "epic-comics",
@@ -601,6 +657,15 @@
       ],
       "description": "Epic Comics (also known as the Epic Comics Group) was an imprint of American publishing company Marvel Comics, active from 1982 to 1996. A spin-off of the publisher's Epic Illustrated magazine, it published creator-owned work unconnected to Marvel's superhero universe, and without the restrictions of the Comics Code. The name was revived by Marvel in the mid-2000s for a short-lived program inviting new writers to pitch series proposals to the publisher.",
       "imageUrl": null,
+      "foundedYear": 1982,
+      "activeUntil": 1996,
+      "country": "United States",
+      "founders": [
+        {
+          "artistId": null,
+          "name": "Jim Shooter"
+        }
+      ],
       "references": [
         {
           "name": "Wikipedia",
@@ -664,7 +729,7 @@
       ],
       "activeFrom": 1972,
       "country": "United States",
-      "website": "http://www.fantagraphics.com/",
+      "website": "https://www.fantagraphics.com/",
       "foundedYear": 1976,
       "location": "Seattle, Washington"
     },
@@ -674,15 +739,28 @@
       "kind": "imprint",
       "parent": "oni-press",
       "aliases": [],
-      "description": "",
+      "description": "Flux House is Matt Kindt's imprint for his creator-owned comics, built around books designed as objects, with unusual trim sizes and special print features. It launched at Dark Horse Comics in July 2022 with the four-issue MIND MGMT: Bootleg, drawn by Farel Dalrymple, Jill Thompson, David Rub\u00edn and Matt Lesniewski, and covers crime, science fiction and humor. In October 2025 Kindt moved it to Oni Press, which became its exclusive home and took film and TV rights to more than 20 Flux House titles. The Oni line opened in June 2026 with the ongoing MIND MGMT: New and Improved, followed by the twelve-issue Fort Psycho with Brian Hurtt and the quarterly anthology Flux House Presents.",
       "imageUrl": null,
+      "foundedYear": 2022,
+      "country": "United States",
       "founders": [
         {
           "artistId": "matt-kindt",
           "name": "Matt Kindt"
         }
       ],
-      "references": [],
+      "references": [
+        {
+          "name": "Dark Horse",
+          "url": "https://www.darkhorse.com/newsfeed/matt-kindt-launches-flux-house-imprint-dark-horse-/",
+          "title": "Matt Kindt Launches Flux House Imprint at Dark Horse"
+        },
+        {
+          "name": "Oni Press",
+          "url": "https://www.onipress.com/news/n9j4umwi815u22jwcqg1cp47myst0o",
+          "title": "Oni Press and Matt Kindt's Flux House Announce New Exclusive Publishing & Media Partnership"
+        }
+      ],
       "ids": {}
     },
     {
@@ -693,8 +771,11 @@
       "aliases": [
         "Food Chain (self-published)"
       ],
-      "description": "",
+      "description": "Food Chain, or Food Chain Productions, is the label Nate Powell used to self-publish his comics, starting in 1992 at age 14 with the photocopied D.O.A., made with Mike Lierly in Little Rock. The name also went to Food Chain Records, the punk label Powell started with bandmate Eli Milholland in 1994 and later renamed Harlan Records. Its best-known comics are the four issues of Walkie Talkie (2000\u20132002), the first paid for with a Shakespeare & Company Books self-publishing grant Powell won at the School of Visual Arts, which were later collected in Tiny Giants and Sounds of Your Name.",
       "imageUrl": null,
+      "foundedYear": 1992,
+      "country": "United States",
+      "location": "Little Rock, Arkansas",
       "website": "https://www.seemybrotherdance.org/",
       "founders": [
         {
@@ -702,7 +783,16 @@
           "name": "Nate Powell"
         }
       ],
-      "references": [],
+      "references": [
+        {
+          "name": "Comiclopedia",
+          "url": "https://www.lambiek.net/artists/p/powell_nate.htm"
+        },
+        {
+          "name": "Encyclopedia of Arkansas",
+          "url": "https://encyclopediaofarkansas.net/entries/nathan-lee-6974/"
+        }
+      ],
       "ids": {}
     },
     {
@@ -713,6 +803,9 @@
       "aliases": [],
       "description": "Ghost Machine (founded and previously known as Mad Ghost Productions) is an American cooperative media company founded in October 2023, which publishes creator-owned comics through Image Comics, and was founded to help the participating creators to benefit from the development of its intellectual properties. The company was announced on October 12, 2023 at the New York Comic Con. Its founding writers and artists, who are exclusive to the company, are Brad Meltzer, Jason Fabok, Gary Frank, Bryan Hitch, Geoff Johns, Francis Manapul, Peter J. Tomasi, Lamont Magee, Maytal Zchut, Brad Anderson and Rob Leigh.\r\n\r\nAt its launch, the creators stressed that unlike the work they had done in the past for publishers such as DC Comics, the books of the four shared universes established by the company's first official release in January 2024, Ghost Machine #1, would not be set in the superhero genre, but in other genres such as science fiction, historical fantasy, post-apocalyptic fiction, and horror.",
       "imageUrl": "https://static.metron.cloud/media/imprint/2026/05/12/387110663_122119170344040082_6116092821001476979_n.jpg",
+      "foundedYear": 2023,
+      "country": "United States",
+      "website": "https://ghostmachinepro.com/",
       "references": [
         {
           "name": "Wikipedia",
@@ -737,8 +830,9 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "",
+      "description": "Golden Gate Publishing Company was Terry Zwigoff's small publishing venture, best known for the first printing of Robert Crumb's one-shot The People's Comics in September 1972, the issue in which Fritz the Cat is killed off. Zwigoff soon sold the printing rights to Kitchen Sink Press, which issued the next six printings. Zwigoff, who played in Crumb's band the Cheap Suit Serenaders, later became a filmmaker and directed Crumb (1994) and Ghost World (2001).",
       "imageUrl": null,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -749,6 +843,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/golden-gate-publishing-company/4010-3737/"
+        },
+        {
+          "name": "Wikipedia: The People's Comics",
+          "url": "https://en.wikipedia.org/wiki/The_People%27s_Comics"
         }
       ],
       "ids": {
@@ -768,7 +866,7 @@
         "HM Communications",
         "Metal Mammoth, Inc."
       ],
-      "description": "",
+      "description": "Heavy Metal is an American science fiction, fantasy and horror comics brand that began in April 1977 as the English-language edition of the French magazine M\u00e9tal hurlant, licensed by National Lampoon president Leonard Mogel and published by HM Communications. Kevin Eastman bought the magazine in 1992 and sold it in January 2014 to David Boxenbaum and Jeff Krelitz. Matthew Medney became CEO in 2020 and launched the creator-owned VIRUS imprint. A publishing deal with the marketplace Whatnot fell apart in 2022, and the magazine was cancelled in 2023 after issue #320. A new company, Heavy Metal International, relaunched the brand in 2025 following a Kickstarter campaign.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2019/09/24/heavy-metal-logo.png",
       "references": [
         {
@@ -778,6 +876,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/heavy-metal/4010-536/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Heavy_Metal_(magazine)"
         }
       ],
       "ids": {
@@ -790,7 +892,8 @@
         "metron",
         "comicvine"
       ],
-      "location": "Rockville Centre, New York"
+      "location": "Rockville Centre, New York",
+      "website": "https://www.heavymetal.com/"
     },
     {
       "id": "icon-comics",
@@ -800,7 +903,7 @@
       "aliases": [
         "Icon Comics"
       ],
-      "description": "Icon Comics was an imprint of Marvel Comics for creator-owned titles, designed to keep select \"A-list\" creators producing for Marvel rather than seeing them take creator-owned work to other publishers.",
+      "description": "Icon Comics was an imprint of Marvel Comics for creator-owned titles, designed to keep select \"A-list\" creators producing for Marvel rather than seeing them take creator-owned work to other publishers. Launched in 2004 with Powers by Brian Michael Bendis and Michael Avon Oeming, it went on to publish Mark Millar's Kick-Ass and Ed Brubaker and Sean Phillips's Criminal and Incognito, and was wound down in 2017.",
       "imageUrl": "https://static.metron.cloud/media/imprint/2026/03/01/Icon.png",
       "references": [
         {
@@ -819,7 +922,9 @@
         "wikipedia",
         "metron"
       ],
-      "foundedYear": 2004
+      "foundedYear": 2004,
+      "activeUntil": 2017,
+      "country": "United States"
     },
     {
       "id": "idw-publishing",
@@ -875,7 +980,8 @@
       ],
       "foundedYear": 1999,
       "country": "United States",
-      "location": "San Diego, California"
+      "location": "San Diego, California",
+      "website": "https://idwpublishing.com/"
     },
     {
       "id": "ignition-press",
@@ -883,7 +989,7 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "Ignition Press is dedicated to empowering vibrant creativity through creator-driven original stories, told with integrity and commitment, that meet their audience where they are.",
+      "description": "Ignition Press is a Los Angeles publisher of creator-owned comics and graphic novels, unveiled at New York Comic Con in October 2024 by publisher Filip Sablik (formerly president of publishing and marketing at Boom! Studios), editor-in-chief Jamie S. Rich (formerly of IDW), creative director Jeremy Haun and CEO Eric Gitter, a producer of Scott Pilgrim vs. the World. Its first books came out in September 2025, with bookstore sales and distribution through Penguin Random House Publisher Services. Its list includes Just Brutal by Dennis Hopeless and Brahm Revel and The Dogsitter by Rich and Megan Levens.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2026/06/07/ig-press-logo.png",
       "references": [
         {
@@ -893,6 +999,11 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/ignition-press/4010-11649/"
+        },
+        {
+          "name": "The Beat",
+          "url": "https://www.comicsbeat.com/nycc-24-ignition-press-makes-its-formal-debut",
+          "title": "NYCC '24: Ignition Press makes its formal debut"
         }
       ],
       "ids": {
@@ -900,13 +1011,32 @@
         "comicvine": 11649,
         "gcd": 19180
       },
-      "foundedYear": 2025,
+      "foundedYear": 2024,
       "country": "United States",
       "sources": [
         "metron",
         "comicvine"
       ],
-      "location": "Los Angeles, California"
+      "location": "Los Angeles, California",
+      "website": "https://ignitionpress.com/",
+      "founders": [
+        {
+          "artistId": null,
+          "name": "Filip Sablik"
+        },
+        {
+          "artistId": "jamie-s-rich",
+          "name": "Jamie S. Rich"
+        },
+        {
+          "artistId": "jeremy-haun",
+          "name": "Jeremy Haun"
+        },
+        {
+          "artistId": null,
+          "name": "Eric Gitter"
+        }
+      ]
     },
     {
       "id": "image-comics",
@@ -982,7 +1112,7 @@
       "country": "United States",
       "website": "https://imagecomics.com",
       "foundedYear": 1992,
-      "location": "Berkeley, California"
+      "location": "Portland, Oregon"
     },
     {
       "id": "kitchen-sink-press",
@@ -996,6 +1126,7 @@
       ],
       "description": "Kitchen Sink Press was a comic book publishing company founded by Denis Kitchen in 1970. Kitchen Sink Press was a pioneering publisher of underground comics, and was also responsible for numerous republications of classic comic strips in hardcover and softcover volumes. One of their best-known products was the first full reprint of Will Eisner's The Spirit\u2014first in magazine format, then in standard comic book format. The company closed in 1999.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/14/148518/3016589-ksplogo.gif",
+      "foundedYear": 1970,
       "founders": [
         {
           "artistId": "denis-kitchen",
@@ -1040,6 +1171,8 @@
       ],
       "description": "Last Gasp is a San Francisco\u2013based book publisher with a lowbrow art and counterculture focus. Owned and operated by Ron Turner, for most of its existence Last Gasp was a publisher, distributor, and wholesaler of underground comix and books of all types.\r\n\r\nLast Gasp was established in 1970. Although the company came onto the scene a bit later than some of the other underground publishers, Last Gasp continued publishing comics far longer than most of its competitors. In addition to publishing notable original titles like Slow Death, Wimmen's Comix, Binky Brown Meets the Holy Virgin Mary, and Weirdo, it also picked up the publishing reins of important titles\u2014such as Zap Comix and Young Lust\u2014from rivals who had gone out of business.\r\n\r\nAlthough Last Gasp no longer publishes \"floppy\" comics; the company continues to publish art and photography books, graphic novels, fiction, and poetry, producing 10\u201315 new titles per year.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7100268-4370860903-TgeRK.jpg",
+      "foundedYear": 1970,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -1063,7 +1196,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "San Francisco, California"
+      "location": "San Francisco, California",
+      "website": "https://lastgasp.com/"
     },
     {
       "id": "marvel-comics",
@@ -1122,7 +1256,8 @@
       ],
       "foundedYear": 1939,
       "country": "United States",
-      "location": "New York, New York"
+      "location": "New York, New York",
+      "website": "https://www.marvel.com/"
     },
     {
       "id": "oni-press",
@@ -1169,7 +1304,8 @@
       ],
       "foundedYear": 1997,
       "country": "United States",
-      "location": "OR"
+      "location": "Portland, Oregon",
+      "website": "https://www.onipress.com/"
     },
     {
       "id": "pacific-comics",
@@ -1181,6 +1317,9 @@
       ],
       "description": "Pacific Comics was a comic book distributor and publisher active from 1971 to 1984. The company began as a San Diego, California, comic book shop owned by brothers Bill and Steve Schanes, later moving into comics distribution and then publishing. \r\n\r\nAs a publisher, starting in 1981, Pacific took early advantage of the growing direct market, attracting a number of writers and artists from DC Comics and Marvel Comics to produce creator-owned titles, which were not subject to the Comics Code, and thus were free to feature more mature content.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/3/34986/1047384-vanity_1_0001.jpg",
+      "foundedYear": 1971,
+      "activeUntil": 1984,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -1218,6 +1357,8 @@
       "aliases": [],
       "description": "Pantheon Books is an American book publishing imprint. Founded in 1942 as an independent publishing house in New York City by Kurt and Helen Wolff, it specialized in introducing progressive European works to American readers. In 1961, it was acquired by Random House, and Andr\u00e9 Schiffrin was hired as executive editor, who continued to publish important works, by both European and American writers, until he was forced to resign in 1990 by Random House owner Samuel Irving Newhouse, Jr. and president Alberto Vitale. Several editors resigned in protest, and multiple Pantheon authors including Studs Terkel, Kurt Vonnegut, and Barbara Ehrenreich held a protest outside Random House. In 1998, Bertelsmann purchased Random House, and the imprint has undergone a number of corporate restructurings since then. It is now part of the Knopf Doubleday Publishing Group under Penguin Random House.\r\n\r\nDan Frank was Editorial Director from 1996 until his death in May 2021. Lisa Lucas joined the imprint from 2020-2024 as Senior Vice President and Publisher.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11/111746/5955651-c73.gif",
+      "foundedYear": 1942,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -1245,7 +1386,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "New York, New York"
+      "location": "New York, New York",
+      "website": "https://knopfdoubleday.com/imprint/pantheon/"
     },
     {
       "id": "print-mint",
@@ -1257,6 +1399,9 @@
       ],
       "description": "The Print Mint, Inc. was a major publisher and distributor of underground comix based in the San Francisco Bay Area during the genre's late 1960s-early 1970s heyday. Starting as a retailer of psychedelic posters, the Print Mint soon evolved into a publisher, printer, and distributor. It was \"ground zero\" for the psychedelic poster. The Print Mint was originally owned by poet Don Schenker and his wife Alice, who later partnered in the business with Bob and Peggy Rita.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9625144-printmint.jpg",
+      "foundedYear": 1965,
+      "activeUntil": 1978,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -1294,6 +1439,8 @@
       "aliases": [],
       "description": "Rip Off Press Inc. is a comic book mail order retailer and distributor, better known as the former publisher of adult-themed series like The Fabulous Furry Freak Brothers and Rip Off Comix, as well as many other seminal publications from the underground comix era. Founded in 1969 in San Francisco by four friends from Austin, Texas \u2014 cartoonists Gilbert Shelton and Jack Jackson, and Fred Todd and Dave Moriaty \u2014 Rip Off Press is now run in Auburn, California, by Todd.\r\n\r\nRip Off Press is notable for being the first company to publish the fourth edition of the Principia Discordia, a Discordian religious text written by Gregory Hill and Kerry Thornley. It was also an early publisher of a booklet on drug manufacturing, Psychedelic Chemistry.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/8519229-ripoff.jpg",
+      "foundedYear": 1969,
+      "country": "United States",
       "founders": [
         {
           "artistId": "gilbert-shelton",
@@ -1329,7 +1476,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "Auburn, California"
+      "location": "Auburn, California",
+      "website": "https://ripoffpress.com/"
     },
     {
       "id": "row-7-publishing",
@@ -1340,7 +1488,7 @@
         "Row7 Publishing",
         "Row 7"
       ],
-      "description": "Row 7 is a self-publishing company ran by the two creators Ajna Wulou and Brandon John. They can be found at https://row7.squarespace.com",
+      "description": "Row 7 is the self-publishing imprint of Anja Wuolu and the Minneapolis cartoonist Brandon John, for their books, comics and zines. It has issued John's NUT comics since 2022, alongside When Fruit Bleeds, and runs the Panel Punx Comics School.",
       "imageUrl": "https://static.metron.cloud/media/publisher/2025/09/24/Row_7_Logo.webp",
       "website": "https://row7.squarespace.com/",
       "references": [
@@ -1353,6 +1501,16 @@
         "metron": 172
       },
       "country": "United States",
+      "founders": [
+        {
+          "artistId": null,
+          "name": "Anja Wuolu"
+        },
+        {
+          "artistId": "brandon-john",
+          "name": "Brandon John"
+        }
+      ],
       "sources": [
         "metron"
       ]
@@ -1363,7 +1521,7 @@
       "kind": "self-published",
       "parent": null,
       "aliases": [],
-      "description": "",
+      "description": "Sandez Rey's own label for self-published comics, printed on demand and sold through IndyPlanet. Its books include the one-shot Trumpzilla, with a back-up strip featuring the lucha libre enforcer Dr. Spiral.",
       "imageUrl": null,
       "founders": [
         {
@@ -1371,7 +1529,12 @@
           "name": "Sandez Rey"
         }
       ],
-      "references": [],
+      "references": [
+        {
+          "name": "IndyPlanet",
+          "url": "https://www.indyplanet.com/trumpzilla-1"
+        }
+      ],
       "ids": {}
     },
     {
@@ -1382,6 +1545,10 @@
       "aliases": [],
       "description": "Silver Sprocket is a San Francisco-based indie comics publisher and independent record label, founded in 2007 by Avi Ehrlich of Springman Records. In addition to publishing records and comics, Silver Sprocket also supports a range of independent musicians and other community-based initiatives.",
       "imageUrl": null,
+      "foundedYear": 2007,
+      "country": "United States",
+      "location": "San Francisco, California",
+      "website": "https://www.silversprocket.net/",
       "founders": [
         {
           "artistId": null,
@@ -1405,8 +1572,9 @@
       "kind": "self-published",
       "parent": null,
       "aliases": [],
-      "description": "",
+      "description": "Skelenaut is the registered studio name of the Iowa artist Jonathan Sims. Under it he self-published his creator-owned comic Floating BunnyHead in 2012 and 2018 and the yearly zine comic Absolutely Not For Kids (2016\u20132020, collected in 2021). The name also covers his murals in Marion and Iowa City, the Snack Attack art book, and design work for ReUnion Brewery and Jonnie 5 Apparel.",
       "imageUrl": null,
+      "country": "United States",
       "website": "https://www.skelenaut.com/",
       "founders": [
         {
@@ -1414,7 +1582,12 @@
           "name": "Jonathan Sims"
         }
       ],
-      "references": [],
+      "references": [
+        {
+          "name": "Skelenaut",
+          "url": "https://www.skelenaut.com/"
+        }
+      ],
       "ids": {}
     },
     {
@@ -1425,7 +1598,7 @@
       "aliases": [
         "Skybound Entertainment"
       ],
-      "description": "Skybound Entertainment is an American multiplatform entertainment company founded by Robert Kirkman and David Alpert. It operates in concert with Image Comics.",
+      "description": "Skybound Entertainment is an American multiplatform entertainment company founded by Robert Kirkman and David Alpert. It operates in concert with Image Comics. Founded in 2010, it publishes through Image under the Skybound imprint, home to Kirkman's The Walking Dead and Invincible, and since 2023 to a line of Universal Monsters limited series that began with James Tynion IV and Martin Simmonds's Dracula.",
       "imageUrl": "https://static.metron.cloud/media/imprint/2024/11/30/graphix.png",
       "founders": [
         {
@@ -1454,7 +1627,9 @@
         "wikipedia",
         "metron"
       ],
-      "foundedYear": 2005
+      "foundedYear": 2010,
+      "country": "United States",
+      "website": "https://www.skybound.com/"
     },
     {
       "id": "slg-publishing",
@@ -1469,6 +1644,8 @@
       ],
       "description": "Slave Labor Graphics (now mostly known by the acronym SLG) is an American independent comic book publisher, well known for publishing darkly humorous, offbeat adult comics. Creators associated with SLG over the years include Evan Dorkin, Roman Dirge, Sarah Dyer, Woodrow Phoenix, Jhonen Vasquez, and Andi Watson.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4161946-logo.jpg",
+      "foundedYear": 1986,
+      "country": "United States",
       "founders": [
         {
           "artistId": null,
@@ -1492,7 +1669,8 @@
         "wikipedia",
         "comicvine"
       ],
-      "location": "San Jose, California"
+      "location": "San Jose, California",
+      "website": "https://slgpubs.com/"
     },
     {
       "id": "topps-comics",
@@ -1502,6 +1680,9 @@
       "aliases": [],
       "description": "Topps Comics was a division of Topps that published comic books from 1993 to 1998, beginning its existence during a short-lived comics industry boom that attracted many investors and created many companies. It was based in New York City, first at 254 36th Street, Brooklyn, and then at One Whitehall Street, in Manhattan.\r\n\r\nThe company specialized in licensed titles, particularly film and TV series tie-ins, such as The X-Files, based on the Fox TV series, and the films Bram Stoker's Dracula and Jurassic Park. It also licensed such literary properties as Zorro, and published a smattering of original series, including Cadillacs and Dinosaurs and several based on concepts by the then-retired comics industry legend Jack Kirby.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/5/58245/1100265-topps_logo.gif",
+      "foundedYear": 1992,
+      "activeUntil": 1998,
+      "country": "United States",
       "references": [
         {
           "name": "Wikipedia",
@@ -1527,15 +1708,22 @@
       "kind": "self-published",
       "parent": null,
       "aliases": [],
-      "description": "",
+      "description": "Tucker Petertil edited and published the underground anthology Juice City in Santa Cruz, California. The first issue is dated December 1977 and ran to about 3,000 copies. It carried work by George Metzger, Doug Hansen, Hunt Emerson and Hector Tellez alongside two stories by Petertil, who had earlier made Tales of Bozi-Sattva (Serious Comics, 1975) and later produced Juice City #2 as a mini-comic.",
       "imageUrl": null,
+      "country": "United States",
+      "location": "Santa Cruz, California",
       "founders": [
         {
           "artistId": null,
           "name": "Tucker Petertil"
         }
       ],
-      "references": [],
+      "references": [
+        {
+          "name": "Comix Joint: Juice City",
+          "url": "https://www.comixjoint.com/juicecity1.html"
+        }
+      ],
       "ids": {}
     },
     {
@@ -1549,6 +1737,9 @@
       ],
       "description": "Tundra Publishing was a Northampton, Massachusetts-based comic book publisher founded by Kevin Eastman in 1990. The company was founded to provide a venue for adventurous, creator-owned work by talented cartoonists and illustrators. Its publications were noted in the trade for their high production values, including glossy paper stock, full-color printing, and square binding. Tundra was one of the earlier creator-owned companies, before the formation of Image Comics and Dark Horse Comics' Legends imprint.\r\n\r\nCreators and projects involved with Tundra included Alan Moore and Bill Sienkiewicz's Big Numbers, Moore & Eddie Campbell's From Hell, Moore & Melinda Gebbie's Lost Girls (these last two original serialised in Stephen R. Bissette's Taboo anthology, which was also part-published by Tundra), The Crow, Mike Allred's Madman and Dave McKean's Cages.\r\n\r\nDespite its ambitious start, Tundra never became a profitable enterprise. It closed its doors in 1993 after burning through $14 million in three years. Kitchen Sink Press acquired its holdings; it reprinted popular Tundra publications such as Understanding Comics and continued to publish some Tundra series such as Taboo.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/19151/636288-35_20061218183257_publisher.jpg",
+      "foundedYear": 1990,
+      "activeUntil": 1993,
+      "country": "United States",
       "founders": [
         {
           "artistId": "kevin-eastman",
@@ -1608,7 +1799,8 @@
       ],
       "foundedYear": 2016,
       "country": "United States",
-      "location": "Bethesda, Maryland"
+      "location": "Missoula, Montana",
+      "website": "https://vaultcomics.com/"
     },
     {
       "id": "vertigo",
@@ -1644,7 +1836,8 @@
         "wikipedia",
         "metron"
       ],
-      "foundedYear": 1993
+      "foundedYear": 1993,
+      "country": "United States"
     },
     {
       "id": "virus",
@@ -1652,12 +1845,24 @@
       "kind": "imprint",
       "parent": "heavy-metal-international",
       "aliases": [],
-      "description": "",
+      "description": "VIRUS is Heavy Metal's creator-owned comics imprint, announced in April 2020 under CEO Matthew Medney and publisher David Erwin as a \"comic books on demand\" line of science fiction, fantasy and horror. Creators keep ownership and are paid 15 percent of the cover price from the first copy sold. New books came out weekly from April 29, 2020, starting with The Red, Nomobots, Hymn of the Teada, Garbage Factory and Bob Fingerman's Dotty's Inferno. Keith Champagne was later hired as its full-time editor.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7411812-1318829812-875.j.jpg",
+      "foundedYear": 2020,
+      "country": "United States",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/virus/4010-9613/"
+        },
+        {
+          "name": "SYFY Wire",
+          "url": "https://www.syfy.com/syfy-wire/heavy-metal-virus-imprint-comics-announcement",
+          "title": "Heavy Metal announces bold new creator-owned comics imprint, VIRUS"
+        },
+        {
+          "name": "GamesRadar+",
+          "url": "https://www.gamesradar.com/heavy-metal-expands-creator-owned-imprint-with-new-editor",
+          "title": "Heavy Metal expands creator-owned imprint with new editor"
         }
       ],
       "ids": {
@@ -1716,18 +1921,27 @@
       "kind": "publisher",
       "parent": null,
       "aliases": [],
-      "description": "Underground publisher from Washington, D.C.",
+      "description": "Washington Free Community, Inc. published the Washington Free Press, a radical biweekly underground newspaper in Washington, D.C. Representatives of the city's five colleges founded it in 1966 as a \"community paper for local Movement people,\" and after a short first run an editorial collective revived it in March 1967. The paper joined the Underground Press Syndicate, opposed the Vietnam War and reported a circulation of 23,000 in 1969, and it closed in late 1969 or early 1970. Members of the Washington Free Community Artists Co-Op also produced the underground anthology Tasty Comix in 1969\u20131970.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/0/3125/4585791-wash.jpg",
+      "country": "United States",
       "references": [
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/washington-free-community/4010-6648/"
+        },
+        {
+          "name": "Wikipedia: Washington Free Press",
+          "url": "https://en.wikipedia.org/wiki/Washington_Free_Press"
+        },
+        {
+          "name": "Comix Joint: Tasty Comix",
+          "url": "https://www.comixjoint.com/tastycomix.html"
         }
       ],
       "ids": {
         "comicvine": 6648
       },
-      "location": "Washington D.C., Washington D.C.",
+      "location": "Washington, D.C.",
       "sources": [
         "comicvine"
       ]
@@ -1740,7 +1954,7 @@
       "aliases": [
         "Yahoo Productions"
       ],
-      "description": "",
+      "description": "Yahoo Productions was a small underground comix publisher whose only known book is Dave Geiser's one-shot Clowns (1972), printed in a single run of about 10,000 copies that has never been reprinted.",
       "imageUrl": null,
       "references": [
         {
@@ -1750,6 +1964,10 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/yahoo-production/4010-3537/"
+        },
+        {
+          "name": "Comix Joint: Clowns",
+          "url": "https://www.comixjoint.com/clowns.html"
         }
       ],
       "ids": {
