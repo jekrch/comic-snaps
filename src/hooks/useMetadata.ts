@@ -3,6 +3,8 @@ import type { Artist, IssueCredits, Panel, RatingsIndex, Series, TargetRatings }
 import { getCachedMetadata, loadMetadata } from "../utils/metadata";
 import { EMPTY_PUBLISHER_INDEX, buildPublisherIndex } from "../utils/publishers";
 import type { PublisherIndex } from "../utils/publishers";
+import { EMPTY_OWNERSHIP_INDEX, buildOwnershipIndex, getCachedOwners, loadOwners } from "../utils/owners";
+import type { OwnershipIndex } from "../utils/owners";
 import { getCachedRatings, issueTargetId, loadRatings, lookupRatings, seriesTargetId } from "../utils/ratings";
 
 export interface ArtistIndex {
@@ -69,6 +71,25 @@ export function usePublisherIndex(): PublisherIndex {
     () => (publishers ? buildPublisherIndex(publishers) : EMPTY_PUBLISHER_INDEX),
     [publishers],
   );
+}
+
+/**
+ * owners.json, indexed, for the ownership tree on a publisher's page. Loaded
+ * once; empty until it arrives, and if it never does.
+ */
+export function useOwnershipIndex(): OwnershipIndex {
+  const [owners, setOwners] = useState(() => getCachedOwners());
+
+  useEffect(() => {
+    if (owners) return;
+    let cancelled = false;
+    loadOwners().then((list) => {
+      if (!cancelled) setOwners(list);
+    });
+    return () => { cancelled = true; };
+  }, [owners]);
+
+  return useMemo(() => (owners ? buildOwnershipIndex(owners) : EMPTY_OWNERSHIP_INDEX), [owners]);
 }
 
 /**

@@ -8,8 +8,10 @@ import { panelsByDecade, publisherKindLabel, publisherLogoFor, publisherYears, y
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
 import type { ArtistIndex } from "../hooks/useMetadata";
-import { useSeriesById } from "../hooks/useMetadata";
+import { useOwnershipIndex, useSeriesById } from "../hooks/useMetadata";
+import { ownershipChain } from "../utils/owners";
 import ReferenceLinks from "./ReferenceLinks";
+import OwnershipTree from "./OwnershipTree";
 import { attachDragScroll } from "../hooks/useDragScroll";
 
 interface Props {
@@ -287,6 +289,12 @@ export default function PublisherProfile({
   const currentLogo = publisherLogoFor(publisher, currentYear);
   const editors = publisher?.editors ?? [];
   const events = publisher?.events ?? [];
+
+  const ownershipIndex = useOwnershipIndex();
+  const ownership = useMemo(
+    () => (publisher ? ownershipChain(publisher, index, ownershipIndex) : null),
+    [publisher, index, ownershipIndex],
+  );
 
   const parent = publisher?.kind === "imprint" && publisher.parent ? index.byId.get(publisher.parent) ?? null : null;
   const kindLabel = publisher ? publisherKindLabel(publisher, index) : "Publisher";
@@ -713,6 +721,27 @@ export default function PublisherProfile({
                     ))}
                   </div>
                 )}
+              </section>
+            </>
+          )}
+
+          {/* Who's above the label, top of the chain down to it, and what
+              else each company on the way holds. */}
+          {ownership && (
+            <>
+              <div className="border-t border-white/8" />
+              <section className="profile-rise" style={rise(slot++)}>
+                <SectionHead label="Ownership">
+                  {ownership[0].owner?.status && (
+                    <span className="text-white/55">· {ownership[0].owner.status}</span>
+                  )}
+                </SectionHead>
+                <OwnershipTree
+                  steps={ownership}
+                  onOpenPublisher={onOpenPublisher}
+                  onOpenPerson={onOpenPerson}
+                  isPersonInteractive={isPersonInteractive}
+                />
               </section>
             </>
           )}

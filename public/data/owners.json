@@ -1,0 +1,1407 @@
+{
+  "owners": [
+    {
+      "id": "ellison-family",
+      "name": "Ellison family",
+      "kind": "controlling shareholders",
+      "parent": null,
+      "note": "Larry Ellison co-founded Oracle; his son David is Skydance's co-chief executive.",
+      "url": "https://en.wikipedia.org/wiki/Larry_Ellison",
+      "holdings": [
+        {
+          "name": "Oracle",
+          "what": "database and cloud software"
+        },
+        {
+          "name": "Lanai",
+          "what": "98 percent of the Hawaiian island, bought in 2012"
+        }
+      ]
+    },
+    {
+      "id": "skydance",
+      "name": "Skydance",
+      "kind": "media conglomerate",
+      "parent": "ellison-family",
+      "stake": "controlling",
+      "since": 2025,
+      "note": "Formed when Skydance Media merged with Paramount in 2025; it bought Warner Bros. Discovery in 2026.",
+      "url": "https://en.wikipedia.org/wiki/Skydance_Corporation",
+      "stakes": [
+        {
+          "name": "RedBird Capital Partners",
+          "what": "shares control with the Ellisons"
+        },
+        {
+          "name": "Saudi, Qatari and Emirati sovereign wealth funds",
+          "what": "non-voting shares, for helping pay for Warner Bros. Discovery",
+          "since": 2026
+        }
+      ],
+      "holdings": [
+        {
+          "name": "CBS",
+          "what": "broadcast network"
+        },
+        {
+          "name": "CNN",
+          "what": "cable news"
+        },
+        {
+          "name": "HBO",
+          "what": "pay TV"
+        },
+        {
+          "name": "Paramount Pictures",
+          "what": "film studio"
+        },
+        {
+          "name": "Warner Bros. Pictures",
+          "what": "film studio"
+        },
+        {
+          "name": "Nickelodeon",
+          "what": "children's TV"
+        },
+        {
+          "name": "HGTV",
+          "what": "home-renovation TV"
+        },
+        {
+          "name": "TNT Sports"
+        }
+      ]
+    },
+    {
+      "id": "skydance-products-publishing",
+      "name": "Skydance Products & Publishing",
+      "kind": "consumer products division",
+      "parent": "skydance",
+      "since": 2026,
+      "note": "Merchandise, licensing and publishing for the merged company, under Josh Silverman.",
+      "url": "https://variety.com/2026/biz/news/dc-comics-skydance-products-publishing-division-warner-bros-paramount-1236906731/",
+      "holdings": [
+        {
+          "name": "Warner Bros. Consumer Products",
+          "what": "toys and licensed merchandise"
+        },
+        {
+          "name": "Paramount Consumer Products",
+          "what": "toys and licensed merchandise"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "dc-comics",
+          "since": 2026,
+          "price": "$110.9 billion, with the rest of Warner Bros. Discovery",
+          "earlier": [
+            {
+              "name": "Kinney National Company",
+              "what": "parking lots, funeral homes and office cleaning",
+              "from": 1967,
+              "until": 1972,
+              "price": "$30 million"
+            },
+            {
+              "name": "Warner Communications",
+              "from": 1972,
+              "until": 1990
+            },
+            {
+              "name": "Time Warner",
+              "from": 1990,
+              "until": 2018
+            },
+            {
+              "name": "AT&T",
+              "what": "the phone company",
+              "from": 2018,
+              "until": 2022
+            },
+            {
+              "name": "Warner Bros. Discovery",
+              "from": 2022,
+              "until": 2026
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walt-disney-company",
+      "name": "The Walt Disney Company",
+      "kind": "entertainment conglomerate",
+      "parent": null,
+      "url": "https://en.wikipedia.org/wiki/The_Walt_Disney_Company",
+      "holdings": [
+        {
+          "name": "ABC",
+          "what": "broadcast network"
+        },
+        {
+          "name": "ESPN",
+          "what": "sports TV"
+        },
+        {
+          "name": "Pixar"
+        },
+        {
+          "name": "Lucasfilm",
+          "what": "Star Wars"
+        },
+        {
+          "name": "Hulu",
+          "what": "streaming"
+        },
+        {
+          "name": "Disney Cruise Line"
+        }
+      ]
+    },
+    {
+      "id": "disney-publishing-worldwide",
+      "name": "Disney Publishing Worldwide",
+      "kind": "publishing division",
+      "parent": "walt-disney-company",
+      "note": "Disney's book and magazine arm. Marvel was moved under it in 2023, when Marvel Entertainment was dissolved.",
+      "url": "https://en.wikipedia.org/wiki/Disney_Publishing_Worldwide",
+      "holdings": [
+        {
+          "name": "Disney Hyperion",
+          "what": "children's and young-adult books"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "marvel-comics",
+          "since": 2009,
+          "price": "$4 billion",
+          "earlier": [
+            {
+              "name": "Perfect Film & Chemical, later Cadence Industries",
+              "from": 1968,
+              "until": 1986
+            },
+            {
+              "name": "New World Entertainment",
+              "what": "film and TV studio",
+              "from": 1986,
+              "until": 1989
+            },
+            {
+              "name": "MacAndrews & Forbes",
+              "what": "Ronald Perelman's holding company, also Revlon's owner",
+              "from": 1989,
+              "until": 1998
+            },
+            {
+              "name": "Toy Biz",
+              "what": "the toy company that took it out of bankruptcy",
+              "from": 1998,
+              "until": 2009
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bertelsmann",
+      "name": "Bertelsmann",
+      "kind": "German media and services group",
+      "parent": null,
+      "note": "Owned outright by the Mohn family and its foundation, the Bertelsmann Stiftung.",
+      "url": "https://en.wikipedia.org/wiki/Bertelsmann",
+      "holdings": [
+        {
+          "name": "RTL Group",
+          "what": "Europe's largest commercial broadcaster"
+        },
+        {
+          "name": "Fremantle",
+          "what": "TV formats: Idol, Got Talent"
+        },
+        {
+          "name": "BMG",
+          "what": "music rights"
+        },
+        {
+          "name": "Arvato",
+          "what": "logistics and outsourcing"
+        }
+      ]
+    },
+    {
+      "id": "penguin-random-house",
+      "name": "Penguin Random House",
+      "kind": "the world's largest book publisher",
+      "parent": "bertelsmann",
+      "since": 2020,
+      "note": "Formed from Random House and Penguin in 2013; Bertelsmann bought out Penguin's former owner, Pearson, in 2020. A federal judge blocked its purchase of Simon & Schuster in 2022, after the Justice Department sued.",
+      "url": "https://en.wikipedia.org/wiki/Penguin_Random_House",
+      "holdings": [
+        {
+          "name": "Penguin Random House Publisher Services",
+          "what": "sells and ships other houses' books: Marvel, DSTLRY, Ignition Press, and Oni Press from 2026"
+        },
+        {
+          "name": "Crown"
+        },
+        {
+          "name": "Viking"
+        },
+        {
+          "name": "DK",
+          "what": "illustrated reference"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "boom-studios",
+          "since": 2024,
+          "earlier": [
+            {
+              "name": "20th Century Fox",
+              "what": "minority stake",
+              "from": 2017,
+              "until": 2019
+            },
+            {
+              "name": "The Walt Disney Company",
+              "what": "minority stake, which came with Fox",
+              "from": 2019,
+              "until": 2024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "knopf-doubleday",
+      "name": "Knopf Doubleday Publishing Group",
+      "kind": "publishing group",
+      "parent": "penguin-random-house",
+      "url": "https://en.wikipedia.org/wiki/Knopf_Doubleday_Publishing_Group",
+      "holdings": [
+        {
+          "name": "Alfred A. Knopf"
+        },
+        {
+          "name": "Doubleday"
+        },
+        {
+          "name": "Vintage"
+        },
+        {
+          "name": "Anchor Books"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "pantheon-books",
+          "since": 1961,
+          "earlier": [
+            {
+              "name": "RCA",
+              "what": "the electronics maker and NBC's parent, through Random House",
+              "from": 1965,
+              "until": 1980
+            },
+            {
+              "name": "Advance Publications",
+              "what": "the Newhouse family's company, Cond\u00e9 Nast's owner, through Random House",
+              "from": 1980,
+              "until": 1998
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "embracer-group",
+      "name": "Embracer Group",
+      "kind": "Swedish video-game holding company",
+      "parent": null,
+      "note": "Bought dozens of studios from 2019 to 2022, then sold or closed many after a $2 billion deal with Savvy, its Saudi shareholder, fell through in 2023. It paid up to $1.3 billion for Gearbox in 2021 and sold it to Take-Two for $460 million in 2024. Its co-founder Lars Wingefors is its largest shareholder.",
+      "url": "https://en.wikipedia.org/wiki/Embracer_Group",
+      "stakes": [
+        {
+          "name": "Savvy Games Group",
+          "what": "owned by Saudi Arabia's Public Investment Fund",
+          "share": "about 7.5% of the shares, 5% of the votes",
+          "since": 2022,
+          "price": "$1 billion"
+        }
+      ],
+      "holdings": [
+        {
+          "name": "THQ Nordic",
+          "what": "games publisher"
+        },
+        {
+          "name": "Plaion",
+          "what": "games publishing and distribution"
+        }
+      ]
+    },
+    {
+      "id": "fellowship-entertainment",
+      "name": "Fellowship Entertainment",
+      "kind": "games and licensing group",
+      "parent": "embracer-group",
+      "note": "Embracer plans to spin it off as its own company on the Stockholm exchange in 2027, handing its shares to Embracer's shareholders, Savvy among them.",
+      "url": "https://www.comicsbeat.com/fellowship-spin-off/",
+      "holdings": [
+        {
+          "name": "Middle-earth Enterprises",
+          "what": "film, stage and merchandise rights to The Lord of the Rings and The Hobbit"
+        },
+        {
+          "name": "Crystal Dynamics",
+          "what": "Tomb Raider"
+        },
+        {
+          "name": "Eidos-Montr\u00e9al",
+          "what": "Deus Ex"
+        },
+        {
+          "name": "Warhorse Studios",
+          "what": "Kingdom Come: Deliverance"
+        }
+      ]
+    },
+    {
+      "id": "dark-horse-media",
+      "name": "Dark Horse Media",
+      "kind": "Dark Horse's parent company",
+      "parent": "fellowship-entertainment",
+      "since": 2022,
+      "url": "https://en.wikipedia.org/wiki/Dark_Horse_Media",
+      "earlier": [
+        {
+          "name": "Mike Richardson",
+          "what": "its founder",
+          "until": 2022
+        }
+      ],
+      "holdings": [
+        {
+          "name": "Dark Horse Entertainment",
+          "what": "film and TV: Hellboy, The Umbrella Academy"
+        },
+        {
+          "name": "Dark Horse Direct",
+          "what": "collectible figures"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "dark-horse-comics"
+        }
+      ]
+    },
+    {
+      "id": "fanatics",
+      "name": "Fanatics",
+      "kind": "sports merchandise company",
+      "parent": null,
+      "note": "Founded and run by Michael Rubin.",
+      "url": "https://en.wikipedia.org/wiki/Fanatics_(company)",
+      "holdings": [
+        {
+          "name": "Fanatics Commerce",
+          "what": "licensed jerseys and team gear"
+        },
+        {
+          "name": "Fanatics Sportsbook",
+          "what": "sports betting"
+        },
+        {
+          "name": "Mitchell & Ness",
+          "what": "throwback jerseys"
+        }
+      ]
+    },
+    {
+      "id": "topps",
+      "name": "Topps",
+      "kind": "trading-card company",
+      "parent": "fanatics",
+      "since": 2022,
+      "price": "$500 million",
+      "url": "https://en.wikipedia.org/wiki/Topps",
+      "earlier": [
+        {
+          "name": "The Tornante Company and Madison Dearborn Partners",
+          "what": "Michael Eisner's firm and a private-equity fund",
+          "from": 2007,
+          "until": 2022,
+          "price": "$385 million"
+        }
+      ],
+      "holdings": [
+        {
+          "name": "Garbage Pail Kids",
+          "what": "sticker cards"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "topps-comics",
+          "since": 1992,
+          "until": 1998
+        }
+      ]
+    },
+    {
+      "id": "polarity",
+      "name": "Polarity",
+      "kind": "media company",
+      "parent": null,
+      "note": "Founded in 2018 by David Steward II, son of the World Wide Technology founder David Steward. It holds Oni through Oni\u2013Lion Forge Publishing Group, formed in the 2019 merger.",
+      "url": "https://en.wikipedia.org/wiki/Polarity_(company)",
+      "holdings": [
+        {
+          "name": "Lion Forge Animation",
+          "what": "Hair Love, an Oscar-winning short"
+        },
+        {
+          "name": "Magnetic Press",
+          "what": "comics"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "oni-press",
+          "stake": "majority",
+          "since": 2019
+        }
+      ]
+    },
+    {
+      "id": "aethon-books",
+      "name": "Aethon Books",
+      "kind": "fiction publisher, ebooks and audiobooks first",
+      "parent": null,
+      "note": "Run by the novelist Rhett C. Bruno.",
+      "url": "https://aethonbooks.com/2025/05/29/aethon-books-acquires-majority-stake-in-vault-comics",
+      "holdings": [
+        {
+          "name": "Wicked House",
+          "what": "horror publisher, bought in 2025"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "vault-comics",
+          "stake": "majority",
+          "since": 2025
+        }
+      ]
+    },
+    {
+      "id": "jonas-family",
+      "name": "Jonas family",
+      "kind": "controlling shareholders",
+      "parent": null,
+      "note": "Howard Jonas chairs IDW Media Holdings and the companies below; his son Davidi runs IDW.",
+      "url": "https://en.wikipedia.org/wiki/Howard_Jonas",
+      "holdings": [
+        {
+          "name": "IDT Corporation",
+          "what": "telecom and money transfers"
+        },
+        {
+          "name": "Genie Energy",
+          "what": "retail power and gas; once held oil-exploration rights in the Golan Heights"
+        },
+        {
+          "name": "Rafael Holdings",
+          "what": "pharmaceuticals"
+        }
+      ]
+    },
+    {
+      "id": "idw-media-holdings",
+      "name": "IDW Media Holdings",
+      "kind": "holding company",
+      "parent": "jonas-family",
+      "stake": "controlling",
+      "note": "Spun off from IDT in 2009 as CTM Media Holdings and renamed in 2015. It left the New York Stock Exchange in 2023.",
+      "holdings": [
+        {
+          "name": "IDW Entertainment",
+          "what": "TV: Wynonna Earp"
+        },
+        {
+          "name": "Top Shelf Productions",
+          "what": "graphic novels, bought in 2015"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "idw-publishing",
+          "since": 2007,
+          "earlier": [
+            {
+              "name": "Ted Adams and partners",
+              "what": "its founders",
+              "from": 1999,
+              "until": 2007
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fantagraphics-owners",
+      "name": "Gary Groth",
+      "kind": "co-founder",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Gary Groth",
+          "artistId": "gary-groth"
+        }
+      ],
+      "note": "Co-owned with Kim Thompson from 1978 until Thompson's death in 2013. Eric Reynolds, there since 1993, now runs it with Groth, who is still there in its 50th year.",
+      "publishers": [
+        {
+          "id": "fantagraphics",
+          "since": 1976,
+          "earlier": [
+            {
+              "name": "Michael Catron",
+              "what": "co-founder",
+              "from": 1976,
+              "until": 1978
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drawn-and-quarterly-owners",
+      "name": "Peggy Burns, Tom Devlin, Tracy Hurren and Julia Pohl-Miranda",
+      "kind": "its publisher and senior staff",
+      "parent": null,
+      "status": "Staff-owned",
+      "publishers": [
+        {
+          "id": "drawn-and-quarterly",
+          "since": 2023,
+          "earlier": [
+            {
+              "name": "Chris Oliveros",
+              "what": "its founder",
+              "from": 1990,
+              "until": 2023
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "image-comics-owners",
+      "name": "Todd McFarlane, Erik Larsen, Marc Silvestri, Jim Valentino and Robert Kirkman",
+      "kind": "its partners",
+      "parent": null,
+      "status": "Partner-owned",
+      "people": [
+        {
+          "name": "Todd McFarlane",
+          "artistId": null
+        },
+        {
+          "name": "Erik Larsen",
+          "artistId": null
+        },
+        {
+          "name": "Marc Silvestri",
+          "artistId": null
+        },
+        {
+          "name": "Jim Valentino",
+          "artistId": null
+        },
+        {
+          "name": "Robert Kirkman",
+          "artistId": "robert-kirkman"
+        }
+      ],
+      "note": "Creators keep the rights to what they publish through it. Of its founders, Rob Liefeld left in 1996 and Jim Lee sold his WildStorm studio to DC in 1998; Kirkman became a partner in 2008.",
+      "publishers": [
+        {
+          "id": "image-comics",
+          "since": 1992
+        }
+      ]
+    },
+    {
+      "id": "skybound-owners",
+      "name": "Robert Kirkman and David Alpert",
+      "kind": "founders; chairman and chief executive",
+      "parent": null,
+      "status": "Investor-backed",
+      "people": [
+        {
+          "name": "Robert Kirkman",
+          "artistId": "robert-kirkman"
+        },
+        {
+          "name": "David Alpert",
+          "artistId": null
+        }
+      ],
+      "note": "It publishes through Image, where Kirkman is a partner.",
+      "holdings": [
+        {
+          "name": "Skybound Games"
+        },
+        {
+          "name": "Energon Universe",
+          "what": "Transformers and G.I. Joe comics, licensed from Hasbro"
+        }
+      ],
+      "stakes": [
+        {
+          "name": "Skydance",
+          "what": "now DC's owner"
+        },
+        {
+          "name": "Com2uS",
+          "what": "South Korean game publisher"
+        },
+        {
+          "name": "Hiro Capital",
+          "what": "games venture fund"
+        },
+        {
+          "name": "fans",
+          "what": "shares sold through Republic at a $500 million valuation",
+          "since": 2023
+        }
+      ],
+      "publishers": [
+        {
+          "id": "skybound",
+          "since": 2010
+        }
+      ]
+    },
+    {
+      "id": "ghost-machine-owners",
+      "name": "Geoff Johns, Brad Meltzer, Gary Frank, Bryan Hitch, Jason Fabok, Francis Manapul, Peter J. Tomasi, Lamont Magee, Maytal Zchut, Brad Anderson and Rob Leigh",
+      "kind": "its founding writers and artists",
+      "parent": null,
+      "status": "Creator cooperative",
+      "people": [
+        {
+          "name": "Geoff Johns",
+          "artistId": "geoff-johns"
+        },
+        {
+          "name": "Brad Meltzer",
+          "artistId": null
+        },
+        {
+          "name": "Gary Frank",
+          "artistId": "gary-frank"
+        },
+        {
+          "name": "Bryan Hitch",
+          "artistId": "bryan-hitch"
+        },
+        {
+          "name": "Jason Fabok",
+          "artistId": null
+        },
+        {
+          "name": "Francis Manapul",
+          "artistId": null
+        },
+        {
+          "name": "Peter J. Tomasi",
+          "artistId": null
+        },
+        {
+          "name": "Lamont Magee",
+          "artistId": null
+        },
+        {
+          "name": "Maytal Zchut",
+          "artistId": null
+        },
+        {
+          "name": "Brad Anderson",
+          "artistId": null
+        },
+        {
+          "name": "Rob Leigh",
+          "artistId": null
+        }
+      ],
+      "note": "The creators share in the film, TV and game rights to what they make. The books come out through Image.",
+      "publishers": [
+        {
+          "id": "ghost-machine",
+          "since": 2023
+        }
+      ]
+    },
+    {
+      "id": "dstlry-owners",
+      "name": "David Steinberger and Chip Mosher",
+      "kind": "founders",
+      "parent": null,
+      "status": "Venture-backed",
+      "note": "Both were comiXology executives; Amazon bought comiXology in 2014. DSTLRY raised $7.4 million by 2024.",
+      "stakes": [
+        {
+          "name": "1AM Gaming",
+          "what": "games investor, led the 2024 round"
+        },
+        {
+          "name": "Kodansha USA",
+          "what": "the Japanese manga publisher's American arm"
+        },
+        {
+          "name": "Groupe Delcourt",
+          "what": "French comics publisher"
+        },
+        {
+          "name": "Lorenzo di Bonaventura",
+          "what": "producer of the Transformers films"
+        },
+        {
+          "name": "its founding creators",
+          "what": "Scott Snyder, James Tynion IV, Tula Lotay and others; 3% more set aside for later creators"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "dstlry",
+          "since": 2023
+        }
+      ]
+    },
+    {
+      "id": "ignition-press-owners",
+      "name": "Eric Gitter, Filip Sablik, Jamie S. Rich and Jeremy Haun",
+      "kind": "founders",
+      "parent": null,
+      "status": "Privately funded",
+      "people": [
+        {
+          "name": "Eric Gitter",
+          "artistId": null
+        },
+        {
+          "name": "Filip Sablik",
+          "artistId": null
+        },
+        {
+          "name": "Jamie S. Rich",
+          "artistId": "jamie-s-rich"
+        },
+        {
+          "name": "Jeremy Haun",
+          "artistId": "jeremy-haun"
+        }
+      ],
+      "note": "Its investors haven't been named. Gitter, a producer of Scott Pilgrim vs. the World, is chief executive.",
+      "publishers": [
+        {
+          "id": "ignition-press",
+          "since": 2024
+        }
+      ]
+    },
+    {
+      "id": "dynamite-entertainment-owners",
+      "name": "Nick Barrucci",
+      "kind": "founder and chief executive",
+      "parent": null,
+      "status": "Independent",
+      "holdings": [
+        {
+          "name": "Dynamic Forces",
+          "what": "signed and limited editions, run by Barrucci since 1995"
+        },
+        {
+          "name": "Vampirella",
+          "what": "Warren's horror hostess, its since 2010"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "dynamite-entertainment",
+          "since": 2004
+        }
+      ]
+    },
+    {
+      "id": "ablaze-owners",
+      "name": "Rich Young",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Rich Young",
+          "artistId": "rich-young"
+        }
+      ],
+      "holdings": [
+        {
+          "name": "NBM",
+          "what": "New York graphic novel house founded in 1976, bought in 2025"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "ablaze",
+          "since": 2019
+        }
+      ]
+    },
+    {
+      "id": "black-mask-studios-owners",
+      "name": "Matt Pizzolo, Brett Gurewitz and Steve Niles",
+      "kind": "founders",
+      "parent": null,
+      "status": "Independent",
+      "note": "Gurewitz, the Bad Religion guitarist who founded Epitaph Records, put up the money; Pizzolo runs it day to day.",
+      "publishers": [
+        {
+          "id": "black-mask-studios",
+          "since": 2012
+        }
+      ]
+    },
+    {
+      "id": "bad-idea-owners",
+      "name": "Dinesh Shamdasani, Warren Simons and Hunter Gorinson",
+      "kind": "founders",
+      "parent": null,
+      "status": "Independent",
+      "note": "All three came from Valiant Entertainment, where Shamdasani was chief executive until China's DMG Entertainment bought it in 2018. Gorinson has since become Oni Press's president and publisher.",
+      "publishers": [
+        {
+          "id": "bad-idea",
+          "since": 2019
+        }
+      ]
+    },
+    {
+      "id": "silver-sprocket-owners",
+      "name": "Avi Ehrlich",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "note": "It laid off staff in 2025, and its San Francisco shop closed in March 2026.",
+      "publishers": [
+        {
+          "id": "silver-sprocket",
+          "since": 2007
+        }
+      ]
+    },
+    {
+      "id": "slg-publishing-owners",
+      "name": "Dan Vado",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "publishers": [
+        {
+          "id": "slg-publishing",
+          "since": 1986
+        }
+      ]
+    },
+    {
+      "id": "last-gasp-owners",
+      "name": "Ron Turner and Colin Turner",
+      "kind": "founder and his son",
+      "parent": null,
+      "status": "Independent",
+      "note": "Ron Turner started it in 1970 and now runs it with Colin.",
+      "publishers": [
+        {
+          "id": "last-gasp",
+          "since": 1970
+        }
+      ]
+    },
+    {
+      "id": "rip-off-press-owners",
+      "name": "Fred Todd",
+      "kind": "co-founder",
+      "parent": null,
+      "status": "Independent",
+      "note": "One of the four Texans who started it in 1969; he runs it from his home in Auburn, California.",
+      "publishers": [
+        {
+          "id": "rip-off-press",
+          "since": 1969
+        }
+      ]
+    },
+    {
+      "id": "caliber-comics-owners",
+      "name": "Gary Reed",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "note": "Reed relaunched it in 2014 in partnership with Eric Reichart's Eagle One Media. It has carried on since his death in 2016; who owns it now isn't public.",
+      "publishers": [
+        {
+          "id": "caliber-comics",
+          "since": 1989,
+          "until": 2016
+        }
+      ]
+    },
+    {
+      "id": "heavy-metal-international-owners",
+      "name": "Marshall Lees",
+      "kind": "chief executive and publisher",
+      "parent": null,
+      "status": "Independent",
+      "note": "Relaunched the brand in 2025 through a new company, after the old one stopped publishing in 2023.",
+      "publishers": [
+        {
+          "id": "heavy-metal-international",
+          "since": 2024,
+          "earlier": [
+            {
+              "name": "Leonard Mogel",
+              "what": "the National Lampoon publisher who licensed M\u00e9tal hurlant",
+              "from": 1977,
+              "until": 1992
+            },
+            {
+              "name": "Kevin Eastman",
+              "what": "co-creator of the Teenage Mutant Ninja Turtles",
+              "from": 1992,
+              "until": 2014,
+              "price": "$500,000"
+            },
+            {
+              "name": "Heavy Metal Media",
+              "what": "David Boxenbaum and Jeff Krelitz's company, run from 2020 by Matthew Medney",
+              "from": 2014,
+              "until": 2023
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ec-comics-owners",
+      "name": "Gaines family",
+      "kind": "William M. Gaines Agent, Inc.",
+      "parent": null,
+      "status": "Family-owned",
+      "note": "Bill Gaines's daughter Cathy Gaines Mifsud and grandson Corey Mifsud run the trust that holds the EC rights. Since 2024 the name has been licensed to Oni Press, which publishes new EC titles.",
+      "publishers": [
+        {
+          "id": "ec-comics",
+          "since": 1992,
+          "earlier": [
+            {
+              "name": "Max Gaines",
+              "what": "its founder",
+              "from": 1944,
+              "until": 1947
+            },
+            {
+              "name": "Bill Gaines",
+              "what": "his son",
+              "from": 1947,
+              "until": 1992
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aaa-pop-owners",
+      "name": "Mike and Laura Allred",
+      "kind": "the cartoonist and the colorist",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "Mike Allred",
+          "artistId": "mike-allred"
+        },
+        {
+          "name": "Laura Allred",
+          "artistId": "laura-allred"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "aaa-pop",
+          "since": 2000
+        }
+      ]
+    },
+    {
+      "id": "el-capitan-books-owners",
+      "name": "David and Maria Lapham",
+      "kind": "the cartoonist and his wife",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "David Lapham",
+          "artistId": "david-lapham"
+        },
+        {
+          "name": "Maria Lapham",
+          "artistId": null
+        }
+      ],
+      "publishers": [
+        {
+          "id": "el-capitan-books",
+          "since": 1995
+        }
+      ]
+    },
+    {
+      "id": "food-chain-owners",
+      "name": "Nate Powell",
+      "kind": "the cartoonist",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "Nate Powell",
+          "artistId": "nate-powell"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "food-chain",
+          "since": 1992
+        }
+      ]
+    },
+    {
+      "id": "row-7-publishing-owners",
+      "name": "Anja Wuolu and Brandon John",
+      "kind": "the cartoonist and his partner in the label",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "Anja Wuolu",
+          "artistId": null
+        },
+        {
+          "name": "Brandon John",
+          "artistId": "brandon-john"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "row-7-publishing",
+          "since": 2022
+        }
+      ]
+    },
+    {
+      "id": "sandez-rey-owners",
+      "name": "Sandez Rey",
+      "kind": "the cartoonist",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "Sandez Rey",
+          "artistId": "sandez-rey"
+        }
+      ],
+      "note": "Printed on demand through IndyPlanet.",
+      "publishers": [
+        {
+          "id": "sandez-rey"
+        }
+      ]
+    },
+    {
+      "id": "skelenaut-owners",
+      "name": "Jonathan Sims",
+      "kind": "the artist",
+      "parent": null,
+      "status": "Self-published",
+      "people": [
+        {
+          "name": "Jonathan Sims",
+          "artistId": "jonathan-sims"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "skelenaut",
+          "since": 2012
+        }
+      ]
+    },
+    {
+      "id": "tucker-petertil-owners",
+      "name": "Tucker Petertil",
+      "kind": "the editor and cartoonist",
+      "parent": null,
+      "status": "Self-published",
+      "publishers": [
+        {
+          "id": "tucker-petertil",
+          "since": 1977
+        }
+      ]
+    },
+    {
+      "id": "kitchen-sink-press-owners",
+      "name": "A Los Angeles investment group",
+      "kind": "never named publicly",
+      "parent": null,
+      "status": "Investor-owned",
+      "note": "Denis Kitchen sold control in 1994. In 1997 the cartoon producer Fred Seibert gathered small investors to try to save it; it was dissolved in 1999. Since 2013 the name has lived on as Kitchen Sink Books, a joint imprint at Dark Horse.",
+      "publishers": [
+        {
+          "id": "kitchen-sink-press",
+          "since": 1994,
+          "until": 1999,
+          "earlier": [
+            {
+              "name": "Denis Kitchen",
+              "what": "its founder",
+              "from": 1970,
+              "until": 1994
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tundra-publishing-owners",
+      "name": "Kevin Eastman",
+      "kind": "founder, co-creator of the Teenage Mutant Ninja Turtles",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Kevin Eastman",
+          "artistId": "kevin-eastman"
+        }
+      ],
+      "note": "He paid for it with Turtles money. It lost as much as $14 million before Kitchen Sink bought it out in 1993.",
+      "publishers": [
+        {
+          "id": "tundra-publishing",
+          "since": 1990,
+          "until": 1993
+        }
+      ]
+    },
+    {
+      "id": "warren-publishing-owners",
+      "name": "James Warren",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "James Warren",
+          "artistId": "james-warren"
+        }
+      ],
+      "note": "It went bankrupt in 1983 and Harris Publications bought its assets. Warren won Creepy and Eerie back in court around 2000 and sold them in 2007 to New Comic Company, whose reprints Dark Horse publishes. Vampirella went from Harris to Dynamite in 2010.",
+      "publishers": [
+        {
+          "id": "warren-publishing",
+          "since": 1957,
+          "until": 1983
+        }
+      ]
+    },
+    {
+      "id": "deadline-publications-owners",
+      "name": "Tom Astor",
+      "kind": "owner and backer",
+      "parent": null,
+      "status": "Independent",
+      "note": "A grandson of Nancy Astor, the first woman to take her seat in the House of Commons, he financed the magazine; Brett Ewins and Steve Dillon edited it.",
+      "publishers": [
+        {
+          "id": "deadline-publications",
+          "since": 1988,
+          "until": 1995
+        }
+      ]
+    },
+    {
+      "id": "pacific-comics-owners",
+      "name": "Steve and Bill Schanes",
+      "kind": "the brothers who founded it",
+      "parent": null,
+      "status": "Independent",
+      "note": "It went into liquidation in 1984.",
+      "publishers": [
+        {
+          "id": "pacific-comics",
+          "since": 1971,
+          "until": 1984
+        }
+      ]
+    },
+    {
+      "id": "print-mint-owners",
+      "name": "Don and Alice Schenker",
+      "kind": "founders",
+      "parent": null,
+      "status": "Independent",
+      "note": "Later in partnership with Bob and Peggy Rita.",
+      "publishers": [
+        {
+          "id": "print-mint",
+          "since": 1965,
+          "until": 1978
+        }
+      ]
+    },
+    {
+      "id": "apex-novelties-owners",
+      "name": "Don Donahue",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "note": "Susan Goodrick was his partner in it from 1970 to 1978.",
+      "publishers": [
+        {
+          "id": "apex-novelties",
+          "since": 1968,
+          "until": 1979
+        }
+      ]
+    },
+    {
+      "id": "bijou-publishing-empire-owners",
+      "name": "Jay Lynch",
+      "kind": "founder",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Jay Lynch",
+          "artistId": "jay-lynch"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "bijou-publishing-empire",
+          "since": 1968,
+          "until": 1973
+        }
+      ]
+    },
+    {
+      "id": "cat-head-comics-owners",
+      "name": "Steve Lafler and Stephen Beaupre",
+      "kind": "founder and co-publisher",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Steve Lafler",
+          "artistId": "steve-lafler"
+        },
+        {
+          "name": "Stephen Beaupre",
+          "artistId": "steve-beaupre"
+        }
+      ],
+      "publishers": [
+        {
+          "id": "cat-head-comics",
+          "since": 1980,
+          "until": 1998
+        }
+      ]
+    },
+    {
+      "id": "golden-gate-publishing-company-owners",
+      "name": "Terry Zwigoff",
+      "kind": "founder, later a filmmaker",
+      "parent": null,
+      "status": "Independent",
+      "note": "He sold the printing rights to The People's Comics to Kitchen Sink Press.",
+      "publishers": [
+        {
+          "id": "golden-gate-publishing-company",
+          "since": 1972,
+          "until": 1972
+        }
+      ]
+    },
+    {
+      "id": "los-angeles-comic-book-company-owners",
+      "name": "Bill Spicer, Michael Moore and Fred Walker",
+      "kind": "founders",
+      "parent": null,
+      "status": "Independent",
+      "people": [
+        {
+          "name": "Bill Spicer",
+          "artistId": "bill-spicer"
+        },
+        {
+          "name": "Michael Moore",
+          "artistId": null
+        },
+        {
+          "name": "Fred Walker",
+          "artistId": null
+        }
+      ],
+      "publishers": [
+        {
+          "id": "los-angeles-comic-book-company",
+          "since": 1971
+        }
+      ]
+    },
+    {
+      "id": "steeldragon-press-owners",
+      "name": "Will Shetterly and Emma Bull",
+      "kind": "the fantasy novelists who ran it",
+      "parent": null,
+      "status": "Independent",
+      "publishers": [
+        {
+          "id": "steeldragon-press"
+        }
+      ]
+    },
+    {
+      "id": "washington-free-community-owners",
+      "name": "An editorial collective",
+      "kind": "students and activists",
+      "parent": null,
+      "status": "Collective",
+      "publishers": [
+        {
+          "id": "washington-free-community",
+          "since": 1967,
+          "until": 1970
+        }
+      ]
+    }
+  ]
+}

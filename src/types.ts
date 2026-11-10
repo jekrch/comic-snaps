@@ -112,6 +112,64 @@ export interface PublisherLogo {
   source?: string;
 }
 
+/** How one company holds the next one down: since when, how much of it, and
+ *  for what. Every field is optional; an in-house division has none. */
+export interface OwnershipLink {
+  /** "majority", "controlling" — absent when it is owned outright. */
+  stake?: string | null;
+  since?: number | null;
+  /** Set when the holding has ended (a closed line). */
+  until?: number | null;
+  price?: string | null;
+  /** Who held it before, oldest first. */
+  earlier?: FormerOwner[];
+}
+
+export interface FormerOwner {
+  name: string;
+  /** What they were, in a few words: "the phone company". */
+  what?: string | null;
+  from?: number | null;
+  until?: number | null;
+  price?: string | null;
+}
+
+export interface MinorityStake {
+  name: string;
+  what?: string | null;
+  /** How much of it: "about 7.5% of the shares, 5% of the votes". */
+  share?: string | null;
+  since?: number | null;
+  price?: string | null;
+}
+
+/**
+ * A company (or family) above the publishers in owners.json, hand-researched.
+ * Its own link fields describe how its `parent` holds it.
+ */
+export interface Owner extends OwnershipLink {
+  id: string;
+  name: string;
+  /** What it is, in a few words: "German media and services group". */
+  kind: string;
+  parent: string | null;
+  /** Set on an owner that is people rather than a company — "Independent",
+   *  "Self-published", "Staff-owned" — and shown beside the section's name
+   *  when it heads the chain. */
+  status?: string | null;
+  /** The people `name` stands for, so each can open their page. */
+  people?: { name: string; artistId?: string | null }[];
+  note?: string | null;
+  url?: string | null;
+  /** Minority holders worth knowing about: they don't control it, so they
+   *  aren't a rung on the chain, but they have money in it. */
+  stakes?: MinorityStake[];
+  /** Its notable other holdings, beside the line down to the wall. */
+  holdings?: { name: string; what?: string | null }[];
+  /** The registry houses it holds directly, by publishers.json id. */
+  publishers?: (OwnershipLink & { id: string })[];
+}
+
 export interface IssueCredit {
   artistId: string | null;
   name: string;
