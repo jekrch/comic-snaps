@@ -3,6 +3,8 @@ import type { Panel } from "../types";
 import { Expand } from "lucide-react";
 import { formatIssue } from "../utils/issueFormat";
 import { useNearViewport } from "../hooks/useNearViewport";
+import type { OwnerBadge as OwnerBadgeInfo } from "../utils/owners";
+import OwnerBadge, { CHIP, CHIP_SMALL } from "./OwnerBadge";
 
 /** Shared with the series strip, so the two places a blur is announced say
  *  the same thing. */
@@ -33,9 +35,17 @@ interface Props {
   onSelect: (panel: Panel) => void;
   onOpen: (panel: Panel) => void;
   isFirstLoad?: boolean;
+  /** The owner badge to show, when that view option is on and the panel's
+   *  house is known. Stable per panel, so it doesn't break the memo. */
+  owner?: OwnerBadgeInfo | null;
+  onOpenOwner?: (panel: Panel, owner: OwnerBadgeInfo) => void;
+  /** Show the artist's age that year, when it is known. */
+  showAge?: boolean;
+  /** Keep the details overlay up rather than only on hover or selection. */
+  showDetails?: boolean;
 }
 
-function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
+function PanelCard({ panel, selected, onSelect, onOpen, owner, onOpenOwner, showAge, showDetails }: Props) {
   const imgRef = useRef<HTMLImageElement>(null);
   const hatchPatternId = useId();
   const hatchFadeId = useId();
@@ -66,17 +76,18 @@ function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
   // viewer. On touch, the first tap reveals the details and tapping the
   // already-selected card opens the viewer. Selecting one card deselects any
   // other (handled by the parent), so there is no timing window — the two taps
-  // can be arbitrarily far apart.
+  // can be arbitrarily far apart. With the details pinned there is nothing
+  // for the first tap to reveal, so it opens the viewer straight away.
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
       if (e.pointerType === "mouse") {
         if (e.button === 0) openViewer();
         return;
       }
-      if (selected) openViewer();
+      if (selected || showDetails) openViewer();
       else onSelect(panel);
     },
-    [selected, openViewer, onSelect, panel]
+    [selected, showDetails, openViewer, onSelect, panel]
   );
 
   const isBlurred = panel.blur === "ew" || panel.blur === "nsfw";
@@ -102,7 +113,7 @@ function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
         data-panel-id={panel.id}
         className={`panel-item group relative cursor-pointer overflow-hidden rounded-sm bg-surface-raised ${
           selected ? "panel-selected" : ""
-        }`}
+        } ${showDetails ? "panel-details-pinned" : ""}`}
         onPointerUp={handlePointerUp}
       >
         <div
@@ -196,6 +207,26 @@ function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
           </div>
         )}
 
+        {/* The view options' labels. Always up rather than on hover, which
+            is the point of turning them on, and above the blur, since they
+            say nothing about what is under it. */}
+        {((owner && onOpenOwner) || (showAge && panel.artistAge != null)) && (
+          <div className="absolute top-2 left-2 right-12 z-[4] flex flex-col items-start gap-1 pointer-events-none">
+            {owner && onOpenOwner && (
+              <OwnerBadge badge={owner} onOpen={() => onOpenOwner(panel, owner)} />
+            )}
+            {showAge && panel.artistAge != null && (
+              <span
+                className={`${CHIP} ${CHIP_SMALL} pl-1.5 pointer-events-auto tabular-nums`}
+                title={`${panel.artist} turned ${panel.artistAge} in ${panel.year}`}
+              >
+                <span className="text-white/45">age</span>
+                {panel.artistAge}
+              </span>
+            )}
+          </div>
+        )}
+
         <div
           className={`panel-overlay absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-3 ${
             isBlurred ? "z-[2]" : ""
@@ -208,6 +239,7 @@ function PanelCard({ panel, selected, onSelect, onOpen }: Props) {
               openViewer();
             }}
             className="
+              panel-expand
               absolute top-2 right-2
               w-8 h-8 flex items-center justify-center
               rounded-md bg-black/50 backdrop-blur-sm

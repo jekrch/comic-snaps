@@ -143,6 +143,16 @@ export interface MinorityStake {
   price?: string | null;
 }
 
+export interface OwnerLogo {
+  /** Absolute, or relative to the site root for a copy kept in public/data. */
+  url: string;
+  /** Where the mark came from, for attribution. */
+  source?: string;
+  /** A light mark on a transparent ground, which needs a dark tile behind it
+   *  rather than the light one most logos sit on. */
+  onDark?: boolean;
+}
+
 /**
  * A company (or family) above the publishers in owners.json, hand-researched.
  * Its own link fields describe how its `parent` holds it.
@@ -157,10 +167,18 @@ export interface Owner extends OwnershipLink {
    *  "Self-published", "Staff-owned" — and shown beside the section's name
    *  when it heads the chain. */
   status?: string | null;
-  /** The people `name` stands for, so each can open their page. */
-  people?: { name: string; artistId?: string | null }[];
+  /** The people `name` stands for, so each can open their page. `portrait`
+   *  is for someone whose artist record has no photo, or who has no record. */
+  people?: { name: string; artistId?: string | null; portrait?: { url: string; source?: string } | null }[];
   note?: string | null;
   url?: string | null;
+  /** The company's mark, for the wall's owner badge. Only set on companies,
+   *  never on a family or the people behind an independent. */
+  logo?: OwnerLogo | null;
+  /** A photo, for an owner that is a person: what the badge and the chain
+   *  show in place of a logo. For several people, each carries their own in
+   *  `people` instead. */
+  portrait?: { url: string; source?: string } | null;
   /** Minority holders worth knowing about: they don't control it, so they
    *  aren't a rung on the chain, but they have money in it. */
   stakes?: MinorityStake[];
@@ -244,6 +262,12 @@ export interface Panel {
    */
   publisher?: string;
   imprint?: string;
+  /**
+   * What kind of ownership the house is under — "Corporate-owned",
+   * "Independent", "Partner-owned"… — derived at load from owners.json
+   * (see `ownershipType`). Absent when owners.json says nothing.
+   */
+  ownership?: string;
   /**
    * The artist's age in the publication year, derived at load from their
    * birth year in `artists.json` (see `artistAgeAt`). Absent when unknown.

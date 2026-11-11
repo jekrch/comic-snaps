@@ -12,6 +12,7 @@ import { useOwnershipIndex, useSeriesById } from "../hooks/useMetadata";
 import { ownershipChain } from "../utils/owners";
 import ReferenceLinks from "./ReferenceLinks";
 import OwnershipTree from "./OwnershipTree";
+import { isMarkZoomOpen } from "./MarkZoom";
 import { attachDragScroll } from "../hooks/useDragScroll";
 
 interface Props {
@@ -165,11 +166,12 @@ export default function PublisherProfile({
 }: Props) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Escape closes the page before the viewer or drawer sees it.
+  // Escape closes the page before the viewer or drawer sees it — unless an
+  // ownership mark is enlarged over it, which closes first.
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && !isMarkZoomOpen()) {
         e.stopImmediatePropagation();
         onClose();
       }
@@ -738,6 +740,7 @@ export default function PublisherProfile({
                 </SectionHead>
                 <OwnershipTree
                   steps={ownership}
+                  year={currentYear}
                   onOpenPublisher={onOpenPublisher}
                   onOpenPerson={onOpenPerson}
                   isPersonInteractive={isPersonInteractive}

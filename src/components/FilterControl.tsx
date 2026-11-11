@@ -50,7 +50,7 @@ export default function FilterControl({
   const active = hasActiveFilters(filters);
   const count = activeFilterCount(filters);
 
-  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, seriesCounts, publisherCounts, ageCounts } = useMemo(
+  const { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, seriesCounts, publisherCounts, ownershipCounts, ageCounts } = useMemo(
     () => computeFacets(panels, filters),
     [panels, filters]
   );
@@ -144,6 +144,16 @@ export default function FilterControl({
     }
     return items;
   }, [publisherCounts, imprintParent]);
+
+  // Biggest first: a handful of kinds, where how much of the wall each
+  // holds is the interesting part.
+  const ownershipItems = useMemo(
+    () =>
+      Array.from(ownershipCounts.entries())
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([label, c]) => ({ label, count: c })),
+    [ownershipCounts]
+  );
 
   const ageItems = useMemo(
     () =>
@@ -306,6 +316,12 @@ export default function FilterControl({
                   label
                 )
               }
+            />
+            <FacetSection
+              title="OWNERSHIP"
+              items={ownershipItems}
+              selected={filters.ownership}
+              onToggle={(v) => toggleInSet("ownership", v)}
             />
             <FacetSection
               title="TAGS"

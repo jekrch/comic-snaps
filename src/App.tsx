@@ -25,6 +25,7 @@ import { useFilterParams } from "./hooks/useFilterParams";
 import { isProductionOnly, loadMetadata } from "./utils/metadata";
 import { artistAgeAt } from "./utils/artistAge";
 import { buildPublisherIndex, resolveSeriesPublisher } from "./utils/publishers";
+import { buildOwnershipIndex, loadOwners, ownershipType } from "./utils/owners";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import HeaderViewSwitch from "./components/HeaderViewSwitch";
@@ -681,6 +682,7 @@ export default function App() {
         postedBy: new Set(),
         series: new Set(patch.series ?? []),
         publishers: new Set(patch.publishers ?? []),
+        ownership: new Set(patch.ownership ?? []),
         ages: new Set(patch.ages ?? []),
       };
       setFilters(next);
@@ -698,8 +700,10 @@ export default function App() {
         return res.json() as Promise<Gallery>;
       }),
       loadMetadata(),
+      // Never rejects: without it, panels just carry no ownership type.
+      loadOwners(),
     ])
-      .then(([gallery, { artists, series, issues, publishers }]) => {
+      .then(([gallery, { artists, series, issues, publishers }, owners]) => {
         const seriesTagMap = new Map<string, string[]>();
         const seriesById = new Map<string, Series>();
         for (const s of series) {
@@ -709,14 +713,20 @@ export default function App() {
         // Who published each series, resolved once: the filter, the search
         // and the stats all read it off the panel.
         const publisherIndex = buildPublisherIndex(publishers);
-        const publisherMap = new Map<string, { publisher?: string; imprint?: string }>();
+        const ownershipIndex = buildOwnershipIndex(owners);
+        const publisherMap = new Map<string, { publisher?: string; imprint?: string; ownership?: string }>();
         for (const s of series) {
           const parent = s.parentSeries ? seriesById.get(s.parentSeries) : null;
-          const { publisher, imprint } = resolveSeriesPublisher(s, parent, publisherIndex);
+          const { publisher, imprint, publisherEntry, imprintEntry } = resolveSeriesPublisher(s, parent, publisherIndex);
+          // Read off the house it came out under, so an imprint with an owner
+          // of its own (Skybound at Image) files under that owner's type.
+          const house = imprintEntry ?? publisherEntry;
+          const ownership = house ? ownershipType(house, publisherIndex, ownershipIndex) : null;
           if (publisher || imprint) {
             publisherMap.set(s.id, {
               ...(publisher && { publisher }),
               ...(imprint && { imprint }),
+              ...(ownership && { ownership }),
             });
           }
         }
@@ -869,6 +879,14 @@ export default function App() {
       setOpenPanelId(panel.id);
     },
     [sortedPanels]
+  );
+
+  // A house named in a card's ownership chain opens on its page, over the
+  // card it was reached from. `info` as well: the viewer only takes up a
+  // publisher request once its drawer is out, as a series row's link does.
+  const handleOpenPanelPublisher = useCallback(
+    (panel: Panel, name: string) => handleSelectPanel(panel, undefined, { info: true, publisher: name }),
+    [handleSelectPanel]
   );
 
   // Jump from a creator's profile to the gallery filtered to their work in a
@@ -1059,6 +1077,7 @@ export default function App() {
                   onLayoutReady={handleLayoutReady}
                   onPanelPositions={setPanelPositions}
                   onOpenPanel={handleOpenPanel}
+                  onOpenPublisher={handleOpenPanelPublisher}
                   onLaunchViz={handleOpenViz}
                   isFirstLoad={isFirstLoad}
                   view={view}

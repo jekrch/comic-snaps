@@ -13,6 +13,13 @@ import FooterPyramid from "./FooterPryamid";
 import type { GalleryView } from "./ViewControl";
 import { resolveNeighbors } from "../adjacency";
 import type { NeighborMap } from "../adjacency";
+import { useViewOptions } from "../hooks/useViewOptions";
+import { useOwnershipIndex, usePublisherIndex } from "../hooks/useMetadata";
+import { findPublisher } from "../utils/publishers";
+import { ownerBadge } from "../utils/owners";
+import type { OwnerBadge } from "../utils/owners";
+import ViewOptionsModal from "./ViewOptionsModal";
+import OwnerChainModal from "./OwnerChainModal";
 
 const GAP = 4;
 
@@ -288,6 +295,8 @@ interface MasonryGridProps {
   isFirstLoad?: boolean;
   view?: GalleryView;
   onViewChange?: (view: GalleryView) => void;
+  /** Open a house's page in the viewer, over the given panel. */
+  onOpenPublisher?: (panel: Panel, name: string) => void;
 }
 
 export default function MasonryGrid({
@@ -304,6 +313,7 @@ export default function MasonryGrid({
   onLaunchViz,
   view,
   onViewChange,
+  onOpenPublisher,
 }: MasonryGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -315,6 +325,35 @@ export default function MasonryGrid({
   // The card currently revealing its details overlay. Tapping a card selects it;
   // tapping the selected card opens the viewer; tapping empty space clears it.
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const [viewOptions, setViewOptions] = useViewOptions();
+  const [viewOptionsOpen, setViewOptionsOpen] = useState(false);
+  const [ownerOpen, setOwnerOpen] = useState<{ panel: Panel; badge: OwnerBadge } | null>(null);
+
+  // Each panel's owner badge, resolved once per house and year and kept, so a
+  // card gets the same object on every render and its memo holds.
+  const publisherIndex = usePublisherIndex();
+  const ownershipIndex = useOwnershipIndex();
+  const badgeFor = useMemo(() => {
+    const cache = new Map<string, OwnerBadge | null>();
+    return (panel: Panel): OwnerBadge | null => {
+      const house =
+        findPublisher(publisherIndex, panel.imprint) ?? findPublisher(publisherIndex, panel.publisher);
+      if (!house) return null;
+      const key = `${house.id}|${panel.year}`;
+      let badge = cache.get(key);
+      if (badge === undefined) {
+        badge = ownerBadge(house, panel.year, publisherIndex, ownershipIndex);
+        cache.set(key, badge);
+      }
+      return badge;
+    };
+  }, [publisherIndex, ownershipIndex]);
+
+  const handleOpenOwner = useCallback(
+    (panel: Panel, badge: OwnerBadge) => setOwnerOpen({ panel, badge }),
+    []
+  );
 
   const stampCacheRef = useRef<Map<string, { stamp: StampDef; fillerIndex: number }>>(new Map());
 
@@ -571,7 +610,13 @@ export default function MasonryGrid({
               width: colWidth > 0 ? `${colWidth}px` : undefined,
             }}
           >
-            <SortControl activeSort={sortMode} onSort={onSort} onInfoOpen={onInfoOpen} />
+            <SortControl
+              activeSort={sortMode}
+              onSort={onSort}
+              onInfoOpen={onInfoOpen}
+              onViewOptions={() => setViewOptionsOpen(true)}
+              viewOptionsOn={viewOptions.details || viewOptions.owner || viewOptions.age}
+            />
           </div>
         )}
 
@@ -617,6 +662,10 @@ export default function MasonryGrid({
                 selected={selectedId === item.panel.id}
                 onSelect={handleSelect}
                 onOpen={onOpenPanel}
+                owner={viewOptions.owner ? badgeFor(item.panel) : null}
+                onOpenOwner={handleOpenOwner}
+                showAge={viewOptions.age}
+                showDetails={viewOptions.details}
                 //isFirstLoad={isFirstLoad}
               />
             </div>
@@ -626,6 +675,24 @@ export default function MasonryGrid({
       <div className="swap-tail">
         <FooterPyramid />
       </div>
+
+      {viewOptionsOpen && (
+        <ViewOptionsModal
+          options={viewOptions}
+          onChange={setViewOptions}
+          panels={allPanels}
+          onClose={() => setViewOptionsOpen(false)}
+        />
+      )}
+
+      {ownerOpen && (
+        <OwnerChainModal
+          panel={ownerOpen.panel}
+          badge={ownerOpen.badge}
+          onClose={() => setOwnerOpen(null)}
+          onOpenPublisher={(panel, name) => (onOpenPublisher ? onOpenPublisher(panel, name) : onOpenPanel(panel))}
+        />
+      )}
     </>
   );
 }

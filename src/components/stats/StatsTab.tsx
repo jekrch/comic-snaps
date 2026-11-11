@@ -39,7 +39,7 @@ const ISSUE_CREDIT_ROLES = ["Writer", "Colorist", "Letterer"];
 /** Gallery filter selections a clicked bar can apply — keys match Filters. */
 export type StatsFilterPatch = Partial<
   Record<
-    "decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series" | "publishers" | "ages",
+    "decades" | "tags" | "artists" | "colorists" | "letterers" | "credits" | "series" | "publishers" | "ownership" | "ages",
     string[]
   >
 >;
@@ -1229,6 +1229,9 @@ function HueWheel({
 
 // Tab
 
+// Publishing history section is hidden for now; flip to true to bring it back.
+const SHOW_PUBLISHING_HISTORY = false;
+
 export default function StatsTab({
   panels,
   onFilter,
@@ -1252,7 +1255,7 @@ export default function StatsTab({
       .then(({ artists, issues, publishers }) => {
         if (cancelled) return;
         setMeta(computeMetaStats(panels, artists, issues));
-        setHistory(wallTimeline(panels, publishers));
+        if (SHOW_PUBLISHING_HISTORY) setHistory(wallTimeline(panels, publishers));
       })
       // metadata is optional — panel-derived stats still render
       .catch(() => {});
@@ -1417,7 +1420,7 @@ export default function StatsTab({
           </section>
         )}
 
-        {history.length > 0 && (
+        {SHOW_PUBLISHING_HISTORY && history.length > 0 && (
           <section>
             <SectionTitle
               title="PUBLISHING HISTORY"

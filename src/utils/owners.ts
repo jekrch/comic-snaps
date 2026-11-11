@@ -1,6 +1,6 @@
 import type { Owner, OwnershipLink, Publisher } from "../types";
 import type { PublisherIndex } from "./publishers";
-import { yearSpan } from "./publishers";
+import { publisherLogoFor, yearSpan } from "./publishers";
 
 /** owners.json, indexed: each company by id, and who holds each registry house. */
 export interface OwnershipIndex {
@@ -102,6 +102,132 @@ export function ownershipChain(
       .filter((p) => !(p.kind === "imprint" && p.parent && ids.has(p.parent)))
       .sort((a, b) => a.name.localeCompare(b.name));
     return { ...rung, siblings };
+  });
+}
+
+/**
+ * The people behind an independent house, which carry a `status`
+ * ("Independent", "Self-published") or a `people` list. A family controlling
+ * a corporate chain (the Ellisons over Skydance, the Jonases over IDW) is not
+ * one of these: it is the chain's owner, and the badge names it.
+ */
+export function isIndependentOwner(o: Owner): boolean {
+  return !!o.status || !!o.people?.length;
+}
+
+/** The ownership type of a house with a company anywhere above it. */
+export const CORPORATE_OWNERSHIP = "Corporate-owned";
+
+/**
+ * What kind of ownership a house is under, for the filter: the people-owner's
+ * `status` ("Independent", "Partner-owned", "Self-published"…) when people
+ * own it outright, "Corporate-owned" when a company sits anywhere above it
+ * (a family controlling the company included), or null when owners.json
+ * says nothing about it.
+ */
+export function ownershipType(
+  house: Publisher,
+  publishers: PublisherIndex,
+  ownership: OwnershipIndex,
+): string | null {
+  const rungs = ladder(house, publishers, ownership);
+  const top = rungs[0].owner;
+  if (!top) return null;
+  if (top.status) return top.status;
+  return rungs.some((r) => r.owner && !isIndependentOwner(r.owner)) ? CORPORATE_OWNERSHIP : null;
+}
+
+/** What the wall's owner badge says for one panel. */
+export interface OwnerBadge {
+  /** The house the panel came out under: its imprint, or its publisher. */
+  house: Publisher;
+  /**
+   * The top of the chain, a family that controls it included. For an
+   * independent it is the house (or the publisher an imprint belongs to)
+   * itself, with the people who own it given as `status`.
+   */
+  name: string;
+  /** Its mark, if there is one: an owner's `logo` or, for a person, their
+   *  `portrait`; or a house's logo for the year. */
+  logo: OwnerMark | null;
+  /** Set when people own it outright: the top owner's "Independent", "Self-published". */
+  status: string | null;
+}
+
+/**
+ * Who owns a panel's house, for the badge on its card: the top of its
+ * ownership chain, with that company's mark. `year` picks the house's logo
+ * when the house is the top company, so the mark matches the book's era.
+ */
+export function ownerBadge(
+  house: Publisher,
+  year: number | null | undefined,
+  publishers: PublisherIndex,
+  ownership: OwnershipIndex,
+): OwnerBadge {
+  const rungs = ladder(house, publishers, ownership);
+  // The ladder always ends at the house, so a company is always found.
+  const top = rungs.find((r) => r.publisher || (r.owner && !isIndependentOwner(r.owner))) ?? rungs[rungs.length - 1];
+  const status = rungs[0].owner?.status ?? null;
+
+  if (top.owner) return { house, name: top.owner.name, logo: ownerMark(top.owner), status: null };
+  const p = top.publisher ?? house;
+  return { house, name: p.name, logo: houseMark(p, year), status };
+}
+
+/** An image standing for a rung of the chain: a company's logo, or a person's photo. */
+export interface OwnerMark {
+  url: string;
+  /** A light mark, which needs a dark ground. */
+  onDark: boolean;
+  /** A photo of a person rather than a logo. */
+  portrait?: boolean;
+  /** Whose it is, when that isn't the rung's own name: one of several people. */
+  name?: string;
+  /** Where the image came from, for attribution. */
+  source?: string | null;
+}
+
+/** A company's logo, or the portrait of an owner that is a person. */
+export function ownerMark(o: Owner): OwnerMark | null {
+  if (o.logo) return { url: o.logo.url, onDark: !!o.logo.onDark, source: o.logo.source };
+  if (o.portrait) return { url: o.portrait.url, onDark: false, portrait: true, source: o.portrait.source };
+  return null;
+}
+
+/** A house's logo for the year, or its current one. */
+export function houseMark(p: Publisher, year?: number | null): OwnerMark | null {
+  const logo = publisherLogoFor(p, year);
+  const url = logo?.url ?? p.imageUrl;
+  return url ? { url, onDark: false, source: logo?.source } : null;
+}
+
+/** A rendered SVG: a bare mark on a clear ground, which needs a margin
+ *  around it that a photo, or a card with its own ground, doesn't. */
+export const isBareMark = (url: string) => /\.svg\b/i.test(url);
+
+/**
+ * The images for one rung of the ladder: the company's logo or the owner's
+ * portrait, a house's logo, or for the people behind an independent, each
+ * one's photo that can be found — their own in owners.json, else the one on
+ * their artist record. Empty when there is nothing to show.
+ */
+export function stepMarks(
+  step: Pick<OwnershipStep, "owner" | "publisher">,
+  portraitOf: (artistId: string) => string | null | undefined,
+  year?: number | null,
+): OwnerMark[] {
+  const { owner, publisher } = step;
+  if (publisher) {
+    const mark = houseMark(publisher, year);
+    return mark ? [mark] : [];
+  }
+  if (!owner) return [];
+  const own = ownerMark(owner);
+  if (own) return [own];
+  return (owner.people ?? []).flatMap((p) => {
+    const url = p.portrait?.url ?? (p.artistId ? portraitOf(p.artistId) : null);
+    return url ? [{ url, onDark: false, portrait: true, name: p.name, source: p.portrait?.source }] : [];
   });
 }
 

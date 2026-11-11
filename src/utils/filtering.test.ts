@@ -27,6 +27,7 @@ function filters(over: FilterSpec = {}): Filters {
     postedBy: new Set(over.postedBy ?? []),
     series: new Set(over.series ?? []),
     publishers: new Set(over.publishers ?? []),
+    ownership: new Set(over.ownership ?? []),
     ages: new Set(over.ages ?? []),
     searchQuery: over.searchQuery ?? "",
   };
@@ -275,6 +276,26 @@ describe("artist age filter", () => {
   it("counts brackets against every other filter but its own", () => {
     const { ageCounts } = computeFacets(all, filters({ ages: ["20-24"] }));
     expect(Object.fromEntries(ageCounts)).toEqual({ "20-24": 1, "30-34": 1 });
+  });
+});
+
+describe("ownership", () => {
+  const batman = makePanel({ id: "b", title: "Batman", publisher: "DC Comics", ownership: "Corporate-owned" });
+  const saga = makePanel({ id: "g", title: "Saga", publisher: "Image Comics", ownership: "Partner-owned" });
+  const love = makePanel({ id: "l", title: "Love and Rockets", publisher: "Fantagraphics", ownership: "Independent" });
+  const unknown = makePanel({ id: "u", title: "Mystery" });
+  const all = [batman, saga, love, unknown];
+
+  it("keeps the panels under any selected type, and drops those with none", () => {
+    const ids = (o: string[]) => applyFilters(all, filters({ ownership: o })).map((p) => p.id);
+    expect(ids(["Independent"])).toEqual(["l"]);
+    expect(ids(["Independent", "Partner-owned"])).toEqual(["g", "l"]);
+  });
+
+  it("counts each type against the other filters, not its own", () => {
+    const { ownershipCounts } = computeFacets(all, filters({ ownership: ["Independent"], publishers: ["Image Comics", "Fantagraphics"] }));
+    expect(Object.fromEntries(ownershipCounts)).toEqual({ "Partner-owned": 1, Independent: 1 });
+    expect(activeFilterCount(filters({ ownership: ["Independent"] }))).toBe(1);
   });
 });
 

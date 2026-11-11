@@ -15,8 +15,9 @@ interface Props<T extends string> {
   onSelect: (value: T) => void;
   /** Trailing glyph for an option — the embedding sorts mark themselves. */
   renderBadge?: (value: T) => ReactNode;
-  /** Anything below the list, under its own rule. */
-  footer?: ReactNode;
+  /** Anything below the list, under its own rule. A function is handed a
+   *  way to fold the menu, for an action that should close it like a pick. */
+  footer?: ReactNode | ((close: () => void) => ReactNode);
 }
 
 /**
@@ -108,7 +109,7 @@ export default function SortMenu<T extends string>({
                     background: "var(--color-border, rgba(74,71,69,0.25))",
                   }}
                 />
-                {footer}
+                {typeof footer === "function" ? footer(() => setOpen(false)) : footer}
               </>
             )}
           </div>

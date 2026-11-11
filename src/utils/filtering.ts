@@ -13,6 +13,8 @@ export interface Filters {
   /** Publisher or imprint names. A parent matches its imprints' panels too,
    *  since a panel carries both (see `Panel.publisher`). */
   publishers: Set<string>;
+  /** Ownership types like "Independent" or "Corporate-owned" (see `ownershipType`). */
+  ownership: Set<string>;
   /** Artist's age at publication, as brackets like "30-34" (see `ageBinOf`). */
   ages: Set<string>;
   /** Free text, matched across every field a panel carries (see `panelHaystack`). */
@@ -32,6 +34,7 @@ export const FILTER_SET_KEYS: FilterSetKey[] = [
   "postedBy",
   "series",
   "publishers",
+  "ownership",
   "ages",
 ];
 
@@ -48,6 +51,7 @@ export const EMPTY_FILTERS: Filters = {
   postedBy: new Set(),
   series: new Set(),
   publishers: new Set(),
+  ownership: new Set(),
   ages: new Set(),
   searchQuery: "",
 };
@@ -67,6 +71,7 @@ export function activeFilterCount(filters: Filters): number {
     filters.postedBy.size +
     filters.series.size +
     filters.publishers.size +
+    filters.ownership.size +
     filters.ages.size +
     (filters.searchQuery.trim() ? 1 : 0)
   );
@@ -81,6 +86,9 @@ const matchesPublisher = (panel: Panel, publishers: Set<string>) =>
   publishers.size === 0 ||
   (!!panel.publisher && publishers.has(panel.publisher)) ||
   (!!panel.imprint && publishers.has(panel.imprint));
+
+const matchesOwnership = (panel: Panel, ownership: Set<string>) =>
+  ownership.size === 0 || (!!panel.ownership && ownership.has(panel.ownership));
 
 const matchesAge = (panel: Panel, ages: Set<string>) => {
   if (ages.size === 0) return true;
@@ -137,6 +145,7 @@ export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
     if (filters.postedBy.size > 0 && !filters.postedBy.has(p.postedBy)) return false;
     if (filters.series.size > 0 && !filters.series.has(p.title)) return false;
     if (!matchesPublisher(p, filters.publishers)) return false;
+    if (!matchesOwnership(p, filters.ownership)) return false;
     if (!matchesAge(p, filters.ages)) return false;
     if (filters.tags.size > 0) {
       const panelTags = p.tags ?? [];
@@ -158,6 +167,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
   const postedByCounts = new Map<string, number>();
   const seriesCounts = new Map<string, number>();
   const publisherCounts = new Map<string, number>();
+  const ownershipCounts = new Map<string, number>();
   const ageCounts = new Map<string, number>();
 
   for (const p of panels) {
@@ -173,6 +183,7 @@ export function computeFacets(panels: Panel[], filters: Filters) {
       postedBy: filters.postedBy.size === 0 || filters.postedBy.has(p.postedBy),
       series: filters.series.size === 0 || filters.series.has(p.title),
       publishers: matchesPublisher(p, filters.publishers),
+      ownership: matchesOwnership(p, filters.ownership),
       ages: matchesAge(p, filters.ages),
       // Not a facet of its own, so nothing skips it: the query narrows every
       // count, the same as it narrows the grid.
@@ -220,11 +231,14 @@ export function computeFacets(panels: Panel[], filters: Filters) {
         if (name) publisherCounts.set(name, (publisherCounts.get(name) ?? 0) + 1);
       }
     }
+    if (passAllExcept("ownership") && p.ownership) {
+      ownershipCounts.set(p.ownership, (ownershipCounts.get(p.ownership) ?? 0) + 1);
+    }
     if (passAllExcept("ages")) {
       const bin = getAgeBin(p);
       if (bin) ageCounts.set(bin, (ageCounts.get(bin) ?? 0) + 1);
     }
   }
 
-  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, publisherCounts, ageCounts };
+  return { decadeCounts, tagCounts, artistCounts, coloristCounts, lettererCounts, creditCounts, postedByCounts, seriesCounts, publisherCounts, ownershipCounts, ageCounts };
 }

@@ -9,6 +9,7 @@ import { DEFAULT_SERIES_SORT, isSeriesSortMode } from "../utils/seriesSorting";
 import type { ArtistSortMode } from "../utils/artistSorting";
 import { DEFAULT_ARTIST_SORT, isArtistSortMode } from "../utils/artistSorting";
 import { VIZ_MAX_SPEED, VIZ_MIN_SPEED } from "../components/viz/vizConfig";
+import { VIEW_OPTIONS_PARAM } from "./useViewOptions";
 
 const FILTER_KEYS: FilterSetKey[] = FILTER_SET_KEYS;
 const DEFAULT_SORT: SortMode = "newest";
@@ -39,6 +40,7 @@ function parseFiltersFromURL(): {
     postedBy: new Set(params.get("postedBy")?.split(",").filter(Boolean) ?? []),
     series: new Set(params.get("series")?.split(",").filter(Boolean) ?? []),
     publishers: new Set(params.get("publishers")?.split(",").filter(Boolean) ?? []),
+    ownership: new Set(params.get("ownership")?.split(",").filter(Boolean) ?? []),
     ages: new Set(params.get("ages")?.split(",").filter(Boolean) ?? []),
     searchQuery: params.get("q") ?? "",
   };
@@ -89,6 +91,10 @@ function parseFiltersFromURL(): {
  *  filter change would silently drop a run someone was replaying. */
 const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizcfg", "vizseed", "vizdebug"] as const;
 
+/** Everything owned by someone else and carried through untouched: the
+ *  visualizer's params, and the wall's view options (`useViewOptions`). */
+const CARRIED_KEYS = [...VIZ_KEYS, VIEW_OPTIONS_PARAM] as const;
+
 function buildParams(
   filters: Filters,
   sort: SortMode,
@@ -131,8 +137,9 @@ function buildParams(
   }
 
   // A visualizer run composes with the active filters, so both sets of params
-  // have to survive each other's updates for the URL to stay linkable.
-  for (const key of VIZ_KEYS) {
+  // have to survive each other's updates for the URL to stay linkable. The
+  // view options ride along the same way.
+  for (const key of CARRIED_KEYS) {
     const value = carried.get(key);
     if (value) params.set(key, value);
   }

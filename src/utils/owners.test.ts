@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { Owner, Publisher } from "../types";
 import { buildPublisherIndex } from "./publishers";
-import { buildOwnershipIndex, describeLink, ownershipChain } from "./owners";
+import {
+  CORPORATE_OWNERSHIP,
+  buildOwnershipIndex,
+  describeLink,
+  ownerBadge,
+  ownershipChain,
+  ownershipType,
+  stepMarks,
+} from "./owners";
 
 function pub(over: Partial<Publisher> & { id: string; name: string }): Publisher {
   return {
@@ -117,5 +125,156 @@ describe("describeLink", () => {
     expect(describeLink({ stake: "controlling" })).toBe("controlling stake");
     expect(describeLink({})).toBe("");
     expect(describeLink(null)).toBe("");
+  });
+});
+
+describe("ownerBadge", () => {
+  const family: Owner[] = [
+    { id: "family", name: "Family", kind: "controlling shareholders", parent: null },
+    {
+      id: "conglomerate",
+      name: "Conglomerate",
+      kind: "media conglomerate",
+      parent: "family",
+      logo: { url: "https://example.com/c.png" },
+    },
+    { id: "products", name: "Products", kind: "division", parent: "conglomerate", publishers: [{ id: "dc" }] },
+    { id: "groth", name: "Founder", kind: "co-founder", parent: null, status: "Independent", publishers: [{ id: "boom" }] },
+    {
+      id: "light",
+      name: "Light Mark",
+      kind: "media company",
+      parent: null,
+      logo: { url: "data/owner-logos/x.png", onDark: true },
+      publishers: [{ id: "pantheon" }],
+    },
+  ];
+  const dcLogos = pub({
+    id: "dc",
+    name: "DC Comics",
+    imageUrl: "https://example.com/dc-now.png",
+    logos: [{ url: "https://example.com/dc-1977.png", from: 1977, until: 2005 }],
+  });
+  const index = buildPublisherIndex([dcLogos, vertigo, boom, pantheon, image]);
+  const held = buildOwnershipIndex(family);
+  const badge = (p: Publisher, year?: number) => ownerBadge(p, year, index, held);
+
+  it("names the family at the top of the chain, with no mark of its own", () => {
+    expect(badge(dcLogos)).toMatchObject({ name: "Family", logo: null, status: null });
+  });
+
+  it("shows a person's portrait where a company would have its logo", () => {
+    const person = buildOwnershipIndex(
+      family.map((o) => (o.id === "family" ? { ...o, portrait: { url: "https://example.com/p.png" } } : o))
+    );
+    expect(ownerBadge(dcLogos, 2020, index, person).logo).toEqual({
+      url: "https://example.com/p.png",
+      onDark: false,
+      portrait: true,
+    });
+  });
+
+  it("names the top company when no family sits over it", () => {
+    const corp = buildOwnershipIndex(family.filter((o) => o.id !== "family").map((o) => (o.id === "conglomerate" ? { ...o, parent: null } : o)));
+    expect(ownerBadge(dcLogos, 2020, index, corp)).toMatchObject({
+      name: "Conglomerate",
+      logo: { url: "https://example.com/c.png", onDark: false },
+    });
+  });
+
+  it("follows an imprint up to its publisher's owners, keeping the imprint as the house", () => {
+    const b = badge(vertigo);
+    expect(b.name).toBe("Family");
+    expect(b.house.id).toBe("vertigo");
+  });
+
+  it("carries a light mark's need for a dark tile", () => {
+    expect(badge(pantheon).logo).toEqual({ url: "data/owner-logos/x.png", onDark: true });
+  });
+
+  it("names the house itself when people own it, with their status and its own mark", () => {
+    expect(badge(boom)).toMatchObject({ name: "Boom! Studios", status: "Independent", logo: null });
+  });
+
+  it("uses the house's logo for the year when the house is the top company", () => {
+    const solo = buildOwnershipIndex([
+      { id: "people", name: "People", kind: "founders", parent: null, status: "Independent", publishers: [{ id: "dc" }] },
+    ]);
+    expect(ownerBadge(dcLogos, 1990, index, solo).logo?.url).toBe("https://example.com/dc-1977.png");
+    expect(ownerBadge(dcLogos, 2020, index, solo).logo?.url).toBe("https://example.com/dc-now.png");
+  });
+
+  it("falls back to the house when nothing owns it", () => {
+    expect(badge(image)).toMatchObject({ name: "Image Comics", status: null, logo: null });
+  });
+});
+
+describe("stepMarks", () => {
+  const owner = (over: Partial<Owner>): Owner => ({ id: "o", name: "O", kind: "", parent: null, ...over });
+  const portraits: Record<string, string> = { kirkman: "https://example.com/kirkman.jpg" };
+  const portraitOf = (id: string) => portraits[id];
+  const marks = (step: { owner?: Owner; publisher?: Publisher }, year?: number) =>
+    stepMarks({ owner: step.owner ?? null, publisher: step.publisher ?? null }, portraitOf, year);
+
+  it("shows a company's logo", () => {
+    expect(marks({ owner: owner({ logo: { url: "l.png", onDark: true } }) })).toEqual([{ url: "l.png", onDark: true }]);
+  });
+
+  it("shows a person's portrait", () => {
+    expect(marks({ owner: owner({ portrait: { url: "p.jpg" } }) })).toEqual([{ url: "p.jpg", onDark: false, portrait: true }]);
+  });
+
+  it("shows each of the people's faces, their own photo first, else their artist record's", () => {
+    const people = owner({
+      status: "Partner-owned",
+      people: [
+        { name: "McFarlane", portrait: { url: "mcf.jpg" } },
+        { name: "Kirkman", artistId: "kirkman" },
+        { name: "Nobody", artistId: "unknown" },
+        { name: "Unlinked" },
+      ],
+    });
+    expect(marks({ owner: people }).map((m) => m.url)).toEqual(["mcf.jpg", "https://example.com/kirkman.jpg"]);
+  });
+
+  it("shows a house's logo for the year", () => {
+    const house = pub({
+      id: "dc",
+      name: "DC Comics",
+      imageUrl: "now.png",
+      logos: [{ url: "1977.png", from: 1977, until: 2005 }],
+    });
+    expect(marks({ publisher: house }, 1990)).toEqual([{ url: "1977.png", onDark: false }]);
+    expect(marks({ publisher: house })).toEqual([{ url: "now.png", onDark: false }]);
+  });
+
+  it("is empty when there is nothing to show", () => {
+    expect(marks({ owner: owner({}) })).toEqual([]);
+    expect(marks({ publisher: pub({ id: "x", name: "X" }) })).toEqual([]);
+  });
+});
+
+describe("ownershipType", () => {
+  const people: Owner[] = [
+    { id: "family", name: "Family", kind: "controlling shareholders", parent: null },
+    { id: "products", name: "Products", kind: "division", parent: "family", publishers: [{ id: "dc" }] },
+    { id: "partners", name: "Partners", kind: "its partners", parent: null, status: "Partner-owned", publishers: [{ id: "image" }] },
+    { id: "backers", name: "Backers", kind: "investors", parent: null, status: "Investor-backed", publishers: [{ id: "skybound" }] },
+  ];
+  const held = buildOwnershipIndex(people);
+  const type = (p: Publisher) => ownershipType(p, publishers, held);
+
+  it("files a house under a company, a family over it included, as corporate", () => {
+    expect(type(dc)).toBe(CORPORATE_OWNERSHIP);
+    expect(type(vertigo)).toBe(CORPORATE_OWNERSHIP);
+  });
+
+  it("takes the people-owner's status, and an imprint's own owner over its house's", () => {
+    expect(type(image)).toBe("Partner-owned");
+    expect(type(skybound)).toBe("Investor-backed");
+  });
+
+  it("is null for a house with no owner on record", () => {
+    expect(type(boom)).toBeNull();
   });
 });

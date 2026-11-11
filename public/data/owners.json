@@ -2,11 +2,15 @@
   "owners": [
     {
       "id": "ellison-family",
-      "name": "Ellison family",
-      "kind": "controlling shareholders",
+      "name": "Larry Ellison",
+      "kind": "controlling shareholder",
       "parent": null,
-      "note": "Larry Ellison co-founded Oracle; his son David is Skydance's co-chief executive.",
+      "note": "Co-founded Oracle; his son David is Skydance's co-chief executive.",
       "url": "https://en.wikipedia.org/wiki/Larry_Ellison",
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Larry_Ellison_2016.png/330px-Larry_Ellison_2016.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Larry_Ellison_2016.png"
+      },
       "holdings": [
         {
           "name": "Oracle",
@@ -70,7 +74,11 @@
         {
           "name": "TNT Sports"
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Skydance_Corporation_Dark_Logo_2026.svg/500px-Skydance_Corporation_Dark_Logo_2026.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Skydance_Corporation_Dark_Logo_2026.svg"
+      }
     },
     {
       "id": "skydance-products-publishing",
@@ -157,7 +165,11 @@
         {
           "name": "Disney Cruise Line"
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Walt_Disney_company_logo.svg/500px-The_Walt_Disney_company_logo.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:The_Walt_Disney_company_logo.svg"
+      }
     },
     {
       "id": "disney-publishing-worldwide",
@@ -203,7 +215,11 @@
             }
           ]
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d5/Disney_Publishing_Worldwide_1999.svg/500px-Disney_Publishing_Worldwide_1999.svg.png",
+        "source": "https://en.wikipedia.org/wiki/File:Disney_Publishing_Worldwide_1999.svg"
+      }
     },
     {
       "id": "bertelsmann",
@@ -229,7 +245,11 @@
           "name": "Arvato",
           "what": "logistics and outsourcing"
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Bertelsmann_2011_logo.svg/500px-Bertelsmann_2011_logo.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Bertelsmann_2011_logo.svg"
+      }
     },
     {
       "id": "penguin-random-house",
@@ -274,7 +294,11 @@
             }
           ]
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fe/Penguin_Random_House_logo_2024.svg/500px-Penguin_Random_House_logo_2024.svg.png",
+        "source": "https://en.wikipedia.org/wiki/File:Penguin_Random_House_logo_2024.svg"
+      }
     },
     {
       "id": "knopf-doubleday",
@@ -342,7 +366,11 @@
           "name": "Plaion",
           "what": "games publishing and distribution"
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Embracer_Group_logo.svg/500px-Embracer_Group_logo.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Embracer_Group_logo.svg"
+      }
     },
     {
       "id": "fellowship-entertainment",
@@ -420,7 +448,11 @@
           "name": "Mitchell & Ness",
           "what": "throwback jerseys"
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Fanatics_inc_blacklogo.svg/500px-Fanatics_inc_blacklogo.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Fanatics_inc_blacklogo.svg"
+      }
     },
     {
       "id": "topps",
@@ -451,7 +483,11 @@
           "since": 1992,
           "until": 1998
         }
-      ]
+      ],
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Topps_Logo.svg/500px-Topps_Logo.svg.png",
+        "source": "https://commons.wikimedia.org/wiki/File:Topps_Logo.svg"
+      }
     },
     {
       "id": "polarity",
@@ -476,7 +512,12 @@
           "stake": "majority",
           "since": 2019
         }
-      ]
+      ],
+      "logo": {
+        "url": "data/owner-logos/polarity.png",
+        "source": "https://polarityltd.com/",
+        "onDark": true
+      }
     },
     {
       "id": "aethon-books",
@@ -497,7 +538,12 @@
           "stake": "majority",
           "since": 2025
         }
-      ]
+      ],
+      "logo": {
+        "url": "data/owner-logos/aethon-books.png",
+        "source": "https://aethonbooks.com/",
+        "onDark": true
+      }
     },
     {
       "id": "jonas-family",
@@ -551,7 +597,12 @@
             }
           ]
         }
-      ]
+      ],
+      "logo": {
+        "url": "data/owner-logos/idw-media-holdings.png",
+        "source": "https://idwmediaholdings.com/",
+        "onDark": true
+      }
     },
     {
       "id": "fantagraphics-owners",
@@ -587,6 +638,28 @@
       "kind": "its publisher and senior staff",
       "parent": null,
       "status": "Staff-owned",
+      "people": [
+        {
+          "name": "Peggy Burns",
+          "artistId": null,
+          "portrait": {
+            "url": "data/owner-logos/peggy-burns.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Peggy_Burns%2C_Julie_Rocheleau%2C_FBDFQ_2015-04-10.jpg"
+          }
+        },
+        {
+          "name": "Tom Devlin",
+          "artistId": null
+        },
+        {
+          "name": "Tracy Hurren",
+          "artistId": null
+        },
+        {
+          "name": "Julia Pohl-Miranda",
+          "artistId": null
+        }
+      ],
       "publishers": [
         {
           "id": "drawn-and-quarterly",
@@ -611,19 +684,35 @@
       "people": [
         {
           "name": "Todd McFarlane",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Todd_McFarlane_%28cropped%29.jpg/330px-Todd_McFarlane_%28cropped%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Todd_McFarlane_%28cropped%29.jpg"
+          }
         },
         {
           "name": "Erik Larsen",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/10.14.11ErikLarsenByLuigiNovi.jpg/330px-10.14.11ErikLarsenByLuigiNovi.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:10.14.11ErikLarsenByLuigiNovi.jpg"
+          }
         },
         {
           "name": "Marc Silvestri",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Marc_Silvestri%2C_Amazing_Arizona_Comic_Con%2C_2014-2_%28cropped%29.jpg/330px-Marc_Silvestri%2C_Amazing_Arizona_Comic_Con%2C_2014-2_%28cropped%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Marc_Silvestri%2C_Amazing_Arizona_Comic_Con%2C_2014-2_%28cropped%29.jpg"
+          }
         },
         {
           "name": "Jim Valentino",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/10.9.10JimValentinoByLuigiNovi1.jpg/330px-10.9.10JimValentinoByLuigiNovi1.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:10.9.10JimValentinoByLuigiNovi1.jpg"
+          }
         },
         {
           "name": "Robert Kirkman",
@@ -651,7 +740,11 @@
         },
         {
           "name": "David Alpert",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/David_Alpert_by_Gage_Skidmore.jpg/330px-David_Alpert_by_Gage_Skidmore.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:David_Alpert_by_Gage_Skidmore.jpg"
+          }
         }
       ],
       "note": "It publishes through Image, where Kirkman is a partner.",
@@ -703,7 +796,11 @@
         },
         {
           "name": "Brad Meltzer",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/1.6.26BradMeltzerByLuigiNovi1.jpg/330px-1.6.26BradMeltzerByLuigiNovi1.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:1.6.26BradMeltzerByLuigiNovi1.jpg"
+          }
         },
         {
           "name": "Gary Frank",
@@ -715,19 +812,35 @@
         },
         {
           "name": "Jason Fabok",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Jason_Fabok_on_The_Riley_and_Kimmy_Show.jpg/330px-Jason_Fabok_on_The_Riley_and_Kimmy_Show.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Jason_Fabok_on_The_Riley_and_Kimmy_Show.jpg"
+          }
         },
         {
           "name": "Francis Manapul",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/10.10.10FrancisManapulByLuigiNovi1.jpg/330px-10.10.10FrancisManapulByLuigiNovi1.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:10.10.10FrancisManapulByLuigiNovi1.jpg"
+          }
         },
         {
           "name": "Peter J. Tomasi",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Peter_Tomasi_GalaxyCon_Oklahoma_City_052026-2.jpg/330px-Peter_Tomasi_GalaxyCon_Oklahoma_City_052026-2.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Peter_Tomasi_GalaxyCon_Oklahoma_City_052026-2.jpg"
+          }
         },
         {
           "name": "Lamont Magee",
-          "artistId": null
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Lamont_Magee_by_Gage_Skidmore.jpg/330px-Lamont_Magee_by_Gage_Skidmore.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Lamont_Magee_by_Gage_Skidmore.jpg"
+          }
         },
         {
           "name": "Maytal Zchut",
@@ -735,11 +848,11 @@
         },
         {
           "name": "Brad Anderson",
-          "artistId": null
+          "artistId": "brad-anderson"
         },
         {
           "name": "Rob Leigh",
-          "artistId": null
+          "artistId": "rob-leigh"
         }
       ],
       "note": "The creators share in the film, TV and game rights to what they make. The books come out through Image.",
@@ -872,6 +985,29 @@
       "kind": "founders",
       "parent": null,
       "status": "Independent",
+      "people": [
+        {
+          "name": "Matt Pizzolo",
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Matt_Pizzolo_at_LAcon_V_%28Worldcon_2026%29.jpg/330px-Matt_Pizzolo_at_LAcon_V_%28Worldcon_2026%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Matt_Pizzolo_at_LAcon_V_%28Worldcon_2026%29.jpg"
+          }
+        },
+        {
+          "name": "Brett Gurewitz",
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Brett_Gurewitz_of_Bad_Religion.jpg/330px-Brett_Gurewitz_of_Bad_Religion.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Brett_Gurewitz_of_Bad_Religion.jpg"
+          }
+        },
+        {
+          "name": "Steve Niles",
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Niles%2C_Steve_%282007%29.jpg/330px-Niles%2C_Steve_%282007%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Niles%2C_Steve_%282007%29.jpg"
+          }
+        }
+      ],
       "note": "Gurewitz, the Bad Religion guitarist who founded Epitaph Records, put up the money; Pizzolo runs it day to day.",
       "publishers": [
         {
@@ -886,6 +1022,28 @@
       "kind": "founders",
       "parent": null,
       "status": "Independent",
+      "people": [
+        {
+          "name": "Dinesh Shamdasani",
+          "artistId": null,
+          "portrait": {
+            "url": "data/owner-logos/dinesh-shamdasani.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:5.2.12ValiantPersonnelByLuigiNovi1.jpg"
+          }
+        },
+        {
+          "name": "Warren Simons",
+          "artistId": null
+        },
+        {
+          "name": "Hunter Gorinson",
+          "artistId": null,
+          "portrait": {
+            "url": "data/owner-logos/hunter-gorinson.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:5.2.12ValiantPersonnelByLuigiNovi1.jpg"
+          }
+        }
+      ],
       "note": "All three came from Valiant Entertainment, where Shamdasani was chief executive until China's DMG Entertainment bought it in 2018. Gorinson has since become Oni Press's president and publisher.",
       "publishers": [
         {
@@ -919,7 +1077,11 @@
           "id": "slg-publishing",
           "since": 1986
         }
-      ]
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Dan_Vado_at_San_Jose_Book_Festival_2026.jpg/330px-Dan_Vado_at_San_Jose_Book_Festival_2026.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Dan_Vado_at_San_Jose_Book_Festival_2026.jpg"
+      }
     },
     {
       "id": "last-gasp-owners",
@@ -927,6 +1089,20 @@
       "kind": "founder and his son",
       "parent": null,
       "status": "Independent",
+      "people": [
+        {
+          "name": "Ron Turner",
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Ron_Turner_%28San_Francisco_2007%29.jpg/330px-Ron_Turner_%28San_Francisco_2007%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Ron_Turner_%28San_Francisco_2007%29.jpg"
+          }
+        },
+        {
+          "name": "Colin Turner",
+          "artistId": null
+        }
+      ],
       "note": "Ron Turner started it in 1970 and now runs it with Colin.",
       "publishers": [
         {
@@ -962,7 +1138,11 @@
           "since": 1989,
           "until": 2016
         }
-      ]
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Gary_Reed_at_C3_%2709.jpg/330px-Gary_Reed_at_C3_%2709.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:Gary_Reed_at_C3_%2709.jpg"
+      }
     },
     {
       "id": "heavy-metal-international-owners",
@@ -1252,6 +1432,20 @@
       "kind": "the brothers who founded it",
       "parent": null,
       "status": "Independent",
+      "people": [
+        {
+          "name": "Steve Schanes",
+          "artistId": null,
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Steve_Schanes_%281982%29.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Steve_Schanes_%281982%29.jpg"
+          }
+        },
+        {
+          "name": "Bill Schanes",
+          "artistId": null
+        }
+      ],
       "note": "It went into liquidation in 1984.",
       "publishers": [
         {
@@ -1348,7 +1542,11 @@
           "since": 1972,
           "until": 1972
         }
-      ]
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/2012-09-27_Portrait_Terry_Zwigoff_with_Lilypads_%28melanieTZ3%29_UNC_715x861.jpg/330px-2012-09-27_Portrait_Terry_Zwigoff_with_Lilypads_%28melanieTZ3%29_UNC_715x861.jpg",
+        "source": "https://commons.wikimedia.org/wiki/File:2012-09-27_Portrait_Terry_Zwigoff_with_Lilypads_%28melanieTZ3%29_UNC_715x861.jpg"
+      }
     },
     {
       "id": "los-angeles-comic-book-company-owners",
@@ -1383,6 +1581,22 @@
       "kind": "the fantasy novelists who ran it",
       "parent": null,
       "status": "Independent",
+      "people": [
+        {
+          "name": "Will Shetterly",
+          "portrait": {
+            "url": "data/owner-logos/will-shetterly.jpg",
+            "source": "https://commons.wikimedia.org/wiki/File:Will_Shetterly_Emma_Bull_Ddb_1059-35.jpg"
+          }
+        },
+        {
+          "name": "Emma Bull",
+          "portrait": {
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Emmabisbee.JPG/330px-Emmabisbee.JPG",
+            "source": "https://commons.wikimedia.org/wiki/File:Emmabisbee.JPG"
+          }
+        }
+      ],
       "publishers": [
         {
           "id": "steeldragon-press"

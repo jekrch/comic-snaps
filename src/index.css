@@ -106,6 +106,24 @@ button,
   opacity: 1;
 }
 
+/* The "details" view option: the overlay stays up on every card. Its shade
+   is cut down to the bottom of the card so the art isn't dimmed all the way
+   up for good, and the expand button still only comes up on hover — on touch
+   the tap itself opens the viewer. */
+.panel-item.panel-details-pinned .panel-overlay {
+  opacity: 1;
+  background-image: linear-gradient(to top, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.35) 30%, transparent 55%);
+}
+
+.panel-item.panel-details-pinned .panel-expand {
+  opacity: 0;
+}
+
+.panel-item.panel-details-pinned:hover .panel-expand,
+.panel-item.panel-details-pinned:focus-within .panel-expand {
+  opacity: 1;
+}
+
 /* Subtle image scale on hover.
    NOTE: do NOT set `will-change` here — it would permanently promote every
    panel image (~160) to its own GPU layer, blowing iOS's tile/layer budget and
