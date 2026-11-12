@@ -25,7 +25,7 @@ import { useFilterParams } from "./hooks/useFilterParams";
 import { isProductionOnly, loadMetadata } from "./utils/metadata";
 import { artistAgeAt } from "./utils/artistAge";
 import { buildPublisherIndex, resolveSeriesPublisher } from "./utils/publishers";
-import { buildOwnershipIndex, loadOwners, ownershipType } from "./utils/owners";
+import { buildOwnershipIndex, loadOwners, ownershipType, topCorporateOwner } from "./utils/owners";
 import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import HeaderViewSwitch from "./components/HeaderViewSwitch";
@@ -714,7 +714,7 @@ export default function App() {
         // and the stats all read it off the panel.
         const publisherIndex = buildPublisherIndex(publishers);
         const ownershipIndex = buildOwnershipIndex(owners);
-        const publisherMap = new Map<string, { publisher?: string; imprint?: string; ownership?: string }>();
+        const publisherMap = new Map<string, { publisher?: string; imprint?: string; ownership?: string; owner?: string }>();
         for (const s of series) {
           const parent = s.parentSeries ? seriesById.get(s.parentSeries) : null;
           const { publisher, imprint, publisherEntry, imprintEntry } = resolveSeriesPublisher(s, parent, publisherIndex);
@@ -722,11 +722,13 @@ export default function App() {
           // of its own (Skybound at Image) files under that owner's type.
           const house = imprintEntry ?? publisherEntry;
           const ownership = house ? ownershipType(house, publisherIndex, ownershipIndex) : null;
+          const owner = house ? topCorporateOwner(house, publisherIndex, ownershipIndex) : null;
           if (publisher || imprint) {
             publisherMap.set(s.id, {
               ...(publisher && { publisher }),
               ...(imprint && { imprint }),
               ...(ownership && { ownership }),
+              ...(owner && { owner }),
             });
           }
         }

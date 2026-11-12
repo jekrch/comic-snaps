@@ -597,6 +597,8 @@ export default function MasonryGrid({
             vizDisabled={panels.length === 0}
             view={view}
             onViewChange={onViewChange}
+            viewOptions={viewOptions}
+            onViewOptionsChange={setViewOptions}
           />
         </div>
 

@@ -1,6 +1,23 @@
 import { EMERGE_SPAN_PCT } from "./constants";
 import type { Droplet, SplashEvent } from "./types";
 
+/**
+ * Droplet motion as Web Animations keyframes. These used to be injected as
+ * `@keyframes` text in a `<style>` per filler, which re-parsed a stylesheet
+ * and invalidated style for every filler each time an event started or
+ * ended. `element.animate()` runs the same curves with no stylesheet churn.
+ */
+export interface DropAnimation {
+  keyframes: Keyframe[];
+  options: KeyframeAnimationOptions;
+}
+
+interface Key {
+  /** Percentage of the active animation, 0–100. */
+  pct: number;
+  transform: string;
+}
+
 /** Sample the dual-sine wobble (x offset) at a given percentage of the animation. */
 function wobbleAt(d: Droplet, pct: number): number {
   const u = pct / 100;
@@ -19,23 +36,21 @@ function bulgeAt(d: Droplet, pct: number): { bx: number; by: number } {
   };
 }
 
-function xAt(d: Droplet, driftFrac: number, pct: number, wobbleMul: number): string {
-  return (d.driftX * driftFrac + wobbleAt(d, pct) * wobbleMul).toFixed(1);
+function transform(tx: number, ty: number, sx: number, sy: number): string {
+  return `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
 }
 
-function yAt(d: Droplet, frac: number): string {
-  return (d.fallDistance * frac).toFixed(1);
+function xAt(d: Droplet, driftFrac: number, pct: number, wobbleMul: number): number {
+  return d.driftX * driftFrac + wobbleAt(d, pct) * wobbleMul;
 }
 
 /** Emerge stage: blob grows from scale 0 to (sx, sy) at its rest position. */
-function emergeKeyframes(d: Droplet, inner: number): string {
+function emergeKeys(d: Droplet, inner: number): Key[] {
   return d.growthProfile.map((p) => {
     const pct = inner + EMERGE_SPAN_PCT * p.t;
     const { bx, by } = bulgeAt(d, pct);
-    const sx = p.sx * bx;
-    const sy = p.sy * by;
-    return `${pct.toFixed(1)}% { transform: translate(0, 0) scale(${sx.toFixed(2)}, ${sy.toFixed(2)}); }`;
-  }).join("\n        ");
+    return { pct, transform: transform(0, 0, p.sx * bx, p.sy * by) };
+  });
 }
 
 /**
@@ -45,7 +60,7 @@ function emergeKeyframes(d: Droplet, inner: number): string {
  * 100% so the active mask hands off to the static settled layer without any
  * scale snap.
  */
-function fallKeyframes(d: Droplet, emergeEnd: number): string {
+function fallKeys(d: Droplet, emergeEnd: number): Key[] {
   const fallSpan = 100 - emergeEnd;
   return d.fallProfile.map((p) => {
     const pct = emergeEnd + fallSpan * p.t;
@@ -55,58 +70,63 @@ function fallKeyframes(d: Droplet, emergeEnd: number): string {
     const { bx, by } = bulgeAt(d, pct);
     const sx = 1 + (bx - 1) * damp;
     const sy = 1 + (by - 1) * damp;
-    return `${pct.toFixed(1)}% { transform: translate(${xAt(d, p.f, pct, 0)}px, ${yAt(d, p.f)}px) scale(${sx.toFixed(3)}, ${sy.toFixed(3)}); }`;
-  }).join("\n          ");
+    return { pct, transform: transform(xAt(d, p.f, pct, 0), d.fallDistance * p.f, sx, sy) };
+  });
 }
 
-function dropletKeyframes(d: Droplet, i: number, animId: string, activeSec: number): string {
+/**
+ * Keys to Web Animations keyframes. Where two keys share a percentage, the
+ * later one wins, as it did when these were CSS `@keyframes` selectors.
+ */
+function toKeyframes(keys: Key[]): Keyframe[] {
+  const out: Keyframe[] = [];
+  let lastPct = -1;
+  for (const k of keys) {
+    const pct = Math.max(lastPct, Math.min(100, Math.max(0, k.pct)));
+    const frame = { offset: pct / 100, transform: k.transform };
+    if (out.length > 0 && pct - lastPct < 1e-6) out[out.length - 1] = frame;
+    else out.push(frame);
+    lastPct = pct;
+  }
+  return out;
+}
+
+function dropletKeys(d: Droplet): Key[] {
   const a = d.inner;
   const emergeEnd = a + EMERGE_SPAN_PCT;
-  const fromAbove = d.y < 0;
-
-  const body = fromAbove
-    ? `
-        0% { transform: translate(${xAt(d, 0, 0, 1)}px, 0) scale(1); }
-        ${a.toFixed(1)}% { transform: translate(${xAt(d, 0, a, 1)}px, 0) scale(1); }
-        ${fallKeyframes(d, a)}
-          `
-    : `
-        0% { transform: translate(0, 0) scale(0); }
-        ${a.toFixed(1)}% { transform: translate(0, 0) scale(0); }
-        ${emergeKeyframes(d, a)}
-        ${fallKeyframes(d, emergeEnd)}
-          `;
-
-  return `
-      @keyframes drop-${animId}-${i} { ${body} }
-      .drop-${animId}-${i} {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: drop-${animId}-${i} ${activeSec.toFixed(2)}s linear 1 both;
-        will-change: transform;
-      }
-      `;
+  if (d.y < 0) {
+    // Spawned above the tile: full size from the start, falls in.
+    const start = transform(xAt(d, 0, 0, 1), 0, 1, 1);
+    return [
+      { pct: 0, transform: start },
+      { pct: a, transform: transform(xAt(d, 0, a, 1), 0, 1, 1) },
+      ...fallKeys(d, a),
+    ];
+  }
+  const hidden = transform(0, 0, 0, 0);
+  return [
+    { pct: 0, transform: hidden },
+    { pct: a, transform: hidden },
+    ...emergeKeys(d, a),
+    ...fallKeys(d, emergeEnd),
+  ];
 }
 
-function takeoverKeyframes(animId: string, activeSec: number): string {
-  return `
-        @keyframes drop-${animId}-0 {
-          0% { transform: translate(0, 0) scale(0); }
-          100% { transform: translate(0, 0) scale(1); }
-        }
-        .drop-${animId}-0 {
-          transform-box: fill-box;
-          transform-origin: center;
-          animation: drop-${animId}-0 ${activeSec.toFixed(2)}s ease-in-out 1 both;
-        }
-      `;
-}
-
-/** Build the @keyframes + class CSS for an in-flight splash event. */
-export function buildDropKeyframes(event: SplashEvent | null, animId: string): string {
-  if (!event) return "";
-  if (event.isTakeover) return takeoverKeyframes(animId, event.activeSec);
-  return event.droplets
-    .map((d, i) => dropletKeyframes(d, i, animId, event.activeSec))
-    .join("");
+/** One animation per droplet of an in-flight splash event, in droplet order. */
+export function buildDropAnimations(event: SplashEvent | null): DropAnimation[] {
+  if (!event) return [];
+  const duration = event.activeSec * 1000;
+  if (event.isTakeover) {
+    return [{
+      keyframes: [
+        { transform: transform(0, 0, 0, 0) },
+        { transform: transform(0, 0, 1, 1) },
+      ],
+      options: { duration, easing: "ease-in-out", fill: "both" },
+    }];
+  }
+  return event.droplets.map((d) => ({
+    keyframes: toKeyframes(dropletKeys(d)),
+    options: { duration, easing: "linear", fill: "both" },
+  }));
 }

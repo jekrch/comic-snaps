@@ -871,6 +871,32 @@ button,
   margin-right: auto;
 }
 
+/* HatchFiller's stamp and artist labels. These lived in a <style> each
+   filler injected; one copy here, with the per-filler twist passed in as
+   --hatch-twist on .hatch-root. */
+.hatch-text {
+  transform: var(--hatch-twist, none);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center center;
+}
+
+.hatch-root:hover .hatch-text {
+  transform: scale(1.2) rotate(0deg);
+}
+
+.filler-labels {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.25s ease-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center center;
+  pointer-events: none;
+}
+
+.hatch-root:hover .filler-labels {
+  opacity: 1;
+  transform: scale(1);
+}
+
 @keyframes hatchFadeIn {
   from {
     opacity: 0;

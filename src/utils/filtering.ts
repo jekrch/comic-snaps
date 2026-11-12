@@ -13,7 +13,10 @@ export interface Filters {
   /** Publisher or imprint names. A parent matches its imprints' panels too,
    *  since a panel carries both (see `Panel.publisher`). */
   publishers: Set<string>;
-  /** Ownership types like "Independent" or "Corporate-owned" (see `ownershipType`). */
+  /** Ownership types like "Independent" or "Corporate-owned" (see
+   *  `ownershipType`), and the top owners filed under "Corporate-owned"
+   *  ("The Walt Disney Company"), matched against `Panel.owner`. A panel
+   *  carries both, so selecting the type takes in every owner under it. */
   ownership: Set<string>;
   /** Artist's age at publication, as brackets like "30-34" (see `ageBinOf`). */
   ages: Set<string>;
@@ -88,7 +91,9 @@ const matchesPublisher = (panel: Panel, publishers: Set<string>) =>
   (!!panel.imprint && publishers.has(panel.imprint));
 
 const matchesOwnership = (panel: Panel, ownership: Set<string>) =>
-  ownership.size === 0 || (!!panel.ownership && ownership.has(panel.ownership));
+  ownership.size === 0 ||
+  (!!panel.ownership && ownership.has(panel.ownership)) ||
+  (!!panel.owner && ownership.has(panel.owner));
 
 const matchesAge = (panel: Panel, ages: Set<string>) => {
   if (ages.size === 0) return true;
@@ -231,8 +236,10 @@ export function computeFacets(panels: Panel[], filters: Filters) {
         if (name) publisherCounts.set(name, (publisherCounts.get(name) ?? 0) + 1);
       }
     }
-    if (passAllExcept("ownership") && p.ownership) {
-      ownershipCounts.set(p.ownership, (ownershipCounts.get(p.ownership) ?? 0) + 1);
+    if (passAllExcept("ownership")) {
+      for (const name of [p.ownership, p.owner]) {
+        if (name) ownershipCounts.set(name, (ownershipCounts.get(name) ?? 0) + 1);
+      }
     }
     if (passAllExcept("ages")) {
       const bin = getAgeBin(p);

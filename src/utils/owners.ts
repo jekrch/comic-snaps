@@ -137,6 +137,21 @@ export function ownershipType(
   return rungs.some((r) => r.owner && !isIndependentOwner(r.owner)) ? CORPORATE_OWNERSHIP : null;
 }
 
+/**
+ * The company at the very top of a corporate-owned house's chain, a family
+ * controlling it included ("Larry Ellison" over DC, "The Walt Disney Company"
+ * over Marvel), for the ownership filter's rows under "Corporate-owned". Null
+ * for any house that isn't corporate-owned.
+ */
+export function topCorporateOwner(
+  house: Publisher,
+  publishers: PublisherIndex,
+  ownership: OwnershipIndex,
+): string | null {
+  if (ownershipType(house, publishers, ownership) !== CORPORATE_OWNERSHIP) return null;
+  return ladder(house, publishers, ownership)[0].owner?.name ?? null;
+}
+
 /** What the wall's owner badge says for one panel. */
 export interface OwnerBadge {
   /** The house the panel came out under: its imprint, or its publisher. */

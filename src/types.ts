@@ -269,6 +269,12 @@ export interface Panel {
    */
   ownership?: string;
   /**
+   * The top of a corporate-owned house's chain — "Larry Ellison", "The Walt
+   * Disney Company"… — derived at load alongside `ownership` (see
+   * `topCorporateOwner`). Absent for any house that isn't corporate-owned.
+   */
+  owner?: string;
+  /**
    * The artist's age in the publication year, derived at load from their
    * birth year in `artists.json` (see `artistAgeAt`). Absent when unknown.
    */

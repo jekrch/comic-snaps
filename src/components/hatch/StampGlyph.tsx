@@ -1,7 +1,8 @@
+import type { CSSProperties } from "react";
 import type { StampDef } from "./stamps";
 import { computeStampGeometry, type StableStyle } from "./style";
 
-interface MaskContentProps {
+interface StampGlyphProps {
   stamp: StampDef;
   width: number;
   height: number;
@@ -12,20 +13,32 @@ interface MaskContentProps {
 const WORD_FONT_SIZE = 80;
 
 /**
- * The mask payload — either a word in big bold mono or a Lucide icon, used as
- * a cut-out so the hatch only shows around the stamp.
+ * Painted in the tile's background colour, on top of the hatch, so it reads
+ * as a cut-out. This used to be a luminance mask over the hatch group; over
+ * an opaque background the two composite to the same pixels, antialiased
+ * edges included, and painting it skips a mask pass on every animated frame.
  */
-export default function MaskContent({
+const INK = "var(--color-surface-raised, #1a1a1a)";
+
+// Set as fill/stroke directly, never through `color` + `currentColor`: the base
+// layer's `*` rule gives every element its own grey `color`, so the icon's
+// inner <svg> and paths would resolve `currentColor` to grey, not the ink.
+const TEXT_INK: CSSProperties = { fill: INK };
+const ICON_INK: CSSProperties = { stroke: INK };
+
+/** The stamp — a word in big bold mono or a Lucide icon. */
+export default function StampGlyph({
   stamp,
   width,
   height,
   style,
   iconSvgContent,
-}: MaskContentProps) {
+}: StampGlyphProps) {
   if (stamp.type === "word") {
     return (
       <text
         className="hatch-text"
+        style={TEXT_INK}
         x="50%"
         y="50%"
         dominantBaseline="central"
@@ -34,7 +47,6 @@ export default function MaskContent({
         fontWeight="900"
         fontSize={WORD_FONT_SIZE}
         letterSpacing="0em"
-        fill="black"
       >
         {stamp.value}
       </text>
@@ -44,11 +56,13 @@ export default function MaskContent({
   if (!iconSvgContent) return null;
 
   const { iconSize, half, cx, cy } = computeStampGeometry(width, height, style.placement);
-  const patchedContent = iconSvgContent.replace(/stroke="currentColor"/g, 'stroke="black"');
+  // Strip any stroke the paths carry so they inherit the ink from the <svg>.
+  const patchedContent = iconSvgContent.replace(/\sstroke="(?:currentColor|black)"/g, "");
 
   return (
     <g className="hatch-text" transform={`translate(${cx - half}, ${cy - half})`}>
       <svg
+        style={ICON_INK}
         x={style.iconInnerX}
         y={style.iconInnerY}
         width={iconSize}
@@ -56,7 +70,6 @@ export default function MaskContent({
         viewBox="0 0 24 24"
         overflow="visible"
         fill="none"
-        stroke="black"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

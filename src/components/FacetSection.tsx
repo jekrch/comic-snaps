@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import Toggle from "./Toggle";
 
 interface FacetSectionProps {
   title: string;
@@ -7,6 +8,9 @@ interface FacetSectionProps {
   selected: Set<string>;
   onToggle: (value: string) => void;
   renderLabel?: (label: string) => React.ReactNode;
+  /** A display switch shown above the values when the section is open — a
+   *  way to see what the section filters on, not one more thing to filter by. */
+  viewSwitch?: { label: string; on: boolean; onChange: (on: boolean) => void };
 }
 
 export default function FacetSection({
@@ -15,6 +19,7 @@ export default function FacetSection({
   selected,
   onToggle,
   renderLabel,
+  viewSwitch,
 }: FacetSectionProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -57,6 +62,36 @@ export default function FacetSection({
       >
         <div className="overflow-hidden">
           <div className="px-1 pb-1.5">
+            {viewSwitch && (
+              <>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={viewSwitch.on}
+                  onClick={() => viewSwitch.onChange(!viewSwitch.on)}
+                  className="
+                    w-full text-left px-2 py-1 rounded-sm
+                    flex items-center justify-between gap-2
+                    transition-colors duration-100
+                    cursor-pointer
+                    hover:bg-surface-hover
+                  "
+                >
+                  <span
+                    className={`font-display text-[10px] tracking-wide uppercase truncate transition-colors ${
+                      viewSwitch.on ? "text-ink" : "text-ink-muted"
+                    }`}
+                  >
+                    {viewSwitch.label}
+                  </span>
+                  <Toggle on={viewSwitch.on} />
+                </button>
+                <div
+                  className="mx-2 my-1"
+                  style={{ height: "1px", background: "var(--color-border, rgba(74,71,69,0.25))" }}
+                />
+              </>
+            )}
             {items.map((item) => {
               const isActive = selected.has(item.label);
               return (

@@ -11,6 +11,7 @@ import { ChevronDown, Search, X, XCircle } from "lucide-react";
 import VizLaunchButton from "./viz/VizLaunchButton";
 import ViewControl from "./ViewControl";
 import type { GalleryView } from "./ViewControl";
+import type { ViewOptions } from "../hooks/useViewOptions";
 
 /** The expanded body's collapse, shared by the transition below and by the
  *  handover in the view plate — the two have to agree. */
@@ -26,6 +27,10 @@ interface FilterControlProps {
   /** The wall/shelf switch rides at the bottom of the list (§5.1). */
   view?: GalleryView;
   onViewChange?: (view: GalleryView) => void;
+  /** The wall's card labels. Given, the owner and age switches ride at the
+   *  top of the OWNERSHIP and ARTIST'S AGE sections they correspond to. */
+  viewOptions?: ViewOptions;
+  onViewOptionsChange?: (next: ViewOptions) => void;
 }
 
 export default function FilterControl({
@@ -36,6 +41,8 @@ export default function FilterControl({
   vizDisabled,
   view,
   onViewChange,
+  viewOptions,
+  onViewOptionsChange,
 }: FilterControlProps) {
   const [open, setOpen] = useState(false);
   /** A view switch waiting for the list to finish closing (see below). */
@@ -145,15 +152,39 @@ export default function FilterControl({
     return items;
   }, [publisherCounts, imprintParent]);
 
+  // Which names in the ownership facet are top owners, and the type each
+  // files under. Read off every panel, like `imprintParent`.
+  const ownerType = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const p of panels) {
+      if (p.owner && p.ownership) map.set(p.owner, p.ownership);
+    }
+    return map;
+  }, [panels]);
+
   // Biggest first: a handful of kinds, where how much of the wall each
-  // holds is the interesting part.
-  const ownershipItems = useMemo(
-    () =>
-      Array.from(ownershipCounts.entries())
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-        .map(([label, c]) => ({ label, count: c })),
-    [ownershipCounts]
-  );
+  // holds is the interesting part. Each type is followed by the top owners
+  // under it, biggest first too.
+  const ownershipItems = useMemo(() => {
+    const bySize = (a: [string, number], b: [string, number]) => b[1] - a[1] || a[0].localeCompare(b[0]);
+    const entries = Array.from(ownershipCounts.entries());
+    const types = entries.filter(([n]) => !ownerType.has(n)).sort(bySize);
+    const owners = entries.filter(([n]) => ownerType.has(n)).sort(bySize);
+    const items: { label: string; count: number }[] = [];
+    const placed = new Set<string>();
+    for (const [type, c] of types) {
+      items.push({ label: type, count: c });
+      for (const [owner, oc] of owners) {
+        if (ownerType.get(owner) !== type) continue;
+        items.push({ label: owner, count: oc });
+        placed.add(owner);
+      }
+    }
+    for (const [owner, oc] of owners) {
+      if (!placed.has(owner)) items.push({ label: owner, count: oc });
+    }
+    return items;
+  }, [ownershipCounts, ownerType]);
 
   const ageItems = useMemo(
     () =>
@@ -172,6 +203,11 @@ export default function FilterControl({
     },
     [filters, onFiltersChange]
   );
+
+  const viewSwitch = (key: "owner" | "age", label: string) =>
+    viewOptions && onViewOptionsChange
+      ? { label, on: viewOptions[key], onChange: (on: boolean) => onViewOptionsChange({ ...viewOptions, [key]: on }) }
+      : undefined;
 
   const clearAll = useCallback(() => {
     onFiltersChange(EMPTY_FILTERS);
@@ -207,21 +243,26 @@ export default function FilterControl({
             />
           </span>
         </button>
-        {/* Clearing without opening the list; once it's open, the list's own
-            clear line takes over. */}
-        {active && !open && (
+        {/* Clear lives in the header, open or closed, so selecting the first
+            filter never pushes the list down. Open, it carries a label. */}
+        {active && (
           <button
             type="button"
             aria-label={`Clear ${count} ${count === 1 ? "filter" : "filters"}`}
             title="Clear filters"
-            onClick={clearAll}
+            onClick={() => {
+              clearAll();
+              setOpen(false);
+            }}
             className="
-              shrink-0 flex items-center px-3
+              shrink-0 flex items-center gap-1.5 px-3
+              font-display text-[10px] tracking-wider uppercase
               text-ink-muted hover:text-rust-ink
               transition-colors duration-100
               cursor-pointer
             "
           >
+            {open && <span>CLEAR</span>}
             <XCircle size={13} />
           </button>
         )}
@@ -237,28 +278,6 @@ export default function FilterControl({
       >
         <div className="overflow-hidden">
           <div>
-            {/* clear filters action at top of list */}
-            {active && (
-              <div className="px-3 py-2">
-                <button
-                  onClick={() => {
-                    clearAll();
-                    setOpen(false);
-                  }}
-                  className="
-                    flex items-center gap-1.5
-                    font-display text-[10px] tracking-wider uppercase
-                    text-white/60 hover:text-rust-ink
-                    transition-colors duration-100
-                    cursor-pointer
-                  "
-                >
-                  <XCircle size={12} className="text-rust-ink" />
-                  CLEAR {count} {count === 1 ? "FILTER" : "FILTERS"}
-                </button>
-              </div>
-            )}
-
             {/* free text across every field a panel carries */}
             <div className="px-3 pt-2 pb-2">
               <div className="filter-search-box flex items-center gap-2 px-2 py-1.5 rounded-sm bg-surface-raised/60 ring-1 ring-inset ring-ink-faint/15 focus-within:ring-accent/40 transition-colors">
@@ -322,6 +341,17 @@ export default function FilterControl({
               items={ownershipItems}
               selected={filters.ownership}
               onToggle={(v) => toggleInSet("ownership", v)}
+              viewSwitch={viewSwitch("owner", "Show on cards")}
+              renderLabel={(label) =>
+                ownerType.has(label) ? (
+                  <>
+                    <span aria-hidden className="mr-1 text-ink-faint">↳</span>
+                    {label}
+                  </>
+                ) : (
+                  label
+                )
+              }
             />
             <FacetSection
               title="TAGS"
@@ -353,6 +383,7 @@ export default function FilterControl({
               selected={filters.ages}
               onToggle={(v) => toggleInSet("ages", v)}
               renderLabel={formatAgeBin}
+              viewSwitch={viewSwitch("age", "Show on cards")}
             />
             <FacetSection
               title="CREDITED"

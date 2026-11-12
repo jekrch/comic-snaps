@@ -1,16 +1,16 @@
-import { memo, useId, useMemo, useRef } from "react";
+import { memo, useId, useMemo, useRef, type CSSProperties } from "react";
 import type { NeighborMap } from "../adjacency";
 import { useViewerOpen } from "../hooks/useViewerOpen";
 import FillerLabels from "./FillerLabels";
 import HatchPattern from "./hatch/HatchPattern";
-import MaskContent from "./hatch/MaskContent";
+import StampGlyph from "./hatch/StampGlyph";
 import { buildStampPool, useLucideExtract, type StampDef } from "./hatch/stamps";
 import { generateStableStyle } from "./hatch/style";
 import {
-  buildDropKeyframes,
+  ActiveLayer,
   buildLiquidConfig,
-  LiquidDefs,
-  LiquidLayers,
+  SettledDefs,
+  SettledLayers,
   useLiquidAnimation,
 } from "./hatch/liquid";
 import {
@@ -38,6 +38,21 @@ interface HatchFillerProps {
   colorOverride?: string | null;
 }
 
+/** Promotes the live SVG to its own compositor layer while it animates. */
+const LIVE_LAYER: CSSProperties = { willChange: "transform" };
+
+/**
+ * The filler is two stacked SVGs.
+ *
+ *   static — background, base hatch, settled splash layers. Changes only when
+ *            a splash settles, so it is rasterized a few times a minute.
+ *   live   — the in-flight splash and the stamp. Repaints every frame, on its
+ *            own compositor layer, so those repaints never re-run the static
+ *            SVG's goo filters.
+ *
+ * The in-flight splash always drew above every settled layer and the stamp
+ * cut through all of it, so splitting at that seam keeps the stacking order.
+ */
 function HatchFiller({
   empty = false,
   assignedStamp = null,
@@ -47,10 +62,10 @@ function HatchFiller({
 }: HatchFillerProps) {
   const patternId = useId();
   const darkPatternId = useId();
-  const maskId = useId();
   const gooFilterId = useId();
   const liquidMaskId = useId();
-  const animId = useId().replace(/[^a-zA-Z0-9_-]/g, "_");
+  const liveGooFilterId = useId();
+  const liveMaskId = useId();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const size = useContainerSize(containerRef);
@@ -93,37 +108,20 @@ function HatchFiller({
     baseRadius: liquid.baseRadius,
   });
 
-  const dropKeyframes = useMemo(
-    () => (liquid.enabled ? buildDropKeyframes(event, animId) : ""),
-    [event, liquid.enabled, animId],
+  const glyphStamp = empty ? null : stamp;
+  const rootStyle = useMemo(
+    () => ({ "--hatch-twist": style.twist || "none" }) as CSSProperties,
+    [style.twist],
   );
 
   return (
-    <div ref={containerRef} className="hatch-root relative w-full h-full rounded-sm overflow-hidden">
-      <style>{`
-        .hatch-text {
-          transform: ${style.twist};
-          transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-          transform-origin: center center;
-        }
-        .hatch-root:hover .hatch-text {
-          transform: scale(1.2) rotate(0deg);
-        }
-        .filler-labels {
-          opacity: 0;
-          transform: scale(0.92);
-          transition: opacity 0.25s ease-out, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          transform-origin: center center;
-          pointer-events: none;
-        }
-        .hatch-root:hover .filler-labels {
-          opacity: 1;
-          transform: scale(1);
-        }
-        ${dropKeyframes}
-      `}</style>
+    <div
+      ref={containerRef}
+      className="hatch-root relative w-full h-full rounded-sm overflow-hidden"
+      style={rootStyle}
+    >
       <svg
-        className="hatch-container"
+        className="hatch-container absolute inset-0"
         width="100%"
         height="100%"
         xmlns="http://www.w3.org/2000/svg"
@@ -134,41 +132,58 @@ function HatchFiller({
           {liquid.enabled && (
             <HatchPattern id={darkPatternId} rotation={style.rotation} color={liquid.darkColor} />
           )}
-          <mask id={maskId}>
-            <rect width="100%" height="100%" fill="white" />
-            {!empty && stamp && (
-              <MaskContent
-                stamp={stamp}
-                width={size.width}
-                height={size.height}
-                style={style}
-                iconSvgContent={iconSvgContent}
-              />
-            )}
-          </mask>
-          <LiquidDefs
+          <SettledDefs
             liquid={liquid}
             layers={layers}
-            event={event}
             gooFilterId={gooFilterId}
             liquidMaskId={liquidMaskId}
-            animId={animId}
           />
         </defs>
         <rect width="100%" height="100%" fill="var(--color-surface-raised, #1a1a1a)" />
-        <g mask={`url(#${maskId})`}>
-          {/* Base hatch — always present, never animated. */}
-          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-          <LiquidLayers
+        {/* Base hatch — always present, never animated. */}
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} />
+        <SettledLayers
+          liquid={liquid}
+          layers={layers}
+          width={size.width}
+          height={size.height}
+          patternId={patternId}
+          darkPatternId={darkPatternId}
+          liquidMaskId={liquidMaskId}
+        />
+      </svg>
+
+      {(glyphStamp || liquid.enabled) && (
+        <svg
+          className="hatch-live absolute inset-0"
+          width="100%"
+          height="100%"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          style={animationActive ? LIVE_LAYER : undefined}
+        >
+          {/* Patterns are referenced from the static SVG; ids are document-wide. */}
+          <ActiveLayer
             liquid={liquid}
-            layers={layers}
             event={event}
+            width={size.width}
+            height={size.height}
             patternId={patternId}
             darkPatternId={darkPatternId}
-            liquidMaskId={liquidMaskId}
+            gooFilterId={liveGooFilterId}
+            maskId={liveMaskId}
           />
-        </g>
-      </svg>
+          {glyphStamp && (
+            <StampGlyph
+              stamp={glyphStamp}
+              width={size.width}
+              height={size.height}
+              style={style}
+              iconSvgContent={iconSvgContent}
+            />
+          )}
+        </svg>
+      )}
 
       {neighbors && (
         <FillerLabels neighbors={neighbors} width={size.width} height={size.height} />
@@ -189,9 +204,9 @@ function sameNeighbors(a?: NeighborMap | null, b?: NeighborMap | null): boolean 
   );
 }
 
-// Each filler owns two observers, an injected <style>, an SVG mask stack and a
-// running liquid animation, so re-rendering the full set on every relayout is
-// the dominant cost in the grid. Only a genuine content change warrants it.
+// Each filler owns two observers, two SVGs and a running liquid animation, so
+// re-rendering the full set on every relayout is the dominant cost in the
+// grid. Only a genuine content change warrants it.
 export default memo(
   HatchFiller,
   (prev, next) =>

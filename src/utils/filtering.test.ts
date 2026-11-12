@@ -297,6 +297,24 @@ describe("ownership", () => {
     expect(Object.fromEntries(ownershipCounts)).toEqual({ "Partner-owned": 1, Independent: 1 });
     expect(activeFilterCount(filters({ ownership: ["Independent"] }))).toBe(1);
   });
+
+  it("matches a top owner under its type, and counts both", () => {
+    const xmen = makePanel({ id: "x", title: "X-Men", publisher: "Marvel Comics", ownership: "Corporate-owned", owner: "The Walt Disney Company" });
+    const dcOwned = { ...batman, owner: "Larry Ellison" };
+    const panels = [dcOwned, xmen, saga, love];
+    const ids = (o: string[]) => applyFilters(panels, filters({ ownership: o })).map((p) => p.id);
+    expect(ids(["The Walt Disney Company"])).toEqual(["x"]);
+    expect(ids(["The Walt Disney Company", "Independent"])).toEqual(["x", "l"]);
+    expect(ids(["Corporate-owned", "Larry Ellison"])).toEqual(["b", "x"]);
+    const { ownershipCounts } = computeFacets(panels, filters({}));
+    expect(Object.fromEntries(ownershipCounts)).toEqual({
+      "Corporate-owned": 2,
+      "Larry Ellison": 1,
+      "The Walt Disney Company": 1,
+      "Partner-owned": 1,
+      Independent: 1,
+    });
+  });
 });
 
 describe("publishers", () => {
