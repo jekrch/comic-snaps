@@ -20,19 +20,22 @@ export function compositeFragment(maxShards: number): string {
     vec2 d = p - rect.xy;
     // inverse rotation into the shard's local frame
     vec2 local = vec2(d.x * misc.x + d.y * misc.y, -d.x * misc.y + d.y * misc.x);
-    vec2 q = local / max(rect.zw, vec2(1e-4)) + 0.5;
+    vec2 q = local * rect.zw + 0.5;
     if (q.x > -0.001 && q.x < 1.001 && q.y > -0.001 && q.y < 1.001) {
       vec4 src = uSrc[${i}];
       vec2 c = clamp(q, 0.0, 1.0);
       vec3 tex = texture(uTex[${i}], sampleUv(src, c)).rgb;
       // Level toward a common key before tint and blend, so a bright page has
       // somewhere to climb instead of saturating the frame — see levelsFor().
-      vec2 lvl = uLevels[${i}];
+      vec3 lvl = uLevels[${i}];
       tex = clamp(tex * lvl.x + lvl.y, 0.0, 1.0);
       vec4 tint = uTint[${i}];
       tex = mix(tex, tex * tint.rgb, tint.a);
       float a = misc.z * edgeMask(q, misc.w);
-      col = mix(col, blendPixel(col, tex, uMode[${i}]), a);
+      // A blend that takes its light from the base leans back toward a plain
+      // layer by how much is beneath it (lvl.z), so it never goes black over an
+      // empty frame. Exactly 1 for every other blend, where this is the blend.
+      col = mix(col, mix(tex, blendPixel(col, tex, uMode[${i}]), lvl.z), a);
     }
   }
 `;
@@ -51,14 +54,16 @@ uniform vec3 uBackground;
 uniform float uAspect;
 uniform int uCount;
 
-// per shard: centre.xy + size.xy
+// per shard: centre.xy + 1/size.xy. The reciprocal arrives from the CPU, as the
+// rotation's cos/sin do — a divide here was two reciprocals per shard per pixel,
+// twelve shards deep, on every frame of the flat path.
 uniform vec4 uRect[${maxShards}];
 // per shard: crop origin.uv + crop size.uv
 uniform vec4 uSrc[${maxShards}];
 // per shard: cos, sin, opacity, feather
 uniform vec4 uMisc[${maxShards}];
-// per shard: tone gain, tone lift
-uniform vec2 uLevels[${maxShards}];
+// per shard: tone gain, tone lift, presence of the stack beneath (see needsBase)
+uniform vec3 uLevels[${maxShards}];
 // per shard: tint.rgb + tint amount
 uniform vec4 uTint[${maxShards}];
 uniform float uMode[${maxShards}];

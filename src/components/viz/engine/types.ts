@@ -38,6 +38,29 @@ export function blendCode(mode: BlendMode): number {
   return BLEND_CODES[mode];
 }
 
+/**
+ * Whether a blend needs something beneath it to mean anything.
+ *
+ * Overlay, hard-light and multiply all take their light from the base, so over
+ * an empty frame they collapse to black (hard-light to a darkened copy) — which
+ * during a crossfade reads as a layer dropping out rather than as a blend. Both
+ * backends therefore lean these back toward a plain layer by how much of the
+ * stack is actually beneath them: see `presenceAfter`.
+ */
+export function needsBase(mode: BlendMode): boolean {
+  return mode === "overlay" || mode === "hard-light" || mode === "multiply";
+}
+
+/**
+ * How much of the frame is covered once a layer at `opacity` has been laid over
+ * `presence` — the running coverage both backends walk up the stack with. Every
+ * layer counts, whatever its blend, because whatever it did the frame now has
+ * something in it.
+ */
+export function presenceAfter(presence: number, opacity: number): number {
+  return 1 - (1 - presence) * (1 - Math.min(1, Math.max(0, opacity)));
+}
+
 /** CSS `mix-blend-mode` equivalents, for the fallback backend. */
 export const CSS_BLEND: Record<BlendMode, string> = {
   normal: "normal",

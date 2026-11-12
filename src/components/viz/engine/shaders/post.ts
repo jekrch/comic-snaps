@@ -1,4 +1,5 @@
 import { JULIA_WRAP } from "../julia";
+import { POND_MAX } from "../pond";
 
 /**
  * The post chain. One shader, every effect gated by its own amount uniform,
@@ -12,6 +13,11 @@ import { JULIA_WRAP } from "../julia";
  *  renormalisation `uFoldNorm` from it — the two must agree or the figure
  *  drifts off the stage. */
 export const FOLD_ITERS = 4;
+
+/** Plane waves in the quasicrystal. Five, at 36 degree steps, is what makes the
+ *  sum five-fold symmetric and aperiodic. Shared with the backend, which turns
+ *  their headings. */
+export const QUASI_WAVES = 5;
 
 /**
  * Cycles of ring travel after which the pond's phase may be wrapped.
@@ -69,6 +75,8 @@ uniform float uTime;
 uniform float uFeedbackAmount;
 uniform float uFeedbackScale;
 uniform float uFeedbackRotate;
+/** cos and sin of uFeedbackRotate, from the CPU. */
+uniform vec2 uFeedbackTurn;
 uniform float uFeedbackDroste;
 uniform float uHalftone;
 uniform vec2 uHalftoneFreq;
@@ -80,10 +88,11 @@ uniform float uHueShift;
 /** Channel level at which the landing's shoulder starts. 1 disables it. */
 uniform float uShoulder;
 
+/** The panes' amount with the breath already applied, 0..1 — see the note
+ *  where the backend derives it. */
 uniform float uPane;
-uniform float uPaneGrid;
-uniform float uPaneBreathe;
-uniform float uPanePhase;
+/** Magnification the panes back the view off by: paneGrid ^ uPane. */
+uniform float uPaneZoom;
 uniform float uKaleido;
 uniform float uKaleidoSegments;
 uniform float uKaleidoPhase;
@@ -94,17 +103,22 @@ uniform float uWarpSpeed;
 uniform float uRipple;
 uniform float uRippleFreq;
 uniform float uPond;
-uniform float uPondFreq;
 /** How many sources are running. Read as a loop bound against POND_MAX, so a
  *  fractional value simply takes the sources below it. */
 uniform float uPondSources;
-uniform float uPondReach;
 uniform float uPondBurst;
-uniform float uPondSwirl;
-/** Travel of the rings, in cycles. Integrated in the director and wrapped
- *  against POND_CYCLE, which every per-source rate below divides evenly. */
-uniform float uPondPhase;
-uniform float uPondSeed;
+/**
+ * Each source's arrangement, worked out on the CPU — see engine/pond.ts. None of
+ * it depends on the pixel, and in here it was eight hashes and two rotations per
+ * source per pixel.
+ *
+ *   uPondSrc  = centre.xy, reach, ring frequency
+ *   uPondWave = ring travel in radians, drop age, drop window, amplitude
+ *   uPondTurn = cos and sin of the swirl
+ */
+uniform vec4 uPondSrc[${POND_MAX}];
+uniform vec4 uPondWave[${POND_MAX}];
+uniform vec2 uPondTurn[${POND_MAX}];
 uniform float uTwist;
 uniform float uBulge;
 uniform float uSolarize;
@@ -164,6 +178,9 @@ uniform float uJuliaChunkGrid;
 uniform vec2 uJuliaCenter;
 uniform float uQuasi;
 uniform float uQuasiFreq;
+/** The quasicrystal's plane-wave headings, turning slowly — from the CPU,
+ *  since they are the same for every pixel. */
+uniform vec2 uQuasiDir[${QUASI_WAVES}];
 uniform float uTurbulence;
 uniform float uTurbulenceScale;
 uniform float uTurbulenceSpeed;
@@ -173,18 +190,21 @@ uniform float uDeckSpread;
 uniform float uDeckTurn;
 uniform float uDeckSeed;
 uniform float uMobius;
-uniform float uMobiusShift;
-uniform float uMobiusPhase;
+/** The slide at unit refraction strength: mobiusShift * mobius along the
+ *  heading phases.mobius. Scaled by the strength per channel in the shader. */
+uniform vec2 uMobiusA;
 uniform float uRelief;
 uniform float uReliefLevel;
-uniform float uReliefPhase;
+/** Unit vector toward the relief's light, which circles the page. */
+uniform vec3 uReliefLight;
 uniform float uContour;
 uniform float uContourBands;
 uniform float uKeyplate;
 uniform float uKeyplateLevel;
 uniform float uMelt;
 uniform float uMeltLevel;
-uniform float uMeltAngle;
+/** The melt's heading, as a unit vector. */
+uniform vec2 uMeltDir;
 uniform float uWake;
 uniform float uWakeSpread;
 uniform float uWakeLead;
@@ -218,9 +238,20 @@ uniform float uHistoryCount;
 uniform float uHistoryCursor;
 
 uniform float uMisreg;
-uniform float uMisregSpread;
+/**
+ * Where each plate has drifted to, in frame fractions — cyan, magenta, yellow,
+ * then black. Each takes its own pair of incommensurate rates, so no two of them
+ * ever line back up and the register never returns to true; derived on the CPU
+ * because the drift is the same for every pixel. See the backend.
+ */
+uniform vec2 uMisregDrift[4];
 uniform float uMoire;
-uniform float uMoireSpread;
+/**
+ * Rotation of each halftone screen as cos/sin pairs — cyan, magenta, yellow —
+ * the first pair turned back by the moire's delta and the second turned on by
+ * it. With no moire both pairs are the plate's own angle.
+ */
+uniform vec4 uScreenRot[3];
 uniform float uBenday;
 uniform float uKrackle;
 uniform float uKrackleScale;
@@ -316,60 +347,12 @@ const float MOBIUS_FIT = 0.64;
  *  unrolls — a uniform bound would leave the whole body live. The cycler draws
  *  well under it: see the panel-scale note on PostParams.deck. */
 const int DECK_MAX_DEPTH = 4;
-/**
- * Most sources one pond may run.
- *
- * Four is where interference stops reading as several places and starts reading
- * as a boil: past it the sources overlap everywhere, the rings cancel, and what
- * is left is a shimmer with no centres in it — which is what turbulence is
- * for, and it does it better and for the same money.
- */
-const int POND_MAX = 4;
-/** How far a source may wander from where the seed put it, stage units. Small:
- *  the drift is there so a long hold does not settle, not so the sources tour
- *  the frame. */
-const float POND_DRIFT = 0.09;
-/**
- * How fast a drop's front travels, as a fraction of the rings' own travel —
- * so also the reciprocal of a packet's life, two ring cycles at unit rate.
- *
- * A half rather than a whole on purpose. With the front locked to the rings
- * the packet would be a bubble with a still pattern inside it; at half, the
- * rings are born at the back of the group, run forward through it and vanish
- * off its leading edge. That is not a stylisation — deep water carries a
- * gravity wave group at exactly half its phase speed, and it is the detail
- * that makes a splash read as a splash.
- */
-const float POND_DROP = 0.5;
+/** Most sources one pond may run — see engine/pond.ts, which also holds the
+ *  drift, the drop speed and the slope budget that used to be here. */
+const int POND_MAX = ${POND_MAX};
 /** Width of the drop's ring, as the reciprocal square of a fraction of the
  *  source's reach: about a quarter of it. */
 const float POND_SHARP = 14.0;
-/**
- * The slope budget: the most any one source may bend the frame, as the
- * derivative of its own displacement.
- *
- * This is the number the whole effect is scaled by, and scaling by a *slope*
- * rather than by an amplitude is the point. A radial sine displaces by A and
- * bends by A times its frequency, so an amplitude held fixed while the rings
- * tighten walks straight past 1 — where the map stops being injective and the
- * page starts folding back through itself — and a pond draws far tighter rings
- * than the centred ripple, because its pools are a fraction of the frame and
- * rings need room inside one to read as rings at all. So the amplitude is
- * derived from the frequency instead, and every source gets the same bend
- * whatever spacing it drew.
- *
- * Under 1 rather than at it because sources overlap. The sum is normalised by
- * the root of their count and not by the count itself — see the end of the
- * block — so two pools meeting can reach about a root-two multiple of this
- * between them, and this is the largest value at which a sweep of the cycler's
- * own draws finds no folded pixel anywhere in the frame at any phase.
- */
-const float POND_SLOPE = 0.62;
-/** Ceiling on the amplitude the budget above implies, stage units. It only
- *  binds at the loose end — below about a dozen radians a unit the slope is
- *  cheap and the swell is enormous, and a fifteenth of the frame is as much
- *  travel as §6 will pay for however smooth it is. */
-const float POND_AMP = 0.06;
 /**
  * Radius over which a source's push fades in, in radians of its own rings.
  *
@@ -458,10 +441,11 @@ vec3 hueRotate(vec3 c, float a) {
   return c * ca + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - ca);
 }
 
-/** Ink coverage of one rotated dot screen. Returns 1 where ink lands. */
-float screenDot(vec2 p, float angle, float value) {
-  float s = sin(angle);
-  float c = cos(angle);
+/** Ink coverage of one rotated dot screen, its angle given as cos/sin. Returns 1
+ *  where ink lands. */
+float screenDot(vec2 p, vec2 turn, float value) {
+  float c = turn.x;
+  float s = turn.y;
   vec2 q = vec2(p.x * c - p.y * s, p.x * s + p.y * c);
   vec2 cell = fract(q) - 0.5;
   float r = sqrt(clamp(value, 0.0, 1.0)) * 0.62;
@@ -477,19 +461,22 @@ float screenDot(vec2 p, float angle, float value) {
  * way, and identity at a delta of zero because both terms are then the same
  * screen. The delta itself drifts, and that drift is the whole effect: the
  * rosettes swim, from two things that are each standing still.
+ *
+ * The two angles arrive as uScreenRot, worked out on the CPU — the delta is a
+ * function of the clock alone, and in here it was a sine plus four sin/cos pairs
+ * a pixel for every plate.
  */
-float plate(vec2 p, float angle, float value) {
-  if (uMoire <= 0.0) return screenDot(p, angle, value);
-  float d = uMoire * uMoireSpread * (0.62 + 0.38 * sin(uTime * 0.011));
-  return 0.5 * (screenDot(p, angle - d, value) + screenDot(p, angle + d, value));
+float plate(vec2 p, vec4 turns, float value) {
+  if (uMoire <= 0.0) return screenDot(p, turns.xy, value);
+  return 0.5 * (screenDot(p, turns.xy, value) + screenDot(p, turns.zw, value));
 }
 
 vec3 halftone(vec3 c, vec2 uv) {
   vec2 p = uv * uHalftoneFreq;
-  // Classic CMY screen angles: 15deg, 75deg, 0deg.
-  float ci = plate(p, 0.2618, 1.0 - c.r);
-  float mi = plate(p, 1.3090, 1.0 - c.g);
-  float yi = plate(p, 0.0, 1.0 - c.b);
+  // Classic CMY screen angles: 15deg, 75deg, 0deg — set by the backend.
+  float ci = plate(p, uScreenRot[0], 1.0 - c.r);
+  float mi = plate(p, uScreenRot[1], 1.0 - c.g);
+  float yi = plate(p, uScreenRot[2], 1.0 - c.b);
   return vec3(1.0 - ci, 1.0 - mi, 1.0 - yi);
 }
 
@@ -514,20 +501,6 @@ float worley(vec2 p) {
     }
   }
   return best;
-}
-
-/**
- * Where one plate has drifted to, in frame fractions.
- *
- * Each plate takes its own pair of incommensurate rates, so no two of them ever
- * line back up and the register never returns to true. Divided by the aspect on
- * x so the drift is the same distance on screen in both directions rather than
- * being stretched by a wide canvas.
- */
-vec2 plateDrift(float seed) {
-  float a = uTime * (0.0131 + seed * 0.0041) + seed * 2.39;
-  float b = uTime * (0.0097 + seed * 0.0063) + seed * 1.71;
-  return vec2(sin(a) / uAspect, cos(b)) * uMisregSpread * uMisreg;
 }
 
 /** Mirror-repeat into 0..1. Identity for coordinates already in range, so a
@@ -636,13 +609,12 @@ vec2 distortFold(vec2 uv) {
    * angular periodicity, and this is a mirrored similarity — the rosette is
    * redrawn whole in every cell, seams closing where they always did.
    *
-   * The breath is evaluated here rather than on the CPU because what the
-   * director integrates is the *rate*: a phase is a position in the cycle, and
-   * one shaped by a cosine opens and closes with zero velocity at both ends,
-   * which is what keeps a zoom of a whole octave from starting with a lurch.
+   * The breath and the pull-back both arrive from the backend already
+   * evaluated: neither depends on the pixel, and this block sits ahead of
+   * every gate in the chain, so the cosine it used to take here was being paid
+   * at every pixel of every frame whether the panes were running or not.
    */
-  float pane = clamp(uPane + uPaneBreathe * (0.5 - 0.5 * cos(uPanePhase * TAU)), 0.0, 1.0);
-  if (pane > 0.0) {
+  if (uPane > 0.0) {
     /*
      * Geometric in the pull-back, so the view recedes at a constant *rate* of
      * magnification rather than a constant rate of scale — an octave covered
@@ -656,7 +628,7 @@ vec2 distortFold(vec2 uv) {
      * as the same gesture, which is the frame backing away from the viewer and
      * finding itself repeated.
      */
-    uv = mirrorUv((uv - 0.5) * pow(max(1.0, uPaneGrid), pane) + 0.5);
+    uv = mirrorUv((uv - 0.5) * uPaneZoom + 0.5);
   }
 
   /* The frame as it was composited, before any of this. Kept for the Julia
@@ -981,9 +953,13 @@ vec2 distortFold(vec2 uv) {
       // closer, so it is as finished as an escaping one — and counting it means
       // the interior carries the same structure as the outside rather than being
       // the one flat region in the frame.
+      //
+      // Tested on the squared distance, so the root is taken once, on the step
+      // that captures, rather than on every step of every orbit in the set.
       vec2 toM = z - m;
-      float dc = length(toM);
-      if (dc < JULIA_CAPTURE) {
+      float dc2 = dot(toM, toM);
+      if (dc2 < JULIA_CAPTURE * JULIA_CAPTURE) {
+        float dc = sqrt(dc2);
         nu = float(i) - log(JULIA_CAPTURE / dc) / muLog;
         grad = length(dz) / max(1e-3, muLog * dc);
         // Same pair, about the attractor instead. The interior is not
@@ -1482,7 +1458,7 @@ vec2 distortDisplace(vec2 uv, float disp) {
     // The amount scales the slide rather than blending two coordinates, so
     // every value of it is a genuine automorphism and zero is the identity map
     // exactly rather than a mixture that happens to reduce to it.
-    vec2 a = uMobiusShift * uMobius * disp * vec2(cos(uMobiusPhase), sin(uMobiusPhase));
+    vec2 a = uMobiusA * disp;
     uv = fromStage(cdiv(z - a, vec2(1.0, 0.0) - cmul(vec2(a.x, -a.y), z)) * radius);
   }
 
@@ -1510,50 +1486,20 @@ vec2 distortDisplace(vec2 uv, float disp) {
      * lines of the loop is about *where* — the places, their reaches, and the
      * two windows that decide whether a source is a standing pool or a drop
      * travelling out of one. The whole arrangement is hashed from one seed, as
-     * the deck's layout is, so a pulse costs one uniform rather than four.
+     * the deck's layout is — on the CPU, once a frame, since nothing in it
+     * depends on the pixel. See engine/pond.ts for where each number comes from.
      */
     vec2 g = vec2(0.0);
     for (int i = 0; i < POND_MAX; i++) {
       if (float(i) >= uPondSources) break;
-      float id = float(i) * 3.0 + uPondSeed * 61.0;
-      /*
-       * Placed in the frame and then carried into the stage, rather than drawn
-       * in stage coordinates directly: the hash gives a point in the unit
-       * square whatever the aspect is, so the same seed reads as the same
-       * arrangement on a phone held upright and on a television.
-       */
-      vec2 home = toStage(vec2(hash21(vec2(id, 1.73)), hash21(vec2(id, 5.31))));
-      float hf = hash21(vec2(id, 9.11));
-      float hr = hash21(vec2(id, 2.47));
-      float hd = hash21(vec2(id, 6.73));
-      float hs = hash21(vec2(id, 3.97));
-      float hw = hash21(vec2(id, 8.29));
-      float hv = hash21(vec2(id, 4.13));
-      /*
-       * Sources wander on slow circles of their own. On uTime rather than on
-       * the travel phase, and that is not an oversight: the phase wraps, and a
-       * wrap is invisible in a sine and a step in a position.
-       */
-      float turn = hr * TAU + uTime * mix(0.02, 0.05, hd);
-      vec2 c = home + vec2(cos(turn), sin(turn)) * POND_DRIFT;
-      vec2 d = p - c;
+      vec4 src = uPondSrc[i];
+      vec4 wav = uPondWave[i];
+      vec2 turn = uPondTurn[i];
+      float reach = src.z;
+      float freq = src.w;
+      vec2 d = p - src.xy;
       float rd = length(d);
-      float reach = max(uPondReach * mix(0.6, 1.4, hf), 1e-3);
-      float freq = uPondFreq * mix(0.7, 1.45, hs);
-      // Half of them run inward. Two sources facing each other read as two
-      // things happening; two running the same way read as one thing repeated,
-      // which is the whole argument against a single centred ripple.
-      float dir = hd < 0.5 ? -1.0 : 1.0;
-      /*
-       * Halves, unity and three halves — never anything between. The phase is
-       * wrapped against POND_CYCLE and only a rate that divides it evenly
-       * survives the wrap: an arbitrary multiplier would put a step into the
-       * rings every time the phase came round, at whatever amount the effect
-       * happened to be running.
-       */
-      float rate = (0.5 + 0.5 * floor(hv * 3.0)) * dir;
-      float travel = uPondPhase * rate;
-      float wave = sin(rd * freq - travel * TAU);
+      float wave = sin(rd * freq - wav.x);
 
       // The standing reading: a pool with a soft rim and nothing beyond it.
       float pool = 1.0 - smoothstep(0.35, 1.0, rd / reach);
@@ -1563,22 +1509,21 @@ vec2 distortDisplace(vec2 uv, float disp) {
        * edge of its reach and dying there. Built on the same phase, so the two
        * are one wave train under two windows rather than two effects — which is
        * why pondBurst can sit anywhere between them and still mean something.
+       * The packet's age and its birth-and-death window arrive in wav.yz.
        */
-      float age = fract(travel * POND_DROP + hf);
-      float edge = (rd - age * reach) / reach;
+      float edge = (rd - wav.y * reach) / reach;
       float ring = exp(-POND_SHARP * edge * edge);
-      // Born and gone smoothly. A packet that arrived at full size would be the
-      // one discontinuity this effect is able to produce.
-      float drop = ring * smoothstep(0.0, 0.12, age) * (1.0 - smoothstep(0.5, 1.0, age));
+      float drop = ring * wav.z;
 
       // Turned off radial by the swirl, each source its own way round: at a
       // right angle the rings drag the picture around themselves instead of
       // pushing it in and out, and a pond of that is four slow whirlpools.
-      vec2 push = rot(d / max(rd, 1e-4), uPondSwirl * 1.5708 * (hw < 0.5 ? -1.0 : 1.0));
-      // Amplitude out of the slope budget and the source's own spacing — see
-      // POND_SLOPE — with the core faded so the one point that has no radial
-      // direction is also the one point with nothing to push.
-      float amp = min(POND_SLOPE / freq, POND_AMP) * smoothstep(0.0, POND_CORE, rd * freq);
+      vec2 radial = d / max(rd, 1e-4);
+      vec2 push = vec2(radial.x * turn.x - radial.y * turn.y, radial.x * turn.y + radial.y * turn.x);
+      // Amplitude out of the slope budget and the source's own spacing, with
+      // the core faded so the one point that has no radial direction is also
+      // the one point with nothing to push.
+      float amp = wav.w * smoothstep(0.0, POND_CORE, rd * freq);
       g += push * wave * amp * mix(pool, drop, uPondBurst);
     }
     /*
@@ -1599,10 +1544,10 @@ vec2 distortDisplace(vec2 uv, float disp) {
     // never repeats. Displacing along its *gradient* rather than radially is
     // what makes it read as refraction through a lattice — a radial push would
     // just be another ripple centred on the viewer.
+    // The headings turn slowly with the clock; they arrive from the CPU.
     vec2 g = vec2(0.0);
-    for (int i = 0; i < 5; i++) {
-      float a = float(i) * 0.6283185 + uTime * 0.015;
-      vec2 d = vec2(cos(a), sin(a));
+    for (int i = 0; i < ${QUASI_WAVES}; i++) {
+      vec2 d = uQuasiDir[i];
       g -= d * sin(dot(p, d) * uQuasiFreq);
     }
     p += g * uQuasi * disp * 0.01;
@@ -1658,7 +1603,7 @@ vec2 distortDisplace(vec2 uv, float disp) {
      */
     float span = exp2(uMeltLevel) / uResolution.y;
     float tone = dot(textureLod(uScene, uv, uMeltLevel).rgb, LUMA) - 0.5;
-    uv += vec2(cos(uMeltAngle), sin(uMeltAngle)) * tone * uMelt * disp * span * MELT_REACH;
+    uv += uMeltDir * tone * uMelt * disp * span * MELT_REACH;
   }
 
   if (uFlow > 0.0) {
@@ -1820,10 +1765,10 @@ void main() {
     suvB -= off;
   }
   if (uMisreg > 0.0) {
-    suvR += plateDrift(0.0);
-    suvG += plateDrift(1.0);
-    suvB += plateDrift(2.0);
-    suvK = suvG + plateDrift(3.0);
+    suvR += uMisregDrift[0];
+    suvG += uMisregDrift[1];
+    suvB += uMisregDrift[2];
+    suvK = suvG + uMisregDrift[3];
   }
 
   /*
@@ -1963,8 +1908,8 @@ void main() {
   }
 
   if (uFeedbackAmount > 0.0) {
-    float ca = cos(uFeedbackRotate);
-    float sa = sin(uFeedbackRotate);
+    float ca = uFeedbackTurn.x;
+    float sa = uFeedbackTurn.y;
     vec2 f = vec2(radial.x * ca - radial.y * sa, radial.x * sa + radial.y * ca);
     f = f / max(uFeedbackScale, 0.001) + 0.5;
     if (uFeedbackDroste > 0.0) {
@@ -2075,7 +2020,7 @@ void main() {
     float hd = dot(textureLod(uScene, suvG - vec2(0.0, e.y), uReliefLevel).rgb, LUMA);
     float hu = dot(textureLod(uScene, suvG + vec2(0.0, e.y), uReliefLevel).rgb, LUMA);
     vec3 n = normalize(vec3(hl - hr, hd - hu, RELIEF_FLAT));
-    vec3 l = normalize(vec3(cos(uReliefPhase), sin(uReliefPhase), 0.8));
+    vec3 l = uReliefLight;
     // Bounded rather than left open: the response is small and symmetric for the
     // gentle slopes that make up nearly all of a page, but a near-vertical wall
     // can reach a long way down, and a gain that went negative would invert the

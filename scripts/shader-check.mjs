@@ -123,9 +123,18 @@ const post = readFileSync(join(SHADER_DIR, "post.ts"), "utf8");
 const glsl = /export const POST_FRAGMENT = `([\s\S]*?)\n`;/.exec(post)[1];
 const backend = readFileSync(join(ROOT, "src/components/viz/engine/backends/WebGLBackend.ts"), "utf8");
 const program = backend.split("this.postProgram = new Program(")[1].split("this.postMesh")[0];
-const declaredU = new Set([...glsl.matchAll(/^uniform \w+ (u\w+);/gm)].map((m) => m[1]));
+// Arrays included: their size is usually a constant interpolated from the TS side.
+const declaredU = new Set(
+  [...glsl.matchAll(/^uniform \w+ (u\w+)(?:\[[^\]]+\])?;/gm)].map((m) => m[1])
+);
 const boundU = new Set([...program.matchAll(/^\s+(u\w+): \{ value:/gm)].map((m) => m[1]));
-const assignedU = new Set([...backend.matchAll(/post\.(u\w+)\.value =/g)].map((m) => m[1]));
+// A uniform whose array is refilled in place every frame is just as live as one
+// that is reassigned, so an alias of it (`const a = post.uX.value`) or passing it
+// to a function that fills it (`fill(post.uX.value)`) counts. A bare read does not.
+const assignedU = new Set([
+  ...[...backend.matchAll(/post\.(u\w+)\.value =/g)].map((m) => m[1]),
+  ...[...backend.matchAll(/(?:=|[(,])\s*post\.(u\w+)\.value\b(?!\s*=(?!=))/g)].map((m) => m[1]),
+]);
 for (const u of declaredU) if (!boundU.has(u)) fail("post.ts", `${u} is declared but never bound — it will read zero`);
 for (const u of boundU) if (!declaredU.has(u)) fail("WebGLBackend.ts", `${u} is bound but not declared in the shader`);
 for (const u of boundU) if (!assignedU.has(u)) fail("WebGLBackend.ts", `${u} is initialised but never assigned per frame`);

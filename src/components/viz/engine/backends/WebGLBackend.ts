@@ -2,19 +2,31 @@ import { Renderer, Program, Mesh, Triangle, RenderTarget, Texture } from "ogl";
 import type { OGLRenderingContext } from "ogl";
 import type { Panel } from "../../../../types";
 import type { DrawShard, StageFrame, Vec3, VizBackend, VizFrame } from "../types";
-import { blendCode } from "../types";
+import { blendCode, needsBase, presenceAfter } from "../types";
 import { TexturePool } from "../TexturePool";
 import { FULLSCREEN_VERT } from "../shaders/common";
 import { HANDOVER_FRAGMENT } from "../shaders/handover";
 import { compositeFragment } from "../shaders/layer";
-import { FOLD_ITERS, POST_FRAGMENT } from "../shaders/post";
+import { FOLD_ITERS, POST_FRAGMENT, QUASI_WAVES } from "../shaders/post";
 import { SpatialPass } from "./SpatialPass";
 import { FieldPass } from "./FieldPass";
 import type { DeviceCaps } from "../../vizConfig";
 import { juliaFrame } from "../julia";
+import { fillPondUniforms, makePondUniforms } from "../pond";
+import type { PondInput } from "../pond";
 
 type Vec2 = [number, number];
 type Vec4 = [number, number, number, number];
+
+const TAU = Math.PI * 2;
+
+/** The halftone's classic CMY screen angles: 15deg, 75deg, 0deg. */
+const SCREEN_ANGLES = [0.2618, 1.309, 0];
+
+/** One screen's cos/sin pair, twice — a screen with no moire delta on it. */
+function screenAtRest(angle: number): Vec4 {
+  return [Math.cos(angle), Math.sin(angle), Math.cos(angle), Math.sin(angle)];
+}
 
 function vec4(): Vec4 {
   return [0, 0, 0, 0];
@@ -36,10 +48,11 @@ const HISTORY_IDLE_STRIDE = 3;
  */
 const WARM_FIRST_FRAME = 3;
 
-/** Identity tone levels, so an untouched slot is a pass-through rather than a
- *  black one — unlike the vec4 uniforms, zero is not the neutral value here. */
-function unitLevels(): Vec2 {
-  return [1, 0];
+/** Identity tone levels at full presence, so an untouched slot is a
+ *  pass-through rather than a black one — unlike the vec4 uniforms, zero is not
+ *  the neutral value here. */
+function unitLevels(): [number, number, number] {
+  return [1, 0, 1];
 }
 
 /**
@@ -127,6 +140,26 @@ export class WebGLBackend implements VizBackend {
    */
   private readonly drawable: DrawShard[] = [];
   private readonly pinnedIds: string[] = [];
+  /**
+   * The pond's per-source uniforms and the input they are worked out from, both
+   * refilled in place every frame the pond runs — see engine/pond.ts.
+   *
+   * More generally, everything `renderPost` derives from the frame is written
+   * into the uniform's own array rather than a fresh one, for the same reason
+   * as `drawable`. ogl caches a clone of what it last uploaded, so an in-place
+   * change is still seen as one.
+   */
+  private readonly pond = makePondUniforms();
+  private readonly pondInput: PondInput = {
+    sources: 0,
+    seed: 0,
+    freq: 0,
+    reach: 0,
+    swirl: 0,
+    phase: 0,
+    time: 0,
+    aspect: 1,
+  };
   private readonly maxShards: number;
   /**
    * Built on the first spatial frame, not in the constructor. Two reasons, and
@@ -221,6 +254,7 @@ export class WebGLBackend implements VizBackend {
         uFeedbackAmount: { value: 0 },
         uFeedbackScale: { value: 1 },
         uFeedbackRotate: { value: 0 },
+        uFeedbackTurn: { value: [1, 0] },
         uFeedbackDroste: { value: 0 },
         uHalftone: { value: 0 },
         uHalftoneFreq: { value: [1, 1] },
@@ -231,9 +265,7 @@ export class WebGLBackend implements VizBackend {
         uHueShift: { value: 0 },
         uShoulder: { value: 1 },
         uPane: { value: 0 },
-        uPaneGrid: { value: 2 },
-        uPaneBreathe: { value: 0 },
-        uPanePhase: { value: 0 },
+        uPaneZoom: { value: 1 },
         uKaleido: { value: 0 },
         uKaleidoSegments: { value: 6 },
         uKaleidoPhase: { value: 0 },
@@ -244,13 +276,11 @@ export class WebGLBackend implements VizBackend {
         uRipple: { value: 0 },
         uRippleFreq: { value: 16 },
         uPond: { value: 0 },
-        uPondFreq: { value: 12 },
         uPondSources: { value: 3 },
-        uPondReach: { value: 0.45 },
         uPondBurst: { value: 0 },
-        uPondSwirl: { value: 0 },
-        uPondPhase: { value: 0 },
-        uPondSeed: { value: 0 },
+        uPondSrc: { value: this.pond.src },
+        uPondWave: { value: this.pond.wave },
+        uPondTurn: { value: this.pond.turn },
         uTwist: { value: 0 },
         uBulge: { value: 0 },
         uSolarize: { value: 0 },
@@ -290,6 +320,7 @@ export class WebGLBackend implements VizBackend {
         uJuliaCenter: { value: [0, 0] },
         uQuasi: { value: 0 },
         uQuasiFreq: { value: 14 },
+        uQuasiDir: { value: Array.from({ length: QUASI_WAVES }, (): Vec2 => [1, 0]) },
         uTurbulence: { value: 0 },
         uTurbulenceScale: { value: 2.2 },
         uTurbulenceSpeed: { value: 0.12 },
@@ -299,18 +330,17 @@ export class WebGLBackend implements VizBackend {
         uDeckTurn: { value: 0.12 },
         uDeckSeed: { value: 0 },
         uMobius: { value: 0 },
-        uMobiusShift: { value: 0.28 },
-        uMobiusPhase: { value: 0 },
+        uMobiusA: { value: [0, 0] },
         uRelief: { value: 0 },
         uReliefLevel: { value: 5 },
-        uReliefPhase: { value: 0 },
+        uReliefLight: { value: [0, 0, 1] },
         uContour: { value: 0 },
         uContourBands: { value: 7 },
         uKeyplate: { value: 0 },
         uKeyplateLevel: { value: 4 },
         uMelt: { value: 0 },
         uMeltLevel: { value: 6 },
-        uMeltAngle: { value: Math.PI / 2 },
+        uMeltDir: { value: [0, 1] },
         uWake: { value: 0 },
         uWakeSpread: { value: 0.25 },
         uWakeLead: { value: 0 },
@@ -339,9 +369,9 @@ export class WebGLBackend implements VizBackend {
         uHistoryCount: { value: 1 },
         uHistoryCursor: { value: 0 },
         uMisreg: { value: 0 },
-        uMisregSpread: { value: 0.006 },
+        uMisregDrift: { value: Array.from({ length: 4 }, (): Vec2 => [0, 0]) },
         uMoire: { value: 0 },
-        uMoireSpread: { value: 0.09 },
+        uScreenRot: { value: SCREEN_ANGLES.map(screenAtRest) },
         uBenday: { value: 0 },
         uKrackle: { value: 0 },
         uKrackleScale: { value: 26 },
@@ -648,6 +678,9 @@ export class WebGLBackend implements VizBackend {
 
     let read: RenderTarget | null = null;
     let write = this.targets[0];
+    // Coverage of the stack beneath the shard being written, walked bottom up
+    // across every batch — see `needsBase`.
+    let presence = 0;
 
     const batches = Math.max(1, Math.ceil(drawable.length / this.maxShards));
     for (let batch = 0; batch < batches; batch++) {
@@ -668,8 +701,9 @@ export class WebGLBackend implements VizBackend {
         const rect = uniforms.uRect.value[i];
         rect[0] = dstRect.x + dstRect.w / 2;
         rect[1] = dstRect.y + dstRect.h / 2;
-        rect[2] = dstRect.w;
-        rect[3] = dstRect.h;
+        // Reciprocal size, floored as the shader used to floor it before dividing.
+        rect[2] = 1 / Math.max(dstRect.w, 1e-4);
+        rect[3] = 1 / Math.max(dstRect.h, 1e-4);
 
         const src = uniforms.uSrc.value[i];
         src[0] = srcRect.x;
@@ -686,6 +720,8 @@ export class WebGLBackend implements VizBackend {
         const levels = uniforms.uLevels.value[i];
         levels[0] = shard.levels.gain;
         levels[1] = shard.levels.lift;
+        levels[2] = needsBase(shard.blendMode) ? presence : 1;
+        presence = presenceAfter(presence, shard.opacity);
 
         const tint = uniforms.uTint.value[i];
         tint[0] = shard.tint[0];
@@ -797,29 +833,52 @@ export class WebGLBackend implements VizBackend {
     post.uFlowTex.value = fields.flow;
     post.uReactTex.value = fields.react;
     post.uHistory.value = fields.history;
-    post.uResolution.value = [this.width, this.height];
+    const resolution = post.uResolution.value;
+    resolution[0] = this.width;
+    resolution[1] = this.height;
     post.uFieldResolution.value = this.fields.fieldResolution;
     post.uAspect.value = this.aspect;
     post.uTime.value = frame.time;
     post.uFeedbackAmount.value = frame.post.feedbackAmount;
     post.uFeedbackScale.value = frame.post.feedbackScale;
     post.uFeedbackRotate.value = frame.post.feedbackRotate;
+    const feedbackTurn = post.uFeedbackTurn.value;
+    feedbackTurn[0] = Math.cos(frame.post.feedbackRotate);
+    feedbackTurn[1] = Math.sin(frame.post.feedbackRotate);
     post.uFeedbackDroste.value = frame.post.feedbackDroste;
     post.uHalftone.value = frame.post.halftone;
     // Screen frequency derives from the render resolution, not from pixels, so
     // dropping the internal resolution on mobile does not introduce moire.
     const cells = 90 / Math.max(0.2, frame.post.halftoneScale);
-    post.uHalftoneFreq.value = [cells * this.aspect, cells];
+    const halftoneFreq = post.uHalftoneFreq.value;
+    halftoneFreq[0] = cells * this.aspect;
+    halftoneFreq[1] = cells;
+    if (frame.post.halftone > 0) this.setScreens(frame);
     post.uChroma.value = frame.post.chroma;
     post.uPosterize.value = frame.post.posterize;
     post.uVignette.value = frame.post.vignette;
     post.uExposure.value = frame.post.exposure;
     post.uHueShift.value = frame.post.hueShift;
     post.uShoulder.value = frame.post.shoulder;
-    post.uPane.value = frame.post.pane;
-    post.uPaneGrid.value = frame.post.paneGrid;
-    post.uPaneBreathe.value = frame.post.paneBreathe;
-    post.uPanePhase.value = frame.phases.pane;
+    /*
+     * The panes' breath, shaped by a cosine here rather than integrated as a
+     * position: what the director integrates is the *rate*, and a phase run
+     * through a cosine opens and closes with zero velocity at both ends, which is
+     * what keeps a zoom of a whole octave from starting with a lurch.
+     *
+     * Evaluated on the CPU because it is the same at every pixel — and in the
+     * shader it sat ahead of every gate in the chain, so its cosine was paid at
+     * every pixel of every frame whether the panes were running or not.
+     */
+    const pane = Math.min(
+      1,
+      Math.max(
+        0,
+        frame.post.pane + frame.post.paneBreathe * (0.5 - 0.5 * Math.cos(frame.phases.pane * TAU))
+      )
+    );
+    post.uPane.value = pane;
+    post.uPaneZoom.value = Math.pow(Math.max(1, frame.post.paneGrid), pane);
     post.uKaleido.value = frame.post.kaleido;
     post.uKaleidoSegments.value = frame.post.kaleidoSegments;
     post.uKaleidoPhase.value = frame.phases.kaleido;
@@ -830,16 +889,23 @@ export class WebGLBackend implements VizBackend {
     post.uRipple.value = frame.post.ripple;
     post.uRippleFreq.value = frame.post.rippleFreq;
     post.uPond.value = frame.post.pond;
-    post.uPondFreq.value = frame.post.pondFreq;
     // Floored to a whole source here rather than in the shader: the loop takes
     // this as a bound, and a preset sliding the slider should add a drop at the
     // moment the number says so instead of half a frame either side of it.
     post.uPondSources.value = Math.floor(frame.post.pondSources);
-    post.uPondReach.value = frame.post.pondReach;
     post.uPondBurst.value = frame.post.pondBurst;
-    post.uPondSwirl.value = frame.post.pondSwirl;
-    post.uPondPhase.value = frame.phases.pond;
-    post.uPondSeed.value = frame.post.pondSeed;
+    if (frame.post.pond > 0) {
+      const input = this.pondInput;
+      input.sources = post.uPondSources.value;
+      input.seed = frame.post.pondSeed;
+      input.freq = frame.post.pondFreq;
+      input.reach = frame.post.pondReach;
+      input.swirl = frame.post.pondSwirl;
+      input.phase = frame.phases.pond;
+      input.time = frame.time;
+      input.aspect = this.aspect;
+      fillPondUniforms(input, post.uPondSrc.value, post.uPondWave.value, post.uPondTurn.value);
+    }
     post.uTwist.value = frame.post.twist;
     post.uBulge.value = frame.post.bulge;
     post.uSolarize.value = frame.post.solarize;
@@ -853,7 +919,9 @@ export class WebGLBackend implements VizBackend {
     post.uTunnelPhase.value = frame.phases.tunnel;
     post.uFold.value = frame.post.fold;
     post.uFoldScale.value = frame.post.foldScale;
-    post.uFoldOffset.value = [frame.post.foldOffsetX, frame.post.foldOffsetY];
+    const foldOffset = post.uFoldOffset.value;
+    foldOffset[0] = frame.post.foldOffsetX;
+    foldOffset[1] = frame.post.foldOffsetY;
     post.uFoldPhase.value = frame.phases.fold;
     // The iterated zoom compounds, so the point has to be brought back into
     // the stage by exactly what the loop multiplied it by — derived here rather
@@ -892,12 +960,20 @@ export class WebGLBackend implements VizBackend {
      */
     const drift = frame.phases.juliaDrift;
     const driftAmp = frame.post.juliaDrift * 0.5;
-    post.uJuliaCenter.value = [
-      driftAmp * Math.sin(drift),
-      driftAmp * Math.sin(drift * 1.6180339 + 1.1),
-    ];
+    const juliaCenter = post.uJuliaCenter.value;
+    juliaCenter[0] = driftAmp * Math.sin(drift);
+    juliaCenter[1] = driftAmp * Math.sin(drift * 1.6180339 + 1.1);
     post.uQuasi.value = frame.post.quasi;
     post.uQuasiFreq.value = frame.post.quasiFreq;
+    if (frame.post.quasi > 0) {
+      // Five plane waves at 36 degree steps, turning together on the clock.
+      const dirs = post.uQuasiDir.value;
+      for (let i = 0; i < QUASI_WAVES; i++) {
+        const a = i * 0.6283185 + frame.time * 0.015;
+        dirs[i][0] = Math.cos(a);
+        dirs[i][1] = Math.sin(a);
+      }
+    }
     post.uTurbulence.value = frame.post.turbulence;
     post.uTurbulenceScale.value = frame.post.turbulenceScale;
     post.uTurbulenceSpeed.value = frame.post.turbulenceSpeed;
@@ -914,18 +990,32 @@ export class WebGLBackend implements VizBackend {
     post.uDeckTurn.value = frame.post.deckTurn;
     post.uDeckSeed.value = frame.post.deckSeed;
     post.uMobius.value = frame.post.mobius;
-    post.uMobiusShift.value = frame.post.mobiusShift;
-    post.uMobiusPhase.value = frame.phases.mobius;
+    // The slide at unit refraction strength; the shader scales it per channel.
+    const mobiusA = post.uMobiusA.value;
+    const slide = frame.post.mobiusShift * frame.post.mobius;
+    mobiusA[0] = slide * Math.cos(frame.phases.mobius);
+    mobiusA[1] = slide * Math.sin(frame.phases.mobius);
     post.uRelief.value = frame.post.relief;
     post.uReliefLevel.value = frame.post.reliefLevel;
-    post.uReliefPhase.value = frame.phases.relief;
+    if (frame.post.relief > 0) {
+      // The light circles the page at a fixed elevation.
+      const light = post.uReliefLight.value;
+      const lx = Math.cos(frame.phases.relief);
+      const ly = Math.sin(frame.phases.relief);
+      const norm = 1 / Math.hypot(lx, ly, 0.8);
+      light[0] = lx * norm;
+      light[1] = ly * norm;
+      light[2] = 0.8 * norm;
+    }
     post.uContour.value = frame.post.contour;
     post.uContourBands.value = frame.post.contourBands;
     post.uKeyplate.value = frame.post.keyplate;
     post.uKeyplateLevel.value = frame.post.keyplateLevel;
     post.uMelt.value = frame.post.melt;
     post.uMeltLevel.value = frame.post.meltLevel;
-    post.uMeltAngle.value = frame.post.meltAngle;
+    const meltDir = post.uMeltDir.value;
+    meltDir[0] = Math.cos(frame.post.meltAngle);
+    meltDir[1] = Math.sin(frame.post.meltAngle);
     post.uWake.value = frame.post.wake;
     post.uWakeSpread.value = frame.post.wakeSpread;
     post.uWakeLead.value = frame.post.wakeLead;
@@ -947,9 +1037,8 @@ export class WebGLBackend implements VizBackend {
     post.uHistoryCount.value = this.fields.historyCount;
     post.uHistoryCursor.value = this.fields.historyCursor;
     post.uMisreg.value = frame.post.misreg;
-    post.uMisregSpread.value = frame.post.misregSpread;
+    if (frame.post.misreg > 0) this.setMisregistration(frame);
     post.uMoire.value = frame.post.moire;
-    post.uMoireSpread.value = frame.post.moireSpread;
     post.uBenday.value = frame.post.benday;
     post.uKrackle.value = frame.post.krackle;
     post.uKrackleScale.value = frame.post.krackleScale;
@@ -967,6 +1056,53 @@ export class WebGLBackend implements VizBackend {
     // frame, where a wake reading one shows a *plate* of an old frame, which is
     // a colour cast over the whole picture rather than a band of it.
     this.captureHistory(frame.post.slit > 0 || frame.post.wake > 0);
+  }
+
+  /**
+   * Where each colour plate has drifted to, in frame fractions — cyan, magenta,
+   * yellow, black.
+   *
+   * Each plate takes its own pair of incommensurate rates, so no two of them ever
+   * line back up and the register never returns to true. Divided by the aspect on
+   * x so the drift is the same distance on screen in both directions rather than
+   * being stretched by a wide canvas.
+   */
+  private setMisregistration(frame: VizFrame): void {
+    const post = this.postProgram.uniforms;
+    const drift = post.uMisregDrift.value as Vec2[];
+    const reach = frame.post.misregSpread * frame.post.misreg;
+    for (let seed = 0; seed < drift.length; seed++) {
+      const a = frame.time * (0.0131 + seed * 0.0041) + seed * 2.39;
+      const b = frame.time * (0.0097 + seed * 0.0063) + seed * 1.71;
+      drift[seed][0] = (Math.sin(a) / this.aspect) * reach;
+      drift[seed][1] = Math.cos(b) * reach;
+    }
+  }
+
+  /**
+   * The halftone's screen angles as cos/sin pairs, each turned either way by the
+   * moire's delta.
+   *
+   * Two screens that nearly agree beat against each other at a period far longer
+   * than either of them — see `plate` in the post shader. The delta drifts, and
+   * that drift is the whole effect. With no moire the delta is zero and both
+   * pairs are the plate's own angle.
+   */
+  private setScreens(frame: VizFrame): void {
+    const post = this.postProgram.uniforms;
+    const screens = post.uScreenRot.value as Vec4[];
+    const delta =
+      frame.post.moire > 0
+        ? frame.post.moire * frame.post.moireSpread * (0.62 + 0.38 * Math.sin(frame.time * 0.011))
+        : 0;
+    for (let i = 0; i < SCREEN_ANGLES.length; i++) {
+      const angle = SCREEN_ANGLES[i];
+      const screen = screens[i];
+      screen[0] = Math.cos(angle - delta);
+      screen[1] = Math.sin(angle - delta);
+      screen[2] = Math.cos(angle + delta);
+      screen[3] = Math.sin(angle + delta);
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 import type { Panel } from "../../../../types";
 import { panelImageUrl } from "../../../../utils/imageUrl";
 import type { DrawShard, VizBackend, VizFrame } from "../types";
-import { CSS_BLEND } from "../types";
+import { CSS_BLEND, needsBase, presenceAfter } from "../types";
 
 interface Slot {
   wrap: HTMLDivElement;
@@ -72,6 +72,11 @@ export class CssBackend implements VizBackend {
 
     while (this.slots.length < drawable.length) this.addSlot();
 
+    // CSS cannot lean a blend toward a plain layer the way the composite does,
+    // so a blend that needs a base simply is a plain layer until at least half
+    // the frame is covered beneath it. A step rather than a ramp, which on the
+    // fallback path is the honest trade.
+    let presence = 0;
     for (let i = 0; i < this.slots.length; i++) {
       const slot = this.slots[i];
       const shard = drawable[i];
@@ -80,7 +85,8 @@ export class CssBackend implements VizBackend {
         continue;
       }
       slot.wrap.style.display = "block";
-      this.applyShard(slot, shard);
+      this.applyShard(slot, shard, needsBase(shard.blendMode) && presence < 0.5);
+      presence = presenceAfter(presence, shard.opacity);
     }
 
     this.vignette.style.opacity = String(frame.post.vignette);
@@ -97,7 +103,7 @@ export class CssBackend implements VizBackend {
     this.slots.push({ wrap, img, panelId: "" });
   }
 
-  private applyShard(slot: Slot, shard: DrawShard): void {
+  private applyShard(slot: Slot, shard: DrawShard, plain = false): void {
     const source = this.images.get(shard.panelId);
     if (!source) return;
     if (slot.panelId !== shard.panelId) {
@@ -117,7 +123,7 @@ export class CssBackend implements VizBackend {
     slot.wrap.style.left = `${left}px`;
     slot.wrap.style.top = `${top}px`;
     slot.wrap.style.opacity = String(shard.opacity);
-    slot.wrap.style.mixBlendMode = CSS_BLEND[shard.blendMode];
+    slot.wrap.style.mixBlendMode = plain ? "normal" : CSS_BLEND[shard.blendMode];
     // CSS rotates clockwise; the stage convention is counter-clockwise.
     slot.wrap.style.transform = `rotate(${-shard.rotation}rad)`;
 
