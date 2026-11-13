@@ -21,6 +21,9 @@ export interface EngineStats {
   backend: BackendKind;
   /** Where the quality governor has settled the internal resolution. */
   renderScale: number;
+  /** WebGL contexts the browser has taken away this run. Each one is a moment
+   *  of black while the backend rebuilds and its panels decode again. */
+  contextLosses: number;
 }
 
 interface BackendWithStats extends VizBackend {
@@ -107,6 +110,12 @@ export class VizEngine {
   private backendKind: BackendKind = "webgl";
   private readonly director: Director;
   private resizeObserver: ResizeObserver | null = null;
+  /**
+   * The container has moved since the surface was last sized. Applied by the
+   * next frame rather than by the observer — see `observeSize`.
+   */
+  private sizeDirty = false;
+  private contextLosses = 0;
   private frameHandle = 0;
   private lastFrameTime = 0;
   private clock = 0;
@@ -211,6 +220,11 @@ export class VizEngine {
   private handleContextLost = (event: Event): void => {
     // Preventing the default is what makes a restore possible at all.
     event.preventDefault();
+    this.contextLosses++;
+    console.warn("viz: WebGL context lost, rebuilding");
+    // Only a run that was drawing comes back drawing. A paused run, or one
+    // already stopped behind the page break on its way out, stays as it was.
+    const wasRunning = this.running;
     this.stop();
     this.teardownBackend();
     if (this.disposed) return;
@@ -220,7 +234,7 @@ export class VizEngine {
       if (this.disposed) return;
       this.createBackend(false);
       this.applySize();
-      this.start();
+      if (wasRunning) this.start();
     }, 250);
   };
 
@@ -229,13 +243,25 @@ export class VizEngine {
     // the observer that runs with that window's rendering rather than ours.
     const Observer =
       (this.view as Partial<Window & typeof globalThis>).ResizeObserver ?? ResizeObserver;
-    const observer = new Observer(() => this.applySize());
+    //
+    // The observer only marks the size stale; the frame loop applies it. Resizing
+    // the canvas resets its drawing buffer to black, and observer callbacks run
+    // after the frame callbacks in the same rendering update — so a resize made
+    // here was a black frame on screen every time, with nothing scheduled to
+    // draw over it before the compositor took it. Applied at the top of the next
+    // frame, the buffer is reallocated and drawn into in the same task. What it
+    // costs is one frame of the old buffer stretched to the new box, which
+    // under everything the post chain does to it is not something anyone sees.
+    const observer = new Observer(() => {
+      this.sizeDirty = true;
+    });
     observer.observe(this.container);
     this.resizeObserver = observer;
     this.applySize();
   }
 
   private applySize(): void {
+    this.sizeDirty = false;
     const width = Math.max(1, this.container.clientWidth);
     const height = Math.max(1, this.container.clientHeight);
     this.backend?.resize(width, height, 1);
@@ -344,6 +370,9 @@ export class VizEngine {
 
     const seconds = now / 1000;
     if (!this.shouldDraw(seconds)) return;
+    // Here and nowhere else mid-run, so the reset it does to the canvas is drawn
+    // over before the frame is presented — see `observeSize`.
+    if (this.sizeDirty) this.applySize();
 
     const raw = this.lastFrameTime === 0 ? 1 / 60 : seconds - this.lastFrameTime;
     this.lastFrameTime = seconds;
@@ -524,7 +553,19 @@ export class VizEngine {
       return;
     }
     ctx.drawImage(canvas, 0, 0, still.width, still.height);
-    still.toBlob((blob) => waiting.forEach((resolve) => resolve(blob)), "image/jpeg", 0.9);
+    still.toBlob(
+      (blob) => {
+        // A canvas's backing store is only released when the element is
+        // collected, and on iOS canvas memory is a budget of its own — so the
+        // still's ten-odd megabytes are given back as soon as the encode is done
+        // rather than whenever the collector gets round to it.
+        still.width = 0;
+        still.height = 0;
+        waiting.forEach((resolve) => resolve(blob));
+      },
+      "image/jpeg",
+      0.9
+    );
   }
 
   /** Clamped here as well as in the UI, so a hand-written config cannot push
@@ -545,6 +586,7 @@ export class VizEngine {
       scene: this.director.sceneName,
       backend: this.backendKind,
       renderScale: this.renderScale,
+      contextLosses: this.contextLosses,
     };
   }
 
@@ -553,10 +595,21 @@ export class VizEngine {
   }
 
   private teardownBackend(): void {
+    // The listener goes first: the backend's dispose loses its own context on
+    // purpose, and that is not a loss to recover from.
+    this.canvas?.removeEventListener("webglcontextlost", this.handleContextLost);
     this.backend?.dispose();
     this.backend = null;
-    this.canvas?.removeEventListener("webglcontextlost", this.handleContextLost);
-    this.canvas?.remove();
+    if (this.canvas) {
+      // Zeroed after the context is gone, which releases the drawing buffer now
+      // rather than when the element is collected. On iOS a lost context keeps
+      // its storage until then, and every run — and every context loss within
+      // one — leaves a canvas behind for the collector, which is memory the wall
+      // is still paying for after the run has closed.
+      this.canvas.width = 0;
+      this.canvas.height = 0;
+      this.canvas.remove();
+    }
     this.canvas = null;
   }
 

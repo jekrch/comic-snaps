@@ -19,6 +19,7 @@ import {
   TUBE_VERTEX,
 } from "../shaders/spatial";
 import type { TexturePool } from "../TexturePool";
+import { deleteProgram, deleteTarget } from "./gpu";
 
 /** The unit quad every instance is a transform of. */
 const QUAD_POSITION = new Float32Array([-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5]);
@@ -698,15 +699,18 @@ export class SpatialPass {
     this.disposeSlots();
     for (const mesh of Object.values(this.solids)) mesh.geometry.remove();
     this.tube?.geometry.remove();
-    this.tubeProgram?.remove();
+    deleteProgram(this.gl, this.tubeProgram);
     this.tube = null;
     this.tubeProgram = null;
     this.surface?.geometry.remove();
-    this.surfaceProgram?.remove();
+    deleteProgram(this.gl, this.surfaceProgram);
     this.surface = null;
     this.surfaceProgram = null;
-    this.quadProgram.remove();
-    this.solidProgram.remove();
+    deleteProgram(this.gl, this.quadProgram);
+    deleteProgram(this.gl, this.solidProgram);
+    // The colour texture, the depth renderbuffer and the framebuffer — ogl's
+    // RenderTarget frees none of them itself, so dropping the reference did not.
+    deleteTarget(this.gl, this.target);
     this.target = null;
   }
 }

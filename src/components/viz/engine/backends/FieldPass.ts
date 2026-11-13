@@ -4,6 +4,7 @@ import { FULLSCREEN_VERT } from "../shaders/common";
 import { BLOOM_BLUR_FRAGMENT, BLOOM_THRESHOLD_FRAGMENT } from "../shaders/bloom";
 import { FLOW_FRAGMENT, REACT_FRAGMENT } from "../shaders/fields";
 import type { PostParams } from "../types";
+import { copyTexture, deleteProgram, deleteTarget } from "./gpu";
 
 /**
  * Every buffer the post chain reads that is not the scene or the last frame.
@@ -118,27 +119,68 @@ export class FieldPass {
     this.height = Math.max(1, height);
 
     const [fw, fh] = this.fieldSize;
-    for (const pass of [this.flow, this.react]) {
-      if (!pass) continue;
-      for (const target of pass.targets) target.setSize(fw, fh);
-      // A resized field is an uninitialised one, and for the reaction that is
-      // not a cosmetic problem: Gray–Scott on a zeroed buffer has no feedstock
-      // and stays flat forever.
-      this.seed(pass);
-    }
+    this.resizeField(this.flow, fw, fh, [0.5, 0.5, 0, 1]);
+    this.resizeField(this.react, fw, fh, [1, 0, 0, 1]);
     if (this.bloomTargets) {
       const w = Math.max(1, Math.round(this.width * BLOOM_SCALE));
       const h = Math.max(1, Math.round(this.height * BLOOM_SCALE));
       for (const target of this.bloomTargets) target.setSize(w, h);
     }
-    // Rebuilt rather than resized: the tile grid is derived from the frame, and
-    // the frames already in the ring were captured at the old one. A resize is
-    // also the one thing that can un-refuse the atlas, so a past failure is
-    // forgotten here rather than being permanent for the session.
+    // Rebuilt rather than resized: the tile grid is derived from the frame. The
+    // frames already in the ring are carried across onto the new grid — see
+    // `rebuildHistory`. A resize is also the one thing that can un-refuse the
+    // atlas, so a past failure is forgotten here rather than being permanent for
+    // the session.
     if (this.historyTarget || this.historyFailed) {
       this.historyFailed = false;
       this.rebuildHistory();
     }
+  }
+
+  /**
+   * Move a running field onto a new size with its state, rather than reseeding
+   * it.
+   *
+   * A reseed is a visible reset — the reaction's pattern collapses back to
+   * feedstock and the flow's displacement drops to rest, both mid-effect — and
+   * the quality governor resizes mid-run. The state is a smooth field, so a
+   * linear resample of it is the same state at another grain. Reseeded only if
+   * the copy is refused, which for the reaction is not optional: a zeroed buffer
+   * has no feedstock and stays flat forever.
+   *
+   * And not at all when the field lands on the size it already has, which is
+   * most resizes: the field is a quarter of the frame with a floor under it, so
+   * a governor step often does not move it. Before, that reset it anyway.
+   */
+  private resizeField(
+    pass: PingPong | null,
+    width: number,
+    height: number,
+    rest: [number, number, number, number]
+  ): void {
+    if (!pass) return;
+    const current = pass.targets[pass.read];
+    if (current.width === width && current.height === height) return;
+    const next: [RenderTarget, RenderTarget] = [
+      this.makeTarget(width, height),
+      this.makeTarget(width, height),
+    ];
+    const previous = pass.targets;
+    pass.targets = next;
+    // Both cleared to rest first, so the one the copy does not fill is a valid
+    // state too, and so a refused copy leaves the field seeded rather than black.
+    this.clear(pass, rest);
+    copyTexture(
+      this.renderer,
+      current.texture.texture,
+      current.width,
+      current.height,
+      next[0].texture.texture,
+      width,
+      height
+    );
+    pass.read = 0;
+    for (const target of previous) deleteTarget(this.gl, target);
   }
 
   /** Advance every buffer the frame asks for. Call before the post pass. */
@@ -396,9 +438,29 @@ export class FieldPass {
     if (!this.historyTarget && !this.historyFailed) this.rebuildHistory();
   }
 
+  /**
+   * Build the ring's atlas at the current frame size — carrying across whatever
+   * the old one held.
+   *
+   * The carry is what keeps a resize off the screen. A rebuilt ring used to
+   * start empty, and the first post pass after it reads the newest tile before
+   * anything has been captured into it: through slit-scan, which mixes the ring
+   * straight over the frame, that is a frame dimmed toward black by the full
+   * strength of the effect; through the wake, two colour plates gone dark. The
+   * governor steps the resolution mid-run — and most readily just after a heavy
+   * effect has come in — so that was a blink on the transitions.
+   *
+   * Both atlases are the same grid of equal tiles, so one scaled blit of the
+   * whole thing lands every old tile on its own slot in the new one, and the
+   * cursor and fill count stay valid as they are.
+   */
   private rebuildHistory(): void {
     const gl = this.gl as unknown as WebGL2RenderingContext;
-    this.disposeHistory();
+    const previous = this.historyTarget;
+    const previousFbo = this.historyFbo;
+    // Detached rather than deleted, so the copy below can still read it.
+    this.historyTarget = null;
+    this.historyFbo = null;
 
     // Tile size is a quarter of the frame, or whatever keeps the atlas inside
     // HISTORY_MAX_EDGE — whichever is smaller. The cap is what stops a 4×
@@ -446,11 +508,37 @@ export class FieldPass {
       console.error("viz: frame history unavailable at", this.historyTarget.width);
       this.historyFailed = true;
       this.disposeHistory();
+      this.deleteHistory(previous, previousFbo);
       return;
     }
 
-    this.cursor = HISTORY_SLOTS - 1;
-    this.filled = 0;
+    let carried = false;
+    if (previous && previousFbo && this.filled > 0) {
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, previousFbo);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.historyFbo);
+      gl.blitFramebuffer(
+        0,
+        0,
+        previous.width,
+        previous.height,
+        0,
+        0,
+        this.historyTarget.width,
+        this.historyTarget.height,
+        gl.COLOR_BUFFER_BIT,
+        gl.LINEAR
+      );
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+      this.renderer.state.framebuffer = null;
+      carried = true;
+    }
+    this.deleteHistory(previous, previousFbo);
+
+    if (!carried) {
+      this.cursor = HISTORY_SLOTS - 1;
+      this.filled = 0;
+    }
   }
 
   // --- shared ---------------------------------------------------------------
@@ -486,35 +574,40 @@ export class FieldPass {
   }
 
   private disposeHistory(): void {
-    if (this.historyFbo) {
-      (this.gl as unknown as WebGL2RenderingContext).deleteFramebuffer(this.historyFbo);
-      this.historyFbo = null;
-    }
-    // The texture, not only the framebuffer over it. ogl's RenderTarget has no
-    // teardown of its own, so dropping the reference leaves the allocation
-    // behind — and at up to 2048² this is the largest texture the engine owns.
-    // Every rebuild stranded one: a rotated phone, a surface sent to a second
-    // window and back, a governor step. On a device with a few hundred MB of
-    // GPU memory to give that is a context loss with a delay on it rather than
-    // a leak you can wait out.
-    if (this.historyTarget) {
-      this.gl.deleteTexture(this.historyTarget.texture.texture);
-      this.historyTarget = null;
-    }
+    this.deleteHistory(this.historyTarget, this.historyFbo);
+    this.historyTarget = null;
+    this.historyFbo = null;
+  }
+
+  /**
+   * The texture and both framebuffers — ours and the one ogl's RenderTarget
+   * made for itself — not only the framebuffer over it. ogl's RenderTarget has
+   * no teardown of its own, so dropping the reference leaves the allocation
+   * behind — and at up to 2048² this is the largest texture the engine owns.
+   * Every rebuild stranded one: a rotated phone, a surface sent to a second
+   * window and back, a governor step. On a device with a few hundred MB of GPU
+   * memory to give that is a context loss with a delay on it rather than a leak
+   * you can wait out.
+   */
+  private deleteHistory(target: RenderTarget | null, fbo: WebGLFramebuffer | null): void {
+    if (fbo) (this.gl as unknown as WebGL2RenderingContext).deleteFramebuffer(fbo);
+    deleteTarget(this.gl, target);
   }
 
   dispose(): void {
     this.disposeHistory();
-    for (const target of this.bloomTargets ?? []) {
-      this.gl.deleteTexture(target.texture.texture);
-    }
+    for (const target of this.bloomTargets ?? []) deleteTarget(this.gl, target);
     for (const pass of [this.flow, this.react]) {
-      for (const target of pass?.targets ?? []) this.gl.deleteTexture(target.texture.texture);
+      for (const target of pass?.targets ?? []) deleteTarget(this.gl, target);
     }
-    this.thresholdProgram?.remove();
-    this.blurProgram?.remove();
-    this.flow?.program.remove();
-    this.react?.program.remove();
+    deleteProgram(this.gl, this.thresholdProgram);
+    deleteProgram(this.gl, this.blurProgram);
+    deleteProgram(this.gl, this.flow?.program);
+    deleteProgram(this.gl, this.react?.program);
+    this.thresholdProgram = null;
+    this.blurProgram = null;
+    this.thresholdMesh = null;
+    this.blurMesh = null;
     this.bloomTargets = null;
     this.flow = null;
     this.react = null;

@@ -204,6 +204,7 @@ export default function VizDebugPanel({
             shards {stats?.shards ?? 0} · tex {stats?.resident ?? 0}
             {stats?.pending ? ` (+${stats.pending})` : ""} · res{" "}
             {stats ? `${(stats.renderScale * 100).toFixed(0)}%` : "—"}
+            {stats?.contextLosses ? ` · lost ${stats.contextLosses}` : ""}
           </div>
           <div className="opacity-55">seed {seed}</div>
         </div>

@@ -10,6 +10,7 @@ import { compositeFragment } from "../shaders/layer";
 import { FOLD_ITERS, POST_FRAGMENT, QUASI_WAVES } from "../shaders/post";
 import { SpatialPass } from "./SpatialPass";
 import { FieldPass } from "./FieldPass";
+import { copyTexture, deleteProgram, deleteTarget } from "./gpu";
 import type { DeviceCaps } from "../../vizConfig";
 import { juliaFrame } from "../julia";
 import { fillPondUniforms, makePondUniforms } from "../pond";
@@ -435,33 +436,79 @@ export class WebGLBackend implements VizBackend {
     if (this.disposed) return;
     this.cssWidth = width;
     this.cssHeight = height;
-    this.renderer.dpr = this.renderScale;
-    this.renderer.setSize(width, height);
     // Floored rather than rounded so these agree exactly with the drawing
-    // buffer ogl just sized, which truncates — a one-pixel disagreement would
+    // buffer ogl sizes below, which truncates — a one-pixel disagreement would
     // put `uResolution` and the viewport out of step with the framebuffer.
     const nextWidth = Math.max(1, Math.floor(width * this.renderScale));
     const nextHeight = Math.max(1, Math.floor(height * this.renderScale));
-    // A resize that lands on the same buffer size is anything but free — it
-    // reallocates every target and rebuilds the history atlas. The observer
-    // fires on sub-pixel container changes and on every mount of the chrome
-    // around the surface, so the early return is what keeps a layout nudge from
-    // being a dropped frame.
+    /*
+     * A resize that lands on the same buffer size is anything but free, and it
+     * is not merely a cost: it is a black frame.
+     *
+     * `Renderer.setSize` assigns `canvas.width` and `canvas.height`
+     * unconditionally, and assigning either one — even the value it already
+     * holds — resets the drawing buffer to black. The observer fires on
+     * sub-pixel container changes and on every mount of the chrome around the
+     * surface, and when it fires outside the frame loop nothing redraws before
+     * the compositor presents. So the early return comes *before* the canvas is
+     * touched, not after.
+     */
     if (nextWidth === this.width && nextHeight === this.height) return;
+    this.renderer.dpr = this.renderScale;
+    this.renderer.setSize(width, height);
+    // ogl pins the canvas's CSS box to the pixel size it was handed. The canvas
+    // is laid out by its container, so it goes back to filling it — otherwise a
+    // CSS change the early return above skipped would leave it a fraction off.
+    const style = this.gl.canvas.style;
+    style.width = "100%";
+    style.height = "100%";
+
+    const previousWidth = this.width;
+    const previousHeight = this.height;
     this.width = nextWidth;
     this.height = nextHeight;
     this.aspect = this.width / this.height;
+    // `setSize` replaces level 0 and leaves the old chain behind at the old
+    // sizes, which makes a texture on a mip filter incomplete — and an
+    // incomplete texture samples as black. The next frame that wants the chain
+    // builds it again.
+    this.retireSceneMips();
     for (const target of this.targets) target.setSize(this.width, this.height);
-    // Resized with the rest, and its contents dropped: a still of the frame at
-    // the old size is not a still of this one, and a crossing that has lost what
-    // it was crossing against should fall back to the cut rather than dissolve
-    // out of a black buffer.
-    this.snapshot?.setSize(this.width, this.height);
-    this.captured = false;
+    // The crossing's still and the feedback trail are both the past, which the
+    // next frame cannot redraw — so they are resampled onto the new size rather
+    // than reallocated empty. A crossing in flight keeps dissolving and the
+    // trails keep their length, where before a governor step cut the one and
+    // dropped the other.
+    if (this.snapshot) {
+      const previous = this.snapshot;
+      this.snapshot = this.makeTarget(this.width, this.height);
+      this.captured =
+        this.captured &&
+        copyTexture(
+          this.renderer,
+          previous.texture.texture,
+          previousWidth,
+          previousHeight,
+          this.snapshot.texture.texture,
+          this.width,
+          this.height
+        );
+      deleteTarget(this.gl, previous);
+    }
     this.spatial?.resize(this.width, this.height);
     this.fields.resize(this.width, this.height);
-    this.gl.deleteTexture(this.feedback.texture);
+    const previousFeedback = this.feedback;
     this.feedback = this.makeFeedback(this.width, this.height);
+    copyTexture(
+      this.renderer,
+      previousFeedback.texture,
+      previousWidth,
+      previousHeight,
+      this.feedback.texture,
+      this.width,
+      this.height
+    );
+    this.gl.deleteTexture(previousFeedback.texture);
   }
 
   /**
@@ -507,6 +554,24 @@ export class WebGLBackend implements VizBackend {
     // alone would put a hard cut through every one of them under a crossing that
     // has none.
     const composed = this.applyHandover(frame, scene);
+    // Four effects read the frame at a level other than its own: the fractal, at
+    // whatever rate its orbit is compressing by; the melt, at the level its
+    // grain names; the keyplate, at the level it splits the drawing from the
+    // colour on; and the relief, at the grain of its terrain. Any one of them
+    // needs the chain, and between them this is no longer a single-preset cost —
+    // three are in the cycler's pool, so any run with psychedelia up can ask for
+    // it, and a run in a liquid or a light movement will ask often.
+    //
+    // Ahead of the fields rather than in post: bloom and the reaction sample this
+    // texture too, and a chain built after them is one they read a frame stale —
+    // or, on the frame after a resize, not at all.
+    this.syncSceneMips(
+      composed,
+      frame.post.julia > 0 ||
+        frame.post.melt > 0 ||
+        frame.post.keyplate > 0 ||
+        frame.post.relief > 0
+    );
     // Between the scene and post, so the buffers post reads are this frame's
     // rather than the last one's — the reaction in particular is seeded from the
     // composite, and a frame late would have it chasing a picture that has
@@ -785,12 +850,19 @@ export class WebGLBackend implements VizBackend {
       return;
     }
 
-    // Every texture that was ever put on a mip filter, not merely the one this
-    // frame happens to be reading. The shard path ping-pongs between two targets
-    // and the spatial path has a third, so which texture arrives here changes
-    // with the batch count and the mode — and a target left behind on a mip
-    // filter is one whose chain stops being regenerated while it is still being
-    // sampled from.
+    this.retireSceneMips();
+  }
+
+  /**
+   * Every texture that was ever put on a mip filter, not merely the one this
+   * frame happens to be reading. The shard path ping-pongs between two targets
+   * and the spatial path has a third, so which texture arrives here changes with
+   * the batch count and the mode — and a target left behind on a mip filter is
+   * one whose chain stops being regenerated while it is still being sampled
+   * from.
+   */
+  private retireSceneMips(): void {
+    const gl = this.gl;
     if (this.mipped.size === 0) return;
     for (const texture of this.mipped) {
       this.renderer.activeTexture(0);
@@ -813,20 +885,6 @@ export class WebGLBackend implements VizBackend {
   private renderPost(frame: VizFrame, scene: Texture): void {
     const post = this.postProgram.uniforms;
     const fields = this.fields.textures;
-    // Four effects read the frame at a level other than its own: the fractal, at
-    // whatever rate its orbit is compressing by; the melt, at the level its
-    // grain names; the keyplate, at the level it splits the drawing from the
-    // colour on; and the relief, at the grain of its terrain. Any one of them
-    // needs the chain, and between them this is no longer a single-preset cost —
-    // three are in the cycler's pool, so any run with psychedelia up can ask for
-    // it, and a run in a liquid or a light movement will ask often.
-    this.syncSceneMips(
-      scene,
-      frame.post.julia > 0 ||
-        frame.post.melt > 0 ||
-        frame.post.keyplate > 0 ||
-        frame.post.relief > 0
-    );
     post.uScene.value = scene;
     post.uFeedback.value = this.feedback;
     post.uBloomTex.value = fields.bloom;
@@ -1170,9 +1228,20 @@ export class WebGLBackend implements VizBackend {
     this.spatial?.dispose();
     this.fields.dispose();
     this.gl.deleteTexture(this.feedback.texture);
-    this.compositeProgram.remove();
-    this.postProgram.remove();
-    this.handoverProgram?.remove();
+    // Everything by hand, ahead of the loss below. `loseContext` would reclaim
+    // it eventually, but a synthetic loss on iOS holds the context's storage
+    // until the canvas is collected — after the run has closed, on the wall.
+    for (const target of this.targets) deleteTarget(this.gl, target);
+    deleteTarget(this.gl, this.snapshot);
+    this.snapshot = null;
+    this.mipped.clear();
+    deleteProgram(this.gl, this.compositeProgram);
+    deleteProgram(this.gl, this.postProgram);
+    deleteProgram(this.gl, this.handoverProgram);
+    this.handoverProgram = null;
+    this.handoverMesh = null;
+    // Shared with the field pass, so only once it has gone.
+    this.geometry.remove();
     const lose = this.gl.getExtension("WEBGL_lose_context");
     lose?.loseContext();
   }

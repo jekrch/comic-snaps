@@ -209,17 +209,61 @@ export class TexturePool {
     if (longest > this.maxEdge && panel.width && panel.height) {
       const scale = this.maxEdge / longest;
       try {
-        return await createImageBitmap(blob, {
-          ...DECODE_OPTIONS,
-          resizeWidth: Math.round(panel.width * scale),
-          resizeHeight: Math.round(panel.height * scale),
-          resizeQuality: "high",
-        });
+        return this.fit(
+          await createImageBitmap(blob, {
+            ...DECODE_OPTIONS,
+            resizeWidth: Math.round(panel.width * scale),
+            resizeHeight: Math.round(panel.height * scale),
+            resizeQuality: "high",
+          })
+        );
       } catch {
         // Older Safari rejects the resize options; full-size decode still works.
       }
     }
-    return createImageBitmap(blob, DECODE_OPTIONS);
+    return this.fit(await createImageBitmap(blob, DECODE_OPTIONS));
+  }
+
+  /**
+   * The decode as it actually came back, held to the cap.
+   *
+   * The resize above is a request, not a guarantee: a browser that rejects the
+   * options falls through to a full-size decode, one that ignores them hands
+   * back the original, and a panel with no recorded size never asks at all. Any
+   * of those is a phone photo going up at its native twelve megapixels — sixty
+   * megabytes a texture with its mip chain, in a pool of eight, on a device
+   * that drops the context long before that. So the size is checked here, and
+   * anything over is drawn down through a canvas. Free for every decode the
+   * resize already handled.
+   */
+  private async fit(bitmap: ImageBitmap): Promise<ImageBitmap> {
+    const longest = Math.max(bitmap.width, bitmap.height);
+    // A pixel of slack for the rounding in the resize request.
+    if (longest <= this.maxEdge + 1) return bitmap;
+    const scale = this.maxEdge / longest;
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+    try {
+      const canvas =
+        typeof OffscreenCanvas !== "undefined"
+          ? new OffscreenCanvas(width, height)
+          : Object.assign(document.createElement("canvas"), { width, height });
+      const ctx = canvas.getContext("2d") as
+        | CanvasRenderingContext2D
+        | OffscreenCanvasRenderingContext2D
+        | null;
+      if (!ctx) return bitmap;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      const fitted = await createImageBitmap(canvas, DECODE_OPTIONS);
+      // Given back now rather than at collection — see `Engine.takeStill`.
+      canvas.width = 0;
+      canvas.height = 0;
+      bitmap.close();
+      return fitted;
+    } catch {
+      return bitmap;
+    }
   }
 
   private insert(panelId: string, bitmap: ImageBitmap): void {
