@@ -369,6 +369,7 @@ export class WebGLBackend implements VizBackend {
         uHistoryGrid: { value: [1, 1] },
         uHistoryCount: { value: 1 },
         uHistoryCursor: { value: 0 },
+        uHistoryReach: { value: 0 },
         uMisreg: { value: 0 },
         uMisregDrift: { value: Array.from({ length: 4 }, (): Vec2 => [0, 0]) },
         uMoire: { value: 0 },
@@ -1094,6 +1095,7 @@ export class WebGLBackend implements VizBackend {
     post.uHistoryGrid.value = this.fields.historyGrid;
     post.uHistoryCount.value = this.fields.historyCount;
     post.uHistoryCursor.value = this.fields.historyCursor;
+    post.uHistoryReach.value = this.fields.historyReach;
     post.uMisreg.value = frame.post.misreg;
     if (frame.post.misreg > 0) this.setMisregistration(frame);
     post.uMoire.value = frame.post.moire;
@@ -1176,23 +1178,25 @@ export class WebGLBackend implements VizBackend {
    * stride the oldest tile is a couple of seconds old rather than a fraction of
    * one, which is just as far from "minutes ago", for a third of the bandwidth.
    *
-   * The switch back to every frame leaves the ring briefly non-uniform in time —
-   * recent tiles a frame apart, older ones a stride apart — so the trail's depth
-   * axis is momentarily stretched at its far end. It costs a ring's worth of
-   * frames to clear, which is well under a second, against an effect that
-   * MIN_EFFECT_RAMP will not let reach visible strength for one and a half. The
-   * stretch is gone before there is anything on screen to see it in.
+   * The switch back to every frame leaves the ring briefly non-uniform in time:
+   * recent tiles a frame apart, older ones a stride apart. That used to be
+   * argued away as a ring's worth of frames, gone before the effect could be
+   * seen. At 60fps it was. On a phone running the fractal at twenty, the stride
+   * tiles were several seconds old and still in the ring when the slit-scan
+   * was showing. The read is now bounded by capture time instead (see
+   * `FieldPass.historyReach`), so stride tiles older than the span are never
+   * read at any frame rate.
    */
   private captureHistory(live: boolean): void {
     if (live) {
       this.historyIdle = 0;
-      this.fields.capture();
+      this.fields.capture(performance.now() / 1000);
       return;
     }
     if (!this.fields.hasHistory) return;
     if (++this.historyIdle < HISTORY_IDLE_STRIDE) return;
     this.historyIdle = 0;
-    this.fields.capture();
+    this.fields.capture(performance.now() / 1000);
   }
 
   /**

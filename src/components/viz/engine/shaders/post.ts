@@ -236,6 +236,9 @@ uniform vec2 uHistoryGrid;
 uniform float uHistoryCount;
 /** Tile holding the most recently captured frame. */
 uniform float uHistoryCursor;
+/** Tiles back from the cursor that age 1 reaches: the ring's span in real time
+ *  rather than its length in frames — see HISTORY_SPAN. */
+uniform float uHistoryReach;
 
 uniform float uMisreg;
 /**
@@ -1652,7 +1655,7 @@ vec3 slice(vec2 uv, float slot) {
  * depth in time.
  */
 vec3 history(vec2 uv, float age) {
-  float back = age * (uHistoryCount - 1.0);
+  float back = age * uHistoryReach;
   float nearest = floor(back);
   // The cursor holds the newest tile, so walking into the past is subtraction.
   return mix(

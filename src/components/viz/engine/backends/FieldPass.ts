@@ -38,6 +38,25 @@ const HISTORY_SLOTS = HISTORY_COLS * HISTORY_ROWS;
 const HISTORY_MAX_EDGE = 2048;
 /** Tile size relative to the frame, before the cap above bites. */
 const HISTORY_TILE_SCALE = 0.25;
+/**
+ * The furthest back the ring is ever read, in real seconds.
+ *
+ * The ring is a count of frames, and a count of frames is not a length of
+ * time. Twenty-five of them, captured every frame on the 60Hz desktop this
+ * was tuned on, is 0.4 seconds, a trail. On a phone, held to 30 and usually
+ * well under it in the heavier modes, the same twenty-five frames reach a
+ * second or more back. While the ring is still catching up from its idle
+ * stride they reach several. Through slit-scan, which lays the deepest tile
+ * over most of the frame, that was the picture jumping back a few seconds
+ * every time the cycler brought it in. In the fractal's flight it read as the
+ * run resetting.
+ *
+ * So the shader is handed a reach in tiles worked out from when each one was
+ * captured, rather than the whole ring. A slow device reads fewer, more widely
+ * spaced tiles across the same span. A fast one is capped by the ring before it
+ * gets near this.
+ */
+const HISTORY_SPAN = 24 / 60;
 
 /** Flow and reaction buffer size, relative to the frame. */
 const FIELD_SCALE = 0.25;
@@ -100,6 +119,9 @@ export class FieldPass {
    */
   private cursor = HISTORY_SLOTS - 1;
   private filled = 0;
+  /** When each tile was captured, real seconds, by slot. Carried across a
+   *  rebuild with the tiles themselves, since the cursor and fill count are. */
+  private readonly stamps = new Float64Array(HISTORY_SLOTS);
   /** Set once and for good if the atlas will not attach. Without it a refused
    *  framebuffer would be rebuilt and refused again every frame. */
   private historyFailed = false;
@@ -217,6 +239,31 @@ export class FieldPass {
 
   get historyCursor(): number {
     return this.cursor;
+  }
+
+  /**
+   * How many tiles back from the newest the shader may read, fractional, so
+   * that the oldest moment it reaches is at most HISTORY_SPAN before the newest.
+   *
+   * Walked off the capture times rather than derived from a frame rate, because
+   * the spacing is not uniform: tiles written at the idle stride sit further
+   * apart than the ones written since the effect came in, and a rate would
+   * get exactly that stretch of the ring wrong.
+   */
+  get historyReach(): number {
+    const newest = this.stamps[this.cursor];
+    let reach = 0;
+    let reachAge = 0;
+    for (let back = 1; back < this.filled; back++) {
+      const age = newest - this.stamps[(this.cursor - back + HISTORY_SLOTS) % HISTORY_SLOTS];
+      if (age > HISTORY_SPAN) {
+        const gap = age - reachAge;
+        return gap > 0 ? reach + (HISTORY_SPAN - reachAge) / gap : reach;
+      }
+      reach = back;
+      reachAge = age;
+    }
+    return reach;
   }
 
   /** Whether the ring has been allocated. Once it has, it is worth keeping fed
@@ -398,13 +445,14 @@ export class FieldPass {
    * the frame on each edge, so a copy would need a downsample pass of its own to
    * feed it, where the blit does the filtering on the way across.
    */
-  capture(): void {
+  capture(now: number): void {
     const gl = this.gl as unknown as WebGL2RenderingContext;
     this.ensureHistory();
     if (!this.historyFbo) return;
 
     this.cursor = (this.cursor + 1) % HISTORY_SLOTS;
     this.filled = Math.min(HISTORY_SLOTS, this.filled + 1);
+    this.stamps[this.cursor] = now;
 
     const [tw, th] = this.historyTile;
     const x = (this.cursor % this.historyCols) * tw;
