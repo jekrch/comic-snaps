@@ -1402,6 +1402,17 @@ function level(pulse: Pulse, time: number): number {
 export class EffectCycler {
   private stream: Rng | null = null;
   private readonly active: Pulse[] = [];
+
+  /** Ids of every effect a running pulse is driving, companions included —
+   *  for the debug readout. */
+  get runningIds(): string[] {
+    const ids: string[] = [];
+    for (const pulse of this.active) {
+      ids.push(EFFECTS[pulse.effect].id);
+      if (pulse.mate) ids.push(EFFECTS[pulse.mate.effect].id);
+    }
+    return ids;
+  }
   private nextOnset = -1;
   /** The movement the piece is currently in, and when it gives it up. */
   private chapter: Family | null = null;

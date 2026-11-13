@@ -32,7 +32,14 @@ export interface EngineStats {
   pageAge: number;
   /** Preimages into the Julia flight, 0..JULIA_WRAP. */
   juliaTravel: number;
+  /** Recent events, newest last, each stamped with the run clock. */
+  events: readonly string[];
 }
+
+/** Events kept for the debug readout. */
+const EVENT_LOG_SIZE = 12;
+/** A frame this much longer than the cap's interval is logged as a stall. */
+const STALL_SECONDS = 0.15;
 
 /** Counted per page load, so the debug readout can tell an engine rebuilt from
  *  the top (same page, higher number) from a reload (back to 1). */
@@ -145,6 +152,11 @@ export class VizEngine {
   private sizeDirty = false;
   private contextLosses = 0;
   private readonly build = ++engineBuilds;
+  /** What the debug readout's event log has seen — see `watch`. */
+  private readonly events: string[] = [];
+  private seenEffects = new Set<string>();
+  private seenTravel = -1;
+  private seenSpawns = 0;
   private frameHandle = 0;
   private lastFrameTime = 0;
   private clock = 0;
@@ -256,6 +268,7 @@ export class VizEngine {
     // Preventing the default is what makes a restore possible at all.
     event.preventDefault();
     this.contextLosses++;
+    this.log("context lost");
     console.warn("viz: WebGL context lost, rebuilding");
     // Only a run that was drawing comes back drawing. A paused run, or one
     // already stopped behind the page break on its way out, stays as it was.
@@ -407,9 +420,13 @@ export class VizEngine {
     if (!this.shouldDraw(seconds)) return;
     // Here and nowhere else mid-run, so the reset it does to the canvas is drawn
     // over before the frame is presented — see `observeSize`.
-    if (this.sizeDirty) this.applySize();
+    if (this.sizeDirty) {
+      this.applySize();
+      this.log(`resize ${this.container.clientWidth}x${this.container.clientHeight}`);
+    }
 
     const raw = this.lastFrameTime === 0 ? 1 / 60 : seconds - this.lastFrameTime;
+    if (this.lastFrameTime !== 0 && raw > STALL_SECONDS) this.log(`stall ${raw.toFixed(2)}s`);
     this.lastFrameTime = seconds;
     const dt = Math.min(Math.max(raw, 0), MAX_DT);
     // The clock is the only thing the speed control touches. Everything
@@ -437,6 +454,7 @@ export class VizEngine {
     const frame = this.director.update(this.clock, dt);
     this.lastShardCount = drawCount(frame);
     this.backend.render(frame);
+    this.watch();
 
     // Read straight off the back of the draw, in the same task: the drawing
     // buffer is not preserved — asking for it would cost every frame of the run
@@ -535,6 +553,7 @@ export class VizEngine {
   }
 
   private setRenderScale(scale: number): void {
+    this.log(`res ${(this.renderScale * 100).toFixed(0)}→${(scale * 100).toFixed(0)}% @${this.fps.toFixed(0)}fps`);
     this.renderScale = scale;
     this.backend?.setRenderScale?.(scale);
     // The step itself reallocates every target, which is a stall — and one that
@@ -635,7 +654,46 @@ export class VizEngine {
       build: this.build,
       pageAge: performance.now() / 1000,
       juliaTravel: this.director.juliaTravel,
+      events: this.events,
     };
+  }
+
+  private log(text: string): void {
+    this.events.push(`${this.clock.toFixed(1)} ${text}`);
+    if (this.events.length > EVENT_LOG_SIZE) this.events.shift();
+  }
+
+  /**
+   * Diff the state the debug readout cares about against the last frame and log
+   * what changed. A handful of comparisons a frame; the set is rebuilt only
+   * when the effect list actually differs.
+   */
+  private watch(): void {
+    const ids = this.director.effectIds;
+    let changed = ids.length !== this.seenEffects.size;
+    for (const id of ids) {
+      if (!this.seenEffects.has(id)) {
+        this.log(`+${id}`);
+        changed = true;
+      }
+    }
+    if (changed) {
+      const now = new Set(ids);
+      for (const id of this.seenEffects) if (!now.has(id)) this.log(`-${id}`);
+      this.seenEffects = now;
+    }
+
+    const travel = this.director.juliaTravel;
+    if (this.seenTravel >= 0 && Math.abs(travel - this.seenTravel) > 1) {
+      this.log(`flight ${this.seenTravel.toFixed(2)}→${travel.toFixed(2)}`);
+    }
+    this.seenTravel = travel;
+
+    const spawns = this.director.layersSpawned;
+    if (spawns !== this.seenSpawns) {
+      this.log("new layer");
+      this.seenSpawns = spawns;
+    }
   }
 
   get usablePanelCount(): number {

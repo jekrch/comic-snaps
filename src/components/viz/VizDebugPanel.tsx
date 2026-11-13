@@ -212,6 +212,13 @@ export default function VizDebugPanel({
             {stats ? stats.juliaTravel.toFixed(2) : "—"}
           </div>
           <div className="opacity-55">seed {seed}</div>
+          {stats?.events.length ? (
+            <div className="mt-1 opacity-75">
+              {stats.events.map((event, i) => (
+                <div key={i}>{event}</div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
 

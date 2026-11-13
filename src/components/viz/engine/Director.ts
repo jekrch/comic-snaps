@@ -466,6 +466,16 @@ export class Director {
     return this.panels.length;
   }
 
+  /** Effects the cycler is running, for the debug readout. */
+  get effectIds(): string[] {
+    return this.cycler.runningIds;
+  }
+
+  /** Layers spawned so far, for the debug readout. */
+  get layersSpawned(): number {
+    return this.spawnCount;
+  }
+
   /** Preimages into the Julia flight, for the debug readout. */
   get juliaTravel(): number {
     return this.phases.juliaTravel;

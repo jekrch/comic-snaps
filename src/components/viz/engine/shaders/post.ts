@@ -789,7 +789,15 @@ vec2 distortFold(vec2 uv) {
     // footprint rather than a plane-space one. Only its magnitude survives to
     // the mip level below — the phase cancels out of |dz| — so the flight's
     // rotation is left out of it.
-    vec2 dz = vec2(s * length(uJuliaStep), 0.0);
+    // The chart's whole derivative, not just its linear term. At the top of a
+    // turn the curved terms are zero and the two agree. At the bottom they are
+    // not, and seeding with the linear term alone put the derivative a few
+    // percent off at the wrap, which moved the facets and the chunk cells that
+    // are read off it by that much in one frame.
+    vec2 dz = vec2(
+      s * length(uJuliaStep + 2.0 * cmul(uJuliaWarp, w) + 3.0 * cmul(uJuliaWarp3, w2)),
+      0.0
+    );
 
     /*
      * The page, driving the figure.
