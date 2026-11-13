@@ -67,6 +67,10 @@ uniform sampler2D uReactTex;
 /** Ring of recent frames, tiled into one atlas. */
 uniform sampler2D uHistory;
 uniform vec2 uResolution;
+/** Frame height in pixels at the device's ceiling scale. Unlike uResolution it
+ *  does not move when the quality governor steps the internal resolution, so
+ *  it is what anything that decides the picture's content measures against. */
+uniform float uFacetRes;
 /** Resolution of the flow and reaction fields, which run well below the frame. */
 uniform vec2 uFieldResolution;
 uniform float uAspect;
@@ -1095,7 +1099,15 @@ vec2 distortFold(vec2 uv) {
        * whether a facet is thin is a question about pixels and the internal
        * resolution moves with the device.
        */
-      float cap = q * uResolution.y / 3.0;
+      // Measured against the frame's height at the device ceiling rather than
+      // the live internal resolution. The cap decides which facet a pixel
+      // lands in, and a staircase is discontinuous, so a cap that moved with
+      // the governor put 2–4% of the frame onto a different crop on every step.
+      // On a phone climbing to its ceiling that was a jump in the middle of
+      // the figure every few seconds, which looked like the run skipping back.
+      // A pixel at the ceiling is the pixel the device is shown at, so it is
+      // the right yardstick anyway.
+      float cap = q * uFacetRes / 3.0;
       float k = 1.0 / (1.0 + offJac / max(cap, 1e-4));
       off *= k;
       offJac *= k;

@@ -445,7 +445,7 @@ export class FieldPass {
    * the frame on each edge, so a copy would need a downsample pass of its own to
    * feed it, where the blit does the filtering on the way across.
    */
-  capture(now: number, source: WebGLFramebuffer | null): void {
+  capture(now: number): void {
     const gl = this.gl as unknown as WebGL2RenderingContext;
     this.ensureHistory();
     if (!this.historyFbo) return;
@@ -461,7 +461,7 @@ export class FieldPass {
     // shader indexes tiles in the same order this writes them.
     const y = Math.floor(this.cursor / this.historyCols) * th;
 
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, source);
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.historyFbo);
     gl.blitFramebuffer(
       0,

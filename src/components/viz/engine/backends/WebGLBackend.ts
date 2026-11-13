@@ -190,30 +190,11 @@ export class WebGLBackend implements VizBackend {
    *  waiting for the container to move. */
   private cssWidth = 1;
   private cssHeight = 1;
-  /**
-   * The canvas's drawing buffer, which is held at the device ceiling whatever
-   * the internal resolution is doing.
-   *
-   * It used to follow the governor, so every step of the render scale was also
-   * a resize of the canvas. On iOS that showed up as the run jumping back a few
-   * seconds for a moment on each step: WebKit recycles a resized canvas's
-   * display surfaces from a pool kept by size, and the first frame after a
-   * resize could put up one still holding a frame from the last time the canvas
-   * was that size. A step is now a reallocation of internal targets only.
-   * Below the ceiling, post draws into `output` and is scaled up into the
-   * canvas, and the canvas changes only when its container does.
-   */
-  private canvasWidth = 1;
-  private canvasHeight = 1;
-  /** Where post draws while the internal resolution is under the canvas's.
-   *  Null at the ceiling, where post draws straight into the canvas and the
-   *  scale-up pass costs nothing. */
-  private output: RenderTarget | null = null;
 
   constructor(canvas: HTMLCanvasElement, private readonly caps: DeviceCaps) {
     this.renderer = new Renderer({
       canvas,
-      dpr: caps.maxRenderScale,
+      dpr: caps.renderScale,
       alpha: false,
       antialias: false,
       depth: false,
@@ -389,6 +370,7 @@ export class WebGLBackend implements VizBackend {
         uHistoryCount: { value: 1 },
         uHistoryCursor: { value: 0 },
         uHistoryReach: { value: 0 },
+        uFacetRes: { value: 1 },
         uMisreg: { value: 0 },
         uMisregDrift: { value: Array.from({ length: 4 }, (): Vec2 => [0, 0]) },
         uMoire: { value: 0 },
@@ -459,11 +441,8 @@ export class WebGLBackend implements VizBackend {
     // Floored rather than rounded so these agree exactly with the drawing
     // buffer ogl sizes below, which truncates — a one-pixel disagreement would
     // put `uResolution` and the viewport out of step with the framebuffer.
-    const ceiling = this.caps.maxRenderScale;
-    const canvasWidth = Math.max(1, Math.floor(width * ceiling));
-    const canvasHeight = Math.max(1, Math.floor(height * ceiling));
-    const nextWidth = Math.min(canvasWidth, Math.max(1, Math.floor(width * this.renderScale)));
-    const nextHeight = Math.min(canvasHeight, Math.max(1, Math.floor(height * this.renderScale)));
+    const nextWidth = Math.max(1, Math.floor(width * this.renderScale));
+    const nextHeight = Math.max(1, Math.floor(height * this.renderScale));
     /*
      * A resize that lands on the same buffer size is anything but free, and it
      * is not merely a cost: it is a black frame.
@@ -476,22 +455,15 @@ export class WebGLBackend implements VizBackend {
      * the compositor presents. So the early return comes *before* the canvas is
      * touched, not after.
      */
-    if (canvasWidth !== this.canvasWidth || canvasHeight !== this.canvasHeight) {
-      this.canvasWidth = canvasWidth;
-      this.canvasHeight = canvasHeight;
-      this.renderer.dpr = ceiling;
-      this.renderer.setSize(width, height);
-      // ogl pins the canvas's CSS box to the pixel size it was handed. The canvas
-      // is laid out by its container, so it goes back to filling it — otherwise a
-      // CSS change the early return above skipped would leave it a fraction off.
-      const style = this.gl.canvas.style;
-      style.width = "100%";
-      style.height = "100%";
-    }
-    if (nextWidth === this.width && nextHeight === this.height) {
-      this.syncOutput();
-      return;
-    }
+    if (nextWidth === this.width && nextHeight === this.height) return;
+    this.renderer.dpr = this.renderScale;
+    this.renderer.setSize(width, height);
+    // ogl pins the canvas's CSS box to the pixel size it was handed. The canvas
+    // is laid out by its container, so it goes back to filling it — otherwise a
+    // CSS change the early return above skipped would leave it a fraction off.
+    const style = this.gl.canvas.style;
+    style.width = "100%";
+    style.height = "100%";
 
     const previousWidth = this.width;
     const previousHeight = this.height;
@@ -539,53 +511,6 @@ export class WebGLBackend implements VizBackend {
       this.height
     );
     this.gl.deleteTexture(previousFeedback.texture);
-    this.syncOutput();
-  }
-
-  /** Build, size or retire `output` to match the internal resolution against
-   *  the canvas's. */
-  private syncOutput(): void {
-    const scaled = this.width !== this.canvasWidth || this.height !== this.canvasHeight;
-    if (!scaled) {
-      deleteTarget(this.gl, this.output);
-      this.output = null;
-      return;
-    }
-    if (this.output) this.output.setSize(this.width, this.height);
-    else this.output = this.makeTarget(this.width, this.height);
-  }
-
-  /** The framebuffer post's output is in: the canvas's, or `output`. */
-  private get outputFbo(): WebGLFramebuffer | null {
-    return this.output ? this.output.buffer : null;
-  }
-
-  /**
-   * Scale `output` up into the canvas. Nothing to do at the ceiling, where post
-   * drew there directly.
-   *
-   * A blit rather than a pass: one filtered copy, no program, and it does not
-   * touch any state ogl tracks except the framebuffer binding, reset below.
-   */
-  private present(): void {
-    if (!this.output) return;
-    const gl = this.gl as unknown as WebGL2RenderingContext;
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.output.buffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(
-      0,
-      0,
-      this.width,
-      this.height,
-      0,
-      0,
-      this.canvasWidth,
-      this.canvasHeight,
-      gl.COLOR_BUFFER_BIT,
-      gl.LINEAR
-    );
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
-    this.renderer.state.framebuffer = null;
   }
 
   /**
@@ -971,6 +896,7 @@ export class WebGLBackend implements VizBackend {
     const resolution = post.uResolution.value;
     resolution[0] = this.width;
     resolution[1] = this.height;
+    post.uFacetRes.value = this.cssHeight * this.caps.maxRenderScale;
     post.uFieldResolution.value = this.fields.fieldResolution;
     post.uAspect.value = this.aspect;
     post.uTime.value = frame.time;
@@ -1183,12 +1109,8 @@ export class WebGLBackend implements VizBackend {
     post.uBleedRadius.value = frame.post.bleedRadius;
     post.uPaper.value = frame.post.paper;
 
-    // Straight to the canvas at the ceiling, or into `output` under it.
-    if (this.output) {
-      this.renderer.render({ scene: this.postMesh, target: this.output, frustumCull: false });
-    } else {
-      this.renderer.render({ scene: this.postMesh, frustumCull: false });
-    }
+    // No target: straight to the default framebuffer.
+    this.renderer.render({ scene: this.postMesh, frustumCull: false });
 
     if (frame.post.feedbackAmount > 0) this.captureFeedback();
     // Both readers of the ring keep it live, and the wake needs it far more
@@ -1196,7 +1118,6 @@ export class WebGLBackend implements VizBackend {
     // frame, where a wake reading one shows a *plate* of an old frame, which is
     // a colour cast over the whole picture rather than a band of it.
     this.captureHistory(frame.post.slit > 0 || frame.post.wake > 0);
-    this.present();
   }
 
   /**
@@ -1271,13 +1192,13 @@ export class WebGLBackend implements VizBackend {
   private captureHistory(live: boolean): void {
     if (live) {
       this.historyIdle = 0;
-      this.fields.capture(performance.now() / 1000, this.outputFbo);
+      this.fields.capture(performance.now() / 1000);
       return;
     }
     if (!this.fields.hasHistory) return;
     if (++this.historyIdle < HISTORY_IDLE_STRIDE) return;
     this.historyIdle = 0;
-    this.fields.capture(performance.now() / 1000, this.outputFbo);
+    this.fields.capture(performance.now() / 1000);
   }
 
   /**
@@ -1295,14 +1216,9 @@ export class WebGLBackend implements VizBackend {
    */
   private captureFeedback(): void {
     const gl = this.gl;
-    // Read from wherever post drew, bound explicitly rather than trusted to
-    // still be bound from the draw.
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.outputFbo);
     gl.bindTexture(gl.TEXTURE_2D, this.feedback.texture);
     gl.copyTexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 0, 0, this.width, this.height);
     gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    this.renderer.state.framebuffer = null;
     // The raw binds above bypassed ogl's unit cache; force it to re-bind.
     this.renderer.state.textureUnits = [];
   }
@@ -1324,8 +1240,6 @@ export class WebGLBackend implements VizBackend {
     for (const target of this.targets) deleteTarget(this.gl, target);
     deleteTarget(this.gl, this.snapshot);
     this.snapshot = null;
-    deleteTarget(this.gl, this.output);
-    this.output = null;
     this.mipped.clear();
     deleteProgram(this.gl, this.compositeProgram);
     deleteProgram(this.gl, this.postProgram);
