@@ -24,7 +24,19 @@ export interface EngineStats {
   /** WebGL contexts the browser has taken away this run. Each one is a moment
    *  of black while the backend rebuilds and its panels decode again. */
   contextLosses: number;
+  /** Composition clock, seconds since this engine was built. */
+  clock: number;
+  /** Engines built since the page loaded; this one's number. */
+  build: number;
+  /** Seconds since the page loaded. Back near zero means the page reloaded. */
+  pageAge: number;
+  /** Preimages into the Julia flight, 0..JULIA_WRAP. */
+  juliaTravel: number;
 }
+
+/** Counted per page load, so the debug readout can tell an engine rebuilt from
+ *  the top (same page, higher number) from a reload (back to 1). */
+let engineBuilds = 0;
 
 interface BackendWithStats extends VizBackend {
   stats?: { resident: number; pending: number };
@@ -116,6 +128,7 @@ export class VizEngine {
    */
   private sizeDirty = false;
   private contextLosses = 0;
+  private readonly build = ++engineBuilds;
   private frameHandle = 0;
   private lastFrameTime = 0;
   private clock = 0;
@@ -587,6 +600,10 @@ export class VizEngine {
       backend: this.backendKind,
       renderScale: this.renderScale,
       contextLosses: this.contextLosses,
+      clock: this.clock,
+      build: this.build,
+      pageAge: performance.now() / 1000,
+      juliaTravel: this.director.juliaTravel,
     };
   }
 

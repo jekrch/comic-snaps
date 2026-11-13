@@ -466,6 +466,11 @@ export class Director {
     return this.panels.length;
   }
 
+  /** Preimages into the Julia flight, for the debug readout. */
+  get juliaTravel(): number {
+    return this.phases.juliaTravel;
+  }
+
   get sceneName(): string {
     return this.stage.active ? this.stage.name : this.scene.name;
   }

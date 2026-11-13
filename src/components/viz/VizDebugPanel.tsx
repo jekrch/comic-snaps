@@ -206,6 +206,11 @@ export default function VizDebugPanel({
             {stats ? `${(stats.renderScale * 100).toFixed(0)}%` : "—"}
             {stats?.contextLosses ? ` · lost ${stats.contextLosses}` : ""}
           </div>
+          <div>
+            run {stats ? stats.clock.toFixed(0) : "—"}s · page{" "}
+            {stats ? stats.pageAge.toFixed(0) : "—"}s · engine #{stats?.build ?? "—"} · flight{" "}
+            {stats ? stats.juliaTravel.toFixed(2) : "—"}
+          </div>
           <div className="opacity-55">seed {seed}</div>
         </div>
       </div>
