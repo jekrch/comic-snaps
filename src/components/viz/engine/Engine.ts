@@ -77,6 +77,22 @@ const GOVERNOR_RAISE_SAMPLES = 4;
  *  have held from the start. The asymmetry that matters is kept. */
 const GOVERNOR_STEP_DOWN = 0.12;
 const GOVERNOR_STEP_UP = 0.08;
+/**
+ * After a drop, seconds before the governor may climb back above the scale it
+ * dropped to, doubling each time a climb fails, up to the maximum.
+ *
+ * Without it the governor oscillated on any device that holds its rate at one
+ * scale and not at the next: four good samples, up a step, the rate falls, down
+ * a step, and again eight seconds later, for the whole run. Fractal mode on a
+ * phone did exactly that. Each step reallocates every internal target and is
+ * a visible hitch, so a run that settles should stay settled. The hold expires
+ * rather than lasting the whole run because the drop may have been a heavy
+ * effect passing through, or a phone that has since cooled.
+ */
+const GOVERNOR_HOLD = 45;
+const GOVERNOR_HOLD_MAX = 600;
+/** A drop this soon after a climb is that climb failing. */
+const GOVERNOR_FAILED_CLIMB = 20;
 
 /**
  * What the frame is actually putting on screen, for the debug readout. Shards on
@@ -144,6 +160,12 @@ export class VizEngine {
   /** Wall-clock seconds, of the same origin as `lastFrameTime`. */
   private governorNext = 0;
   private governorGood = 0;
+  /** Scale the governor may not climb above until `climbCapUntil` — see
+   *  GOVERNOR_HOLD. Kept across a pause: it is about the device, not the run. */
+  private climbCap = Infinity;
+  private climbCapUntil = 0;
+  private climbHold = GOVERNOR_HOLD;
+  private lastClimb = -Infinity;
   /** Real time of the last *drawn* frame, for the pacing cap. Separate from
    *  `lastFrameTime`, which a skipped frame deliberately does not advance. */
   private lastDrawTime = 0;
@@ -489,14 +511,23 @@ export class VizEngine {
 
     if (this.fps < target * GOVERNOR_DROP && this.renderScale > floor) {
       this.governorGood = 0;
-      this.setRenderScale(Math.max(floor, this.renderScale - GOVERNOR_STEP_DOWN));
+      const next = Math.max(floor, this.renderScale - GOVERNOR_STEP_DOWN);
+      const failedClimb = seconds - this.lastClimb < GOVERNOR_FAILED_CLIMB;
+      this.climbHold = failedClimb
+        ? Math.min(GOVERNOR_HOLD_MAX, this.climbHold * 2)
+        : GOVERNOR_HOLD;
+      this.climbCap = next;
+      this.climbCapUntil = seconds + this.climbHold;
+      this.setRenderScale(next);
       return;
     }
 
-    if (this.fps > target * GOVERNOR_RAISE && this.renderScale < ceiling) {
+    const cap = seconds < this.climbCapUntil ? Math.min(ceiling, this.climbCap) : ceiling;
+    if (this.fps > target * GOVERNOR_RAISE && this.renderScale < cap - 1e-4) {
       if (++this.governorGood < GOVERNOR_RAISE_SAMPLES) return;
       this.governorGood = 0;
-      this.setRenderScale(Math.min(ceiling, this.renderScale + GOVERNOR_STEP_UP));
+      this.lastClimb = seconds;
+      this.setRenderScale(Math.min(cap, this.renderScale + GOVERNOR_STEP_UP));
       return;
     }
 
