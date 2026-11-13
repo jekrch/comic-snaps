@@ -89,7 +89,7 @@ function parseFiltersFromURL(): {
 /** Visualizer params, carried across unrelated URL updates. `vizseed` and
  *  `vizdebug` are read straight off the URL by the overlay, so losing them on a
  *  filter change would silently drop a run someone was replaying. */
-const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizcfg", "vizseed", "vizdebug"] as const;
+const VIZ_KEYS = ["viz", "vizpreset", "vizspeed", "vizcfg", "vizseed", "vizdebug", "vizres"] as const;
 
 /** Everything owned by someone else and carried through untouched: the
  *  visualizer's params, and the wall's view options (`useViewOptions`). */

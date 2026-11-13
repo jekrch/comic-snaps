@@ -174,6 +174,7 @@ export class VizEngine {
   private governorGood = 0;
   /** Scale the governor may not climb above until `climbCapUntil` — see
    *  GOVERNOR_HOLD. Kept across a pause: it is about the device, not the run. */
+  private governorPinned = false;
   private climbCap = Infinity;
   private climbCapUntil = 0;
   private climbHold = GOVERNOR_HOLD;
@@ -214,6 +215,14 @@ export class VizEngine {
     this.config = config;
     this.caps = deviceCaps(this.view);
     this.renderScale = this.caps.renderScale;
+    // `?vizres=1.1` pins the internal resolution and turns the governor off — a
+    // debugging switch for telling the governor's steps apart from anything
+    // else that happens around them.
+    const pinned = Number(new URLSearchParams(this.view.location.search).get("vizres"));
+    if (pinned > 0) {
+      this.renderScale = Math.min(this.caps.maxRenderScale, Math.max(0.25, pinned));
+      this.governorPinned = true;
+    }
     this.director = new Director(panels, config, new Rng(seed), this.caps);
     // Read through `this.backend` rather than bound to one, since a lost context
     // replaces it — and false while there is none, which is the honest answer:
@@ -515,7 +524,7 @@ export class VizEngine {
    * either one is wrong for the other.
    */
   private governQuality(seconds: number): void {
-    if (!this.backend?.setRenderScale) return;
+    if (!this.backend?.setRenderScale || this.governorPinned) return;
     if (this.governorNext === 0) {
       this.governorNext = seconds + GOVERNOR_GRACE;
       return;
