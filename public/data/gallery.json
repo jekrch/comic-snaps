@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 362,
+      "id": "bleeding-hearts-9-1794690093",
+      "title": "Bleeding Hearts",
+      "slug": "bleeding-hearts",
+      "issue": 9,
+      "year": 2026,
+      "artist": "Stipan Morian",
+      "image": "images/bleeding-hearts/issue-9-1794690093.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-14T21:01:35.778Z"
+    },
+    {
       "seq": 361,
       "id": "bleeding-hearts-9-1794690026",
       "title": "Bleeding Hearts",
