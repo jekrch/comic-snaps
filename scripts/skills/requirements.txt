@@ -7,7 +7,11 @@
 # workflow installs these in jobs holding the Claude and repo-write tokens.
 numpy==2.2.6
 opencv-python-headless==4.10.0.84
-Pillow==12.1.1
+# Pillow only opens images here (metadata + hashes), so it tracks security
+# fixes rather than the tuning pins. 13.x needs Python 3.11+ (CI runs 3.12);
+# 12.3.0 is the newest that still installs on a local Python 3.10.
+Pillow==13.0.0; python_version >= "3.11"
+Pillow==12.3.0; python_version < "3.11"
 ImageHash==4.3.2
 scikit-learn==1.7.2
 scikit-image==0.25.2
