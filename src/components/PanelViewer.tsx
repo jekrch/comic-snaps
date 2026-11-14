@@ -60,7 +60,7 @@ const panelOrigin = originFromAttribute<Panel>("data-panel-id");
 // of the URL when you page onto one.
 const panelHistory: ViewerHistoryOptions<Panel> = {
   param: "panel",
-  value: (item) => (item.data?.cover || item.data?.portrait ? null : item.id),
+  value: (item) => (item.data.cover || item.data.portrait ? null : item.id),
 };
 
 /**
@@ -339,6 +339,9 @@ export default function PanelViewer({
       disableNavigation={graphOpen}
       navSlotPlacement="inline"
       closeOnBackdropClick
+      // Every wheel event zooms (1.0 defaults to trackpad behavior: a plain
+      // scroll pans a zoomed panel and is otherwise left to the browser).
+      wheel="zoom"
       ariaLabel={`${panel.title} ${formatIssue(panel.issue)} — full view`}
       classNames={{ root: overViz ? "rvl-over-viz" : undefined }}
       icons={viewerIcons}
@@ -445,7 +448,11 @@ export default function PanelViewer({
           closing={ctx.closing}
           overViz={overViz}
           onSelectPanel={onSelectPanel}
-          onBrowse={onBrowse}
+          // Browsing leaves the viewer for a filtered wall. Close first and
+          // browse once the viewer has stepped back off its history entry;
+          // writing the filters while that entry is still current would leave
+          // it behind the new URL, costing an extra press of back.
+          onBrowse={(dimension, value) => ctx.close(() => onBrowse(dimension, value))}
         />
       )}
     />

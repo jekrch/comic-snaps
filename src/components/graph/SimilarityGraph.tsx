@@ -345,7 +345,10 @@ export default function SimilarityGraph({
   if (slideDir && !show && !slideOutSettled) {
     graphTransform = `translateX(${slideDir === "left" ? "-100%" : "100%"})`;
   }
-  if (closing) {
+  // When the viewer closes with the graph up, it fades where it is instead of
+  // sliding away. Only while it's open: a graph already put away stays
+  // off-screen, or it would snap into view for the length of the fade.
+  if (closing && open) {
     graphTransform = "translateY(0)";
   }
 

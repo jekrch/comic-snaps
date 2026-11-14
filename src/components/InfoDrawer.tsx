@@ -704,8 +704,10 @@ export default function InfoDrawer({ open, panel, allPanels, onSelectPanel, arti
   if (slideDir && !show && !slideOutSettled) {
     transform = `translateX(${slideDir === "left" ? "-100%" : "100%"})`;
   }
-  // When the viewer is closing, fade out instead of sliding down
-  if (closing) {
+  // When the viewer closes with the drawer up, fade out instead of sliding
+  // down. Only while it's open: a drawer already put away stays off-screen, or
+  // it would snap into view for the length of the fade.
+  if (closing && open) {
     transform = "translateY(0)";
   }
 
