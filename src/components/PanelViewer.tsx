@@ -1,6 +1,12 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
-import { ImageViewer } from "@jekrch/react-viewport-lightbox";
+import {
+  ImageViewer,
+  ViewerButton,
+  originFromAttribute,
+  type ViewerHistoryOptions,
+  type ViewerItem,
+} from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../types";
 import { formatIssue } from "../utils/issueFormat";
 import { panelImageUrl } from "../utils/imageUrl";
@@ -29,12 +35,38 @@ interface Props {
   onBrowse: (dimension: BrowseDimension, value: string) => void;
 }
 
+// Lighter chrome icons than the library's 18px / 1.75 defaults, to sit with the
+// app's own UI. Hoisted so the viewer sees the same object every render.
+const viewerIcons = {
+  close: <X size={16} strokeWidth={1.5} />,
+  zoomIn: <ZoomIn size={16} strokeWidth={1.5} />,
+  zoomOut: <ZoomOut size={16} strokeWidth={1.5} />,
+  prev: <ChevronLeft size={38} strokeWidth={1.5} />,
+  next: <ChevronRight size={38} strokeWidth={1.5} />,
+};
+
+// Shared-element open/close: expand from (and collapse back into) the wall
+// card or series tile carrying the matching id. Offscreen thumbnails return
+// their (offscreen) rect and the library falls back to a plain fade, so this
+// is safe after deep nav, and so is a viewer group wider than the strip it
+// was opened from. While an overlay has the stage shifted off-screen the
+// library fades the close instead of collapsing, so no guard is needed here.
+const panelOrigin = originFromAttribute<Panel>("data-panel-id");
+
+// Keep the open panel id in the URL (?panel=<id>) so the viewer is linkable.
+// Neither a cover nor a portrait has an id the wall can resolve on a cold load,
+// so those leave the param off instead of writing a link that would open on
+// nothing — and leaving it off is also what takes the previous panel's id out
+// of the URL when you page onto one.
+const panelHistory: ViewerHistoryOptions<Panel> = {
+  param: "panel",
+  value: (item) => (item.data?.cover || item.data?.portrait ? null : item.id),
+};
+
 /**
  * Overlay content rendered inside the lightbox: the info drawer (slides up,
- * pushing the image up) and the similarity graph (slides down, pushing the
- * image down). Lives in its own component so it can call `setContentShift`
- * from an effect — that hook is only available on the viewer context handed to
- * render slots.
+ * with the image pushed up out of its way) and the similarity graph (slides
+ * down, with the image pushed down).
  */
 function ViewerOverlay({
   panel,
@@ -53,7 +85,6 @@ function ViewerOverlay({
   overViz,
   onSelectPanel,
   onBrowse,
-  setContentShift,
 }: {
   panel: Panel;
   allPanels: Panel[];
@@ -71,7 +102,6 @@ function ViewerOverlay({
   overViz: boolean;
   onSelectPanel: (panel: Panel, group?: Panel[]) => void;
   onBrowse: (dimension: BrowseDimension, value: string) => void;
-  setContentShift: (transform: string | null, animate?: boolean) => void;
 }) {
   const { artist, series, parentSeries, issueCredits } = useMetadata(panel.artist, panel.slug, panel.issue);
   const artistIndex = useArtistIndex();
@@ -81,41 +111,6 @@ function ViewerOverlay({
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
     `${panel.title} ${formatIssue(panel.issue)} ${panel.year} ${panel.artist}`
   )}`;
-
-  // Hand the page back the moment the close *starts*, rather than when the
-  // viewer finally unmounts a quarter-second later: the gallery comes back
-  // under a backdrop that is still up and fades out along with it, where
-  // returning it on unmount would pop it in one frame after the backdrop had
-  // already gone. A layout effect, and in the overlay rather than in
-  // `PanelViewer` itself, so it lands before the viewer's own layout effects
-  // measure the thumbnail the image collapses back into.
-  useLayoutEffect(() => {
-    if (closing) setViewerOpen(false);
-  }, [closing]);
-
-  // Push the image track out of the way for whichever overlay is open: up for
-  // the drawer (slides from the bottom), down for the graph (slides from the
-  // top). The shared-element close/collapse still measures the resting image,
-  // so reset to center before the viewer tears down.
-  // The very first placement snaps, in a layout effect: a viewer that opens
-  // with the drawer already out is already where it belongs, and animating the
-  // stage there would show the art for a beat and then slide it away.
-  // Guarded on the shift last applied rather than a "have I placed" flag —
-  // StrictMode runs mount effects twice, and the second pass re-sending the
-  // same shift with `animate: true` is exactly what put the slide back: by
-  // then the viewer's own layout effects have measured, so the stage has a
-  // computed transform at rest for the transition to run from.
-  const applied = useRef<string | null | undefined>(undefined);
-  useLayoutEffect(() => {
-    const shift = drawerOpen ? "translateY(-100vh)" : graphOpen ? "translateY(100vh)" : null;
-    if (applied.current === shift) return;
-    // Only a shift that is actually off-center needs snapping; a viewer opening
-    // on the art is already centered, so it keeps the library's default and
-    // never carries a `transition: none` into the first toggle.
-    const snap = applied.current === undefined && shift !== null;
-    applied.current = shift;
-    setContentShift(shift, !snap);
-  }, [drawerOpen, graphOpen, setContentShift]);
 
   return (
     <>
@@ -197,67 +192,28 @@ export default function PanelViewer({
     openWithPublisher ? { name: openWithPublisher, seq: 1, returnTo: "details" } : null
   );
 
-  const items = useMemo(
+  const items = useMemo<ViewerItem<Panel>[]>(
     () =>
       panels.map((p) => ({
         id: p.id,
         src: panelImageUrl(p.image),
         alt: `${p.title} ${formatIssue(p.issue)}`,
+        data: p,
       })),
     [panels]
   );
 
-  const overlayOpen = drawerOpen || graphOpen;
-
-  // Shared-element open/close: expand from (and collapse back into) the wall
-  // card or series tile carrying the matching id. Offscreen thumbnails return
-  // their (offscreen) rect and the library falls back to a plain fade, so this
-  // is safe after deep nav, and so is a viewer group wider than the strip it
-  // was opened from.
-  // While an overlay is open the image stage is shifted off-screen, so its rect
-  // no longer matches the thumbnail — return null to fall back to a fade close.
-  // Over the visualizer there is no visible card to fly from either: the run
-  // covers the grid, so flying out of a hidden thumbnail would read as a jump
-  // from nowhere.
-  const getOrigin = useCallback(
-    (i: number) => {
-      if (overlayOpen || overViz) return null;
-      const it = items[i];
-      if (!it) return null;
-      return document.querySelector<HTMLElement>(`[data-panel-id="${CSS.escape(it.id)}"]`);
-    },
-    [items, overlayOpen, overViz]
-  );
-
   // Tell the page behind to go quiet while the viewer owns the screen: the
-  // hatch stops animating and the series washes stop painting.
+  // hatch stops animating and the series washes stop painting. It's handed back
+  // the moment a close *starts* (`onCloseStart` below), so the gallery comes
+  // back under the still-opaque backdrop and fades in with it; this cleanup
+  // only covers a viewer torn down without a close.
   useEffect(() => {
     setViewerOpen(true);
     return () => setViewerOpen(false);
   }, []);
 
-  // Keep the open panel id in the URL so the viewer is linkable. Neither a
-  // cover nor a portrait has an id the wall can resolve on a cold load, so
-  // those clear the param instead of writing a link that would open on
-  // nothing — and clearing it is also what takes the previous panel's id out
-  // of the URL when you page onto one.
   const offWall = panel.cover || panel.portrait;
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (offWall) params.delete("panel");
-    else params.set("panel", panel.id);
-    const qs = params.toString();
-    window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
-
-    return () => {
-      const p = new URLSearchParams(window.location.search);
-      if (p.get("panel") === panel.id) {
-        p.delete("panel");
-        const q = p.toString();
-        window.history.replaceState(null, "", q ? `${window.location.pathname}?${q}` : window.location.pathname);
-      }
-    };
-  }, [panel.id, offWall]);
 
   // Close any open overlay when the panel changes, then clear the slide
   // direction once the slide-out has settled. Guarded on the index it last ran
@@ -338,7 +294,14 @@ export default function PanelViewer({
     [drawerOpen, graphOpen]
   );
 
-  // Esc closes the graph, then the drawer, then (default) the viewer.
+  // Hand the page back the moment the close *starts*, rather than when the
+  // viewer finally unmounts a quarter-second later: the gallery comes back
+  // under a backdrop that is still up and fades out along with it. The library
+  // calls this before it measures the thumbnail the image collapses back into,
+  // so the page's own state has landed by then.
+  const handleCloseStart = useCallback(() => setViewerOpen(false), []);
+
+  // Esc (and back) closes the graph, then the drawer, then (default) the viewer.
   const handleEscape = useCallback(() => {
     if (graphOpen) {
       setGraphOpen(false);
@@ -352,27 +315,33 @@ export default function PanelViewer({
   }, [graphOpen, drawerOpen]);
 
   return (
-    <ImageViewer
+    <ImageViewer<Panel>
       items={items}
       index={currentIndex}
       onIndexChange={onNavigate}
       onNavigate={handleViewerNavigate}
       onClose={onClose}
+      onCloseStart={handleCloseStart}
       onEscape={handleEscape}
-      getOrigin={getOrigin}
+      // Over the visualizer there is no visible card to fly from: the run
+      // covers the grid, so flying out of a hidden thumbnail would read as a
+      // jump from nowhere. Without an origin the library fades instead.
+      getOrigin={overViz ? undefined : panelOrigin}
+      // Back closes the viewer (through handleEscape, so it takes down the
+      // graph, then the drawer, first) and the URL names the open panel.
+      history={panelHistory}
+      // Push the image track out of the way for whichever overlay is open: up
+      // for the drawer (slides from the bottom), down for the graph (slides
+      // from the top). A details-first open mounts already shifted, which the
+      // library places without a slide. While shifted, the zoom controls and
+      // backdrop-click close are suspended.
+      stageShift={drawerOpen ? "up" : graphOpen ? "down" : null}
       disableNavigation={graphOpen}
       navSlotPlacement="inline"
-      showZoomControls={!overlayOpen}
-      closeOnBackdropClick={!overlayOpen}
+      closeOnBackdropClick
       ariaLabel={`${panel.title} ${formatIssue(panel.issue)} — full view`}
       classNames={{ root: overViz ? "rvl-over-viz" : undefined }}
-      icons={{
-        close: <X size={16} strokeWidth={1.5} />,
-        zoomIn: <ZoomIn size={16} strokeWidth={1.5} />,
-        zoomOut: <ZoomOut size={16} strokeWidth={1.5} />,
-        prev: <ChevronLeft size={38} strokeWidth={1.5} />,
-        next: <ChevronRight size={38} strokeWidth={1.5} />,
-      }}
+      icons={viewerIcons}
       renderHeader={() =>
         graphOpen ? (
           // Portal target for the graph's toolbar (replaces the title while open).
@@ -438,15 +407,9 @@ export default function PanelViewer({
       renderNavStart={
         hasContent
           ? () => (
-              <button
-                type="button"
-                onClick={toggleDrawer}
-                className={`rvl-btn ${drawerOpen ? "is-active" : ""}`}
-                title="Show details"
-                aria-label="Show details"
-              >
+              <ViewerButton onClick={toggleDrawer} active={drawerOpen} label="Show details">
                 <Info size={16} strokeWidth={1.5} />
-              </button>
+              </ViewerButton>
             )
           : undefined
       }
@@ -457,30 +420,14 @@ export default function PanelViewer({
         offWall
           ? undefined
           : () => (
-              <button
-                type="button"
-                onClick={toggleGraph}
-                className={`rvl-btn ${graphOpen ? "is-active" : ""}`}
-                title="Similarity graph"
-                aria-label="Similarity graph"
-              >
+              <ViewerButton onClick={toggleGraph} active={graphOpen} label="Similarity graph">
                 <GitGraph size={16} strokeWidth={1.5} />
-              </button>
+              </ViewerButton>
             )
       }
-      renderFooter={
-        items.length <= 1
-          ? (ctx) => (
-              <div className="rvl-hint">
-                <span>
-                  {ctx.isTouchDevice
-                    ? "pinch to zoom · double-tap to enlarge"
-                    : "scroll to zoom · double-click to enlarge · esc to close"}
-                </span>
-              </div>
-            )
-          : undefined
-      }
+      // The built-in gesture hint, for a lone image only (a group's nav row
+      // already says enough). Hides itself while zoomed or shifted.
+      hint={items.length <= 1}
       renderOverlay={(ctx) => (
         <ViewerOverlay
           panel={panel}
@@ -499,7 +446,6 @@ export default function PanelViewer({
           overViz={overViz}
           onSelectPanel={onSelectPanel}
           onBrowse={onBrowse}
-          setContentShift={ctx.setContentShift}
         />
       )}
     />
