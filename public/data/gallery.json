@@ -45,7 +45,7 @@
       "issue": 5,
       "year": 2026,
       "artist": "Letizia Cadonici",
-      "image": "images/odin/issue-5-1794690321.jpg",
+      "image": "images/odin/issue-5-1794690321-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -54,25 +54,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          19.7,
-          10.6,
-          -15.6
+          5.8,
+          9.9,
+          -12.8
         ],
         [
-          54.9,
-          45,
-          10.3
+          52.5,
+          49,
+          12.5
         ],
         [
-          41.4,
-          30,
-          -37.7
+          37.1,
+          33.9,
+          -39.5
         ]
       ],
-      "colorfulness": 28,
-      "phash": "f0c6383b1d1e1c79",
-      "ahash": "0070fcffcfcf870e",
-      "dhash": "c7c3c0e69b9b9b98"
+      "colorfulness": 31.2,
+      "phash": "f046683b3f1e1c59",
+      "ahash": "0070fcffefcfcfce",
+      "dhash": "c6c3c0e699989898"
     },
     {
       "seq": 363,
