@@ -8,7 +8,7 @@
       "issue": 3,
       "year": 2026,
       "artist": "Ian Bertram",
-      "image": "images/the-karman-blade/issue-3-1794695274.jpg",
+      "image": "images/the-karman-blade/issue-3-1794695274-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -17,25 +17,25 @@
       "height": 1103,
       "dominantColors": [
         [
-          56.5,
-          22.8,
-          23.1
+          58,
+          21.3,
+          23.9
         ],
         [
-          75.0,
-          7.2,
-          0.2
+          81.2,
+          3.3,
+          0.8
         ],
         [
-          19.6,
-          6.6,
-          1.8
+          19.3,
+          5.9,
+          2.4
         ]
       ],
-      "colorfulness": 16.2,
-      "phash": "ce91a42e994bb55c",
-      "ahash": "fffdfcf8b0a030f0",
-      "dhash": "d969094969656515"
+      "colorfulness": 17,
+      "phash": "ee91a42e9949b55c",
+      "ahash": "fffdfce8b02030f0",
+      "dhash": "5969094969656515"
     },
     {
       "seq": 364,
@@ -4041,7 +4041,7 @@
       "slug": "heart-eyes",
       "issue": 2,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-2-1788036384.jpg",
       "notes": null,
       "tags": [],
@@ -4381,7 +4381,7 @@
       "slug": "heart-eyes",
       "issue": 1,
       "year": 2022,
-      "artist": "Victor Ib\u00e1\u00f1ez",
+      "artist": "Victor Ibáñez",
       "image": "images/heart-eyes/issue-1-1787433089.jpg",
       "notes": null,
       "tags": [],
@@ -7906,7 +7906,7 @@
     {
       "seq": 149,
       "id": "it-s-jeff-brand-new-week-1-1780785185",
-      "title": "It\u2019s Jeff: Brand New Week",
+      "title": "It’s Jeff: Brand New Week",
       "slug": "it-s-jeff-brand-new-week",
       "issue": 1,
       "year": 2026,
