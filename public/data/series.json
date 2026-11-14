@@ -3252,7 +3252,8 @@
         "data/covers/odin/7547dad6c601.jpg",
         "data/covers/odin/2f4e9d1263c5.jpg"
       ],
-      "issueCount": 4
+      "issueCount": 5,
+      "issueCountInferred": true
     },
     {
       "id": "omaha",
