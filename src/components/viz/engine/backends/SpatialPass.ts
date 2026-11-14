@@ -200,6 +200,10 @@ export class SpatialPass {
   private target: RenderTarget | null = null;
   private width = 1;
   private height = 1;
+  /** The aspect the frame is shown at — the container's, not the buffer's,
+   *  which drifts with the governor. Set by the backend; see
+   *  `WebGLBackend.resize`. */
+  aspect = 1;
 
   constructor(private readonly renderer: Renderer) {
     this.gl = renderer.gl;
@@ -301,7 +305,7 @@ export class SpatialPass {
 
     this.camera.perspective({
       fov: stage.fov,
-      aspect: this.width / this.height,
+      aspect: this.aspect,
       near: NEAR_PLANE,
       // Just past the fog, so the far plane never clips something still visible
       // and never wastes depth precision on what has already faded out.

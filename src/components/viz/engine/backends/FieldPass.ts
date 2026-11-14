@@ -96,6 +96,10 @@ export class FieldPass {
   private readonly gl: OGLRenderingContext;
   private width = 1;
   private height = 1;
+  /** The aspect the frame is shown at — the container's, not the buffer's,
+   *  which drifts with the governor. Set by the backend; see
+   *  `WebGLBackend.resize`. */
+  aspect = 1;
 
   private bloomTargets: [RenderTarget, RenderTarget] | null = null;
   private thresholdProgram: Program | null = null;
@@ -349,7 +353,7 @@ export class FieldPass {
     uniforms.uDecay.value = Math.min(0.999, Math.max(0, post.flowDecay));
     uniforms.uScale.value = post.flowScale;
     uniforms.uTime.value = time;
-    uniforms.uAspect.value = this.width / this.height;
+    uniforms.uAspect.value = this.aspect;
     this.advance(pass);
   }
 

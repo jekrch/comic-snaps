@@ -396,6 +396,7 @@ export class WebGLBackend implements VizBackend {
     if (this.spatial || this.spatialFailed) return this.spatial;
     try {
       this.spatial = new SpatialPass(this.renderer);
+      this.spatial.aspect = this.aspect;
       this.spatial.resize(this.width, this.height);
     } catch (error) {
       this.spatialFailed = true;
@@ -438,6 +439,23 @@ export class WebGLBackend implements VizBackend {
     if (this.disposed) return;
     this.cssWidth = width;
     this.cssHeight = height;
+    /*
+     * The aspect the frame is *shown* at, which is the container's, and not the
+     * buffer's. The buffer is floored to whole pixels at whatever scale the
+     * governor has it at, so its own ratio drifts by up to a few parts in a
+     * thousand from one step to the next — and the canvas is stretched to fill
+     * the container whatever that ratio is, so the drift was never on screen as
+     * a shape. It was on screen as content: the Julia map reads the frame
+     * through the aspect, a small change to its input moves the deep filaments
+     * a long way, and the facets and the trap's guard are both thresholds. Up to
+     * 1.5% of the frame was put onto a different crop at every governor step,
+     * which is the jump last seen when the facet cap measured the live height.
+     * Set ahead of the early return so a container change that lands on the
+     * same buffer still reaches it.
+     */
+    this.aspect = width / height;
+    this.fields.aspect = this.aspect;
+    if (this.spatial) this.spatial.aspect = this.aspect;
     // Floored rather than rounded so these agree exactly with the drawing
     // buffer ogl sizes below, which truncates — a one-pixel disagreement would
     // put `uResolution` and the viewport out of step with the framebuffer.
@@ -469,7 +487,6 @@ export class WebGLBackend implements VizBackend {
     const previousHeight = this.height;
     this.width = nextWidth;
     this.height = nextHeight;
-    this.aspect = this.width / this.height;
     // `setSize` replaces level 0 and leaves the old chain behind at the old
     // sizes, which makes a texture on a mip filter incomplete — and an
     // incomplete texture samples as black. The next frame that wants the chain
