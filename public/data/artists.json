@@ -14777,6 +14777,27 @@
       ]
     },
     {
+      "id": "tirso-cons",
+      "name": "Tirso Cons",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10141269-tirso_cons.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/9574/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/tirso-cons/4040-59673/"
+        }
+      ],
+      "country": "Spain",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "todd-klein",
       "name": "Todd Klein",
       "description": "Todd Klein is an American comic book letterer, logo designer, and occasional writer, primarily for DC Comics.",
