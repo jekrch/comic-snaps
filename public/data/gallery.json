@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 364,
+      "id": "odin-5-1794690321",
+      "title": "Odin",
+      "slug": "odin",
+      "issue": 5,
+      "year": 2026,
+      "artist": "Letizia Cadonici",
+      "image": "images/odin/issue-5-1794690321.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-14T21:05:23.372Z"
+    },
+    {
       "seq": 363,
       "id": "odin-5-1794690245",
       "title": "Odin",
