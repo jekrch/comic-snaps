@@ -1153,7 +1153,7 @@
       "startYear": 2026,
       "publisher": "Image Comics",
       "publisherId": "image-comics",
-      "issueCount": 2,
+      "issueCount": 3,
       "sources": [
         "comicvine",
         "metron",
@@ -1162,17 +1162,20 @@
       "coverSources": {
         "metron": [
           1,
-          2
+          2,
+          3
         ],
         "comicvine": [
           1,
-          2
+          2,
+          3
         ]
       },
       "coverImages": [
         "data/covers/crowbound/adf7a15450dc.jpg",
         "data/covers/crowbound/eed04f87ca19.jpg",
-        "data/covers/crowbound/0bc617ab89ca.jpg"
+        "data/covers/crowbound/0bc617ab89ca.jpg",
+        "data/covers/crowbound/7d837c22cb87.jpg"
       ],
       "issueCountInferred": true
     },
