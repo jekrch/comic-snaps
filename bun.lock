@@ -5,7 +5,7 @@
     "": {
       "name": "comic-snaps",
       "dependencies": {
-        "@jekrch/react-viewport-lightbox": "^1.0.1",
+        "@jekrch/react-viewport-lightbox": "^1.0.2",
         "@xyflow/react": "^12.11.2",
         "lucide-react": "^0.575.0",
         "ogl": "^1.0.11",
@@ -45,7 +45,7 @@
 
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@1.2.2", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA=="],
 
-    "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@1.0.1", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-EfBJ1YJjYalneVR0S0De27awi/qorHBj9LfGUIgYP0xcOixzfl7ub8rNWJIqHJCXGSov+fZXD9ZM7ipporYrVA=="],
+    "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@1.0.2", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-trlQaV2EH6ETpqjoGQrZ9kj7FMs8M8zUc3+BjOwVYmQV/vb3x0+b0aWhi6A8LG8LeHDT83I3623uBvHo1yyUdw=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.13", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="],
 
