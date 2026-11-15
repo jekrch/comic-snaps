@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 366,
+      "id": "crowbound-3-1794759990",
+      "title": "Crowbound",
+      "slug": "crowbound",
+      "issue": 3,
+      "year": 2026,
+      "artist": "Dustin Nguyen",
+      "image": "images/crowbound/issue-3-1794759990.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-15T16:26:33.350Z"
+    },
+    {
       "seq": 365,
       "id": "the-karman-blade-3-1794695274",
       "title": "The Karman Blade",
