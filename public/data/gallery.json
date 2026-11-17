@@ -193,7 +193,7 @@
       "issue": 9,
       "year": 2026,
       "artist": "Stipan Morian",
-      "image": "images/bleeding-hearts/issue-9-1794690026.jpg",
+      "image": "images/bleeding-hearts/issue-9-1794690026-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
@@ -202,25 +202,25 @@
       "height": 1280,
       "dominantColors": [
         [
-          33.8,
-          11.7,
-          10.1
+          72.6,
+          1.7,
+          8.2
         ],
         [
-          63.2,
-          7,
-          2.8
+          45.6,
+          5.9,
+          12.6
         ],
         [
-          63.6,
-          12.3,
-          16.1
+          18.5,
+          9.7,
+          10.2
         ]
       ],
-      "colorfulness": 8,
-      "phash": "c3da14e43db76095",
-      "ahash": "de3c2c28f8f83e00",
-      "dhash": "baf1d94be2c27a76"
+      "colorfulness": 10.2,
+      "phash": "c3da14e43db76285",
+      "ahash": "de3c2c28f9f83e00",
+      "dhash": "baf1d94be2c27af4"
     },
     {
       "seq": 360,
