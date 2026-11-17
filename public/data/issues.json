@@ -3860,10 +3860,68 @@
       "id": "crowbound-3",
       "series": "crowbound",
       "issue": 3,
-      "credits": [],
-      "references": [],
+      "credits": [
+        {
+          "artistId": "jeff-lemire",
+          "name": "Jeff Lemire",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "steve-wands",
+          "name": "Steve Wands",
+          "roles": [
+            "Letterer",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "christian-ward",
+          "name": "Christian Ward",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dustin-nguyen",
+          "name": "Dustin Nguyen",
+          "roles": [
+            "Illustrator",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "filipe-andrade",
+          "name": "Filipe Andrade",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "jeffrey-alan-love",
+          "name": "Jeffrey Alan Love",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eric-harburn",
+          "name": "Eric Harburn",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/crowbound-2026-3/"
+        }
+      ],
       "sources": [
-        "comicvine"
+        "comicvine",
+        "metron"
       ]
     },
     {
