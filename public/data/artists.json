@@ -1206,6 +1206,28 @@
       ]
     },
     {
+      "id": "ashley-wood",
+      "name": "Ashley Wood",
+      "description": "An Australian comic book artist and award-winning illustrator known for his cover art, concept design and his work as an art director. Wood initially worked in both the UK and international comic book industries, working on characters such as the British character Judge Dredd, before breaking into the US market, where he worked for such companies as Marvel Comics and DC Comics. Wood later worked for Image, creating graphic novels and cover art for the various Spawn properties of Todd McFarlane, and projects with IDW Publishing.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10080487-ashley_wood.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2184/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/ashley-wood/4040-5034/"
+        }
+      ],
+      "birthYear": 1978,
+      "country": "Australia",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "austin-hatch",
       "name": "Austin Hatch",
       "description": "",
@@ -2594,6 +2616,27 @@
       ]
     },
     {
+      "id": "chris-ryall",
+      "name": "Chris Ryall",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/10186942-chris_ryall.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1763/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/chris-ryall/4040-44612/"
+        }
+      ],
+      "country": "USA",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "chris-warner",
       "name": "Chris Warner",
       "description": "",
@@ -3460,6 +3503,30 @@
       "country": "United States of America",
       "aliases": [
         "Dave Avallone"
+      ]
+    },
+    {
+      "id": "david-booher",
+      "name": "David Booher",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8379804-6958995641-e68s7.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5240/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/david-booher/4040-94461/"
+        }
+      ],
+      "country": "United States",
+      "aliases": [
+        "David M. Booher"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -7410,6 +7477,28 @@
         "comicvine"
       ],
       "country": "United States"
+    },
+    {
+      "id": "joe-hill",
+      "name": "Joe Hill",
+      "description": "Joe Hill is an acclaimed suspense novelist and the son of author Stephen King. He is the creator of the dark fantasy Locke & Key published by IDW.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/7380155-9733023579-JoeHi.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2663/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/joe-hill/4040-51596/"
+        }
+      ],
+      "birthYear": 1972,
+      "country": "United States",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "joe-jusko",
@@ -13764,6 +13853,26 @@
       ]
     },
     {
+      "id": "shawn-lee",
+      "name": "Shawn Lee",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9985819-shawn_lee.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1127/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/shawn-lee/4040-61037/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "sheldon-moldoff",
       "name": "Sheldon Moldoff",
       "description": "Sheldon \"Shelly\" Moldoff was an American comics artist best known for his early work on the DC Comics characters Hawkman and Hawkgirl, and as one of Bob Kane's primary \"ghost artists\" (uncredited collaborators) on the superhero Batman.\r\n\r\nHe co-created the Batman super-villains Poison Ivy, Mr. Freeze, the second Clayface, and Bat-Mite, as well as the original heroes Bat-Girl, Batwoman, and Ace the Bat-Hound. Moldoff is the sole creator of the Black Pirate. Moldoff is not to be confused with fellow Golden Age comics professional Sheldon Mayer.",
@@ -15885,6 +15994,27 @@
           "url": "https://metron.cloud/creator/4041/"
         }
       ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "zoe-thorogood",
+      "name": "Zoe Thorogood",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/65071/8965868-3783777990-zoe-t.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/zoe-thorogood/4040-108448/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5612/"
+        }
+      ],
+      "birthYear": 1998,
       "sources": [
         "comicvine",
         "metron"

@@ -8984,6 +8984,73 @@
       ]
     },
     {
+      "id": "rain-1",
+      "series": "rain",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "david-booher",
+          "name": "David Booher",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "joe-hill",
+          "name": "Joe Hill",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "zoe-thorogood",
+          "name": "Zoe Thorogood",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chris-o-halloran",
+          "name": "Chris O'Halloran",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "shawn-lee",
+          "name": "Shawn Lee",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "ashley-wood",
+          "name": "Ashley Wood",
+          "roles": [
+            "Cover",
+            "Logo Design"
+          ]
+        },
+        {
+          "artistId": "chris-ryall",
+          "name": "Chris Ryall",
+          "roles": [
+            "Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/rain-2022-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "red-book-4",
       "series": "red-book",
       "issue": 4,

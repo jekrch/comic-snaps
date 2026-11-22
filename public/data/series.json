@@ -3460,6 +3460,39 @@
       ]
     },
     {
+      "id": "rain",
+      "name": "Rain",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/3083/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-publisher"
+      ],
+      "startYear": 2022,
+      "publisher": "Image Comics",
+      "publisherId": "image-comics",
+      "issueCount": 5,
+      "coverSources": {
+        "metron": [
+          1
+        ]
+      },
+      "coverImages": [
+        "data/covers/rain/e16bae6a1aae.jpg",
+        "data/covers/rain/1962f6488b9a.jpg",
+        "data/covers/rain/17c536175d09.jpg",
+        "data/covers/rain/4805d60f4591.jpg"
+      ]
+    },
+    {
       "id": "red-book",
       "name": "Red Book",
       "parentSeries": null,
