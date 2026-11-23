@@ -22,6 +22,12 @@ compact embedding. Because PCA is fit on the full corpus each run, gram
 embeddings are always fully recomputed (not incremental). Bumping the
 version string will also trigger a recompute.
 
+The raw (pre-PCA) Gram features depend only on an image's bytes, so they
+are cached on disk keyed by a SHA-256 of the image file (see
+GRAM_FEATURE_CACHE). A run then pushes only new or changed images through
+VGG and refits PCA on the full matrix exactly as before. CI persists the
+cache between runs with actions/cache.
+
 Usage
 -----
     python compute_embeddings.py              # compute all
@@ -31,6 +37,7 @@ Usage
     python compute_embeddings.py siglip dino  # explicit subset
 """
 
+import hashlib
 import json
 import os
 import sys
@@ -64,8 +71,19 @@ INCREMENTAL_BATCH_SIZE = int(os.environ.get("EMBED_BATCH_SIZE", "8"))
 
 
 # Paths
-GALLERY_PATH = Path("public/data/gallery.json")
+# EMBED_GALLERY_PATH lets CI point at a snapshot of gallery.json taken before
+# compute-image-metadata.py (which runs alongside this script) rewrites it.
+# Only panel ids and image paths are read here, which that script never
+# changes.
+GALLERY_PATH = Path(os.environ.get("EMBED_GALLERY_PATH") or "public/data/gallery.json")
 IMAGE_ROOT = Path("public")
+
+# Raw Gram features cached by image content hash. Lives outside the repo
+# by default: it's ~0.7 MB per panel and is never committed.
+GRAM_FEATURE_CACHE = Path(
+    os.environ.get("GRAM_FEATURE_CACHE")
+    or Path.home() / ".cache" / "comic-snaps" / "gram-features.npz"
+)
 
 
 # Model registry
@@ -362,6 +380,57 @@ def compute_gram_features(
     return compute_gram_features_batch([img], extractor)[0]
 
 
+def file_sha256(path: Path) -> str:
+    """Hex SHA-256 of a file's bytes: the Gram feature cache key."""
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_gram_cache(spec: ModelSpec) -> dict[str, np.ndarray]:
+    """Load cached raw Gram features as {image sha256: feature vector}.
+
+    Returns {} when the cache is missing, unreadable, or was written under
+    a different model version (layers or normalization may have changed).
+    """
+    if not GRAM_FEATURE_CACHE.exists():
+        print(f"[{spec.key}] No feature cache at {GRAM_FEATURE_CACHE}.")
+        return {}
+    try:
+        with np.load(GRAM_FEATURE_CACHE) as data:
+            version = str(data["version"])
+            if version != spec.version:
+                print(
+                    f"[{spec.key}] Feature cache version {version!r} != "
+                    f"{spec.version!r}; ignoring it."
+                )
+                return {}
+            hashes = data["hashes"]
+            features = data["features"]
+    except Exception as e:
+        print(f"[{spec.key}] Could not read feature cache ({e}); ignoring it.",
+              file=sys.stderr)
+        return {}
+    return {str(h): features[i] for i, h in enumerate(hashes)}
+
+
+def save_gram_cache(spec: ModelSpec, cache: dict[str, np.ndarray]) -> None:
+    """Write the feature cache atomically (temp file, then rename)."""
+    GRAM_FEATURE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    hashes = sorted(cache)
+    tmp = GRAM_FEATURE_CACHE.with_name(GRAM_FEATURE_CACHE.name + ".tmp")
+    with tmp.open("wb") as f:
+        np.savez(
+            f,
+            version=np.array(spec.version),
+            hashes=np.array(hashes),
+            features=np.stack([cache[h] for h in hashes]).astype(np.float32),
+        )
+    os.replace(tmp, GRAM_FEATURE_CACHE)
+
+
 
 # Dispatch table for standard (incremental) models
 
@@ -508,68 +577,100 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
         print(f"[{spec.key}] All panels already have embeddings.")
         return
 
-    print(f"[{spec.key}] Computing Gram features for {len(panels)} panel(s)...")
-    print(f"[{spec.key}] Loading model: VGG-16 (torchvision)")
-    extractor = GramExtractor(GRAM_LAYER_INDICES)
-    extractor.eval()
+    print(f"[{spec.key}] Gathering Gram features for {len(panels)} panel(s)...")
 
-    # Phase 1: extract raw Gram features in batches
-    raw_features: dict[str, np.ndarray] = {}
+    # Phase 1: raw Gram features, from the cache where the image bytes are
+    # unchanged and through VGG otherwise.
+    cache = load_gram_cache(spec)
     error_count = 0
 
-    # Build a list of (panel_id, image) pairs, skipping load failures
-    batch_ids: list[str] = []
-    batch_imgs: list[Image.Image] = []
+    # (panel_id, image sha256) for every panel whose file exists, in
+    # gallery order — PCA rows are assembled in this order below.
+    panel_hashes: list[tuple[str, str]] = []
+    # Images not yet in the cache, keyed by hash (dedupes shared images).
+    to_compute: dict[str, Path] = {}
 
-    for i, panel in enumerate(panels):
+    for panel in panels:
         image_path = IMAGE_ROOT / panel["image"]
         if not image_path.exists():
             print(f"  SKIP (file not found): {panel['image']}", file=sys.stderr)
             error_count += 1
             continue
+        digest = file_sha256(image_path)
+        panel_hashes.append((panel["id"], digest))
+        if digest not in cache:
+            to_compute[digest] = image_path
 
-        try:
-            img = Image.open(image_path).convert("RGB")
-            batch_ids.append(panel["id"])
-            batch_imgs.append(img)
-        except Exception as e:
-            print(f"  ERROR loading: {panel['image']} → {e}", file=sys.stderr)
-            error_count += 1
+    print(
+        f"[{spec.key}] {len(panel_hashes) - len(to_compute)} cached, "
+        f"{len(to_compute)} to compute."
+    )
 
-    # Process in chunks of GRAM_BATCH_SIZE
-    total = len(batch_imgs)
-    for start in range(0, total, GRAM_BATCH_SIZE):
-        end = min(start + GRAM_BATCH_SIZE, total)
-        chunk_ids = batch_ids[start:end]
-        chunk_imgs = batch_imgs[start:end]
+    computed: dict[str, np.ndarray] = {}
+    if to_compute:
+        print(f"[{spec.key}] Loading model: VGG-16 (torchvision)")
+        extractor = GramExtractor(GRAM_LAYER_INDICES)
+        extractor.eval()
 
-        try:
-            features = compute_gram_features_batch(chunk_imgs, extractor)
-            for j, pid in enumerate(chunk_ids):
-                raw_features[pid] = features[j]
-            print(
-                f"  [{end}/{total}] Batch OK "
-                f"({len(chunk_ids)} image(s))"
-            )
-        except Exception as e:
-            # Fall back to one-at-a-time so a single bad image
-            # doesn't take out the whole batch
-            print(
-                f"  Batch {start}–{end} failed ({e}), "
-                f"falling back to single-image mode",
-                file=sys.stderr,
-            )
-            for j, (pid, img) in enumerate(zip(chunk_ids, chunk_imgs)):
-                try:
-                    feat = compute_gram_features(img, extractor)
-                    raw_features[pid] = feat
-                    print(f"  [{start + j + 1}/{total}] OK (fallback)")
-                except Exception as e2:
-                    print(
-                        f"  ERROR: panel {pid} → {e2}",
-                        file=sys.stderr,
-                    )
-                    error_count += 1
+        # Load images, skipping (and counting) unreadable files
+        batch_hashes: list[str] = []
+        batch_imgs: list[Image.Image] = []
+        for digest, image_path in to_compute.items():
+            try:
+                batch_imgs.append(Image.open(image_path).convert("RGB"))
+                batch_hashes.append(digest)
+            except Exception as e:
+                print(f"  ERROR loading: {image_path} → {e}", file=sys.stderr)
+                error_count += 1
+
+        # Process in chunks of GRAM_BATCH_SIZE
+        total = len(batch_imgs)
+        for start in range(0, total, GRAM_BATCH_SIZE):
+            end = min(start + GRAM_BATCH_SIZE, total)
+            chunk_hashes = batch_hashes[start:end]
+            chunk_imgs = batch_imgs[start:end]
+
+            try:
+                features = compute_gram_features_batch(chunk_imgs, extractor)
+                for j, digest in enumerate(chunk_hashes):
+                    computed[digest] = features[j]
+                print(
+                    f"  [{end}/{total}] Batch OK "
+                    f"({len(chunk_hashes)} image(s))"
+                )
+            except Exception as e:
+                # Fall back to one-at-a-time so a single bad image
+                # doesn't take out the whole batch
+                print(
+                    f"  Batch {start}–{end} failed ({e}), "
+                    f"falling back to single-image mode",
+                    file=sys.stderr,
+                )
+                for j, (digest, img) in enumerate(zip(chunk_hashes, chunk_imgs)):
+                    try:
+                        computed[digest] = compute_gram_features(img, extractor)
+                        print(f"  [{start + j + 1}/{total}] OK (fallback)")
+                    except Exception as e2:
+                        print(
+                            f"  ERROR: image {to_compute[digest]} → {e2}",
+                            file=sys.stderr,
+                        )
+                        error_count += 1
+
+    available = {**cache, **computed}
+    raw_features: dict[str, np.ndarray] = {
+        pid: available[digest]
+        for pid, digest in panel_hashes
+        if digest in available
+    }
+
+    # Persist only the current panels' features, so images that left the
+    # gallery (or were replaced by a restoration) drop out of the cache.
+    keep = {digest: available[digest]
+            for _, digest in panel_hashes if digest in available}
+    if computed or keep.keys() != cache.keys():
+        save_gram_cache(spec, keep)
+        print(f"[{spec.key}] Wrote feature cache ({len(keep)} image(s)).")
 
     if len(raw_features) < 2:
         print(
