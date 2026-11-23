@@ -22,11 +22,34 @@
       "issue": 1,
       "year": 2026,
       "artist": "Zoe Thorogood",
-      "image": "images/rain/issue-1-1795392089.jpg",
+      "image": "images/rain/issue-1-1795392089-v2.jpg",
       "notes": null,
       "tags": [],
       "postedBy": "Jacob",
-      "addedAt": "2026-11-23T00:01:31.217Z"
+      "addedAt": "2026-11-23T00:01:31.217Z",
+      "ahash": "fcfcf8381e5e4404",
+      "height": 1280,
+      "colorfulness": 14.1,
+      "phash": "d0cf74b90f46233c",
+      "width": 962,
+      "dominantColors": [
+        [
+          54.4,
+          7.8,
+          23.5
+        ],
+        [
+          32.9,
+          18.7,
+          17.9
+        ],
+        [
+          13,
+          5.9,
+          6.5
+        ]
+      ],
+      "dhash": "1010806070d88cac"
     },
     {
       "seq": 370,
