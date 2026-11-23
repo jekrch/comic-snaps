@@ -28,13 +28,14 @@
         ],
         [
           33.8,
-          8,
+          8.0,
           7.5
         ]
       ],
       "phash": "b0d91f74441f5ed0",
       "ahash": "1e0f0f4f47070707",
-      "dhash": "7cdad99d9dadadad"
+      "dhash": "7cdad99d9dadadad",
+      "colorfulness": 19.6
     },
     {
       "seq": 372,
