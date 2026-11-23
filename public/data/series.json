@@ -2379,7 +2379,7 @@
       "startYear": 2026,
       "publisher": "Image Comics",
       "publisherId": "image-comics",
-      "issueCount": 5,
+      "issueCount": 6,
       "sources": [
         "comicvine",
         "metron",
@@ -4410,7 +4410,7 @@
       "publisherId": "heavy-metal-international",
       "imprintId": "virus",
       "imprint": "VIRUS",
-      "issueCount": 5,
+      "issueCount": 6,
       "sources": [
         "comicvine",
         "metron",
@@ -4430,7 +4430,8 @@
         "data/covers/the-eye-collector/34ad7d5ea401.jpg",
         "data/covers/the-eye-collector/598b1a46d75d.jpg",
         "data/covers/the-eye-collector/c8c894e25f4b.jpg"
-      ]
+      ],
+      "issueCountInferred": true
     },
     {
       "id": "the-karman-blade",
