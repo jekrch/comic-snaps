@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 371,
+      "id": "rain-1-1795392089",
+      "title": "Rain",
+      "slug": "rain",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Zoe Thorogood",
+      "image": "images/rain/issue-1-1795392089.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-23T00:01:31.217Z"
+    },
+    {
       "seq": 370,
       "id": "if-destruction-be-our-lot-6-1795391949",
       "title": "If Destruction Be Our Lot",
