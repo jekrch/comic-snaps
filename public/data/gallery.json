@@ -15,43 +15,6 @@
       "addedAt": "2026-11-23T00:13:15.668Z"
     },
     {
-      "seq": 371,
-      "id": "rain-1-1795392089",
-      "title": "Rain",
-      "slug": "rain",
-      "issue": 1,
-      "year": 2026,
-      "artist": "Zoe Thorogood",
-      "image": "images/rain/issue-1-1795392089.jpg",
-      "notes": null,
-      "tags": [],
-      "postedBy": "Jacob",
-      "addedAt": "2026-11-23T00:01:31.217Z",
-      "width": 962,
-      "height": 1280,
-      "dominantColors": [
-        [
-          54.3,
-          7.6,
-          20.5
-        ],
-        [
-          28.8,
-          6.3,
-          11.7
-        ],
-        [
-          31.9,
-          37.4,
-          14.9
-        ]
-      ],
-      "colorfulness": 13.3,
-      "phash": "d0cf76990f46233c",
-      "ahash": "fefcf8381e4c4400",
-      "dhash": "101080e070d88cac"
-    },
-    {
       "seq": 370,
       "id": "if-destruction-be-our-lot-6-1795391949",
       "title": "If Destruction Be Our Lot",
