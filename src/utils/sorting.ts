@@ -51,6 +51,17 @@ const embeddingCaches: Record<string, EmbeddingCacheEntry> = {
 };
 
 /**
+ * The embedding map for a mode if it has already been loaded, else null.
+ * Lets a view render real vectors on its first paint when the file is
+ * already in memory, instead of flashing a placeholder for a tick.
+ */
+export function peekEmbeddings(
+  mode: "embedding-siglip" | "embedding-dino" | "embedding-gram"
+): EmbeddingMap | null {
+  return embeddingCaches[mode]?.data ?? null;
+}
+
+/**
  * Lazy-load an embedding file by sort mode key.
  * Returns the cached map on subsequent calls. The file is only fetched
  * when the user first selects that embedding-based sort.

@@ -16,9 +16,12 @@ export function AngleDiagram({
   // tiny.  The closest arrow is pushed to at least MIN_ANGLE
   // from the anchor, and the furthest to at least MIN_GAP
   // beyond the closest.  Relative ordering is always preserved.
+  // Angles past 90° are real: gram distances often exceed 1 (PCA centres
+  // its vectors), so the furthest arrow may point below the origin. The cap
+  // only keeps it from folding back onto the anchor's own line.
   const MIN_ANGLE = 15 * (Math.PI / 180); // 15°
   const MIN_GAP = 12 * (Math.PI / 180);   // 12° between close & far
-  const MAX_ANGLE = 80 * (Math.PI / 180); // cap so arrows stay in view
+  const MAX_ANGLE = 170 * (Math.PI / 180);
 
   let closeAngle = closeAngleTrue;
   let farAngle = farAngleTrue;
@@ -30,19 +33,25 @@ export function AngleDiagram({
   if (farAngle - closeAngle < MIN_GAP) closeAngle = farAngle - MIN_GAP;
 
   //Layout constants
-  // Origin shifted left; viewBox widened to give right-side room.
+  // Origin shifted left; viewBox widened to give right-side room. The
+  // height grows only when the far arrow (and its label) dips below the
+  // origin, so acute cases keep the original compact box.
   const W = 240;
-  const H = 150;
   const cx = 70;
   const cy = 115;
   const r = 80;
+  const labelR = r + 14;
+  const below = Math.max(0, -Math.cos(farAngle)); // 0 until past 90°
+  const H = Math.max(150, Math.ceil(cy + labelR * below + 12));
   const anchorAngle = -Math.PI / 2;
   const closeRad = anchorAngle + closeAngle;
   const farRad = anchorAngle + farAngle;
 
-  // Label placement with collision avoidance 
-  const labelR = r + 14;
+  // Label placement with collision avoidance
   const labels = buildLabels(cx, cy, labelR, anchorAngle, closeRad, farRad, W, H);
+  const deg = (a: number) => `${(a * (180 / Math.PI)).toFixed(1)}°`;
+  // The far angle's readout sits between the two arrows, past the arcs.
+  const farTextRad = anchorAngle + (closeAngle + farAngle) / 2;
 
   return (
     <div className="flex justify-center my-3">
@@ -64,8 +73,8 @@ export function AngleDiagram({
         {arrow(cx, cy, r, farRad, "rgba(255,255,255,0.35)", labels.far)}
 
         <text
-          x={cx + 34 * Math.cos(anchorAngle + closeAngleTrue / 2)}
-          y={cy + 34 * Math.sin(anchorAngle + closeAngleTrue / 2)}
+          x={cx + 34 * Math.cos(anchorAngle + closeAngle / 2)}
+          y={cy + 34 * Math.sin(anchorAngle + closeAngle / 2)}
           textAnchor="middle"
           dominantBaseline="middle"
           fill="var(--color-accent, #e97d62)"
@@ -73,7 +82,18 @@ export function AngleDiagram({
           fontFamily="var(--font-mono, monospace)"
           opacity="0.8"
         >
-          {(closeAngleTrue * (180 / Math.PI)).toFixed(1)}°
+          {deg(closeAngleTrue)}
+        </text>
+        <text
+          x={cx + 60 * Math.cos(farTextRad)}
+          y={cy + 60 * Math.sin(farTextRad)}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="rgba(255,255,255,0.4)"
+          fontSize="7.5"
+          fontFamily="var(--font-mono, monospace)"
+        >
+          {deg(farAngleTrue)}
         </text>
       </svg>
     </div>

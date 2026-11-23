@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import type { MetricExplainerProps } from "./explainerConstants";
 import { METRIC_INFO } from "./explainerConstants";
 import { HatchDivider } from "./explainerPrimitives";
+import { isFigureViewerOpen } from "./figureViewer";
 import {
   EmbeddingExplanation,
   ColorExplanation,
@@ -53,7 +54,8 @@ export default function MetricExplainerModal({
   /* Escape key */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
+      // A figure's zoom viewer on top takes this Escape for itself.
+      if (e.key === "Escape" && !isFigureViewerOpen()) handleClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);

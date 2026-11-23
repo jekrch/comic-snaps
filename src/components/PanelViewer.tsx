@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { X, ZoomIn, ZoomOut, GitGraph, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import { GitGraph, Info } from "lucide-react";
+// Lighter chrome icons than the library's 18px / 1.75 defaults, to sit with the
+// app's own UI. Hoisted so the viewer sees the same object every render.
+import { viewerIcons } from "./viewerIcons";
+import { isFigureViewerOpen } from "./explainer/figureViewer";
 import {
   ImageViewer,
   ViewerButton,
@@ -35,15 +39,6 @@ interface Props {
   onBrowse: (dimension: BrowseDimension, value: string) => void;
 }
 
-// Lighter chrome icons than the library's 18px / 1.75 defaults, to sit with the
-// app's own UI. Hoisted so the viewer sees the same object every render.
-const viewerIcons = {
-  close: <X size={16} strokeWidth={1.5} />,
-  zoomIn: <ZoomIn size={16} strokeWidth={1.5} />,
-  zoomOut: <ZoomOut size={16} strokeWidth={1.5} />,
-  prev: <ChevronLeft size={38} strokeWidth={1.5} />,
-  next: <ChevronRight size={38} strokeWidth={1.5} />,
-};
 
 // Shared-element open/close: expand from (and collapse back into) the wall
 // card or series tile carrying the matching id. Offscreen thumbnails return
@@ -303,6 +298,9 @@ export default function PanelViewer({
 
   // Esc (and back) closes the graph, then the drawer, then (default) the viewer.
   const handleEscape = useCallback(() => {
+    // An explainer figure opened from the graph has its own viewer on top;
+    // that Escape is its to close, so this one does nothing.
+    if (isFigureViewerOpen()) return true;
     if (graphOpen) {
       setGraphOpen(false);
       return true;

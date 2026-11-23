@@ -25,19 +25,19 @@ export const METRIC_INFO: Record<
     name: "SigLIP",
     family: "Vision-language embedding",
     oneLiner:
-      "SigLIP converts each image into a list of numbers that captures its meaning: what's depicted, the mood, the composition. Two images with similar meaning end up with similar lists.",
+      "SigLIP was trained to match images with their captions, so it converts each image into a list of numbers that captures what a caption would: what's depicted, the mood, the composition. Two images with similar meaning end up with similar lists.",
   },
   "embedding-dino": {
     name: "DINOv2",
     family: "Self-supervised vision embedding",
     oneLiner:
-      "DINOv2 converts each image into a list of numbers that captures its visual structure: shapes, spatial layout, and texture, without understanding what things \"are.\"",
+      "DINOv2 learned from images alone, with no captions or labels, so it converts each image into a list of numbers that captures how it looks: shapes, spatial layout, and texture. It can tell that two things look alike without having words for them.",
   },
   "embedding-gram": {
     name: "VGG-16 Gram Matrix",
     family: "Style / texture embedding",
     oneLiner:
-      "VGG-16 Gram matrices convert each image into a list of numbers that captures artistic style: line quality, hatching patterns, ink texture, and tonal rendering.",
+      "A Gram matrix records which of VGG-16's texture detectors fire together across a panel, while ignoring where they fire. That turns each image into a list of numbers about style (line quality, hatching, ink texture, tonal rendering) rather than about what's drawn.",
   },
   color: {
     name: "Color Palette",
@@ -53,12 +53,13 @@ export const METRIC_INFO: Record<
   },
 };
 
-// Embedding dimensions by metric */
+// Embedding dimensions by metric — a fallback only: the explainer reads the
+// real length off the loaded vectors when it has them.
 
 export const EMBEDDING_DIM: Record<string, number> = {
   "embedding-siglip": 768,
-  "embedding-dino": 768,
-  "embedding-gram": 512,
+  "embedding-dino": 384,
+  "embedding-gram": 30,
 };
 
 // Helpers

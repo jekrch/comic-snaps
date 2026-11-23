@@ -285,7 +285,7 @@ const SORT_DESCRIPTIONS: {
       body: (
         <p className="m-0">
           OK things get more interesting here, where we're sorting by semantic similarity via a
-          vision-language model. SigLIP encodes holistic visual meaning: i.e. composition, subject
+          vision-language model (one trained to match images with their captions). SigLIP encodes holistic visual meaning: i.e. composition, subject
           matter, mood, and style all blended into one vector. Adjacent panels will be alike in varied
           respects: traffic noise, depictions of sadness, a hammer, etc. The axes of similarity vary
           wildly, but it's fun to guess at the points of connection.
@@ -303,12 +303,17 @@ const SORT_DESCRIPTIONS: {
         <p className="m-0">
           This captures structural and perceptual similarity from a self-supervised vision model.
           DINOv2 focuses on spatial layout, shapes, and visual texture without any language grounding.
-          It tends to group panels by composition and form rather than narrative content.
+          It tends to group panels by composition and form rather than narrative content. Unlike
+          SigLIP, which squashes every panel into a square, DINOv2 gets each panel whole and at its
+          own shape. (Out of the box it would only look at the centre square, which cut off a third
+          or more of a typical panel.) This is the "with registers" version, which gives the model a
+          few spare slots for its own bookkeeping so that scratch work doesn't get smeared across the
+          image itself.
         </p>
       ),
       link: {
-        text: "facebook/dinov2-base",
-        href: "https://huggingface.co/facebook/dinov2-base",
+        text: "facebook/dinov2-with-registers-small",
+        href: "https://huggingface.co/facebook/dinov2-with-registers-small",
       },
       metricKey: "embedding-dino",
     },
@@ -317,8 +322,15 @@ const SORT_DESCRIPTIONS: {
       body: (
         <p className="m-0">
           Here we focus on style and texture similarity from Gram-matrix features of a VGG-16
-          network. You might notice connections based on line quality, hatching patterns, and tonal
-          rendering. Panels by the same artist or in similar techniques will likely cluster together.
+          network. A Gram matrix records which of the network's texture detectors fire together
+          across a panel while throwing away where they fire, which is why it reads style rather
+          than subject. You might notice connections based on line quality, hatching patterns, and
+          tonal rendering. It sees each panel whole at a fairly high resolution, since squashing
+          panels into small squares smudged exactly the fine marks it's meant to read. Tested against
+          the artist credits, that change made it noticeably better at finding same-artist panels,
+          roughly level with SigLIP now. It's still not great at spotting an artist's hand across
+          different series, though (none of them are), so treat it as a texture sort more than an
+          artist detector.
         </p>
       ),
       link: {
@@ -745,7 +757,7 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                 >
                   Each sort type reorders the gallery by a different axis of similarity.
                   I use several neat models for this, which you can read about below.
-                  Their embeddings are all computed in advance (at build time), so nothing has to run in your sweaty browser.
+                  Their embeddings are all computed in advance (whenever a panel is added), so nothing has to run in your sweaty browser.
                 </p>
 
                 <div className="flex flex-col gap-6">

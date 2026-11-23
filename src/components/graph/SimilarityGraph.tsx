@@ -34,6 +34,7 @@ import {
 import { nodeTypes, type PanelNodeData } from "./PanelNode.tsx";
 import { edgeTypes } from "./DistanceEdge.tsx";
 import MetricExplainerPanel from "../explainer/MetricExplainerPanel";
+import { isFigureViewerOpen } from "../explainer/figureViewer";
 import { useFilterParams } from "../../hooks/useFilterParams.ts";
 
 /* Helper: fit view only when anchor changes */
@@ -132,7 +133,9 @@ export default function SimilarityGraph({
   useEffect(() => {
     if (!open || !showExplainer) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      // A figure's zoom viewer is open over the explainer: let the key
+      // through to it, and keep the explainer up.
+      if (e.key === "Escape" && !isFigureViewerOpen()) {
         e.stopImmediatePropagation();
         setShowExplainer(false);
       }

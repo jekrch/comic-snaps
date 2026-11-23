@@ -48,8 +48,8 @@ A GitHub Action (`compute-image-metadata.yml`) runs whenever `gallery.json` is u
 After metadata, the action computes embeddings via three models, each stored in its own file:
 
 - **SigLIP** (`embeddings.json`) — 768-dimensional vectors from `google/siglip-base-patch16-224`. Captures semantic and conceptual similarity.
-- **DINOv2** (`embeddings-dino.json`) — 384-dimensional vectors from `facebook/dinov2-small`. Captures structural and perceptual similarity.
-- **VGG-16 Gram** (`embeddings-gram.json`) — 256-dimensional vectors derived from Gram matrices at three convolutional layers of VGG-16 (relu1_2, relu2_2, relu3_3), reduced via PCA. Captures line style and texture similarity — hatching, stippling, inking approach — independent of composition or subject matter.
+- **DINOv2** (`embeddings-dino.json`) — 384-dimensional vectors from `facebook/dinov2-with-registers-small`, run on the whole panel at its own aspect ratio (short side 256 px, both sides snapped to 14 px patches) rather than the stock centre crop. The vector is the CLS token averaged with the mean patch token, register tokens excluded. Captures structural and perceptual similarity.
+- **VGG-16 Gram** (`embeddings-gram.json`) — 30-dimensional vectors derived from Gram matrices at four convolutional layers of VGG-16 (relu1_2, relu2_2, relu3_3, relu4_3), computed on the whole panel at its own aspect ratio (short side 448 px, long side capped at 1024) and reduced via PCA fit on the whole gallery. Captures line style and texture similarity — hatching, stippling, inking approach — independent of composition or subject matter.
 
 SigLIP and DINOv2 support incremental updates (only new panels are embedded). Gram embeddings are always fully recomputed because PCA is fit on the full corpus. Each file carries a version tag; a version bump triggers a full recompute automatically.
 

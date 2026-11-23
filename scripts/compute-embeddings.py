@@ -9,13 +9,14 @@ automatically.
 Models
 ------
 siglip  – google/siglip-base-patch16-224 (semantic / conceptual similarity)
-dino    – facebook/dinov2-small (structural / perceptual similarity)
+dino    – facebook/dinov2-with-registers-small (structural / perceptual similarity)
 gram    – VGG-16 Gram matrices (line style / texture similarity)
 
 The gram model extracts Gram matrices from four VGG-16 convolutional
 layers spanning shallow-to-mid depth, capturing texture at multiple
 scales: fine hatching and stippling from early layers, broader inking
-style from deeper ones. Each layer's Gram vector is independently
+style from deeper ones. VGG sees the whole panel at its own aspect ratio,
+short side 448 px (see GRAM_SHORT_SIDE). Each layer's Gram vector is independently
 unit-normalized before concatenation so that no single layer dominates.
 The raw Gram features are high-dimensional, so PCA reduces them to a
 compact embedding. Because PCA is fit on the full corpus each run, gram
@@ -43,6 +44,15 @@ import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+# DINOv2 and the gram model both see every panel at its own shape, so
+# nearly every forward pass has new input dimensions. oneDNN caches a
+# compiled convolution (and its scratch buffers) per shape, 1024 deep by
+# default; at gram's 448 px that grew past 3.5 GB over the gallery and got
+# the process OOM-killed. A tiny cache keeps memory flat (~1.5 GB) at no
+# measurable cost, since shapes rarely repeat anyway. Must be set before
+# torch loads oneDNN.
+os.environ.setdefault("ONEDNN_PRIMITIVE_CACHE_CAPACITY", "4")
 
 import numpy as np
 import torch
@@ -110,17 +120,17 @@ MODELS: dict[str, ModelSpec] = {
     ),
     "dino": ModelSpec(
         key="dino",
-        hf_name="facebook/dinov2-small",
+        hf_name="facebook/dinov2-with-registers-small",
         dim=384,
         output_path=Path("public/data/embeddings-dino.json"),
-        version="dinov2-small-cls-patch-v1",
+        version="dinov2-reg-small-native256-cls-patch-v1",
     ),
     "gram": ModelSpec(
         key="gram",
         hf_name="vgg16",
         dim=30,
         output_path=Path("public/data/embeddings-gram.json"),
-        version="vgg16-gram-4layer-normed-pca30-v1",
+        version="vgg16-gram-4layer-normed-pca30-native448-v1",
         incremental=False,  # PCA must be fit on the full corpus
     ),
 }
@@ -221,16 +231,56 @@ def compute_embedding_dino(
     return compute_embeddings_dino_batch([img], model, processor)[0]
 
 
+# DINOv2 sees each panel whole, at its own aspect ratio, rather than through
+# the stock processor's resize-to-256-then-centre-crop-224, which dropped a
+# third or more of a typical (1.35:1) panel. The short side goes to 256 (the
+# stock resize, so linework gets the same pixels as before) and both sides
+# snap to whole 14 px patches; DINOv2 interpolates its position embeddings
+# to whatever grid that makes. On scripts/embedding-neighbors.py this beat
+# the centre crop on series and artist matching (+0.026 / +0.025 mAP) and
+# tied it on cross-series artist matching.
+DINO_SHORT_SIDE = 256
+DINO_MAX_SIDE = 1036  # 74 patches; only a strip longer than ~4:1 is capped
+DINO_PATCH = 14
+
+
+def _dino_snap(n: float) -> int:
+    return max(DINO_PATCH, int(round(n / DINO_PATCH)) * DINO_PATCH)
+
+
+def dino_pixels(img: Image.Image, processor) -> torch.Tensor:
+    """Whole panel → (3, H, W) normalized tensor, H and W multiples of 14."""
+    w, h = img.size
+    scale = min(DINO_SHORT_SIDE / min(w, h), DINO_MAX_SIDE / max(w, h))
+    resized = img.resize((_dino_snap(w * scale), _dino_snap(h * scale)), Image.BICUBIC)
+    arr = np.asarray(resized, dtype=np.float32) / 255.0
+    mean = np.asarray(processor.image_mean, dtype=np.float32)
+    std = np.asarray(processor.image_std, dtype=np.float32)
+    return torch.from_numpy(((arr - mean) / std).transpose(2, 0, 1).copy())
+
+
 def compute_embeddings_dino_batch(
     images: list[Image.Image], model, processor
 ) -> np.ndarray:
-    """Batched DINOv2: returns (B, dim) of unit-normalized vectors."""
-    inputs = processor(images=images, return_tensors="pt")
+    """DINOv2 over a list of images: returns (B, dim) of unit-normalized vectors.
+
+    Panels keep their own shapes, so each image is its own forward pass
+    (differently-sized grids can't share a batch tensor).
+
+    The with-registers variant puts its register tokens between CLS and
+    the patches ([CLS, reg_1..reg_n, patch_1..]). They exist to soak up
+    global scratch information that plain DINOv2 dumps into a few
+    high-norm patch tokens, so they're left out of the patch mean.
+    """
+    n_reg = getattr(model.config, "num_register_tokens", 0) or 0
+    vecs = []
     with torch.inference_mode():
-        outputs = model(**inputs)
-        cls = outputs.last_hidden_state[:, 0]                      # (B, dim)
-        patch_mean = outputs.last_hidden_state[:, 1:].mean(dim=1)  # (B, dim)
-        vecs_np = ((cls + patch_mean) / 2).numpy()
+        for img in images:
+            hidden = model(pixel_values=dino_pixels(img, processor).unsqueeze(0)).last_hidden_state[0]
+            cls = hidden[0]
+            patch_mean = hidden[1 + n_reg:].mean(dim=0)
+            vecs.append(((cls + patch_mean) / 2).numpy())
+    vecs_np = np.stack(vecs)
     norms = np.linalg.norm(vecs_np, axis=1, keepdims=True)
     norms[norms == 0] = 1
     return vecs_np / norms
@@ -258,17 +308,32 @@ GRAM_LAYER_INDICES = {
 # upper-triangle indices.
 GRAM_CHANNEL_COUNTS = [64, 128, 256, 512]
 
+# VGG sees each panel whole, at its own aspect ratio, with the short side at
+# 448 px (long side capped at 1024 for strips past ~2.3:1). Convolutions
+# take any size, and the Gram matrix is normalized by H*W, so nothing
+# downstream changes. On scripts/embedding-neighbors.py this beat the old
+# 224×224 squash by +0.045 series / +0.051 artist mAP; keeping the shape
+# and doubling the resolution each helped on their own, and 640 px added
+# nothing over 448 at twice the cost.
+GRAM_SHORT_SIDE = 448
+GRAM_MAX_SIDE = 1024
+
 # Standard ImageNet normalization for VGG
-GRAM_TRANSFORM = transforms.Compose([
-    transforms.Resize((224, 224)),
+GRAM_NORMALIZE = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
-# Number of images to push through VGG in a single forward pass.
-# Tune based on available memory — 32 is conservative for CPU with
-# 224×224 inputs and only the first 22 conv layers.
-GRAM_BATCH_SIZE = 32
+
+def gram_input(img: Image.Image) -> Image.Image:
+    """Resize a panel to the size VGG sees (keeps its aspect ratio)."""
+    w, h = img.size
+    scale = min(GRAM_SHORT_SIDE / min(w, h), GRAM_MAX_SIDE / max(w, h))
+    return img.resize((round(w * scale), round(h * scale)), Image.BILINEAR)
+
+
+# Progress is printed every this many images.
+GRAM_PROGRESS_EVERY = 32
 
 
 class GramExtractor(nn.Module):
@@ -315,7 +380,7 @@ class GramExtractor(nn.Module):
 
         Parameters
         ----------
-        x : Tensor of shape (B, 3, 224, 224)
+        x : Tensor of shape (B, 3, H, W); any H, W (convolutions are size-agnostic)
 
         Returns
         -------
@@ -347,37 +412,23 @@ class GramExtractor(nn.Module):
         return grams
 
 
-def compute_gram_features_batch(
-    images: list[Image.Image], extractor: GramExtractor
-) -> np.ndarray:
-    """Compute raw (pre-PCA) Gram feature vectors for a batch of images.
-
-    Parameters
-    ----------
-    images : list[PIL.Image]
-        Already-converted to RGB.
-    extractor : GramExtractor
-
-    Returns
-    -------
-    np.ndarray of shape (len(images), total_features)
-        Concatenated per-layer-normalized upper-triangle Gram values.
-    """
-    batch = torch.stack([GRAM_TRANSFORM(img) for img in images])
-    with torch.inference_mode():
-        grams = extractor(batch)                # list of (B, tri_i)
-    return torch.cat(grams, dim=1).numpy()       # (B, total_features)
-
-
 def compute_gram_features(
     img: Image.Image, extractor: GramExtractor
 ) -> np.ndarray:
-    """Compute raw (pre-PCA) Gram feature vector for a single image.
+    """Raw (pre-PCA) Gram feature vector for one RGB image.
 
-    Convenience wrapper around compute_gram_features_batch for the
-    single-image case.
+    One image per forward pass: panels keep their own shapes, so they
+    can't share a batch tensor.
+
+    Returns
+    -------
+    np.ndarray of shape (total_features,)
+        Concatenated per-layer-normalized upper-triangle Gram values.
     """
-    return compute_gram_features_batch([img], extractor)[0]
+    x = GRAM_NORMALIZE(gram_input(img)).unsqueeze(0)
+    with torch.inference_mode():
+        grams = extractor(x)                     # list of (1, tri_i)
+    return torch.cat(grams, dim=1)[0].numpy()    # (total_features,)
 
 
 def file_sha256(path: Path) -> str:
@@ -612,50 +663,19 @@ def process_gram(spec: ModelSpec, panels: list[dict]) -> None:
         extractor = GramExtractor(GRAM_LAYER_INDICES)
         extractor.eval()
 
-        # Load images, skipping (and counting) unreadable files
-        batch_hashes: list[str] = []
-        batch_imgs: list[Image.Image] = []
-        for digest, image_path in to_compute.items():
+        # One image at a time: each is decoded, run, and released, so only
+        # one full-size photo is in memory at once, and a bad file fails
+        # alone.
+        total = len(to_compute)
+        for n, (digest, image_path) in enumerate(to_compute.items(), start=1):
             try:
-                batch_imgs.append(Image.open(image_path).convert("RGB"))
-                batch_hashes.append(digest)
+                img = Image.open(image_path).convert("RGB")
+                computed[digest] = compute_gram_features(img, extractor)
             except Exception as e:
-                print(f"  ERROR loading: {image_path} → {e}", file=sys.stderr)
+                print(f"  ERROR: image {image_path} → {e}", file=sys.stderr)
                 error_count += 1
-
-        # Process in chunks of GRAM_BATCH_SIZE
-        total = len(batch_imgs)
-        for start in range(0, total, GRAM_BATCH_SIZE):
-            end = min(start + GRAM_BATCH_SIZE, total)
-            chunk_hashes = batch_hashes[start:end]
-            chunk_imgs = batch_imgs[start:end]
-
-            try:
-                features = compute_gram_features_batch(chunk_imgs, extractor)
-                for j, digest in enumerate(chunk_hashes):
-                    computed[digest] = features[j]
-                print(
-                    f"  [{end}/{total}] Batch OK "
-                    f"({len(chunk_hashes)} image(s))"
-                )
-            except Exception as e:
-                # Fall back to one-at-a-time so a single bad image
-                # doesn't take out the whole batch
-                print(
-                    f"  Batch {start}–{end} failed ({e}), "
-                    f"falling back to single-image mode",
-                    file=sys.stderr,
-                )
-                for j, (digest, img) in enumerate(zip(chunk_hashes, chunk_imgs)):
-                    try:
-                        computed[digest] = compute_gram_features(img, extractor)
-                        print(f"  [{start + j + 1}/{total}] OK (fallback)")
-                    except Exception as e2:
-                        print(
-                            f"  ERROR: image {to_compute[digest]} → {e2}",
-                            file=sys.stderr,
-                        )
-                        error_count += 1
+            if n % GRAM_PROGRESS_EVERY == 0 or n == total:
+                print(f"  [{n}/{total}] OK")
 
     available = {**cache, **computed}
     raw_features: dict[str, np.ndarray] = {
