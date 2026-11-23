@@ -7,6 +7,14 @@ on:
       - "public/data/gallery.json"
   workflow_dispatch:
 
+# One run at a time. Overlapping runs each computed the same new panels and
+# then hit rebase conflicts on embeddings*.json when committing. Runs queue
+# instead, and a burst of pushes collapses to the running job plus one
+# pending job (a newer pending run replaces an older one).
+concurrency:
+  group: compute-image-metadata
+  cancel-in-progress: false
+
 jobs:
   compute-metadata:
     runs-on: ubuntu-latest
@@ -15,7 +23,12 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Check out the branch head, not the triggering commit: a run that
+      # waited in the concurrency queue must start from the previous run's
+      # bot commit, or it would redo that work and conflict with it.
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -45,16 +58,68 @@ jobs:
           path: ~/.cache/torch/hub/checkpoints
           key: torchvision-vgg16
 
-      - name: Compute missing image metadata
+      # Raw (pre-PCA) Gram features keyed by image hash, so the gram model
+      # only runs VGG on new images instead of the whole gallery. The exact
+      # key never matches; restore-keys picks the newest saved cache.
+      - name: Restore Gram feature cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/comic-snaps
+          key: gram-features-v1-${{ github.sha }}
+          restore-keys: gram-features-v1-
+
+      - name: Hash Gram feature cache (before)
+        id: gram-before
+        run: |
+          f=~/.cache/comic-snaps/gram-features.npz
+          if [ -f "$f" ]; then h=$(sha256sum "$f" | cut -c1-16); else h=none; fi
+          echo "hash=$h" >> "$GITHUB_OUTPUT"
+
+      # The metadata script waits on API rate limits and the embeddings
+      # script is CPU-bound, so they run side by side. Embeddings read only
+      # panel ids and image paths, which the metadata script never changes;
+      # they read a snapshot of gallery.json because the metadata script
+      # rewrites the file when it finishes. The two write disjoint files.
+      - name: Compute metadata and embeddings
         env:
           PYTHONUNBUFFERED: "1"
           COMIC_VINE_API_KEY: ${{ secrets.COMIC_VINE_API_KEY }}
           METRON_USERNAME: ${{ secrets.METRON_USERNAME }}
           METRON_PASSWORD: ${{ secrets.METRON_PASSWORD }}
-        run: python scripts/compute-image-metadata.py --skip-gcd
+        run: |
+          cp public/data/gallery.json "$RUNNER_TEMP/gallery-snapshot.json"
+          EMBED_GALLERY_PATH="$RUNNER_TEMP/gallery-snapshot.json" \
+            python scripts/compute-embeddings.py > "$RUNNER_TEMP/embeddings.log" 2>&1 &
+          embed_pid=$!
 
-      - name: Compute embeddings
-        run: python scripts/compute-embeddings.py
+          meta_status=0
+          python scripts/compute-image-metadata.py --skip-gcd || meta_status=$?
+
+          embed_status=0
+          wait "$embed_pid" || embed_status=$?
+          echo
+          echo "=============== compute-embeddings.py ==============="
+          cat "$RUNNER_TEMP/embeddings.log"
+
+          echo "metadata exit: $meta_status, embeddings exit: $embed_status"
+          [ "$meta_status" -eq 0 ] && [ "$embed_status" -eq 0 ]
+
+      - name: Hash Gram feature cache (after)
+        id: gram-after
+        if: ${{ !cancelled() }}
+        run: |
+          f=~/.cache/comic-snaps/gram-features.npz
+          if [ -f "$f" ]; then h=$(sha256sum "$f" | cut -c1-16); else h=none; fi
+          echo "hash=$h" >> "$GITHUB_OUTPUT"
+
+      # Saved only when this run changed it; the cache file is written
+      # atomically, so it's valid even if a later step failed.
+      - name: Save Gram feature cache
+        if: ${{ !cancelled() && steps.gram-after.outputs.hash != 'none' && steps.gram-after.outputs.hash != steps.gram-before.outputs.hash }}
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/comic-snaps
+          key: gram-features-v1-${{ steps.gram-after.outputs.hash }}
 
       # - name: Compute text embeddings
       #   run: python scripts/compute-text-embeddings.py
