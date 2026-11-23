@@ -9616,6 +9616,311 @@
       ]
     },
     {
+      "id": "sabrina-the-teenage-witch-1",
+      "series": "sabrina-the-teenage-witch",
+      "issue": 1,
+      "credits": [
+        {
+          "artistId": "corinna-bechko",
+          "name": "Corinna Bechko",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "kano",
+          "name": "Kano",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nick-cagnetti",
+          "name": "Nick Cagnetti",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "david-c-hopkins",
+          "name": "David C. Hopkins",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "bree-lundberg",
+          "name": "Bree Lundberg",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "caroline-cash",
+          "name": "Caroline Cash",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "chlo-stawski",
+          "name": "Chlo\u00e9 Stawski",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dan-parent",
+          "name": "Dan Parent",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "danica-brine",
+          "name": "Danica Brine",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "elias-chatzoudis",
+          "name": "Elias Chatzoudis",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "erica-henderson",
+          "name": "Erica Henderson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "lauren-knight",
+          "name": "Lauren Knight",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "mahmud-a-asrar",
+          "name": "Mahmud A. Asrar",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "marguerite-sauvage",
+          "name": "Marguerite Sauvage",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "matthew-wilson",
+          "name": "Matthew Wilson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "morgan-beem",
+          "name": "Morgan Beem",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "naomi-franquiz",
+          "name": "Naomi Franquiz",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "megan-brown",
+          "name": "Megan Brown",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "joelena-despard",
+          "name": "Joelena Despard",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "angie-knowles",
+          "name": "Angie Knowles",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "carey-soucy",
+          "name": "Carey Soucy",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "rian-hughes",
+          "name": "Rian Hughes",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/sabrina-the-teenage-witch-2026-1/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
+      "id": "sabrina-the-teenage-witch-2",
+      "series": "sabrina-the-teenage-witch",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "corinna-bechko",
+          "name": "Corinna Bechko",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "kano",
+          "name": "Kano",
+          "roles": [
+            "Artist",
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "nick-cagnetti",
+          "name": "Nick Cagnetti",
+          "roles": [
+            "Artist"
+          ]
+        },
+        {
+          "artistId": "david-c-hopkins",
+          "name": "David C. Hopkins",
+          "roles": [
+            "Letterer"
+          ]
+        },
+        {
+          "artistId": "brad-simpson",
+          "name": "Brad Simpson",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "dan-parent",
+          "name": "Dan Parent",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "eleonora-carlini",
+          "name": "Eleonora Carlini",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "khary-randolph",
+          "name": "Khary Randolph",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "marguerite-sauvage",
+          "name": "Marguerite Sauvage",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "paulina-ganucheau",
+          "name": "Paulina Ganucheau",
+          "roles": [
+            "Cover"
+          ]
+        },
+        {
+          "artistId": "megan-brown",
+          "name": "Megan Brown",
+          "roles": [
+            "Editor"
+          ]
+        },
+        {
+          "artistId": "joelena-despard",
+          "name": "Joelena Despard",
+          "roles": [
+            "Assistant Editor"
+          ]
+        },
+        {
+          "artistId": "angie-knowles",
+          "name": "Angie Knowles",
+          "roles": [
+            "Production",
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "carey-soucy",
+          "name": "Carey Soucy",
+          "roles": [
+            "Designer"
+          ]
+        },
+        {
+          "artistId": "rian-hughes",
+          "name": "Rian Hughes",
+          "roles": [
+            "Designer",
+            "Logo Design"
+          ]
+        },
+        {
+          "artistId": "bess-pallares",
+          "name": "Bess Pallares",
+          "roles": [
+            "Group Editor"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/issue/sabrina-the-teenage-witch-2026-2/"
+        }
+      ],
+      "sources": [
+        "metron"
+      ]
+    },
+    {
       "id": "seamonsters-and-superheroes-1",
       "series": "seamonsters-and-superheroes",
       "issue": 1,

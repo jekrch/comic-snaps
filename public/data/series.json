@@ -3659,10 +3659,38 @@
       "name": "Sabrina the Teenage Witch",
       "parentSeries": null,
       "description": "",
-      "imageUrl": null,
-      "references": [],
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10206183-cover.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sabrina-the-teenage-witch/4050-177373/"
+        },
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/series/16914/"
+        }
+      ],
       "startYear": 2026,
-      "sources": []
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-publisher"
+      ],
+      "publisher": "Oni Press",
+      "publisherId": "oni-press",
+      "issueCount": 2,
+      "coverSources": {
+        "metron": [
+          1,
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/sabrina-the-teenage-witch/dccfadca88f0.jpg",
+        "data/covers/sabrina-the-teenage-witch/235c7f9f54a9.jpg",
+        "data/covers/sabrina-the-teenage-witch/9b4e853270af.jpg",
+        "data/covers/sabrina-the-teenage-witch/d30c99e62817.jpg"
+      ]
     },
     {
       "id": "seamonsters-and-superheroes",

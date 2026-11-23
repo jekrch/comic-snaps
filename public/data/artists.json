@@ -1819,6 +1819,22 @@
       ]
     },
     {
+      "id": "bree-lundberg",
+      "name": "Bree Lundberg",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/8666/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "brian-azzarello",
       "name": "Brian Azzarello",
       "description": "Brian Azzarello is an American comic book writer and screenwriter. He came to prominence with the hard-boiled crime series 100 Bullets, published by DC Comics' mature-audience imprint Vertigo. In 2011, he became the writer of DC's relaunched Wonder Woman series.",
@@ -2251,6 +2267,27 @@
       ]
     },
     {
+      "id": "caroline-cash",
+      "name": "Caroline Cash",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/7/71975/7031317-5237502558-mAbwK.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/12459/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/caroline-cash/4040-105948/"
+        }
+      ],
+      "country": "U.S.",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "cary-nord",
       "name": "Cary Nord",
       "description": "Cary Nord is the award-winning artist of comic books and graphic novels such as Daredevil, X-Men, and Conan The Barbarian. Throughout his career Cary has drawn virtually every major character in comics, having worked on Superman, Wolverine, Mutant X, Ghost Rider, Spider-Man, Thor, and Star Wars.\r\n\r\nHe is currently working on the critically acclaimed series X-O Manowar from Valiant Entertainment.\r\n\r\nIn 2004, Cary was awarded the industry's top honour for his work on Conan the Barbarian, taking home the Will Eisner Comic Industry Award for Best Single Issue.\r\n\r\nBorn in Calgary, Cary spent most of his youth drawing, and after attending the Alberta College of Art and Design he began to submit his work to Marvel and DC Comics. Diligence and hard work paid off, and work on single issues grew into longer fan-favourite stories with beloved characters.",
@@ -2415,6 +2452,22 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/12120/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "chlo-stawski",
+      "name": "Chlo\u00e9 Stawski",
+      "description": "",
+      "imageUrl": null,
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/17661/"
         }
       ],
       "sources": [
@@ -2861,6 +2914,29 @@
       ]
     },
     {
+      "id": "corinna-bechko",
+      "name": "Corinna Bechko",
+      "description": "Bechko's first graphic novel Heathentown was published by Image/Shadowline in 2009.\r\n\r\nSince then she has worked on Planet of the Apes for Boom!, Star Wars: Legacy for Dark Horse, and Once Upon a Time: Shadow of the Queen for Marvel.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/4257965-corinna-sara-bechko.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/992/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/corinna-bechko/4040-62207/"
+        }
+      ],
+      "aliases": [
+        "Corinna Sara Bechko"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "corrado-mastantuono",
       "name": "Corrado Mastantuono",
       "description": "",
@@ -3134,6 +3210,29 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "danica-brine",
+      "name": "Danica Brine",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11127/111278564/8446017-a.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/5989/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/danica-brine/4040-104786/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ],
+      "aliases": [
+        "Danica Bradshaw"
       ]
     },
     {
@@ -4347,6 +4446,48 @@
       ]
     },
     {
+      "id": "eleonora-carlini",
+      "name": "Eleonora Carlini",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9973536-eleonora_carlini.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1012/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/eleonora-carlini/4040-68068/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "elias-chatzoudis",
+      "name": "Elias Chatzoudis",
+      "description": "Artist that has worked for Zenescope Entertainment",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9984426-elias_chatzoudis.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4655/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/elias-chatzoudis/4040-62822/"
+        }
+      ],
+      "birthYear": 1982,
+      "country": "Greece",
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "elizabeth-beals",
       "name": "Elizabeth Beals",
       "description": "",
@@ -4610,6 +4751,27 @@
       "aliases": [
         "Eric Zawadski"
       ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "erica-henderson",
+      "name": "Erica Henderson",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320216-5466578202-Erica.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2021/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/erica-henderson/4040-66709/"
+        }
+      ],
+      "country": "U.S.",
       "sources": [
         "comicvine",
         "metron"
@@ -9169,6 +9331,26 @@
       ]
     },
     {
+      "id": "khary-randolph",
+      "name": "Khary Randolph",
+      "description": "Khary Randolph\u00a0was born in Boston, Massachusetts. He moved to New York in 1996 to attend the School of Visual Arts and graduated in 2000 with a BFA in Cartooning and Illustration. Since, he has worked for a number of clients in the animation, advertising and comic book industries and left his mark on many properties, such as Spider-Man, X-Men, Hellboy, Teenage Mutant Ninja Turtles, Boondocks and Teen Titans. He is currently employed by 4Kids Entertainment as Lead Character Illustrator on the cartoon and online card game Chaotic, which can be seen on Saturday mornings on the CW.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/8058293-8795528349-Featu.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/1342/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/khary-randolph/4040-43222/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "kike-j-diaz",
       "name": "Kike J. Diaz",
       "description": "",
@@ -9336,6 +9518,26 @@
       "sources": [
         "metron",
         "comicvine"
+      ]
+    },
+    {
+      "id": "lauren-knight",
+      "name": "Lauren Knight",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9613605-lauren_knight.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/6462/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/lauren-knight/4040-81453/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
       ]
     },
     {
@@ -10718,6 +10920,26 @@
       ]
     },
     {
+      "id": "megan-brown",
+      "name": "Megan Brown",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9883281-megan_brown.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/3185/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/megan-brown/4040-101946/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
       "id": "megan-levens",
       "name": "Megan Levens",
       "description": "Megan Levens is a comic artist who came to comics after years in advertising, having drawn her friends' D&D characters in high school and made comics online.\r\n\r\nShe broke in as a fill-in artist on Dark Horse's Buffy the Vampire Slayer Season 10 and drew Madame Frankenstein (Image, 2014) and Ares & Aphrodite for writer Jamie S. Rich, pairing clean linework with an eye for the horrific. She has since drawn Star Trek comics including Boldly Go and Strange New Worlds, and reunited with Rich on the romance The Dogsitter for Ignition Press in 2026.",
@@ -11203,6 +11425,50 @@
       ],
       "country": "France",
       "hometown": "Nogent-sur-Marne"
+    },
+    {
+      "id": "morgan-beem",
+      "name": "Morgan Beem",
+      "description": "",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6320318-7107026502-Morga.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/2077/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/morgan-beem/4040-83663/"
+        }
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
+    },
+    {
+      "id": "naomi-franquiz",
+      "name": "Naomi Franquiz",
+      "description": "A freelance illustrator and comic book artist based in Florida.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/1/15776/9975439-naomi_franquiz.jpg",
+      "references": [
+        {
+          "name": "Metron",
+          "url": "https://metron.cloud/creator/4802/"
+        },
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/naomi-franquiz/4040-77959/"
+        }
+      ],
+      "country": "United States",
+      "aliases": [
+        "Naomi Franq"
+      ],
+      "sources": [
+        "comicvine",
+        "metron"
+      ]
     },
     {
       "id": "naomi-griffin",
