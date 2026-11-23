@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 372,
+      "id": "sabrina-the-teenage-witch-2-1795392793",
+      "title": "Sabrina the Teenage Witch",
+      "slug": "sabrina-the-teenage-witch",
+      "issue": 2,
+      "year": 2026,
+      "artist": "Kano",
+      "image": "images/sabrina-the-teenage-witch/issue-2-1795392793.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-23T00:13:15.668Z"
+    },
+    {
       "seq": 371,
       "id": "rain-1-1795392089",
       "title": "Rain",
