@@ -77,15 +77,17 @@ Paint is lighter than the line work and carries hue. They need opposite fixes.
 
 | You see | Do |
 | --- | --- |
+| Photo is dim or gloomy, or one side darker, and the art's lightest areas are painted (a cream sky, a tinted wall), with no white to name | `--light-only`: it evens the falloff and brightens without changing color. Add `--strength 0.2` to take a little of the cast too. The defaults read that paint as paper and bleach it: see "Dim photos" below |
 | Art lost its color, or everything shifted toward the opposite hue | The bright areas were paint, not paper. Name the real whites with `--white-box`, or lower `--strength`, or use `--no-balance` |
 | A warm or sepia palette looks cold | Same: that warmth may be the art. Try `--white-box`, or `--strength 0.5` |
 | It refused a cast that balloons or other white things visibly share | Large bright flats were read as paper. `--white-box X,Y,W,H` on one or more balloons: see below |
 | Cast clearly remains, with paper visible | `--strength 1`, if the warning says it was limited |
-| Colored page kept when it should be neutral, or the reverse | `--tint A,B`, or `--tint 0,0` for neutral. `--max-warmth` allows more yellow for aged stock |
+| Colored page kept when it should be neutral, or the reverse | `--tint A,B`, or `--tint 0,0` for neutral, with `=` for a negative value: `--tint=-2,2`. `--max-warmth` allows more yellow for aged stock |
 | True black ink mottled, such as glare on hair | Raise `--ink-sigmas` (default 1.5), up to 4 |
 | Solid painted darks mottled, recolored, or crushed | Raising `--ink-sigmas` makes this worse. Use `--ink-sigmas=-1.5`, down to `-3`, with `--max-veil 0.03` or `0.02` |
 | Dark browns turned red or maroon | `--keep-dark-hue`. The black point doesn't cause this, so `--ink-l` won't fix it |
 | Highlights blown out | Lower `--paper-l` (default 91) |
+| A pale color went white or lost its tint toward one side only | The fitted light runs past its anchors there and clips that side. Probe the same paint on both sides to confirm. Give that side anchors: box whites there, or, when the anchors are pale paint under `--light-only` or a low `--strength`, drop `--white-box` so the defaults' anchors reach it |
 | Halos along the lines | Lower `--sharpen` (default 0.35) |
 | Faded art still looks flat | Only if the user asks: `--saturation 1.1`. It invents color, so never by default |
 | Hard glare spot left behind | The whole-frame fields are too smooth to follow it. When working locally, `--glare-box` takes off a soft streak or patch: see "Taking off glare" below. Glare blown out to white can't be recovered: tell the user |
@@ -113,6 +115,31 @@ of the panel too. Check that `--anchors` shows green only on paper.
 
 Don't name pale paint as white. A cream sky or a yellowed balloon the artist colored
 is art. If the balloons are colored, leave the cast alone.
+
+**Lettered balloons.** Dense lettering fails the flatness test, so a few small balloons
+can leave under 1% of anchors, and it prints "no solid paper" even with boxes named.
+If the boxes all measure about the same cast, add `--flat-field`. That reads one cast for
+the whole frame from the named whites alone, through a tighter gate (chroma 6), so pale
+paint near the balloons' color can't vote. It can't follow a falloff, so it suits an
+evenly lit photo. It fixed Bleeding Hearts #9 (balloons a≈11 b≈4.5 to a≈2.7 b≈5) and
+Sabrina the Teenage Witch #2 (a≈10–15 b≈10–11 to a≈3–6 b≈6–7). `--white-gate` changes
+the gate.
+
+### Dim photos
+
+A photo taken in dull light comes out dim and often darker to one side. When there's
+paper or a named white, the defaults handle it. When the lightest things are painted, a
+cream sky or a tinted wall, the defaults take that paint for paper and remove its color
+as cast: Rain #1's cream sky went white.
+
+`--light-only` reads only the light's brightness from the anchors. It evens the falloff
+and lifts the frame (by up to 8 L above the anchors), and leaves color alone. The color
+evidence limits don't apply, since no color is removed. Add `--strength 0.2` to take a
+fifth of the cast as well, which is what Rain #1's two panels kept: the street scene's
+sky went from L 85 to 89 and stayed cream, and the second panel's wall, L 38 to 74 across
+the frame, came out even at about L 80. Probe a known neutral (grey shading, a white
+shirt) before going higher: on that second panel 30% already turned the greys blue and
+the inset's pink magenta.
 
 ### 5. Install
 
@@ -188,6 +215,8 @@ split it into boxes that each are.
   bright areas it found are probably art. It only sets levels. If balloons or other white
   things show the same cast, name them with `--white-box`, which reads the light from them
   alone. `--strength` overrides it too, but keeps the wrong field's shape and hue.
+- **"lettering leaves too little of the named whites".** The boxes were named but too few
+  of their pixels count as flat. If they share one cast, use `--flat-field`.
 - **"the field doesn't follow the named whites".** The fitted light misses the boxes'
   color by more than chroma 8. Look at `--anchors`, and box whites where the light differs.
 - **"glare over the ink: up to N of the paper".** The glare it subtracts, against
@@ -224,6 +253,12 @@ Worth knowing before changing the script. The limits were all set by panels it g
   brightness. That fixes the one case the evidence limits get wrong, where real light is
   stronger than chroma 40. Bijou Funnies #6's yellow flats read as a=26 b=68 while its
   balloons measured a=22 b=33.
+- **Flat field:** `--flat-field` fits one constant instead of the six-term surface, so a
+  fraction of a percent of anchors is enough, and narrows the gate to chroma 6. The glare
+  floor over the ink stays a surface.
+- **Light only:** the field's color is scaled by `--strength` and its brightness isn't,
+  so strength 0 evens and brightens the light without recoloring anything. That makes it
+  safe to fit to pale paint, which is the only evidence some panels have.
 - **Glare:** a smooth floor fitted under the darkest pixels of each cell, because ink is
   often only thin lines and any solid dark left to vote is paint. Reading a charcoal shape
   as glare turned it navy. Glare takes the white field's color, not the dark pixels',

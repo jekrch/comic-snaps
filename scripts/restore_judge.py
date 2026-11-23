@@ -73,7 +73,10 @@ FLAGS = {
     "color": {
         "strength": ("num", 0.0, 1.0),
         "no-balance": ("bool",),
+        "light-only": ("bool",),
         "white-box": ("box",),
+        "flat-field": ("bool",),
+        "white-gate": ("num", 3.0, 12.0),
         "keep-dark-hue": ("bool",),
         "max-veil": ("num", 0.0, 0.15),
         "saturation": ("num", 1.0, 1.15),

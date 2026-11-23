@@ -44,6 +44,13 @@ FIELD_LONG_SIDE = 512  # The fields are smooth, so fit them small and fast.
 # With --white-box, anchors are only pixels this close in Lab chroma to the named
 # whites. Bijou Funnies #6's yellow flats sat ~35 from its balloons, the paper 0-10.
 WHITE_GATE = 12.0
+# --flat-field: one cast for the whole frame, read from the named whites alone.
+# Dense lettering fails the flatness test, so a few balloons leave well under 1%
+# of anchors: 0.6% on Bleeding Hearts #9, 0.9% on Sabrina the Teenage Witch #2.
+# One constant needs far fewer than a quadratic's six terms, and the tighter gate
+# keeps pale paint near the balloons' color from voting (BH #9's bluish sky did).
+FLAT_WHITE_GATE = 6.0
+FLAT_MIN_WHITE_COVERAGE = 0.002
 BOX_DISAGREE = 8.0  # Chroma between the named whites and the field fitted at them.
 # Named whites are aged stock too: taking all of their cast turned Bijou Funnies
 # #6's grey shirt blue. This with the aged-paper tint matched the version kept.
@@ -126,11 +133,12 @@ def cmd_check(args):
     print(VERDICTS[verdict])
 
 
-def basis(x, y):
-    return np.stack([x ** 0, x, y, x * x, x * y, y * y], axis=-1)
+def basis(x, y, flat=False):
+    terms = [x ** 0] if flat else [x ** 0, x, y, x * x, x * y, y * y]
+    return np.stack(terms, axis=-1)
 
 
-def white_candidates(lab, gate=None):
+def white_candidates(lab, gate=None, gate_width=WHITE_GATE):
     """Bright, flat pixels that might be paper. gate=(L, a, b) of known whites
     keeps only pixels near that color, so painted flats can't vote at all."""
     L = lab[..., 0]
@@ -144,29 +152,30 @@ def white_candidates(lab, gate=None):
     flat = np.sqrt(np.maximum(cv2.blur(L * L, (9, 9)) - mean * mean, 0)) < 3.5
     candidates = bright & flat
     if gate is not None:
-        candidates &= np.hypot(lab[..., 1] - gate[1], lab[..., 2] - gate[2]) < WHITE_GATE
+        candidates &= np.hypot(lab[..., 1] - gate[1], lab[..., 2] - gate[2]) < gate_width
     return cv2.erode(candidates.astype(np.uint8), kernel) > 0
 
 
-def fit_white(lab, lin, gate=None):
+def fit_white(lab, lin, gate=None, gate_width=WHITE_GATE, flat=False):
     """Fit the light's color and falloff to solid bright regions: paper, balloons.
 
     A low-order surface is what keeps this off the art: it can follow a lamp's
     gradient across the page, but not a yellow sky's edge. Returns log-linear
     coefficients per channel (or None if nothing bright and flat enough exists),
-    the coverage of the anchors kept, and a mask of them for --anchors.
+    the coverage of the anchors kept, and a mask of them for --anchors. flat fits
+    one color for the whole frame instead of a surface.
     """
     L = lab[..., 0]
     H, W = L.shape
-    mask = white_candidates(lab, gate)
+    mask = white_candidates(lab, gate, gate_width)
     coverage = float(mask.mean())
-    if coverage < MIN_WHITE_COVERAGE:
+    if coverage < (FLAT_MIN_WHITE_COVERAGE if flat else MIN_WHITE_COVERAGE):
         return None, coverage, mask
 
     yy, xx = np.nonzero(mask)
     pick = np.random.default_rng(0).permutation(len(yy))[:20000]
     yy, xx = yy[pick], xx[pick]
-    X = basis(xx / W - 0.5, yy / H - 0.5)
+    X = basis(xx / W - 0.5, yy / H - 0.5, flat)
     logs = np.log(np.maximum(lin[yy, xx], 1e-4))
     samples = lab[yy, xx]
     keep = np.ones(len(yy), bool)
@@ -181,7 +190,7 @@ def fit_white(lab, lin, gate=None):
     # The same acceptance test over every candidate, for the overlay.
     ay, ax = np.nonzero(mask)
     full = lab[ay, ax]
-    fX = basis(ax / W - 0.5, ay / H - 0.5)
+    fX = basis(ax / W - 0.5, ay / H - 0.5, flat)
     fres = [full[:, c] - fX @ fits[c] for c in range(3)]
     kept = np.zeros_like(mask)
     kept[ay, ax] = (fres[0] > -2.5 * sigma[0]) & (np.abs(fres[1]) < 2.5 * sigma[1]) & (np.abs(fres[2]) < 2.5 * sigma[2])
@@ -454,6 +463,10 @@ def cmd_enhance(args):
     bgr = cv2.imread(str(args.image), cv2.IMREAD_COLOR)
     if bgr is None:
         sys.exit(f"cannot read {args.image}")
+    if args.flat_field and not args.white_box:
+        sys.exit("--flat-field reads the light from the named whites: give it --white-box")
+    if args.light_only and args.no_balance:
+        sys.exit("--light-only evens the light, which --no-balance turns off: pick one")
 
     source = bw.rectify(args, bgr)
     H, W = source.shape[:2]
@@ -469,6 +482,7 @@ def cmd_enhance(args):
     lin = srgb_to_linear(warped.astype(np.float64) / 255.0)
     yy, xx = np.mgrid[0:H, 0:W]
     full_basis = basis(xx / W - 0.5, yy / H - 0.5)
+    white_basis = basis(xx / W - 0.5, yy / H - 0.5, args.flat_field)
 
     small = shrink(warped, FIELD_LONG_SIDE)
     scale = small.shape[1] / W
@@ -482,13 +496,16 @@ def cmd_enhance(args):
 
     # Everything here is reflectance times light, so dividing by a white field
     # takes out the cast and the falloff together, in proportion, across all hues.
-    coefs, coverage, white_mask = fit_white(small_lab, small_lin, gate)
+    gate_width = args.white_gate or (FLAT_WHITE_GATE if args.flat_field else WHITE_GATE)
+    coefs, coverage, white_mask = fit_white(small_lab, small_lin, gate, gate_width, args.flat_field)
     balance = coefs is not None and not args.no_balance
     if coefs is None:
         print(f"  <-- no solid paper to read the light from ({coverage:.1%}): color left alone, levels only")
+        if gate is not None and not args.flat_field:
+            print("  <-- lettering leaves too little of the named whites: if they all share one cast, try --flat-field")
     strength = 0.0
     if balance:
-        white = np.exp(full_basis @ coefs.T)
+        white = np.exp(white_basis @ coefs.T)
         white_lab = cv2.cvtColor(linear_to_srgb(shrink(white, 64)).astype(np.float32), cv2.COLOR_BGR2Lab)
         cast_a, cast_b = float(np.median(white_lab[..., 1])), float(np.median(white_lab[..., 2]))
         cast = float(np.hypot(cast_a, cast_b))
@@ -505,6 +522,9 @@ def cmd_enhance(args):
                 print("  <-- the field doesn't follow the named whites: check --anchors, or add boxes where the light differs")
         if args.strength is not None:
             strength = args.strength
+        elif args.light_only:
+            # The anchors may be pale paint, which only says how bright the light is.
+            strength = 0.0
         elif gate is not None:
             # Named whites are the evidence the limits below stand in for.
             strength = NAMED_WHITE_STRENGTH
@@ -549,6 +569,8 @@ def cmd_enhance(args):
 
     if args.tint:
         paper_a, paper_b = (float(v) for v in args.tint.split(","))
+    elif args.light_only:
+        paper_a, paper_b = 0.0, 0.0  # Any warmth is the art's or the cast it kept.
     elif gate is not None and balance and cast_b >= 0:
         # Below full strength a neutral target still cooled the greys here.
         paper_a, paper_b = float(np.clip(cast_a, -1.0, 2.0)), min(cast_b, args.max_warmth)
@@ -632,6 +654,12 @@ def main():
         e.add_argument(f"--{side}", help="measured edge line; reframes the panel, so only when asked")
     e.add_argument("--strength", type=float, help="how much of the cast to remove, 0-1, overriding the safety limits; lower it if the art lost color")
     e.add_argument("--no-balance", action="store_true", help="leave color alone, only set levels")
+    e.add_argument("--light-only", action="store_true", help="even out and brighten a dim photo without changing its color: "
+                   "for art whose lightest areas are painted. With --strength, takes that much of the cast too")
+    e.add_argument("--flat-field", action="store_true", help="one cast for the whole frame, read from the --white-box whites "
+                   "alone: for lettered balloons that leave too few anchors")
+    e.add_argument("--white-gate", type=float, help=f"Lab chroma from the named whites' color that still counts as white "
+                   f"(default {WHITE_GATE:g}, or {FLAT_WHITE_GATE:g} with --flat-field)")
     e.add_argument("--white-box", action="append", help="X,Y,W,H of something known white, like a balloon; repeatable. "
                    "Only pixels near its color anchor the light, and it overrides the cast limits")
     e.add_argument("--glare-box", action="append", help="X,Y,W,H around a soft glare streak or patch, reaching clean paint on every "
