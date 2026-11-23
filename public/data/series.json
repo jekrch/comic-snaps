@@ -3463,12 +3463,24 @@
       "id": "rain",
       "name": "Rain",
       "parentSeries": null,
-      "description": "",
+      "description": "Rain is a five-issue comic book miniseries adapting Joe Hill's novella of the same name, which first appeared in his collection Strange Weather. It was adapted by David M. Booher, with art by Zoe Thorogood, colors by Chris O'Halloran and letters by Shawn Lee, and was the first title from Syzygy Publishing, the imprint Chris Ryall and Ashley Wood started at Image Comics.\r\n\r\nOn a clear August day in Boulder, Colorado, Honeysuckle Speck is about to move in with her girlfriend Yolanda when dark clouds roll in and release a downpour of crystal splinters that shred anyone caught outside. The rain spreads across the country and around the world.\r\n\r\nThe series ran from January to May 2022 and was collected in hardcover that October. It drew three 2023 Eisner Award nominations: Best Adaptation from Another Medium, and Best Painter/Multimedia Artist and Best Cover Artist for Thorogood.",
       "imageUrl": null,
       "references": [
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/3083/"
+        },
+        {
+          "name": "Image Comics",
+          "url": "https://imagecomics.com/comics/releases/joe-hill-s-rain-1-of-5"
+        },
+        {
+          "name": "The Beat",
+          "url": "https://www.comicsbeat.com/image-comics-syzygy-publishing-imprint-joe-hill-rain"
+        },
+        {
+          "name": "Wikipedia: Zoe Thorogood",
+          "url": "https://en.wikipedia.org/wiki/Zoe_Thorogood"
         }
       ],
       "sources": [
@@ -3658,7 +3670,7 @@
       "id": "sabrina-the-teenage-witch",
       "name": "Sabrina the Teenage Witch",
       "parentSeries": null,
-      "description": "",
+      "description": "Sabrina the Teenage Witch is an ongoing comic book series from Oni Press, written by Corinna Bechko and drawn by Kano, with Nick Cagnetti illustrating a bonus guide to familiars. It is part of the new line of Archie comics Oni began publishing in fall 2026, alongside Archie and Archie in Hell. The first issue went on sale on October 7, 2026, with a surprise 12:01 a.m. release timed to Marvel's Midnight X-Men, Midnight Spider-Man and Midnight Fantastic Four debuts.\r\n\r\nSixteen-year-old Sabrina, still reeling from the revelation of her secret birthright, is balancing learning magic with life as a teenager as Halloween approaches when her familiar Salem drops a mythical trickster on her doorstep. Bechko said the \"teenage\" part of the title is as important as the \"witch\" part, and that the series would heavily feature Salem, with a bonus guide in each issue.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11161/111615891/10206183-cover.jpg",
       "references": [
         {
@@ -3668,6 +3680,26 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/series/16914/"
+        },
+        {
+          "name": "Oni Press",
+          "url": "https://www.onipress.com/news/jp15c53hxmhzj8eb5nd46pny5v39kw",
+          "title": "First Look: The All-New SABRINA THE TEENAGE WITCH #1 Enthralls in October!"
+        },
+        {
+          "name": "Bleeding Cool",
+          "url": "https://bleedingcool.com/comics/onis-sabrina-the-teenage-witch-1-by-corinna-bechko-kano-in-october/",
+          "title": "Oni's Sabrina The Teenage Witch #1 by Corinna Bechko & Kano in October"
+        },
+        {
+          "name": "The Beat",
+          "url": "https://www.comicsbeat.com/sabrina-teenage-witch-reboot-midnight-release/",
+          "title": "SABRINA THE TEENAGE WITCH series gets surprise midnight release"
+        },
+        {
+          "name": "Daily Dead",
+          "url": "https://dailydead.com/?p=316223",
+          "title": "Interview with SABRINA THE TEENAGE WITCH Writer Corinna Bechko"
         }
       ],
       "startYear": 2026,

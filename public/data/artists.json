@@ -16268,7 +16268,7 @@
     {
       "id": "zoe-thorogood",
       "name": "Zoe Thorogood",
-      "description": "",
+      "description": "Zoe Thorogood is a British comic book author and artist, born in Bradford, England. She studied video game art at De Montfort University in Leicester and continued her studies at Teesside University. Her first graphic novel, The Impending Blindness of Billie Scott, was published by Avery Hill Publishing in 2020.\r\n\r\nIn 2022 she drew Rain, David M. Booher's adaptation of a Joe Hill novella, and wrote and drew It's Lonely at the Centre of the Earth, an autobiographical comic from Image Comics that follows her life through the last six months of 2021. The two books brought her five Eisner Award nominations in 2023, the year she received the Russ Manning Most Promising Newcomer Award.\r\n\r\nShe went on to draw Hack/Slash: Back to School, with series creator Tim Seeley back as writer, and to write Life Is Strange: Forget-Me-Not for Titan Comics.",
       "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/65071/8965868-3783777990-zoe-t.jpg",
       "references": [
         {
@@ -16278,9 +16278,25 @@
         {
           "name": "Metron",
           "url": "https://metron.cloud/creator/5612/"
+        },
+        {
+          "name": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Zoe_Thorogood"
+        },
+        {
+          "name": "The Observer",
+          "url": "https://www.theguardian.com/books/2023/jul/16/the-real-deal-young-graphic-artist-zoe-thorogood-nominated-for-five-eisners",
+          "title": "'The real deal': young UK graphic artist nominated for five 'comic book Oscars'"
+        },
+        {
+          "name": "Popverse",
+          "url": "https://www.thepopverse.com/zoe-thorogood-comics-graphic-novel-comic-books-eisner-win-2023",
+          "title": "Zoe Thorogood is living up to her reputation as the future of comics"
         }
       ],
       "birthYear": 1998,
+      "country": "United Kingdom",
+      "hometown": "Bradford",
       "sources": [
         "comicvine",
         "metron"
