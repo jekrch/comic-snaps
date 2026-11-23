@@ -249,6 +249,43 @@
           "name": "Love and Rockets: New Stories"
         }
       ]
+    },
+    "Sabrina the Teenage Witch": {
+      "id": null,
+      "candidates": [
+        {
+          "id": 6878,
+          "name": "Sabrina the Teenage Witch"
+        },
+        {
+          "id": 6877,
+          "name": "Sabrina the Teenage Witch"
+        },
+        {
+          "id": 6879,
+          "name": "Sabrina the Teenage Witch"
+        },
+        {
+          "id": 202,
+          "name": "Sabrina the Teenage Witch"
+        },
+        {
+          "id": 16914,
+          "name": "Sabrina the Teenage Witch"
+        },
+        {
+          "id": 6061,
+          "name": "Sabrina, the Teenage Witch"
+        },
+        {
+          "id": 6316,
+          "name": "Sabrina the Teenage Witch Holiday Special"
+        },
+        {
+          "id": 17632,
+          "name": "Sabrina the Teenage Witch / Vampirella"
+        }
+      ]
     }
   }
 }

@@ -3655,6 +3655,43 @@
       "anthology": true
     },
     {
+      "id": "sabrina-the-teenage-witch",
+      "name": "Sabrina the Teenage Witch",
+      "parentSeries": null,
+      "description": "The first Sabrina comic which lasted from 1971-1983.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/6/67663/6782362-1857316960-74994.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sabrina-the-teenage-witch/4050-22745/"
+        }
+      ],
+      "startYear": 1971,
+      "publisher": "Archie Comics",
+      "publisherId": "archie-comics",
+      "issueCount": 77,
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup",
+        "comicvine-publisher"
+      ],
+      "coverSources": {
+        "metron": [
+          2
+        ],
+        "comicvine": [
+          2
+        ]
+      },
+      "coverImages": [
+        "data/covers/sabrina-the-teenage-witch/ee6832d48581.jpg",
+        "data/covers/sabrina-the-teenage-witch/13618046df7f.jpg",
+        "data/covers/sabrina-the-teenage-witch/4263cabad4f7.jpg",
+        "data/covers/sabrina-the-teenage-witch/93153f047a41.jpg"
+      ]
+    },
+    {
       "id": "seamonsters-and-superheroes",
       "name": "Seamonsters and Superheroes",
       "parentSeries": null,

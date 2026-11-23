@@ -190,6 +190,34 @@
       "location": "San Francisco, California"
     },
     {
+      "id": "archie-comics",
+      "name": "Archie Comics",
+      "kind": "publisher",
+      "parent": null,
+      "aliases": [
+        "Archie MLJ",
+        "Mighty Comics",
+        "Radio Comics",
+        "Archie Adventure Series",
+        "MLJ Magazines"
+      ],
+      "description": "Archie Comics are the publishers of the Riverdale Gang's adventures as well as Sonic.",
+      "imageUrl": "https://comicvine.gamespot.com/a/uploads/scale_large/11141/111417740/8418061-archie-comics-vector-logo-small.jpg",
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/archie-comics/4010-101/"
+        }
+      ],
+      "ids": {
+        "comicvine": 101
+      },
+      "location": "Mamaroneck, New York",
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "bad-idea",
       "name": "Bad Idea Comics",
       "kind": "publisher",

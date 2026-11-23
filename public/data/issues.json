@@ -9544,6 +9544,30 @@
       ]
     },
     {
+      "id": "sabrina-the-teenage-witch-2",
+      "series": "sabrina-the-teenage-witch",
+      "issue": 2,
+      "credits": [
+        {
+          "artistId": "archie-superstars",
+          "name": "Archie Superstars",
+          "roles": [
+            "Writer",
+            "Artist"
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Comic Vine",
+          "url": "https://comicvine.gamespot.com/sabrina-the-teenage-witch-2-no-strings-attached/4000-323750/"
+        }
+      ],
+      "sources": [
+        "comicvine"
+      ]
+    },
+    {
       "id": "seamonsters-and-superheroes-1",
       "series": "seamonsters-and-superheroes",
       "issue": 1,
