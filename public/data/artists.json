@@ -1027,22 +1027,6 @@
       ]
     },
     {
-      "id": "archie-superstars",
-      "name": "Archie Superstars",
-      "description": "Collective pseudonym used for writers and artists at Archie Comics.",
-      "imageUrl": null,
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/archie-superstars/4040-118342/"
-        }
-      ],
-      "sources": [
-        "comicvine",
-        "metron"
-      ]
-    },
-    {
       "id": "ariana-maher",
       "name": "Ariana Maher",
       "description": "A comic book letterer who works with both independent imprints such as LittleFoolery and publishers such as Marvel, Image Comics, Dynamite Entertainment, and Skybound.",

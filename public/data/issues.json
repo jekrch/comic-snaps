@@ -7104,8 +7104,8 @@
           ]
         },
         {
-          "artistId": "brian-level",
-          "name": "Brian Level",
+          "artistId": "brahm-revel",
+          "name": "Brahm Revel",
           "roles": [
             "Illustrator",
             "Letterer",
@@ -7172,8 +7172,8 @@
           ]
         },
         {
-          "artistId": "brian-level",
-          "name": "Brian Level",
+          "artistId": "brahm-revel",
+          "name": "Brahm Revel",
           "roles": [
             "Illustrator",
             "Letterer",
@@ -7224,7 +7224,31 @@
       "id": "just-brutal-4",
       "series": "just-brutal",
       "issue": 4,
-      "credits": [],
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marissa-louise",
+          "name": "Marissa Louise",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "brahm-revel",
+          "name": "Brahm Revel",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
       "references": [],
       "sources": [
         "metron",
@@ -7235,7 +7259,31 @@
       "id": "just-brutal-5",
       "series": "just-brutal",
       "issue": 5,
-      "credits": [],
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marissa-louise",
+          "name": "Marissa Louise",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "brahm-revel",
+          "name": "Brahm Revel",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
       "references": [],
       "sources": [
         "metron",
@@ -7246,7 +7294,31 @@
       "id": "just-brutal-6",
       "series": "just-brutal",
       "issue": 6,
-      "credits": [],
+      "credits": [
+        {
+          "artistId": "dennis-hopeless",
+          "name": "Dennis Hopeless",
+          "roles": [
+            "Writer"
+          ]
+        },
+        {
+          "artistId": "marissa-louise",
+          "name": "Marissa Louise",
+          "roles": [
+            "Colorist"
+          ]
+        },
+        {
+          "artistId": "brahm-revel",
+          "name": "Brahm Revel",
+          "roles": [
+            "Illustrator",
+            "Letterer",
+            "Cover"
+          ]
+        }
+      ],
       "references": [],
       "sources": [
         "metron",
@@ -9537,30 +9609,6 @@
         {
           "name": "Comic Vine",
           "url": "https://comicvine.gamespot.com/rip-off-comix-3-return-from-the-planet-of-the-pigs/4000-175911/"
-        }
-      ],
-      "sources": [
-        "comicvine"
-      ]
-    },
-    {
-      "id": "sabrina-the-teenage-witch-2",
-      "series": "sabrina-the-teenage-witch",
-      "issue": 2,
-      "credits": [
-        {
-          "artistId": "archie-superstars",
-          "name": "Archie Superstars",
-          "roles": [
-            "Writer",
-            "Artist"
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Comic Vine",
-          "url": "https://comicvine.gamespot.com/sabrina-the-teenage-witch-2-no-strings-attached/4000-323750/"
         }
       ],
       "sources": [
