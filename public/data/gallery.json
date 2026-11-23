@@ -1,6 +1,20 @@
 {
   "panels": [
     {
+      "seq": 373,
+      "id": "rain-1-1795393151",
+      "title": "Rain",
+      "slug": "rain",
+      "issue": 1,
+      "year": 2026,
+      "artist": "Zoe Thorogood",
+      "image": "images/rain/issue-1-1795393151.jpg",
+      "notes": null,
+      "tags": [],
+      "postedBy": "Jacob",
+      "addedAt": "2026-11-23T00:19:13.338Z"
+    },
+    {
       "seq": 372,
       "id": "sabrina-the-teenage-witch-2-1795392793",
       "title": "Sabrina the Teenage Witch",
