@@ -138,6 +138,11 @@ function matchesSearch(panel: Panel, tokens: string[]): boolean {
   return tokens.every((t) => hay.includes(t));
 }
 
+/** Whether a panel matches a free-text query the way the gallery search does. */
+export function panelMatchesQuery(panel: Panel, query: string): boolean {
+  return matchesSearch(panel, searchTokens(query));
+}
+
 export function applyFilters(panels: Panel[], filters: Filters): Panel[] {
   if (!hasActiveFilters(filters)) return panels;
   const tokens = searchTokens(filters.searchQuery);

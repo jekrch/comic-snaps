@@ -4,13 +4,13 @@ import { useLightbox, type ViewerItem } from "@jekrch/react-viewport-lightbox";
 import type { Panel } from "../../types";
 import { panelImageUrl } from "../../utils/imageUrl";
 import { viewerIcons } from "../viewerIcons";
-import { setFigureViewerOpen } from "./figureViewer";
+import { GUIDE_OVERLAY_Z, STOP_EVENTS, useOverlay } from "../guide/overlayStack";
 import { loadImage, renderStage, type StageSpec } from "./renderModelInput";
 
 type EmbeddingMetric = "embedding-siglip" | "embedding-dino" | "embedding-gram";
 
-/** Longest side of each figure, in CSS px. Three fit across the modal on desktop. */
-const BOX = 104;
+/** Longest side of each figure, in CSS px. Two fit across a phone; three across the Guide's column. */
+const BOX = 148;
 
 // These mirror scripts/compute-embeddings.py, so the captions and grids are
 // the real input sizes rather than approximations.
@@ -22,9 +22,6 @@ const DINO_PATCH = 14;
 const GRAM_SHORT_SIDE = 448;
 const GRAM_MAX_SIDE = 1024;
 const SCRAMBLE_TILES = 6; // per side, for the Gram illustration
-
-/** Above the explainer modal (z-70) and the panel viewer (the library's 50). */
-const VIEWER_Z = 90;
 
 /** Python's round(): ties go to the even neighbour. */
 function roundHalfEven(x: number): number {
@@ -137,7 +134,7 @@ function Figure({
           frame
         )}
       </div>
-      <figcaption className="mt-1.5 text-center text-[9px] leading-[1.4]" style={captionStyle}>
+      <figcaption className="guide-caption mt-1.5 text-center" style={captionStyle}>
         <span style={{ color: "rgba(255,255,255,0.6)" }}>{title}</span>
         <br />
         {detail}
@@ -173,7 +170,7 @@ function PatchGrid({ cols, rows }: { cols: number; rows: number }) {
 function Arrow() {
   return (
     <span
-      className="self-start text-[12px] select-none"
+      className="self-start text-[14px] select-none"
       style={{ ...captionStyle, marginTop: BOX / 2 - 9 }}
       aria-hidden="true"
     >
@@ -181,25 +178,6 @@ function Arrow() {
     </span>
   );
 }
-
-// Events from the portal'd viewer still bubble up the React tree to whatever
-// rendered this figure: the explainer modal's scrim (closes on touch), or the
-// panel viewer the graph lives in (swipe-to-close, backdrop click). Stop them
-// at the portal's root; the viewer's own handlers have run by then.
-const stop = (e: React.SyntheticEvent) => e.stopPropagation();
-const STOP_EVENTS = {
-  onClick: stop,
-  onDoubleClick: stop,
-  onPointerDown: stop,
-  onPointerMove: stop,
-  onPointerUp: stop,
-  onMouseDown: stop,
-  onTouchStart: stop,
-  onTouchMove: stop,
-  onTouchEnd: stop,
-  onWheel: stop,
-  onKeyDown: stop,
-};
 
 /**
  * The anchor panel as stored, next to exactly what one model is given:
@@ -347,11 +325,8 @@ export function PreprocessFigure({ metric, panel }: { metric: EmbeddingMetric; p
     ),
   });
 
-  // Let the Escape handlers underneath stand down while this is open.
-  useEffect(() => {
-    setFigureViewerOpen(lightbox.isOpen);
-  }, [lightbox.isOpen]);
-  useEffect(() => () => setFigureViewerOpen(false), []);
+  // On the overlay stack while open, so Escape closes this and nothing under it.
+  useOverlay(lightbox.isOpen, "figure");
 
   const triggerFor = (id: Stage["id"]): TriggerProps | undefined => {
     const i = items.findIndex((item) => item.id === id);
@@ -427,12 +402,12 @@ export function PreprocessFigure({ metric, panel }: { metric: EmbeddingMetric; p
           </div>
         ))}
       </div>
-      <p className="mt-2 mb-0 text-center text-[9px]" style={captionStyle}>
+      <p className="guide-caption mt-2 mb-0 text-center" style={captionStyle}>
         Tap an image to inspect it at the model's own resolution.
       </p>
       {lightbox.viewer &&
         createPortal(
-          <div style={{ "--rvl-z": VIEWER_Z } as React.CSSProperties} {...STOP_EVENTS}>
+          <div style={{ "--rvl-z": GUIDE_OVERLAY_Z } as React.CSSProperties} {...STOP_EVENTS}>
             {lightbox.viewer}
           </div>,
           document.body

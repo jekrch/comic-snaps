@@ -11,7 +11,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, ChevronDown, Info } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 
 import type { Panel } from "../../types";
 import type { EmbeddingMap } from "../../utils/sorting";
@@ -33,8 +33,8 @@ import {
 } from "../../utils/similarityUtils.ts";
 import { nodeTypes, type PanelNodeData } from "./PanelNode.tsx";
 import { edgeTypes } from "./DistanceEdge.tsx";
-import MetricExplainerPanel from "../explainer/MetricExplainerPanel";
-import { isFigureViewerOpen } from "../explainer/figureViewer";
+import { openGuide } from "../guide/useGuideRoute";
+import { lessonForMetric } from "../guide/lessons";
 import { useFilterParams } from "../../hooks/useFilterParams.ts";
 
 /* Helper: fit view only when anchor changes */
@@ -102,7 +102,6 @@ export default function SimilarityGraph({
   const [neighborCount, setNeighborCount] = useState(DEFAULT_COUNT);
   const [showCrossEdges] = useState(false);
   const [metricDropdownOpen, setMetricDropdownOpen] = useState(false);
-  const [showExplainer, setShowExplainer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [embeddings, setEmbeddings] = useState<EmbeddingMap | null>(null);
   const [currentNeighbors, setCurrentNeighbors] = useState<Neighbor[]>([]);
@@ -129,30 +128,10 @@ export default function SimilarityGraph({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Escape closes explainer before graph
-  useEffect(() => {
-    if (!open || !showExplainer) return;
-    const handler = (e: KeyboardEvent) => {
-      // A figure's zoom viewer is open over the explainer: let the key
-      // through to it, and keep the explainer up.
-      if (e.key === "Escape" && !isFigureViewerOpen()) {
-        e.stopImmediatePropagation();
-        setShowExplainer(false);
-      }
-    };
-    window.addEventListener("keydown", handler, true);
-    return () => window.removeEventListener("keydown", handler, true);
-  }, [open, showExplainer]);
-
   // Sync anchor when the parent panel changes (e.g. navigation)
   useEffect(() => {
     setAnchorPanel(panel);
   }, [panel]);
-
-  // Close explainer when metric changes or graph closes
-  useEffect(() => {
-    setShowExplainer(false);
-  }, [metric, open]);
 
   // Load embeddings when metric changes (only when open)
   useEffect(() => {
@@ -358,19 +337,7 @@ export default function SimilarityGraph({
   // Toolbar — rendered via portal into the top bar
   const toolbar = toolbarContainer && createPortal(
     <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
-      {showExplainer ? (
-        /* Back button when explainer is open */
-        <button
-          onClick={() => setShowExplainer(false)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded bg-white/5 hover:bg-white/10 transition-colors"
-        >
-          <ArrowLeft size={13} strokeWidth={1.5} className="text-white/60" />
-          <span className="font-display text-[11px] tracking-wider text-white/80 uppercase">
-            Graph
-          </span>
-        </button>
-      ) : (
-        <>
+      <>
           {/* Metric selector */}
           <div ref={dropdownRef} className="relative">
             <button
@@ -447,8 +414,7 @@ export default function SimilarityGraph({
               nearest panels by {activeMetric.shortLabel}
             </span>
           )}
-        </>
-      )}
+      </>
     </div>,
     toolbarContainer,
   );
@@ -476,14 +442,7 @@ export default function SimilarityGraph({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Inner slide track: shifts graph down when explainer is open */}
-        <div
-          className="relative w-full h-full"
-          style={{
-            transform: showExplainer ? "translateY(100%)" : "translateY(0)",
-            transition: "transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)",
-          }}
-        >
+        <div className="relative w-full h-full">
           {/* Graph */}
           <div className="absolute inset-0 flex flex-col">
             <div className="flex-1 relative">
@@ -540,10 +499,11 @@ export default function SimilarityGraph({
                 </ReactFlow>
               )}
 
-              {/* "How it works" — floats in graph space */}
+              {/* "How it works": the Guide's lesson for this metric, worked
+                  through on the panel the graph is centred on. */}
               {!loading && currentNeighbors.length > 0 && (
                 <button
-                  onClick={() => setShowExplainer(true)}
+                  onClick={() => openGuide({ page: lessonForMetric(metric), anchor: anchorPanel.id })}
                   className="absolute z-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md
                              bg-white/8 hover:bg-white/14 border border-white/10
                              hover:border-white/20 transition-all duration-200
@@ -559,23 +519,6 @@ export default function SimilarityGraph({
             </div>
           </div>
 
-          {/* Metric explainer — slides down from top (positioned above the graph) */}
-          <div
-            className="absolute inset-x-0 overflow-y-auto info-modal-scroll"
-            style={{
-              top: 0,
-              bottom: 0,
-              transform: "translateY(-100%)",
-            }}
-          >
-            {currentNeighbors.length > 0 && (
-              <MetricExplainerPanel
-                metric={metric}
-                anchorPanel={anchorPanel}
-                neighbors={currentNeighbors}
-              />
-            )}
-          </div>
         </div>
       </div>
 

@@ -1,0 +1,334 @@
+/**
+ * Plain-language explanations for names in the explainer's code views that
+ * the repo doesn't define itself: library calls, model outputs, and the
+ * local variables that carry the story. Repo functions and constants are
+ * explained from their own docstrings instead (see docs.ts).
+ *
+ * Keys are a name or dotted chain ("np.linalg.norm"), optionally scoped to
+ * one file ("compute-embeddings.py:vecs") for names that mean different
+ * things in different places.
+ */
+
+export interface GlossaryEntry {
+  kind: string;
+  text: string;
+}
+
+const NUMPY = "NumPy";
+const TORCH = "PyTorch";
+const PIL = "Pillow (images)";
+const HF = "Hugging Face model";
+const PY = "Python";
+const JS = "JavaScript";
+const VAR = "variable";
+
+export const GLOSSARY: Record<string, GlossaryEntry> = {
+  // NumPy
+  np: { kind: NUMPY, text: "NumPy, Python's library for fast arrays of numbers." },
+  "np.ndarray": { kind: NUMPY, text: "NumPy's array type: a grid of numbers of any number of dimensions." },
+  "np.linalg.norm": { kind: NUMPY, text: "A vector's length: the square root of the sum of its squared numbers. With axis=1, the length of each row." },
+  "np.linalg.svd": { kind: NUMPY, text: "Singular value decomposition. Among other things it finds the directions along which a set of vectors varies most; the rows of vt are those directions, most important first." },
+  "np.median": { kind: NUMPY, text: "The middle value once sorted. Unlike the average, a few huge values barely move it." },
+  "np.std": { kind: NUMPY, text: "Standard deviation: how spread out the values are around their average." },
+  "np.sqrt": { kind: NUMPY, text: "Square root." },
+  "np.abs": { kind: NUMPY, text: "Absolute value: drops the minus sign." },
+  "np.clip": { kind: NUMPY, text: "Pins every value into a range, here −127 to 127, the range one signed byte can hold." },
+  "np.round": { kind: NUMPY, text: "Rounds to the nearest whole number." },
+  "np.stack": { kind: NUMPY, text: "Joins equal-length arrays into one 2-D array, one per row." },
+  "np.asarray": { kind: NUMPY, text: "Turns an image or list into a NumPy array of numbers." },
+  "np.array": { kind: NUMPY, text: "Turns an image or list into a NumPy array of numbers." },
+  "np.unique": { kind: NUMPY, text: "The distinct values in an array; with return_counts=True, also how often each appears." },
+  "np.argsort": { kind: NUMPY, text: "The order that would sort an array. Sorting -counts puts the biggest first." },
+  "np.flatnonzero": { kind: NUMPY, text: "The positions where a condition is true." },
+  "np.float32": { kind: NUMPY, text: "A 32-bit decimal number type." },
+  "np.float64": { kind: NUMPY, text: "A 64-bit decimal number type, for extra precision in the maths." },
+  "np.int8": { kind: NUMPY, text: "A whole number from −128 to 127, stored in a single byte." },
+  argmax: { kind: NUMPY, text: "The position of the largest value." },
+  astype: { kind: NUMPY, text: "Converts an array to another number type." },
+  tolist: { kind: NUMPY, text: "Converts an array to a plain Python list." },
+  tobytes: { kind: NUMPY, text: "The array's raw bytes." },
+  reshape: { kind: NUMPY, text: "Rearranges the same numbers into a different shape; -1 means 'whatever size fits'." },
+  transpose: { kind: NUMPY, text: "Reorders an array's axes, e.g. from height × width × colour to colour × height × width, the order PyTorch expects." },
+  keepdims: { kind: NUMPY, text: "Keeps the summed-over axis (with size 1) so the result still lines up with the original array for division." },
+
+  // PyTorch / torchvision
+  torch: { kind: TORCH, text: "PyTorch, the library the neural networks run in." },
+  "torch.Tensor": { kind: TORCH, text: "PyTorch's array type: like a NumPy array, but it can run through a network." },
+  "torch.inference_mode": { kind: TORCH, text: "Tells PyTorch it's only running the model, not training it, so it skips the bookkeeping training needs. Faster and lighter." },
+  "torch.from_numpy": { kind: TORCH, text: "Wraps a NumPy array as a PyTorch tensor without copying it." },
+  "torch.bmm": { kind: TORCH, text: "Batched matrix multiply. Here, each layer's features times their own transpose: for every pair of filters, how strongly they fire together. That's the Gram matrix." },
+  "torch.triu_indices": { kind: TORCH, text: "The positions in a square matrix's upper triangle. A Gram matrix is symmetric, so that half holds everything." },
+  unsqueeze: { kind: TORCH, text: "Adds a dimension of size 1. unsqueeze(0) turns one image into a batch of one, which is what models expect." },
+  numpy: { kind: TORCH, text: "Converts a PyTorch tensor back to a NumPy array." },
+  view: { kind: TORCH, text: "Reshapes a tensor without copying. Here it flattens each feature map's height × width into one long row per filter." },
+  nn: { kind: TORCH, text: "PyTorch's building blocks for neural networks." },
+  "nn.Module": { kind: TORCH, text: "The base class for anything that behaves like a network layer: it has weights and a forward method." },
+  "nn.Sequential": { kind: TORCH, text: "Runs a list of layers one after another." },
+  "nn.ModuleList": { kind: TORCH, text: "A list of layers PyTorch knows belong to this module." },
+  "models.vgg16": { kind: "torchvision", text: "VGG-16, a 16-layer image classifier from 2014. Its early layers respond to marks, lines and textures, which is why it's used for style." },
+  "models.VGG16_Weights.IMAGENET1K_V1": { kind: "torchvision", text: "Weights learned from ImageNet's 1.2 million labelled photos." },
+  "vgg.features": { kind: "torchvision", text: "VGG-16's convolutional layers, in order, before its classifier." },
+  children: { kind: TORCH, text: "A module's layers, in order." },
+  transforms: { kind: "torchvision", text: "torchvision's image-to-tensor helpers." },
+  "transforms.Compose": { kind: "torchvision", text: "Chains several image transforms into one." },
+  "transforms.ToTensor": { kind: "torchvision", text: "Turns an image into a tensor of numbers from 0 to 1, channels first." },
+  "transforms.Normalize": { kind: "torchvision", text: "Subtracts ImageNet's average colour and divides by its spread, so pixels are on the scale VGG was trained on." },
+
+  // Pillow
+  Image: { kind: PIL, text: "Pillow, Python's image library." },
+  "Image.Image": { kind: PIL, text: "Pillow's image type." },
+  "Image.open": { kind: PIL, text: "Reads an image file." },
+  "Image.BICUBIC": { kind: PIL, text: "A smooth resampling method: each new pixel blends a 4 × 4 neighbourhood of old ones." },
+  "Image.BILINEAR": { kind: PIL, text: "A resampling method: each new pixel blends the nearest 2 × 2 old ones." },
+  resize: { kind: PIL, text: "Returns the image scaled to a new width and height." },
+  convert: { kind: PIL, text: 'Changes the colour mode: "RGB" for colour, "L" for greyscale.' },
+  thumbnail: { kind: PIL, text: "Shrinks the image in place to fit within a size, keeping its shape." },
+
+  // scikit-learn / scikit-image / imagehash / base64
+  PCA: { kind: "scikit-learn", text: "Principal component analysis: finds the few directions in which a set of vectors varies most, and re-describes each vector by where it sits along them." },
+  "pca.fit_transform": { kind: "scikit-learn", text: "Finds those directions from all the panels at once (fit), then expresses every panel along them (transform)." },
+  KMeans: { kind: "scikit-learn", text: "Groups points into k clusters around k centres. Here the points are pixels' colours, so the centres are the panel's main colours." },
+  "kmeans.fit": { kind: "scikit-learn", text: "Runs the clustering." },
+  "kmeans.labels_": { kind: "scikit-learn", text: "Which cluster each pixel ended up in." },
+  "kmeans.cluster_centers_": { kind: "scikit-learn", text: "Each cluster's centre: one CIELAB colour per cluster." },
+  "skcolor.rgb2lab": { kind: "scikit-image", text: "Converts RGB colours to CIELAB, where equal distances look about equally different to people." },
+  "imagehash.phash": { kind: "imagehash", text: "Perceptual hash: shrinks the image to 32 × 32 greyscale, takes its frequency transform (DCT), and keeps one bit per low frequency: above or below the median." },
+  "imagehash.average_hash": { kind: "imagehash", text: "Average hash: one bit per pixel of an 8 × 8 greyscale thumbnail, above or below the average." },
+  "imagehash.dhash": { kind: "imagehash", text: "Difference hash: one bit per neighbouring pixel pair, recording whether brightness rises or falls." },
+  "base64.b64encode": { kind: PY, text: "Turns raw bytes into plain text, so they fit in a JSON file." },
+
+  // Python built-ins
+  getattr: { kind: PY, text: "Reads a setting by name, with a fallback if it's missing." },
+  hasattr: { kind: PY, text: "Whether an object has a field with this name." },
+  isinstance: { kind: PY, text: "Whether a value is of a given type." },
+  enumerate: { kind: PY, text: "Loops over a list while also counting: gives (index, item) pairs." },
+  super: { kind: PY, text: "The parent class; super().__init__() runs its setup first." },
+
+  // Hugging Face transformers
+  processor: { kind: HF, text: "The model's own image preparer: resizes and normalizes a panel exactly the way the model was trained to expect." },
+  "processor.image_mean": { kind: HF, text: "The average colour of the model's training images. Subtracting it centres our pixels the same way." },
+  "processor.image_std": { kind: HF, text: "How spread out the training images' colours were. Dividing by it puts our pixels on the same scale." },
+  model: { kind: HF, text: "The neural network, loaded with its trained weights." },
+  "model.config": { kind: HF, text: "The settings the model shipped with: patch size, layer count, and so on." },
+  patch_size: { kind: HF, text: "How many pixels wide each square patch is: 16 for SigLIP, 14 for DINOv2." },
+  num_register_tokens: { kind: HF, text: "How many register tokens this DINOv2 has: extra tokens, with no patch of their own, that soak up panel-wide bookkeeping." },
+  "model.get_image_features": { kind: HF, text: "Runs SigLIP's whole image side, through all 12 layers and its attention-pooling step, and returns one vector per panel." },
+  pooler_output: { kind: HF, text: "The pooled summary: one vector for the whole panel." },
+  last_hidden_state: { kind: HF, text: "Every token's numbers after the final layer: for DINOv2, CLS first, then the registers, then one per patch." },
+  hidden_states: { kind: HF, text: "Every token's numbers after each layer. [0] is before the first layer; [12] is after the last." },
+  attentions: { kind: HF, text: "For each layer and each attention head, how much every token attended to every other token." },
+  output_hidden_states: { kind: HF, text: "Asks the model to return its in-between results from every layer, not just the final one." },
+  output_attentions: { kind: HF, text: "Asks the model to return its attention weights too." },
+  pixel_values: { kind: HF, text: "The prepared image as numbers: colour channels × height × width." },
+  return_tensors: { kind: HF, text: '"pt" asks for PyTorch tensors back.' },
+
+  // JavaScript
+  Math: { kind: JS, text: "JavaScript's built-in maths functions." },
+  "Math.atan2": { kind: JS, text: "The angle of a point from the origin. On CIELAB's a*/b* plane, that angle is the colour's hue." },
+  "Math.sqrt": { kind: JS, text: "Square root." },
+  "Math.sin": { kind: JS, text: "Sine; here it makes a curve that's 0 at pure black and pure white and peaks at middle lightness." },
+  "Math.PI": { kind: JS, text: "π." },
+  parseInt: { kind: JS, text: "Reads text as a number; with 16, reads one hex digit (0–f) as 0–15." },
+  isFinite: { kind: JS, text: "Whether a number is a real, finite value (not Infinity or NaN)." },
+  Float32Array: { kind: JS, text: "A fixed-length array of 32-bit decimals: compact and fast for number crunching." },
+
+  // compute-embeddings.py
+  "compute-embeddings.py:forward": { kind: TORCH, text: "What a module does to its input. Calling extractor(x) runs this." },
+  "compute-embeddings.py:vecs": { kind: VAR, text: "One vector per panel, before they're scaled to length 1." },
+  "compute-embeddings.py:vecs_np": { kind: VAR, text: "The same vectors as a NumPy array, one row per panel." },
+  "compute-embeddings.py:norms": { kind: VAR, text: "Each vector's length. Dividing by it scales every arrow to length 1, so only direction is left." },
+  "compute-embeddings.py:hidden": { kind: VAR, text: "DINOv2's final numbers for every token of this panel: CLS, the registers, then the patches." },
+  "compute-embeddings.py:cls": { kind: VAR, text: "The CLS token's final numbers: an extra token, with no patch of its own, that gathers a summary of the panel." },
+  "compute-embeddings.py:patch_mean": { kind: VAR, text: "The average of every patch token's final numbers." },
+  "compute-embeddings.py:n_reg": { kind: VAR, text: "How many register tokens sit between CLS and the patches (4), so they can be skipped." },
+  "compute-embeddings.py:inputs": { kind: VAR, text: "The panels as SigLIP's processor prepared them: squashed to 224 × 224 and normalized." },
+  "compute-embeddings.py:outputs": { kind: VAR, text: "What the model returned for the batch." },
+  "compute-embeddings.py:scale": { kind: VAR, text: "How much to shrink or grow the panel so its short side hits the target, without the long side passing its cap." },
+  "compute-embeddings.py:resized": { kind: VAR, text: "The panel at the size the model sees." },
+  "compute-embeddings.py:arr": { kind: VAR, text: "The resized panel's pixels as numbers from 0 to 1." },
+  "compute-embeddings.py:mean": { kind: VAR, text: "The average colour of DINOv2's training images, per channel." },
+  "compute-embeddings.py:std": { kind: VAR, text: "How spread out the training images' colours were, per channel." },
+  "compute-embeddings.py:features": { kind: VAR, text: "One layer's output, flattened: one row per filter, one column per position." },
+  "compute-embeddings.py:gram": { kind: VAR, text: "The Gram matrix: for every pair of filters, how strongly they fire together across the panel. Where they fire is gone." },
+  "compute-embeddings.py:gram_upper": { kind: VAR, text: "The Gram matrix's upper triangle, scaled to length 1 so every layer counts equally." },
+  "compute-embeddings.py:grams": { kind: VAR, text: "One Gram vector per chosen layer." },
+  "compute-embeddings.py:matrix": { kind: VAR, text: "Every panel's raw style numbers, one row per panel: 174,560 columns." },
+  "compute-embeddings.py:reduced": { kind: VAR, text: "Each panel's style, re-described by its position along the gallery's main directions of difference." },
+  "compute-embeddings.py:ids": { kind: VAR, text: "The panel ids, in the same order as the matrix rows." },
+  "compute-embeddings.py:pca": { kind: VAR, text: "The PCA, fitted to this gallery." },
+  "compute-embeddings.py:n_components": { kind: VAR, text: "How many directions to keep (30), or fewer for a tiny gallery." },
+
+  // compute-patch-maps.py
+  "compute-patch-maps.py:tokens": { kind: VAR, text: "One row of numbers per patch, from one layer." },
+  "compute-patch-maps.py:t": { kind: VAR, text: "The tokens, centred on the panel's average token." },
+  "compute-patch-maps.py:vt": { kind: VAR, text: "The directions in which this panel's patches differ most, most important first." },
+  "compute-patch-maps.py:proj": { kind: VAR, text: "Each patch described by just its position along the top 16 directions." },
+  "compute-patch-maps.py:q": { kind: VAR, text: "Those 16 numbers per patch, rounded to single bytes." },
+  "compute-patch-maps.py:scale": { kind: VAR, text: "The divisor that fits the largest number into a byte. Cosine similarity ignores a shared scale, so it isn't stored." },
+  "compute-patch-maps.py:out": { kind: VAR, text: "Everything the model returned: final tokens, every layer's tokens, and attention weights." },
+  "compute-patch-maps.py:first": { kind: VAR, text: "Where the patch tokens start, after CLS and the registers." },
+  "compute-patch-maps.py:layers": { kind: VAR, text: "The packed patch numbers for each recorded layer." },
+  "compute-patch-maps.py:h_l": { kind: VAR, text: "Every token's numbers after layer L." },
+  "compute-patch-maps.py:cls_attn": { kind: VAR, text: "How much the CLS token attended to each patch in the last layer, averaged over its 6 heads." },
+  "compute-patch-maps.py:scratch": { kind: VAR, text: "The patches the model has repurposed as scratch space." },
+  "compute-patch-maps.py:pick": { kind: VAR, text: "CLS attention with the scratch patches ruled out, for choosing where the figure starts." },
+  "compute-patch-maps.py:n": { kind: VAR, text: "Each token's length." },
+  "compute-patch-maps.py:cols": { kind: VAR, text: "How many patches across." },
+  "compute-patch-maps.py:rows": { kind: VAR, text: "How many patches down." },
+  "compute-patch-maps.py:side": { kind: VAR, text: "Patches per side of SigLIP's square grid: 224 ÷ 16 = 14." },
+  "compute-patch-maps.py:last": { kind: VAR, text: "Every token's numbers after the last layer." },
+  "compute-patch-maps.py:focus_xy": { kind: VAR, text: "Where DINOv2's starting patch sits, as fractions of the panel's width and height." },
+  "compute-patch-maps.py:LAYERS": { kind: "constant", text: "The layers the figure shows: an early, a middle and the last of 12." },
+  "compute-patch-maps.py:DIMS": { kind: "constant", text: "How many numbers each patch is shrunk to: 16." },
+  "compute-patch-maps.py:SCRATCH_RATIO": { kind: "constant", text: "How many times larger than the median a token must be to count as scratch space: 4." },
+  "compute-patch-maps.py:SCRATCH_LAYER": { kind: "constant", text: "The layer the scratch check reads: 6, where scratch tokens stand out most." },
+
+  // patchMaps.ts
+  "patchMaps.ts:v": { kind: VAR, text: "Every patch's 16 numbers for one layer, already scaled to length 1." },
+  "patchMaps.ts:dims": { kind: VAR, text: "Numbers per patch: 16." },
+  "patchMaps.ts:f": { kind: VAR, text: "Where the chosen patch's numbers start in the flat array." },
+  "patchMaps.ts:dot": { kind: VAR, text: "The running dot product: with length-1 vectors, the cosine of the angle between two patches." },
+  "patchMaps.ts:out": { kind: VAR, text: "One similarity per patch." },
+
+  // sorting.ts / similarityUtils.ts
+  "sorting.ts:dot": { kind: VAR, text: "The running sum of matching numbers multiplied together." },
+  "sorting.ts:chroma": { kind: VAR, text: "How colourful a colour is: its distance from grey on the a*/b* plane." },
+  "sorting.ts:hue": { kind: VAR, text: "The colour's angle on the a*/b* plane: red, yellow, green, blue…" },
+  "sorting.ts:pairWeight": { kind: VAR, text: "How much this pair of colours counts: the smaller of the two importances." },
+  "sorting.ts:weightedSum": { kind: VAR, text: "Distances so far, each multiplied by how much its pair counts." },
+  "sorting.ts:totalWeight": { kind: VAR, text: "The weights so far, to turn the sum into an average." },
+  "sorting.ts:xor": { kind: VAR, text: "The bits that differ between two hex digits (exclusive or)." },
+  "sorting.ts:dist": { kind: VAR, text: "The running count of differing bits." },
+  "similarityUtils.ts:candidates": { kind: VAR, text: "Every other panel with its distance to the anchor." },
+  "similarityUtils.ts:dist": { kind: VAR, text: "This panel's distance to the anchor under the chosen metric." },
+  "similarityUtils.ts:aEmb": { kind: VAR, text: "The anchor's vector." },
+  "similarityUtils.ts:bEmb": { kind: VAR, text: "The other panel's vector." },
+  "similarityUtils.ts:anchorIsChromatic": { kind: VAR, text: "Whether the anchor counts as a colour panel (colorfulness 6 or more)." },
+  "similarityUtils.ts:candidateIsChromatic": { kind: VAR, text: "Whether this panel counts as a colour panel." },
+  "similarityUtils.ts:COLORFULNESS_THRESHOLD": { kind: "constant", text: "The colorfulness score at which a panel counts as colour rather than black-and-white: 6." },
+
+  // image_metadata.py
+  "image_metadata.py:thumb": { kind: VAR, text: "A copy of the panel shrunk to fit 64 × 64: plenty for colour, and fast." },
+  "image_metadata.py:pixels_rgb": { kind: VAR, text: "Every thumbnail pixel's red, green and blue, from 0 to 1." },
+  "image_metadata.py:pixels_lab": { kind: VAR, text: "Every thumbnail pixel in CIELAB: lightness, green–red, blue–yellow." },
+  "image_metadata.py:centers": { kind: VAR, text: "The cluster centres, biggest cluster first: the panel's dominant colours." },
+  "image_metadata.py:counts": { kind: VAR, text: "How many pixels landed in each cluster." },
+  "image_metadata.py:order": { kind: VAR, text: "Cluster order, biggest first." },
+  "image_metadata.py:std_a": { kind: VAR, text: "How much the pixels vary from green to red." },
+  "image_metadata.py:std_b": { kind: VAR, text: "How much the pixels vary from blue to yellow." },
+  "image_metadata.py:img_l": { kind: VAR, text: "The panel in greyscale; the hashes only look at brightness." },
+
+  // Plain-language versions of repo names whose own docs are terse or
+  // missing. They keep the link to their code (see lookupDoc).
+  compute_embeddings_siglip_batch: { kind: "function", text: "Turns a batch of panels into SigLIP arrows: prepares them, runs the model, and scales each arrow to length 1." },
+  compute_embeddings_dino_batch: { kind: "function", text: "Turns panels into DINOv2 arrows, one at a time (each keeps its own shape): runs the model, averages CLS with the patch average, and scales each arrow to length 1." },
+  dino_pixels: { kind: "function", text: "Prepares a panel for DINOv2: scales it so the short side is 256 pixels, snaps both sides to whole 14-pixel patches, and normalizes the colours." },
+  _dino_snap: { kind: "function", text: "Rounds a length to the nearest whole number of 14-pixel patches (at least one)." },
+  pack_tokens: { kind: "function", text: "Shrinks one layer's patch tokens for storage: re-describes each patch by its 16 most telling numbers (PCA within the panel), then rounds them to single bytes." },
+  pack_weights: { kind: "function", text: "Stores attention weights as single bytes, scaled so the largest is 255." },
+  computeNeighbors: { kind: "function", text: "Measures the anchor's distance to every other panel under one metric, sorts them nearest first, and keeps the first `count`." },
+  EmbeddingMap: { kind: "type", text: "Every panel's vector, keyed by panel id." },
+  Neighbor: { kind: "type", text: "A panel and its distance to the anchor." },
+  ModelMaps: { kind: "type", text: "One model's patch data for one example panel, ready for the figure." },
+  NUM_DOMINANT_COLORS: { kind: "constant", text: "How many dominant colours each panel keeps: 3." },
+  HASH_FUNCTIONS: { kind: "constant", text: "The three perceptual hashes stored for every panel, by name." },
+  "compute-embeddings.py:GRAM_MAX_SIDE": { kind: "constant", text: "The longest side VGG-16 ever gets, so very wide strips don't blow up the cost: 1024 pixels." },
+  "compute-embeddings.py:DINO_PATCH": { kind: "constant", text: "DINOv2's patch size: 14 × 14 pixels." },
+
+  // More library and model names
+  norm: { kind: TORCH, text: "A vector's length: the square root of the sum of its squared numbers." },
+  "np.linalg": { kind: NUMPY, text: "NumPy's linear-algebra functions." },
+  clamp: { kind: TORCH, text: "Keeps values within a range; here it stops a zero length from causing a divide-by-zero." },
+  keepdim: { kind: TORCH, text: "Keeps the summed-over axis (with size 1) so the result lines up with the original for division." },
+  mean: { kind: NUMPY, text: "The average." },
+  T: { kind: NUMPY, text: "The transpose: rows become columns." },
+  full_matrices: { kind: NUMPY, text: "False skips computing parts of the decomposition that aren't needed." },
+  random_state: { kind: "scikit-learn", text: "Fixes the random starting point, so every run gives exactly the same result." },
+  n_clusters: { kind: "scikit-learn", text: "How many clusters (here, colours) to find." },
+  n_init: { kind: "scikit-learn", text: "How many times to restart from different random starting points and keep the best." },
+  return_counts: { kind: NUMPY, text: "Also return how many times each distinct value appears." },
+  Path: { kind: PY, text: "A file path." },
+  "Math.min": { kind: JS, text: "The smaller of the numbers given." },
+  "Math.max": { kind: JS, text: "The larger of the numbers given." },
+  "HASH_FUNCTIONS.items": { kind: PY, text: "Each (name, hash function) pair, for the loop." },
+  "similarityUtils.ts:sort": { kind: JS, text: "Sorts in place; (a, b) => a.distance - b.distance puts the smallest distance first." },
+  "similarityUtils.ts:slice": { kind: JS, text: "The first `count` items." },
+
+  // compute-embeddings.py, more
+  "compute-embeddings.py:images": { kind: VAR, text: "The panels to embed, as Pillow images." },
+  "compute-embeddings.py:img": { kind: VAR, text: "One panel, as a Pillow image." },
+  "compute-embeddings.py:dim": { kind: VAR, text: "How many numbers are in each vector." },
+  "compute-embeddings.py:slices": { kind: VAR, text: "VGG-16 cut into pieces, each running the image on to the next chosen layer." },
+  "compute-embeddings.py:layer_indices": { kind: VAR, text: "Which of VGG-16's layers to read the style from, by position." },
+  "compute-embeddings.py:triu": { kind: VAR, text: "The upper-triangle positions for this layer's Gram matrix." },
+  "compute-embeddings.py:raw_features": { kind: VAR, text: "Every panel's raw style numbers, before PCA, by panel id." },
+  "compute-embeddings.py:spec": { kind: VAR, text: "This model's settings: name, output file, and how many numbers to keep." },
+  "compute-embeddings.py:x": { kind: VAR, text: "The image as a tensor: batch × colour × height × width." },
+  "compute-embeddings.py:height": { kind: VAR, text: "How many positions down this layer's feature map is." },
+  "compute-embeddings.py:width": { kind: VAR, text: "How many positions across this layer's feature map is." },
+
+  // compute-patch-maps.py, more
+  "compute-patch-maps.py:img": { kind: VAR, text: "The example panel, as a Pillow image." },
+  "compute-patch-maps.py:pixels": { kind: VAR, text: "The panel as the model receives it: colour × height × width." },
+  "compute-patch-maps.py:n_reg": { kind: VAR, text: "How many register tokens sit between CLS and the patches (4)." },
+  "compute-patch-maps.py:patch": { kind: VAR, text: "The patch size in pixels: 14 for DINOv2." },
+  "compute-patch-maps.py:L": { kind: VAR, text: "A layer number: 1, 6 or 12." },
+  "compute-patch-maps.py:_": { kind: VAR, text: "A value that comes back but isn't needed." },
+
+  // patchMaps.ts, more
+  "patchMaps.ts:maps": { kind: VAR, text: "One model's patch data for the panel on show." },
+  "patchMaps.ts:layer": { kind: VAR, text: "Which recorded layer: 0, 1 or 2 for layers 1, 6 and 12." },
+  "patchMaps.ts:focus": { kind: VAR, text: "The chosen patch's position in the grid." },
+  "patchMaps.ts:n": { kind: VAR, text: "How many patches the panel has." },
+  "patchMaps.ts:p": { kind: VAR, text: "The patch being compared with the chosen one." },
+  "patchMaps.ts:d": { kind: VAR, text: "Which of the 16 numbers." },
+
+  // sorting.ts, more
+  "sorting.ts:L": { kind: VAR, text: "Lightness: 0 is black, 100 is white." },
+  "sorting.ts:chromaFactor": { kind: VAR, text: "How much a colour counts for being colourful: greys count for little." },
+  "sorting.ts:lightnessFactor": { kind: VAR, text: "How much a colour counts for its lightness: near-black and near-white count for little." },
+  "sorting.ts:wA": { kind: VAR, text: "How much this colour of the first panel matters." },
+  "sorting.ts:wB": { kind: VAR, text: "How much this colour of the second panel matters." },
+  "sorting.ts:minLen": { kind: VAR, text: "How many colour pairs to compare: the shorter palette's length." },
+  "sorting.ts:hueNorm": { kind: VAR, text: "The hue angle shifted into 0 to 2π, so the sort runs once around the colour wheel." },
+  "sorting.ts:CHROMA_THRESHOLD": { kind: "constant", text: "How colourful a dominant colour must be (chroma 10) to set the panel's hue; greyer ones are skipped." },
+  "sorting.ts:colors": { kind: VAR, text: "The panel's dominant colours, biggest first." },
+  "sorting.ts:na": { kind: VAR, text: "One hex digit of the first hash, as a number 0–15." },
+  "sorting.ts:nb": { kind: VAR, text: "The matching hex digit of the second hash." },
+
+  // similarityUtils.ts, more
+  "similarityUtils.ts:anchor": { kind: VAR, text: "The panel everything is compared with." },
+  "similarityUtils.ts:allPanels": { kind: VAR, text: "The whole gallery." },
+  "similarityUtils.ts:metric": { kind: VAR, text: "Which way of measuring alikeness: SigLIP, DINOv2, Gram, colour or pHash." },
+  "similarityUtils.ts:count": { kind: VAR, text: "How many neighbours to keep." },
+  "similarityUtils.ts:embeddings": { kind: VAR, text: "Every panel's vector for the chosen model, when the metric uses one." },
+  "similarityUtils.ts:p": { kind: VAR, text: "The panel being compared with the anchor." },
+
+  // image_metadata.py, more
+  "image_metadata.py:image_path": { kind: VAR, text: "Where the panel's image file is." },
+  "image_metadata.py:img": { kind: VAR, text: "The panel, as a Pillow image." },
+  "image_metadata.py:result": { kind: VAR, text: "Everything measured about the panel, saved into gallery.json." },
+  "image_metadata.py:k": { kind: VAR, text: "How many dominant colours to find: 3." },
+  "image_metadata.py:kmeans": { kind: VAR, text: "The clustering, set up to find k colours." },
+  "image_metadata.py:labels": { kind: VAR, text: "The cluster numbers that occur." },
+  "image_metadata.py:score": { kind: VAR, text: "The colorfulness score: the combined spread of a* and b*." },
+  "image_metadata.py:name": { kind: VAR, text: "The hash's name: phash, ahash or dhash." },
+  "image_metadata.py:fn": { kind: VAR, text: "The function that computes that hash." },
+
+  // Common fields and modules
+  axis: { kind: NUMPY, text: "Which direction to work along: 0 runs down the rows (one result per column), 1 runs across each row (one result per row)." },
+  dtype: { kind: NUMPY, text: "The number type to store values as." },
+  shape: { kind: NUMPY, text: "The size along each dimension." },
+  size: { kind: PIL, text: "The image's (width, height) in pixels." },
+  skcolor: { kind: "scikit-image", text: "scikit-image's colour-space conversions." },
+  imagehash: { kind: "imagehash", text: "A library of perceptual image hashes." },
+  base64: { kind: PY, text: "Python's text encoding for raw bytes." },
+  models: { kind: "torchvision", text: "torchvision's library of pretrained image models." },
+  Panel: { kind: "type", text: "One gallery panel: its image, title, artist, and everything measured about it." },
+  MetricKey: { kind: "type", text: "Which way of measuring alikeness: SigLIP, DINOv2, Gram, colour or pHash." },
+  dominantColors: { kind: "field", text: "The panel's three dominant colours in CIELAB, biggest first, measured when it was added." },
+  colorfulness: { kind: "field", text: "The panel's colorfulness score, measured when it was added. Under 6 counts as black-and-white." },
+  phash: { kind: "field", text: "The panel's perceptual hash: 64 bits written as 16 hex digits." },
+  "similarityUtils.ts:distance": { kind: "field", text: "How far this panel is from the anchor; smaller is more alike." },
+  "compute-embeddings.py:vgg": { kind: VAR, text: "VGG-16 with its trained weights." },
+};

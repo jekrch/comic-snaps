@@ -3,7 +3,7 @@ import { GitGraph, Info } from "lucide-react";
 // Lighter chrome icons than the library's 18px / 1.75 defaults, to sit with the
 // app's own UI. Hoisted so the viewer sees the same object every render.
 import { viewerIcons } from "./viewerIcons";
-import { isFigureViewerOpen } from "./explainer/figureViewer";
+import { hasOverlays } from "./guide/overlayStack";
 import {
   ImageViewer,
   ViewerButton,
@@ -298,9 +298,9 @@ export default function PanelViewer({
 
   // Esc (and back) closes the graph, then the drawer, then (default) the viewer.
   const handleEscape = useCallback(() => {
-    // An explainer figure opened from the graph has its own viewer on top;
-    // that Escape is its to close, so this one does nothing.
-    if (isFigureViewerOpen()) return true;
+    // The Guide (opened from the graph) and anything over it are on top;
+    // that Escape is theirs, so this one does nothing.
+    if (hasOverlays()) return true;
     if (graphOpen) {
       setGraphOpen(false);
       return true;

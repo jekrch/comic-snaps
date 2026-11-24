@@ -2,11 +2,9 @@ import { lazy, Suspense, useCallback, useEffect, useId, useLayoutEffect, useMemo
 import { X, Github, ChevronDown, ExternalLink, Info, GitGraph, Bird } from "lucide-react";
 import type { Panel } from "../types";
 import type { MetricKey } from "./graph/similarityConfig";
-import type { Neighbor } from "../utils/similarityUtils";
-import { computeNeighbors } from "../utils/similarityUtils";
-import { loadEmbeddings } from "../utils/sorting";
-import type { EmbeddingMap } from "../utils/sorting";
-import MetricExplainerModal from "./explainer/MetricExplainerModal";
+import { openGuide } from "./guide/useGuideRoute";
+import { GUIDE_NAME, lessonForMetric } from "./guide/lessons";
+import { hasOverlays } from "./guide/overlayStack";
 
 // Lazy so the charting library only loads when the Stats tab is opened
 const StatsTab = lazy(() => import("./stats/StatsTab"));
@@ -116,13 +114,11 @@ function SortEntry({
   body,
   link,
   onExplainerOpen,
-  explainerLoading,
 }: {
   label: string;
   body: React.ReactNode;
   link?: { text: string; href: string };
   onExplainerOpen?: () => void;
-  explainerLoading?: boolean;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -224,16 +220,15 @@ function SortEntry({
         {onExplainerOpen && (
           <button
             onClick={onExplainerOpen}
-            disabled={explainerLoading}
             className="bg-transparent border-none cursor-pointer p-0
                        inline-flex items-center gap-1 text-[10px]
-                       transition-colors duration-150 disabled:opacity-40 disabled:cursor-wait"
+                       transition-colors duration-150"
             style={{ color: "var(--color-accent, #e97d62)", opacity: 0.75 }}
-            onMouseEnter={(e) => { if (!explainerLoading) e.currentTarget.style.opacity = "1"; }}
-            onMouseLeave={(e) => { if (!explainerLoading) e.currentTarget.style.opacity = "0.75"; }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.75")}
           >
             <Info size={10} className="shrink-0" />
-            {explainerLoading ? "loading…" : "how it works"}
+            how it works
           </button>
         )}
       </div>
@@ -279,6 +274,7 @@ const SORT_DESCRIPTIONS: {
         text: "CIELAB color space",
         href: "https://en.wikipedia.org/wiki/CIELAB_color_space",
       },
+      metricKey: "color",
     },
     {
       label: "SigLIP",
@@ -350,31 +346,9 @@ const SORT_DESCRIPTIONS: {
         </p>
       ),
       link: { text: "pHash.org", href: "https://www.phash.org/" },
+      metricKey: "phash",
     }
   ];
-
-// Pick a good spread of sample panels: random anchor, then closest + furthest neighbors
-
-function pickSamplePanels(
-  panels: Panel[],
-  metric: MetricKey,
-  embeddings: EmbeddingMap
-): { anchor: Panel; neighbors: Neighbor[] } | null {
-  if (panels.length < 3) return null;
-
-  // Pick a random anchor from the first ~half to avoid edge cases
-  const anchorIdx = Math.floor(Math.random() * Math.min(panels.length, Math.max(panels.length / 2, 10)));
-  const anchor = panels[anchorIdx];
-
-  // Compute all neighbors to find the closest and furthest
-  const allNeighbors = computeNeighbors(anchor, panels, metric, panels.length, embeddings);
-  if (allNeighbors.length < 2) return null;
-
-  const closest = allNeighbors[0];
-  const furthest = allNeighbors[allNeighbors.length - 1];
-
-  return { anchor, neighbors: [closest, furthest] };
-}
 
 // Modal
 
@@ -400,34 +374,6 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
   const patternId = useId();
   const maskId = useId();
   const fadeId = useId();
-
-  // Explainer modal state
-  const [explainerMetric, setExplainerMetric] = useState<MetricKey | null>(null);
-  const [explainerAnchor, setExplainerAnchor] = useState<Panel | null>(null);
-  const [explainerNeighbors, setExplainerNeighbors] = useState<Neighbor[]>([]);
-  const [explainerLoading, setExplainerLoading] = useState<MetricKey | null>(null);
-
-  const handleExplainerOpen = useCallback(async (metric: MetricKey) => {
-    if (!panels || panels.length < 3) return;
-
-    setExplainerLoading(metric);
-    try {
-      const embeddings = await loadEmbeddings(metric as any);
-      const sample = pickSamplePanels(panels, metric, embeddings);
-      if (!sample) {
-        setExplainerLoading(null);
-        return;
-      }
-
-      setExplainerAnchor(sample.anchor);
-      setExplainerNeighbors(sample.neighbors);
-      setExplainerMetric(metric);
-    } catch (err) {
-      console.error("Failed to load embeddings for explainer:", err);
-    } finally {
-      setExplainerLoading(null);
-    }
-  }, [panels]);
 
   const { rotation, color } = useMemo(() => {
     const rotations = [45, 135];
@@ -485,12 +431,13 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (explainerMetric) return; // let explainer handle its own Escape
+      // The Guide (or anything else) open over this takes its own Escape.
+      if (hasOverlays()) return;
       if (e.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [handleClose, explainerMetric]);
+  }, [handleClose]);
 
   // Decorative hatch ornament — mirrors the backdrop's SVG hatch language
 
@@ -721,6 +668,17 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                 </p>
 
                 <HatchDivider />
+                <button
+                  type="button"
+                  onClick={() => openGuide({ page: "overview" })}
+                  className="bg-transparent border-none cursor-pointer p-0 mt-1
+                             text-[11px] tracking-[0.04em]
+                             transition-opacity duration-150 opacity-80 hover:opacity-100"
+                  style={{ fontFamily: "var(--font-display)", color: "var(--color-accent, #e97d62)" }}
+                >
+                  How the sorting works →
+                </button>
+
                 {/* Links */}
                 <div className="mt-8 flex flex-col items-center gap-2">
                   <a
@@ -759,6 +717,16 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                   I use several neat models for this, which you can read about below.
                   Their embeddings are all computed in advance (whenever a panel is added), so nothing has to run in your sweaty browser.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => openGuide({ page: "overview" })}
+                  className="bg-transparent border-none cursor-pointer p-0 -mt-2 mb-6
+                             inline-flex items-center gap-1.5 text-[11px] tracking-[0.04em]
+                             transition-opacity duration-150 opacity-80 hover:opacity-100"
+                  style={{ fontFamily: "var(--font-display)", color: "var(--color-accent, #e97d62)" }}
+                >
+                  Read {GUIDE_NAME.toLowerCase()} to all five →
+                </button>
 
                 <div className="flex flex-col gap-6">
                   {SORT_DESCRIPTIONS.map(({ label, body, link, metricKey }) => (
@@ -769,11 +737,8 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
                       link={link}
                       onExplainerOpen={
                         metricKey && panels && panels.length >= 3
-                          ? () => handleExplainerOpen(metricKey)
+                          ? () => openGuide({ page: lessonForMetric(metricKey) })
                           : undefined
-                      }
-                      explainerLoading={
-                        metricKey ? explainerLoading === metricKey : false
                       }
                     />
                   ))}
@@ -853,19 +818,6 @@ export default function InfoModal({ onClose, initialTab = "about", onTabChange, 
         </div>
       </div>
 
-      {/* Metric explainer modal (renders above InfoModal) */}
-      {explainerMetric && explainerAnchor && explainerNeighbors.length > 0 && (
-        <MetricExplainerModal
-          metric={explainerMetric}
-          anchorPanel={explainerAnchor}
-          neighbors={explainerNeighbors}
-          onClose={() => {
-            setExplainerMetric(null);
-            setExplainerAnchor(null);
-            setExplainerNeighbors([]);
-          }}
-        />
-      )}
     </>
   );
 }

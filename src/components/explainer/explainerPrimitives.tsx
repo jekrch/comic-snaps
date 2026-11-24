@@ -1,89 +1,131 @@
 import { useId, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { useLightbox, type ViewerItem } from "@jekrch/react-viewport-lightbox";
+import { viewerIcons } from "../viewerIcons";
+import type { CodeRef } from "./code/snippets";
+import { GUIDE_OVERLAY_Z, STOP_EVENTS, useOverlay } from "../guide/overlayStack";
+import { StepContext, useGuide } from "../guide/guideContext";
+import { stepDef, stepNumber } from "../guide/lessons";
 
-// Section 
+// Section: one numbered step of a lesson. Its number, title and anchor id
+// come from the lesson registry (guide/lessons.ts), so a lesson only names
+// the step.
 
 export function Section({
-  number,
-  title,
+  step,
+  code,
   children,
 }: {
-  number: number;
-  title: string;
+  step: string;
+  /** The code behind this step, opened in the margin (or a sheet) from the heading. */
+  code?: CodeRef | null;
   children: React.ReactNode;
 }) {
+  const { page, codeStep, openCode, copyStepLink } = useGuide();
+  const n = stepNumber(page, step);
+  const title = stepDef(page, step)?.title ?? step;
+  const codeOpen = codeStep === step;
   return (
-    <div className="mb-5">
-      <div className="flex items-baseline gap-2 mb-1.5">
-        <span
-          className="text-[10px] font-mono shrink-0"
-          style={{ color: "var(--color-accent, #e97d62)", opacity: 0.7 }}
-        >
-          {number}.
-        </span>
-        <h3
-          className="text-[12px] tracking-[0.04em] m-0"
-          style={{
-            fontFamily: "var(--font-display)",
-            color: "var(--color-ink, #e8e0d8)",
+    <section id={step} data-step={step} className="guide-step">
+      <h2 className="guide-step-heading">
+        <span className="guide-step-num">{n > 0 ? n : "·"}</span>
+        <span className="guide-step-title">{title}</span>
+        <a
+          href={`#${step}`}
+          className="guide-step-link"
+          onClick={(e) => {
+            e.preventDefault();
+            copyStepLink(step);
           }}
+          aria-label={`Copy a link to “${title}”`}
+          title="Copy a link to this step"
         >
-          {title}
-        </h3>
-      </div>
-      <div
-        className="text-[11.5px] leading-relaxed pl-5"
-        style={{ color: "var(--color-ink-muted, rgba(160,155,150,0.7))" }}
-      >
-        {children}
-      </div>
-    </div>
+          #
+        </a>
+        {code && (
+          <button
+            type="button"
+            onClick={() => openCode(step, code)}
+            className="guide-code-btn"
+            aria-pressed={codeOpen}
+            title="See the code behind this step"
+          >
+            {"</> code"}
+          </button>
+        )}
+      </h2>
+      <StepContext.Provider value={step}>
+        <div className="guide-step-body">{children}</div>
+      </StepContext.Provider>
+    </section>
   );
 }
 
-// CodeBlock 
+/** A figure that breaks out of the reading column into the margin on wide screens. */
+export function Wide({ children }: { children: React.ReactNode }) {
+  return <div className="guide-wide">{children}</div>;
+}
+
+/** Small print under a figure. */
+export function Caption({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <p className={`guide-caption ${className}`}>{children}</p>;
+}
+
+// CodeBlock
 
 export function CodeBlock({ children }: { children: string }) {
-  return (
-    <pre
-      className="mt-2 mb-0 p-3 rounded overflow-x-auto text-[10px] leading-[1.6]"
-      style={{
-        background: "rgba(0,0,0,0.35)",
-        border: "1px solid rgba(255,255,255,0.04)",
-        fontFamily: "var(--font-mono, monospace)",
-        color: "rgba(255,255,255,0.55)",
-        whiteSpace: "pre",
-        WebkitOverflowScrolling: "touch",
-      }}
-    >
-      {children}
-    </pre>
-  );
+  return <pre className="guide-codeblock">{children}</pre>;
 }
 
-// Em (accent-colored inline emphasis) */
+// Em (accent-colored inline emphasis)
 
 export function Em({ children }: { children: React.ReactNode }) {
-  return (
-    <span style={{ color: "var(--color-accent, #e97d62)", fontStyle: "normal" }}>
-      {children}
-    </span>
-  );
+  return <span className="guide-em">{children}</span>;
 }
 
-// Mono (inline code)───── */
+// Mono (inline code)
 
 export function Mono({ children }: { children: React.ReactNode }) {
+  return <code className="guide-mono">{children}</code>;
+}
+
+/**
+ * A zoom viewer for a figure, opened over the Guide. It takes a place on the
+ * overlay stack while open, so Escape closes it and nothing underneath.
+ */
+export function useZoomViewer<T>(
+  items: ViewerItem<T>[],
+  ariaLabel: string,
+  renderHeader: (item: ViewerItem<T>) => React.ReactNode
+) {
+  const lightbox = useLightbox<T>(items, {
+    zoom: true,
+    wheel: "zoom",
+    closeOnBackdropClick: true,
+    icons: viewerIcons,
+    accent: "var(--color-accent, #e97d62)",
+    ariaLabel,
+    renderHeader: (ctx) => renderHeader(ctx.item),
+  });
+  useOverlay(lightbox.isOpen, "figure");
+  const portal =
+    lightbox.viewer &&
+    createPortal(
+      <div style={{ "--rvl-z": GUIDE_OVERLAY_Z } as React.CSSProperties} {...STOP_EVENTS}>
+        {lightbox.viewer}
+      </div>,
+      document.body
+    );
+  return { lightbox, portal };
+}
+
+/** The usual zoom-viewer header: a title and a line of detail. */
+export function ZoomHeader({ title, detail }: { title: string; detail: string }) {
   return (
-    <code
-      className="text-[10.5px] px-1 py-0.5 rounded"
-      style={{
-        fontFamily: "var(--font-mono, monospace)",
-        background: "rgba(255,255,255,0.05)",
-        color: "rgba(255,255,255,0.7)",
-      }}
-    >
-      {children}
-    </code>
+    <div className="min-w-0">
+      <p className="font-display text-sm text-white/90 leading-snug m-0">{title}</p>
+      <p className="text-xs text-white/50 mt-0.5 leading-snug m-0">{detail}</p>
+    </div>
   );
 }
 
@@ -234,7 +276,7 @@ export function DistanceBar({
   const gradId = `distBarGrad-${anchorLabel.slice(0, 6).replace(/\W/g, "")}`;
 
   return (
-    <div>
+    <div className="guide-diagram">
       <svg
         width="100%"
         viewBox={`0 0 ${W} ${totalH}`}
@@ -319,6 +361,77 @@ export function DistanceBar({
           );
         })}
       </svg>
+    </div>
+  );
+}
+// PanelTrio: the anchor and its two neighbours as pictures, so a distance
+// reads against what the panels actually look like. Each opens in the same
+// zoom viewer as the explainer's other figures.
+
+export interface TrioItem {
+  src: string;
+  title: string;
+  /** "anchor", or the distance as it should read. */
+  note: string;
+  color: string;
+}
+
+/** What each position in the trio is, for the viewer's header. */
+const TRIO_ROLES = ["The anchor panel", "Closest neighbour", "Furthest neighbour"];
+
+interface TrioCaption {
+  title: string;
+  detail: string;
+}
+
+export function PanelTrio({ items }: { items: TrioItem[] }) {
+  const viewerItems = useMemo<ViewerItem<TrioCaption>[]>(
+    () =>
+      items.map((it, i) => {
+        const role = TRIO_ROLES[i] ?? "";
+        const detail = i === 0 ? role : `${role} · distance ${it.note}`;
+        return { id: `${i}-${it.src}`, src: it.src, alt: `${it.title}: ${detail}`, data: { title: it.title, detail } };
+      }),
+    [items]
+  );
+
+  const { lightbox, portal } = useZoomViewer<TrioCaption>(viewerItems, "The anchor and its neighbours", (item) => (
+    <ZoomHeader title={item.data.title} detail={item.data.detail} />
+  ));
+
+  return (
+    <div className="guide-trio">
+      <div className="flex items-end justify-center gap-4">
+        {items.map((it, i) => (
+          <figure key={i} className="m-0 flex flex-col items-center min-w-0" style={{ flex: "0 1 30%" }}>
+            <button
+              type="button"
+              {...lightbox.triggerProps(i)}
+              className="block max-w-full p-0 m-0 border-0 bg-transparent cursor-zoom-in rounded-[2px]
+                         transition-opacity duration-150 hover:opacity-85
+                         focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--color-accent,#e97d62)]"
+              aria-label={`Inspect: ${it.title}, ${viewerItems[i]?.data.detail ?? ""}`}
+              title="Inspect up close"
+            >
+              <img
+                src={it.src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+                className="guide-trio-img block max-w-full rounded-[2px]"
+                style={{ outline: `1px solid ${it.color}`, outlineOffset: 1 }}
+              />
+            </button>
+            <figcaption className="guide-caption mt-1.5 text-center max-w-full" style={{ color: it.color }}>
+              <span className="block truncate">{it.title}</span>
+              <span style={{ opacity: 0.7 }}>{it.note}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <Caption className="text-center">Tap a panel to see it up close.</Caption>
+      {portal}
     </div>
   );
 }

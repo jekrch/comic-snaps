@@ -9,6 +9,9 @@ __pycache__/
 *.mp3
 .claude
 
+# local-only generated data, kept out of public/ and git
+/local-data
+
 # test output
 coverage/
 .pytest_cache/

@@ -8,11 +8,18 @@ export interface NeighborInfo {
   distance: number;
 }
 
-export interface MetricExplainerProps {
-  metric: MetricKey;
-  anchorPanel: Panel;
-  neighbors: NeighborInfo[];
-  onClose: () => void;
+// Panels the explainers never show on their own: not as the random sample
+// anchor, nor as a closest/furthest neighbour (the next one in line is used
+// instead). They stay in the gallery and everywhere else.
+export const EXPLAINER_EXCLUDED_PANELS: ReadonlySet<string> = new Set([
+  "hyde-street-10-1772390798",
+]);
+
+/** Neighbours an explainer may show, nearest first. */
+export function explainerNeighbors(neighbors: NeighborInfo[]): NeighborInfo[] {
+  return neighbors
+    .filter((n) => !EXPLAINER_EXCLUDED_PANELS.has(n.panel.id))
+    .sort((a, b) => a.distance - b.distance);
 }
 
 // Metric display metadata */

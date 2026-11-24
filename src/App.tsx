@@ -30,6 +30,9 @@ import BirdIcon from "./components/BirdIcon";
 import type { BirdHandle } from "./components/BirdIcon";
 import HeaderViewSwitch from "./components/HeaderViewSwitch";
 import PanelViewer from "./components/PanelViewer";
+import GuideHost from "./components/guide/GuideHost";
+import { getGuideState } from "./components/guide/useGuideRoute";
+import type { MetricKey } from "./components/graph/similarityConfig";
 import SearchPalette from "./components/SearchPalette";
 import VizLaunchModal from "./components/viz/VizLaunchModal";
 //import VizThought from "./components/viz/VizThought";
@@ -668,6 +671,19 @@ export default function App() {
     syncTab(null);
   }, [syncTab]);
 
+  // The Guide's "Sort the gallery by …" hands the sort back once it has
+  // closed: whatever it was opened from (the info modal) goes too, and the
+  // wall starts from the top in its new order.
+  const handleGuideSort = useCallback(
+    (metric: MetricKey) => {
+      setShowInfo(null);
+      syncTab(null);
+      handleSortChange(metric as SortMode);
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    },
+    [handleSortChange, syncTab]
+  );
+
   // A clicked bar in the stats tab replaces the active filters with its own
   const handleStatsFilter = useCallback(
     (patch: StatsFilterPatch) => {
@@ -963,6 +979,8 @@ export default function App() {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
       if (e.key !== "f" && e.key !== "F") return;
+      // The Guide is a page of its own; the browser's find belongs to it.
+      if (getGuideState().route) return;
       if (searchOpen) {
         setSearchOpen(false);
         return;
@@ -1175,6 +1193,13 @@ export default function App() {
           onBrowse={handleBrowseBy}
         />
       )}
+
+      {/* Above everything it can be opened from. A sort is only handed back
+          when the gallery is what's underneath, not the viewer or a run. */}
+      <GuideHost
+        panels={panels}
+        onSortBy={openIndex < 0 && !vizRun ? handleGuideSort : undefined}
+      />
 
       {vizPrompt && status === "ready" && (
         <VizLaunchModal
