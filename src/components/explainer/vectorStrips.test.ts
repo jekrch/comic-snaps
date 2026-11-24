@@ -3,7 +3,7 @@ import { stripScale } from "./VectorStrips";
 
 describe("stripScale", () => {
   it("ignores a lone outlier so ordinary cells keep their contrast", () => {
-    const row = Array.from({ length: 96 }, (_, i) => (i % 2 ? 0.02 : -0.02));
+    const row: number[] = Array.from({ length: 96 }, (_, i) => (i % 2 ? 0.02 : -0.02));
     row[78] = 0.38;
     expect(stripScale([row, row, row])).toBeCloseTo(0.02);
   });
