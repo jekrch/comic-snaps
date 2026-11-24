@@ -35,13 +35,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     # For workflow_run triggers, only deploy if the upstream workflow succeeded.
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # - name: Wait for additional commits
       #   run: sleep 10
@@ -62,5 +59,18 @@ jobs:
         with:
           path: dist
 
+  # Deploy runs as its own job. In the same job, deploy-pages asks the artifact
+  # service for "github-pages" a fraction of a second after the upload
+  # finalizes and can get an empty list back ("Found 0 artifact(s)"). The job
+  # boundary gives the artifact time to become listable, and re-running a
+  # failed deploy reuses the build's artifact instead of uploading a second one
+  # ("Multiple artifacts named github-pages").
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v5
