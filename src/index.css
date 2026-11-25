@@ -3042,6 +3042,25 @@ button,
     color: var(--color-ink);
   }
 
+  /* A lesson's sources, a section of their own under its steps */
+  .guide-rail-section {
+    margin: 0;
+    padding: 2px 10px 2px 21px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .guide-rail-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--color-ink-faint);
+  }
+
   .guide-rail-num {
     min-width: 1em;
     font-family: var(--font-mono);
@@ -3115,6 +3134,490 @@ button,
     color: var(--color-ink-faint);
   }
 
+  /* The meta line and, on lessons, the Full / TL;DR switch at its end. */
+  .guide-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+  }
+
+  .guide-mode {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    flex-shrink: 0;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--guide-border);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  .guide-mode > button {
+    position: relative;
+    z-index: 1;
+    min-width: 58px;
+    padding: 4px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-faint);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 200ms;
+  }
+
+  .guide-mode > button:hover {
+    color: var(--color-ink-muted);
+  }
+
+  .guide-mode > button[aria-pressed="true"] {
+    color: var(--color-ink);
+    cursor: default;
+  }
+
+  .guide-mode > button:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+
+  .guide-mode-thumb {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc(50% - 2px);
+    background: color-mix(in srgb, var(--color-accent) 16%, #1a1918);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+    border-radius: 999px;
+    transition:
+      transform 320ms var(--guide-ease-out),
+      opacity 200ms ease-out;
+  }
+
+  .guide-mode[data-mode="short"] .guide-mode-thumb {
+    transform: translateX(100%);
+  }
+
+  /* Steps switched one by one into a mix: neither option holds. */
+  .guide-mode[data-mode="mixed"] .guide-mode-thumb {
+    opacity: 0;
+    transform: translateX(50%) scaleX(0.6);
+  }
+
+  /* A lesson's steps (the Guide's slots, Guide.tsx). Everything above a
+     step's heading is the same short or full, so the heading and its switch
+     never move when the step switches; a short step sits closer to the next
+     one by losing space at its bottom, inside the glide. */
+  .guide-step[data-slot] {
+    margin-top: 30px;
+    padding-bottom: 14px;
+  }
+
+  .guide-step[data-slot]:first-child {
+    margin-top: 44px;
+  }
+
+  .guide-step[data-slot].is-short {
+    padding-bottom: 0;
+  }
+
+  .guide-step.is-short::before {
+    width: 40px;
+  }
+
+  .guide-step.is-short .guide-step-heading {
+    margin-bottom: 8px;
+  }
+
+  /* Mid-switch (Guide.tsx sets the height): only the bottom edge clips, so
+     sidenotes in the margin still show. Opening, the edge fades rather than
+     cuts, and the fade closes to nothing as the box lands. Folding, it
+     cuts clean: the short text is already all there, and a fade would dim
+     its last lines. */
+  .guide-step.is-gliding {
+    clip-path: inset(-100vmax -100vmax 0 -100vmax);
+  }
+
+  .guide-step.is-gliding[data-glide="open"] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--guide-glide-fade, 0px)), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--guide-glide-fade, 0px)), transparent);
+  }
+
+  /* The step's own switch: a quiet pill whose chevron points where the
+     step will go. */
+  .guide-code-btn.guide-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    /* Wide enough for either label, so the pill keeps its size. */
+    min-width: 72px;
+    padding: 3px 10px 3px 7px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-faint);
+    background: rgba(255, 255, 255, 0.02);
+    border-color: var(--guide-border);
+    border-radius: 999px;
+    opacity: 1;
+    transition:
+      color 200ms,
+      border-color 200ms,
+      background-color 200ms,
+      box-shadow 200ms;
+  }
+
+  .guide-code-btn.guide-more-btn svg {
+    transition: transform 260ms var(--guide-ease-out);
+  }
+
+  .guide-code-btn.guide-more-btn:hover,
+  .guide-code-btn.guide-more-btn:focus-visible {
+    color: var(--color-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 7%, transparent);
+  }
+
+  .guide-code-btn.guide-more-btn:focus-visible {
+    outline: none;
+  }
+
+  .guide-code-btn.guide-more-btn[aria-expanded="false"]:hover svg {
+    transform: translateY(1.5px);
+  }
+
+  .guide-code-btn.guide-more-btn[aria-expanded="true"]:hover svg {
+    transform: translateY(-1.5px);
+  }
+
+  /* A step's new version, after its own switch or the lesson's. Transforms
+     and opacity only: the box is measured for the glide as it lands. The
+     chevron turns over and the body rises in a beat behind. */
+
+  .guide-step-heading.is-swapped .guide-more-btn svg {
+    animation: guideChevronFlip 520ms var(--guide-ease-out) backwards;
+  }
+
+  /* The code button goes with the full version: on folding it slides into
+     the switch beside it, shrinking, blurring and closing its gap; on
+     opening it slides back out a beat after the chevron turns. The switch
+     is rightmost, so it never moves. */
+  .guide-code-btn.is-leaving,
+  .guide-code-btn.is-entering {
+    overflow: hidden;
+    white-space: nowrap;
+    transform-origin: right center;
+  }
+
+  .guide-code-btn.is-leaving {
+    pointer-events: none;
+    animation: guideCodeBtnOut 420ms var(--guide-ease-out) forwards;
+  }
+
+  .guide-code-btn.is-entering {
+    animation: guideCodeBtnIn 520ms var(--guide-ease-out) 90ms backwards;
+  }
+
+  @keyframes guideCodeBtnIn {
+    from {
+      max-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+      border-width: 0;
+      margin-right: -6px;
+      opacity: 0;
+      transform: translate3d(18px, 0, 0) scale(0.75);
+      filter: blur(3px);
+    }
+    35% {
+      opacity: 0;
+    }
+    to {
+      max-width: 120px;
+    }
+  }
+
+  @keyframes guideCodeBtnOut {
+    from {
+      max-width: 120px;
+    }
+    55% {
+      opacity: 0;
+    }
+    to {
+      max-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+      border-width: 0;
+      margin-right: -6px;
+      opacity: 0;
+      transform: translate3d(18px, 0, 0) scale(0.75);
+      filter: blur(3px);
+      visibility: hidden;
+    }
+  }
+
+  .guide-step-body.is-swapped {
+    animation: guideSwapIn 560ms var(--guide-ease-out) 60ms backwards;
+  }
+
+  /* Folding, the short text is there at full strength from the first
+     frame and only settles; any fade would read as a dim. */
+  .guide-step.is-short .guide-step-body.is-swapped {
+    animation: guideSwapSettle 420ms var(--guide-ease-out) backwards;
+  }
+
+  @keyframes guideSwapSettle {
+    from {
+      transform: translate3d(0, 6px, 0);
+    }
+  }
+
+  @keyframes guideChevronFlip {
+    from {
+      transform: rotate(-180deg);
+    }
+  }
+
+  @keyframes guideSwapIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0);
+    }
+  }
+
+  .guide-prose .guide-tldr-end {
+    margin: 0 0 22px;
+    font-size: 0.93em;
+    color: var(--color-ink-muted);
+  }
+
+  /* Guess first, then the numbers (Guess.tsx). */
+  .guide-guess {
+    margin: 18px 0 8px;
+    padding: 14px 14px 12px;
+    background: rgba(255, 255, 255, 0.018);
+    border: 1px solid var(--guide-border);
+    border-radius: 8px;
+  }
+
+  .guide-guess-q {
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--color-ink);
+  }
+
+  .guide-guess-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: end;
+    gap: 12px;
+  }
+
+  .guide-guess-anchor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding-right: 12px;
+    border-right: 1px solid var(--guide-border);
+  }
+
+  .guide-guess-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .guide-guess-anchor img,
+  .guide-guess-choice img {
+    display: block;
+    max-width: 100%;
+    max-height: 110px;
+    object-fit: contain;
+    border-radius: 2px;
+  }
+
+  .guide-grid.is-desktop .guide-guess-anchor img,
+  .guide-grid.is-desktop .guide-guess-choice img {
+    max-height: 140px;
+  }
+
+  .guide-guess-choice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    padding: 6px 6px 4px;
+    font: inherit;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition:
+      border-color 200ms,
+      background-color 200ms,
+      opacity 300ms,
+      transform 200ms var(--guide-ease-out);
+  }
+
+  .guide-guess-choice[data-state="open"]:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--guide-border);
+    transform: translateY(-2px);
+  }
+
+  .guide-guess-choice:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+
+  .guide-guess-choice:disabled {
+    cursor: default;
+  }
+
+  .guide-guess-choice[data-state="closer"] {
+    border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  }
+
+  .guide-guess-choice[data-state="further"] {
+    opacity: 0.55;
+  }
+
+  .guide-guess-choice[data-picked]::after {
+    content: "your guess";
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .guide-guess-tag {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  .guide-guess-choice[data-state="closer"] .guide-guess-tag {
+    color: var(--color-accent);
+  }
+
+  .guide-guess-num {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+  }
+
+  .guide-guess-answer {
+    margin-top: 12px;
+  }
+
+  .guide-prose .guide-guess-hint {
+    margin: 0;
+    font-size: 0.88em;
+    color: var(--color-ink-faint);
+  }
+
+  .guide-guess-reveal {
+    animation: guideRise 420ms var(--guide-ease-out) backwards;
+  }
+
+  .guide-prose .guide-guess-reveal p {
+    margin-bottom: 10px;
+    font-size: 0.95em;
+  }
+
+  .guide-guess-verdict {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+
+  .guide-guess-reveal > .guide-link {
+    font-size: 0.9em;
+  }
+
+  .guide-guess-dial {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .guide-guess-dial input[type="range"] {
+    flex: 1;
+    min-width: 0;
+    height: 4px;
+    appearance: none;
+    background: linear-gradient(to right, var(--color-accent) var(--fill, 0%), rgba(255, 255, 255, 0.1) var(--fill, 0%));
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  .guide-guess-dial input[type="range"]::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+    appearance: none;
+    background: var(--color-ink);
+    border: 3px solid var(--color-surface);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  .guide-guess-dial input[type="range"]::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    background: var(--color-ink);
+    border: 3px solid var(--color-surface);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  .guide-guess-dial input[type="range"]:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  .guide-guess-dial output {
+    min-width: 2ch;
+    font-size: 20px;
+    text-align: right;
+  }
+
+  .guide-guess-lock {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-surface);
+    background: var(--color-accent);
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 150ms, opacity 150ms;
+  }
+
+  .guide-guess-lock:hover {
+    background: var(--color-accent-dim);
+  }
+
+  .guide-guess-lock:disabled {
+    color: var(--color-ink-faint);
+    background: rgba(255, 255, 255, 0.05);
+    cursor: default;
+  }
+
   .guide-step {
     margin-top: 44px;
     scroll-margin-top: 72px;
@@ -3123,6 +3626,7 @@ button,
   .guide-step::before {
     content: "";
     display: block;
+    transition: width 480ms var(--guide-ease-out);
     width: 72px;
     height: 6px;
     margin-bottom: 18px;
@@ -3170,8 +3674,19 @@ button,
     color: var(--color-accent);
   }
 
-  .guide-code-btn {
+  .guide-step-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .guide-step-tools:empty {
+    display: none;
+  }
+
+  .guide-code-btn {
     flex-shrink: 0;
     padding: 3px 9px;
     font-family: var(--font-mono);
@@ -3642,60 +4157,179 @@ button,
     outline-offset: 3px;
   }
 
-  .cielab-legend {
+  /* The three highlighted panels: picture, palette with the plotted color
+     picked out, and the stage's reading. */
+  .cielab-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
     list-style: none;
     margin: 12px 0 0;
     padding: 0;
   }
 
-  .cielab-legend button {
-    display: grid;
-    grid-template-columns: 14px 5.5em minmax(0, 1fr);
-    grid-template-areas:
-      "dot role title"
-      ". . lab";
-    column-gap: 8px;
-    align-items: center;
+  .cielab-cards button {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
-    padding: 5px 8px;
+    height: 100%;
+    padding: 6px;
     text-align: left;
-    border-radius: 4px;
-    font-size: 13px;
-    line-height: 1.45;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.22);
+    transition: border-color 0.15s, background-color 0.15s;
   }
 
-  .cielab-legend button:hover,
-  .cielab-legend button.is-on {
-    background: rgba(255, 255, 255, 0.05);
+  .cielab-cards button:hover,
+  .cielab-cards button.is-on {
+    border-color: var(--role);
+    background: rgba(255, 255, 255, 0.04);
   }
 
-  .cielab-dot {
-    grid-area: dot;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+  .cielab-cards button:focus-visible {
+    outline: 1px solid var(--color-accent);
+    outline-offset: 2px;
   }
 
-  .cielab-legend-role {
-    grid-area: role;
+  .cielab-card-img {
+    display: block;
+    width: 100%;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 3px 3px 0 0;
+  }
+
+  /* Biggest color first, each as wide as its share of the panel (set
+     inline); the one on the plot is ringed in the panel's role color. */
+  .cielab-palette {
+    display: flex;
+    gap: 3px;
+    height: 30px;
+    margin-top: -1px;
+    padding: 0 2px;
+  }
+
+  .cielab-palette > span {
+    flex: 1 1 0;
+    min-width: 6px;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+
+  .cielab-palette > span.is-plotted {
+    box-shadow:
+      inset 0 0 0 1px rgba(10, 9, 9, 0.6),
+      0 0 0 2px var(--role);
+  }
+
+  /* Hue step: the measured key color, set apart from the palette. */
+  .cielab-palette > .cielab-palette-key {
+    flex: 0 0 30%;
+    margin-left: 5px;
+  }
+
+  .cielab-card-role {
+    margin-top: 4px;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
+    color: var(--role);
   }
 
-  .cielab-legend-title {
-    grid-area: title;
+  .cielab-card-name {
+    font-size: 13px;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .cielab-card-line {
+    font-size: 11px;
+    line-height: 1.35;
+    color: var(--color-ink-faint);
+  }
+
+  .cielab-card-title {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+  }
+
+  /* The figure's point in one sentence, above the plot. */
+  .guide-prose .cielab-takeaway,
+  .cielab-takeaway {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  /* Palette distance worked through (PaletteDistance.tsx). */
+  .palette-dist {
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .palette-dist-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+
+  .palette-dist-table th,
+  .palette-dist-table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .palette-dist-table thead th {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--color-ink-faint);
+  }
+
+  .palette-dist-table tbody th {
+    font-weight: 400;
+    color: var(--color-ink-faint);
+  }
+
+  .palette-dist-table td {
     color: rgba(255, 255, 255, 0.78);
   }
 
-  .cielab-legend-lab {
-    grid-area: lab;
-    font-size: 11.5px;
+  .palette-dist-table td.is-faint {
     color: var(--color-ink-faint);
+  }
+
+  .palette-dist-swatch {
+    display: inline-block;
+    width: 28px;
+    height: 18px;
+    vertical-align: middle;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .guide-prose .palette-dist-sum,
+  .palette-dist-sum {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    column-gap: 0.6em;
+    margin: 8px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ink-faint);
+  }
+
+  .palette-dist-sum strong {
+    font-weight: 400;
+    font-size: 13px;
   }
 
   /* RGB vs CIELAB pairs (RgbVsLab.tsx). Both tabs share one structure, so
@@ -4106,6 +4740,70 @@ button,
       opacity 160ms ease-out,
       transform 280ms var(--guide-ease-out),
       visibility 0s;
+  }
+
+  /* Sources, after a lesson's last step */
+  .guide-sources {
+    clear: both;
+    margin-top: 56px;
+  }
+
+  .guide-sources-title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .guide-sources-group + .guide-sources-group {
+    margin-top: 28px;
+  }
+
+  .guide-sources-group-title {
+    margin: 0 0 6px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: normal;
+    color: var(--color-ink);
+  }
+
+  .guide-sources-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .guide-sources-list li {
+    padding: 12px 0;
+    border-top: 1px solid var(--guide-border);
+  }
+
+  .guide-sources .guide-source-ref {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .guide-source-venue {
+    font-style: italic;
+    color: var(--color-ink-muted);
+  }
+
+  .guide-sources .guide-source-note {
+    margin: 4px 0 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-ink-faint);
+  }
+
+  .guide-sources + .guide-end {
+    margin-top: 32px;
   }
 
   /* End of a lesson */
@@ -4861,8 +5559,9 @@ button,
     }
   }
 
-  /* The code pane: in from the margin's edge, out the same way; grown over
-     the column from its corner in the margin, and settled back. */
+  /* The code pane: in from the margin's edge, out the same way. Growing
+     over the column and settling back are flown in script (CodePane's
+     useFlight) from wherever the pane actually sits. */
   @keyframes guideCodeIn {
     from {
       opacity: 0;
@@ -4877,24 +5576,6 @@ button,
     }
   }
 
-  @keyframes guideCodeGrow {
-    from {
-      opacity: 0.35;
-      transform: scale(0.94);
-    }
-  }
-
-  @keyframes guideCodeSettle {
-    from {
-      opacity: 0.35;
-      transform: scale(1.04);
-    }
-  }
-
-  .guide-code-pane {
-    transform-origin: top right;
-  }
-
   .guide-code-pane[data-motion="in"] {
     animation: guideCodeIn 380ms var(--guide-ease-out) backwards;
   }
@@ -4902,14 +5583,6 @@ button,
   .guide-code-pane[data-motion="out"] {
     animation: guideCodeOut 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
     pointer-events: none;
-  }
-
-  .guide-code-pane[data-motion="grow"] {
-    animation: guideCodeGrow 360ms var(--guide-ease-out) backwards;
-  }
-
-  .guide-code-pane[data-motion="settle"] {
-    animation: guideCodeSettle 320ms var(--guide-ease-out) backwards;
   }
 
   .guide-code-scrim {
@@ -4995,7 +5668,9 @@ button,
 
   .guide-step[data-reveal]::before {
     transform-origin: left center;
-    transition: transform 640ms var(--guide-ease-out);
+    transition:
+      transform 640ms var(--guide-ease-out),
+      width 480ms var(--guide-ease-out);
   }
 
   .guide-step[data-reveal="out"]::before {
@@ -5021,13 +5696,48 @@ button,
     .guide-code-tool-icon,
     .guide-doc-pop,
     .guide-phone-title,
-    .guide-rail-steps > li {
+    .guide-rail-steps > li,
+    .guide-guess-reveal {
       animation: none;
     }
 
-    .guide-body.is-arriving {
+    .guide-mode-thumb,
+    .guide-guess-choice {
+      transition: none;
+    }
+
+    .guide-body.is-arriving,
+    .guide-step-body.is-swapped {
       animation-duration: 150ms;
       animation-delay: 0ms;
     }
+
+    .guide-step-body.is-swapped {
+      animation-name: guideFadeIn;
+    }
+
+    .guide-step-heading.is-swapped .guide-more-btn svg,
+    .guide-step.is-short .guide-step-body.is-swapped,
+    .guide-code-btn.is-entering {
+      animation: none;
+    }
+
+    .guide-code-btn.is-leaving {
+      display: none;
+    }
+
+    .guide-step::before,
+    .guide-more-btn svg {
+      transition: none;
+    }
   }
+}
+
+/* The bottom fade on a step opening in the Guide, eased shut as the step
+   lands (Guide.tsx). Registered so it can transition; where it can't, the
+   fade simply stays until the glide ends. */
+@property --guide-glide-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
 }

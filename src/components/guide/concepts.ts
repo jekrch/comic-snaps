@@ -1,4 +1,4 @@
-import type { LessonId } from "./lessons";
+import type { PageId } from "./lessons";
 
 /**
  * The ideas the Guide teaches, each with a one-line definition and the step
@@ -12,13 +12,28 @@ export interface Concept {
   id: string;
   label: string;
   short: string;
-  lesson: LessonId;
+  /** The page that introduces it: a lesson, or the Overview for ideas every lesson uses. */
+  lesson: PageId;
   step: string;
   /** Names in the code view that implement this idea. */
   code?: string[];
 }
 
 export const CONCEPTS: Concept[] = [
+  {
+    id: "anchor",
+    label: "Anchor panel",
+    short: "The panel everything else is compared with. Each lesson ranks the gallery by its distance to the anchor; shuffle or pick another from the worked example.",
+    lesson: "overview",
+    step: "alike",
+  },
+  {
+    id: "neural-network",
+    label: "Neural network (model)",
+    short: "A program made of many layers of simple arithmetic whose settings were learned from millions of example images rather than written by hand. Three of the five methods use one.",
+    lesson: "overview",
+    step: "alike",
+  },
   {
     id: "vector",
     label: "Vector (arrow)",
@@ -36,7 +51,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "dimension",
     label: "Dimension",
-    short: "How many numbers a vector has. SigLIP's arrows live in 768 dimensions, DINOv2's in 384.",
+    short: "How many numbers a vector has. SigLIP's arrows live in 768 dimensions, DINOv2's in 384 and the Gram model's in 30.",
     lesson: "vectors",
     step: "arrows",
   },
@@ -72,11 +87,39 @@ export const CONCEPTS: Concept[] = [
     code: ["cosineDistance"],
   },
   {
+    id: "vision-language",
+    label: "Vision-language model",
+    short: "A model trained on images paired with their captions, so it learns to place a picture near the words that describe it. SigLIP is one.",
+    lesson: "siglip",
+    step: "prepare",
+  },
+  {
+    id: "self-supervised",
+    label: "Self-supervised",
+    short: "Trained on pictures alone, with no captions or labels: the model learns by matching different crops and views of the same image. DINOv2 is trained this way.",
+    lesson: "dino",
+    step: "prepare",
+  },
+  {
     id: "patch",
     label: "Patch",
     short: "One small square of the image. A transformer reads an image as a grid of patches, like words in a sentence.",
     lesson: "siglip",
     step: "prepare",
+  },
+  {
+    id: "transformer",
+    label: "Transformer",
+    short: "A kind of neural network that reads its input as a set of pieces (words, or an image's patches) and, layer after layer, lets every piece look at every other. SigLIP and DINOv2 are transformers; VGG-16 isn't.",
+    lesson: "siglip",
+    step: "attention",
+  },
+  {
+    id: "token",
+    label: "Token",
+    short: "One piece of a transformer's input with its own list of numbers. For an image, each patch is a token; DINOv2 adds a few that have no patch, like CLS.",
+    lesson: "siglip",
+    step: "attention",
   },
   {
     id: "layer",
@@ -93,9 +136,16 @@ export const CONCEPTS: Concept[] = [
     step: "attention",
   },
   {
+    id: "pooling",
+    label: "Pooling",
+    short: "Turning a transformer's many per-patch lists into the one list for the whole panel. SigLIP uses one last attention step; DINOv2 averages CLS with the mean of the patches.",
+    lesson: "siglip",
+    step: "arrows",
+  },
+  {
     id: "cls",
     label: "CLS token",
-    short: "An extra slot in DINOv2 with no patch of its own. It only gathers from the patches, and half of the final arrow is its numbers.",
+    short: "An extra token in DINOv2 with no pixels of its own, whose numbers build up a summary of the whole panel. The final arrow is the average of CLS and the patches' average.",
     lesson: "dino",
     step: "attention",
   },
@@ -105,6 +155,13 @@ export const CONCEPTS: Concept[] = [
     short: "Patches a model stops using to describe the art and keeps whole-image bookkeeping in instead. DINOv2's 'with registers' version gets spare slots for this.",
     lesson: "dino",
     step: "attention",
+  },
+  {
+    id: "vgg16",
+    label: "VGG-16",
+    short: "A 2014 neural network built to name what's in a photo (trained on ImageNet's 1,000 categories). The Gram model ignores its answer and reads its filters instead.",
+    lesson: "gram",
+    step: "prepare",
   },
   {
     id: "filter",
@@ -130,31 +187,71 @@ export const CONCEPTS: Concept[] = [
   {
     id: "cielab",
     label: "CIELAB",
-    short: "A color space built so that equal distances look like equal differences to the eye.",
+    short: "A color space built so that equal distances look roughly like equal differences to the eye. Roughly: it's known to be uneven, especially among blues and vivid colors.",
     lesson: "color",
     step: "rgb",
   },
   {
-    id: "colorfulness",
-    label: "Colorfulness (chroma)",
-    short: "How far a panel's colors spread from gray on CIELAB's a* and b* axes. It splits color panels from black-and-white ones.",
+    id: "palette",
+    label: "Dominant colors (palette)",
+    short: "A panel's three main colors, found by grouping its pixels into three clusters of similar color (k-means) and taking each cluster's average. Paper and ink often take one or two of them.",
+    lesson: "color",
+    step: "channels",
+    code: ["extract_dominant_colors"],
+  },
+  {
+    id: "chroma",
+    label: "Chroma",
+    short: "How far a color sits from gray: its distance from the center of the a*–b* plane. Vivid colors have high chroma; whites, grays and blacks have almost none.",
     lesson: "color",
     step: "split",
   },
   {
+    id: "chroma-share",
+    label: "Chroma share",
+    short: "The fraction of a panel's pixels that are clearly colored once the paper's own tint is taken out. At 4% or more the panel sorts as color; below, as black-and-white.",
+    lesson: "color",
+    step: "split",
+    code: ["compute_color_features", "isChromatic"],
+  },
+  {
+    id: "similarity-graph",
+    label: "Similarity graph",
+    short: "The gallery's graph view: a panel in the middle with its nearest neighbours around it, by whichever method is chosen.",
+    lesson: "color",
+    step: "split",
+    code: ["computeNeighbors"],
+  },
+  {
     id: "hue-angle",
     label: "Hue angle",
-    short: "Where a color sits around the color wheel, worked out from a* and b*. Reds near 0°, yellows near 90°.",
+    short: "Where a color sits around the a*–b* plane, as an angle. In CIELAB, red is near 40°, yellow near 100°, green near 135° and blue near 305°.",
     lesson: "color",
     step: "hue",
   },
   {
+    id: "key-color",
+    label: "Key color",
+    short: "The color a panel reads as: the most common hue among its colored pixels, averaged around that peak. The color sort places panels by it.",
+    lesson: "color",
+    step: "hue",
+    code: ["compute_color_features", "sortColor"],
+  },
+  {
     id: "delta-e",
     label: "ΔE (color distance)",
-    short: "The straight-line distance between two colors in CIELAB. Under about 10 most people call them the same color.",
+    short: "The straight-line distance between two colors in CIELAB. About 2 is the smallest difference most people can see; under about 10, two colors still get the same name.",
     lesson: "color",
     step: "distance",
-    code: ["paletteDistance"],
+    code: ["labDistance"],
+  },
+  {
+    id: "perceptual-weight",
+    label: "Perceptual weight",
+    short: "How much a palette color counts in the color distance: more for vivid mid-tones that cover much of the panel, very little for paper white and ink black.",
+    lesson: "color",
+    step: "distance",
+    code: ["colorPerceptualWeight", "matchPalettes"],
   },
   {
     id: "phash",
@@ -165,8 +262,8 @@ export const CONCEPTS: Concept[] = [
   },
   {
     id: "luminance",
-    label: "Luminance",
-    short: "One brightness number per pixel, a weighted sum of red, green and blue with green counting most. pHash sees nothing else.",
+    label: "Luma (brightness)",
+    short: "One brightness number per pixel, a weighted sum of the stored red, green and blue values with green counting most. Often called luminance, which strictly is the same sum on linear light. pHash sees nothing else.",
     lesson: "phash",
     step: "luma",
   },
@@ -176,6 +273,20 @@ export const CONCEPTS: Concept[] = [
     short: "Rewrites an image as a sum of smooth to busy patterns. pHash keeps only the smooth ones: the big-picture brightness.",
     lesson: "phash",
     step: "patterns",
+  },
+  {
+    id: "median",
+    label: "Median",
+    short: "The middle value once a list is sorted: half the values are above it, half below. Unlike the average, a few huge values barely move it.",
+    lesson: "phash",
+    step: "bits",
+  },
+  {
+    id: "hex",
+    label: "Hex digit",
+    short: "One digit in base 16, 0–9 then a–f. Each stands for exactly four bits, so a 64-bit hash is 16 hex digits.",
+    lesson: "phash",
+    step: "bits",
   },
   {
     id: "hamming",

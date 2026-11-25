@@ -93,13 +93,14 @@ export async function loadEmbeddings(
   return cache.promise;
 }
 
-// colorfulness threshold for partitioning chromatic vs achromatic panels.
-// based on RMS of std(a*) and std(b*) in CIELAB space. B&W scans with
-// paper tint typically score 2–8; muted color panels 10–15; vivid color 20+.
+// the older colour/black-and-white cut, kept for panels without chromaShare:
+// RMS of std(a*) and std(b*) in CIELAB. it measures spread, not colour, so a
+// page washed in one hue reads as black-and-white and a tinted B&W page under
+// uneven light can read as colour.
 const COLORFULNESS_THRESHOLD = 6;
 
 /** euclidean distance between two CIELAB color vectors. */
-function labDistance(a: number[], b: number[]): number {
+export function labDistance(a: readonly number[], b: readonly number[]): number {
   const dL = a[0] - b[0];
   const da = a[1] - b[1];
   const db = a[2] - b[2];
@@ -154,7 +155,7 @@ export function cosineDistance(a: number[], b: number[]): number {
  *     to 0, L*=50 maps to 1. a floor of 0.1 ensures extreme values
  *     still contribute a small amount.
  */
-function colorPerceptualWeight(L: number, a: number, b: number): number {
+export function colorPerceptualWeight(L: number, a: number, b: number): number {
   const chroma = Math.sqrt(a * a + b * b);
   const chromaFactor = Math.min(1, Math.max(0.05, chroma / 50));
 
@@ -164,86 +165,239 @@ function colorPerceptualWeight(L: number, a: number, b: number): number {
   return chromaFactor * lightnessFactor;
 }
 
-/**
- * color distance between two panels' palettes.
- *
- * each palette entry is weighted by its perceptual importance: chroma
- * and lightness determine how much a color matters. near-white and
- * near-black entries (margins, gutters) are heavily discounted so that
- * the "real" artwork colors drive similarity.
- *
- * the distance is computed as a weighted average of per-entry CIELAB
- * distances, where each pair's contribution is the minimum weight of
- * the two entries being compared. this ensures a shared low-importance
- * color (e.g. two white margins) barely affects the total distance.
- */
-export function paletteDistance(
-  a: [number, number, number][] | null,
-  b: [number, number, number][] | null
-): number {
-  if (!a || !b || a.length === 0 || b.length === 0) return Infinity;
+type Lab = [number, number, number];
 
-  const minLen = Math.min(a.length, b.length);
+/** one matched pair of palette colors, as `matchPalettes` returns them. */
+export interface PalettePair {
+  a: Lab;
+  b: Lab;
+  /** CIELAB distance between the two. */
+  distance: number;
+  /** how much the pair counts: the mean importance of its two colors. */
+  weight: number;
+}
 
-  let weightedSum = 0;
-  let totalWeight = 0;
-
-  for (let i = 0; i < minLen; i++) {
-    const wA = colorPerceptualWeight(a[i][0], a[i][1], a[i][2]);
-    const wB = colorPerceptualWeight(b[i][0], b[i][1], b[i][2]);
-    // use the minimum: if either side is an unimportant neutral,
-    // this pair contributes little regardless of the other side
-    const pairWeight = Math.min(wA, wB);
-
-    const dist = labDistance(a[i], b[i]);
-    weightedSum += dist * pairWeight;
-    totalWeight += pairWeight;
+/** every ordering of `k` distinct indices drawn from 0..n-1. */
+function arrangements(n: number, k: number): number[][] {
+  if (k === 0) return [[]];
+  const out: number[][] = [];
+  for (const rest of arrangements(n, k - 1)) {
+    for (let i = 0; i < n; i++) if (!rest.includes(i)) out.push([...rest, i]);
   }
-
-  // fallback: if all weights are near-zero (both palettes are pure
-  // black/white), fall back to unweighted average so we still get
-  // a finite, comparable distance
-  if (totalWeight < 0.001) {
-    let sum = 0;
-    for (let i = 0; i < minLen; i++) {
-      sum += labDistance(a[i], b[i]);
-    }
-    return sum / minLen;
-  }
-
-  return weightedSum / totalWeight;
+  return out;
 }
 
 /**
- * sort key for a panel's dominant color using hue-based ordering.
+ * pair two palettes color-for-color, the way that makes them closest.
  *
- * scans the panel's dominant colors and picks the first one with
- * meaningful chroma (sqrt(a² + b²) >= threshold), skipping near-neutral
- * whites, blacks, and greys that typically represent margins or gutters.
- * if no chromatic color is found, falls back to lightness-only ordering
- * at the end of the spectrum (these panels will cluster with the
- * achromatic partition anyway).
+ * each color's importance is its perceptual weight (see
+ * `colorPerceptualWeight`) times its share of the panel's pixels, so a
+ * sliver of colour counts for less than a wash of it. when no shares are
+ * given every color is taken to cover an equal share.
+ *
+ * colors are matched by trying every pairing (palettes hold three colors, so
+ * that is six) and keeping the one with the lowest weighted average distance.
+ * pairing by rank instead compares a panel's second color with the other's
+ * second even when the same red is second in one and third in the other.
  */
-function colorSortKey(panel: Panel): number {
-  const colors = panel.dominantColors;
-  if (!colors || colors.length === 0) return Infinity;
+export function matchPalettes(
+  a: Lab[] | null,
+  b: Lab[] | null,
+  weightsA?: number[] | null,
+  weightsB?: number[] | null
+): PalettePair[] | null {
+  if (!a || !b || a.length === 0 || b.length === 0) return null;
 
-  const CHROMA_THRESHOLD = 10;
+  // the shorter palette picks its partners from the longer one
+  const flip = a.length > b.length;
+  const [short, long] = flip ? [b, a] : [a, b];
+  const [wShort, wLong] = flip ? [weightsB, weightsA] : [weightsA, weightsB];
+  const importance = (c: Lab, i: number, palette: Lab[], shares?: number[] | null) =>
+    colorPerceptualWeight(c[0], c[1], c[2]) * (shares?.[i] ?? 1 / palette.length);
 
-  for (const [L, a, b] of colors) {
-    const chroma = Math.sqrt(a * a + b * b);
-    if (chroma >= CHROMA_THRESHOLD) {
-      const hue = Math.atan2(b, a);
-      const hueNorm = hue < 0 ? hue + 2 * Math.PI : hue;
-      return hueNorm * 1000 + L;
+  const iShort = short.map((c, i) => importance(c, i, short, wShort));
+  const iLong = long.map((c, i) => importance(c, i, long, wLong));
+
+  // more than six colors would make this slow; nothing stores that many
+  const options = long.length <= 6 ? arrangements(long.length, short.length) : [short.map((_, i) => i)];
+
+  let best: PalettePair[] = [];
+  let bestScore = Infinity;
+  for (const option of options) {
+    let sum = 0;
+    let total = 0;
+    const pairs = option.map((j, i) => {
+      const distance = labDistance(short[i], long[j]);
+      const weight = (iShort[i] + iLong[j]) / 2;
+      sum += distance * weight;
+      total += weight;
+      return flip
+        ? { a: long[j], b: short[i], distance, weight }
+        : { a: short[i], b: long[j], distance, weight };
+    });
+    // all-neutral palettes have no weight to speak of: compare them plainly
+    const score = total < 1e-6 ? pairs.reduce((s, p) => s + p.distance, 0) / pairs.length : sum / total;
+    if (score < bestScore) {
+      bestScore = score;
+      best = pairs;
     }
   }
+  return best;
+}
 
-  // no chromatic color found — sort by lightness only, offset past
-  // the hue range (2π * 1000 ≈ 6283) so these sort after all
-  // chromatic panels
-  const [L] = colors[0];
-  return 2 * Math.PI * 1000 + L;
+/**
+ * color distance between two panels' palettes: the weighted average CIELAB
+ * distance over the pairs `matchPalettes` finds. near-white and near-black
+ * colors (margins, gutters, ink) and small clusters count for little, so the
+ * artwork's actual colours drive the result.
+ */
+export function paletteDistance(
+  a: Lab[] | null,
+  b: Lab[] | null,
+  weightsA?: number[] | null,
+  weightsB?: number[] | null
+): number {
+  const pairs = matchPalettes(a, b, weightsA, weightsB);
+  if (!pairs) return Infinity;
+  let sum = 0;
+  let total = 0;
+  for (const p of pairs) {
+    sum += p.distance * p.weight;
+    total += p.weight;
+  }
+  if (total < 1e-6) return pairs.reduce((s, p) => s + p.distance, 0) / pairs.length;
+  return sum / total;
+}
+
+/**
+ * the share of a panel's pixels that must be coloured for it to count as a
+ * colour panel. set against hand-checked panels: muted painted colour and
+ * watercolour washes come in at 4–10%, black-and-white pages under a warm
+ * lamp below 3% once the paper tint is taken out.
+ */
+export const CHROMA_SHARE_THRESHOLD = 0.04;
+
+/**
+ * whether a panel sorts as colour or black-and-white. panels without a
+ * chromaShare (not yet measured, or local photos in the visualizer) fall back
+ * to the older colorfulness score.
+ */
+export function isChromatic(panel: Pick<Panel, "chromaShare" | "keyColor" | "colorfulness">): boolean {
+  if (panel.chromaShare != null) {
+    return panel.chromaShare >= CHROMA_SHARE_THRESHOLD && panel.keyColor != null;
+  }
+  return (panel.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+}
+
+/**
+ * the colour whose hue places a panel in the color sort, in CIELAB: its
+ * measured key colour, or null for a black-and-white panel. the key colour
+ * comes from the panel's coloured pixels, not from the k-means palette, whose
+ * centres average different hues together.
+ */
+export function sortColor(
+  panel: Pick<Panel, "chromaShare" | "keyColor" | "colorfulness" | "dominantColors">
+): Lab | null {
+  if (!isChromatic(panel)) return null;
+  if (panel.chromaShare != null) return panel.keyColor ?? null;
+  // not yet measured: the older pick from the palette
+  return panel.dominantColors ? hueSortColor(panel.dominantColors) : null;
+}
+
+/** below this chroma a palette color is too grey to give a usable hue. */
+export const HUE_CHROMA_THRESHOLD = 10;
+
+/**
+ * the first palette color with meaningful chroma, or null if every entry is
+ * near-neutral. this is how the color sort used to pick a panel's hue, before
+ * `sortColor`; the Guide's color lesson still illustrates it.
+ */
+export function hueSortColor<T extends readonly number[]>(colors: readonly T[]): T | null {
+  for (const c of colors) {
+    if (Math.sqrt(c[1] * c[1] + c[2] * c[2]) >= HUE_CHROMA_THRESHOLD) return c;
+  }
+  return null;
+}
+
+/** hue angle of a CIELAB color in degrees, 0–360. */
+function hueDegrees(c: Lab): number {
+  const h = (Math.atan2(c[2], c[1]) * 180) / Math.PI;
+  return h < 0 ? h + 360 : h;
+}
+
+/** a panel's overall lightness: its palette's L*, weighted by pixel share. */
+function panelLightness(panel: Panel): number {
+  const colors = panel.dominantColors ?? [];
+  const weights = panel.dominantWeights;
+  let sum = 0;
+  let total = 0;
+  colors.forEach((c, i) => {
+    const w = weights?.[i] ?? 1;
+    sum += c[0] * w;
+    total += w;
+  });
+  return total > 0 ? sum / total : 0;
+}
+
+/** how many hue bands the colour sort cuts the wheel into (30° each). */
+const HUE_BANDS = 12;
+
+const byAdded = (a: Panel, b: Panel) =>
+  new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
+
+/**
+ * the COLOR sort: colour panels around the hue wheel, then black-and-white
+ * panels from light to dark, then anything not yet measured.
+ *
+ * the wheel starts at the widest stretch of hue no panel has, so the seam
+ * falls where it splits nothing. it's cut into 30° bands, and within each band
+ * panels go by lightness, alternating light-to-dark and dark-to-light from
+ * one band to the next so neighbours across a band boundary stay close
+ * instead of jumping from darkest to lightest.
+ */
+function sortByColor(panels: Panel[]): Panel[] {
+  const chromatic: { panel: Panel; hue: number; L: number }[] = [];
+  const achromatic: Panel[] = [];
+  const unmeasured: Panel[] = [];
+  for (const panel of panels) {
+    const key = sortColor(panel);
+    if (key) chromatic.push({ panel, hue: hueDegrees(key), L: key[0] });
+    else if (panel.dominantColors?.length) achromatic.push(panel);
+    else unmeasured.push(panel);
+  }
+
+  let start = 0;
+  if (chromatic.length > 1) {
+    const hues = chromatic.map((c) => c.hue).sort((x, y) => x - y);
+    let widest = -1;
+    hues.forEach((h, i) => {
+      const next = i + 1 < hues.length ? hues[i + 1] : hues[0] + 360;
+      if (next - h > widest) {
+        widest = next - h;
+        start = next % 360;
+      }
+    });
+  }
+
+  const band = 360 / HUE_BANDS;
+  const banded = chromatic.map((c) => {
+    const rel = (c.hue - start + 360) % 360;
+    return { ...c, rel, band: Math.floor(rel / band) };
+  });
+  const occupied = [...new Set(banded.map((c) => c.band))].sort((x, y) => x - y);
+  const direction = new Map(occupied.map((b, i) => [b, i % 2 === 0 ? -1 : 1]));
+  banded.sort(
+    (x, y) =>
+      x.band - y.band ||
+      direction.get(x.band)! * (x.L - y.L) ||
+      x.rel - y.rel ||
+      byAdded(x.panel, y.panel)
+  );
+
+  achromatic.sort((x, y) => panelLightness(y) - panelLightness(x) || byAdded(x, y));
+  unmeasured.sort(byAdded);
+
+  return [...banded.map((c) => c.panel), ...achromatic, ...unmeasured];
 }
 
 /**
@@ -364,33 +518,8 @@ export function sortPanels(panels: Panel[], mode: SortMode): Panel[] {
       return [...result, ...withoutHash];
     }
 
-    case "color": {
-      if (sorted.length <= 1) return sorted;
-
-      const chromatic: Panel[] = [];
-      const achromatic: Panel[] = [];
-      for (const p of sorted) {
-        if ((p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD) {
-          chromatic.push(p);
-        } else {
-          achromatic.push(p);
-        }
-      }
-
-      const byColor = (a: Panel, b: Panel) => {
-        const ka = colorSortKey(a);
-        const kb = colorSortKey(b);
-        if (ka === Infinity && kb === Infinity) {
-          return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
-        }
-        if (ka !== kb) return ka - kb;
-        return new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime();
-      };
-      chromatic.sort(byColor);
-      achromatic.sort(byColor);
-
-      return [...chromatic, ...achromatic];
-    }
+    case "color":
+      return sortByColor(sorted);
 
     // embedding sorts are async — this synchronous fallback returns
     // unsorted if called directly. use sortPanelsAsync instead.

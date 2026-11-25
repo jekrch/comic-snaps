@@ -257,16 +257,17 @@ const SORT_DESCRIPTIONS: {
       body: (
         <>
           <p className="m-0">
-            This splits panels into color vs black-and-white using a colorfulness score derived from
-            the CIELAB color space: specifically the spread of the a* and b* channels, which represent
-            green-red and blue-yellow. Without that split, panels that read as black-and-white to our
+            This splits panels into color vs black-and-white by how much of each panel is actually
+            colored, once the paper's own tint (yellowed newsprint, warm lamp light) is taken out of
+            the a* and b* channels, which represent green-red and blue-yellow. Without that split, panels that read as black-and-white to our
             eyes would still land somewhere on the hue spectrum and break up the intuitive flow (since even grayscale pixels can have faint chroma values).
           </p>
           <p className="mt-2 mb-0">
             I thought this was an interesting case of how 'colorfulness' can be more of a human,
             perceptual judgment than an objective property of light. Within each group, panels are
-            sorted by the hue angle of their dominant color, producing a spectrum from reds
-            through oranges into yellows and beyond.
+            sorted by the hue of their colored pixels, producing a spectrum from reds
+            through oranges into yellows and beyond, with lighter and darker panels of each hue
+            kept together. Black-and-white panels follow, light to dark.
           </p>
         </>
       ),

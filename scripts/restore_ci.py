@@ -30,7 +30,10 @@ EMBEDDINGS = ("embeddings.json", "embeddings-dino.json", "embeddings-gram.json")
 # What `restore.py install` rewrites on a panel. The worker's /approve copies
 # exactly these onto main, so a run that changed anything else is refused here,
 # before anyone looks at it.
-RESTORE_FIELDS = ("image", "width", "height", "dominantColors", "colorfulness", "phash", "ahash", "dhash")
+RESTORE_FIELDS = (
+    "image", "width", "height", "dominantColors", "dominantWeights", "colorfulness",
+    "chromaShare", "keyColor", "phash", "ahash", "dhash",
+)
 
 # The paths `restore.py install` writes: a plain .jpg in a series folder. The
 # worker's /approve applies the same rule (restoredImageProblem in restore.ts).

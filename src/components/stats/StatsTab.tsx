@@ -15,6 +15,7 @@ import { PRODUCTION_ROLES, loadMetadata } from "../../utils/metadata";
 import { normalizeCountry } from "../../utils/country";
 import { formatIssue } from "../../utils/issueFormat";
 import { panelImageUrl } from "../../utils/imageUrl";
+import { CHROMA_SHARE_THRESHOLD, isChromatic, sortColor } from "../../utils/sorting";
 import { AGE_BIN, ageBinKey, ageBinStart } from "../../utils/artistAge";
 import { wallTimeline } from "../../utils/publishers";
 import type { WallEvent } from "../../utils/publishers";
@@ -28,8 +29,6 @@ const NEUTRAL = "#8a857f";
 const INK_MUTED = "var(--color-ink-muted, rgba(160,155,150,0.7))";
 const HAIRLINE = "rgba(255,255,255,0.07)";
 
-// Same threshold the color sort uses to partition chromatic vs achromatic.
-const COLORFULNESS_THRESHOLD = 6;
 
 // Co-creator roles the "most credited" chart counts from issue credits. Artist
 // is handled separately — every panel carries its own artist (see below), so
@@ -139,23 +138,16 @@ const decadeLabel = (d: number) => `'${String(d).slice(2)}s`;
 
 const labCss = ([L, a, b]: [number, number, number]) => `lab(${L} ${a} ${b})`;
 
-// Chroma a dominant color needs before it counts as the panel's hue — the same
-// cut the COLOR sort uses, so the wheel agrees with that sort's order.
-const HUE_CHROMA = 10;
-
 /**
- * CIELAB hue (degrees) of a color panel's first strongly chromatic dominant
- * color, or null for B&W pages and color panels too muted to have one.
+ * CIELAB hue (degrees) of a color panel's key color, or null for B&W pages —
+ * the same color and cut the COLOR sort uses, so the wheel agrees with that
+ * sort's order.
  */
 function hueOf(p: Panel): number | null {
-  if ((p.colorfulness ?? 0) < COLORFULNESS_THRESHOLD) return null;
-  for (const [, a, b] of p.dominantColors ?? []) {
-    if (Math.hypot(a, b) >= HUE_CHROMA) {
-      const h = (Math.atan2(b, a) * 180) / Math.PI;
-      return h < 0 ? h + 360 : h;
-    }
-  }
-  return null;
+  const key = sortColor(p);
+  if (!key) return null;
+  const h = (Math.atan2(key[2], key[1]) * 180) / Math.PI;
+  return h < 0 ? h + 360 : h;
 }
 
 // Twelve 30° wedges. Names are for CIELAB hue angles, where red sits near 40°
@@ -188,7 +180,7 @@ function computePanelStats(panels: Panel[]): ComputedStats {
     const d = Math.floor(y / 10) * 10;
     byDecade.set(d, (byDecade.get(d) ?? 0) + 1);
   }
-  const isColor = (p: Panel) => (p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+  const isColor = (p: Panel) => isChromatic(p);
   const colorByDecade = new Map<number, number>();
   for (const p of panels) {
     if (p.year > 0 && isColor(p)) {
@@ -1344,7 +1336,7 @@ export default function StatsTab({
         )}
 
         <section>
-          <SectionTitle title="PANELS BY DECADE" note={`color vs B&W at colorfulness ≥ ${COLORFULNESS_THRESHOLD}`} />
+          <SectionTitle title="PANELS BY DECADE" note={`color vs B&W: color once ${Math.round(CHROMA_SHARE_THRESHOLD * 100)}% of a panel's pixels are colored`} />
           <DecadeColorChart
             data={stats.decades}
             colorCount={stats.colorCount}

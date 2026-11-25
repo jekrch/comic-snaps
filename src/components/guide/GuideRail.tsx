@@ -2,12 +2,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, X } from "lucide-react";
 import { PAGES, type PageId } from "./lessons";
+import { SOURCE_GROUPS, sourcesFor } from "./sources";
 import { GUIDE_OVERLAY_Z, STOP_EVENTS, isTopOverlay, useOverlay } from "./overlayStack";
 import { prefersReducedMotion } from "./useScrollSpy";
 
 /**
  * Every page of the Guide, with the current page's steps opened out and the
  * step the reader is in marked. Lessons they've read to the end get a tick.
+ * A lesson's sources follow its steps as a section of their own.
  */
 export function GuideRail({
   page,
@@ -32,6 +34,7 @@ export function GuideRail({
       <ol className="guide-rail-list">
         {PAGES.map((p) => {
           const here = p.id === page;
+          const sources = here ? sourcesFor(p.id) : null;
           return (
             <li key={p.id} className={`guide-rail-page${here ? " is-current" : ""}${p.id === "glossary" ? " is-glossary" : ""}`}>
               <a
@@ -70,6 +73,40 @@ export function GuideRail({
                       );
                     })}
                   </ol>
+                </div>
+              )}
+              {sources && (
+                <div className="guide-rail-sources">
+                  <p className="guide-rail-section" id="guide-rail-sources-label">
+                    Sources
+                  </p>
+                  <div className="guide-rail-track">
+                    <StepMarker step={step} />
+                    <ol className="guide-rail-steps" aria-labelledby="guide-rail-sources-label">
+                      {SOURCE_GROUPS.filter((g) => sources[g.key].length > 0).map((g, i) => {
+                        const on = g.id === step;
+                        const n = sources[g.key].length;
+                        return (
+                          <li key={g.id} className={on ? "is-current" : undefined} style={{ "--i": p.steps.length + i } as React.CSSProperties}>
+                            <a
+                              href={`#${g.id}`}
+                              ref={on ? currentRef : undefined}
+                              aria-current={on ? "step" : undefined}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                onGo(p.id, g.id);
+                              }}
+                            >
+                              <span>{g.short}</span>
+                              <span className="guide-rail-count" aria-label={`${n} sources`}>
+                                {n}
+                              </span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  </div>
                 </div>
               )}
             </li>

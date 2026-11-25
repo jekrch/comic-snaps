@@ -32,7 +32,18 @@
           41.6
         ]
       ],
+      "dominantWeights": [
+        0.474,
+        0.361,
+        0.165
+      ],
       "colorfulness": 29.2,
+      "chromaShare": 0.632,
+      "keyColor": [
+        40,
+        23.1,
+        -26.9
+      ],
       "phash": "ca9485cf9a52c7b1",
       "ahash": "78f8e0c8f8f8e8e9",
       "dhash": "e041151911d999d9"
@@ -69,10 +80,21 @@
           7.5
         ]
       ],
+      "dominantWeights": [
+        0.489,
+        0.264,
+        0.247
+      ],
       "phash": "b0d91f74441f5ed0",
       "ahash": "1e0f0f4f47070707",
       "dhash": "7cdad99d9dadadad",
-      "colorfulness": 19.6
+      "colorfulness": 19.6,
+      "chromaShare": 0.855,
+      "keyColor": [
+        49.1,
+        40.1,
+        13.7
+      ]
     },
     {
       "seq": 372,
@@ -106,7 +128,18 @@
           -0.2
         ]
       ],
+      "dominantWeights": [
+        0.496,
+        0.311,
+        0.193
+      ],
       "colorfulness": 23,
+      "chromaShare": 0.835,
+      "keyColor": [
+        55.6,
+        33.8,
+        0.5
+      ],
       "phash": "b79cbd1b85f0031c",
       "ahash": "bfb777672426c0a0",
       "dhash": "5655c5cc5c4c1c5c"
@@ -143,7 +176,18 @@
           18
         ]
       ],
+      "dominantWeights": [
+        0.465,
+        0.381,
+        0.154
+      ],
       "colorfulness": 8.4,
+      "chromaShare": 0.479,
+      "keyColor": [
+        55,
+        5,
+        16.3
+      ],
       "phash": "d0c42f9f187a6725",
       "ahash": "787e624e7e7e0c00",
       "dhash": "f0f0869cdcc8d818"
@@ -180,7 +224,18 @@
           2.5
         ]
       ],
+      "dominantWeights": [
+        0.465,
+        0.278,
+        0.257
+      ],
       "colorfulness": 8.7,
+      "chromaShare": 0.231,
+      "keyColor": [
+        44.3,
+        12,
+        15.9
+      ],
       "phash": "8cb3b6d1f3b44984",
       "ahash": "ef7f190938181610",
       "dhash": "8eddf7d972726464"
@@ -217,7 +272,18 @@
           19.9
         ]
       ],
+      "dominantWeights": [
+        0.476,
+        0.353,
+        0.171
+      ],
       "colorfulness": 16.3,
+      "chromaShare": 0.774,
+      "keyColor": [
+        76.1,
+        16.8,
+        -3.1
+      ],
       "phash": "b14e539cb273061f",
       "ahash": "040001c78f5fcfcf",
       "dhash": "dc9dcb9b1b931b9b"
@@ -254,7 +320,18 @@
           6.1
         ]
       ],
+      "dominantWeights": [
+        0.369,
+        0.336,
+        0.295
+      ],
       "colorfulness": 8.3,
+      "chromaShare": 0.163,
+      "keyColor": [
+        84.9,
+        3.6,
+        -12.1
+      ],
       "phash": "eadbd05e105a26d6",
       "ahash": "fcf9e1010301f5e7",
       "dhash": "19d3879b3f45258e"
@@ -291,7 +368,18 @@
           11.2
         ]
       ],
+      "dominantWeights": [
+        0.401,
+        0.323,
+        0.275
+      ],
       "colorfulness": 7.2,
+      "chromaShare": 0.525,
+      "keyColor": [
+        47,
+        8.6,
+        13.9
+      ],
       "phash": "d3d4d423ad78d2b0",
       "ahash": "7e7e7c082124ecff",
       "dhash": "b4d4d4734b4909e9"
@@ -328,7 +416,18 @@
           2.4
         ]
       ],
+      "dominantWeights": [
+        0.399,
+        0.302,
+        0.299
+      ],
       "colorfulness": 17,
+      "chromaShare": 0.53,
+      "keyColor": [
+        57.1,
+        22.3,
+        25.7
+      ],
       "phash": "ee91a42e9949b55c",
       "ahash": "fffdfce8b02030f0",
       "dhash": "5969094969656515"
@@ -365,7 +464,18 @@
           -37.7
         ]
       ],
+      "dominantWeights": [
+        0.394,
+        0.336,
+        0.269
+      ],
       "colorfulness": 28,
+      "chromaShare": 0.886,
+      "keyColor": [
+        51.9,
+        50.8,
+        11.8
+      ],
       "phash": "f0c6383b1d1e1c79",
       "ahash": "0070fcffcfcf870e",
       "dhash": "c7c3c0e69b9b9b98"
@@ -402,7 +512,18 @@
           3.3
         ]
       ],
+      "dominantWeights": [
+        0.544,
+        0.325,
+        0.131
+      ],
       "colorfulness": 14.2,
+      "chromaShare": 0.922,
+      "keyColor": [
+        47.5,
+        34.8,
+        26.6
+      ],
       "phash": "c2a7314d2d76c6b2",
       "ahash": "7f7f7c7c38380008",
       "dhash": "f3c9cdc1f1f190d9"
@@ -439,7 +560,18 @@
           35
         ]
       ],
+      "dominantWeights": [
+        0.492,
+        0.275,
+        0.233
+      ],
       "colorfulness": 20.8,
+      "chromaShare": 0.338,
+      "keyColor": [
+        37.9,
+        41.1,
+        32.6
+      ],
       "phash": "edb2e0333ba4b544",
       "ahash": "e7f8f6898000f0f8",
       "dhash": "8f41842b33462723"
@@ -476,7 +608,18 @@
           10.2
         ]
       ],
+      "dominantWeights": [
+        0.438,
+        0.351,
+        0.211
+      ],
       "colorfulness": 10.2,
+      "chromaShare": 0.484,
+      "keyColor": [
+        41.6,
+        10.8,
+        14.7
+      ],
       "phash": "c3da14e43db76285",
       "ahash": "de3c2c28f9f83e00",
       "dhash": "baf1d94be2c27af4"
@@ -513,7 +656,18 @@
           8.3
         ]
       ],
+      "dominantWeights": [
+        0.752,
+        0.195,
+        0.053
+      ],
       "colorfulness": 5,
+      "chromaShare": 0.039,
+      "keyColor": [
+        74.7,
+        9.8,
+        8.1
+      ],
       "phash": "9838b0c7c7c3cf43",
       "ahash": "c98f8ddd9bbb7b7b",
       "dhash": "913db1a97662a3b2"
@@ -550,7 +704,18 @@
           -22.4
         ]
       ],
+      "dominantWeights": [
+        0.376,
+        0.325,
+        0.299
+      ],
       "colorfulness": 17.3,
+      "chromaShare": 0.64,
+      "keyColor": [
+        52.9,
+        17.9,
+        -25.1
+      ],
       "phash": "c493e6627887e32d",
       "ahash": "60feff0c00f0f0f0",
       "dhash": "cc8cc778b2ebe6a7"
@@ -587,7 +752,18 @@
           -26.4
         ]
       ],
+      "dominantWeights": [
+        0.427,
+        0.425,
+        0.147
+      ],
       "colorfulness": 24.4,
+      "chromaShare": 0.629,
+      "keyColor": [
+        45.7,
+        13.7,
+        -42
+      ],
       "phash": "ea98d862c29f3f48",
       "ahash": "ffdf8f356080f1f1",
       "dhash": "f13c3165c74f2303"
@@ -624,7 +800,18 @@
           -5
         ]
       ],
+      "dominantWeights": [
+        0.544,
+        0.326,
+        0.129
+      ],
       "colorfulness": 9.6,
+      "chromaShare": 0.405,
+      "keyColor": [
+        69.2,
+        16.8,
+        -4.3
+      ],
       "phash": "b9bcf6909623cc38",
       "ahash": "dfdbcb090949019c",
       "dhash": "1c1212dbdb9bd975"
@@ -661,7 +848,18 @@
           24.2
         ]
       ],
+      "dominantWeights": [
+        0.529,
+        0.376,
+        0.096
+      ],
       "colorfulness": 12,
+      "chromaShare": 0.819,
+      "keyColor": [
+        44.5,
+        19.4,
+        11.2
+      ],
       "phash": "f89707c8d06f46c3",
       "ahash": "ffffa7dbdf500000",
       "dhash": "e6564e9791b7738c"
@@ -698,7 +896,14 @@
           8.7
         ]
       ],
+      "dominantWeights": [
+        0.413,
+        0.347,
+        0.24
+      ],
       "colorfulness": 3.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ca726069e16e9d0f",
       "ahash": "4004bffdb91810ff",
       "dhash": "95b9617953716551"
@@ -735,7 +940,18 @@
           3.3
         ]
       ],
+      "dominantWeights": [
+        0.554,
+        0.305,
+        0.141
+      ],
       "colorfulness": 5.4,
+      "chromaShare": 0.039,
+      "keyColor": [
+        42.5,
+        4.3,
+        20.3
+      ],
       "phash": "a3cd0f692d629c6c",
       "ahash": "01ffffe7c3470105",
       "dhash": "4359cecd978eeb7d"
@@ -772,7 +988,18 @@
           21.1
         ]
       ],
+      "dominantWeights": [
+        0.576,
+        0.314,
+        0.11
+      ],
       "colorfulness": 7.1,
+      "chromaShare": 0.997,
+      "keyColor": [
+        67.6,
+        24,
+        20.3
+      ],
       "phash": "bf98ccf8c667c009",
       "ahash": "ff0f0f870f870303",
       "dhash": "143e5b6f5b2d0f6b"
@@ -809,7 +1036,18 @@
           -22
         ]
       ],
+      "dominantWeights": [
+        0.4,
+        0.386,
+        0.214
+      ],
       "colorfulness": 6.8,
+      "chromaShare": 0.852,
+      "keyColor": [
+        50.1,
+        10.3,
+        -17.5
+      ],
       "phash": "fed2d1a9c0cbc544",
       "ahash": "fc848494968386fe",
       "dhash": "342c64252426552c"
@@ -846,7 +1084,18 @@
           2.9
         ]
       ],
+      "dominantWeights": [
+        0.479,
+        0.381,
+        0.141
+      ],
       "colorfulness": 9.7,
+      "chromaShare": 0.304,
+      "keyColor": [
+        49.3,
+        18.9,
+        9.4
+      ],
       "phash": "d9c572a483bcc738",
       "ahash": "fcf8b8b8d8d8981c",
       "dhash": "90b860703232b1b1"
@@ -883,7 +1132,18 @@
           -3
         ]
       ],
+      "dominantWeights": [
+        0.512,
+        0.303,
+        0.185
+      ],
       "colorfulness": 9,
+      "chromaShare": 0.432,
+      "keyColor": [
+        68,
+        7.7,
+        -18.5
+      ],
       "phash": "c05f51607e331f39",
       "ahash": "00ff1f20d17b4b6c",
       "dhash": "c0807949a1b39ad9"
@@ -920,7 +1180,18 @@
           12.3
         ]
       ],
+      "dominantWeights": [
+        0.424,
+        0.314,
+        0.261
+      ],
       "colorfulness": 7.4,
+      "chromaShare": 0.852,
+      "keyColor": [
+        52.8,
+        8.9,
+        19.7
+      ],
       "phash": "91ca2d0a7e5d6f18",
       "ahash": "197f7a7e0f0f0f86",
       "dhash": "fbd5d698999bbe9e"
@@ -957,7 +1228,18 @@
           23.2
         ]
       ],
+      "dominantWeights": [
+        0.474,
+        0.381,
+        0.144
+      ],
       "colorfulness": 21.8,
+      "chromaShare": 0.641,
+      "keyColor": [
+        43.1,
+        37.1,
+        18.3
+      ],
       "phash": "8bdff73241bf0050",
       "ahash": "afbd3838180fc7e1",
       "dhash": "595b7373d1b92dab"
@@ -996,7 +1278,18 @@
           8.1
         ]
       ],
+      "dominantWeights": [
+        0.464,
+        0.384,
+        0.152
+      ],
       "colorfulness": 21.2,
+      "chromaShare": 0.552,
+      "keyColor": [
+        57.7,
+        24.1,
+        15.1
+      ],
       "phash": "c2e191cc969ceef0",
       "ahash": "e561e53cf0f1482c",
       "dhash": "cbd98965c5a99149"
@@ -1033,7 +1326,18 @@
           2.3
         ]
       ],
+      "dominantWeights": [
+        0.454,
+        0.3,
+        0.246
+      ],
       "colorfulness": 16.9,
+      "chromaShare": 0.589,
+      "keyColor": [
+        52.1,
+        25,
+        20.3
+      ],
       "phash": "870c0c7f3ac671dc",
       "ahash": "103b37370fef7f0f",
       "dhash": "e4e2c6cd7948e95f"
@@ -1072,7 +1376,14 @@
           1
         ]
       ],
+      "dominantWeights": [
+        0.617,
+        0.315,
+        0.068
+      ],
       "colorfulness": 2.5,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "e91b92856db996c4",
       "ahash": "9f7dcdc912ebcfdf",
       "dhash": "3bd95d1ba6969ba4"
@@ -1109,7 +1420,18 @@
           28.5
         ]
       ],
+      "dominantWeights": [
+        0.435,
+        0.294,
+        0.272
+      ],
       "colorfulness": 38.6,
+      "chromaShare": 0.981,
+      "keyColor": [
+        69.8,
+        8.3,
+        66.5
+      ],
       "phash": "a3d6ccd037663199",
       "ahash": "ffffef4145410101",
       "dhash": "0d33db8fdbdbd3d3"
@@ -1148,7 +1470,18 @@
           31.6
         ]
       ],
+      "dominantWeights": [
+        0.4,
+        0.379,
+        0.221
+      ],
       "colorfulness": 20.8,
+      "chromaShare": 0.4,
+      "keyColor": [
+        41.9,
+        28.7,
+        24.2
+      ],
       "phash": "f4b28188da4bcde5",
       "ahash": "ffc78284c01206de",
       "dhash": "8f0c2e2c14666e92"
@@ -1188,7 +1521,14 @@
           1.2
         ]
       ],
+      "dominantWeights": [
+        0.551,
+        0.273,
+        0.176
+      ],
       "colorfulness": 1.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8e066ef000bff999",
       "ahash": "34353f3f7fffb731",
       "dhash": "65656b6ec5246467"
@@ -1225,7 +1565,18 @@
           13.4
         ]
       ],
+      "dominantWeights": [
+        0.465,
+        0.355,
+        0.18
+      ],
       "colorfulness": 18.8,
+      "chromaShare": 0.522,
+      "keyColor": [
+        66.5,
+        22.2,
+        26.5
+      ],
       "phash": "bda23df4424be0f0",
       "ahash": "c383c300ef838101",
       "dhash": "1e372b6b9e223333"
@@ -1265,7 +1616,14 @@
           0.4
         ]
       ],
+      "dominantWeights": [
+        0.632,
+        0.206,
+        0.162
+      ],
       "colorfulness": 0.9,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "956086b94d396f59",
       "ahash": "003600020e8f9fbf",
       "dhash": "962ca416721c386c"
@@ -1304,7 +1662,14 @@
           0.2
         ]
       ],
+      "dominantWeights": [
+        0.6,
+        0.237,
+        0.163
+      ],
       "colorfulness": 0.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "beebc1e6e098d224",
       "ahash": "ff8b9f9787971f5f",
       "dhash": "c53b3b262e2c3ebc"
@@ -1341,7 +1706,18 @@
           4.9
         ]
       ],
+      "dominantWeights": [
+        0.467,
+        0.291,
+        0.242
+      ],
       "colorfulness": 13.9,
+      "chromaShare": 0.333,
+      "keyColor": [
+        65.7,
+        -5.7,
+        27.9
+      ],
       "phash": "9b84ba69845ae4bd",
       "ahash": "9f1fbe3c73e1889f",
       "dhash": "737964f4c20b1931"
@@ -1378,7 +1754,18 @@
           -3.8
         ]
       ],
+      "dominantWeights": [
+        0.413,
+        0.378,
+        0.209
+      ],
       "colorfulness": 22,
+      "chromaShare": 0.621,
+      "keyColor": [
+        53.6,
+        41.9,
+        -13.3
+      ],
       "phash": "88d435ffd13a850e",
       "ahash": "ff33337d7d390049",
       "dhash": "1a66e399d163379b"
@@ -1417,7 +1804,14 @@
           1.3
         ]
       ],
+      "dominantWeights": [
+        0.362,
+        0.342,
+        0.295
+      ],
       "colorfulness": 0.8,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "c14b4183b77a0f37",
       "ahash": "787810efff3b7f3e",
       "dhash": "d1c2612d4ecab3dc"
@@ -1454,7 +1848,18 @@
           -0.7
         ]
       ],
+      "dominantWeights": [
+        0.498,
+        0.281,
+        0.221
+      ],
       "colorfulness": 20.4,
+      "chromaShare": 0.782,
+      "keyColor": [
+        65,
+        17.1,
+        18.9
+      ],
       "phash": "e19e0b1d3d011fba",
       "ahash": "19ffe5c2c22061e1",
       "dhash": "f3010d963666c78b"
@@ -1491,7 +1896,18 @@
           0.5
         ]
       ],
+      "dominantWeights": [
+        0.536,
+        0.329,
+        0.135
+      ],
       "colorfulness": 6.9,
+      "chromaShare": 0.111,
+      "keyColor": [
+        51,
+        13.3,
+        10.5
+      ],
       "phash": "bbb925c11d4a5e98",
       "ahash": "efc78d08fff70100",
       "dhash": "5b5f3939d94dab72"
@@ -1528,7 +1944,18 @@
           -3.2
         ]
       ],
+      "dominantWeights": [
+        0.581,
+        0.319,
+        0.1
+      ],
       "colorfulness": 6.4,
+      "chromaShare": 0.463,
+      "keyColor": [
+        68.4,
+        -12.4,
+        -8.3
+      ],
       "phash": "fbb0958484738c7b",
       "ahash": "ffec80c1c1fda0fc",
       "dhash": "c0280b0b2b550968"
@@ -1565,7 +1992,18 @@
           -4.3
         ]
       ],
+      "dominantWeights": [
+        0.635,
+        0.237,
+        0.128
+      ],
       "colorfulness": 5.6,
+      "chromaShare": 0.51,
+      "keyColor": [
+        76.2,
+        -2.9,
+        -12.5
+      ],
       "phash": "ed8156b896ca2f70",
       "ahash": "fffbf9f98b919080",
       "dhash": "6c62f3f3322b2b2c"
@@ -1602,7 +2040,18 @@
           20.2
         ]
       ],
+      "dominantWeights": [
+        0.479,
+        0.314,
+        0.207
+      ],
       "colorfulness": 24.7,
+      "chromaShare": 0.725,
+      "keyColor": [
+        47.6,
+        40.3,
+        11.1
+      ],
       "phash": "93a43fe507d79414",
       "ahash": "261f5e3c3efd0804",
       "dhash": "4679b9e9eaab593d"
@@ -1639,7 +2088,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.44,
+        0.325,
+        0.235
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "e8835ee1957cb18c",
       "ahash": "f7e1f1fbfbc08080",
       "dhash": "8e8ba39382933525"
@@ -1676,7 +2132,18 @@
           24.5
         ]
       ],
+      "dominantWeights": [
+        0.504,
+        0.314,
+        0.182
+      ],
       "colorfulness": 21.4,
+      "chromaShare": 0.76,
+      "keyColor": [
+        54.8,
+        40.8,
+        14.5
+      ],
       "phash": "a98790b11fe947ca",
       "ahash": "ffe7e38181c3c101",
       "dhash": "9e8f0f170f0f170f"
@@ -1713,7 +2180,18 @@
           -5.1
         ]
       ],
+      "dominantWeights": [
+        0.587,
+        0.267,
+        0.146
+      ],
       "colorfulness": 5.2,
+      "chromaShare": 0.039,
+      "keyColor": [
+        42.2,
+        6.1,
+        -17.8
+      ],
       "phash": "d757c86832222fd6",
       "ahash": "f8bc2626e4d1ffbf",
       "dhash": "01604c4868238565"
@@ -1750,7 +2228,18 @@
           -31.6
         ]
       ],
+      "dominantWeights": [
+        0.389,
+        0.354,
+        0.257
+      ],
       "colorfulness": 14.3,
+      "chromaShare": 0.81,
+      "keyColor": [
+        42.1,
+        20,
+        -19.7
+      ],
       "phash": "f8a313c98f2da64a",
       "ahash": "ffeed7d3d8c08080",
       "dhash": "421c053713171238"
@@ -1787,7 +2276,18 @@
           9.1
         ]
       ],
+      "dominantWeights": [
+        0.368,
+        0.325,
+        0.307
+      ],
       "colorfulness": 10.2,
+      "chromaShare": 0.361,
+      "keyColor": [
+        43.2,
+        10,
+        13.8
+      ],
       "phash": "ea1f433097b5d8a4",
       "ahash": "81a1b1a7c7c1e1f1",
       "dhash": "5d41232b0f05074b"
@@ -1824,7 +2324,18 @@
           1.4
         ]
       ],
+      "dominantWeights": [
+        0.421,
+        0.332,
+        0.247
+      ],
       "colorfulness": 8.8,
+      "chromaShare": 0.795,
+      "keyColor": [
+        45.6,
+        15.1,
+        5.3
+      ],
       "phash": "809316f81db772bc",
       "ahash": "2f7f0f1f5bc13700",
       "dhash": "e8e39cda9399aee4"
@@ -1863,7 +2374,18 @@
           -5.7
         ]
       ],
+      "dominantWeights": [
+        0.507,
+        0.263,
+        0.229
+      ],
       "colorfulness": 3.2,
+      "chromaShare": 0.013,
+      "keyColor": [
+        73.8,
+        0.4,
+        -12.6
+      ],
       "phash": "b6a1be0df426e05a",
       "ahash": "e7e7e7e31818bcbd",
       "dhash": "8ede8f8ebaa26125"
@@ -1900,7 +2422,18 @@
           -23.7
         ]
       ],
+      "dominantWeights": [
+        0.703,
+        0.271,
+        0.026
+      ],
       "colorfulness": 23.8,
+      "chromaShare": 0.922,
+      "keyColor": [
+        47.1,
+        50.7,
+        25.4
+      ],
       "phash": "cab924e393d41e6a",
       "ahash": "f1f1f8fcf8f0f030",
       "dhash": "cbc3b1b04941c7e5"
@@ -1939,7 +2472,18 @@
           2.3
         ]
       ],
+      "dominantWeights": [
+        0.419,
+        0.383,
+        0.198
+      ],
       "colorfulness": 10,
+      "chromaShare": 0.246,
+      "keyColor": [
+        58.4,
+        -1.9,
+        22.6
+      ],
       "phash": "c6e5e1b80a5af233",
       "ahash": "fff7e41014dc1404",
       "dhash": "06c6ed656dad2d6d"
@@ -1978,7 +2522,18 @@
           6.3
         ]
       ],
+      "dominantWeights": [
+        0.497,
+        0.328,
+        0.175
+      ],
       "colorfulness": 7.1,
+      "chromaShare": 0.222,
+      "keyColor": [
+        47.8,
+        9.6,
+        8.7
+      ],
       "phash": "fc31c0d6839b0f0f",
       "ahash": "ffc38181acfcfc18",
       "dhash": "8c16331b6828b0b3"
@@ -2017,7 +2572,18 @@
           1.5
         ]
       ],
+      "dominantWeights": [
+        0.485,
+        0.397,
+        0.119
+      ],
       "colorfulness": 5,
+      "chromaShare": 0.054,
+      "keyColor": [
+        72.7,
+        8.4,
+        13
+      ],
       "phash": "b1e4d1339e98704f",
       "ahash": "ffe3e3572303080e",
       "dhash": "960606b75edb1998"
@@ -2056,7 +2622,18 @@
           1.9
         ]
       ],
+      "dominantWeights": [
+        0.464,
+        0.38,
+        0.156
+      ],
       "colorfulness": 6.7,
+      "chromaShare": 0.109,
+      "keyColor": [
+        68.4,
+        -5.1,
+        16.4
+      ],
       "phash": "d49366e9b3b41487",
       "ahash": "efff3e5e7b509040",
       "dhash": "9ccb7094eab63686"
@@ -2095,7 +2672,18 @@
           12.7
         ]
       ],
+      "dominantWeights": [
+        0.356,
+        0.343,
+        0.301
+      ],
       "colorfulness": 8.6,
+      "chromaShare": 0.268,
+      "keyColor": [
+        42.9,
+        15.3,
+        16.6
+      ],
       "phash": "edae8d18184f83ba",
       "ahash": "1bf3e3e1d9c8e0c2",
       "dhash": "b3264e4bbb9a0a12"
@@ -2134,7 +2722,18 @@
           1.6
         ]
       ],
+      "dominantWeights": [
+        0.4,
+        0.311,
+        0.289
+      ],
       "colorfulness": 8,
+      "chromaShare": 0.252,
+      "keyColor": [
+        50.8,
+        13.3,
+        9.1
+      ],
       "phash": "f5b071b5f2494ac8",
       "ahash": "c2c6f0f3f78382a0",
       "dhash": "9e1ec3472c06120c"
@@ -2173,7 +2772,18 @@
           2.8
         ]
       ],
+      "dominantWeights": [
+        0.505,
+        0.295,
+        0.2
+      ],
       "colorfulness": 9.2,
+      "chromaShare": 0.244,
+      "keyColor": [
+        34.4,
+        14.5,
+        13.8
+      ],
       "phash": "b7ebe88e018c3e34",
       "ahash": "ffef870f07070707",
       "dhash": "170b0e5c6c6cb6b6"
@@ -2210,7 +2820,18 @@
           22.1
         ]
       ],
+      "dominantWeights": [
+        0.499,
+        0.417,
+        0.084
+      ],
       "colorfulness": 24.9,
+      "chromaShare": 0.537,
+      "keyColor": [
+        45.9,
+        16.5,
+        -36.4
+      ],
       "phash": "f3c0cc63a49ee31c",
       "ahash": "fef8f8e460e00812",
       "dhash": "c480311dcc4a7836"
@@ -2247,7 +2868,18 @@
           0.2
         ]
       ],
+      "dominantWeights": [
+        0.35,
+        0.329,
+        0.321
+      ],
       "colorfulness": 14.4,
+      "chromaShare": 0.32,
+      "keyColor": [
+        54.4,
+        19.6,
+        14.7
+      ],
       "phash": "c8ff90c62f9840f3",
       "ahash": "fefcd89820705f1f",
       "dhash": "2070103241e3b8b8"
@@ -2284,7 +2916,18 @@
           21.2
         ]
       ],
+      "dominantWeights": [
+        0.404,
+        0.374,
+        0.222
+      ],
       "colorfulness": 14.3,
+      "chromaShare": 0.394,
+      "keyColor": [
+        48,
+        -3.7,
+        -20
+      ],
       "phash": "83d2494fde0f7492",
       "ahash": "3d2f2f3f3f030300",
       "dhash": "e9dddc7c7d77d393"
@@ -2321,7 +2964,18 @@
           -7.1
         ]
       ],
+      "dominantWeights": [
+        0.467,
+        0.319,
+        0.214
+      ],
       "colorfulness": 11,
+      "chromaShare": 0.685,
+      "keyColor": [
+        63.6,
+        3.6,
+        -21.3
+      ],
       "phash": "d086724e1fda29b3",
       "ahash": "1efefebe1e18cc00",
       "dhash": "aca898b03cb29898"
@@ -2360,7 +3014,18 @@
           5
         ]
       ],
+      "dominantWeights": [
+        0.575,
+        0.315,
+        0.11
+      ],
       "colorfulness": 6.6,
+      "chromaShare": 0.93,
+      "keyColor": [
+        62.2,
+        14.7,
+        12.5
+      ],
       "phash": "8c425b6c4a5d677c",
       "ahash": "00fcffff97131a1f",
       "dhash": "a1a866f026663632"
@@ -2399,7 +3064,18 @@
           26.2
         ]
       ],
+      "dominantWeights": [
+        0.468,
+        0.28,
+        0.252
+      ],
       "colorfulness": 23,
+      "chromaShare": 0.806,
+      "keyColor": [
+        55.3,
+        20.4,
+        34.7
+      ],
       "phash": "efd29531ea0bf180",
       "ahash": "fff7f5f1f1011390",
       "dhash": "58e4656147477262"
@@ -2436,7 +3112,18 @@
           4.6
         ]
       ],
+      "dominantWeights": [
+        0.497,
+        0.273,
+        0.231
+      ],
       "colorfulness": 11.3,
+      "chromaShare": 0.321,
+      "keyColor": [
+        38.8,
+        14.4,
+        15
+      ],
       "phash": "f0e6461f306f8c96",
       "ahash": "f7ffffc70e180000",
       "dhash": "a4d037969c315b8f"
@@ -2475,7 +3162,18 @@
           40.4
         ]
       ],
+      "dominantWeights": [
+        0.488,
+        0.424,
+        0.088
+      ],
       "colorfulness": 15.7,
+      "chromaShare": 0.362,
+      "keyColor": [
+        51.4,
+        31.4,
+        21.2
+      ],
       "phash": "c1230e39dbacb9d2",
       "ahash": "0020fff7ec693a3c",
       "dhash": "d3cec686889bb4f0"
@@ -2514,7 +3212,18 @@
           23.5
         ]
       ],
+      "dominantWeights": [
+        0.416,
+        0.383,
+        0.2
+      ],
       "colorfulness": 12.7,
+      "chromaShare": 0.867,
+      "keyColor": [
+        51.2,
+        21,
+        17.3
+      ],
       "phash": "89f707a35876838e",
       "ahash": "0c6b7fdcdb6f0418",
       "dhash": "9bcac991b3dbf9f3"
@@ -2551,7 +3260,18 @@
           26.1
         ]
       ],
+      "dominantWeights": [
+        0.413,
+        0.354,
+        0.233
+      ],
       "colorfulness": 24.5,
+      "chromaShare": 0.842,
+      "keyColor": [
+        66.9,
+        -10.9,
+        38.9
+      ],
       "phash": "919dee09d89133f2",
       "ahash": "dff3671f4d0262e0",
       "dhash": "5367cdb2bb9ec689"
@@ -2588,7 +3308,18 @@
           31.3
         ]
       ],
+      "dominantWeights": [
+        0.384,
+        0.35,
+        0.266
+      ],
       "colorfulness": 19,
+      "chromaShare": 0.728,
+      "keyColor": [
+        53.6,
+        34.8,
+        24.1
+      ],
       "phash": "a58f80c34acfb13e",
       "ahash": "3f070700846f3340",
       "dhash": "e3ef3e7b3cdc6387"
@@ -2625,7 +3356,18 @@
           31.3
         ]
       ],
+      "dominantWeights": [
+        0.436,
+        0.37,
+        0.194
+      ],
       "colorfulness": 15.3,
+      "chromaShare": 0.577,
+      "keyColor": [
+        52.6,
+        17.7,
+        21.8
+      ],
       "phash": "edb1144ea1b29d2b",
       "ahash": "ffffefeff1100000",
       "dhash": "b2ba1b9f436624ae"
@@ -2662,7 +3404,18 @@
           -10.6
         ]
       ],
+      "dominantWeights": [
+        0.678,
+        0.262,
+        0.06
+      ],
       "colorfulness": 14.6,
+      "chromaShare": 0.695,
+      "keyColor": [
+        53.6,
+        18.4,
+        19.9
+      ],
       "phash": "dfaf635c2f0ec020",
       "ahash": "bfefdf1f989c8c00",
       "dhash": "631a38767430500c"
@@ -2699,7 +3452,18 @@
           -1.3
         ]
       ],
+      "dominantWeights": [
+        0.388,
+        0.355,
+        0.257
+      ],
       "colorfulness": 21.9,
+      "chromaShare": 0.744,
+      "keyColor": [
+        48.5,
+        27.7,
+        -10.2
+      ],
       "phash": "eb919c07a29fd132",
       "ahash": "fff9e8f9e1e080c1",
       "dhash": "72339161cd534527"
@@ -2736,7 +3500,18 @@
           -16
         ]
       ],
+      "dominantWeights": [
+        0.406,
+        0.362,
+        0.231
+      ],
       "colorfulness": 18.8,
+      "chromaShare": 0.973,
+      "keyColor": [
+        54.2,
+        40.4,
+        -37.2
+      ],
       "phash": "e28dc6d3e01c9e33",
       "ahash": "fff383c1e1e5c0c0",
       "dhash": "e6272797dd9d8d8d"
@@ -2773,7 +3548,18 @@
           51
         ]
       ],
+      "dominantWeights": [
+        0.549,
+        0.254,
+        0.197
+      ],
       "colorfulness": 23,
+      "chromaShare": 0.527,
+      "keyColor": [
+        74.1,
+        8.2,
+        45.5
+      ],
       "phash": "b6e53a8ce5345a52",
       "ahash": "f3fffeef7c1c0404",
       "dhash": "06020856d5313d1d"
@@ -2810,7 +3596,18 @@
           -28.8
         ]
       ],
+      "dominantWeights": [
+        0.445,
+        0.314,
+        0.241
+      ],
       "colorfulness": 30.7,
+      "chromaShare": 0.803,
+      "keyColor": [
+        50.4,
+        46.8,
+        -25.9
+      ],
       "phash": "f46ea2c70484df2d",
       "ahash": "67c1000000fcffff",
       "dhash": "c50f37945460d494"
@@ -2849,7 +3646,18 @@
           14.2
         ]
       ],
+      "dominantWeights": [
+        0.419,
+        0.332,
+        0.248
+      ],
       "colorfulness": 25.6,
+      "chromaShare": 0.807,
+      "keyColor": [
+        77.3,
+        -4.3,
+        41.9
+      ],
       "phash": "853d7229b71c92b5",
       "ahash": "0221393b3b3b7b77",
       "dhash": "eee3eae2e2e3d7c5"
@@ -2888,7 +3696,14 @@
           0.8
         ]
       ],
+      "dominantWeights": [
+        0.548,
+        0.34,
+        0.112
+      ],
       "colorfulness": 1.7,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "81f461c11a8afe6f",
       "ahash": "7e62371f3e7e7b66",
       "dhash": "98866cf8d8d6caca"
@@ -2925,7 +3740,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.414,
+        0.307,
+        0.279
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ca9b70d4a3e0b5e1",
       "ahash": "ff0c1d3d3df4f0e0",
       "dhash": "997979e9eba4a585"
@@ -2962,7 +3784,18 @@
           14.9
         ]
       ],
+      "dominantWeights": [
+        0.492,
+        0.261,
+        0.247
+      ],
       "colorfulness": 9.3,
+      "chromaShare": 0.114,
+      "keyColor": [
+        43.5,
+        18.1,
+        9
+      ],
       "phash": "bbe80e9f004c7f52",
       "ahash": "1fcfc3074faf0707",
       "dhash": "331e1fbed94b2b2d"
@@ -2999,7 +3832,18 @@
           0.3
         ]
       ],
+      "dominantWeights": [
+        0.413,
+        0.323,
+        0.264
+      ],
       "colorfulness": 6,
+      "chromaShare": 0.176,
+      "keyColor": [
+        38.5,
+        15.3,
+        0.5
+      ],
       "phash": "b0262739cb6c9ecc",
       "ahash": "070717074f4f031f",
       "dhash": "dfdfa5979b9986fc"
@@ -3036,7 +3880,18 @@
           -3.6
         ]
       ],
+      "dominantWeights": [
+        0.448,
+        0.43,
+        0.122
+      ],
       "colorfulness": 7.5,
+      "chromaShare": 0.749,
+      "keyColor": [
+        56.6,
+        5,
+        -18.6
+      ],
       "phash": "e11abe254d5ba4ac",
       "ahash": "00067c68e2e3efff",
       "dhash": "b7accdc98a8e8ab7"
@@ -3073,7 +3928,18 @@
           -3.1
         ]
       ],
+      "dominantWeights": [
+        0.434,
+        0.415,
+        0.151
+      ],
       "colorfulness": 7.3,
+      "chromaShare": 0.195,
+      "keyColor": [
+        61.3,
+        4.5,
+        -18.3
+      ],
       "phash": "bef1c06fac0ec056",
       "ahash": "ffcf1f171b191919",
       "dhash": "7351557777717131"
@@ -3110,7 +3976,18 @@
           3.3
         ]
       ],
+      "dominantWeights": [
+        0.391,
+        0.348,
+        0.261
+      ],
       "colorfulness": 14.7,
+      "chromaShare": 0.827,
+      "keyColor": [
+        52.9,
+        31,
+        2.4
+      ],
       "phash": "f83f45f058ae416c",
       "ahash": "8889018dcce8f778",
       "dhash": "191b0b39198aab83"
@@ -3147,7 +4024,18 @@
           4
         ]
       ],
+      "dominantWeights": [
+        0.385,
+        0.366,
+        0.248
+      ],
       "colorfulness": 14.7,
+      "chromaShare": 0.589,
+      "keyColor": [
+        39.2,
+        23.5,
+        17.9
+      ],
       "phash": "eb6a90e1969497b2",
       "ahash": "e9818181c1e3c1ff",
       "dhash": "13130b332b031333"
@@ -3186,7 +4074,14 @@
           -1
         ]
       ],
+      "dominantWeights": [
+        0.666,
+        0.183,
+        0.151
+      ],
       "colorfulness": 1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "c13342ceb9264f5d",
       "ahash": "007c00c7fb707078",
       "dhash": "cce8869e92e2e5d2"
@@ -3223,7 +4118,18 @@
           43.3
         ]
       ],
+      "dominantWeights": [
+        0.56,
+        0.363,
+        0.077
+      ],
       "colorfulness": 21.8,
+      "chromaShare": 0.38,
+      "keyColor": [
+        40.2,
+        54.5,
+        39.6
+      ],
       "phash": "974a3129c7d38e9c",
       "ahash": "00003c3e3f1f0f07",
       "dhash": "ce3168646c777e6e"
@@ -3260,7 +4166,18 @@
           60.4
         ]
       ],
+      "dominantWeights": [
+        0.717,
+        0.249,
+        0.034
+      ],
       "colorfulness": 20.8,
+      "chromaShare": 0.451,
+      "keyColor": [
+        62,
+        -32.1,
+        32.4
+      ],
       "phash": "a5d22d41ae5968af",
       "ahash": "f347874733030383",
       "dhash": "079d1f97e6925627"
@@ -3297,7 +4214,14 @@
           1
         ]
       ],
+      "dominantWeights": [
+        0.557,
+        0.234,
+        0.209
+      ],
       "colorfulness": 1.9,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "94b523da1f1b7831",
       "ahash": "0ee7c3bf9edc7e3a",
       "dhash": "3ace9e663ab4c4e2"
@@ -3336,7 +4260,18 @@
           3.9
         ]
       ],
+      "dominantWeights": [
+        0.661,
+        0.246,
+        0.092
+      ],
       "colorfulness": 9.4,
+      "chromaShare": 0.596,
+      "keyColor": [
+        68.9,
+        -10.9,
+        9.4
+      ],
       "phash": "b2b138ce87c68f38",
       "ahash": "cfcfcfaf0f3d450f",
       "dhash": "9b991b49ddc5959d"
@@ -3375,7 +4310,18 @@
           1.4
         ]
       ],
+      "dominantWeights": [
+        0.493,
+        0.354,
+        0.153
+      ],
       "colorfulness": 13.3,
+      "chromaShare": 0.314,
+      "keyColor": [
+        55.8,
+        21.5,
+        20
+      ],
       "phash": "d555ba0e22e46e9a",
       "ahash": "fe3ef6421012ffff",
       "dhash": "5cf0868ee666868e"
@@ -3414,7 +4360,18 @@
           5.9
         ]
       ],
+      "dominantWeights": [
+        0.432,
+        0.328,
+        0.24
+      ],
       "colorfulness": 6,
+      "chromaShare": 0.296,
+      "keyColor": [
+        41.2,
+        12.4,
+        7
+      ],
       "phash": "e9ad994c948ba752",
       "ahash": "ffc9a30b00b0f8fe",
       "dhash": "33134fb321633138"
@@ -3453,7 +4410,18 @@
           2.3
         ]
       ],
+      "dominantWeights": [
+        0.438,
+        0.292,
+        0.27
+      ],
       "colorfulness": 14.7,
+      "chromaShare": 0.509,
+      "keyColor": [
+        56.6,
+        27.2,
+        8.3
+      ],
       "phash": "e363a352da3252da",
       "ahash": "e0e0e0e0fcfcffff",
       "dhash": "09ca4a4670a88bdb"
@@ -3490,7 +4458,18 @@
           29.6
         ]
       ],
+      "dominantWeights": [
+        0.517,
+        0.248,
+        0.235
+      ],
       "colorfulness": 13.9,
+      "chromaShare": 0.315,
+      "keyColor": [
+        71.5,
+        -1.8,
+        28.2
+      ],
       "phash": "89b0336d339b6696",
       "ahash": "435b5f595b1b1b0e",
       "dhash": "93b2b2b2b2b2b2f8"
@@ -3527,7 +4506,18 @@
           -3.6
         ]
       ],
+      "dominantWeights": [
+        0.602,
+        0.292,
+        0.106
+      ],
       "colorfulness": 10.4,
+      "chromaShare": 0.249,
+      "keyColor": [
+        71.4,
+        -1.5,
+        24.7
+      ],
       "phash": "88f4c41be5cc1de3",
       "ahash": "ffcffffb0f0f3979",
       "dhash": "f79eb2d31bb9f393"
@@ -3564,7 +4554,18 @@
           2.2
         ]
       ],
+      "dominantWeights": [
+        0.355,
+        0.337,
+        0.308
+      ],
       "colorfulness": 26.6,
+      "chromaShare": 0.68,
+      "keyColor": [
+        58.3,
+        45.3,
+        2.5
+      ],
       "phash": "a7962d677e22f420",
       "ahash": "273f7fbd28300313",
       "dhash": "6dce9569cae6c3b3"
@@ -3603,7 +4604,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.431,
+        0.403,
+        0.166
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "98011c7e4fa166f7",
       "ahash": "000f7f7ff8cd9f10",
       "dhash": "31b497d3283931b3"
@@ -3642,7 +4650,14 @@
           -1.7
         ]
       ],
+      "dominantWeights": [
+        0.411,
+        0.38,
+        0.209
+      ],
       "colorfulness": 1.7,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8b9c1ccac84bc2fe",
       "ahash": "3996ec69fd6d081a",
       "dhash": "713659d9d1c95952"
@@ -3681,7 +4696,18 @@
           21.9
         ]
       ],
+      "dominantWeights": [
+        0.452,
+        0.45,
+        0.099
+      ],
       "colorfulness": 19.3,
+      "chromaShare": 0.427,
+      "keyColor": [
+        39.8,
+        34.2,
+        17.3
+      ],
       "phash": "fc8431392e6c586f",
       "ahash": "17fffef888888080",
       "dhash": "b769243523383a4d"
@@ -3718,7 +4744,18 @@
           -7.7
         ]
       ],
+      "dominantWeights": [
+        0.499,
+        0.252,
+        0.248
+      ],
       "colorfulness": 9.1,
+      "chromaShare": 0.246,
+      "keyColor": [
+        51,
+        5,
+        -15.9
+      ],
       "phash": "8472c22f86f73f84",
       "ahash": "6440de9613017f7f",
       "dhash": "cd91bc2c7677c39c"
@@ -3755,7 +4792,18 @@
           -5.5
         ]
       ],
+      "dominantWeights": [
+        0.399,
+        0.365,
+        0.236
+      ],
       "colorfulness": 15.1,
+      "chromaShare": 0.419,
+      "keyColor": [
+        68.2,
+        -7.7,
+        24.2
+      ],
       "phash": "da511656c57a291f",
       "ahash": "04fc9fff770084ff",
       "dhash": "2c481b81d4152d2d"
@@ -3792,7 +4840,18 @@
           -7.7
         ]
       ],
+      "dominantWeights": [
+        0.436,
+        0.292,
+        0.272
+      ],
       "colorfulness": 23.6,
+      "chromaShare": 0.616,
+      "keyColor": [
+        51.6,
+        16.4,
+        -43
+      ],
       "phash": "a40f7f7b38662452",
       "ahash": "003f7773dbc3e202",
       "dhash": "7362e6a6b2ae8e8e"
@@ -3829,7 +4888,18 @@
           -2.2
         ]
       ],
+      "dominantWeights": [
+        0.669,
+        0.183,
+        0.148
+      ],
       "colorfulness": 14.9,
+      "chromaShare": 0.824,
+      "keyColor": [
+        76.2,
+        6.7,
+        21.1
+      ],
       "phash": "f5e9225654ad895a",
       "ahash": "c6fbf9faf8c08200",
       "dhash": "8e92531200080eca"
@@ -3866,7 +4936,14 @@
           -2.6
         ]
       ],
+      "dominantWeights": [
+        0.548,
+        0.282,
+        0.17
+      ],
       "colorfulness": 2.9,
+      "chromaShare": 0.001,
+      "keyColor": null,
       "phash": "bfe44b1a87683507",
       "ahash": "81fffbc73700082d",
       "dhash": "53b4168f6c551169"
@@ -3906,7 +4983,14 @@
           -0.8
         ]
       ],
+      "dominantWeights": [
+        0.643,
+        0.217,
+        0.14
+      ],
       "colorfulness": 1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "b54b9ab6506d8af0",
       "ahash": "0b6ff9c0c627c37f",
       "dhash": "72de33aa8e4eb69e"
@@ -3945,7 +5029,14 @@
           -2.8
         ]
       ],
+      "dominantWeights": [
+        0.489,
+        0.39,
+        0.122
+      ],
       "colorfulness": 2.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ee88942a5fe5d891",
       "ahash": "ff7ffff18181a200",
       "dhash": "e5ad96673509466c"
@@ -3984,7 +5075,18 @@
           -12.6
         ]
       ],
+      "dominantWeights": [
+        0.392,
+        0.315,
+        0.293
+      ],
       "colorfulness": 14.3,
+      "chromaShare": 0.857,
+      "keyColor": [
+        50.5,
+        38.4,
+        -10.7
+      ],
       "phash": "c08f7fc038e70db1",
       "ahash": "3f3f3b717d78c080",
       "dhash": "f5e8e2e5e5c30e1b"
@@ -4023,7 +5125,18 @@
           10.9
         ]
       ],
+      "dominantWeights": [
+        0.477,
+        0.313,
+        0.21
+      ],
       "colorfulness": 20.8,
+      "chromaShare": 0.417,
+      "keyColor": [
+        62.8,
+        36.7,
+        12.5
+      ],
       "phash": "ae7b5b868471d066",
       "ahash": "81008193b7b7a3ff",
       "dhash": "75650d4767676f67"
@@ -4062,7 +5175,18 @@
           6.4
         ]
       ],
+      "dominantWeights": [
+        0.631,
+        0.33,
+        0.039
+      ],
       "colorfulness": 7.7,
+      "chromaShare": 0.207,
+      "keyColor": [
+        73.8,
+        -6.6,
+        -13.4
+      ],
       "phash": "9bfc063f0723166c",
       "ahash": "009fdf2bffaf2b08",
       "dhash": "f63532da72595bf8"
@@ -4099,7 +5223,14 @@
           2.2
         ]
       ],
+      "dominantWeights": [
+        0.58,
+        0.281,
+        0.139
+      ],
       "colorfulness": 3.8,
+      "chromaShare": 0.002,
+      "keyColor": null,
       "phash": "af8f902dc730c9c9",
       "ahash": "339fffa7330387ff",
       "dhash": "6636a14d626234d8"
@@ -4136,7 +5267,18 @@
           46.1
         ]
       ],
+      "dominantWeights": [
+        0.674,
+        0.232,
+        0.094
+      ],
       "colorfulness": 27.9,
+      "chromaShare": 0.409,
+      "keyColor": [
+        48.7,
+        44.9,
+        31.9
+      ],
       "phash": "abd2381f6e639258",
       "ahash": "08fffd20392fc1c3",
       "dhash": "59f2c945434a5353"
@@ -4175,7 +5317,18 @@
           1.3
         ]
       ],
+      "dominantWeights": [
+        0.513,
+        0.313,
+        0.174
+      ],
       "colorfulness": 5.6,
+      "chromaShare": 0.045,
+      "keyColor": [
+        84.7,
+        9.8,
+        8.5
+      ],
       "phash": "8a78e79fad0a940e",
       "ahash": "bfc500001e3c3d3f",
       "dhash": "6f8db1bb6d6d696b"
@@ -4214,7 +5367,18 @@
           2.8
         ]
       ],
+      "dominantWeights": [
+        0.395,
+        0.338,
+        0.267
+      ],
       "colorfulness": 4.8,
+      "chromaShare": 0.044,
+      "keyColor": [
+        80.9,
+        1.4,
+        17.8
+      ],
       "phash": "bf7f41e3c4c48681",
       "ahash": "8000019fbfa7ffff",
       "dhash": "4b5b6b266f4f5f56"
@@ -4251,7 +5415,18 @@
           7.4
         ]
       ],
+      "dominantWeights": [
+        0.457,
+        0.363,
+        0.18
+      ],
       "colorfulness": 9.9,
+      "chromaShare": 0.333,
+      "keyColor": [
+        65.2,
+        -4.3,
+        23
+      ],
       "phash": "ec9a653dd2a18dc4",
       "ahash": "b91139ffff0300f0",
       "dhash": "7375f7f8a42286e6"
@@ -4288,7 +5463,18 @@
           30.4
         ]
       ],
+      "dominantWeights": [
+        0.399,
+        0.346,
+        0.255
+      ],
       "colorfulness": 24.4,
+      "chromaShare": 0.719,
+      "keyColor": [
+        44.1,
+        37.4,
+        33.9
+      ],
       "phash": "a2dee44af7383232",
       "ahash": "363f070f07014367",
       "dhash": "6464fdd7fbddd7de"
@@ -4325,7 +5511,18 @@
           23.5
         ]
       ],
+      "dominantWeights": [
+        0.392,
+        0.323,
+        0.285
+      ],
       "colorfulness": 20.5,
+      "chromaShare": 0.668,
+      "keyColor": [
+        63.1,
+        13.2,
+        28.1
+      ],
       "phash": "9e6edc4b4a1b3330",
       "ahash": "10ff060ce5249edf",
       "dhash": "21262e7dcd6c3038"
@@ -4362,7 +5559,18 @@
           44.1
         ]
       ],
+      "dominantWeights": [
+        0.387,
+        0.319,
+        0.294
+      ],
       "colorfulness": 22.9,
+      "chromaShare": 0.962,
+      "keyColor": [
+        56.8,
+        33.1,
+        22.1
+      ],
       "phash": "cca39e349378e127",
       "ahash": "ffbff2f830d090bc",
       "dhash": "2866c252c2962664"
@@ -4401,7 +5609,18 @@
           2.5
         ]
       ],
+      "dominantWeights": [
+        0.42,
+        0.399,
+        0.181
+      ],
       "colorfulness": 8.3,
+      "chromaShare": 0.201,
+      "keyColor": [
+        89.1,
+        5.8,
+        -14.1
+      ],
       "phash": "9cfc23dd54903b51",
       "ahash": "defb8f54fafb1f00",
       "dhash": "36232ba5b422f6db"
@@ -4438,7 +5657,18 @@
           5.6
         ]
       ],
+      "dominantWeights": [
+        0.59,
+        0.234,
+        0.176
+      ],
       "colorfulness": 26.4,
+      "chromaShare": 0.71,
+      "keyColor": [
+        58.8,
+        43.7,
+        34.4
+      ],
       "phash": "87c37e8b698b6183",
       "ahash": "283e7f7f7f3f1f00",
       "dhash": "4be4c2f2d3de6524"
@@ -4475,7 +5705,18 @@
           0.7
         ]
       ],
+      "dominantWeights": [
+        0.44,
+        0.308,
+        0.251
+      ],
       "colorfulness": 14.8,
+      "chromaShare": 0.457,
+      "keyColor": [
+        67.4,
+        1.2,
+        25.7
+      ],
       "phash": "f0b8a2c7c74f2a0e",
       "ahash": "ffdfcfc870e00004",
       "dhash": "849cb010844de989"
@@ -4512,7 +5753,18 @@
           -4.8
         ]
       ],
+      "dominantWeights": [
+        0.487,
+        0.466,
+        0.046
+      ],
       "colorfulness": 11.1,
+      "chromaShare": 0.221,
+      "keyColor": [
+        33.7,
+        32.1,
+        -4.4
+      ],
       "phash": "b9fb576628384654",
       "ahash": "39ffdd0f41610808",
       "dhash": "535a39bbb3eb5272"
@@ -4549,7 +5801,18 @@
           -13.7
         ]
       ],
+      "dominantWeights": [
+        0.434,
+        0.406,
+        0.16
+      ],
       "colorfulness": 22.8,
+      "chromaShare": 0.707,
+      "keyColor": [
+        49.4,
+        45.3,
+        -2.4
+      ],
       "phash": "9b92252d1b9a78d3",
       "ahash": "1e3cec8c0c113878",
       "dhash": "7c5999395933e3d3"
@@ -4586,7 +5849,18 @@
           -13
         ]
       ],
+      "dominantWeights": [
+        0.441,
+        0.327,
+        0.232
+      ],
       "colorfulness": 3.5,
+      "chromaShare": 0.942,
+      "keyColor": [
+        61,
+        -1.4,
+        -18.2
+      ],
       "phash": "8b842fec7fe21b20",
       "ahash": "103f3cfcff3d7000",
       "dhash": "76e2f92972fbe55b"
@@ -4625,7 +5899,18 @@
           78.7
         ]
       ],
+      "dominantWeights": [
+        0.412,
+        0.313,
+        0.275
+      ],
       "colorfulness": 37.1,
+      "chromaShare": 0.561,
+      "keyColor": [
+        76.7,
+        -6.4,
+        70.9
+      ],
       "phash": "9ccfa338446cc357",
       "ahash": "fffffeda18c00102",
       "dhash": "4a5958b4b494979e"
@@ -4665,7 +5950,18 @@
           -29.7
         ]
       ],
+      "dominantWeights": [
+        0.451,
+        0.421,
+        0.128
+      ],
       "colorfulness": 13.6,
+      "chromaShare": 0.248,
+      "keyColor": [
+        65.4,
+        -1.3,
+        -29.8
+      ],
       "phash": "b387cf227ec984c4",
       "ahash": "272f3f0f06070f3f",
       "dhash": "4feaba588c8cdaf2"
@@ -4702,7 +5998,18 @@
           2.4
         ]
       ],
+      "dominantWeights": [
+        0.389,
+        0.385,
+        0.226
+      ],
       "colorfulness": 21.3,
+      "chromaShare": 0.8,
+      "keyColor": [
+        72.5,
+        -2.9,
+        36.5
+      ],
       "phash": "8aba5ad23c42b6cb",
       "ahash": "d5f93f777f7e3818",
       "dhash": "ad4b6baeebece973"
@@ -4741,7 +6048,18 @@
           12.2
         ]
       ],
+      "dominantWeights": [
+        0.368,
+        0.326,
+        0.305
+      ],
       "colorfulness": 14.5,
+      "chromaShare": 0.394,
+      "keyColor": [
+        60.8,
+        -2.5,
+        23.2
+      ],
       "phash": "cba05aebb4c2e03d",
       "ahash": "fd9800fffbc88898",
       "dhash": "8933d7c606337131"
@@ -4780,7 +6098,18 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.434,
+        0.341,
+        0.225
+      ],
       "colorfulness": 3.7,
+      "chromaShare": 0.002,
+      "keyColor": [
+        85.2,
+        -3.8,
+        -10
+      ],
       "phash": "9c9f0857207b38ee",
       "ahash": "1cbfff8f9c0cf051",
       "dhash": "a8683159243804b7"
@@ -4819,7 +6148,18 @@
           -6.3
         ]
       ],
+      "dominantWeights": [
+        0.399,
+        0.393,
+        0.208
+      ],
       "colorfulness": 11.8,
+      "chromaShare": 0.283,
+      "keyColor": [
+        41.8,
+        23.4,
+        16.4
+      ],
       "phash": "a582752f4a747d92",
       "ahash": "6e7e7f7f3d838200",
       "dhash": "dccc8ec5d9262616"
@@ -4856,7 +6196,18 @@
           21.9
         ]
       ],
+      "dominantWeights": [
+        0.494,
+        0.376,
+        0.13
+      ],
       "colorfulness": 16.4,
+      "chromaShare": 0.987,
+      "keyColor": [
+        40.5,
+        41.6,
+        27.9
+      ],
       "phash": "e5b1da4e1e35a524",
       "ahash": "fcef63a330b01058",
       "dhash": "71dede566763f3d1"
@@ -4893,7 +6244,18 @@
           9.1
         ]
       ],
+      "dominantWeights": [
+        0.528,
+        0.331,
+        0.141
+      ],
       "colorfulness": 7.2,
+      "chromaShare": 0.107,
+      "keyColor": [
+        38.4,
+        11.7,
+        8.2
+      ],
       "phash": "cf0b693326f4234b",
       "ahash": "00387c3e24e0f8f8",
       "dhash": "2373e064c92820a2"
@@ -4932,7 +6294,18 @@
           9.3
         ]
       ],
+      "dominantWeights": [
+        0.458,
+        0.272,
+        0.27
+      ],
       "colorfulness": 26.4,
+      "chromaShare": 0.476,
+      "keyColor": [
+        52.5,
+        51,
+        0.6
+      ],
       "phash": "da889c7743a643c7",
       "ahash": "ffdfffff00001600",
       "dhash": "2533b18d484c2c34"
@@ -4969,7 +6342,18 @@
           22.9
         ]
       ],
+      "dominantWeights": [
+        0.452,
+        0.341,
+        0.207
+      ],
       "colorfulness": 21.8,
+      "chromaShare": 0.831,
+      "keyColor": [
+        58.7,
+        9,
+        -23.2
+      ],
       "phash": "b3b8daf246675013",
       "ahash": "cfcfc30067efac3c",
       "dhash": "1e199e0ecf1c4c69"
@@ -5006,7 +6390,18 @@
           2.9
         ]
       ],
+      "dominantWeights": [
+        0.61,
+        0.215,
+        0.175
+      ],
       "colorfulness": 18.4,
+      "chromaShare": 0.527,
+      "keyColor": [
+        55.6,
+        36.7,
+        19.3
+      ],
       "phash": "9f3f90d03b0fc522",
       "ahash": "0f0f03018dfebfff",
       "dhash": "7c3a63636d246478"
@@ -5046,7 +6441,18 @@
           32.9
         ]
       ],
+      "dominantWeights": [
+        0.585,
+        0.37,
+        0.045
+      ],
       "colorfulness": 10.9,
+      "chromaShare": 0.168,
+      "keyColor": [
+        50.5,
+        27.4,
+        21.1
+      ],
       "phash": "d0e261991c9e27fc",
       "ahash": "6466e09ede1f9c00",
       "dhash": "cc8ccd74b0d33132"
@@ -5086,7 +6492,18 @@
           5.9
         ]
       ],
+      "dominantWeights": [
+        0.372,
+        0.367,
+        0.261
+      ],
       "colorfulness": 9.9,
+      "chromaShare": 0.626,
+      "keyColor": [
+        44.7,
+        13.8,
+        15.5
+      ],
       "phash": "b9f013f8dc8d8e90",
       "ahash": "cfc73fdbc31b0b01",
       "dhash": "1b9fc53236335bb9"
@@ -5123,7 +6540,18 @@
           8.6
         ]
       ],
+      "dominantWeights": [
+        0.39,
+        0.314,
+        0.296
+      ],
       "colorfulness": 15.5,
+      "chromaShare": 0.299,
+      "keyColor": [
+        49.1,
+        37.7,
+        22.3
+      ],
       "phash": "923cd2947fd9f022",
       "ahash": "8e1e4eb8017f7cec",
       "dhash": "3cacb57267a8d948"
@@ -5160,7 +6588,18 @@
           9.3
         ]
       ],
+      "dominantWeights": [
+        0.417,
+        0.32,
+        0.263
+      ],
       "colorfulness": 17,
+      "chromaShare": 0.741,
+      "keyColor": [
+        50.9,
+        20.9,
+        25.1
+      ],
       "phash": "fac7afe0908d8c34",
       "ahash": "fff5148ccccc8000",
       "dhash": "334d74389c993b19"
@@ -5197,7 +6636,18 @@
           8.6
         ]
       ],
+      "dominantWeights": [
+        0.345,
+        0.33,
+        0.325
+      ],
       "colorfulness": 12.8,
+      "chromaShare": 0.591,
+      "keyColor": [
+        42.4,
+        19.3,
+        7
+      ],
       "phash": "b58b60eae442decc",
       "ahash": "0f0f1e0e8f8fc2c2",
       "dhash": "3f1a585c3a188c8e"
@@ -5236,7 +6686,14 @@
           -4.4
         ]
       ],
+      "dominantWeights": [
+        0.397,
+        0.333,
+        0.27
+      ],
       "colorfulness": 2.8,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ce781a453c52676b",
       "ahash": "00fdf997b3763409",
       "dhash": "ac310b255644c979"
@@ -5275,7 +6732,18 @@
           -15.5
         ]
       ],
+      "dominantWeights": [
+        0.431,
+        0.357,
+        0.212
+      ],
       "colorfulness": 30.4,
+      "chromaShare": 0.91,
+      "keyColor": [
+        44,
+        39.9,
+        32.2
+      ],
       "phash": "b58f9ce0a1501dfa",
       "ahash": "ffbf1c68e1c08486",
       "dhash": "3e6e74909b901c3c"
@@ -5314,7 +6782,18 @@
           34.6
         ]
       ],
+      "dominantWeights": [
+        0.582,
+        0.346,
+        0.072
+      ],
       "colorfulness": 17.8,
+      "chromaShare": 0.771,
+      "keyColor": [
+        62.4,
+        -18,
+        21.1
+      ],
       "phash": "df84f0c90f4bb458",
       "ahash": "ffffe6b0b2ece0c0",
       "dhash": "b2cc8c6a66998908"
@@ -5351,7 +6830,18 @@
           22.6
         ]
       ],
+      "dominantWeights": [
+        0.542,
+        0.233,
+        0.225
+      ],
       "colorfulness": 12.5,
+      "chromaShare": 0.294,
+      "keyColor": [
+        61.3,
+        7,
+        23.6
+      ],
       "phash": "9ec43b43619b7d11",
       "ahash": "f6969ede00ac8d85",
       "dhash": "26a6a4a4d6594959"
@@ -5390,7 +6880,18 @@
           0.6
         ]
       ],
+      "dominantWeights": [
+        0.371,
+        0.322,
+        0.307
+      ],
       "colorfulness": 12.8,
+      "chromaShare": 0.522,
+      "keyColor": [
+        44.3,
+        12.8,
+        17.2
+      ],
       "phash": "94fac0eab81addb0",
       "ahash": "f7771e0e873a363e",
       "dhash": "85c6b63cae62c4e6"
@@ -5430,7 +6931,18 @@
           16.7
         ]
       ],
+      "dominantWeights": [
+        0.49,
+        0.265,
+        0.245
+      ],
       "colorfulness": 11.1,
+      "chromaShare": 0.177,
+      "keyColor": [
+        62,
+        -7.5,
+        27.2
+      ],
       "phash": "898705da17ca7c1f",
       "ahash": "7f7f7fff0fd91000",
       "dhash": "f3f6d78b5c31f39c"
@@ -5467,7 +6979,18 @@
           26.8
         ]
       ],
+      "dominantWeights": [
+        0.485,
+        0.391,
+        0.125
+      ],
       "colorfulness": 13.6,
+      "chromaShare": 0.455,
+      "keyColor": [
+        50.8,
+        12.7,
+        -11.4
+      ],
       "phash": "aa81355835e7c6d9",
       "ahash": "ef7b777318708003",
       "dhash": "1ed7c7c7b1ad0136"
@@ -5504,7 +7027,18 @@
           28.1
         ]
       ],
+      "dominantWeights": [
+        0.641,
+        0.189,
+        0.169
+      ],
       "colorfulness": 12,
+      "chromaShare": 0.419,
+      "keyColor": [
+        74.9,
+        -6.6,
+        26
+      ],
       "phash": "cdd23a25d9629f03",
       "ahash": "7fffffff60000009",
       "dhash": "f0a3e883c2d6c7b2"
@@ -5541,7 +7075,18 @@
           5
         ]
       ],
+      "dominantWeights": [
+        0.432,
+        0.343,
+        0.225
+      ],
       "colorfulness": 21.4,
+      "chromaShare": 0.543,
+      "keyColor": [
+        76.2,
+        -3,
+        39.7
+      ],
       "phash": "be3ce1e389e286c2",
       "ahash": "838195999dbde5bf",
       "dhash": "1333253171696963"
@@ -5580,7 +7125,14 @@
           1.1
         ]
       ],
+      "dominantWeights": [
+        0.654,
+        0.274,
+        0.073
+      ],
       "colorfulness": 3.2,
+      "chromaShare": 0.003,
+      "keyColor": null,
       "phash": "b1c34eccce3c293a",
       "ahash": "ffefcfefdfcf8000",
       "dhash": "6299999a989a3b29"
@@ -5617,7 +7169,18 @@
           20.2
         ]
       ],
+      "dominantWeights": [
+        0.393,
+        0.327,
+        0.28
+      ],
       "colorfulness": 26.9,
+      "chromaShare": 0.888,
+      "keyColor": [
+        44.6,
+        43.8,
+        13.8
+      ],
       "phash": "f110af6bd9391435",
       "ahash": "effd06f8e0e081ff",
       "dhash": "9b29a49880090b16"
@@ -5657,7 +7220,18 @@
           -0.6
         ]
       ],
+      "dominantWeights": [
+        0.652,
+        0.188,
+        0.16
+      ],
       "colorfulness": 2.8,
+      "chromaShare": 0.009,
+      "keyColor": [
+        78,
+        5.6,
+        13.9
+      ],
       "phash": "ae8de1d21aa53a69",
       "ahash": "ffff010100e7e381",
       "dhash": "a8405763198dce17"
@@ -5694,7 +7268,18 @@
           43.3
         ]
       ],
+      "dominantWeights": [
+        0.444,
+        0.397,
+        0.159
+      ],
       "colorfulness": 22.2,
+      "chromaShare": 0.715,
+      "keyColor": [
+        75.9,
+        -2.9,
+        49.1
+      ],
       "phash": "dd6d36347093a2c9",
       "ahash": "00383878babebebe",
       "dhash": "6672625252647270"
@@ -5733,7 +7318,18 @@
           -1.5
         ]
       ],
+      "dominantWeights": [
+        0.62,
+        0.266,
+        0.114
+      ],
       "colorfulness": 3.4,
+      "chromaShare": 0.002,
+      "keyColor": [
+        91.4,
+        5.2,
+        -11
+      ],
       "phash": "daea09a7a1c40e3f",
       "ahash": "ffc990d6cfbe1c08",
       "dhash": "cd3929341c6c70d3"
@@ -5770,7 +7366,18 @@
           1.1
         ]
       ],
+      "dominantWeights": [
+        0.429,
+        0.295,
+        0.275
+      ],
       "colorfulness": 10.2,
+      "chromaShare": 0.301,
+      "keyColor": [
+        76.1,
+        -15,
+        -10.5
+      ],
       "phash": "8a7927d2b874b964",
       "ahash": "99399999fd3d2601",
       "dhash": "716933333369cc17"
@@ -5809,7 +7416,14 @@
           1.4
         ]
       ],
+      "dominantWeights": [
+        0.418,
+        0.409,
+        0.173
+      ],
       "colorfulness": 4.4,
+      "chromaShare": 0.003,
+      "keyColor": null,
       "phash": "c23d3df0c483beb0",
       "ahash": "8200017cfcfc7d7f",
       "dhash": "0c347be1849999e5"
@@ -5849,7 +7463,18 @@
           0.7
         ]
       ],
+      "dominantWeights": [
+        0.45,
+        0.385,
+        0.165
+      ],
       "colorfulness": 8.1,
+      "chromaShare": 0.07,
+      "keyColor": [
+        80.7,
+        3.4,
+        18.1
+      ],
       "phash": "9f14e213e06fd0cb",
       "ahash": "9e1e1e1a0e0e21ff",
       "dhash": "3c7c787678786b65"
@@ -5889,7 +7514,18 @@
           1.6
         ]
       ],
+      "dominantWeights": [
+        0.511,
+        0.297,
+        0.192
+      ],
       "colorfulness": 4.7,
+      "chromaShare": 0.031,
+      "keyColor": [
+        78.9,
+        7.5,
+        15.5
+      ],
       "phash": "8acfbf19f0d08634",
       "ahash": "fd3d347c402045ff",
       "dhash": "696965c9a5e99587"
@@ -5926,7 +7562,18 @@
           29.9
         ]
       ],
+      "dominantWeights": [
+        0.47,
+        0.391,
+        0.14
+      ],
       "colorfulness": 18.1,
+      "chromaShare": 0.791,
+      "keyColor": [
+        39.5,
+        37.6,
+        17
+      ],
       "phash": "d8af60919ee01ff0",
       "ahash": "ffe1803c3c18c000",
       "dhash": "e28f336179729aa8"
@@ -5965,7 +7612,18 @@
           -2.3
         ]
       ],
+      "dominantWeights": [
+        0.401,
+        0.301,
+        0.298
+      ],
       "colorfulness": 23.8,
+      "chromaShare": 0.733,
+      "keyColor": [
+        53,
+        -24.9,
+        -6.9
+      ],
       "phash": "dababfc140c9cd30",
       "ahash": "ffff9f4040000000",
       "dhash": "1929299194407425"
@@ -6004,7 +7662,18 @@
           15.8
         ]
       ],
+      "dominantWeights": [
+        0.528,
+        0.318,
+        0.154
+      ],
       "colorfulness": 31.1,
+      "chromaShare": 0.677,
+      "keyColor": [
+        42.5,
+        46.6,
+        17.5
+      ],
       "phash": "c299f21fe540c67c",
       "ahash": "3ffef8701000c0f0",
       "dhash": "e858a3c356e9210c"
@@ -6041,7 +7710,18 @@
           -1.5
         ]
       ],
+      "dominantWeights": [
+        0.62,
+        0.298,
+        0.082
+      ],
       "colorfulness": 13.1,
+      "chromaShare": 0.83,
+      "keyColor": [
+        47,
+        -23,
+        3.8
+      ],
       "phash": "d815247bb65c374c",
       "ahash": "005c7cfcfca8d850",
       "dhash": "8cb8b0b07149b1b5"
@@ -6078,7 +7758,18 @@
           31.9
         ]
       ],
+      "dominantWeights": [
+        0.534,
+        0.438,
+        0.029
+      ],
       "colorfulness": 21.2,
+      "chromaShare": 0.816,
+      "keyColor": [
+        64.1,
+        -21.7,
+        -14.2
+      ],
       "phash": "995b60ec2537b632",
       "ahash": "80180c3b1bfffbcf",
       "dhash": "1373287a7332329a"
@@ -6115,7 +7806,18 @@
           -10.6
         ]
       ],
+      "dominantWeights": [
+        0.543,
+        0.265,
+        0.192
+      ],
       "colorfulness": 19.2,
+      "chromaShare": 0.777,
+      "keyColor": [
+        40.1,
+        13,
+        -23.7
+      ],
       "phash": "ab3ec46d9ce295c0",
       "ahash": "81818d818581e1f9",
       "dhash": "615d7d5d755dc341"
@@ -6152,7 +7854,14 @@
           -0.9
         ]
       ],
+      "dominantWeights": [
+        0.598,
+        0.315,
+        0.087
+      ],
       "colorfulness": 1.5,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "914e1ed24dee9256",
       "ahash": "1c1e1ee34ccfff00",
       "dhash": "a874f497d8980f76"
@@ -6191,7 +7900,14 @@
           -1.3
         ]
       ],
+      "dominantWeights": [
+        0.446,
+        0.37,
+        0.184
+      ],
       "colorfulness": 1.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8ddd4f22b2271c47",
       "ahash": "fffbfa974f012300",
       "dhash": "71627226abbf4666"
@@ -6228,7 +7944,18 @@
           28
         ]
       ],
+      "dominantWeights": [
+        0.538,
+        0.406,
+        0.055
+      ],
       "colorfulness": 17.3,
+      "chromaShare": 0.342,
+      "keyColor": [
+        29.8,
+        39.2,
+        24.1
+      ],
       "phash": "cd41e064b43b972f",
       "ahash": "7078381830183dbf",
       "dhash": "c5d2f2f36360f967"
@@ -6265,7 +7992,18 @@
           18.1
         ]
       ],
+      "dominantWeights": [
+        0.734,
+        0.164,
+        0.102
+      ],
       "colorfulness": 19.8,
+      "chromaShare": 0.985,
+      "keyColor": [
+        53.6,
+        0.8,
+        -36.1
+      ],
       "phash": "cd4a32799c78c366",
       "ahash": "08307838382800bf",
       "dhash": "9a6be1f262d2da66"
@@ -6304,7 +8042,14 @@
           3.9
         ]
       ],
+      "dominantWeights": [
+        0.473,
+        0.314,
+        0.213
+      ],
       "colorfulness": 2.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "88f7f5de8400cb69",
       "ahash": "ffff693910100101",
       "dhash": "880fdbf5a5e1d3d3"
@@ -6341,7 +8086,18 @@
           -2.2
         ]
       ],
+      "dominantWeights": [
+        0.449,
+        0.407,
+        0.144
+      ],
       "colorfulness": 4.2,
+      "chromaShare": 0.019,
+      "keyColor": [
+        52.9,
+        1,
+        -12.1
+      ],
       "phash": "8cf9c3b496136c4b",
       "ahash": "fffb100617536f3f",
       "dhash": "3b33333435a7ccc5"
@@ -6380,7 +8136,14 @@
           2.2
         ]
       ],
+      "dominantWeights": [
+        0.353,
+        0.33,
+        0.317
+      ],
       "colorfulness": 1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "957b6a640c972cce",
       "ahash": "00e09e9e1a16ff10",
       "dhash": "a44b3e3e3666dce4"
@@ -6419,7 +8182,18 @@
           8.8
         ]
       ],
+      "dominantWeights": [
+        0.408,
+        0.317,
+        0.275
+      ],
       "colorfulness": 22.2,
+      "chromaShare": 0.607,
+      "keyColor": [
+        59.5,
+        38.2,
+        10.6
+      ],
       "phash": "80eba7397c92393c",
       "ahash": "01737d7c900a7e77",
       "dhash": "cdcee9f9b392d4ee"
@@ -6458,7 +8232,18 @@
           -3.7
         ]
       ],
+      "dominantWeights": [
+        0.553,
+        0.235,
+        0.212
+      ],
       "colorfulness": 27.4,
+      "chromaShare": 0.616,
+      "keyColor": [
+        44.1,
+        37.4,
+        15.1
+      ],
       "phash": "af94ecf2f098f081",
       "ahash": "fd3f3f1d24a911a1",
       "dhash": "6565745549697143"
@@ -6497,7 +8282,18 @@
           2.4
         ]
       ],
+      "dominantWeights": [
+        0.64,
+        0.204,
+        0.156
+      ],
       "colorfulness": 3.4,
+      "chromaShare": 0.019,
+      "keyColor": [
+        59.7,
+        9.4,
+        6.9
+      ],
       "phash": "e19c4a259cf2b966",
       "ahash": "7f7fffff43c3e1e1",
       "dhash": "f9fd9994868a8b8b"
@@ -6536,7 +8332,18 @@
           15.2
         ]
       ],
+      "dominantWeights": [
+        0.429,
+        0.314,
+        0.257
+      ],
       "colorfulness": 11.6,
+      "chromaShare": 0.944,
+      "keyColor": [
+        60,
+        4,
+        29.4
+      ],
       "phash": "854707c1c9b913fd",
       "ahash": "3a30137fff07030f",
       "dhash": "c26666d24ade96bb"
@@ -6573,7 +8380,18 @@
           7.1
         ]
       ],
+      "dominantWeights": [
+        0.611,
+        0.293,
+        0.096
+      ],
       "colorfulness": 13.6,
+      "chromaShare": 0.981,
+      "keyColor": [
+        63.1,
+        31.1,
+        -6.4
+      ],
       "phash": "b30d2c46c9d87d2e",
       "ahash": "000787efefc7c7cf",
       "dhash": "bede1e9a898c8d9b"
@@ -6610,7 +8428,18 @@
           -5.1
         ]
       ],
+      "dominantWeights": [
+        0.339,
+        0.333,
+        0.328
+      ],
       "colorfulness": 12.1,
+      "chromaShare": 0.309,
+      "keyColor": [
+        35.2,
+        7.2,
+        -21.4
+      ],
       "phash": "c22736911fd563ca",
       "ahash": "e4f0f0f0f8fcfcb0",
       "dhash": "4ca5c120b1808020"
@@ -6647,7 +8476,18 @@
           -29.3
         ]
       ],
+      "dominantWeights": [
+        0.349,
+        0.347,
+        0.304
+      ],
       "colorfulness": 30.1,
+      "chromaShare": 0.73,
+      "keyColor": [
+        46.7,
+        -3,
+        -33.5
+      ],
       "phash": "aeee43e260f0f151",
       "ahash": "f1139393018f9f00",
       "dhash": "45677627373f2b6b"
@@ -6684,7 +8524,18 @@
           30.1
         ]
       ],
+      "dominantWeights": [
+        0.454,
+        0.282,
+        0.264
+      ],
       "colorfulness": 16.2,
+      "chromaShare": 0.832,
+      "keyColor": [
+        54.3,
+        26.2,
+        20.6
+      ],
       "phash": "eae7b79818691856",
       "ahash": "e5e5e0e0dcd9e1c0",
       "dhash": "4d4d4301b1114b2d"
@@ -6721,7 +8572,18 @@
           25
         ]
       ],
+      "dominantWeights": [
+        0.408,
+        0.381,
+        0.211
+      ],
       "colorfulness": 16.2,
+      "chromaShare": 0.545,
+      "keyColor": [
+        56.4,
+        -5.8,
+        27.9
+      ],
       "phash": "a0c499d81a7bf3a3",
       "ahash": "ff7fe30303400006",
       "dhash": "bba6ce27b7b60f3a"
@@ -6758,7 +8620,18 @@
           -3.8
         ]
       ],
+      "dominantWeights": [
+        0.491,
+        0.315,
+        0.194
+      ],
       "colorfulness": 6.4,
+      "chromaShare": 0.055,
+      "keyColor": [
+        60,
+        3.8,
+        11
+      ],
       "phash": "dc832aeb3429dc55",
       "ahash": "017ffefffff80000",
       "dhash": "bbc9f09438615384"
@@ -6795,7 +8668,18 @@
           2.3
         ]
       ],
+      "dominantWeights": [
+        0.619,
+        0.26,
+        0.121
+      ],
       "colorfulness": 7.5,
+      "chromaShare": 0.233,
+      "keyColor": [
+        85,
+        -1.8,
+        15.1
+      ],
       "phash": "a4db661d26c6ce70",
       "ahash": "e3ebffff43136343",
       "dhash": "4e5697c4b2a6a686"
@@ -6832,7 +8716,18 @@
           3.1
         ]
       ],
+      "dominantWeights": [
+        0.569,
+        0.308,
+        0.122
+      ],
       "colorfulness": 4,
+      "chromaShare": 0.038,
+      "keyColor": [
+        38.1,
+        12,
+        9.6
+      ],
       "phash": "b2c67c70873971e1",
       "ahash": "c7d7e7a7e7c1c183",
       "dhash": "9d2d2e6d8d991b27"
@@ -6871,7 +8766,14 @@
           -0.4
         ]
       ],
+      "dominantWeights": [
+        0.486,
+        0.398,
+        0.116
+      ],
       "colorfulness": 1.5,
+      "chromaShare": 0.002,
+      "keyColor": null,
       "phash": "96db2e622ec6594c",
       "ahash": "009ffebe96c41610",
       "dhash": "6d5e786c2c8c6475"
@@ -6908,7 +8810,18 @@
           -9.5
         ]
       ],
+      "dominantWeights": [
+        0.404,
+        0.299,
+        0.296
+      ],
       "colorfulness": 25,
+      "chromaShare": 0.75,
+      "keyColor": [
+        42.6,
+        36.9,
+        -6.6
+      ],
       "phash": "bfb549c8d072b20b",
       "ahash": "ef8387e7ff830000",
       "dhash": "0e660e0c262b2bf1"
@@ -6948,7 +8861,18 @@
           27.8
         ]
       ],
+      "dominantWeights": [
+        0.656,
+        0.204,
+        0.14
+      ],
       "colorfulness": 12.1,
+      "chromaShare": 0.244,
+      "keyColor": [
+        78.1,
+        0.9,
+        33.2
+      ],
       "phash": "860efe6c88f3d1e0",
       "ahash": "3f117f3f33fbe1ff",
       "dhash": "e567c4e3f30a8ec5"
@@ -6985,7 +8909,18 @@
           -30.9
         ]
       ],
+      "dominantWeights": [
+        0.45,
+        0.284,
+        0.266
+      ],
       "colorfulness": 31.7,
+      "chromaShare": 0.727,
+      "keyColor": [
+        49.2,
+        22.6,
+        29.4
+      ],
       "phash": "8cb293ea2ed9e292",
       "ahash": "ff9f6f8891d11811",
       "dhash": "3d2edc1737b73333"
@@ -7025,7 +8960,18 @@
           -6.4
         ]
       ],
+      "dominantWeights": [
+        0.625,
+        0.267,
+        0.108
+      ],
       "colorfulness": 3.2,
+      "chromaShare": 0.01,
+      "keyColor": [
+        24.3,
+        1.2,
+        -12
+      ],
       "phash": "bbb0c5cec4c7c90c",
       "ahash": "ff8f8f8f8f8908b8",
       "dhash": "5d3c3a083b3b7151"
@@ -7064,7 +9010,18 @@
           -5
         ]
       ],
+      "dominantWeights": [
+        0.532,
+        0.34,
+        0.128
+      ],
       "colorfulness": 3.2,
+      "chromaShare": 0.012,
+      "keyColor": [
+        76.7,
+        -1.7,
+        -11.3
+      ],
       "phash": "aa228cccb3cff8c8",
       "ahash": "b50505876fd1b8ff",
       "dhash": "6d651d4ddd37631c"
@@ -7103,7 +9060,18 @@
           -3.6
         ]
       ],
+      "dominantWeights": [
+        0.367,
+        0.319,
+        0.314
+      ],
       "colorfulness": 11.9,
+      "chromaShare": 0.259,
+      "keyColor": [
+        61.8,
+        19.4,
+        -13
+      ],
       "phash": "d72fac1561e28e13",
       "ahash": "83061ce00c3efefe",
       "dhash": "4f3e6548587464bc"
@@ -7140,7 +9108,18 @@
           -3.1
         ]
       ],
+      "dominantWeights": [
+        0.492,
+        0.303,
+        0.205
+      ],
       "colorfulness": 19.1,
+      "chromaShare": 0.778,
+      "keyColor": [
+        66.9,
+        0.5,
+        -37.3
+      ],
       "phash": "dedf41c171360c1d",
       "ahash": "f8fc9787fefff800",
       "dhash": "d2292d2d687023b6"
@@ -7179,7 +9158,18 @@
           -5.7
         ]
       ],
+      "dominantWeights": [
+        0.546,
+        0.322,
+        0.132
+      ],
       "colorfulness": 7.4,
+      "chromaShare": 0.555,
+      "keyColor": [
+        74,
+        -7,
+        -16.8
+      ],
       "phash": "d8fda7c792946308",
       "ahash": "efcbc8dcdce85f0d",
       "dhash": "ca13111591cab6f9"
@@ -7216,7 +9206,18 @@
           -19.9
         ]
       ],
+      "dominantWeights": [
+        0.541,
+        0.337,
+        0.122
+      ],
       "colorfulness": 12.6,
+      "chromaShare": 0.99,
+      "keyColor": [
+        63.4,
+        -1.5,
+        -40.4
+      ],
       "phash": "de29e0e1b09ef4d0",
       "ahash": "df001000e4fcfef7",
       "dhash": "37532869492864e4"
@@ -7253,7 +9254,18 @@
           17.9
         ]
       ],
+      "dominantWeights": [
+        0.481,
+        0.296,
+        0.223
+      ],
       "colorfulness": 25.6,
+      "chromaShare": 0.698,
+      "keyColor": [
+        38.3,
+        9.7,
+        -44.6
+      ],
       "phash": "92da3d6cc2bdc924",
       "ahash": "fd0c0c7c701a0707",
       "dhash": "291959cdc5763e4c"
@@ -7292,7 +9304,18 @@
           -10.1
         ]
       ],
+      "dominantWeights": [
+        0.391,
+        0.305,
+        0.304
+      ],
       "colorfulness": 14.4,
+      "chromaShare": 0.535,
+      "keyColor": [
+        51.2,
+        20.1,
+        -17.5
+      ],
       "phash": "c49d3be0bd65ac50",
       "ahash": "5f5c7a3a7e702000",
       "dhash": "b6d0b6f6f4e5ed4d"
@@ -7331,7 +9354,14 @@
           -6.7
         ]
       ],
+      "dominantWeights": [
+        0.556,
+        0.33,
+        0.115
+      ],
       "colorfulness": 2.6,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "bf4ce61de16130e2",
       "ahash": "f99c9909880bf5f7",
       "dhash": "376131331335458e"
@@ -7368,7 +9398,18 @@
           73.4
         ]
       ],
+      "dominantWeights": [
+        0.493,
+        0.281,
+        0.227
+      ],
       "colorfulness": 31.3,
+      "chromaShare": 0.995,
+      "keyColor": [
+        61.3,
+        25.7,
+        9.2
+      ],
       "phash": "d180c19a0f8fae7d",
       "ahash": "7d60ee2cc8dca8f0",
       "dhash": "c992946818302a22"
@@ -7407,7 +9448,18 @@
           9.2
         ]
       ],
+      "dominantWeights": [
+        0.475,
+        0.289,
+        0.236
+      ],
       "colorfulness": 15.3,
+      "chromaShare": 0.397,
+      "keyColor": [
+        71.3,
+        2.4,
+        -22.6
+      ],
       "phash": "b3934de4936ce04b",
       "ahash": "ffdfcfc7e7c30101",
       "dhash": "3c3c9c8c8c973373"
@@ -7446,7 +9498,14 @@
           -1.4
         ]
       ],
+      "dominantWeights": [
+        0.395,
+        0.336,
+        0.269
+      ],
       "colorfulness": 1.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "cc56c9f194f0a4c7",
       "ahash": "fef0308002c3fb3f",
       "dhash": "306566342a87d362"
@@ -7483,7 +9542,18 @@
           14.8
         ]
       ],
+      "dominantWeights": [
+        0.407,
+        0.403,
+        0.191
+      ],
       "colorfulness": 25,
+      "chromaShare": 0.766,
+      "keyColor": [
+        42.7,
+        36.8,
+        15.6
+      ],
       "phash": "d0b05bd01bfae0b9",
       "ahash": "ccffffdedef08000",
       "dhash": "99b89638b4a02062"
@@ -7520,7 +9590,18 @@
           -5.8
         ]
       ],
+      "dominantWeights": [
+        0.397,
+        0.338,
+        0.264
+      ],
       "colorfulness": 15.5,
+      "chromaShare": 0.502,
+      "keyColor": [
+        52.9,
+        18.1,
+        17.4
+      ],
       "phash": "c1a69e5b0f2f1d81",
       "ahash": "3cf7f33360486c1c",
       "dhash": "e0aca6e7c291d8f0"
@@ -7557,7 +9638,18 @@
           -0.2
         ]
       ],
+      "dominantWeights": [
+        0.383,
+        0.342,
+        0.274
+      ],
       "colorfulness": 14.5,
+      "chromaShare": 0.552,
+      "keyColor": [
+        61.2,
+        0.3,
+        -21.6
+      ],
       "phash": "ac0ec416f8f9c365",
       "ahash": "1010ffdd0004c3ff",
       "dhash": "636642111b4d16d7"
@@ -7594,7 +9686,18 @@
           14.6
         ]
       ],
+      "dominantWeights": [
+        0.498,
+        0.314,
+        0.188
+      ],
       "colorfulness": 15.3,
+      "chromaShare": 0.627,
+      "keyColor": [
+        45.7,
+        30.2,
+        4.8
+      ],
       "phash": "bd95164ec13b5199",
       "ahash": "3fdfcfefd9000000",
       "dhash": "6c3e1a1b33252f2b"
@@ -7631,7 +9734,18 @@
           5.4
         ]
       ],
+      "dominantWeights": [
+        0.42,
+        0.307,
+        0.273
+      ],
       "colorfulness": 31.8,
+      "chromaShare": 0.766,
+      "keyColor": [
+        55.5,
+        54.9,
+        32
+      ],
       "phash": "a6e3d5d0395b340d",
       "ahash": "efff230107060000",
       "dhash": "8ecfcf4bafac68b6"
@@ -7668,7 +9782,18 @@
           -1.4
         ]
       ],
+      "dominantWeights": [
+        0.367,
+        0.336,
+        0.297
+      ],
       "colorfulness": 11.4,
+      "chromaShare": 0.207,
+      "keyColor": [
+        53.8,
+        -14.5,
+        21.9
+      ],
       "phash": "8d936d07e2a8f269",
       "ahash": "7f3effff3f3e1b80",
       "dhash": "da7a3aaeee6eb212"
@@ -7705,7 +9830,18 @@
           0.4
         ]
       ],
+      "dominantWeights": [
+        0.512,
+        0.43,
+        0.058
+      ],
       "colorfulness": 18.3,
+      "chromaShare": 0.864,
+      "keyColor": [
+        53.3,
+        25.2,
+        33.4
+      ],
       "phash": "868d6dc7a468d43e",
       "ahash": "7f3f1f5f27240000",
       "dhash": "e7ebb9ae6c68edad"
@@ -7744,7 +9880,18 @@
           -8
         ]
       ],
+      "dominantWeights": [
+        0.603,
+        0.294,
+        0.103
+      ],
       "colorfulness": 5,
+      "chromaShare": 0.331,
+      "keyColor": [
+        74.5,
+        -3.9,
+        -12.3
+      ],
       "phash": "b08c42bf45f96f84",
       "ahash": "ffffff5f02030d00",
       "dhash": "e6bd9596961fbb88"
@@ -7783,7 +9930,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.517,
+        0.391,
+        0.092
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "dcdc2125ea572a9c",
       "ahash": "0ede9cbc9e000255",
       "dhash": "98323870306a6ed5"
@@ -7820,7 +9974,18 @@
           -3.8
         ]
       ],
+      "dominantWeights": [
+        0.382,
+        0.322,
+        0.297
+      ],
       "colorfulness": 20,
+      "chromaShare": 0.608,
+      "keyColor": [
+        65.1,
+        30.7,
+        -4.1
+      ],
       "phash": "958555e306a3e2f5",
       "ahash": "361e1f1f1dedee04",
       "dhash": "ce7672fb7b994afc"
@@ -7859,7 +10024,14 @@
           0.3
         ]
       ],
+      "dominantWeights": [
+        0.626,
+        0.283,
+        0.091
+      ],
       "colorfulness": 1.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "e6f887d26827d90a",
       "ahash": "ffffe3c3c0f42727",
       "dhash": "a6f8860725484c6d"
@@ -7896,7 +10068,18 @@
           10.2
         ]
       ],
+      "dominantWeights": [
+        0.49,
+        0.321,
+        0.189
+      ],
       "colorfulness": 9.3,
+      "chromaShare": 0.222,
+      "keyColor": [
+        55.4,
+        14.8,
+        15.8
+      ],
       "phash": "caa4f0cdb95b3152",
       "ahash": "fff745383c387868",
       "dhash": "b5a5adf9e1e1d9d9"
@@ -7933,7 +10116,14 @@
           1.5
         ]
       ],
+      "dominantWeights": [
+        0.613,
+        0.25,
+        0.137
+      ],
       "colorfulness": 1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "dc525a3ee91a2d68",
       "ahash": "f8fc7a7fd39f9dd9",
       "dhash": "8994f6b5966e39b3"
@@ -7970,7 +10160,18 @@
           21.8
         ]
       ],
+      "dominantWeights": [
+        0.45,
+        0.372,
+        0.178
+      ],
       "colorfulness": 18.1,
+      "chromaShare": 0.536,
+      "keyColor": [
+        59.8,
+        29.3,
+        18.4
+      ],
       "phash": "f03f4c40198fe7f0",
       "ahash": "0004871feff4f0f0",
       "dhash": "ad2d2e389c848494"
@@ -8007,7 +10208,14 @@
           2
         ]
       ],
+      "dominantWeights": [
+        0.572,
+        0.305,
+        0.123
+      ],
       "colorfulness": 1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "c37c9fd80422f5e8",
       "ahash": "fefce06060ee757f",
       "dhash": "c4d149cc82d8c9ce"
@@ -8046,7 +10254,14 @@
           -0.7
         ]
       ],
+      "dominantWeights": [
+        0.548,
+        0.305,
+        0.147
+      ],
       "colorfulness": 0.8,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "e2629bb59d589532",
       "ahash": "e1e0f0f0e3e3e0f8",
       "dhash": "4949418386868191"
@@ -8083,7 +10298,18 @@
           2
         ]
       ],
+      "dominantWeights": [
+        0.45,
+        0.34,
+        0.209
+      ],
       "colorfulness": 21.9,
+      "chromaShare": 0.71,
+      "keyColor": [
+        42,
+        4.6,
+        -26.7
+      ],
       "phash": "f89cc670a945b791",
       "ahash": "5d1f1e19c3c0e0e3",
       "dhash": "b1b474739b170647"
@@ -8120,7 +10346,18 @@
           27.4
         ]
       ],
+      "dominantWeights": [
+        0.381,
+        0.349,
+        0.27
+      ],
       "colorfulness": 28.7,
+      "chromaShare": 0.849,
+      "keyColor": [
+        48.8,
+        53.6,
+        44.1
+      ],
       "phash": "d01f43ee78c26d32",
       "ahash": "1c1c0e5edef07e64",
       "dhash": "b9f8babcba828c88"
@@ -8157,7 +10394,14 @@
           1.8
         ]
       ],
+      "dominantWeights": [
+        0.344,
+        0.344,
+        0.312
+      ],
       "colorfulness": 2,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "a6a7cbb314c3051f",
       "ahash": "3fff372707072c00",
       "dhash": "db1f66c63eaec9a2"
@@ -8194,7 +10438,14 @@
           -1.6
         ]
       ],
+      "dominantWeights": [
+        0.438,
+        0.381,
+        0.181
+      ],
       "colorfulness": 2.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8094ffe3116d3473",
       "ahash": "7fff131b6971f078",
       "dhash": "e695b6f6d5d741c1"
@@ -8231,7 +10482,18 @@
           14.1
         ]
       ],
+      "dominantWeights": [
+        0.709,
+        0.164,
+        0.127
+      ],
       "colorfulness": 24.3,
+      "chromaShare": 0.501,
+      "keyColor": [
+        74.4,
+        -7.5,
+        45.4
+      ],
       "phash": "ae9927c862c1bc67",
       "ahash": "c38787cf839f2383",
       "dhash": "1f3f2f9d2f374f0e"
@@ -8270,7 +10532,18 @@
           7.1
         ]
       ],
+      "dominantWeights": [
+        0.549,
+        0.342,
+        0.109
+      ],
       "colorfulness": 4.8,
+      "chromaShare": 0.061,
+      "keyColor": [
+        40.2,
+        12,
+        12.5
+      ],
       "phash": "ea7b49c585a52d34",
       "ahash": "e9c880c7fffbfbfb",
       "dhash": "8b19193d27233323"
@@ -8307,7 +10580,18 @@
           28
         ]
       ],
+      "dominantWeights": [
+        0.471,
+        0.409,
+        0.12
+      ],
       "colorfulness": 12.1,
+      "chromaShare": 0.623,
+      "keyColor": [
+        47.9,
+        11,
+        20.3
+      ],
       "phash": "83a7c14e3b361f83",
       "ahash": "7f7f3f0438007c5c",
       "dhash": "e6d6e8985161d0d8"
@@ -8344,7 +10628,18 @@
           1.3
         ]
       ],
+      "dominantWeights": [
+        0.505,
+        0.305,
+        0.19
+      ],
       "colorfulness": 22.6,
+      "chromaShare": 0.676,
+      "keyColor": [
+        44.4,
+        37.8,
+        27.7
+      ],
       "phash": "ea28d4f5079252de",
       "ahash": "e0c1010100fdfff9",
       "dhash": "8883c1d363113461"
@@ -8383,7 +10678,18 @@
           10.1
         ]
       ],
+      "dominantWeights": [
+        0.44,
+        0.303,
+        0.257
+      ],
       "colorfulness": 17.6,
+      "chromaShare": 0.436,
+      "keyColor": [
+        42.9,
+        17.5,
+        27.1
+      ],
       "phash": "cc6c689790fc6fa0",
       "ahash": "f0f0f0f0f8f0f0f0",
       "dhash": "25242624e44464a4"
@@ -8422,7 +10728,14 @@
           0.1
         ]
       ],
+      "dominantWeights": [
+        0.448,
+        0.276,
+        0.276
+      ],
       "colorfulness": 0.7,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8111fda5e3d286bc",
       "ahash": "6e0b0e6c2b33dbeb",
       "dhash": "ca9af8d8d6e63a1b"
@@ -8459,7 +10772,14 @@
           0.7
         ]
       ],
+      "dominantWeights": [
+        0.463,
+        0.395,
+        0.142
+      ],
       "colorfulness": 1.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "c5f489b04e66ea99",
       "ahash": "fffee0e07f4f1f38",
       "dhash": "a3628344d28df273"
@@ -8496,7 +10816,18 @@
           19.6
         ]
       ],
+      "dominantWeights": [
+        0.464,
+        0.312,
+        0.224
+      ],
       "colorfulness": 15.8,
+      "chromaShare": 0.66,
+      "keyColor": [
+        53.4,
+        24,
+        15.6
+      ],
       "phash": "eae89495999473e8",
       "ahash": "fbf1f1f9d93c3c2c",
       "dhash": "c3c783d393597448"
@@ -8536,7 +10867,18 @@
           -0.6
         ]
       ],
+      "dominantWeights": [
+        0.676,
+        0.203,
+        0.121
+      ],
       "colorfulness": 2.9,
+      "chromaShare": 0.013,
+      "keyColor": [
+        66.7,
+        -0.3,
+        -15.8
+      ],
       "phash": "abd42dd225ea9568",
       "ahash": "ffffffffffff0101",
       "dhash": "5343c3c3e3c90363"
@@ -8575,7 +10917,18 @@
           37.4
         ]
       ],
+      "dominantWeights": [
+        0.545,
+        0.29,
+        0.165
+      ],
       "colorfulness": 25.4,
+      "chromaShare": 0.733,
+      "keyColor": [
+        41.6,
+        43.6,
+        28.9
+      ],
       "phash": "826466cafa391b3d",
       "ahash": "6476070f1f3f0f27",
       "dhash": "8dec5efc39f9fecc"
@@ -8612,7 +10965,14 @@
           5
         ]
       ],
+      "dominantWeights": [
+        0.45,
+        0.33,
+        0.22
+      ],
       "colorfulness": 2.5,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ea859d107b84cf5a",
       "ahash": "fffff5e1c0000080",
       "dhash": "be87ad8d89adb515"
@@ -8649,7 +11009,14 @@
           1.6
         ]
       ],
+      "dominantWeights": [
+        0.645,
+        0.193,
+        0.162
+      ],
       "colorfulness": 2.7,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "aa9e3d61659f1c90",
       "ahash": "818d3f3d61018181",
       "dhash": "271971618581213f"
@@ -8688,7 +11055,14 @@
           -0.5
         ]
       ],
+      "dominantWeights": [
+        0.529,
+        0.312,
+        0.159
+      ],
       "colorfulness": 2.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "a42727b548c9d9d9",
       "ahash": "0107e3f9dfffefc0",
       "dhash": "676e8f83393c8997"
@@ -8727,7 +11101,18 @@
           -5.4
         ]
       ],
+      "dominantWeights": [
+        0.369,
+        0.333,
+        0.298
+      ],
       "colorfulness": 10.8,
+      "chromaShare": 0.44,
+      "keyColor": [
+        63.2,
+        -7.4,
+        -18
+      ],
       "phash": "be9c6bc540b329d4",
       "ahash": "ffff9f1ff2028400",
       "dhash": "2f213d3ce4565c11"
@@ -8766,7 +11151,14 @@
           -5.8
         ]
       ],
+      "dominantWeights": [
+        0.562,
+        0.276,
+        0.162
+      ],
       "colorfulness": 2.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "aa68292f6c6ce4e6",
       "ahash": "0109ffffff7f1f1f",
       "dhash": "a39b99937ddd6bb3"
@@ -8803,7 +11195,18 @@
           -6.3
         ]
       ],
+      "dominantWeights": [
+        0.406,
+        0.383,
+        0.211
+      ],
       "colorfulness": 8.4,
+      "chromaShare": 0.377,
+      "keyColor": [
+        60.9,
+        -1.5,
+        -21.6
+      ],
       "phash": "b8dad783c404e36b",
       "ahash": "ff8f8181818101cf",
       "dhash": "1d393337333b370b"
@@ -8842,7 +11245,18 @@
           3.6
         ]
       ],
+      "dominantWeights": [
+        0.388,
+        0.379,
+        0.233
+      ],
       "colorfulness": 3,
+      "chromaShare": 0.011,
+      "keyColor": [
+        86,
+        1.3,
+        12.3
+      ],
       "phash": "a73682817e9accf2",
       "ahash": "37230382237b7fbf",
       "dhash": "4e4e6e7656d6d168"
@@ -8881,7 +11295,18 @@
           -6.8
         ]
       ],
+      "dominantWeights": [
+        0.41,
+        0.327,
+        0.263
+      ],
       "colorfulness": 3.3,
+      "chromaShare": 0.031,
+      "keyColor": [
+        28.5,
+        3,
+        -11.7
+      ],
       "phash": "804b193f193f38cf",
       "ahash": "187c7c77fb436243",
       "dhash": "f3c08595f1968e8f"
@@ -8920,7 +11345,18 @@
           16.6
         ]
       ],
+      "dominantWeights": [
+        0.394,
+        0.363,
+        0.244
+      ],
       "colorfulness": 18.3,
+      "chromaShare": 0.676,
+      "keyColor": [
+        45.1,
+        22.7,
+        17.3
+      ],
       "phash": "e9c9928ed1a9dd12",
       "ahash": "fdf9faf9b0910100",
       "dhash": "6b819292296b6d8c"
@@ -8957,7 +11393,18 @@
           -37.5
         ]
       ],
+      "dominantWeights": [
+        0.523,
+        0.251,
+        0.227
+      ],
       "colorfulness": 40.9,
+      "chromaShare": 0.833,
+      "keyColor": [
+        63.7,
+        -11.6,
+        -40.9
+      ],
       "phash": "8ff33c8cb31f04a8",
       "ahash": "3fff7fefff381800",
       "dhash": "63aad44d6bf173e6"
@@ -8996,7 +11443,14 @@
           1
         ]
       ],
+      "dominantWeights": [
+        0.688,
+        0.202,
+        0.11
+      ],
       "colorfulness": 1.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "82f8b576cb1ef003",
       "ahash": "f77f7d3d25070727",
       "dhash": "6dc9e9e9c9ed6fd7"
@@ -9035,7 +11489,18 @@
           69.7
         ]
       ],
+      "dominantWeights": [
+        0.492,
+        0.308,
+        0.2
+      ],
       "colorfulness": 29,
+      "chromaShare": 0.268,
+      "keyColor": [
+        70.5,
+        2.3,
+        69.4
+      ],
       "phash": "f8c37a409d61c7b4",
       "ahash": "e8fdfffffff08000",
       "dhash": "9399031bb7c1973a"
@@ -9072,7 +11537,18 @@
           33.1
         ]
       ],
+      "dominantWeights": [
+        0.565,
+        0.314,
+        0.121
+      ],
       "colorfulness": 20.7,
+      "chromaShare": 0.713,
+      "keyColor": [
+        43.4,
+        27.5,
+        17
+      ],
       "phash": "d20a3c6e5ee508f9",
       "ahash": "11096decac74e6ec",
       "dhash": "2179d94969cdcc58"
@@ -9111,7 +11587,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.481,
+        0.329,
+        0.19
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "bff072c5892c26b2",
       "ahash": "ffcc87933f3a9387",
       "dhash": "ca981c767664651b"
@@ -9148,7 +11631,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.393,
+        0.321,
+        0.286
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "924be316f9e48c8d",
       "ahash": "ac243e0c0c14ffff",
       "dhash": "5d4df4d87c74452b"
@@ -9187,7 +11677,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.486,
+        0.291,
+        0.223
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "d5b5f59341364c4c",
       "ahash": "efefd0001c3c0040",
       "dhash": "4a8aa698f0f97492"
@@ -9224,7 +11721,18 @@
           2.7
         ]
       ],
+      "dominantWeights": [
+        0.538,
+        0.241,
+        0.222
+      ],
       "colorfulness": 25,
+      "chromaShare": 0.659,
+      "keyColor": [
+        45.2,
+        40.4,
+        29.7
+      ],
       "phash": "9197186c6f266769",
       "ahash": "ce1e0f0720314301",
       "dhash": "1c9c3c2c63e79797"
@@ -9261,7 +11769,18 @@
           42
         ]
       ],
+      "dominantWeights": [
+        0.397,
+        0.311,
+        0.292
+      ],
       "colorfulness": 25.2,
+      "chromaShare": 0.55,
+      "keyColor": [
+        63,
+        -16.2,
+        41.3
+      ],
       "phash": "afe4c01b9a91e8d3",
       "ahash": "ffe3e3078d010b9f",
       "dhash": "a5c78f6b6b73db39"
@@ -9298,7 +11817,18 @@
           -21.1
         ]
       ],
+      "dominantWeights": [
+        0.554,
+        0.313,
+        0.133
+      ],
       "colorfulness": 22.8,
+      "chromaShare": 0.579,
+      "keyColor": [
+        63.7,
+        54.3,
+        -20.8
+      ],
       "phash": "b9e0fb463548e097",
       "ahash": "ffefdf0b0210098f",
       "dhash": "9359b3127ea77b3a"
@@ -9337,7 +11867,18 @@
           49.2
         ]
       ],
+      "dominantWeights": [
+        0.576,
+        0.24,
+        0.184
+      ],
       "colorfulness": 27.5,
+      "chromaShare": 0.409,
+      "keyColor": [
+        64.1,
+        -28.2,
+        49.4
+      ],
       "phash": "be1fd9c0e06794c1",
       "ahash": "ff8f8783f397e1c1",
       "dhash": "33397d4745252fb9"
@@ -9374,7 +11915,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.446,
+        0.329,
+        0.225
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "cea1a0609f565c7d",
       "ahash": "7bffb83c3830b4bc",
       "dhash": "c2e1716060e56565"
@@ -9411,7 +11959,14 @@
           2
         ]
       ],
+      "dominantWeights": [
+        0.699,
+        0.254,
+        0.047
+      ],
       "colorfulness": 2.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "eca4744cc51bd29b",
       "ahash": "f3f3cfcf73310998",
       "dhash": "a627191b67471330"
@@ -9450,7 +12005,18 @@
           -1.9
         ]
       ],
+      "dominantWeights": [
+        0.47,
+        0.292,
+        0.238
+      ],
       "colorfulness": 33.8,
+      "chromaShare": 0.836,
+      "keyColor": [
+        46.5,
+        61.5,
+        -23.8
+      ],
       "phash": "99a2f4d8273f860d",
       "ahash": "ff7f3f0f195c0800",
       "dhash": "9e9adb5a73b1929a"
@@ -9487,7 +12053,18 @@
           -6.1
         ]
       ],
+      "dominantWeights": [
+        0.53,
+        0.306,
+        0.164
+      ],
       "colorfulness": 17.6,
+      "chromaShare": 0.637,
+      "keyColor": [
+        43.2,
+        5.7,
+        -26.1
+      ],
       "phash": "a4835bad5cb0b15b",
       "ahash": "3f756f5613070300",
       "dhash": "eecddcb4a6e69611"
@@ -9524,7 +12101,18 @@
           -7.7
         ]
       ],
+      "dominantWeights": [
+        0.359,
+        0.352,
+        0.289
+      ],
       "colorfulness": 6.1,
+      "chromaShare": 0.253,
+      "keyColor": [
+        34.7,
+        0,
+        -13.7
+      ],
       "phash": "878e0ba3b5e348e9",
       "ahash": "3f1ff0ffff006000",
       "dhash": "576931cc5edcd5b2"
@@ -9565,7 +12153,18 @@
           -3.4
         ]
       ],
+      "dominantWeights": [
+        0.686,
+        0.174,
+        0.14
+      ],
       "colorfulness": 21.9,
+      "chromaShare": 0.649,
+      "keyColor": [
+        74.2,
+        -14.9,
+        32.3
+      ],
       "phash": "ca913685667e3b15",
       "ahash": "ffffd8f0fff91000",
       "dhash": "e3d399a5e4f33525"
@@ -9604,7 +12203,18 @@
           -4.2
         ]
       ],
+      "dominantWeights": [
+        0.487,
+        0.326,
+        0.186
+      ],
       "colorfulness": 5.9,
+      "chromaShare": 0.076,
+      "keyColor": [
+        55.6,
+        -0.8,
+        -12.1
+      ],
       "phash": "b69135bb318f24f0",
       "ahash": "07f8ffffffff3000",
       "dhash": "1b30a6719d6b6586"
@@ -9643,7 +12253,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.349,
+        0.332,
+        0.318
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "9a8eb071e87e4e43",
       "ahash": "5f1f3f9b0b0e0f07",
       "dhash": "b8fa6535da5adadf"
@@ -9680,7 +12297,18 @@
           36.1
         ]
       ],
+      "dominantWeights": [
+        0.474,
+        0.404,
+        0.122
+      ],
       "colorfulness": 20.6,
+      "chromaShare": 0.469,
+      "keyColor": [
+        68,
+        -9.8,
+        -22.3
+      ],
       "phash": "92ece9e1ac539e44",
       "ahash": "ffff1c0e020c2828",
       "dhash": "65a5e9fcf4d8c9d2"
@@ -9719,7 +12347,18 @@
           3.7
         ]
       ],
+      "dominantWeights": [
+        0.406,
+        0.361,
+        0.233
+      ],
       "colorfulness": 10,
+      "chromaShare": 0.18,
+      "keyColor": [
+        60.3,
+        -8.6,
+        -12.6
+      ],
       "phash": "8b8717cab426d9a5",
       "ahash": "3f3f3f17f9f80003",
       "dhash": "d1f35b671393671e"
@@ -9756,7 +12395,18 @@
           -4.9
         ]
       ],
+      "dominantWeights": [
+        0.463,
+        0.29,
+        0.247
+      ],
       "colorfulness": 18.2,
+      "chromaShare": 0.529,
+      "keyColor": [
+        58.2,
+        15.2,
+        22.8
+      ],
       "phash": "81b03ce678f2aba3",
       "ahash": "4e066ffc7a762608",
       "dhash": "9ceed898c2ec4cb3"
@@ -9793,7 +12443,18 @@
           20.4
         ]
       ],
+      "dominantWeights": [
+        0.461,
+        0.287,
+        0.252
+      ],
       "colorfulness": 11.1,
+      "chromaShare": 0.285,
+      "keyColor": [
+        39.3,
+        22.2,
+        20.2
+      ],
       "phash": "afdac4c33386c534",
       "ahash": "ff9b930185b19383",
       "dhash": "7b33276f5d632646"
@@ -9830,7 +12491,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.485,
+        0.264,
+        0.252
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8a951fd035e08fe3",
       "ahash": "081c3fffffbdf800",
       "dhash": "3371618ccd71b173"
@@ -9869,7 +12537,14 @@
           1.6
         ]
       ],
+      "dominantWeights": [
+        0.409,
+        0.315,
+        0.276
+      ],
       "colorfulness": 3.5,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "cae4375c9be3821c",
       "ahash": "fffffffd18000000",
       "dhash": "c0e5c1c1b0918b39"
@@ -9906,7 +12581,18 @@
           0.9
         ]
       ],
+      "dominantWeights": [
+        0.381,
+        0.342,
+        0.277
+      ],
       "colorfulness": 12.1,
+      "chromaShare": 0.558,
+      "keyColor": [
+        47.1,
+        16.8,
+        11.7
+      ],
       "phash": "a2c096e92793acb7",
       "ahash": "7f7e7e60e1f10100",
       "dhash": "e9e8accc0ba3290d"
@@ -9945,7 +12631,18 @@
           -18.4
         ]
       ],
+      "dominantWeights": [
+        0.431,
+        0.427,
+        0.142
+      ],
       "colorfulness": 21.1,
+      "chromaShare": 0.778,
+      "keyColor": [
+        65.8,
+        12.6,
+        32.9
+      ],
       "phash": "af89eed4a1e4e8c0",
       "ahash": "fb0d01072e9ca0f1",
       "dhash": "237d79ded83d2c67"
@@ -9985,7 +12682,18 @@
           2.3
         ]
       ],
+      "dominantWeights": [
+        0.38,
+        0.347,
+        0.273
+      ],
       "colorfulness": 16.6,
+      "chromaShare": 0.303,
+      "keyColor": [
+        55.6,
+        41.8,
+        0.2
+      ],
       "phash": "b1086bc3de55172d",
       "ahash": "080102deffefefe7",
       "dhash": "b3b3a6acc9cc9f4f"
@@ -10024,7 +12732,18 @@
           44.1
         ]
       ],
+      "dominantWeights": [
+        0.537,
+        0.4,
+        0.063
+      ],
       "colorfulness": 14.4,
+      "chromaShare": 0.333,
+      "keyColor": [
+        65.7,
+        -20,
+        44
+      ],
       "phash": "f05c783073a6a73a",
       "ahash": "8098b872ce4767ef",
       "dhash": "323063c4989c8cca"
@@ -10061,7 +12780,14 @@
           1.7
         ]
       ],
+      "dominantWeights": [
+        0.585,
+        0.332,
+        0.082
+      ],
       "colorfulness": 1.4,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "d2ca25add335dc0a",
       "ahash": "fffcfcfcfc9a0204",
       "dhash": "a9c9a908a92a2ac8"
@@ -10100,7 +12826,18 @@
           37.5
         ]
       ],
+      "dominantWeights": [
+        0.468,
+        0.433,
+        0.098
+      ],
       "colorfulness": 27.3,
+      "chromaShare": 0.677,
+      "keyColor": [
+        44.3,
+        51.1,
+        37.1
+      ],
       "phash": "b6c74f09e1939326",
       "ahash": "78f0e6efc31f0007",
       "dhash": "e9254c1a8f7d332f"
@@ -10139,7 +12876,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.657,
+        0.229,
+        0.114
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "bab0cc46e65893a7",
       "ahash": "ff8f8fc4a78c9cff",
       "dhash": "353a181d4d1d3183"
@@ -10176,7 +12920,18 @@
           50.2
         ]
       ],
+      "dominantWeights": [
+        0.54,
+        0.243,
+        0.217
+      ],
       "colorfulness": 31.5,
+      "chromaShare": 0.897,
+      "keyColor": [
+        51.5,
+        44.1,
+        39
+      ],
       "phash": "eb827cbc15db1131",
       "ahash": "b9f56dbd0f9d8080",
       "dhash": "6345d969dd7b3b3a"
@@ -10215,7 +12970,18 @@
           -5.1
         ]
       ],
+      "dominantWeights": [
+        0.425,
+        0.369,
+        0.206
+      ],
       "colorfulness": 8.9,
+      "chromaShare": 0.242,
+      "keyColor": [
+        60.5,
+        7.2,
+        12.1
+      ],
       "phash": "80ea1e5af7958ca5",
       "ahash": "1e017bffc4180202",
       "dhash": "7c8bd7dc89f1e6e6"
@@ -10252,7 +13018,18 @@
           -56.2
         ]
       ],
+      "dominantWeights": [
+        0.545,
+        0.397,
+        0.058
+      ],
       "colorfulness": 18.9,
+      "chromaShare": 0.515,
+      "keyColor": [
+        63.5,
+        20.1,
+        -15.4
+      ],
       "phash": "e296243d4b5d391e",
       "ahash": "00f7fdf8e0c08060",
       "dhash": "2dccc94989812187"
@@ -10289,7 +13066,18 @@
           5.7
         ]
       ],
+      "dominantWeights": [
+        0.455,
+        0.379,
+        0.166
+      ],
       "colorfulness": 14.2,
+      "chromaShare": 0.895,
+      "keyColor": [
+        54.1,
+        27.6,
+        21
+      ],
       "phash": "e38cb4e23b788715",
       "ahash": "ffff7e6064644004",
       "dhash": "2daeccc9cccccccc"
@@ -10326,7 +13114,18 @@
           16.5
         ]
       ],
+      "dominantWeights": [
+        0.549,
+        0.244,
+        0.207
+      ],
       "colorfulness": 16,
+      "chromaShare": 0.921,
+      "keyColor": [
+        55.2,
+        14,
+        27.2
+      ],
       "phash": "93864a50f28ee7d6",
       "ahash": "3e0c3f3fae0e0c0c",
       "dhash": "78f868f8ac9878d8"
@@ -10365,7 +13164,18 @@
           5.7
         ]
       ],
+      "dominantWeights": [
+        0.362,
+        0.326,
+        0.312
+      ],
       "colorfulness": 26.2,
+      "chromaShare": 0.775,
+      "keyColor": [
+        49.7,
+        39.4,
+        27.1
+      ],
       "phash": "bccca087177ae30d",
       "ahash": "ffdfd1803e248587",
       "dhash": "4d3633396c5c1d2e"
@@ -10404,7 +13214,18 @@
           20
         ]
       ],
+      "dominantWeights": [
+        0.369,
+        0.327,
+        0.304
+      ],
       "colorfulness": 23.6,
+      "chromaShare": 0.715,
+      "keyColor": [
+        49.8,
+        32.6,
+        37.3
+      ],
       "phash": "8a78158770a71ebb",
       "ahash": "084c00617d3f3f1f",
       "dhash": "90983995d9646f7c"
@@ -10443,7 +13264,18 @@
           17.9
         ]
       ],
+      "dominantWeights": [
+        0.364,
+        0.361,
+        0.275
+      ],
       "colorfulness": 10.3,
+      "chromaShare": 0.602,
+      "keyColor": [
+        46.4,
+        10,
+        19.5
+      ],
       "phash": "8e461ee931693e87",
       "ahash": "303c35717bf97104",
       "dhash": "e46465c3d3a3e36d"
@@ -10482,7 +13314,18 @@
           3.3
         ]
       ],
+      "dominantWeights": [
+        0.467,
+        0.267,
+        0.266
+      ],
       "colorfulness": 14.5,
+      "chromaShare": 0.514,
+      "keyColor": [
+        46.5,
+        20.1,
+        22
+      ],
       "phash": "8738678b3e5128de",
       "ahash": "013b1b0f3f7f3e00",
       "dhash": "f7e3f6fc78f2d4e4"
@@ -10521,7 +13364,18 @@
           42.6
         ]
       ],
+      "dominantWeights": [
+        0.429,
+        0.373,
+        0.198
+      ],
       "colorfulness": 25.9,
+      "chromaShare": 0.562,
+      "keyColor": [
+        36,
+        31.2,
+        26.7
+      ],
       "phash": "c8ccb632b750b14f",
       "ahash": "f0f0f8f8f8c8f0ff",
       "dhash": "e5e3b3d343911159"
@@ -10560,7 +13414,18 @@
           -2.1
         ]
       ],
+      "dominantWeights": [
+        0.398,
+        0.37,
+        0.232
+      ],
       "colorfulness": 7.3,
+      "chromaShare": 0.357,
+      "keyColor": [
+        55.5,
+        -12.7,
+        -3.5
+      ],
       "phash": "95a6d75a4ab74544",
       "ahash": "7f3f171f000a0f00",
       "dhash": "eefef6fff1da1bd0"
@@ -10599,7 +13464,18 @@
           21.2
         ]
       ],
+      "dominantWeights": [
+        0.501,
+        0.296,
+        0.203
+      ],
       "colorfulness": 16.7,
+      "chromaShare": 0.563,
+      "keyColor": [
+        54.4,
+        22.5,
+        32.2
+      ],
       "phash": "b72d4212ff607e28",
       "ahash": "c03b03a3af2c64f4",
       "dhash": "147a565e5a5cd545"
@@ -10639,7 +13515,18 @@
           -8.7
         ]
       ],
+      "dominantWeights": [
+        0.631,
+        0.275,
+        0.095
+      ],
       "colorfulness": 10,
+      "chromaShare": 0.29,
+      "keyColor": [
+        68.9,
+        -20.2,
+        -13.3
+      ],
       "phash": "abdc8479366263e1",
       "ahash": "dbffe9ad29010133",
       "dhash": "32324b495b4b4b4e"
@@ -10676,7 +13563,18 @@
           -15.3
         ]
       ],
+      "dominantWeights": [
+        0.549,
+        0.279,
+        0.172
+      ],
       "colorfulness": 13.2,
+      "chromaShare": 0.437,
+      "keyColor": [
+        59.6,
+        -5.8,
+        18.7
+      ],
       "phash": "84e67cfc20226cfb",
       "ahash": "f2ff7f7ffe960400",
       "dhash": "e6ecd4cdd86428a8"
@@ -10715,7 +13613,14 @@
           -2.2
         ]
       ],
+      "dominantWeights": [
+        0.461,
+        0.314,
+        0.225
+      ],
       "colorfulness": 2,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "89ce98d86a5097cf",
       "ahash": "f87b3f00f17f4f4f",
       "dhash": "7177468da3ba9a9b"
@@ -10752,7 +13657,18 @@
           -0.9
         ]
       ],
+      "dominantWeights": [
+        0.446,
+        0.348,
+        0.206
+      ],
       "colorfulness": 3.1,
+      "chromaShare": 0.006,
+      "keyColor": [
+        65.8,
+        3.6,
+        13.1
+      ],
       "phash": "adfa0b9594c78866",
       "ahash": "fb81c1dfc3db0b03",
       "dhash": "131b171736b3e2b2"
@@ -10789,7 +13705,18 @@
           4.5
         ]
       ],
+      "dominantWeights": [
+        0.473,
+        0.391,
+        0.136
+      ],
       "colorfulness": 12,
+      "chromaShare": 0.914,
+      "keyColor": [
+        68.5,
+        6.5,
+        21.6
+      ],
       "phash": "98c213e9271d3dbc",
       "ahash": "7c7c1c38b9991908",
       "dhash": "c9a1347233333339"
@@ -10826,7 +13753,18 @@
           8.7
         ]
       ],
+      "dominantWeights": [
+        0.361,
+        0.355,
+        0.284
+      ],
       "colorfulness": 9.3,
+      "chromaShare": 0.233,
+      "keyColor": [
+        40.7,
+        11.5,
+        9.3
+      ],
       "phash": "c4263998f3b392bc",
       "ahash": "071017667c7c9bc8",
       "dhash": "bc6666cea1f1261b"
@@ -10863,7 +13801,18 @@
           10.9
         ]
       ],
+      "dominantWeights": [
+        0.368,
+        0.365,
+        0.268
+      ],
       "colorfulness": 10.4,
+      "chromaShare": 0.319,
+      "keyColor": [
+        42.9,
+        2.5,
+        19
+      ],
       "phash": "96c7203f8283dd3b",
       "ahash": "3fe6fe7f07000005",
       "dhash": "fc0c5ccc7c3e8ab9"
@@ -10900,7 +13849,18 @@
           -22.2
         ]
       ],
+      "dominantWeights": [
+        0.435,
+        0.289,
+        0.275
+      ],
       "colorfulness": 18.1,
+      "chromaShare": 0.669,
+      "keyColor": [
+        43,
+        21.7,
+        -29
+      ],
       "phash": "e4f0be762a62926c",
       "ahash": "c7fffe7171300101",
       "dhash": "2d2a80c3c7c5e73f"
@@ -10937,7 +13897,18 @@
           25.7
         ]
       ],
+      "dominantWeights": [
+        0.473,
+        0.398,
+        0.13
+      ],
       "colorfulness": 9.5,
+      "chromaShare": 0.77,
+      "keyColor": [
+        35.1,
+        16.1,
+        14.8
+      ],
       "phash": "cf5cc1713dca38c1",
       "ahash": "f870351512817170",
       "dhash": "c2e4e5256635c5ca"
@@ -10976,7 +13947,14 @@
           0.6
         ]
       ],
+      "dominantWeights": [
+        0.568,
+        0.268,
+        0.164
+      ],
       "colorfulness": 3.2,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ca4a5e95957b61a4",
       "ahash": "f8f8e0e87ffcfcfe",
       "dhash": "d989c9999291b9b0"
@@ -11016,7 +13994,18 @@
           35.7
         ]
       ],
+      "dominantWeights": [
+        0.727,
+        0.143,
+        0.13
+      ],
       "colorfulness": 15.8,
+      "chromaShare": 0.304,
+      "keyColor": [
+        49.1,
+        13.6,
+        32.2
+      ],
       "phash": "bbec6027cc3be424",
       "ahash": "ffffdf1f0f070001",
       "dhash": "afab1555555555d5"
@@ -11055,7 +14044,14 @@
           0.9
         ]
       ],
+      "dominantWeights": [
+        0.524,
+        0.272,
+        0.204
+      ],
       "colorfulness": 4.1,
+      "chromaShare": 0.001,
+      "keyColor": null,
       "phash": "d5a337964c862e53",
       "ahash": "37ffe87858befe90",
       "dhash": "655a4af590704834"
@@ -11092,7 +14088,14 @@
           0
         ]
       ],
+      "dominantWeights": [
+        0.574,
+        0.275,
+        0.151
+      ],
       "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "a6cd9b2e225bb0e8",
       "ahash": "f7f77b7063030047",
       "dhash": "26eeaac7c6e6658c"
@@ -11132,7 +14135,18 @@
           2.7
         ]
       ],
+      "dominantWeights": [
+        0.372,
+        0.353,
+        0.274
+      ],
       "colorfulness": 6.5,
+      "chromaShare": 0.08,
+      "keyColor": [
+        74.6,
+        -2.1,
+        -19.3
+      ],
       "phash": "b3f258ef9807205e",
       "ahash": "ffe7e63f9f27130f",
       "dhash": "4f8a8ccd394d67b0"
@@ -11171,7 +14185,18 @@
           47.7
         ]
       ],
+      "dominantWeights": [
+        0.401,
+        0.336,
+        0.263
+      ],
       "colorfulness": 16.4,
+      "chromaShare": 0.741,
+      "keyColor": [
+        48.2,
+        -4.1,
+        37.5
+      ],
       "phash": "9acb317d926a271c",
       "ahash": "bdfdfdbd1c00000f",
       "dhash": "51516121312331fc"
@@ -11210,7 +14235,14 @@
           5.6
         ]
       ],
+      "dominantWeights": [
+        0.404,
+        0.329,
+        0.267
+      ],
       "colorfulness": 5.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "b661209f07cadcce",
       "ahash": "7483f0b5be9e3706",
       "dhash": "c94e17656c3c75ac"
@@ -11249,7 +14281,18 @@
           4.2
         ]
       ],
+      "dominantWeights": [
+        0.465,
+        0.398,
+        0.137
+      ],
       "colorfulness": 7.3,
+      "chromaShare": 0.163,
+      "keyColor": [
+        68,
+        13.4,
+        13.3
+      ],
       "phash": "d25685a9b93a47c6",
       "ahash": "ff74008400000fff",
       "dhash": "53ec6c2931d7dba0"
@@ -11286,7 +14329,18 @@
           28.4
         ]
       ],
+      "dominantWeights": [
+        0.353,
+        0.341,
+        0.305
+      ],
       "colorfulness": 25.4,
+      "chromaShare": 0.927,
+      "keyColor": [
+        42.6,
+        44.8,
+        33.1
+      ],
       "phash": "bac0603cc3a95afe",
       "ahash": "6b67cf6fa7830384",
       "dhash": "9b9c99cb2d35570d"
@@ -11323,7 +14377,18 @@
           32.8
         ]
       ],
+      "dominantWeights": [
+        0.436,
+        0.34,
+        0.224
+      ],
       "colorfulness": 31.5,
+      "chromaShare": 0.455,
+      "keyColor": [
+        37.5,
+        41.7,
+        28.8
+      ],
       "phash": "93e3d73cf8c8184c",
       "ahash": "ffee24ff83000024",
       "dhash": "984cc9c936b6c44c"
@@ -11362,7 +14427,18 @@
           56.5
         ]
       ],
+      "dominantWeights": [
+        0.504,
+        0.431,
+        0.065
+      ],
       "colorfulness": 21,
+      "chromaShare": 0.75,
+      "keyColor": [
+        54.2,
+        -5.1,
+        -20.3
+      ],
       "phash": "b4ae31985ae2874f",
       "ahash": "1f8723849c7f4703",
       "dhash": "7d2f472530f69cae"
@@ -11399,7 +14475,18 @@
           59.6
         ]
       ],
+      "dominantWeights": [
+        0.427,
+        0.369,
+        0.203
+      ],
       "colorfulness": 21.1,
+      "chromaShare": 0.882,
+      "keyColor": [
+        47.6,
+        21.4,
+        41.5
+      ],
       "phash": "b51f477543f038b0",
       "ahash": "021b0f07070fff6f",
       "dhash": "6a6abbdb5e968eca"
@@ -11436,7 +14523,18 @@
           46.2
         ]
       ],
+      "dominantWeights": [
+        0.501,
+        0.313,
+        0.186
+      ],
       "colorfulness": 19.2,
+      "chromaShare": 0.663,
+      "keyColor": [
+        51,
+        14.5,
+        31.1
+      ],
       "phash": "ab83cd1f510e94f4",
       "ahash": "0dedff61e4079091",
       "dhash": "59cbafd95d5d7737"
@@ -11477,7 +14575,18 @@
           39.8
         ]
       ],
+      "dominantWeights": [
+        0.466,
+        0.411,
+        0.123
+      ],
       "colorfulness": 22.9,
+      "chromaShare": 0.495,
+      "keyColor": [
+        57,
+        1.9,
+        29.4
+      ],
       "phash": "9cf54e16d4c3d168",
       "ahash": "fe9feb7f061d0111",
       "dhash": "ec7496d4b4f9f3b7"
@@ -11516,7 +14625,18 @@
           3.5
         ]
       ],
+      "dominantWeights": [
+        0.578,
+        0.281,
+        0.141
+      ],
       "colorfulness": 7,
+      "chromaShare": 0.087,
+      "keyColor": [
+        52.5,
+        10.5,
+        11.2
+      ],
       "phash": "d0a912d5355e5759",
       "ahash": "6cfff8bcdafcfc1c",
       "dhash": "c8933121b2ac203c"
@@ -11553,7 +14673,18 @@
           -2.8
         ]
       ],
+      "dominantWeights": [
+        0.41,
+        0.312,
+        0.277
+      ],
       "colorfulness": 29.2,
+      "chromaShare": 0.676,
+      "keyColor": [
+        55.6,
+        52.7,
+        6.5
+      ],
       "phash": "fc95a93c8972047e",
       "ahash": "dbdfe4ef9c81c1c1",
       "dhash": "16360c8d28250fa7"
@@ -11592,7 +14723,18 @@
           28.6
         ]
       ],
+      "dominantWeights": [
+        0.408,
+        0.323,
+        0.269
+      ],
       "colorfulness": 12,
+      "chromaShare": 0.701,
+      "keyColor": [
+        47.9,
+        16.9,
+        25.5
+      ],
       "phash": "d5f060606f436add",
       "ahash": "e0fefebe9e000200",
       "dhash": "8c9c285870b4fa78"
@@ -11631,7 +14773,14 @@
           5.1
         ]
       ],
+      "dominantWeights": [
+        0.461,
+        0.332,
+        0.207
+      ],
       "colorfulness": 2.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "8dce5ce16a6ec145",
       "ahash": "383e3e1d1b1a1a1e",
       "dhash": "e3e2e0e5f3d2f6f4"
@@ -11670,7 +14819,18 @@
           -38.9
         ]
       ],
+      "dominantWeights": [
+        0.488,
+        0.344,
+        0.168
+      ],
       "colorfulness": 28.7,
+      "chromaShare": 0.737,
+      "keyColor": [
+        49,
+        37,
+        16.3
+      ],
       "phash": "cc963f7e1c463258",
       "ahash": "1ebf7d7ed2e0e080",
       "dhash": "7470cde636074733"
@@ -11707,7 +14867,18 @@
           27.8
         ]
       ],
+      "dominantWeights": [
+        0.567,
+        0.242,
+        0.191
+      ],
       "colorfulness": 13,
+      "chromaShare": 0.283,
+      "keyColor": [
+        55,
+        6.1,
+        29.4
+      ],
       "phash": "bfc6b0238337dc21",
       "ahash": "ffffff3f0101030f",
       "dhash": "c972606f577f1f9f"
@@ -11744,7 +14915,14 @@
           2.5
         ]
       ],
+      "dominantWeights": [
+        0.63,
+        0.26,
+        0.11
+      ],
       "colorfulness": 1.8,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "bf3817c457073c38",
       "ahash": "0edf8f23d9f3ae84",
       "dhash": "7cbb3362bb256c68"
@@ -11784,7 +14962,18 @@
           -7.2
         ]
       ],
+      "dominantWeights": [
+        0.57,
+        0.236,
+        0.193
+      ],
       "colorfulness": 3.1,
+      "chromaShare": 0.004,
+      "keyColor": [
+        79.9,
+        0.2,
+        -11.3
+      ],
       "phash": "e095fed0da785648",
       "ahash": "feff5a78706041b1",
       "dhash": "188e92d0c3c78367"
@@ -11821,7 +15010,18 @@
           -27.6
         ]
       ],
+      "dominantWeights": [
+        0.361,
+        0.334,
+        0.305
+      ],
       "colorfulness": 20.5,
+      "chromaShare": 0.673,
+      "keyColor": [
+        52.9,
+        -6,
+        -30.3
+      ],
       "phash": "c87d1c86a5e0b4f6",
       "ahash": "1988c8e8fcfdfd1b",
       "dhash": "335313d3d5d595f5"
@@ -11862,7 +15062,18 @@
           26.8
         ]
       ],
+      "dominantWeights": [
+        0.42,
+        0.291,
+        0.289
+      ],
       "colorfulness": 25.4,
+      "chromaShare": 0.88,
+      "keyColor": [
+        49.2,
+        39.9,
+        15.9
+      ],
       "phash": "bb9460c6979c3c72",
       "ahash": "1f2f0f1f2f030501",
       "dhash": "eccb1f7a4b6f9b4b"
@@ -11899,7 +15110,18 @@
           -25
         ]
       ],
+      "dominantWeights": [
+        0.475,
+        0.315,
+        0.21
+      ],
       "colorfulness": 8,
+      "chromaShare": 0.987,
+      "keyColor": [
+        59.5,
+        7,
+        -27.2
+      ],
       "phash": "b657c429c96d3b81",
       "ahash": "f4f68600ef8703ff",
       "dhash": "c40c0c249c1fe7fc"
@@ -11938,7 +15160,14 @@
           6.3
         ]
       ],
+      "dominantWeights": [
+        0.389,
+        0.313,
+        0.298
+      ],
       "colorfulness": 4.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "b5358a622a976be1",
       "ahash": "01de8e0640e0ffff",
       "dhash": "4d345e6e87c9d6ad"
@@ -11978,7 +15207,18 @@
           12.2
         ]
       ],
+      "dominantWeights": [
+        0.435,
+        0.34,
+        0.225
+      ],
       "colorfulness": 5.7,
+      "chromaShare": 0.096,
+      "keyColor": [
+        63.6,
+        10.8,
+        12.9
+      ],
       "phash": "c180b4b5d95a7ec6",
       "ahash": "fffffcf878000000",
       "dhash": "baa2b591d1d2c898"
@@ -12017,7 +15257,18 @@
           6.1
         ]
       ],
+      "dominantWeights": [
+        0.377,
+        0.324,
+        0.299
+      ],
       "colorfulness": 8.5,
+      "chromaShare": 0.667,
+      "keyColor": [
+        50.3,
+        12.5,
+        17.7
+      ],
       "phash": "9c963e751d23278c",
       "ahash": "0f1e3f3e1a02131b",
       "dhash": "3c34f4f0b2cae276"
@@ -12056,7 +15307,14 @@
           6.5
         ]
       ],
+      "dominantWeights": [
+        0.476,
+        0.353,
+        0.172
+      ],
       "colorfulness": 3.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "ca6728ae928def90",
       "ahash": "f0c0f8fcfcb9185c",
       "dhash": "41111149c961b1b1"
@@ -12093,7 +15351,18 @@
           5.4
         ]
       ],
+      "dominantWeights": [
+        0.48,
+        0.322,
+        0.197
+      ],
       "colorfulness": 6.7,
+      "chromaShare": 0.044,
+      "keyColor": [
+        69,
+        3,
+        -23.5
+      ],
       "phash": "cadff54442d924a9",
       "ahash": "f8fcbf1c3410cbc3",
       "dhash": "327879f9f5e5978f"
@@ -12134,7 +15403,14 @@
           5.1
         ]
       ],
+      "dominantWeights": [
+        0.452,
+        0.368,
+        0.18
+      ],
       "colorfulness": 4.1,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "a5e09ed0c31fc58b",
       "ahash": "e7c3c34343430307",
       "dhash": "a98f968e8a965f6b"
@@ -12171,7 +15447,18 @@
           18.5
         ]
       ],
+      "dominantWeights": [
+        0.422,
+        0.306,
+        0.273
+      ],
       "colorfulness": 8.8,
+      "chromaShare": 0.523,
+      "keyColor": [
+        43.8,
+        6,
+        18
+      ],
       "phash": "96ca1da44d9272dd",
       "ahash": "363c6c3cf2e60e0e",
       "dhash": "68e9c9a9248cacdc"
@@ -12210,7 +15497,18 @@
           14.3
         ]
       ],
+      "dominantWeights": [
+        0.371,
+        0.319,
+        0.311
+      ],
       "colorfulness": 7.7,
+      "chromaShare": 0.046,
+      "keyColor": [
+        68.4,
+        11.9,
+        8.1
+      ],
       "phash": "fc95834b7cbc06e0",
       "ahash": "ffffc7c3c0808000",
       "dhash": "37ce96370f0f1b85"
@@ -12247,7 +15545,18 @@
           6.1
         ]
       ],
+      "dominantWeights": [
+        0.478,
+        0.343,
+        0.178
+      ],
       "colorfulness": 11.3,
+      "chromaShare": 0.14,
+      "keyColor": [
+        62,
+        28.1,
+        27.3
+      ],
       "phash": "95d7f08e1c3083fc",
       "ahash": "fefeee0e1e2e4000",
       "dhash": "2c9cdefc36d494bc"
@@ -12287,7 +15596,18 @@
           20.6
         ]
       ],
+      "dominantWeights": [
+        0.475,
+        0.364,
+        0.161
+      ],
       "colorfulness": 19.8,
+      "chromaShare": 0.888,
+      "keyColor": [
+        55.6,
+        25.4,
+        19.4
+      ],
       "phash": "ff8d94d2d272850c",
       "ahash": "ffff9bc8f0808000",
       "dhash": "086a721961090d0d"
@@ -12324,7 +15644,18 @@
           26.4
         ]
       ],
+      "dominantWeights": [
+        0.423,
+        0.413,
+        0.164
+      ],
       "colorfulness": 6,
+      "chromaShare": 0.99,
+      "keyColor": [
+        55.5,
+        11.5,
+        26.6
+      ],
       "phash": "8ac08db4f3a39c6e",
       "ahash": "ff591800001f033f",
       "dhash": "f3b1f1d92936777b"
@@ -12365,7 +15696,18 @@
           15.1
         ]
       ],
+      "dominantWeights": [
+        0.557,
+        0.244,
+        0.199
+      ],
       "colorfulness": 9.2,
+      "chromaShare": 0.086,
+      "keyColor": [
+        43.4,
+        18.3,
+        10.6
+      ],
       "phash": "bbb6c61ad448ca4d",
       "ahash": "ff0f0b0f0f09098f",
       "dhash": "745e531111515313"
@@ -12406,7 +15748,18 @@
           -12.9
         ]
       ],
+      "dominantWeights": [
+        0.446,
+        0.28,
+        0.275
+      ],
       "colorfulness": 9.1,
+      "chromaShare": 0.95,
+      "keyColor": [
+        46.9,
+        17.1,
+        -23
+      ],
       "phash": "868f563cb554e836",
       "ahash": "3f3f3f2f07000004",
       "dhash": "f66be1ea3f936cdd"
@@ -12447,7 +15800,18 @@
           -1.9
         ]
       ],
+      "dominantWeights": [
+        0.355,
+        0.332,
+        0.313
+      ],
       "colorfulness": 8.5,
+      "chromaShare": 0.239,
+      "keyColor": [
+        30.3,
+        12.1,
+        -8
+      ],
       "phash": "8bc5abba227c19a5",
       "ahash": "bf7c380027dcc000",
       "dhash": "7be0e274ed3812d9"
@@ -12487,7 +15851,18 @@
           9.2
         ]
       ],
+      "dominantWeights": [
+        0.475,
+        0.366,
+        0.16
+      ],
       "colorfulness": 12.7,
+      "chromaShare": 0.85,
+      "keyColor": [
+        55.4,
+        13.5,
+        25.4
+      ],
       "phash": "cabbb481b9789307",
       "ahash": "fff930d0207070f0",
       "dhash": "d96165b141c1e5e7"
@@ -12526,7 +15901,18 @@
           8.8
         ]
       ],
+      "dominantWeights": [
+        0.421,
+        0.339,
+        0.24
+      ],
       "colorfulness": 8.7,
+      "chromaShare": 0.151,
+      "keyColor": [
+        36,
+        18.8,
+        9.5
+      ],
       "phash": "8a46d4caf133bd23",
       "ahash": "3c340001013d25ff",
       "dhash": "6de94a4b4b6b4b49"
@@ -12566,7 +15952,18 @@
           26.7
         ]
       ],
+      "dominantWeights": [
+        0.541,
+        0.251,
+        0.207
+      ],
       "colorfulness": 26.1,
+      "chromaShare": 0.438,
+      "keyColor": [
+        47.6,
+        50.2,
+        23.3
+      ],
       "phash": "a883229d25be5e3e",
       "ahash": "4f6d01f7989c8f01",
       "dhash": "dbd92dae32383737"
@@ -12607,7 +16004,18 @@
           60.6
         ]
       ],
+      "dominantWeights": [
+        0.564,
+        0.375,
+        0.061
+      ],
       "colorfulness": 14.5,
+      "chromaShare": 0.625,
+      "keyColor": [
+        61.3,
+        9.1,
+        21.2
+      ],
       "phash": "bf410d1d8d9e252b",
       "ahash": "1940e3ff8f879f89",
       "dhash": "33978f25590d6d3b"
@@ -12647,7 +16055,18 @@
           40.1
         ]
       ],
+      "dominantWeights": [
+        0.375,
+        0.324,
+        0.301
+      ],
       "colorfulness": 16.3,
+      "chromaShare": 0.902,
+      "keyColor": [
+        47.6,
+        29.5,
+        38.3
+      ],
       "phash": "d871600f2eecf50b",
       "ahash": "004cdedf3fbf1810",
       "dhash": "ccd890b06872b0b0"
@@ -12684,7 +16103,18 @@
           22.4
         ]
       ],
+      "dominantWeights": [
+        0.441,
+        0.368,
+        0.192
+      ],
       "colorfulness": 12.1,
+      "chromaShare": 0.91,
+      "keyColor": [
+        53,
+        22.5,
+        24.6
+      ],
       "phash": "c0fccd419d4e62e3",
       "ahash": "fbfef09069603103",
       "dhash": "e28a4535cbc7e766"
@@ -12725,7 +16155,14 @@
           1.7
         ]
       ],
+      "dominantWeights": [
+        0.484,
+        0.445,
+        0.071
+      ],
       "colorfulness": 2.3,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "830542f5f67d3f20",
       "ahash": "273901cf6fab393d",
       "dhash": "eecbdb1cde5ae1d9"
@@ -12766,7 +16203,18 @@
           54
         ]
       ],
+      "dominantWeights": [
+        0.504,
+        0.438,
+        0.058
+      ],
       "colorfulness": 14.7,
+      "chromaShare": 0.152,
+      "keyColor": [
+        57.3,
+        32.5,
+        38.7
+      ],
       "phash": "cb346be4381fe01e",
       "ahash": "016d3d193cf93c38",
       "dhash": "53d1457175c35151"
@@ -12806,7 +16254,14 @@
           0.8
         ]
       ],
+      "dominantWeights": [
+        0.412,
+        0.372,
+        0.215
+      ],
       "colorfulness": 2,
+      "chromaShare": 0,
+      "keyColor": null,
       "phash": "aac847cee8357863",
       "ahash": "f9fdc7c7f19d0700",
       "dhash": "d1518d8f21354c4d"
@@ -12846,7 +16301,18 @@
           0.9
         ]
       ],
+      "dominantWeights": [
+        0.466,
+        0.363,
+        0.171
+      ],
       "colorfulness": 9.7,
+      "chromaShare": 0.095,
+      "keyColor": [
+        58.6,
+        9.2,
+        11.6
+      ],
       "phash": "c1adc5e272662e3a",
       "ahash": "7e7f3f240c787808",
       "dhash": "c4f2eadcd9e088d8"
@@ -12887,7 +16353,18 @@
           -13.7
         ]
       ],
+      "dominantWeights": [
+        0.415,
+        0.298,
+        0.288
+      ],
       "colorfulness": 5.8,
+      "chromaShare": 0.737,
+      "keyColor": [
+        54.6,
+        6.1,
+        -14
+      ],
       "phash": "c7ddbc2a9109cd4c",
       "ahash": "fffefa7c70300000",
       "dhash": "b26862d0e0e565f4"
@@ -12927,7 +16404,18 @@
           37.2
         ]
       ],
+      "dominantWeights": [
+        0.497,
+        0.328,
+        0.175
+      ],
       "colorfulness": 18.8,
+      "chromaShare": 0.833,
+      "keyColor": [
+        42.6,
+        34.6,
+        29.2
+      ],
       "phash": "d0874eb48795dfc0",
       "ahash": "38d0f8fee3e0c010",
       "dhash": "a4a580ca8eaaa5a1"
@@ -12969,7 +16457,18 @@
           21.3
         ]
       ],
+      "dominantWeights": [
+        0.401,
+        0.391,
+        0.209
+      ],
       "colorfulness": 33.8,
+      "chromaShare": 0.787,
+      "keyColor": [
+        48.1,
+        60.3,
+        41.6
+      ],
       "phash": "854fbf4898da2696",
       "ahash": "992031387873ffff",
       "dhash": "7552e7d3d7c7546e"
@@ -13013,7 +16512,18 @@
           -21.1
         ]
       ],
-      "colorfulness": 27
+      "dominantWeights": [
+        0.392,
+        0.344,
+        0.264
+      ],
+      "colorfulness": 27,
+      "chromaShare": 0.756,
+      "keyColor": [
+        57.3,
+        -29.3,
+        20.4
+      ]
     },
     {
       "seq": 23,
@@ -13054,7 +16564,18 @@
           61.8
         ]
       ],
-      "colorfulness": 17.8
+      "dominantWeights": [
+        0.507,
+        0.365,
+        0.128
+      ],
+      "colorfulness": 17.8,
+      "chromaShare": 0.904,
+      "keyColor": [
+        63.3,
+        9.8,
+        34.1
+      ]
     },
     {
       "seq": 22,
@@ -13096,7 +16617,14 @@
           0
         ]
       ],
-      "colorfulness": 0
+      "dominantWeights": [
+        0.571,
+        0.34,
+        0.089
+      ],
+      "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 21,
@@ -13138,7 +16666,18 @@
           40.8
         ]
       ],
-      "colorfulness": 19
+      "dominantWeights": [
+        0.436,
+        0.319,
+        0.245
+      ],
+      "colorfulness": 19,
+      "chromaShare": 0.528,
+      "keyColor": [
+        63.6,
+        -2.9,
+        32.1
+      ]
     },
     {
       "seq": 20,
@@ -13178,7 +16717,18 @@
           -0.1
         ]
       ],
-      "colorfulness": 26.8
+      "dominantWeights": [
+        0.475,
+        0.303,
+        0.222
+      ],
+      "colorfulness": 26.8,
+      "chromaShare": 0.789,
+      "keyColor": [
+        44.3,
+        46.5,
+        20.6
+      ]
     },
     {
       "seq": 19,
@@ -13215,7 +16765,18 @@
           4
         ]
       ],
-      "colorfulness": 26.3
+      "dominantWeights": [
+        0.402,
+        0.34,
+        0.258
+      ],
+      "colorfulness": 26.3,
+      "chromaShare": 0.536,
+      "keyColor": [
+        40.8,
+        19.3,
+        -46
+      ]
     },
     {
       "seq": 18,
@@ -13256,7 +16817,18 @@
           5.9
         ]
       ],
-      "colorfulness": 21.5
+      "dominantWeights": [
+        0.58,
+        0.289,
+        0.131
+      ],
+      "colorfulness": 21.5,
+      "chromaShare": 0.685,
+      "keyColor": [
+        52.1,
+        49.9,
+        5.4
+      ]
     },
     {
       "seq": 17,
@@ -13298,7 +16870,14 @@
           1.3
         ]
       ],
-      "colorfulness": 3.3
+      "dominantWeights": [
+        0.395,
+        0.346,
+        0.258
+      ],
+      "colorfulness": 3.3,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 16,
@@ -13339,7 +16918,14 @@
           0.4
         ]
       ],
-      "colorfulness": 3.5
+      "dominantWeights": [
+        0.505,
+        0.311,
+        0.185
+      ],
+      "colorfulness": 3.5,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 15,
@@ -13381,7 +16967,14 @@
           0
         ]
       ],
-      "colorfulness": 0
+      "dominantWeights": [
+        0.476,
+        0.402,
+        0.122
+      ],
+      "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 14,
@@ -13420,7 +17013,14 @@
           0
         ]
       ],
-      "colorfulness": 0
+      "dominantWeights": [
+        0.711,
+        0.15,
+        0.139
+      ],
+      "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 13,
@@ -13460,7 +17060,18 @@
           26.3
         ]
       ],
-      "colorfulness": 11
+      "dominantWeights": [
+        0.459,
+        0.278,
+        0.263
+      ],
+      "colorfulness": 11,
+      "chromaShare": 0.914,
+      "keyColor": [
+        41.4,
+        18.3,
+        23.5
+      ]
     },
     {
       "seq": 12,
@@ -13497,7 +17108,18 @@
           17.6
         ]
       ],
-      "colorfulness": 10.1
+      "dominantWeights": [
+        0.48,
+        0.289,
+        0.231
+      ],
+      "colorfulness": 10.1,
+      "chromaShare": 0.22,
+      "keyColor": [
+        56.1,
+        18,
+        16.8
+      ]
     },
     {
       "seq": 11,
@@ -13539,7 +17161,14 @@
           3.1
         ]
       ],
-      "colorfulness": 2.5
+      "dominantWeights": [
+        0.385,
+        0.369,
+        0.246
+      ],
+      "colorfulness": 2.5,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 10,
@@ -13580,7 +17209,18 @@
           7.9
         ]
       ],
-      "colorfulness": 9.6
+      "dominantWeights": [
+        0.347,
+        0.328,
+        0.325
+      ],
+      "colorfulness": 9.6,
+      "chromaShare": 0.414,
+      "keyColor": [
+        54.5,
+        16.1,
+        6.2
+      ]
     },
     {
       "seq": 9,
@@ -13621,7 +17261,18 @@
           1.9
         ]
       ],
-      "colorfulness": 4.2
+      "dominantWeights": [
+        0.384,
+        0.375,
+        0.24
+      ],
+      "colorfulness": 4.2,
+      "chromaShare": 0.006,
+      "keyColor": [
+        79.3,
+        5.5,
+        10.8
+      ]
     },
     {
       "seq": 8,
@@ -13662,7 +17313,14 @@
           0
         ]
       ],
-      "colorfulness": 0
+      "dominantWeights": [
+        0.476,
+        0.368,
+        0.157
+      ],
+      "colorfulness": 0,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 7,
@@ -13703,7 +17361,18 @@
           18.2
         ]
       ],
-      "colorfulness": 27.2
+      "dominantWeights": [
+        0.442,
+        0.283,
+        0.275
+      ],
+      "colorfulness": 27.2,
+      "chromaShare": 0.618,
+      "keyColor": [
+        53.2,
+        35.9,
+        30
+      ]
     },
     {
       "seq": 6,
@@ -13742,7 +17411,18 @@
           5.3
         ]
       ],
-      "colorfulness": 7
+      "dominantWeights": [
+        0.396,
+        0.385,
+        0.219
+      ],
+      "colorfulness": 7,
+      "chromaShare": 0.13,
+      "keyColor": [
+        47.2,
+        9,
+        10.4
+      ]
     },
     {
       "seq": 5,
@@ -13784,7 +17464,18 @@
           22.1
         ]
       ],
-      "colorfulness": 23.6
+      "dominantWeights": [
+        0.477,
+        0.334,
+        0.189
+      ],
+      "colorfulness": 23.6,
+      "chromaShare": 0.819,
+      "keyColor": [
+        46.2,
+        32.4,
+        17.8
+      ]
     },
     {
       "seq": 4,
@@ -13824,7 +17515,18 @@
           66
         ]
       ],
-      "colorfulness": 29.9
+      "dominantWeights": [
+        0.464,
+        0.286,
+        0.25
+      ],
+      "colorfulness": 29.9,
+      "chromaShare": 0.505,
+      "keyColor": [
+        67.6,
+        -6,
+        58.6
+      ]
     },
     {
       "seq": 3,
@@ -13865,7 +17567,18 @@
           66.1
         ]
       ],
-      "colorfulness": 34.3
+      "dominantWeights": [
+        0.438,
+        0.389,
+        0.173
+      ],
+      "colorfulness": 34.3,
+      "chromaShare": 0.686,
+      "keyColor": [
+        68,
+        -1.4,
+        60.9
+      ]
     },
     {
       "seq": 2,
@@ -13906,7 +17619,14 @@
           0.6
         ]
       ],
-      "colorfulness": 1.7
+      "dominantWeights": [
+        0.586,
+        0.317,
+        0.097
+      ],
+      "colorfulness": 1.7,
+      "chromaShare": 0,
+      "keyColor": null
     },
     {
       "seq": 1,
@@ -13947,7 +17667,14 @@
           0.3
         ]
       ],
-      "colorfulness": 0.9
+      "dominantWeights": [
+        0.38,
+        0.378,
+        0.243
+      ],
+      "colorfulness": 0.9,
+      "chromaShare": 0,
+      "keyColor": null
     }
   ]
 }

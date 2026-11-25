@@ -6,6 +6,7 @@ import { EMBEDDING_DIM, truncate } from "../../explainer/explainerConstants";
 import { Section, Wide } from "../../explainer/explainerPrimitives";
 import type { MetricKey } from "../../graph/similarityConfig";
 import { GuideLink } from "../GuideLink";
+import { Term } from "../Term";
 import { LESSONS, lessonForMetric, pageDef } from "../lessons";
 import { formatDistance } from "../SpecimenBar";
 import { computeSpecimen, isEmbeddingMetric, useAllEmbeddings } from "../specimen";
@@ -27,14 +28,14 @@ const METHODS: { metric: MetricKey; name: string }[] = [
 const FACTS: Record<MetricKey, { looksAt: string; input: string; output: string; range: string; goodFor: string }> = {
   color: {
     looksAt: "The dominant colors",
-    input: "A 64-pixel thumbnail, in CIELAB",
-    output: "Three dominant colors",
-    range: "Under ~10 reads as the same color; above ~50 is far apart",
+    input: "A thumbnail 64 pixels on its long side, in CIELAB",
+    output: "Three dominant colors and a key color",
+    range: "Under ~10 is the same color name; above ~50 is far apart",
     goodFor: "Palette and mood",
   },
   phash: {
     looksAt: "The broad brightness layout",
-    input: "About 32 × 32, grayscale",
+    input: "32 × 32, grayscale",
     output: "A 64-bit hash",
     range: "Bits that differ, 0 to 64; under ~10 is a near-duplicate",
     goodFor: "Near-duplicates",
@@ -86,10 +87,14 @@ export function Overview({ anchor, pool }: { anchor: Panel | null; pool: Panel[]
         <p>
           Every sort on this site answers the same question: which panels are most like this one? The answer depends
           on what's doing the looking. Each of five methods turns a panel into something it can measure (a few
-          colors, a fingerprint of its brightness, a long list of numbers from a neural network) and calls two panels
+          colors, a fingerprint of its brightness, a long list of numbers from a{" "}
+          <Term id="neural-network" first>neural network</Term>) and calls two panels
           alike when those measurements are close.
         </p>
-        <p>Here's the anchor panel, and the one panel each method picks as its nearest neighbour:</p>
+        <p>
+          Here's the <Term id="anchor" first>anchor panel</Term>, and the one panel each method picks as its nearest
+          neighbour:
+        </p>
         <Wide>
           <div className="guide-compare" role="list">
             {anchor && (
@@ -123,7 +128,8 @@ export function Overview({ anchor, pool }: { anchor: Panel | null; pool: Panel[]
         </Wide>
         <p>
           They rarely agree. Each lesson follows one method from the image to the distance, worked through on this
-          same anchor panel. Shuffle it, or pick your own, from the worked example.
+          same anchor panel (all but pHash, which follows one panel before and after restoration instead). Shuffle
+          it, or pick your own, from the worked example.
         </p>
       </Section>
 

@@ -3,12 +3,16 @@ import {
   SORT_OPTIONS,
   cosineDistance,
   hammingDistanceHex,
+  isChromatic,
+  matchPalettes,
   paletteDistance,
+  sortColor,
   sortPanels,
   sortPanelsAsync,
   type SortMode,
 } from "./sorting";
 import { makePanel } from "./testPanel";
+import type { Panel } from "../types";
 
 const at = (iso: string) => new Date(iso).toISOString();
 
@@ -193,35 +197,61 @@ describe("sortPanels", () => {
   });
 
   describe("color mode", () => {
-    const red = makePanel({
-      id: "red",
-      colorfulness: 30,
-      dominantColors: [[50, 60, 40]],
-    });
-    const blue = makePanel({
-      id: "blue",
-      colorfulness: 30,
-      dominantColors: [[50, 20, -60]],
-    });
-    const grey = makePanel({
-      id: "grey",
-      colorfulness: 2,
-      dominantColors: [[50, 1, 1]],
-    });
+    /** a measured colour panel whose key colour sits at `hue` degrees. */
+    const keyed = (id: string, hue: number, L = 50, extra: Partial<Panel> = {}) =>
+      makePanel({
+        id,
+        colorfulness: 30,
+        dominantColors: [[L, 1, 1]],
+        chromaShare: 0.4,
+        keyColor: [L, 40 * Math.cos((hue * Math.PI) / 180), 40 * Math.sin((hue * Math.PI) / 180)],
+        ...extra,
+      });
+    const ids = (panels: Panel[]) => sortPanels(panels, "color").map((p) => p.id);
+
+    const red = makePanel({ id: "red", colorfulness: 30, dominantColors: [[50, 60, 40]] });
+    const grey = makePanel({ id: "grey", colorfulness: 2, dominantColors: [[50, 1, 1]] });
 
     it("puts every chromatic panel ahead of every achromatic one", () => {
-      const out = sortPanels([grey, blue, red], "color").map((p) => p.id);
+      const out = ids([grey, keyed("b", 280), keyed("a", 30)]);
       expect(out.indexOf("grey")).toBe(2);
     });
 
-    it("orders chromatic panels by hue", () => {
-      // Red sits near hue 0; blue is most of the way round the wheel.
-      expect(sortPanels([blue, red], "color").map((p) => p.id)).toEqual(["red", "blue"]);
+    it("starts the wheel at the widest stretch of hue no panel has", () => {
+      expect(ids([keyed("70", 70), keyed("10", 10), keyed("40", 40)])).toEqual(["10", "40", "70"]);
+      // across 0°: the empty stretch is 40°→350°, so 350 leads
+      expect(ids([keyed("40", 40), keyed("10", 10), keyed("350", 350)])).toEqual(["350", "10", "40"]);
     });
 
-    it("skips near-neutral entries when picking the hue", () => {
-      // The first entry is a low-chroma grey, so the second drives the key —
-      // which puts this panel next to `red` rather than at the achromatic end.
+    it("alternates lightness direction from one hue band to the next", () => {
+      const panels = [
+        keyed("a-dark", 12, 30),
+        keyed("a-light", 10, 80),
+        keyed("b-light", 50, 80),
+        keyed("b-dark", 52, 30),
+      ];
+      // band one runs light to dark, band two dark to light
+      expect(ids(panels)).toEqual(["a-light", "a-dark", "b-dark", "b-light"]);
+    });
+
+    it("splits colour from black-and-white on chromaShare when it's measured", () => {
+      const spreadOnly = keyed("spread-only", 30, 50, { colorfulness: 30, chromaShare: 0.01 });
+      const washed = keyed("washed", 200, 50, { colorfulness: 2 });
+      expect(isChromatic(spreadOnly)).toBe(false);
+      expect(isChromatic(washed)).toBe(true);
+      expect(ids([spreadOnly, washed])).toEqual(["washed", "spread-only"]);
+    });
+
+    it("needs a key colour to count as colour", () => {
+      expect(isChromatic(keyed("no-key", 30, 50, { keyColor: null }))).toBe(false);
+    });
+
+    it("places a measured panel by its key colour, not its palette", () => {
+      const p = keyed("k", 200, 60, { dominantColors: [[50, 60, 40]] });
+      expect(sortColor(p)).toEqual(p.keyColor);
+    });
+
+    it("falls back to the first vivid palette colour for an unmeasured panel", () => {
       const leadingGrey = makePanel({
         id: "leading-grey",
         colorfulness: 30,
@@ -230,37 +260,56 @@ describe("sortPanels", () => {
           [50, 60, 40],
         ],
       });
-      expect(sortPanels([blue, leadingGrey], "color").map((p) => p.id)).toEqual([
-        "leading-grey",
-        "blue",
-      ]);
+      expect(sortColor(leadingGrey)).toEqual([50, 60, 40]);
     });
 
-    it("sorts a panel with no palette to the end of its bucket", () => {
+    it("orders black-and-white panels from light to dark, weighting by pixel share", () => {
+      const light = makePanel({ id: "light", colorfulness: 2, dominantColors: [[90, 0, 0], [10, 0, 0]], dominantWeights: [0.9, 0.1] });
+      const dark = makePanel({ id: "dark", colorfulness: 2, dominantColors: [[90, 0, 0], [10, 0, 0]], dominantWeights: [0.2, 0.8] });
+      expect(ids([dark, light])).toEqual(["light", "dark"]);
+    });
+
+    it("sorts a panel with no palette to the end", () => {
       const noPalette = makePanel({ id: "none", colorfulness: 30, dominantColors: null });
-      expect(sortPanels([noPalette, red], "color").map((p) => p.id)).toEqual(["red", "none"]);
+      expect(ids([noPalette, red, grey])).toEqual(["red", "grey", "none"]);
     });
 
     it("breaks ties between palette-less panels by date", () => {
-      const p1 = makePanel({
-        id: "p1",
-        colorfulness: 30,
-        dominantColors: null,
-        addedAt: at("2026-02-01"),
-      });
-      const p2 = makePanel({
-        id: "p2",
-        colorfulness: 30,
-        dominantColors: null,
-        addedAt: at("2026-01-01"),
-      });
-      expect(sortPanels([p1, p2], "color").map((p) => p.id)).toEqual(["p2", "p1"]);
+      const p1 = makePanel({ id: "p1", colorfulness: 30, dominantColors: null, addedAt: at("2026-02-01") });
+      const p2 = makePanel({ id: "p2", colorfulness: 30, dominantColors: null, addedAt: at("2026-01-01") });
+      expect(ids([p1, p2])).toEqual(["p2", "p1"]);
     });
 
     it("treats a null colorfulness as achromatic", () => {
       const unscored = makePanel({ id: "unscored", colorfulness: null, dominantColors: [[50, 60, 40]] });
-      expect(sortPanels([unscored, red], "color").map((p) => p.id)).toEqual(["red", "unscored"]);
+      expect(ids([unscored, red])).toEqual(["red", "unscored"]);
     });
+  });
+});
+
+describe("matchPalettes", () => {
+  type Lab = [number, number, number];
+  const white: Lab = [95, 0, 0];
+  const ink: Lab = [10, 0, 0];
+  const redC: Lab = [50, 60, 40];
+
+  it("pairs matching colours whatever their rank", () => {
+    expect(paletteDistance([white, redC, ink], [white, ink, redC])).toBeCloseTo(0);
+    const pairs = matchPalettes([white, redC, ink], [white, ink, redC])!;
+    expect(pairs.map((p) => p.distance)).toEqual([0, 0, 0]);
+  });
+
+  it("counts a colour by its share of the pixels", () => {
+    const blue: Lab = [50, 20, -60];
+    // the red-vs-blue pair is the only one that differs; it moves the result
+    // far more when red covers most of the panel than when it's a sliver
+    const big = paletteDistance([redC, white], [blue, white], [0.8, 0.2], [0.8, 0.2]);
+    const sliver = paletteDistance([redC, white], [blue, white], [0.02, 0.98], [0.02, 0.98]);
+    expect(big).toBeGreaterThan(sliver);
+  });
+
+  it("is null when either palette is missing", () => {
+    expect(matchPalettes(null, [white])).toBeNull();
   });
 });
 

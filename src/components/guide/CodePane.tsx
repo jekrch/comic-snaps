@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2, Minimize2, X } from "lucide-react";
 import type { CodeRef } from "../explainer/code/snippets";
@@ -53,6 +53,91 @@ export function usePresence<T>(value: T | null, ms: number): { item: T | null; l
   return { item: value ?? kept, leaving: value === null && kept !== null };
 }
 
+const FLIGHT_MS = { grow: 380, settle: 340 };
+
+/**
+ * Flies the pane between its slot in the margin and its expanded box over
+ * the column (FLIP on the box itself, not a scale, so the code never
+ * squashes): measure where it was and where it lands, pin it `fixed`, and
+ * animate top/left/width/height between the two. Toggling mid-flight starts
+ * from wherever it is on screen at that moment.
+ */
+function useFlight(ref: React.RefObject<HTMLDivElement | null>, expanded: boolean, leaving: boolean) {
+  const was = useRef(expanded);
+  const flight = useRef<Animation | null>(null);
+
+  const land = (el: HTMLElement) => {
+    flight.current?.cancel();
+    flight.current = null;
+    el.style.removeProperty("position");
+    el.style.removeProperty("z-index");
+    el.style.removeProperty("margin");
+  };
+
+  useLayoutEffect(() => {
+    if (was.current === expanded) return;
+    was.current = expanded;
+    const el = ref.current;
+    if (!el) return;
+    if (leaving || prefersReducedMotion() || typeof el.animate !== "function") {
+      land(el);
+      return;
+    }
+
+    // Where it is now: mid-flight it's held `fixed` inline, so its rect is
+    // what's on screen; otherwise put the old class back for a moment.
+    let from: DOMRect;
+    if (flight.current) {
+      from = el.getBoundingClientRect();
+      land(el);
+    } else {
+      el.classList.toggle("is-expanded", !expanded);
+      from = el.getBoundingClientRect();
+      el.classList.toggle("is-expanded", expanded);
+    }
+    const to = el.getBoundingClientRect();
+    if (Math.abs(from.left - to.left) + Math.abs(from.top - to.top) + Math.abs(from.width - to.width) < 1) return;
+
+    // The expanded shadow, read once from the stylesheet.
+    if (!expanded) el.classList.add("is-expanded");
+    const shadow = getComputedStyle(el).boxShadow;
+    if (!expanded) el.classList.remove("is-expanded");
+    const flat = "0 0 0 rgba(0, 0, 0, 0)";
+
+    el.style.position = "fixed";
+    el.style.zIndex = "6";
+    el.style.margin = "0";
+    const box = (r: DOMRect) => ({
+      top: `${r.top}px`,
+      left: `${r.left}px`,
+      width: `${r.width}px`,
+      height: `${r.height}px`,
+    });
+    const anim = el.animate(
+      [
+        { ...box(from), boxShadow: expanded ? flat : shadow },
+        { ...box(to), boxShadow: expanded ? shadow : flat },
+      ],
+      {
+        duration: expanded ? FLIGHT_MS.grow : FLIGHT_MS.settle,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        fill: "forwards",
+      }
+    );
+    flight.current = anim;
+    anim.onfinish = () => {
+      if (flight.current === anim) land(el);
+    };
+  }, [ref, expanded, leaving]);
+
+  useEffect(
+    () => () => {
+      flight.current?.cancel();
+    },
+    []
+  );
+}
+
 /**
  * A step's code, pinned in the margin beside the prose. It can expand to
  * take over the reading column for long snippets; a click beside it, or
@@ -74,16 +159,19 @@ export function CodePane({
   onClose: () => void;
   onGoToStep: () => void;
 }) {
-  // Which entrance to play: sliding into the margin, growing over the
-  // column, or settling back into the margin.
+  // The CSS entrance plays only on first arrival in the margin; expanding
+  // and collapsing are flown by useFlight from wherever the pane sits.
   const everExpanded = useRef(false);
   if (expanded) everExpanded.current = true;
-  const motion = leaving ? "out" : expanded ? "grow" : everExpanded.current ? "settle" : "in";
+  const motion = leaving ? "out" : everExpanded.current ? "moved" : "in";
+  const paneRef = useRef<HTMLDivElement>(null);
+  useFlight(paneRef, expanded, leaving);
 
   return (
     <>
       {expanded && !leaving && <div className="guide-code-scrim" onClick={() => onExpand(false)} aria-hidden="true" />}
       <div
+        ref={paneRef}
         className={`guide-code-pane${expanded ? " is-expanded" : ""}`}
         data-motion={motion}
         role="region"

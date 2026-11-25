@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 """
-Compute image dimensions, perceptual hashes, dominant colors, and a
-colorfulness score for gallery panels missing any of these fields.
+Compute image dimensions, perceptual hashes, dominant colors, a
+colorfulness score and the colour-sort features for gallery panels missing
+any of these fields.
 
 Reads gallery.json, finds entries missing any metadata field, computes all
 fields from the corresponding image files, and writes the updated gallery.json
 back. Panels that already have every field are skipped.
 
 Dominant colors are extracted via k-means clustering in CIELAB color space,
-stored as arrays of [L, a, b] values rounded to one decimal place.
+stored as arrays of [L, a, b] values rounded to one decimal place, with each
+cluster's share of the pixels in dominantWeights.
+
+The colour sort reads chromaShare (how much of the panel is coloured once the
+paper's tint is removed) and keyColor (the CIELAB colour the coloured pixels
+peak at), both measured in OKLab from the pixels rather than from the k-means
+centres; see compute_color_features in metadata/image_metadata.py.
 
 Colorfulness is the root-mean-square of the standard deviations of the a* and
 b* channels across all pixels. Truly achromatic images (B&W line art, greyscale
@@ -215,7 +222,7 @@ def main():
                     f"  OK: {panel['image']} → "
                     f"{meta['width']}x{meta['height']} "
                     f"phash={meta['phash']} "
-                    f"colorfulness={meta['colorfulness']} "
+                    f"colorfulness={meta['colorfulness']} chromaShare={meta['chromaShare']} "
                     f"colors=[{colors_preview}]"
                 )
 

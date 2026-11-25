@@ -248,7 +248,17 @@ export interface Panel {
   ahash: string;
   dhash: string;
   dominantColors: [number, number, number][] | null;
+  /** Each dominant color's share of the panel's pixels, in the same order. */
+  dominantWeights?: number[] | null;
   colorfulness: number | null;
+  /**
+   * The fraction of the panel's pixels that are coloured once the paper's
+   * tint is removed (scripts/metadata/image_metadata.py). The colour sort
+   * splits colour from black-and-white on this.
+   */
+  chromaShare?: number | null;
+  /** The colour the panel reads as, CIELAB [L, a, b]; null with too little colour for a hue. */
+  keyColor?: [number, number, number] | null;
   blur: "ew" | "nsfw" | null;
   blurStart: "all" | "top" | "bottom" | "right" | "left" | null;
   colorists?: string[];

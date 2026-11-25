@@ -199,7 +199,7 @@ export const COLOR_CODE: Record<"lab" | "palette" | "split" | "hue" | "distance"
       {
         file: META,
         symbol: "extract_dominant_colors",
-        note: "Groups the CIELAB pixels into three clusters (k-means) and keeps each cluster's centre, biggest first.",
+        note: "Groups the CIELAB pixels into three clusters (k-means) and keeps each cluster's centre and its share of the pixels, biggest first.",
       },
     ],
   },
@@ -208,8 +208,18 @@ export const COLOR_CODE: Record<"lab" | "palette" | "split" | "hue" | "distance"
     snippets: [
       {
         file: META,
-        symbol: "compute_colorfulness",
-        note: "The colorfulness score: how far the pixels' a* and b* values spread.",
+        symbol: "remove_paper_cast",
+        note: "Takes out the page's own tint first: yellowed paper and warm lamp light, measured at each lightness, and only where it matches the paper's own tint.",
+      },
+      {
+        file: META,
+        symbol: "compute_color_features",
+        note: "How much of the panel is coloured (chromaShare), and the colour it reads as, taken from the coloured pixels themselves.",
+      },
+      {
+        file: SORTING,
+        symbol: "isChromatic",
+        note: "In the browser: a panel counts as colour once 4% of its pixels are coloured.",
       },
       {
         file: NEIGHBORS,
@@ -221,12 +231,12 @@ export const COLOR_CODE: Record<"lab" | "palette" | "split" | "hue" | "distance"
     ],
   },
   hue: {
-    title: "Hue-angle sorting within each group",
+    title: "Lining color panels up by hue angle",
     snippets: [
       {
         file: SORTING,
-        symbol: "colorSortKey",
-        note: "Each panel's place in the colour sort: the hue angle of its first properly coloured dominant colour.",
+        symbol: "sortByColor",
+        note: "The colour sort: round the hue wheel from its emptiest point in 30° bands, lightness alternating direction band to band, then black-and-white panels light to dark.",
       },
     ],
   },
@@ -236,8 +246,12 @@ export const COLOR_CODE: Record<"lab" | "palette" | "split" | "hue" | "distance"
       {
         file: SORTING,
         symbol: "colorPerceptualWeight",
-        through: "paletteDistance",
-        note: "Weights each dominant colour by how much it matters (near-white and near-black count for little), then averages the CIELAB distances.",
+        note: "How much a colour matters: near-white and near-black count for little.",
+      },
+      {
+        file: SORTING,
+        symbol: "matchPalettes",
+        note: "Pairs the two palettes colour-for-colour whichever way makes them closest, each colour counted by its importance and its share of the pixels.",
       },
     ],
   },

@@ -64,9 +64,11 @@ export function PhashExplanation() {
       <Section step="luma" code={PHASH_CODE.hash}>
         <p>
           pHash ignores color. Its first step reduces every pixel to its{" "}
-          <Term id="luminance" first>luminance</Term>, a single brightness
+          <Term id="luminance" first>luma</Term>, a single brightness
           number from 0 (black) to 255 (white), by weighting the red, green
-          and blue values and adding them up:
+          and blue values and adding them up. (It's often called luminance,
+          though strictly luminance is the same kind of sum taken on linear
+          light, before a file's brightness curve is applied.)
         </p>
         <CodeBlock>{`L = 0.299 × R  +  0.587 × G  +  0.114 × B`}</CodeBlock>
         <p>
@@ -134,8 +136,8 @@ export function PhashExplanation() {
 
       <Section step="bits" code={PHASH_CODE.hash}>
         <p>
-          Each of the 64 numbers becomes one bit: 1 if it's above the median
-          of the 64, 0 if not. Splitting at the median makes the hash ignore
+          Each of the 64 numbers becomes one bit: 1 if it's above the{" "}
+          <Term id="median" first>median</Term> of the 64, 0 if not. Splitting at the median makes the hash ignore
           two things restorations change most. Brightening the whole image
           only moves the flat pattern's number, and that one is always far
           above the median. Stretching the contrast evenly multiplies every
@@ -145,8 +147,9 @@ export function PhashExplanation() {
           <BitsFigure example={e} />
         ))}
         <p>
-          Read across in rows of eight, the 64 bits are the 16 hex digits the
-          gallery stores for each panel. Because the split is at the median,
+          Read across in rows of eight, the 64 bits are the 16{" "}
+          <Term id="hex" first>hex digits</Term> the gallery stores for each
+          panel. Because the split is at the median,
           every hash has exactly 32 ones and 32 zeros.
         </p>
       </Section>

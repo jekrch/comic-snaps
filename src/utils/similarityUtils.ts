@@ -4,6 +4,7 @@ import {
   paletteDistance,
   cosineDistance,
   hammingDistanceHex,
+  isChromatic,
 } from "./sorting";
 import type { MetricKey } from "../components/graph/similarityConfig";
 
@@ -41,14 +42,15 @@ export function computeNeighbors(
       if (!aEmb || !bEmb) continue;
       dist = cosineDistance(aEmb, bEmb);
     } else if (metric === "color") {
-      const COLORFULNESS_THRESHOLD = 6;
-      const anchorIsChromatic = (anchor.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
-      const candidateIsChromatic = (p.colorfulness ?? 0) >= COLORFULNESS_THRESHOLD;
+      const anchorIsChromatic = isChromatic(anchor);
+      const candidateIsChromatic = isChromatic(p);
       if (anchorIsChromatic !== candidateIsChromatic) continue;
 
       dist = paletteDistance(
         anchor.dominantColors ?? null,
-        p.dominantColors ?? null
+        p.dominantColors ?? null,
+        anchor.dominantWeights,
+        p.dominantWeights
       );
     } else if (metric === "phash") {
       if (!anchor.phash || !p.phash) continue;
@@ -83,7 +85,7 @@ export function computeCrossDistance(
     if (!aE || !bE) return null;
     return cosineDistance(aE, bE);
   } else if (metric === "color") {
-    return paletteDistance(a.dominantColors ?? null, b.dominantColors ?? null);
+    return paletteDistance(a.dominantColors ?? null, b.dominantColors ?? null, a.dominantWeights, b.dominantWeights);
   } else if (metric === "phash") {
     if (!a.phash || !b.phash) return null;
     return hammingDistanceHex(String(a.phash), String(b.phash));

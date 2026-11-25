@@ -390,17 +390,18 @@ export function TransformerExamples({ model, modelName, dim }: { model: PatchMod
         <div className="mt-3 flex items-start gap-3">
           {maps.summary && <SummaryFigure src={src} maps={maps} />}
           <p>
-            DINOv2 also carries one extra token, <Term id="cls" first>CLS</Term>, which has no
-            patch of its own and only gathers from the others.
+            DINOv2 also carries one extra <Term id="token">token</Term>, <Term id="cls" first>CLS</Term>,
+            which has no pixels of its own: its numbers build up a summary of
+            the whole panel from the patches.
             {maps.summary && " The figure shows how much it drew from each patch of this panel in the last layer."}{" "}
-            Half of the arrow in the next step is CLS; the other half is the
-            plain average of every patch's final numbers.
+            The arrow in the next step averages CLS with the plain average of
+            every patch's final numbers, so each counts for half.
           </p>
         </div>
       ) : (
         <p>
           To get from {maps.cols * maps.rows} patches to one list for the
-          whole panel, SigLIP ends with one more attention step: a single
+          whole panel, SigLIP <Term id="pooling">pools</Term> them with one more attention step: a single
           learned question that gathers from all the patches at once. Its
           answer is the {dim} numbers in the next step.
         </p>

@@ -83,3 +83,54 @@ export function num(n: number, d = 0): string {
   const s = Math.abs(n).toFixed(d);
   return n < 0 && Number(s) !== 0 ? `−${s}` : s;
 }
+
+/** Shortest way round the wheel between two hue angles, 0–180. */
+export function hueGap(h1: number, h2: number): number {
+  const d = Math.abs(h1 - h2) % 360;
+  return d > 180 ? 360 - d : d;
+}
+
+/**
+ * The everyday name for a hue angle. CIELAB's angles aren't the familiar
+ * colour wheel's: sRGB red sits near 40°, yellow near 100°, green near 135°,
+ * cyan near 195° and pure blue as far round as 305°. Only saturated blues
+ * reach that far, though; a dusty colour at 300° already reads as purple.
+ */
+export function hueName(L: number, a: number, b: number): string {
+  const C = Math.hypot(a, b);
+  const h = hueDeg(a, b);
+  if (h >= 350 || h < 22) return L > 65 ? "pink" : "red";
+  if (h < 50) return C < 25 && L < 50 ? "brown" : L < 38 ? "maroon" : "red";
+  if (h < 75) return L < 50 ? "brown" : C < 25 && L > 60 ? "beige" : "orange";
+  if (h < 110) return L < 55 ? (C > 20 && h > 85 ? "olive" : "brown") : C < 25 && L > 60 ? "beige" : "yellow";
+  if (h < 165) return "green";
+  if (h < 225) return "teal";
+  if (h < (C > 60 ? 315 : 292)) return "blue";
+  return C > 45 ? "magenta" : "purple";
+}
+
+/** A plain-language name for a CIELAB colour: "a muted orange", "a near-black". */
+export function colorName(L: number, a: number, b: number): string {
+  const C = Math.hypot(a, b);
+  let name: string;
+  if (C < 8) {
+    name = L < 22 ? "near-black" : L > 88 ? "off-white" : L < 45 ? "dark grey" : L > 70 ? "light grey" : "grey";
+  } else {
+    const hue = hueName(L, a, b);
+    // One adjective at most, and none that the hue's own name already says.
+    const adj =
+      C < 15 && hue !== "beige"
+        ? "greyish"
+        : L < 35 && !["maroon", "brown", "olive"].includes(hue)
+          ? "dark"
+          : L > 78 && hue !== "beige"
+            ? "pale"
+            : C < 30 && hue !== "beige"
+              ? "muted"
+              : C > 55
+                ? "vivid"
+                : "";
+    name = adj ? `${adj} ${hue}` : hue;
+  }
+  return `${/^[aeiou]/.test(name) ? "an" : "a"} ${name}`;
+}

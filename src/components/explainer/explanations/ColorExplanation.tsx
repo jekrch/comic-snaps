@@ -6,6 +6,7 @@ import { Term } from "../../guide/Term";
 import { panelImageUrl } from "../../../utils/imageUrl";
 import { COLOR_CODE } from "../code/snippets";
 import { CielabPlane } from "../CielabPlane";
+import { PaletteDistance } from "../PaletteDistance";
 import { RgbVsLab } from "../RgbVsLab";
 
 
@@ -29,6 +30,11 @@ export function ColorExplanation({
   const anchorColor = anchorPanel.dominantColors?.[0];
   const closeColor = closest.panel.dominantColors?.[0];
   const farColor = furthest.panel.dominantColors?.[0];
+  const plane = anchorColor && closeColor && farColor
+    ? (stage: "channels" | "hue" | "distance") => (
+        <CielabPlane key={anchorPanel.id} stage={stage} anchor={anchorPanel} closest={closest} furthest={furthest} all={all} />
+      )
+    : () => null;
 
   return (
     <>
@@ -38,10 +44,12 @@ export function ColorExplanation({
           the human eye isn't equally sensitive to each channel. Two colors can
           be far apart in RGB numbers yet look almost identical, or close in
           RGB yet appear strikingly different. <Term id="cielab" first>CIELAB</Term> is a color
-          space specifically designed so that equal numeric distances correspond
-          to equal <Em>perceived</Em> differences. If two colors are 10 units
-          apart in CIELAB, they look about as different as any other pair that's
-          10 units apart, no matter where they sit on the spectrum.
+          space designed so that equal numeric distances correspond, roughly,
+          to equal <Em>perceived</Em> differences: two colors 10 units apart
+          should look about as different as any other pair 10 units apart,
+          wherever they sit. It's an approximation (CIELAB is known to be
+          uneven, especially among blues and vivid colors), but a far better
+          one than RGB.
         </p>
         <RgbVsLab pool={pool} />
       </Section>
@@ -67,36 +75,41 @@ export function ColorExplanation({
         </div>
         <p>
           Together these form a 3D space. Any color lands at a specific point
-          inside it. Two panels' dominant colors become two points, and the
-          question becomes: how far apart are they?
+          inside it. Each panel is boiled down to three{" "}
+          <Term id="palette" first>dominant colors</Term>, its palette, and
+          each becomes a point. The question becomes: how far apart are two
+          panels' points?
         </p>
 
-        {anchorColor && closeColor && farColor && (
-          <CielabPlane key={anchorPanel.id} anchor={anchorPanel} closest={closest} furthest={furthest} all={all} />
-        )}
+        {plane("channels")}
       </Section>
 
       <Section step="split" code={COLOR_CODE.split}>
         <p>
           Before sorting, panels are split into two groups: <Em>chromatic</Em>{" "}
           (color) and <Em>achromatic</Em> (black-and-white). This matters
-          because even grayscale pixels can have faint chroma values in CIELAB —
-          a warm paper tint or a slight scanner cast is enough to give a
-          technically "gray" pixel a nonzero position on the a*/b* axes. Without
-          this split, black-and-white panels would land somewhere on the hue
-          spectrum and break up the flow of actual color panels.
+          because a black-and-white page photographed under a lamp is never
+          perfectly gray: yellowed paper and warm light tint it, giving every
+          pixel a little <Term id="chroma" first>chroma</Term>, a nonzero
+          position on the a*/b* axes. Without the split, black-and-white panels
+          would land somewhere on the hue wheel and break up the flow of actual
+          color panels.
         </p>
         <p>
-          The split uses a <Term id="colorfulness" first>colorfulness score</Term> derived from the spread
-          of the a* and b* channels across the image. Panels with very little
-          spread (below a threshold of about 5) are classified as achromatic.
-          This is an interesting case where "colorfulness" is more of a human,
-          perceptual judgment than a strict property of the light — a warm-toned
-          newsprint scan might technically contain color, but it reads as
-          black-and-white to the eye.
+          So the split first takes that tint out. It measures the tint of the
+          paper and of each darker shade, and subtracts it wherever it looks
+          like the paper's: weak and warm, the color of old paper and lamplight.
+          Then it counts the pixels that are still clearly colored, skipping
+          the darkest, where black ink picks up the lamp's cast. That count, as
+          a fraction of the panel, is its{" "}
+          <Term id="chroma-share" first>chroma share</Term>. At 4% or more the
+          panel is color; below that it's black-and-white. Muted paint and
+          watercolor washes come in at 4–10%, black-and-white pages under a
+          warm lamp below 3%.
         </p>
         <p>
-          This partition also applies to the similarity graph: a color panel
+          This partition also applies to the{" "}
+          <Term id="similarity-graph" first>similarity graph</Term>: a color panel
           will only ever show other color panels as neighbors, and likewise for
           black-and-white. Cross-group comparisons are excluded entirely.
         </p>
@@ -104,22 +117,31 @@ export function ColorExplanation({
 
       <Section step="hue" code={COLOR_CODE.hue}>
         <p>
-          Within each group, panels are sorted by the <Term id="hue-angle" first>hue angle</Term> of
-          their most dominant color. The hue angle is calculated
-          from the a* and b* channels using the arctangent function, which
-          returns an angle around the color wheel. Reds sit near 0°,
-          yellows around 90°, greens near 180°, and blues near 270°.
+          Color panels are then lined up by{" "}
+          <Term id="hue-angle" first>hue angle</Term>: the direction of a color
+          around the a*/b* plane, worked out from a* and b* with the arctangent
+          function. CIELAB's angles aren't spaced like the familiar color
+          wheel's: reds sit near 40°, yellows near 100°, greens near 135°, and
+          blues out near 305°.
         </p>
-        <CodeBlock>
-{`hue  =  atan2( b*, a* )
-
-       ← reds → oranges → yellows → greens → blues → purples →`}
-        </CodeBlock>
+        <CodeBlock>{`hue  =  atan2( b*, a* )`}</CodeBlock>
         <p>
-          Sorting by this angle produces a natural spectrum walk: reds flow
-          into oranges, then yellows, greens, and so on. Lightness is used as
-          a tiebreaker when two panels have a similar hue, so darker and lighter
-          variants of the same color stay near each other.
+          The color whose hue counts is the panel's{" "}
+          <Term id="key-color" first>key color</Term>. The dominant colors
+          won't do: with only three, a panel usually spends one or two on paper
+          and ink, and the last averages all its real color together, so a
+          red-and-green panel comes out a muddy brown. The key color is
+          measured from the colored pixels themselves: the hue they peak at,
+          averaged over the pixels near that peak.
+        </p>
+        {plane("hue")}
+        <p>
+          The sort walks the wheel in 30° bands, starting at its widest empty
+          stretch so the seam splits no run of panels. Within a band, panels go
+          by lightness rather than exact hue, alternating light-to-dark and
+          dark-to-light from one band to the next so the panels either side of
+          a boundary stay close. Black-and-white panels come after every color
+          panel, lightest first.
         </p>
       </Section>
 
@@ -129,36 +151,38 @@ export function ColorExplanation({
           straight-line <Term id="delta-e" first>Euclidean distance</Term> through the full 3D CIELAB
           space between two panels' dominant colors.
         </p>
+        {plane("distance")}
         {anchorColor && closeColor && (
           <CodeBlock>
 {`distance  =  √( ΔL*² + Δa*² + Δb*² )
 
-closest:   √( ${fmt(anchorColor[0] - closeColor[0], 1)}² + ${fmt(anchorColor[1] - closeColor[1], 1)}² + ${fmt(anchorColor[2] - closeColor[2], 1)}² )  ≈  ${fmt(closest.distance, 2)}`}
+main colors only:   √( ${fmt(anchorColor[0] - closeColor[0], 1)}² + ${fmt(anchorColor[1] - closeColor[1], 1)}² + ${fmt(anchorColor[2] - closeColor[2], 1)}² )  ≈  ${fmt(Math.hypot(anchorColor[0] - closeColor[0], anchorColor[1] - closeColor[1], anchorColor[2] - closeColor[2]), 2)}`}
           </CodeBlock>
         )}
         <p>
-          The dashed lines in the diagram above are this distance projected
-          onto the a*/b* plane. The real distance also includes the L*
-          (lightness) difference, which is why the numbers may not perfectly
-          match the 2D picture.
+          That's one pair of colors. The distance is computed across all
+          palette entries, not just the dominant color: each panel has three,
+          and they're paired up whichever way makes the two palettes closest.
+          Each pair is weighted by its{" "}
+          <Term id="perceptual-weight" first>perceptual weight</Term>: a
+          combination of chroma (how saturated the color is), lightness
+          (peaking at mid-tones), and how much of the panel the color covers.
+          Near-white and near-black colors, the kind that come from page
+          margins, gutters, and panel borders, are heavily discounted so that
+          the actual artwork colors drive the result.
         </p>
-        <p>
-          The distance is computed across all palette entries, not just the
-          dominant color. Each entry is weighted by its <Em>perceptual
-          importance</Em>: a combination of chroma (how saturated the color is)
-          and lightness (peaking at mid-tones). Near-white and near-black
-          colors, the kind that come from page margins, gutters, and panel
-          borders, are heavily discounted so that the actual artwork colors
-          drive the result.
-        </p>
+        {anchorColor && closeColor && farColor && (
+          <PaletteDistance anchor={anchorPanel} closest={closest} furthest={furthest} />
+        )}
       </Section>
 
       <Section step="result">
         <p>
           Smaller numbers mean the colors are more alike to the human eye.
-          As a rough guide: a distance under ~10 is a very close match (most
-          people would call them "the same color"), 10–30 is noticeably
-          different, and above ~50 is quite far apart.
+          As a rough guide: a distance under ~10 is a very close match (the
+          colors would get the same name, though about 2 is the smallest
+          difference most people can see), 10–30 is noticeably different, and
+          above ~50 is quite far apart.
         </p>
         <PanelTrio
           items={[

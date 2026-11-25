@@ -6,7 +6,7 @@ const SPY_OFFSET = 140;
 export interface ScrollState {
   /** The step the reader is in, or null above the first one. */
   step: string | null;
-  /** 0 at the top of the page, 1 at the bottom. */
+  /** 0 at the top of the page, 1 at the end of the reading (see `data-progress-end`). */
   progress: number;
   /** Scrolling down (true) or up (false), past a small threshold. */
   down: boolean;
@@ -41,7 +41,9 @@ export function useScrollSpy(
     const st = scroller.scrollTop;
     // At the very bottom, the last step counts as reached even if it's short.
     if (max > 0 && st >= max - 4 && steps.length > 0) step = steps[steps.length - 1].dataset.step ?? step;
-    const progress = max > 0 ? Math.min(1, Math.max(0, st / max)) : 1;
+    const end = scroller.querySelector<HTMLElement>("[data-progress-end]");
+    const endAt = end ? end.getBoundingClientRect().top - top + st : null;
+    const progress = readingProgress(st, max, endAt, scroller.clientHeight);
     const delta = st - last.current;
     setState((prev) => {
       const down = Math.abs(delta) > 6 ? delta > 0 : prev.down;
@@ -75,6 +77,17 @@ export function useScrollSpy(
   return state;
 }
 
+/**
+ * How far through the reading the reader is, 0 to 1. It runs to where the
+ * reading ends rather than the page's bottom: `endAt`, the scroll offset of
+ * whatever is marked `data-progress-end` (a lesson's sources), and nothing
+ * after it counts. Full once that mark reaches the bottom of the view.
+ */
+export function readingProgress(scrollTop: number, maxScroll: number, endAt: number | null, viewHeight: number): number {
+  const span = endAt === null ? maxScroll : Math.min(maxScroll, Math.max(1, endAt - viewHeight));
+  return span > 0 ? Math.min(1, Math.max(0, scrollTop / span)) : 1;
+}
+
 export function useMediaQuery(query: string): boolean {
   const [match, setMatch] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
   useEffect(() => {
@@ -93,6 +106,7 @@ export function useMediaQuery(query: string): boolean {
 
 const POS_KEY = "comicSnaps.guide.positions";
 const DONE_KEY = "comicSnaps.guide.finished";
+const TLDR_KEY = "comicSnaps.guide.tldr";
 
 function readJson<T>(key: string, fallback: T): T {
   try {
@@ -132,6 +146,15 @@ export function markFinished(page: string) {
   if (all.has(page)) return;
   all.add(page);
   writeJson(DONE_KEY, [...all]);
+}
+
+/** Whether the reader last chose the lessons' short versions. */
+export function tldrPreferred(): boolean {
+  return readJson<boolean>(TLDR_KEY, false) === true;
+}
+
+export function setTldrPreferred(on: boolean) {
+  writeJson(TLDR_KEY, on);
 }
 
 export function prefersReducedMotion(): boolean {

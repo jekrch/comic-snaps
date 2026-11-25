@@ -14,14 +14,15 @@ import { EMBEDDING_CODE } from "../code/snippets";
 import { Term } from "../../guide/Term";
 import { GuideLink, Recap } from "../../guide/GuideLink";
 
-type EmbeddingMetric = "embedding-siglip" | "embedding-dino" | "embedding-gram";
+export type EmbeddingMetric = "embedding-siglip" | "embedding-dino" | "embedding-gram";
 type EmbeddingMap = Record<string, number[]>;
 
 /** How each model's input is prepared; sits beside the PreprocessFigure. */
 const PREPARATION: Record<EmbeddingMetric, React.ReactNode> = {
   "embedding-siglip": (
     <>
-      SigLIP only accepts a 224 × 224 pixel square, so every panel is squashed to fit and then cut into a 14 × 14
+      SigLIP is a <Term id="vision-language" first>vision-language</Term> model, trained on images paired with their
+      captions. It only accepts a 224 × 224 pixel square, so every panel is squashed to fit and then cut into a 14 × 14
       grid of 16-pixel <Term id="patch" first>patches</Term>, which the model reads like words in a sentence.
       Squashing keeps the whole picture but stretches it, and 224 pixels is coarse, which is part of why SigLIP picks
       up the gist more than the fine linework.
@@ -29,7 +30,8 @@ const PREPARATION: Record<EmbeddingMetric, React.ReactNode> = {
   ),
   "embedding-dino": (
     <>
-      DINOv2 gets each panel whole and at its own shape. It's scaled so the short side is 256 pixels and then cut
+      DINOv2 is <Term id="self-supervised" first>self-supervised</Term>: it learned from pictures alone, with no
+      captions or labels. It gets each panel whole and at its own shape, scaled so the short side is 256 pixels and then cut
       into a grid of 14-pixel <Term id="patch">patches</Term>, however many that takes, so a wide panel just gets a
       longer grid. (Out of the box, DINOv2 would crop to the centre square instead, which cut off a third or more of
       a typical panel.)
@@ -37,7 +39,8 @@ const PREPARATION: Record<EmbeddingMetric, React.ReactNode> = {
   ),
   "embedding-gram": (
     <>
-      VGG-16 gets the whole panel at its own shape, scaled so the short side is 448 pixels: twice the detail SigLIP
+      <Term id="vgg16" first>VGG-16</Term>, a network built to name what's in a photo, gets the whole panel at its
+      own shape, scaled so the short side is 448 pixels: twice the detail SigLIP
       gets, because hatching and line weight live in the small stuff. It doesn't cut the image into patches. Instead
       it slides small <Term id="filter" first>filters</Term> across it, layer after layer, from fine marks up to
       broader strokes. The <Term id="gram" first>Gram matrix</Term> then records which filters fire together across
@@ -76,7 +79,7 @@ const TRANSFORMER: Partial<Record<EmbeddingMetric, { key: PatchModel; name: stri
 /** How many of a vector's numbers the cell strips show. */
 const STRIP_CELLS = 96;
 
-const ANGLE_WORDS: Record<EmbeddingMetric, string> = {
+export const ANGLE_WORDS: Record<EmbeddingMetric, string> = {
   "embedding-siglip": "subject, composition, mood",
   "embedding-dino": "shapes, spatial layout, texture",
   "embedding-gram": "line quality, hatching, ink texture",
@@ -132,7 +135,7 @@ function preview(vec: number[] | undefined): string {
   return `[${comp(vec[0])}, ${comp(vec[1])}, ${comp(vec[2])}, …, ${comp(vec[vec.length - 1])}]`;
 }
 
-interface WorkedProps {
+export interface WorkedProps {
   closest: NeighborInfo;
   furthest: NeighborInfo;
   anchorPanel: Panel;
@@ -142,7 +145,7 @@ interface WorkedProps {
  * The anchor's real vectors and everything worked out from them. Whoever
  * opened the Guide has usually loaded the file already.
  */
-function useWorkedNumbers(mode: EmbeddingMetric, { anchorPanel, closest, furthest }: WorkedProps) {
+export function useWorkedNumbers(mode: EmbeddingMetric, { anchorPanel, closest, furthest }: WorkedProps) {
   const [embeddings, setEmbeddings] = useState<EmbeddingMap | null>(() => peekEmbeddings(mode));
   useEffect(() => {
     const have = peekEmbeddings(mode);
@@ -193,7 +196,7 @@ function useWorkedNumbers(mode: EmbeddingMetric, { anchorPanel, closest, furthes
   };
 }
 
-type Worked = ReturnType<typeof useWorkedNumbers>;
+export type Worked = ReturnType<typeof useWorkedNumbers>;
 
 // Blocks shared by the Vectors lesson and the model lessons. Each takes the
 // worked numbers, so the same figure reads off whichever model's vectors.
@@ -220,7 +223,7 @@ function fixedNote(w: Worked, what: string): string {
   return ` The bright ${cells} in the same spot on every row ${verb} ${what} for every panel in the gallery: a quirk of the model, not something these panels share. It adds the same amount to every pair's similarity, which is part of why the distances bunch up.`;
 }
 
-function ValueStrips({ w, anchorPanel, closest, furthest }: { w: Worked } & WorkedProps) {
+export function ValueStrips({ w, anchorPanel, closest, furthest }: { w: Worked } & WorkedProps) {
   if (!w.strips || !w.anchorVec || !w.closeVec || !w.farVec) return null;
   return (
     <VectorStrips
@@ -270,7 +273,7 @@ function DotProduct({ w }: { w: Worked }) {
   );
 }
 
-function Angle({ w }: { w: Worked }) {
+export function Angle({ w }: { w: Worked }) {
   return (
     <>
       <AngleDiagram closeDist={w.closeDist} farDist={w.farDist} />
@@ -439,8 +442,9 @@ export function EmbeddingExplanation({
       {transformer && (
         <Section step="attention" code={code.patches}>
           <p>
-            {transformer.name} reads the patches the way a language model reads words. Each patch starts as {w.dim}{" "}
-            numbers describing only its own pixels and where it sits in the grid. Then come 12 rounds, called{" "}
+            {transformer.name} is a <Term id="transformer" first>transformer</Term>: it reads the patches the way a
+            language model reads words. Each patch becomes a <Term id="token" first>token</Term>, starting as{" "}
+            {w.dim} numbers that describe only its own pixels and where it sits in the grid. Then come 12 rounds, called{" "}
             <Term id="layer" first>layers</Term>. In every layer, each patch compares itself with every other patch,
             weighs which ones matter to it (a step called <Term id="attention" first>attention</Term>), and folds
             some of what they hold into its own numbers.
@@ -452,9 +456,14 @@ export function EmbeddingExplanation({
 
       <Section step="arrows" code={code.direction}>
         <p>
-          {transformer
-            ? `For every panel, the end result is ${w.dim} numbers.`
-            : `A neural network looks at each panel and produces ${w.dim} numbers.`}{" "}
+          {transformer ? (
+            <>
+              For every panel, the patches' final numbers are <Term id="pooling" first>pooled</Term> into one list
+              of {w.dim}.
+            </>
+          ) : (
+            `Each panel ends up as ${w.dim} numbers.`
+          )}{" "}
           They define an <Term id="vector">arrow</Term> through {w.dim}-dimensional space, and its direction encodes
           what {info.name} sees in that image: {ANGLE_WORDS[mode]}, all compressed into orientation.
         </p>

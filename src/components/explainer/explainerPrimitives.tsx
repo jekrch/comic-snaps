@@ -1,15 +1,21 @@
-import { useId, useMemo } from "react";
+import { useContext, useId, useMemo } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useLightbox, type ViewerItem } from "@jekrch/react-viewport-lightbox";
 import { viewerIcons } from "../viewerIcons";
 import type { CodeRef } from "./code/snippets";
 import { GUIDE_OVERLAY_Z, STOP_EVENTS, useOverlay } from "../guide/overlayStack";
-import { StepContext, useGuide } from "../guide/guideContext";
+import { StepContext, VariantContext, useGuide } from "../guide/guideContext";
 import { stepDef, stepNumber } from "../guide/lessons";
 
 // Section: one numbered step of a lesson. Its number, title and anchor id
 // come from the lesson registry (guide/lessons.ts), so a lesson only names
 // the step.
+//
+// On a lesson with a short version, both versions are mounted and each step
+// shows one of them: a Section renders only when its step is in its
+// version, into the step's slot (see `stepSlot`), so the reader can open
+// one step in full without leaving the short version, or the reverse.
 
 export function Section({
   step,
@@ -21,13 +27,19 @@ export function Section({
   code?: CodeRef | null;
   children: React.ReactNode;
 }) {
-  const { page, codeStep, openCode, copyStepLink } = useGuide();
+  const { page, codeStep, openCode, copyStepLink, stepShort, setStepShort, stepSlot, swapped } = useGuide();
+  const variant = useContext(VariantContext);
   const n = stepNumber(page, step);
   const title = stepDef(page, step)?.title ?? step;
   const codeOpen = codeStep === step;
-  return (
-    <section id={step} data-step={step} className="guide-step">
-      <h2 className="guide-step-heading">
+  const justSwapped = !!swapped?.has(step);
+  // A step whose versions can be swapped: the switch sits in its heading.
+  const switchable = variant !== null && !!stepShort;
+  if (switchable && stepShort(step) !== (variant === "short")) return null;
+
+  const content = (
+    <>
+      <h2 className={`guide-step-heading${justSwapped ? " is-swapped" : ""}`}>
         <span className="guide-step-num">{n > 0 ? n : "·"}</span>
         <span className="guide-step-title">{title}</span>
         <a
@@ -42,21 +54,67 @@ export function Section({
         >
           #
         </a>
-        {code && (
-          <button
-            type="button"
-            onClick={() => openCode(step, code)}
-            className="guide-code-btn"
-            aria-pressed={codeOpen}
-            title="See the code behind this step"
-          >
-            {"</> code"}
-          </button>
-        )}
+        <span className="guide-step-tools">
+          {code &&
+            (variant !== "short" ? (
+              <button
+                type="button"
+                onClick={() => openCode(step, code)}
+                className={`guide-code-btn${justSwapped ? " is-entering" : ""}`}
+                aria-pressed={codeOpen}
+                title="See the code behind this step"
+              >
+                {"</> code"}
+              </button>
+            ) : (
+              // Folded just now: a stand-in plays the button's exit, since
+              // the full version that owned it is gone.
+              justSwapped && (
+                <span className="guide-code-btn is-leaving" aria-hidden="true">
+                  {"</> code"}
+                </span>
+              )
+            ))}
+          {variant === "short" ? (
+            <button
+              type="button"
+              onClick={() => setStepShort(step, false)}
+              className="guide-code-btn guide-more-btn"
+              aria-expanded={false}
+              title="Open this step in full, here"
+            >
+              <ChevronDown size={13} strokeWidth={1.75} aria-hidden="true" />
+              <span>Full</span>
+            </button>
+          ) : (
+            switchable && (
+              <button
+                type="button"
+                onClick={() => setStepShort(step, true)}
+                className="guide-code-btn guide-more-btn"
+                aria-expanded={true}
+                title="Fold this step back to its short version"
+              >
+                <ChevronUp size={13} strokeWidth={1.75} aria-hidden="true" />
+                <span>TL;DR</span>
+              </button>
+            )
+          )}
+        </span>
       </h2>
       <StepContext.Provider value={step}>
-        <div className="guide-step-body">{children}</div>
+        <div className={`guide-step-body${justSwapped ? " is-swapped" : ""}`}>{children}</div>
       </StepContext.Provider>
+    </>
+  );
+
+  if (variant !== null && stepSlot) {
+    const slot = stepSlot(step);
+    return slot ? createPortal(content, slot) : null;
+  }
+  return (
+    <section id={step} data-step={step} className={`guide-step${variant === "short" ? " is-short" : ""}`}>
+      {content}
     </section>
   );
 }

@@ -41,6 +41,11 @@ export interface PageDef {
   buildsOn: LessonId[];
   /** Rough reading time. */
   minutes: number;
+  /**
+   * The lesson's short version: its reading time, and the one sentence that
+   * stands in for the lede. Lessons only; the switch shows where it's set.
+   */
+  tldr?: { minutes: number; gist: string };
   steps: StepDef[];
 }
 
@@ -74,11 +79,15 @@ export const PAGES: PageDef[] = [
     metric: "color",
     buildsOn: [],
     minutes: 6,
+    tldr: {
+      minutes: 2,
+      gist: "Panels are lined up around the color wheel, and compared by how different their main colors look to a person.",
+    },
     steps: [
       { id: "rgb", title: "Why not just use RGB?", short: "Why not RGB" },
       { id: "channels", title: "The three CIELAB channels", short: "CIELAB channels" },
       { id: "split", title: "Color vs. black-and-white", short: "Color vs. B&W" },
-      { id: "hue", title: "Hue-angle sorting within each group", short: "Hue angle" },
+      { id: "hue", title: "Lining color panels up by hue angle", short: "Hue angle" },
       { id: "distance", title: "Measuring distance between neighbors", short: "Distance" },
       { id: "result", title: "Reading the result", short: "Reading it" },
     ],
@@ -92,6 +101,10 @@ export const PAGES: PageDef[] = [
     ownExample: true,
     buildsOn: [],
     minutes: 7,
+    tldr: {
+      minutes: 2,
+      gist: "A 64-bit fingerprint of where a panel is light and dark: good at spotting the same picture twice, weak at ranking different ones.",
+    },
     steps: [
       { id: "pair", title: "One panel, two photos", short: "Two photos" },
       { id: "luma", title: "Keep only the brightness", short: "Luminance" },
@@ -109,6 +122,10 @@ export const PAGES: PageDef[] = [
     family: "Shared by every model",
     buildsOn: [],
     minutes: 5,
+    tldr: {
+      minutes: 1,
+      gist: "A model turns each panel into a long list of numbers, an arrow; two panels are alike when their arrows point the same way.",
+    },
     steps: [
       { id: "arrows", title: "Numbers as an arrow", short: "Arrows" },
       { id: "normalize", title: "Same length, different directions", short: "Normalization" },
@@ -124,6 +141,10 @@ export const PAGES: PageDef[] = [
     metric: "embedding-siglip",
     buildsOn: ["vectors"],
     minutes: 9,
+    tldr: {
+      minutes: 2,
+      gist: "SigLIP learned from captions, so two panels sit close when they'd be described alike: same subject, mood or composition.",
+    },
     steps: EMBEDDING_STEPS(true),
   },
   {
@@ -134,6 +155,10 @@ export const PAGES: PageDef[] = [
     metric: "embedding-dino",
     buildsOn: ["vectors"],
     minutes: 9,
+    tldr: {
+      minutes: 2,
+      gist: "DINOv2 learned from pictures alone, so two panels sit close when they look alike: shapes, layout and texture.",
+    },
     steps: EMBEDDING_STEPS(true),
   },
   {
@@ -144,6 +169,10 @@ export const PAGES: PageDef[] = [
     metric: "embedding-gram",
     buildsOn: ["vectors"],
     minutes: 6,
+    tldr: {
+      minutes: 1,
+      gist: "The Gram model ignores what's drawn and where, and compares how it's drawn: line, hatching and ink.",
+    },
     steps: EMBEDDING_STEPS(false),
   },
   {

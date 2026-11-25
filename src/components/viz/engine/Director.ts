@@ -1489,7 +1489,12 @@ export class Director {
   private byPalette(anchor: Panel, pool: Panel[], far: boolean): Panel | null {
     if (!anchor.dominantColors) return null;
     return this.extreme(pool, far, (panel) => {
-      const distance = paletteDistance(anchor.dominantColors, panel.dominantColors);
+      const distance = paletteDistance(
+        anchor.dominantColors,
+        panel.dominantColors,
+        anchor.dominantWeights,
+        panel.dominantWeights
+      );
       return Number.isFinite(distance) ? distance : null;
     });
   }
