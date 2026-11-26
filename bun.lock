@@ -5,7 +5,7 @@
     "": {
       "name": "comic-snaps",
       "dependencies": {
-        "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#54d3df124f6050f0689b9cb0de7ae4b859edb957",
+        "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#02480c5915d820dc098773319927c54623cc9de2",
         "@jekrch/react-viewport-lightbox": "^1.0.2",
         "@xyflow/react": "^12.11.2",
         "lucide-react": "^0.575.0",
@@ -46,7 +46,7 @@
 
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@1.2.2", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA=="],
 
-    "@jekrch/dimensional-docs": ["@jekrch/dimensional-docs@git+ssh://git@github.com/jekrch/dimensional-docs.git#54d3df124f6050f0689b9cb0de7ae4b859edb957", { "peerDependencies": { "react": ">=19", "react-dom": ">=19" } }, "54d3df124f6050f0689b9cb0de7ae4b859edb957"],
+    "@jekrch/dimensional-docs": ["@jekrch/dimensional-docs@git+ssh://git@github.com/jekrch/dimensional-docs.git#02480c5915d820dc098773319927c54623cc9de2", { "peerDependencies": { "react": ">=19", "react-dom": ">=19", "vite": ">=6" }, "optionalPeers": ["vite"], "bin": { "dimensional": "./dist/cli.js" } }, "02480c5915d820dc098773319927c54623cc9de2"],
 
     "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@1.0.2", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-trlQaV2EH6ETpqjoGQrZ9kj7FMs8M8zUc3+BjOwVYmQV/vb3x0+b0aWhi6A8LG8LeHDT83I3623uBvHo1yyUdw=="],
 
