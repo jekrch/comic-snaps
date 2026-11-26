@@ -15,7 +15,7 @@
     "dimensional:update": "node scripts/update-dimensional.mjs"
   },
   "dependencies": {
-    "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#99a6dbbb0272dab2118ba1abefb1d164e2be624f",
+    "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#54d3df124f6050f0689b9cb0de7ae4b859edb957",
     "@jekrch/react-viewport-lightbox": "^1.0.2",
     "@xyflow/react": "^12.11.2",
     "lucide-react": "^0.575.0",
