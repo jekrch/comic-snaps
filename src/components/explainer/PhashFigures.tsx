@@ -180,7 +180,7 @@ export function PairFigure({ example }: { example: PhashExample }) {
       <PairRow aspects={aspects}>
         <figure className="m-0">
           <div className="relative w-full overflow-hidden" style={{ ...frameStyle, aspectRatio: `${before.width} / ${before.height}` }}>
-            <img src={sideSrc(before)} alt={`${exampleLabel(example)}, as photographed`} className="block w-full h-full" draggable={false} />
+            <img decoding="async" src={sideSrc(before)} alt={`${exampleLabel(example)}, as photographed`} className="block w-full h-full" draggable={false} />
             {quad && (
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full" aria-hidden="true">
                 <polygon
@@ -198,7 +198,7 @@ export function PairFigure({ example }: { example: PhashExample }) {
         </figure>
         <figure className="m-0">
           <div className="relative w-full overflow-hidden" style={{ ...frameStyle, aspectRatio: `${after.width} / ${after.height}` }}>
-            <img src={sideSrc(after)} alt={`${exampleLabel(example)}, restored`} className="block w-full h-full" draggable={false} />
+            <img decoding="async" src={sideSrc(after)} alt={`${exampleLabel(example)}, restored`} className="block w-full h-full" draggable={false} />
           </div>
           <SideCaption title="Restored" detail={`${after.width} × ${after.height}`} />
         </figure>
@@ -216,30 +216,68 @@ export function PairFigure({ example }: { example: PhashExample }) {
 // --- 2. Luminance ------------------------------------------------------------
 
 /** An image's pixels, read once it loads. Null until then, or if it can't be read. */
+/**
+ * The pixels the luma probe reads, kept per image. Read once, at most
+ * PROBE_SIDE on the long side (the probe averages a small patch, so full
+ * resolution buys nothing), and only when the page is idle: reading a full
+ * photo into a canvas blocks the main thread long enough to stall the
+ * step's opening glide, and the figure mounts afresh each time the step
+ * opens.
+ */
+const PROBE_SIDE = 640;
+const pixelReads = new Map<string, Promise<ImageData | null>>();
+const pixelsRead = new Map<string, ImageData | null>();
+
+function readPixels(src: string): Promise<ImageData | null> {
+  let read = pixelReads.get(src);
+  if (!read) {
+    read = (async () => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = src;
+      await img.decode();
+      const scale = Math.min(1, PROBE_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
+      // Scaled off the main thread where the browser can.
+      const source: CanvasImageSource =
+        typeof createImageBitmap === "function"
+          ? await createImageBitmap(img, { resizeWidth: w, resizeHeight: h, resizeQuality: "medium" })
+          : img;
+      const c = document.createElement("canvas");
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return null;
+      ctx.drawImage(source, 0, 0, w, h);
+      if ("close" in source) source.close();
+      // A cross-origin image can't be read; the probe just stays off.
+      return ctx.getImageData(0, 0, w, h);
+    })().catch(() => null);
+    read.then((data) => pixelsRead.set(src, data));
+    pixelReads.set(src, read);
+  }
+  return read;
+}
+
 function usePixels(src: string): ImageData | null {
-  const [data, setData] = useState<ImageData | null>(null);
+  const [data, setData] = useState<ImageData | null>(() => pixelsRead.get(src) ?? null);
   useEffect(() => {
     let live = true;
-    setData(null);
-    const img = new Image();
-    img.decoding = "async";
-    img.onload = () => {
-      if (!live) return;
-      const c = document.createElement("canvas");
-      c.width = img.naturalWidth;
-      c.height = img.naturalHeight;
-      const ctx = c.getContext("2d", { willReadFrequently: true });
-      if (!ctx) return;
-      ctx.drawImage(img, 0, 0);
-      try {
-        setData(ctx.getImageData(0, 0, c.width, c.height));
-      } catch {
-        // A cross-origin image can't be read; the probe just stays off.
-      }
+    const have = pixelsRead.get(src);
+    setData(have ?? null);
+    if (have !== undefined) return;
+    const start = () => {
+      readPixels(src).then((d) => {
+        if (live) setData(d);
+      });
     };
-    img.src = src;
+    const idle = typeof requestIdleCallback === "function";
+    const handle = idle ? requestIdleCallback(start, { timeout: 2000 }) : window.setTimeout(start, 700);
     return () => {
       live = false;
+      if (idle) cancelIdleCallback(handle);
+      else window.clearTimeout(handle);
     };
   }, [src]);
   return data;
@@ -279,8 +317,10 @@ function WipeImage({
     const cy = Math.floor(y * pixels.height);
     const sum = [0, 0, 0];
     let n = 0;
-    for (let dy = -2; dy <= 2; dy++)
-      for (let dx = -2; dx <= 2; dx++) {
+    // The pixels are read scaled down (PROBE_SIDE), so 3 × 3 here covers
+    // about the 5 × 5 it did at full size.
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++) {
         const px = cx + dx;
         const py = cy + dy;
         if (px < 0 || py < 0 || px >= pixels.width || py >= pixels.height) continue;
@@ -300,10 +340,11 @@ function WipeImage({
         onPointerMove={read}
         onPointerDown={read}
       >
-        <img src={sideSrc(side)} alt="" className="absolute inset-0 block w-full h-full" draggable={false} />
+        <img src={sideSrc(side)} alt="" decoding="async" className="absolute inset-0 block w-full h-full" draggable={false} />
         <img
           src={panelImageUrl(side.luma)}
           alt=""
+          decoding="async"
           className="absolute inset-0 block w-full h-full"
           draggable={false}
           style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}

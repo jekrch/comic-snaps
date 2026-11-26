@@ -63,6 +63,12 @@ const JUMP_OFFSET_PHONE = 112;
 /** A step's glide between its short and full heights, scaled by the distance. */
 const GLIDE_MIN_MS = 300;
 const GLIDE_MAX_MS = 560;
+/**
+ * The glide's curve: a cubic ease-out. The Guide's usual expo curve covers
+ * nine tenths of the way in a third of the time, and on a long step the
+ * last tenth crawls in long enough to read as stuck.
+ */
+const GLIDE_EASE = "cubic-bezier(0.33, 1, 0.68, 1)";
 
 /** Short page ledes, for the pages that aren't one of the five methods. */
 const LEDES: Partial<Record<PageId, string>> = {
@@ -446,10 +452,11 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
     if (reduced) return;
 
     gliding.current.get(h.step)?.();
-    const to = el.getBoundingClientRect().height;
+    let to = el.getBoundingClientRect().height;
     const from = h.height;
     if (Math.abs(to - from) < 4) return;
     const ms = Math.round(Math.min(GLIDE_MAX_MS, GLIDE_MIN_MS + Math.abs(to - from) * 0.18));
+    const started = performance.now();
     el.style.height = `${from}px`;
     el.classList.add("is-gliding");
     // Opening fades its bottom edge while the rest is still to come, and
@@ -461,12 +468,60 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
     // move the heading the reader just clicked.
     scroller.style.overflowAnchor = "none";
     void el.offsetHeight;
-    el.style.transition = `height ${ms}ms var(--guide-ease-out), --guide-glide-fade ${ms}ms var(--guide-ease-out)`;
+    const fade = `--guide-glide-fade ${ms}ms ${GLIDE_EASE}`;
+    el.style.transition = `height ${ms}ms ${GLIDE_EASE}, ${fade}`;
     el.style.height = `${to}px`;
     if (opening) el.style.setProperty("--guide-glide-fade", "0px");
     const step = h.step;
+    let timer = window.setTimeout(() => end(), ms + 120);
+
+    // The new version can keep growing after it's measured (a figure
+    // settling, images taking their size). Re-aim the glide at its real
+    // height from wherever it's got to, rather than stopping short and
+    // jumping the rest when it ends.
+    // Where the content ends, from layout boxes (the new body rises in on a
+    // transform), plus whatever sits below it (padding, a last margin), which
+    // is measured once now while the height is still its own.
+    const contentBottom = () => {
+      const last = el.lastElementChild as HTMLElement | null;
+      if (!last) return 0;
+      const top = last.offsetParent === el ? 0 : el.offsetTop;
+      return last.offsetTop - top + last.offsetHeight;
+    };
+    const below = to - contentBottom();
+    const retarget = () => {
+      const next = contentBottom() + below;
+      if (Math.abs(next - to) < 2) return;
+      to = next;
+      // Take height out of the transition to stop it where it is, then
+      // glide on from there for the time that's left.
+      const now = el.getBoundingClientRect().height;
+      el.style.transition = fade;
+      el.style.height = `${now}px`;
+      void el.offsetHeight;
+      const left = Math.max(GLIDE_MIN_MS * 0.6, started + ms - performance.now());
+      el.style.transition = `height ${Math.round(left)}ms ${GLIDE_EASE}, ${fade}`;
+      el.style.height = `${to}px`;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => end(), left + 120);
+    };
+    let primed = false;
+    const ro =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => {
+            // The first call only reports the sizes as they are.
+            if (!primed) {
+              primed = true;
+              return;
+            }
+            retarget();
+          });
+    for (const child of Array.from(el.children)) ro?.observe(child);
+
     const end = () => {
       window.clearTimeout(timer);
+      ro?.disconnect();
       el.removeEventListener("transitionend", onEnd);
       el.style.height = "";
       el.style.transition = "";
@@ -480,7 +535,6 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
       if (e.target === el && e.propertyName === "height") end();
     };
     el.addEventListener("transitionend", onEnd);
-    const timer = window.setTimeout(end, ms + 120);
     gliding.current.set(step, end);
   });
 
