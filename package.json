@@ -11,10 +11,11 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:py": "pytest scripts/tests -q",
-    "test:types": "tsc -p tsconfig.test.json --noEmit"
+    "test:types": "tsc -p tsconfig.test.json --noEmit",
+    "dimensional:update": "node scripts/update-dimensional.mjs"
   },
   "dependencies": {
-    "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#e71117df80e7cf345586a0b1b9050a5d8e629fe6",
+    "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#99a6dbbb0272dab2118ba1abefb1d164e2be624f",
     "@jekrch/react-viewport-lightbox": "^1.0.2",
     "@xyflow/react": "^12.11.2",
     "lucide-react": "^0.575.0",

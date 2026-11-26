@@ -103,6 +103,11 @@ function attrs(html: string, name: string): string[] {
   return [...html.matchAll(new RegExp(`${name}="([^"]+)"`, "g"))].map((m) => m[1]);
 }
 
+/** The level each step's depth switch has pressed, in page order. */
+function pressedLevels(html: string): string[] {
+  return [...html.matchAll(/<button[^>]*aria-pressed="true"[^>]*>([^<]+)<\/button>/g)].map((m) => m[1]);
+}
+
 describe("lesson steps", () => {
   for (const lesson of LESSONS) {
     it(`${lesson.id} renders exactly the steps the registry lists, in order`, () => {
@@ -144,8 +149,7 @@ describe("the Essentials", () => {
 
   it("point every step In depth, and keep its code beside it at either depth", () => {
     const html = render("color", true, true);
-    expect(html.match(/data-dir="down"/g)?.length).toBe(pageDef("color").steps.length);
-    expect(html).not.toContain('data-dir="up"');
+    expect(pressedLevels(html)).toEqual(pageDef("color").steps.map(() => "Essentials"));
     expect(html).toContain("&lt;/&gt; code");
   });
 
@@ -155,9 +159,9 @@ describe("the Essentials", () => {
       const html = renderMixed(lesson.id, (step) => !full.has(step));
       const steps = attrs(html, "data-step");
       expect([...steps].sort(), lesson.id).toEqual(lesson.steps.map((s) => s.id).sort());
-      // Essentials steps open In depth; In depth steps fold back.
-      expect(html.match(/data-dir="down"/g)?.length, lesson.id).toBe(lesson.steps.length - full.size);
-      expect(html.match(/data-dir="up"/g)?.length, lesson.id).toBe(full.size);
+      expect(pressedLevels(html), lesson.id).toEqual(
+        lesson.steps.map((s) => (full.has(s.id) ? "In depth" : "Essentials")),
+      );
     }
   });
 
