@@ -46,13 +46,19 @@ export function Term({ id, first = false, children }: { id: string; first?: bool
               aria-label={open ? `Hide what “${c.label}” means` : `What “${c.label}” means`}
               onClick={() => setOpen((o) => !o)}
             >
-              {open ? "–" : "?"}
-            </button>
-            {open && (
-              <span className="guide-inline-note" role="note">
-                {c.short}
+              <span className="guide-note-toggle-q" aria-hidden="true">
+                ?
               </span>
-            )}
+            </button>
+            {/* Always mounted, so it can unfold and fold back; inert while shut. */}
+            <span className="guide-inline-note" role="note" data-open={open || undefined} inert={!open}>
+              <span className="guide-inline-note-clip">
+                <span className="guide-inline-note-card">
+                  <span className="guide-inline-note-label">{c.label}</span>
+                  {c.short}
+                </span>
+              </span>
+            </span>
           </>
         )}
       </>
