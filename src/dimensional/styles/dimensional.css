@@ -1,0 +1,2024 @@
+/* Dimensional UI: the stylesheet.
+
+   Everything sits in the `dd` cascade layer, so a host's own unlayered
+   rules win without specificity tricks. A theme is a set of `--dd-*`
+   tokens on `.dd-root` (see tokens below): palette, type, spacing and
+   timing. What a theme can't change is the behaviour: the order things move
+   in, what stays still during a glide, which element carries a transform.
+   The defaults are the comic-snaps Guide's. */
+
+@layer dd {
+  /* --- Tokens ------------------------------------------------------------ */
+  .dd-root {
+    --dd-bg: #0a0a0a;
+    --dd-surface: #141414;
+    --dd-pop-bg: #171615;
+    --dd-pop-foot-bg: #1c1b1a;
+    --dd-ink: #e8e4df;
+    --dd-ink-prose: rgba(232, 228, 223, 0.85);
+    --dd-ink-muted: #9e9892;
+    --dd-ink-faint: #686563;
+    --dd-accent: #e85d3a;
+    --dd-quiet-accent: #af533c;
+    --dd-quiet-rule: #8d422f;
+    --dd-border: rgba(74, 71, 69, 0.35);
+    --dd-line: rgba(255, 255, 255, 0.09);
+    --dd-code-bg: rgba(0, 0, 0, 0.35);
+    --dd-code-ink: rgba(255, 255, 255, 0.62);
+    --dd-mono-bg: rgba(255, 255, 255, 0.05);
+    --dd-mono-ink: rgba(255, 255, 255, 0.78);
+
+    --dd-font-body: var(--font-sans, "DM Sans", system-ui, sans-serif);
+    --dd-font-display: var(--font-display, "Space Mono", ui-monospace, monospace);
+    --dd-font-mono: var(--font-mono, "Space Mono", ui-monospace, monospace);
+    --dd-text-size: 16px;
+    --dd-text-size-desktop: 15px;
+    --dd-title-size: 26px;
+    --dd-title-size-desktop: 31px;
+    --dd-heading-size: 18px;
+
+    --dd-mast-h: 52px;
+    --dd-rail-w: 220px;
+    --dd-col-w: 640px;
+    --dd-margin-w: 280px;
+    --dd-gap: 48px;
+
+    --dd-slide-ms: 340;
+    --dd-ease: cubic-bezier(0.2, 0, 0, 1);
+    --dd-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --dd-glide-min-ms: 300;
+    --dd-glide-max-ms: 560;
+    --dd-glide-ease: cubic-bezier(0.33, 1, 0.68, 1);
+    --dd-fade-ms: 150;
+    --dd-app-shift: 0.25;
+    --dd-app-dim: 0.6;
+
+    color: var(--dd-ink-muted);
+    font-family: var(--dd-font-body);
+  }
+
+  @media (max-width: 1299px) {
+    .dd-root {
+      --dd-rail-w: 184px;
+      --dd-margin-w: 248px;
+      --dd-gap: 32px;
+    }
+  }
+
+  /* A host's base styles may colour every element directly, which stops
+     colour inheriting. Inside the document, text takes its block's. */
+  .dd-root :where(*) {
+    color: inherit;
+  }
+
+  .dd-root :where(*, *::before, *::after) {
+    box-sizing: border-box;
+  }
+
+  .dd-doc {
+    position: relative;
+    background: var(--dd-bg);
+  }
+
+  .dd-doc.is-page {
+    min-height: 100vh;
+  }
+
+  /* --- Overlay mode ---------------------------------------------------------- */
+  .dd-layer {
+    position: fixed;
+    inset: 0;
+  }
+
+  .dd-scrim {
+    position: absolute;
+    inset: 0;
+    background: #000;
+  }
+
+  .dd-sheet {
+    position: absolute;
+    inset: 0;
+    background: var(--dd-bg);
+    box-shadow: -24px 0 48px rgba(0, 0, 0, 0.45);
+    outline: none;
+  }
+
+  .dd-scroll {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    outline: none;
+  }
+
+  /* --- Masthead -------------------------------------------------------------- */
+  .dd-masthead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    height: var(--dd-mast-h);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+    background: color-mix(in srgb, var(--dd-bg) 94%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--dd-border);
+  }
+
+  .dd-masthead.is-phone {
+    --dd-mast-h: 48px;
+    gap: 4px;
+    padding: 0 6px 0 12px;
+  }
+
+  .dd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 5px 10px;
+    font-family: var(--dd-font-display);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dd-ink-muted);
+    background: transparent;
+    border: 1px solid var(--dd-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 150ms, border-color 150ms;
+  }
+
+  .dd-back:hover {
+    color: var(--dd-ink);
+    border-color: color-mix(in srgb, var(--dd-accent) 50%, transparent);
+  }
+
+  .dd-crumb {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--dd-font-display);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-crumb-home {
+    color: var(--dd-quiet-accent);
+    text-decoration: none;
+  }
+
+  .dd-crumb-home:hover {
+    color: var(--dd-accent);
+  }
+
+  .dd-pips {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .dd-pip {
+    width: 12px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: background-color 360ms var(--dd-ease-out);
+  }
+
+  .dd-pip.is-on {
+    background: var(--dd-quiet-accent);
+  }
+
+  .dd-pip-count {
+    margin-left: 8px;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-phone-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--dd-font-display);
+    font-size: 14px;
+    color: var(--dd-ink);
+  }
+
+  .dd-counter {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 2px 9px;
+    font-family: var(--dd-font-mono);
+    font-size: 12px;
+    color: var(--dd-ink-muted);
+    background: transparent;
+    border: 1px solid var(--dd-border);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .dd-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    pointer-events: none;
+  }
+
+  .dd-progress > div {
+    height: 100%;
+    background: var(--dd-accent);
+    transform-origin: left center;
+    transition: transform 120ms linear;
+  }
+
+  .dd-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    color: var(--dd-ink-muted);
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 150ms, background-color 150ms;
+  }
+
+  .dd-icon-btn:hover {
+    color: var(--dd-ink);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* --- Columns --------------------------------------------------------------- */
+
+  /* At least a screen tall, so the document is always scrollable and a
+     wheel never chains through to the page behind. */
+  .dd-grid {
+    min-height: 100vh;
+    padding: 20px 20px 80px;
+  }
+
+  .dd-doc.is-embedded .dd-grid {
+    min-height: 0;
+    padding: 0 0 40px;
+  }
+
+  .dd-grid.is-desktop {
+    display: grid;
+    grid-template-columns: var(--dd-rail-w) minmax(0, var(--dd-col-w)) var(--dd-margin-w);
+    column-gap: var(--dd-gap);
+    justify-content: center;
+    padding: 40px 32px 112px;
+  }
+
+  .dd-grid.is-desktop.no-rail {
+    grid-template-columns: minmax(0, var(--dd-col-w)) var(--dd-margin-w);
+  }
+
+  .dd-doc.is-embedded .dd-grid.is-desktop {
+    justify-content: start;
+    padding: 0 0 40px;
+  }
+
+  .dd-rail {
+    position: sticky;
+    top: calc(var(--dd-mast-h) + 32px);
+    align-self: start;
+    max-height: calc(100vh - var(--dd-mast-h) - 48px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .dd-doc.is-embedded .dd-rail {
+    top: 24px;
+  }
+
+  /* Above the sidenotes and wide figures that pass under it, but only its
+     sticky contents take the pointer. */
+  .dd-margin {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .dd-margin-sticky {
+    pointer-events: auto;
+    position: sticky;
+    top: calc(var(--dd-mast-h) + 24px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: calc(100vh - var(--dd-mast-h) - 40px);
+  }
+
+  /* --- Rail ------------------------------------------------------------------ */
+  .dd-rail-list,
+  .dd-rail-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dd-rail-page > a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    font-family: var(--dd-font-display);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--dd-ink-muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: color 150ms;
+  }
+
+  .dd-rail-page > a:hover,
+  .dd-rail-steps a:hover {
+    color: var(--dd-ink);
+  }
+
+  .dd-rail-page.is-current > a {
+    color: var(--dd-ink);
+    border-left-color: var(--dd-accent);
+  }
+
+  .dd-rail-page.is-apart {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--dd-border);
+  }
+
+  .dd-rail-tick {
+    display: inline-flex;
+    color: var(--dd-quiet-accent);
+  }
+
+  .dd-rail-track {
+    position: relative;
+  }
+
+  .dd-rail-steps {
+    margin: 2px 0 10px 11px;
+    border-left: 1px solid var(--dd-border);
+  }
+
+  .dd-rail-nav.is-single > .dd-rail-track > .dd-rail-steps {
+    margin-top: 0;
+  }
+
+  /* Centred on the list's 1px rule (11px in). */
+  .dd-rail-marker {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--dd-accent);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 420ms var(--dd-ease-out),
+      height 420ms var(--dd-ease-out),
+      opacity 200ms ease-out;
+  }
+
+  .dd-rail-steps a {
+    display: flex;
+    gap: 8px;
+    padding: 4px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--dd-ink-faint);
+    text-decoration: none;
+    transition: color 150ms;
+  }
+
+  .dd-rail-steps li.is-current a {
+    color: var(--dd-ink);
+  }
+
+  .dd-rail-section {
+    margin: 0;
+    padding: 2px 10px 2px 21px;
+    font-family: var(--dd-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-rail-count {
+    margin-left: auto;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-rail-num {
+    min-width: 1em;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-rail-steps li.is-current .dd-rail-num {
+    color: var(--dd-accent);
+  }
+
+  /* --- Reading column ---------------------------------------------------------- */
+  .dd-prose {
+    position: relative;
+    min-width: 0;
+    font-size: var(--dd-text-size);
+    line-height: 1.7;
+    color: var(--dd-ink-prose);
+  }
+
+  .dd-grid.is-desktop .dd-prose {
+    font-size: var(--dd-text-size-desktop);
+  }
+
+  .dd-prose p {
+    margin: 0 0 1em;
+  }
+
+  .dd-page-head {
+    margin-bottom: 4px;
+  }
+
+  .dd-eyebrow {
+    font-family: var(--dd-font-display);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dd-quiet-accent);
+  }
+
+  .dd-prose .dd-eyebrow {
+    margin: 0;
+  }
+
+  .dd-title {
+    margin: 6px 0 14px;
+    font-family: var(--dd-font-display);
+    font-size: var(--dd-title-size);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--dd-ink);
+  }
+
+  .dd-grid.is-desktop .dd-title {
+    font-size: var(--dd-title-size-desktop);
+  }
+
+  .dd-lede {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: var(--dd-ink-muted);
+  }
+
+  .dd-prose .dd-lede p {
+    margin: 0 0 0.6em;
+  }
+
+  .dd-prose .dd-meta {
+    margin: 0;
+    font-family: var(--dd-font-mono);
+    font-size: 11.5px;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+  }
+
+  /* A hatched rule, fading out at both ends. */
+  .dd-divider {
+    width: 180px;
+    height: 14px;
+    margin: 16px auto;
+    opacity: 0.35;
+    background: repeating-linear-gradient(45deg, var(--dd-accent) 0 2px, transparent 2px 6px);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent);
+  }
+
+  /* The page switch: one segment per level, the pressed one under a sliding
+     thumb (`--n` segments, thumb at `--at`). */
+  .dd-depth {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: repeat(var(--n, 2), 1fr);
+    flex-shrink: 0;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--dd-border);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+  }
+
+  .dd-depth > button {
+    position: relative;
+    z-index: 1;
+    min-width: 58px;
+    margin: 0;
+    padding: 4px 12px;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    color: var(--dd-ink-faint);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 200ms;
+  }
+
+  .dd-depth > button:hover {
+    color: var(--dd-ink-muted);
+  }
+
+  .dd-depth > button[aria-pressed="true"] {
+    color: var(--dd-ink);
+    cursor: default;
+  }
+
+  .dd-depth > button:focus-visible {
+    outline: 1px solid var(--dd-accent);
+    outline-offset: 1px;
+  }
+
+  .dd-depth-thumb {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc((100% - 4px) / var(--n, 2));
+    background: color-mix(in srgb, var(--dd-accent) 16%, #1a1918);
+    border: 1px solid color-mix(in srgb, var(--dd-accent) 40%, transparent);
+    border-radius: 999px;
+    transform: translateX(calc(var(--at, 0) * 100%));
+    transition:
+      transform 320ms var(--dd-ease-out),
+      opacity 200ms ease-out;
+  }
+
+  /* Sections switched one by one into a mix: no level holds. */
+  .dd-depth[data-mixed] .dd-depth-thumb {
+    opacity: 0;
+    transform: translateX(calc((var(--at, 0) + 0.5) * 100%)) scaleX(0.6);
+  }
+
+  /* --- Sections ---------------------------------------------------------------- */
+
+  /* Everything above a section's heading is the same at every depth, so the
+     heading and its switch never move when it switches; a shallower section
+     sits closer to the next by losing space at its bottom, inside the glide. */
+  .dd-section {
+    margin-top: 30px;
+    padding-bottom: 14px;
+    scroll-margin-top: 72px;
+  }
+
+  .dd-body > .dd-section:first-child {
+    margin-top: 44px;
+  }
+
+  .dd-section:not([data-deepest]) {
+    padding-bottom: 0;
+  }
+
+  .dd-section::before {
+    content: "";
+    display: block;
+    width: 72px;
+    height: 6px;
+    margin-bottom: 18px;
+    background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--dd-accent) 45%, transparent) 0 2px, transparent 2px 6px);
+    transition: width 480ms var(--dd-ease-out);
+  }
+
+  .dd-section[data-depth="0"]:not([data-deepest])::before {
+    width: 40px;
+  }
+
+  .dd-section.is-untitled {
+    margin-top: 8px;
+  }
+
+  .dd-section.is-untitled::before {
+    display: none;
+  }
+
+  .dd-section.is-untitled .dd-section-body {
+    font-size: 1.05em;
+    color: var(--dd-ink-muted);
+  }
+
+  /* Mid-switch (core/glide sets the height): only the bottom edge clips, so
+     sidenotes in the margin still show. Opening, the edge fades rather than
+     cuts, and the fade closes to nothing as the box lands. Folding, it cuts
+     clean: the shallower text is already all there. */
+  .dd-section.is-gliding {
+    clip-path: inset(-100vmax -100vmax 0 -100vmax);
+  }
+
+  .dd-section.is-gliding[data-glide="open"] {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--dd-glide-fade, 0px)), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--dd-glide-fade, 0px)), transparent);
+  }
+
+  .dd-section-heading {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin: 0 0 14px;
+    font-family: var(--dd-font-display);
+    font-size: var(--dd-heading-size);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--dd-ink);
+  }
+
+  .dd-section[data-depth="0"]:not([data-deepest]) .dd-section-heading {
+    margin-bottom: 8px;
+  }
+
+  .dd-section-num {
+    min-width: 1.1em;
+    font-size: 14px;
+    color: var(--dd-accent);
+  }
+
+  .dd-section-title {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .dd-section-link {
+    font-size: 15px;
+    color: var(--dd-ink-faint);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 150ms, color 150ms;
+  }
+
+  .dd-section-heading:hover .dd-section-link,
+  .dd-section-link:focus-visible {
+    opacity: 1;
+  }
+
+  .dd-section-link:hover {
+    color: var(--dd-accent);
+  }
+
+  .dd-section-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .dd-section-foot {
+    display: flex;
+    justify-content: flex-end;
+    margin: -4px 0 4px;
+  }
+
+  .dd-facet-btn,
+  .dd-depth-btn {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 3px 9px;
+    font-family: var(--dd-font-mono);
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 1.5;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .dd-facet-btn {
+    color: var(--dd-accent);
+    border: 1px solid color-mix(in srgb, var(--dd-accent) 35%, transparent);
+    border-radius: 4px;
+    opacity: 0.85;
+    transition: opacity 150ms, background-color 150ms;
+  }
+
+  .dd-facet-btn:hover,
+  .dd-facet-btn[aria-pressed="true"] {
+    opacity: 1;
+    background: color-mix(in srgb, var(--dd-accent) 14%, transparent);
+  }
+
+  /* A section's own switch: a quiet pill whose chevron points where the
+     section will go, wide enough for the longest level name so it keeps
+     its size (--dd-depth-ch, set by Section). */
+  .dd-depth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: calc(var(--dd-depth-ch, 10) * 1ch + 30px);
+    padding: 3px 10px 3px 7px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    color: var(--dd-ink-faint);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--dd-border);
+    border-radius: 999px;
+    transition:
+      color 200ms,
+      border-color 200ms,
+      background-color 200ms,
+      box-shadow 200ms;
+  }
+
+  .dd-depth-btn svg {
+    transition: transform 260ms var(--dd-ease-out);
+  }
+
+  .dd-depth-btn:hover,
+  .dd-depth-btn:focus-visible {
+    color: var(--dd-accent);
+    border-color: color-mix(in srgb, var(--dd-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--dd-accent) 8%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--dd-accent) 7%, transparent);
+    outline: none;
+  }
+
+  .dd-depth-btn[data-dir="down"]:hover svg {
+    transform: translateY(1.5px);
+  }
+
+  .dd-depth-btn[data-dir="up"]:hover svg {
+    transform: translateY(-1.5px);
+  }
+
+  /* A section's new layer, after its own switch or the page's: transforms
+     and opacity only, since the box is measured for the glide as it lands.
+     The chevron turns over and the body rises in a beat behind. */
+  .dd-section-heading.is-swapped .dd-depth-btn svg,
+  .dd-section-foot.is-swapped .dd-depth-btn svg {
+    animation: ddChevronFlip 520ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-section-body.is-swapped {
+    animation: ddSwapIn 560ms var(--dd-ease-out) 60ms backwards;
+  }
+
+  /* Folding, the shallower text is there at full strength from the first
+     frame and only settles; any fade would read as a dim. */
+  .dd-section-body.is-swapped[data-swap="fold"] {
+    animation: ddSwapSettle 420ms var(--dd-ease-out) backwards;
+  }
+
+  /* --- Prose ------------------------------------------------------------------- */
+  .dd-prose em {
+    font-style: italic;
+  }
+
+  .dd-prose strong {
+    font-weight: 600;
+    color: var(--dd-ink);
+  }
+
+  .dd-mono {
+    padding: 1px 5px;
+    font-family: var(--dd-font-mono);
+    font-size: 0.86em;
+    color: var(--dd-mono-ink);
+    background: var(--dd-mono-bg);
+    border-radius: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  .dd-codeblock {
+    margin: 4px 0 18px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: var(--dd-font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    white-space: pre;
+    color: var(--dd-code-ink);
+    background: var(--dd-code-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  .dd-codeblock code {
+    font: inherit;
+  }
+
+  .dd-subhead {
+    font-family: var(--dd-font-display);
+    color: var(--dd-ink);
+  }
+
+  .dd-list {
+    margin: 0 0 1em;
+    padding-left: 1.3em;
+  }
+
+  ul.dd-list {
+    list-style: disc;
+  }
+
+  ol.dd-list {
+    list-style: decimal;
+  }
+
+  .dd-list li {
+    margin: 0 0 0.35em;
+    padding-left: 0.2em;
+  }
+
+  .dd-list li::marker {
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-table-wrap {
+    margin: 4px 0 18px;
+    overflow-x: auto;
+  }
+
+  .dd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .dd-table th,
+  .dd-table td {
+    padding: 7px 10px 7px 0;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--dd-border);
+  }
+
+  .dd-table th {
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-rule {
+    margin: 24px 0;
+    border: 0;
+    border-top: 1px solid var(--dd-border);
+  }
+
+  .dd-link {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--dd-accent);
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--dd-accent) 40%, transparent);
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: text-decoration-color 150ms;
+  }
+
+  .dd-link:hover {
+    text-decoration-color: var(--dd-accent);
+  }
+
+  /* A path in a repository, with nowhere to link to here. */
+  .dd-path {
+    color: var(--dd-ink);
+    text-decoration: underline dotted var(--dd-ink-faint);
+    text-underline-offset: 3px;
+  }
+
+  .dd-caption {
+    font-family: var(--dd-font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-inline-icon {
+    display: inline;
+    vertical-align: -1px;
+  }
+
+  /* --- Figures ------------------------------------------------------------------ */
+  .dd-figure {
+    margin: 14px 0 20px;
+  }
+
+  .dd-figure-fallback > p:last-child {
+    margin-bottom: 0;
+  }
+
+  .dd-figure-fallback em {
+    font-family: var(--dd-font-mono);
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.5;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-figure-fallback p:has(> em:only-child) {
+    padding: 12px 14px;
+    border: 1px dashed var(--dd-border);
+    border-radius: 4px;
+  }
+
+  .dd-img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    margin-right: 2%;
+    vertical-align: top;
+    border-radius: 2px;
+  }
+
+  .dd-wide {
+    clear: right;
+    margin: 16px 0 20px;
+  }
+
+  /* Wide figures break out across the margin, unless a facet is there. */
+  .dd-grid.is-desktop .dd-wide,
+  .dd-grid.is-desktop .dd-figure.is-wide {
+    margin-right: calc(-1 * (var(--dd-margin-w) + var(--dd-gap)));
+  }
+
+  .dd-grid.is-desktop.has-facet .dd-wide,
+  .dd-grid.is-desktop.has-facet .dd-figure.is-wide {
+    margin-right: 0;
+  }
+
+  .dd-snippet-ref {
+    margin: 0 0 4px !important;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    color: var(--dd-ink-faint);
+    overflow-wrap: anywhere;
+  }
+
+  .dd-data {
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-data .dd-mono {
+    font-size: 1em;
+    padding: 0 4px;
+  }
+
+  /* --- Terms -------------------------------------------------------------------- */
+  .dd-term.is-defined {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--dd-ink);
+    border-bottom: 1px solid color-mix(in srgb, var(--dd-accent) 60%, transparent);
+  }
+
+  .dd-sidenote {
+    float: right;
+    clear: right;
+    width: var(--dd-margin-w);
+    margin: 0.25em calc(-1 * (var(--dd-margin-w) + var(--dd-gap))) 0.6em 0;
+    padding-left: 10px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--dd-ink-muted);
+    border-left: 2px solid var(--dd-quiet-rule);
+  }
+
+  .dd-sidenote-label,
+  .dd-inline-note-label {
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--dd-font-display);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dd-quiet-accent);
+  }
+
+  /* The phone's "?" beside a defining term. Opening it turns the "?" away
+     and draws a × in its place, while the button fills with the accent. */
+  .dd-note-toggle {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin: 0 0 0 5px;
+    padding: 0;
+    vertical-align: 2px;
+    font-family: var(--dd-font-mono);
+    font-size: 10.5px;
+    line-height: 1;
+    color: var(--dd-accent);
+    background: color-mix(in srgb, var(--dd-accent) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--dd-accent) 45%, transparent);
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color 240ms var(--dd-ease-out),
+      border-color 240ms var(--dd-ease-out),
+      color 240ms var(--dd-ease-out),
+      transform 320ms var(--dd-ease-out);
+  }
+
+  /* A thumb-sized target around the small circle. */
+  .dd-note-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+  }
+
+  .dd-note-toggle:active {
+    transform: scale(0.88);
+  }
+
+  .dd-note-toggle-q,
+  .dd-note-toggle::before {
+    grid-area: 1 / 1;
+    transition:
+      opacity 180ms ease-out,
+      transform 360ms var(--dd-ease-out);
+  }
+
+  .dd-note-toggle::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.4);
+  }
+
+  .dd-note-toggle[aria-expanded="true"] {
+    color: #fff;
+    background: var(--dd-accent);
+    border-color: var(--dd-accent);
+  }
+
+  .dd-note-toggle[aria-expanded="true"] .dd-note-toggle-q {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.4);
+  }
+
+  .dd-note-toggle[aria-expanded="true"]::before {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+
+  /* The note it opens: unfolds from zero height, and the card inside rises
+     into place and comes into focus a beat behind. */
+  .dd-inline-note {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 380ms var(--dd-ease-out);
+  }
+
+  .dd-inline-note[data-open] {
+    grid-template-rows: 1fr;
+  }
+
+  .dd-inline-note-clip {
+    display: block;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .dd-inline-note-card {
+    display: block;
+    margin: 10px 0 12px;
+    padding: 11px 13px 12px;
+    font-family: var(--dd-font-body);
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.55;
+    color: var(--dd-ink-muted);
+    background: var(--dd-pop-bg);
+    border: 1px solid var(--dd-line);
+    border-radius: 10px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.035),
+      0 10px 28px -16px rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    filter: blur(4px);
+    transform: translate3d(0, -8px, 0) scale(0.98);
+    transform-origin: top left;
+    transition:
+      opacity 160ms ease-out,
+      filter 200ms ease-out,
+      transform 260ms var(--dd-ease-out);
+  }
+
+  .dd-inline-note[data-open] .dd-inline-note-card {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition:
+      opacity 260ms ease-out 90ms,
+      filter 340ms ease-out 90ms,
+      transform 460ms var(--dd-ease-out) 60ms;
+  }
+
+  .dd-inline-note-label {
+    margin-bottom: 4px;
+  }
+
+  .dd-term-ref {
+    position: relative;
+    cursor: help;
+    text-decoration: underline dotted color-mix(in srgb, var(--dd-accent) 60%, transparent);
+    text-underline-offset: 3px;
+  }
+
+  /* Popovers: the name, a quiet line saying where it's from, the text, and
+     the way onward as a footer row. The accent is kept for the way onward. */
+  .dd-pop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    max-width: min(300px, calc(100vw - 24px));
+    font-family: var(--dd-font-body);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    white-space: normal;
+    text-align: left;
+    text-transform: none;
+    color: var(--dd-ink-muted);
+    background: var(--dd-pop-bg);
+    border: 1px solid var(--dd-line);
+    border-radius: 8px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.035),
+      0 4px 10px rgba(0, 0, 0, 0.35),
+      0 18px 44px -14px rgba(0, 0, 0, 0.85);
+    cursor: default;
+  }
+
+  .dd-pop-main {
+    display: block;
+    padding: 11px 13px 12px;
+  }
+
+  .dd-pop-name {
+    display: block;
+    font-family: var(--dd-font-display);
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--dd-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .dd-pop-meta {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--dd-font-mono);
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: var(--dd-ink-faint);
+    overflow-wrap: anywhere;
+  }
+
+  .dd-pop-body {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .dd-pop-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 13px 9px;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--dd-ink-muted);
+    background: var(--dd-pop-foot-bg);
+    border: 0;
+    border-top: 1px solid var(--dd-line);
+    border-radius: 0 0 7px 7px;
+    cursor: pointer;
+    transition: color 150ms;
+  }
+
+  .dd-pop-foot:hover,
+  .dd-pop-foot:focus-visible {
+    color: var(--dd-accent);
+  }
+
+  .dd-pop-foot > [aria-hidden] {
+    transition: transform 220ms var(--dd-ease-out);
+  }
+
+  .dd-pop-foot:hover > [aria-hidden] {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  .dd-pop-caret {
+    position: absolute;
+    top: -6px;
+    left: calc(var(--pop-caret, 18px) - 5px);
+    width: 10px;
+    height: 10px;
+    background: var(--dd-pop-bg);
+    border: solid var(--dd-line);
+    border-width: 1px 0 0 1px;
+    border-top-left-radius: 2px;
+    transform: rotate(45deg);
+  }
+
+  .dd-pop[data-side="top"] .dd-pop-caret {
+    top: auto;
+    bottom: -6px;
+    transform: rotate(225deg);
+  }
+
+  .dd-pop[data-side="top"]:has(.dd-pop-foot) .dd-pop-caret {
+    background: var(--dd-pop-foot-bg);
+  }
+
+  /* Placed by Term (--pop-x, --pop-caret, data-side) as it's about to
+     show, and eased in a beat after the pointer arrives, so passing over a
+     word doesn't flash it. */
+  .dd-term-pop {
+    position: absolute;
+    top: calc(100% + 9px);
+    left: var(--pop-x, 0px);
+    z-index: 10;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 4px, 0) scale(0.98);
+    transform-origin: var(--pop-caret, 18px) top;
+    transition:
+      opacity 120ms ease-out,
+      transform 200ms var(--dd-ease-out),
+      visibility 0s linear 120ms;
+  }
+
+  .dd-term-pop[data-side="top"] {
+    top: auto;
+    bottom: calc(100% + 9px);
+    transform: translate3d(0, -4px, 0) scale(0.98);
+    transform-origin: var(--pop-caret, 18px) bottom;
+  }
+
+  /* Bridges the gap to the word, so the pointer can cross to the link. */
+  .dd-term-pop::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -11px;
+    height: 11px;
+  }
+
+  .dd-term-pop[data-side="top"]::before {
+    top: auto;
+    bottom: -11px;
+  }
+
+  @media (hover: hover) {
+    .dd-term-ref:hover .dd-term-pop {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+      transition:
+        opacity 160ms ease-out 70ms,
+        transform 280ms var(--dd-ease-out) 70ms,
+        visibility 0s linear 70ms;
+    }
+  }
+
+  .dd-term-ref:focus-visible .dd-term-pop,
+  .dd-term-ref[aria-expanded="true"] .dd-term-pop {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition:
+      opacity 160ms ease-out,
+      transform 280ms var(--dd-ease-out),
+      visibility 0s;
+  }
+
+  /* --- Sources and the end of a page ---------------------------------------------- */
+  .dd-sources {
+    clear: both;
+    margin-top: 56px;
+  }
+
+  .dd-sources-title {
+    margin: 0 0 10px;
+    font-family: var(--dd-font-display);
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dd-ink-muted);
+  }
+
+  .dd-sources-group + .dd-sources-group {
+    margin-top: 28px;
+  }
+
+  .dd-sources-group-title {
+    margin: 0 0 6px;
+    font-family: var(--dd-font-display);
+    font-size: 15px;
+    font-weight: normal;
+    color: var(--dd-ink);
+  }
+
+  .dd-sources-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dd-sources-list li {
+    padding: 12px 0;
+    border-top: 1px solid var(--dd-border);
+  }
+
+  .dd-prose .dd-source {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--dd-ink-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .dd-end {
+    clear: both;
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--dd-border);
+  }
+
+  .dd-sources + .dd-end {
+    margin-top: 32px;
+  }
+
+  .dd-prose .dd-end-note {
+    margin: 0 0 22px;
+    font-size: 0.93em;
+    color: var(--dd-ink-muted);
+  }
+
+  .dd-prevnext {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .dd-card {
+    display: block;
+    padding: 12px 14px;
+    text-decoration: none;
+    border: 1px solid var(--dd-border);
+    border-radius: 6px;
+    transition: border-color 150ms, background-color 150ms;
+  }
+
+  .dd-card:hover {
+    border-color: color-mix(in srgb, var(--dd-accent) 45%, transparent);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .dd-card .dd-caption {
+    display: block;
+  }
+
+  .dd-card.is-next {
+    text-align: right;
+  }
+
+  .dd-card-title {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--dd-font-display);
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--dd-ink);
+  }
+
+  /* --- Glossary ------------------------------------------------------------------- */
+  .dd-glossary {
+    margin: 32px 0 0;
+  }
+
+  .dd-glossary-entry {
+    padding: 14px 0;
+    border-top: 1px solid var(--dd-border);
+  }
+
+  .dd-glossary-entry dt {
+    font-family: var(--dd-font-display);
+    font-size: 15px;
+    color: var(--dd-ink);
+  }
+
+  .dd-glossary-entry dd {
+    margin: 4px 0 0;
+  }
+
+  .dd-glossary-body {
+    display: block;
+  }
+
+  .dd-glossary-home {
+    margin: 6px 0 0;
+    padding: 0;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    color: var(--dd-ink-faint);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .dd-glossary-home:hover {
+    color: var(--dd-accent);
+  }
+
+  /* --- Facets beside the prose ------------------------------------------------------- */
+  .dd-label {
+    margin: 0;
+    font-family: var(--dd-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-facet-pane {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 220px;
+    overflow: hidden;
+    background: var(--dd-surface);
+    border: 1px solid var(--dd-border);
+    border-radius: 6px;
+  }
+
+  .dd-facet-pane.is-expanded {
+    position: fixed;
+    top: calc(var(--dd-mast-h) + 16px);
+    bottom: 16px;
+    left: calc(var(--dd-rail-w) + 64px);
+    right: 32px;
+    z-index: 6;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+  }
+
+  .dd-facet-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 8px 8px 14px;
+    border-bottom: 1px solid var(--dd-border);
+  }
+
+  .dd-facet-head-text {
+    min-width: 0;
+  }
+
+  .dd-facet-head-tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .dd-facet-title {
+    margin: 2px 0 3px;
+    font-family: var(--dd-font-display);
+    font-size: 13px;
+    color: var(--dd-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .dd-facet-section {
+    margin: 0;
+    padding: 0;
+    font-family: var(--dd-font-mono);
+    font-size: 11px;
+    color: var(--dd-accent);
+    background: none;
+    border: 0;
+    opacity: 0.8;
+    cursor: pointer;
+  }
+
+  .dd-facet-section:hover {
+    opacity: 1;
+  }
+
+  .dd-facet-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 14px 16px 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--dd-ink-muted);
+  }
+
+  .dd-facet-body p {
+    margin: 0 0 0.8em;
+  }
+
+  .dd-facet-body .dd-codeblock {
+    margin: 0 0 14px;
+    font-size: 12px;
+  }
+
+  /* Phone sheets: a facet from the bottom, the contents from the left. */
+  .dd-sheet-layer {
+    position: fixed;
+    inset: 0;
+  }
+
+  .dd-sheet-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .dd-facet-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 85vh;
+    height: 85dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--dd-surface);
+    border-top: 1px solid var(--dd-border);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .dd-sheet-handle {
+    width: 36px;
+    height: 4px;
+    margin: 8px auto 0;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 2px;
+  }
+
+  .dd-contents-sheet {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(320px, 86vw);
+    display: flex;
+    flex-direction: column;
+    background: var(--dd-surface);
+    border-right: 1px solid var(--dd-border);
+  }
+
+  .dd-contents-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 8px;
+  }
+
+  .dd-contents-body {
+    padding: 0 12px 24px;
+    overflow-y: auto;
+  }
+
+  .dd-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 7;
+    margin: 0;
+    padding: 8px 14px;
+    transform: translateX(-50%);
+    font-family: var(--dd-font-mono);
+    font-size: 12px;
+    color: var(--dd-ink);
+    background: var(--dd-surface);
+    border: 1px solid var(--dd-border);
+    border-radius: 16px;
+    animation: ddFadeIn 150ms ease-out backwards;
+  }
+
+  /* --- Motion -----------------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     (next from the right, previous from the left), its heading lines rising
+     one after another. Only sideways for the page itself, and only
+     `backwards` fills throughout, so nothing is left transformed afterwards
+     and the jump arithmetic (which measures the sections) is never off. */
+  @keyframes ddPageIn {
+    from {
+      opacity: 0;
+      transform: translate3d(var(--dd-enter-x, 0), 0, 0);
+    }
+  }
+
+  @keyframes ddRise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+  }
+
+  @keyframes ddFadeIn {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ddRailIn {
+    from {
+      opacity: 0;
+      transform: translate3d(-6px, 0, 0);
+    }
+  }
+
+  @keyframes ddFacetIn {
+    from {
+      opacity: 0;
+      transform: translate3d(18px, 0, 0);
+    }
+  }
+
+  @keyframes ddFacetOut {
+    to {
+      opacity: 0;
+      transform: translate3d(18px, 0, 0);
+    }
+  }
+
+  @keyframes ddSwapSettle {
+    from {
+      transform: translate3d(0, 6px, 0);
+    }
+  }
+
+  @keyframes ddChevronFlip {
+    from {
+      transform: rotate(-180deg);
+    }
+  }
+
+  @keyframes ddSwapIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0);
+    }
+  }
+
+  .dd-facet-pane[data-motion="in"] {
+    animation: ddFacetIn 380ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-facet-pane[data-motion="out"] {
+    animation: ddFacetOut 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
+    pointer-events: none;
+  }
+
+  .dd-facet-scrim {
+    position: fixed;
+    top: var(--dd-mast-h);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.55);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    animation: ddFadeIn 280ms ease-out backwards;
+  }
+
+  .dd-facet-body {
+    animation: ddFadeIn 260ms ease-out backwards;
+  }
+
+  .dd-facet-title {
+    animation: ddRise 320ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-prose[data-enter] {
+    animation: ddPageIn 460ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-prose[data-enter="next"] {
+    --dd-enter-x: 28px;
+  }
+
+  .dd-prose[data-enter="prev"] {
+    --dd-enter-x: -28px;
+  }
+
+  .dd-prose[data-enter] .dd-page-head > * {
+    animation: ddRise 520ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-prose[data-enter] .dd-page-head > :nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  .dd-prose[data-enter] .dd-page-head > :nth-child(3) {
+    animation-delay: 80ms;
+  }
+
+  .dd-prose[data-enter] .dd-page-head > :nth-child(n + 4) {
+    animation-delay: 120ms;
+  }
+
+  /* Opacity only: a vertical shift here would move the section being jumped to. */
+  .dd-prose[data-enter] .dd-body {
+    animation: ddFadeIn 520ms ease-out 120ms backwards;
+  }
+
+  .dd-phone-title {
+    animation: ddRise 360ms var(--dd-ease-out) backwards;
+  }
+
+  .dd-rail-steps > li {
+    animation: ddRailIn 380ms var(--dd-ease-out) backwards;
+    animation-delay: calc(min(var(--i, 0), 10) * 28ms);
+  }
+
+  /* Sections below the fold rise into place as they're reached (core/reveal).
+     The section's own box stays put; its heading and body move, the body a
+     beat behind, and the hatched rule above draws itself in. */
+  :is(.dd-section, .dd-glossary-entry)[data-reveal] > * {
+    transition:
+      opacity 560ms ease-out,
+      transform 720ms var(--dd-ease-out);
+  }
+
+  :is(.dd-section, .dd-glossary-entry)[data-reveal] > :nth-child(2) {
+    transition-delay: 70ms;
+  }
+
+  :is(.dd-section, .dd-glossary-entry)[data-reveal="out"] > * {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+
+  .dd-section[data-reveal]::before {
+    transform-origin: left center;
+    transition:
+      transform 640ms var(--dd-ease-out),
+      width 480ms var(--dd-ease-out);
+  }
+
+  .dd-section[data-reveal="out"]::before {
+    transform: scaleX(0);
+  }
+
+  /* A page's content arriving after its "Loading…" line: opacity only, so a
+     jump to a section lands where it should. */
+  .dd-body.is-arriving {
+    animation: ddFadeIn 520ms ease-out 120ms backwards;
+  }
+
+  /* A facet that brings its own scrolling (a code viewer). */
+  .dd-facet-body.is-bare {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .dd-prose .dd-source-note {
+    margin: 4px 0 0;
+    font-family: var(--dd-font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--dd-ink-faint);
+  }
+
+  .dd-source-venue {
+    font-style: italic;
+    color: var(--dd-ink-muted);
+  }
+
+  /* Landing: overlay mode opened from a link, with no app to slide over. The
+     sheet stays put; what's on it arrives in order. The masthead settles
+     from above while an accent line draws across under it, the page heading
+     rises a line at a time, the rail's sections follow down the side, and
+     the content fades up last (opacity only, so a jump lands where it
+     should). All `backwards` fills, so `.is-landing` comes off unseen. */
+  @media (prefers-reduced-motion: no-preference) {
+    .dd-sheet.is-landing .dd-masthead > :not(.dd-progress) {
+      animation: ddLandDrop 560ms var(--dd-ease-out) backwards;
+    }
+
+    .dd-sheet.is-landing .dd-masthead > :nth-child(2) {
+      animation-delay: 50ms;
+    }
+
+    .dd-sheet.is-landing .dd-masthead > :nth-child(3) {
+      animation-delay: 100ms;
+    }
+
+    .dd-sheet.is-landing .dd-masthead > :nth-child(n + 4) {
+      animation-delay: 150ms;
+    }
+
+    .dd-sheet.is-landing .dd-progress::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--dd-accent);
+      transform-origin: left center;
+      animation: ddLandSweep 1100ms 60ms both;
+    }
+
+    .dd-sheet.is-landing .dd-margin-sticky {
+      animation: ddFadeIn 600ms ease-out 200ms backwards;
+    }
+
+    .dd-sheet.is-landing .dd-rail {
+      animation: ddFadeIn 480ms ease-out 100ms backwards;
+    }
+
+    .dd-sheet.is-landing .dd-rail-steps > li {
+      animation-duration: 520ms;
+      animation-delay: calc(180ms + min(var(--i, 0), 10) * 32ms);
+    }
+
+    .dd-sheet.is-landing .dd-page-head > * {
+      animation: ddLandRise 760ms var(--dd-ease-out) 140ms backwards;
+    }
+
+    .dd-sheet.is-landing .dd-page-head > :nth-child(2) {
+      animation-delay: 200ms;
+    }
+
+    .dd-sheet.is-landing .dd-page-head > :nth-child(3) {
+      animation-delay: 260ms;
+    }
+
+    .dd-sheet.is-landing .dd-page-head > :nth-child(n + 4) {
+      animation-delay: 320ms;
+    }
+
+    .dd-sheet.is-landing .dd-prose > :not(.dd-page-head) {
+      animation: ddFadeIn 720ms ease-out 380ms backwards;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dd-sheet.is-landing .dd-scroll {
+      animation: ddFadeIn 200ms ease-out backwards;
+    }
+  }
+
+  @keyframes ddLandDrop {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+    }
+  }
+
+  @keyframes ddLandRise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0);
+    }
+  }
+
+  /* Draws across fast and eases into the far edge, then dissolves. */
+  @keyframes ddLandSweep {
+    0% {
+      opacity: 0.85;
+      transform: scaleX(0);
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    55% {
+      opacity: 0.85;
+      transform: scaleX(1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
+  /* Reduced motion lives here, not in a theme, so no theme can forget it. */
+  @media (prefers-reduced-motion: reduce) {
+    .dd-progress > div,
+    .dd-rail-marker,
+    .dd-depth-thumb,
+    .dd-inline-note,
+    .dd-inline-note-card,
+    .dd-note-toggle,
+    .dd-note-toggle-q,
+    .dd-note-toggle::before,
+    .dd-section::before,
+    .dd-depth-btn svg {
+      transition: none;
+    }
+
+    .dd-term-pop,
+    .dd-term-pop[data-side="top"],
+    .dd-inline-note-card {
+      filter: none;
+      transform: none;
+    }
+
+    .dd-prose[data-enter],
+    .dd-prose[data-enter] .dd-page-head > *,
+    .dd-facet-pane[data-motion],
+    .dd-facet-title,
+    .dd-phone-title,
+    .dd-rail-steps > li,
+    .dd-section-heading.is-swapped .dd-depth-btn svg,
+    .dd-section-foot.is-swapped .dd-depth-btn svg,
+    .dd-section-body.is-swapped[data-swap="fold"] {
+      animation: none;
+    }
+
+    .dd-prose[data-enter] .dd-body,
+    .dd-section-body.is-swapped {
+      animation: ddFadeIn 150ms ease-out backwards;
+    }
+
+    :is(.dd-section, .dd-glossary-entry)[data-reveal="out"] > * {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* The bottom fade on a section opening (core/glide), eased shut as it
+   lands. Registered so it can transition, which only works outside any
+   cascade layer; where it can't, the fade simply stays until the glide
+   ends. */
+@property --dd-glide-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}

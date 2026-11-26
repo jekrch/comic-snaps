@@ -1,4 +1,5 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense, lazy, useState } from "react";
+import type { PreviewMode } from "./components/dimensional/DimensionalPreview";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -19,8 +20,33 @@ if (getGuideState().route) {
   import("./components/guide/Guide").catch(releaseGuideCover);
 }
 
+// `?dd`: the dimensional-docs framework's preview (src/dimensional), rendering
+// docs/dimensional-docs. Page and embedded modes stand alone; overlay mode
+// slides over the gallery.
+const ddMode = new URLSearchParams(location.search).has("dd")
+  ? (new URLSearchParams(location.search).get("dd-host") as PreviewMode | null) ?? "page"
+  : null;
+const DimensionalPreview = ddMode ? lazy(() => import("./components/dimensional/DimensionalPreview")) : null;
+
+function DimensionalRoot() {
+  const [open, setOpen] = useState(true);
+  if (!DimensionalPreview || !ddMode || !open) return null;
+  return (
+    <Suspense fallback={null}>
+      <DimensionalPreview mode={ddMode} onExited={() => setOpen(false)} />
+    </Suspense>
+  );
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    {ddMode && ddMode !== "overlay" ? (
+      <DimensionalRoot />
+    ) : (
+      <>
+        <App />
+        <DimensionalRoot />
+      </>
+    )}
   </StrictMode>
 );

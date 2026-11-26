@@ -1,21 +1,28 @@
-import { useContext, useId, useMemo } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Suspense, lazy, useId, useMemo } from "react";
+import { Layer, Section as DimSection } from "../../dimensional/react/Section";
+import { useDoc } from "../../dimensional/react/context";
 import { createPortal } from "react-dom";
 import { useLightbox, type ViewerItem } from "@jekrch/react-viewport-lightbox";
 import { viewerIcons } from "../viewerIcons";
 import type { CodeRef } from "./code/snippets";
+import type { Panel } from "../../types";
+import { truncate, type NeighborInfo } from "./explainerConstants";
 import { GUIDE_OVERLAY_Z, STOP_EVENTS, useOverlay } from "../guide/overlayStack";
-import { StepContext, VariantContext, useGuide } from "../guide/guideContext";
-import { stepDef, stepNumber } from "../guide/lessons";
+import { stepDef, type PageId } from "../guide/lessons";
 
-// Section: one numbered step of a lesson. Its number, title and anchor id
-// come from the lesson registry (guide/lessons.ts), so a lesson only names
-// the step.
+// The code view and the source text it quotes load only when first opened.
+const CodeViewerBody = lazy(() => import("./code/CodeViewer"));
+
+// Section: one numbered step of a lesson, as a section of the dimensional
+// framework's document. Its title and rail label come from the lesson
+// registry (guide/lessons.ts), so a lesson only names the step; its number
+// from its place on the page.
 //
-// On a lesson with a short version, both versions are mounted and each step
-// shows one of them: a Section renders only when its step is in its
-// version, into the step's slot (see `stepSlot`), so the reader can open
-// one step in depth without leaving the essentials, or the reverse.
+// A step holds its versions as `Layer`s, Essentials first, then In depth,
+// and shows the one its switch (or the lesson's) is on. Its code opens in
+// the margin, or a sheet on phones, at either depth.
+
+export { Layer };
 
 export function Section({
   step,
@@ -27,95 +34,58 @@ export function Section({
   code?: CodeRef | null;
   children: React.ReactNode;
 }) {
-  const { page, codeStep, openCode, copyStepLink, stepShort, setStepShort, stepSlot, swapped } = useGuide();
-  const variant = useContext(VariantContext);
-  const n = stepNumber(page, step);
-  const title = stepDef(page, step)?.title ?? step;
-  const codeOpen = codeStep === step;
-  const justSwapped = !!swapped?.has(step);
-  // A step whose versions can be swapped: the switch sits in its heading.
-  const switchable = variant !== null && !!stepShort;
-  if (switchable && stepShort(step) !== (variant === "short")) return null;
-
-  const content = (
-    <>
-      <h2 className={`guide-step-heading${justSwapped ? " is-swapped" : ""}`}>
-        <span className="guide-step-num">{n > 0 ? n : "·"}</span>
-        <span className="guide-step-title">{title}</span>
-        <a
-          href={`#${step}`}
-          className="guide-step-link"
-          onClick={(e) => {
-            e.preventDefault();
-            copyStepLink(step);
-          }}
-          aria-label={`Copy a link to “${title}”`}
-          title="Copy a link to this step"
-        >
-          #
-        </a>
-        <span className="guide-step-tools">
-          {code &&
-            (variant !== "short" ? (
-              <button
-                type="button"
-                onClick={() => openCode(step, code)}
-                className={`guide-code-btn${justSwapped ? " is-entering" : ""}`}
-                aria-pressed={codeOpen}
-                title="See the code behind this step"
-              >
-                {"</> code"}
-              </button>
-            ) : (
-              // Folded just now: a stand-in plays the button's exit, since
-              // the full version that owned it is gone.
-              justSwapped && (
-                <span className="guide-code-btn is-leaving" aria-hidden="true">
-                  {"</> code"}
-                </span>
-              )
-            ))}
-          {variant === "short" ? (
-            <button
-              type="button"
-              onClick={() => setStepShort(step, false)}
-              className="guide-code-btn guide-more-btn"
-              aria-expanded={false}
-              title="Go deeper into this step, here"
-            >
-              <ChevronDown size={13} strokeWidth={1.75} aria-hidden="true" />
-              <span>In depth</span>
-            </button>
-          ) : (
-            switchable && (
-              <button
-                type="button"
-                onClick={() => setStepShort(step, true)}
-                className="guide-code-btn guide-more-btn"
-                aria-expanded={true}
-                title="Fold this step back to its essentials"
-              >
-                <ChevronUp size={13} strokeWidth={1.75} aria-hidden="true" />
-                <span>Essentials</span>
-              </button>
-            )
-          )}
-        </span>
-      </h2>
-      <StepContext.Provider value={step}>
-        <div className={`guide-step-body${justSwapped ? " is-swapped" : ""}`}>{children}</div>
-      </StepContext.Provider>
-    </>
-  );
-
-  if (variant !== null && stepSlot) {
-    const slot = stepSlot(step);
-    return slot ? createPortal(content, slot) : null;
-  }
+  const { page } = useDoc();
+  const def = stepDef(page as PageId, step);
   return (
-    <section id={step} data-step={step} className={`guide-step${variant === "short" ? " is-short" : ""}`}>
-      {content}
-    </section>
+    <DimSection
+      id={step}
+      title={def?.title ?? step}
+      short={def?.short}
+      code={
+        code
+          ? {
+              title: code.title,
+              bare: true,
+              body: (
+                <div className="guide-code-body">
+                  <Suspense fallback={<p className="guide-caption px-4 py-3">Loading the code…</p>}>
+                    <CodeViewerBody codeRef={code} />
+                  </Suspense>
+                </div>
+              ),
+            }
+          : null
+      }
+    >
+      {children}
+    </DimSection>
+  );
+}
+
+/**
+ * The anchor and its two neighbours on one distance scale: the bar the
+ * lessons' Essentials end on, under the reader's guess.
+ */
+export function NeighbourBar({
+  anchor,
+  closest,
+  furthest,
+  maxVal,
+}: {
+  anchor: Panel;
+  closest: NeighborInfo;
+  furthest: NeighborInfo;
+  maxVal?: number;
+}) {
+  return (
+    <DistanceBar
+      closeDist={closest.distance}
+      farDist={furthest.distance}
+      anchorLabel={truncate(anchor.title, 18)}
+      closeLabel={truncate(closest.panel.title, 18)}
+      farLabel={truncate(furthest.panel.title, 18)}
+      maxVal={maxVal}
+    />
   );
 }
 

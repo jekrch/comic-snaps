@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { Panel } from "../../../types";
 import type { NeighborInfo } from "../explainerConstants";
 import { EMBEDDING_DIM, METRIC_INFO, fmt, truncate } from "../explainerConstants";
-import { Section, CodeBlock, Em, Mono, DistanceBar, PanelTrio, Caption } from "../explainerPrimitives";
+import { Section, Layer, CodeBlock, Em, Mono, DistanceBar, NeighbourBar, PanelTrio, Caption } from "../explainerPrimitives";
+import { NeighbourGuess } from "../Guess";
 import { AngleDiagram } from "../explainerDiagrams";
 import { PreprocessFigure } from "../PreprocessFigure";
 import { TransformerExamples } from "../TransformerFigures";
@@ -48,6 +49,29 @@ const PREPARATION: Record<EmbeddingMetric, React.ReactNode> = {
       broader strokes. The <Term id="gram" first>Gram matrix</Term> then records which filters fire together across
       the whole panel and throws away where they fired. The scrambled tile is a rough picture of what survives: all
       the marks are still there, but their arrangement is gone.
+    </>
+  ),
+};
+
+/** The same, in a sentence: each model lesson's Essentials. */
+const PREPARE_ESSENTIALS: Record<EmbeddingMetric, React.ReactNode> = {
+  "embedding-siglip": (
+    <>
+      SigLIP squashes every panel into a 224-pixel square and cuts it into a 14 × 14 grid of{" "}
+      <Term id="patch">patches</Term>, which it reads like words in a sentence.
+    </>
+  ),
+  "embedding-dino": (
+    <>
+      DINOv2 keeps each panel's own shape and cuts it into 14-pixel <Term id="patch">patches</Term>, as many as that
+      takes.
+    </>
+  ),
+  "embedding-gram": (
+    <>
+      VGG-16 reads the panel at twice SigLIP's detail and slides small <Term id="filter">filters</Term> over it. The{" "}
+      <Term id="gram">Gram matrix</Term> keeps which marks turn up together and throws away where, like the scrambled
+      tile.
     </>
   ),
 };
@@ -373,82 +397,122 @@ function NeighbourResult({ w, anchorPanel, closest, furthest }: { w: Worked } & 
  * numbers for the reader's anchor; each model lesson recaps it and links here.
  */
 export function VectorsExplanation(props: WorkedProps) {
-  const { anchorPanel, closest } = props;
+  const { anchorPanel, closest, furthest } = props;
   const w = useWorkedNumbers("embedding-siglip", props);
   const code = EMBEDDING_CODE["embedding-siglip"];
   return (
     <>
       <Section step="arrows">
-        <p>
-          SigLIP, DINOv2 and the Gram model all end the same way: each panel becomes a list of numbers, its{" "}
-          <Term id="embedding" first>embedding</Term>, and two panels are compared by comparing their lists. The
-          examples on this page use SigLIP's {w.dim} numbers for your anchor panel.
-        </p>
-        <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
-        <p>
-          Read as coordinates, the {w.dim} numbers mark a point, and the <Term id="vector" first>arrow</Term> (or
-          vector) from the origin to that point stands for the panel. Nobody can picture {w.dim}{" "}
-          <Term id="dimension" first>dimensions</Term>, but the maths is the same as for arrows on paper. It's the
-          arrow's direction that holds what the model sees in the image.
-        </p>
-        {w.strips && (
-          <>
-            <p>
-              Here are the same numbers as cells. Compare the closest panel's row with the anchor's, then the
-              furthest panel's.
-            </p>
-            <ValueStrips w={w} {...props} />
-          </>
-        )}
+        <Layer>
+          <p>
+            Each neural model turns a panel into a list of numbers, its <Term id="embedding">embedding</Term>, and reads
+            the list as an <Term id="vector">arrow</Term> through {w.dim}-dimensional space.
+            {w.strips && " Here are SigLIP's for your panel and two others. Which row looks more like the top one?"}
+          </p>
+          <ValueStrips w={w} {...props} />
+        </Layer>
+        <Layer>
+          <p>
+            SigLIP, DINOv2 and the Gram model all end the same way: each panel becomes a list of numbers, its{" "}
+            <Term id="embedding" first>embedding</Term>, and two panels are compared by comparing their lists. The
+            examples on this page use SigLIP's {w.dim} numbers for your anchor panel.
+          </p>
+          <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
+          <p>
+            Read as coordinates, the {w.dim} numbers mark a point, and the <Term id="vector" first>arrow</Term> (or
+            vector) from the origin to that point stands for the panel. Nobody can picture {w.dim}{" "}
+            <Term id="dimension" first>dimensions</Term>, but the maths is the same as for arrows on paper. It's the
+            arrow's direction that holds what the model sees in the image.
+          </p>
+          {w.strips && (
+            <>
+              <p>
+                Here are the same numbers as cells. Compare the closest panel's row with the anchor's, then the
+                furthest panel's.
+              </p>
+              <ValueStrips w={w} {...props} />
+            </>
+          )}
+        </Layer>
       </Section>
 
       <Section step="normalize" code={code.direction}>
-        <p>
-          Before comparing, every arrow is scaled to the same length (a step called{" "}
-          <Term id="normalization" first>normalization</Term>). An arrow's length partly reflects how strongly the
-          network responded overall, which rises and falls with things like contrast and the amount of detail.
-          Normalizing leaves only the direction: which features are present, and in what proportions.
-        </p>
+        <Layer>
+          <p>Every arrow is stretched or shrunk to the same length, so only its direction counts.</p>
+        </Layer>
+        <Layer>
+          <p>
+            Before comparing, every arrow is scaled to the same length (a step called{" "}
+            <Term id="normalization" first>normalization</Term>). An arrow's length partly reflects how strongly the
+            network responded overall, which rises and falls with things like contrast and the amount of detail.
+            Normalizing leaves only the direction: which features are present, and in what proportions.
+          </p>
+        </Layer>
       </Section>
 
       <Section step="dot" code={code.angle}>
-        <p>
-          Two images that look similar to the model get arrows pointing nearly the same way. To measure how aligned
-          two arrows are, we compute their <Term id="dot-product" first>dot product</Term>: multiply matching
-          numbers and add everything up.
-        </p>
-        <DotProduct w={w} />
-        <p>
-          Because the arrows are normalized, this dot product equals the <Em>cosine</Em> of the angle between them.
-          Cosine is a function from trigonometry that takes an angle and returns a number between −1 and 1. When two
-          arrows point in the same direction the angle is 0° and the cosine is <Mono>1.0</Mono>.
-        </p>
-        <p>
-          As the arrows spread apart the angle grows and the cosine falls toward <Mono>0</Mono> (perpendicular)
-          or <Mono>−1</Mono> (opposite). Hence the name <Term id="cosine" first>cosine similarity</Term>: the
-          cosine turns the angle into a single score.
-        </p>
-        <Angle w={w} />
+        <Layer>
+          <p>
+            Multiply matching numbers and add them up: that's the <Term id="dot-product">dot product</Term>, and for
+            same-length arrows it's the cosine of the angle between them. 1 means they point the same way.
+          </p>
+          <Angle w={w} />
+        </Layer>
+        <Layer>
+          <p>
+            Two images that look similar to the model get arrows pointing nearly the same way. To measure how aligned
+            two arrows are, we compute their <Term id="dot-product" first>dot product</Term>: multiply matching
+            numbers and add everything up.
+          </p>
+          <DotProduct w={w} />
+          <p>
+            Because the arrows are normalized, this dot product equals the <Em>cosine</Em> of the angle between them.
+            Cosine is a function from trigonometry that takes an angle and returns a number between −1 and 1. When two
+            arrows point in the same direction the angle is 0° and the cosine is <Mono>1.0</Mono>.
+          </p>
+          <p>
+            As the arrows spread apart the angle grows and the cosine falls toward <Mono>0</Mono> (perpendicular)
+            or <Mono>−1</Mono> (opposite). Hence the name <Term id="cosine" first>cosine similarity</Term>: the
+            cosine turns the angle into a single score.
+          </p>
+          <Angle w={w} />
+        </Layer>
       </Section>
 
       <Section step="distance" code={code.distance}>
-        <p>
-          Sorting is easier with a <Term id="distance" first>distance</Term>, where smaller means more similar, so
-          the similarity is subtracted from 1.
-        </p>
-        <DistanceSum w={w} />
-        <p>
-          A distance of <Mono>0</Mono> means two arrows point the same way: the images are identical as far as the
-          model can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
-          directions.
-        </p>
-        <ModelScales />
-        <NeighbourResult w={w} {...props} />
-        <p>
-          Each model lesson works the same steps through its own numbers:{" "}
-          <GuideLink to="siglip">SigLIP</GuideLink>, <GuideLink to="dino">DINOv2</GuideLink> and{" "}
-          <GuideLink to="gram">the Gram model</GuideLink>.
-        </p>
+        <Layer>
+          <p>
+            Distance is 1 minus that: 0 when the arrows point the same way, 1 at right angles. Only compare it with
+            other distances from the
+            same model.
+          </p>
+          <NeighbourGuess anchor={anchorPanel} closest={closest} furthest={furthest} method="SigLIP" format={(d) => fmt(d, 3)}>
+            <NeighbourBar anchor={anchorPanel} closest={closest} furthest={furthest} />
+          </NeighbourGuess>
+          <p>
+            Each model lesson runs this on its own numbers: <GuideLink to="siglip">SigLIP</GuideLink>,{" "}
+            <GuideLink to="dino">DINOv2</GuideLink> and <GuideLink to="gram">the Gram model</GuideLink>.
+          </p>
+        </Layer>
+        <Layer>
+          <p>
+            Sorting is easier with a <Term id="distance" first>distance</Term>, where smaller means more similar, so
+            the similarity is subtracted from 1.
+          </p>
+          <DistanceSum w={w} />
+          <p>
+            A distance of <Mono>0</Mono> means two arrows point the same way: the images are identical as far as the
+            model can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
+            directions.
+          </p>
+          <ModelScales />
+          <NeighbourResult w={w} {...props} />
+          <p>
+            Each model lesson works the same steps through its own numbers:{" "}
+            <GuideLink to="siglip">SigLIP</GuideLink>, <GuideLink to="dino">DINOv2</GuideLink> and{" "}
+            <GuideLink to="gram">the Gram model</GuideLink>.
+          </p>
+        </Layer>
       </Section>
     </>
   );
@@ -474,85 +538,132 @@ export function EmbeddingExplanation({
   const maps = useAllEmbeddings(true);
   const stats = useEmbeddingStats(maps[mode]);
   const transformer = TRANSFORMER[mode];
+  const shortName = metric === "embedding-gram" ? "the Gram model" : info.name;
   const code = EMBEDDING_CODE[mode];
 
   return (
     <>
       <Section step="prepare" code={code.prepare}>
-        <p>{PREPARATION[mode]}</p>
-        <PreprocessFigure metric={mode} panel={anchorPanel} />
+        <Layer>
+          <p>{PREPARE_ESSENTIALS[metric]}</p>
+          <PreprocessFigure metric={metric} panel={anchorPanel} />
+        </Layer>
+        <Layer>
+          <p>{PREPARATION[mode]}</p>
+          <PreprocessFigure metric={mode} panel={anchorPanel} />
+        </Layer>
       </Section>
 
       {transformer && (
         <Section step="attention" code={code.patches}>
-          <p>
-            {transformer.name} is a <Term id="transformer" first>transformer</Term>: it reads the patches the way a
-            language model reads words. Each patch becomes a <Term id="token" first>token</Term>, starting as{" "}
-            {w.dim} numbers that describe only its own pixels and where it sits in the grid. Then come 12 rounds, called{" "}
-            <Term id="layer" first>layers</Term>. In every layer, each patch compares itself with every other patch,
-            weighs which ones matter to it (a step called <Term id="attention" first>attention</Term>), and folds
-            some of what they hold into its own numbers.
-          </p>
+          <Layer>
+            <p>
+              Over 12 <Term id="layer">layers</Term>, every patch looks at every other and borrows from the ones that
+              matter to it (<Term id="attention">attention</Term>). By the end, a patch's numbers describe the figure it
+              belongs to as well as its own pixels.
+            </p>
+          </Layer>
+          <Layer>
+            <p>
+              {transformer.name} is a <Term id="transformer" first>transformer</Term>: it reads the patches the way a
+              language model reads words. Each patch becomes a <Term id="token" first>token</Term>, starting as{" "}
+              {w.dim} numbers that describe only its own pixels and where it sits in the grid. Then come 12 rounds, called{" "}
+              <Term id="layer" first>layers</Term>. In every layer, each patch compares itself with every other patch,
+              weighs which ones matter to it (a step called <Term id="attention" first>attention</Term>), and folds
+              some of what they hold into its own numbers.
+            </p>
 
-          <TransformerExamples model={transformer.key} modelName={transformer.name} dim={w.dim} />
+            <TransformerExamples model={transformer.key} modelName={transformer.name} dim={w.dim} />
+          </Layer>
         </Section>
       )}
 
       <Section step="arrows" code={code.direction}>
-        <p>
-          {transformer ? (
+        <Layer>
+          <p>
+            Out come {w.dim} numbers: an <Term id="vector">arrow</Term> whose direction holds what {shortName} sees,{" "}
+            {ANGLE_WORDS[metric]}.
+          </p>
+        </Layer>
+        <Layer>
+          <p>
+            {transformer ? (
+              <>
+                For every panel, the patches' final numbers are <Term id="pooling" first>pooled</Term> into one list
+                of {w.dim}.
+              </>
+            ) : (
+              `Each panel ends up as ${w.dim} numbers.`
+            )}{" "}
+            They define an <Term id="vector">arrow</Term> through {w.dim}-dimensional space, and its direction holds
+            what {info.name} picks up from the image: {ANGLE_WORDS[mode]}.
+          </p>
+          <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
+          {w.strips && (
             <>
-              For every panel, the patches' final numbers are <Term id="pooling" first>pooled</Term> into one list
-              of {w.dim}.
+              <p>
+                Here are the same numbers as cells. Compare the closest panel's row with the anchor's, then the
+                furthest panel's.
+              </p>
+              <ValueStrips w={w} {...props} />
             </>
-          ) : (
-            `Each panel ends up as ${w.dim} numbers.`
-          )}{" "}
-          They define an <Term id="vector">arrow</Term> through {w.dim}-dimensional space, and its direction holds
-          what {info.name} picks up from the image: {ANGLE_WORDS[mode]}.
-        </p>
-        <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
-        {w.strips && (
-          <>
-            <p>
-              Here are the same numbers as cells. Compare the closest panel's row with the anchor's, then the
-              furthest panel's.
-            </p>
-            <ValueStrips w={w} {...props} />
-          </>
-        )}
-        {mode === "embedding-gram" && <p>{GRAM_REDUCTION}</p>}
-        <Recap to="vectors" step="normalize" label="Vectors › Normalization">
-          Before comparing, every arrow is scaled to length 1 (<Term id="normalization">normalization</Term>), so only
-          its direction counts.
-        </Recap>
+          )}
+          {mode === "embedding-gram" && <p>{GRAM_REDUCTION}</p>}
+          <Recap to="vectors" step="normalize" label="Vectors › Normalization">
+            Before comparing, every arrow is scaled to length 1 (<Term id="normalization">normalization</Term>), so only
+            its direction counts.
+          </Recap>
+        </Layer>
       </Section>
 
       <Section step="angle" code={code.angle}>
-        <Recap to="vectors" step="dot" label="Vectors › Dot product">
-          Two arrows are compared by their <Term id="dot-product">dot product</Term>: multiply matching numbers and add
-          everything up. Because the arrows have length 1, the total is the cosine of the angle between them.
-        </Recap>
-        <p>
-          Here it is for the anchor and its closest neighbour, with {info.name}'s {w.dim} numbers:
-        </p>
-        <DotProduct w={w} />
-        <Angle w={w} />
+        <Layer>
+          <p>
+            Two panels are compared by the angle between their arrows, as in <GuideLink to="vectors">Vectors</GuideLink>
+            : the narrower, the more alike.
+          </p>
+          <Angle w={w} />
+        </Layer>
+        <Layer>
+          <Recap to="vectors" step="dot" label="Vectors › Dot product">
+            Two arrows are compared by their <Term id="dot-product">dot product</Term>: multiply matching numbers and add
+            everything up. Because the arrows have length 1, the total is the cosine of the angle between them.
+          </Recap>
+          <p>
+            Here it is for the anchor and its closest neighbour, with {info.name}'s {w.dim} numbers:
+          </p>
+          <DotProduct w={w} />
+          <Angle w={w} />
+        </Layer>
       </Section>
 
       <Section step="distance" code={code.distance}>
-        <p>
-          For sorting, the similarity is turned into a <Term id="distance">distance</Term>, where smaller means more
-          similar, by subtracting it from 1.
-        </p>
-        <DistanceSum w={w} />
-        <p>
-          A distance of <Mono>0</Mono> means two arrows point the same way: the images are identical as far as{" "}
-          {info.name} can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
-          directions. {distanceRange(mode, stats?.spread)}
-        </p>
-        <ModelScales />
-        <NeighbourResult w={w} {...props} />
+        <Layer>
+          <NeighbourGuess
+            anchor={anchorPanel}
+            closest={closest}
+            furthest={furthest}
+            method={shortName}
+            format={(d) => fmt(d, 3)}
+            why={`It's looking at ${ANGLE_WORDS[metric]}.`}
+          >
+            <NeighbourBar anchor={anchorPanel} closest={closest} furthest={furthest} />
+          </NeighbourGuess>
+        </Layer>
+        <Layer>
+          <p>
+            For sorting, the similarity is turned into a <Term id="distance">distance</Term>, where smaller means more
+            similar, by subtracting it from 1.
+          </p>
+          <DistanceSum w={w} />
+          <p>
+            A distance of <Mono>0</Mono> means two arrows point the same way: the images are identical as far as{" "}
+            {info.name} can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
+            directions. {distanceRange(mode, stats?.spread)}
+          </p>
+          <ModelScales />
+          <NeighbourResult w={w} {...props} />
+        </Layer>
       </Section>
     </>
   );

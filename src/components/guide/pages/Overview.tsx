@@ -3,7 +3,7 @@ import type { Panel } from "../../../types";
 import { panelImageUrl } from "../../../utils/imageUrl";
 import { formatIssue } from "../../../utils/issueFormat";
 import { EMBEDDING_DIM, truncate } from "../../explainer/explainerConstants";
-import { Em, Section, Wide } from "../../explainer/explainerPrimitives";
+import { Em, Layer, Section, Wide } from "../../explainer/explainerPrimitives";
 import type { MetricKey } from "../../graph/similarityConfig";
 import { GuideLink } from "../GuideLink";
 import { Term } from "../Term";
@@ -201,190 +201,179 @@ export function Overview({ anchor, pool }: OverviewProps) {
   return (
     <>
       <Section step="alike">
-        <p>
-          Sorting comic panels turned out to be fun in its own right, but I mostly built these sorts as an excuse
-          to learn how color science, image hashing and neural networks each look at a picture. This guide is what
-          I picked up along the way.
-        </p>
-        <p>
-          Every method on this site answers the same question: which panels are most like this one? Here's the{" "}
-          <Term id="anchor" first>anchor panel</Term>, and the one panel each method picks as its nearest neighbour:
-        </p>
-        <CompareRow anchor={anchor} picks={picks} />
-        <p>
-          They rarely agree
-          {agree
-            ? `. Across the whole gallery, the two that agree most often, ${agree.a} and ${agree.b}, pick the same nearest panel for only ${percent(agree.share)} of panels.`
-            : "."}
-        </p>
-        <p>
-          That's because each method measures something different. It turns a panel into a few colors or a long
-          list of numbers from a <Term id="neural-network" first>neural network</Term>, and calls two panels alike
-          when those measurements are close.
-        </p>
-        <p>
-          Each lesson follows one method from the image to the distance, worked through on this same anchor panel.
-          Use <strong>Shuffle</strong> or <strong>Pick</strong> beside the anchor's name to change it.
-        </p>
-        <p>
-          pHash is a special case, which is why it isn't in the row above. It doesn't ask which panel is most like
-          this one, only whether two images are the same picture: a panel posted twice, or a photo beside its
-          restoration. Its lesson follows one such pair instead of the anchor.
-        </p>
+        <Layer>
+          <p>
+            Every method on this site answers one question: which panels are most like this one? Here's the{" "}
+            <Term id="anchor">anchor panel</Term> and the panel each method picks as its nearest neighbour:
+          </p>
+          <CompareRow anchor={anchor} picks={picks} />
+          <p>
+            They rarely agree
+            {agree
+              ? `: even the two closest, ${agree.a} and ${agree.b}, pick the same panel for only ${percent(agree.share)} of the gallery.`
+              : "."}{" "}
+            Each method measures something different, and calls two panels alike when those measurements are close.
+            pHash isn't in the row because it only checks whether two images are the same picture.
+          </p>
+        </Layer>
+        <Layer>
+          <p>
+            Sorting comic panels turned out to be fun in its own right, but I mostly built these sorts as an excuse
+            to learn how color science, image hashing and neural networks each look at a picture. This guide is what
+            I picked up along the way.
+          </p>
+          <p>
+            Every method on this site answers the same question: which panels are most like this one? Here's the{" "}
+            <Term id="anchor" first>anchor panel</Term>, and the one panel each method picks as its nearest neighbour:
+          </p>
+          <CompareRow anchor={anchor} picks={picks} />
+          <p>
+            They rarely agree
+            {agree
+              ? `. Across the whole gallery, the two that agree most often, ${agree.a} and ${agree.b}, pick the same nearest panel for only ${percent(agree.share)} of panels.`
+              : "."}
+          </p>
+          <p>
+            That's because each method measures something different. It turns a panel into a few colors or a long
+            list of numbers from a <Term id="neural-network" first>neural network</Term>, and calls two panels alike
+            when those measurements are close.
+          </p>
+          <p>
+            Each lesson follows one method from the image to the distance, worked through on this same anchor panel.
+            Use <strong>Shuffle</strong> or <strong>Pick</strong> beside the anchor's name to change it.
+          </p>
+          <p>
+            pHash is a special case, which is why it isn't in the row above. It doesn't ask which panel is most like
+            this one, only whether two images are the same picture: a panel posted twice, or a photo beside its
+            restoration. Its lesson follows one such pair instead of the anchor.
+          </p>
+        </Layer>
       </Section>
 
       <Section step="methods">
-        <Wide>
-          <div className="guide-table-wrap">
-            <table className="guide-table">
-              <thead>
-                <tr>
-                  <th scope="col">Method</th>
-                  <th scope="col">Looks at</th>
-                  <th scope="col">Is given</th>
-                  <th scope="col">Gives back</th>
-                  <th scope="col">Typical distances</th>
-                  <th scope="col">Good for</th>
-                </tr>
-              </thead>
-              <tbody>
-                {METHODS.map(({ metric, name }) => {
-                  const f = FACTS[metric];
-                  return (
+        <Layer>
+          <Wide>
+            <div className="guide-table-wrap">
+              <table className="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Method</th>
+                    <th scope="col">Looks at</th>
+                    <th scope="col">Good for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {METHODS.map(({ metric, name }) => (
                     <tr key={metric}>
                       <th scope="row">
                         <GuideLink to={lessonForMetric(metric)}>{name}</GuideLink>
                       </th>
-                      <td>{f.looksAt}</td>
-                      <td>{f.input}</td>
-                      <td>{f.output}</td>
-                      <td>{liveRange(metric, stats[metric])}</td>
-                      <td>{f.goodFor}</td>
+                      <td>{FACTS[metric].looksAt}</td>
+                      <td>{FACTS[metric].goodFor}</td>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </Wide>
-        <p className="guide-caption">
-          “Most pairs” is the middle 90% of every pair of panels in the gallery, measured as you read.
-        </p>
-      </Section>
-
-      <Section step="order">
-        <p>
-          A distance compares two panels. The Sort tab needs one order for all of them, and gets it in one of two
-          ways.
-        </p>
-        <p>
-          SigLIP, DINOv2 and Gram string the panels into a{" "}
-          <Term id="chain" first>nearest-neighbour chain</Term>. The chain starts at one panel, steps to whichever
-          panel not yet placed is closest to it, and repeats from there. Panels side by side in the grid are close
-          by that method. The chain never looks back, though: its early stretch follows the best matches, and the
-          far end collects the panels left over, which are often only loosely related.
-        </p>
-        <p>
-          Color doesn't sort by its distance. It lines panels up around the color wheel, then puts the
-          black-and-white panels after them; the <GuideLink to="color" step="hue">Color lesson</GuideLink> shows
-          how. Its distance, like the models', picks the neighbours in the{" "}
-          <Term id="similarity-graph">similarity graph</Term>.
-        </p>
-        <p>
-          pHash is offered as a sort too, built the same way as the chain, but only its first links mean much. Two
-          copies of one picture land side by side; past that, the order is close to chance.
-        </p>
-      </Section>
-
-      <Section step="start">
-        <p>
-          The lessons go from the simplest method to the most involved. The three neural-network lessons all rely
-          on one idea, comparing lists of numbers as arrows, so that idea gets a short lesson of its own.
-        </p>
-        <p>
-          The Guide uses a method I'm working on that I call <Em>dimensional documentation</Em>: the same material
-          written at more than one depth, so you choose how far down to go, one step at a time. Each lesson opens
-          at its <strong>Essentials</strong>, and you can switch a single step to <strong>In depth</strong> or the
-          whole lesson. Underlined terms open their definitions when tapped, and a step's <strong>code</strong>{" "}
-          button shows the lines that do the work. Shuffling the anchor reruns every example on a different panel.
-          Each lesson ends with sources if you want to go further.
-        </p>
-        <LessonCards />
-      </Section>
-    </>
-  );
-}
-
-/**
- * The overview's essentials, where the page opens. It keeps the full page's
- * steps, so the rail and each step's "In depth" line up, and the figures
- * that carry it (the five picks, the table, the lesson cards); the prose
- * comes down to a sentence or two a step. Terms are references only: the
- * full page stays their home.
- */
-export function OverviewEssentials({ anchor, pool }: OverviewProps) {
-  const { agree, picks } = useOverview(anchor, pool);
-
-  return (
-    <>
-      <Section step="alike">
-        <p>
-          Every method on this site answers one question: which panels are most like this one? Here's the{" "}
-          <Term id="anchor">anchor panel</Term> and the panel each method picks as its nearest neighbour:
-        </p>
-        <CompareRow anchor={anchor} picks={picks} />
-        <p>
-          They rarely agree
-          {agree
-            ? `: even the two closest, ${agree.a} and ${agree.b}, pick the same panel for only ${percent(agree.share)} of the gallery.`
-            : "."}{" "}
-          Each method measures something different, and calls two panels alike when those measurements are close.
-          pHash isn't in the row because it only checks whether two images are the same picture.
-        </p>
-      </Section>
-
-      <Section step="methods">
-        <Wide>
-          <div className="guide-table-wrap">
-            <table className="guide-table">
-              <thead>
-                <tr>
-                  <th scope="col">Method</th>
-                  <th scope="col">Looks at</th>
-                  <th scope="col">Good for</th>
-                </tr>
-              </thead>
-              <tbody>
-                {METHODS.map(({ metric, name }) => (
-                  <tr key={metric}>
-                    <th scope="row">
-                      <GuideLink to={lessonForMetric(metric)}>{name}</GuideLink>
-                    </th>
-                    <td>{FACTS[metric].looksAt}</td>
-                    <td>{FACTS[metric].goodFor}</td>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Wide>
+        </Layer>
+        <Layer>
+          <Wide>
+            <div className="guide-table-wrap">
+              <table className="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Method</th>
+                    <th scope="col">Looks at</th>
+                    <th scope="col">Is given</th>
+                    <th scope="col">Gives back</th>
+                    <th scope="col">Typical distances</th>
+                    <th scope="col">Good for</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Wide>
+                </thead>
+                <tbody>
+                  {METHODS.map(({ metric, name }) => {
+                    const f = FACTS[metric];
+                    return (
+                      <tr key={metric}>
+                        <th scope="row">
+                          <GuideLink to={lessonForMetric(metric)}>{name}</GuideLink>
+                        </th>
+                        <td>{f.looksAt}</td>
+                        <td>{f.input}</td>
+                        <td>{f.output}</td>
+                        <td>{liveRange(metric, stats[metric])}</td>
+                        <td>{f.goodFor}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Wide>
+          <p className="guide-caption">
+            “Most pairs” is the middle 90% of every pair of panels in the gallery, measured as you read.
+          </p>
+        </Layer>
       </Section>
 
       <Section step="order">
-        <p>
-          To sort the gallery, SigLIP, DINOv2 and Gram build a <Term id="chain">nearest-neighbour chain</Term>: start
-          at one panel, step to the closest panel not yet placed, and repeat. Color lines panels up around the color
-          wheel instead, with the black-and-white panels last.
-        </p>
+        <Layer>
+          <p>
+            To sort the gallery, SigLIP, DINOv2 and Gram build a <Term id="chain">nearest-neighbour chain</Term>: start
+            at one panel, step to the closest panel not yet placed, and repeat. Color lines panels up around the color
+            wheel instead, with the black-and-white panels last.
+          </p>
+        </Layer>
+        <Layer>
+          <p>
+            A distance compares two panels. The Sort tab needs one order for all of them, and gets it in one of two
+            ways.
+          </p>
+          <p>
+            SigLIP, DINOv2 and Gram string the panels into a{" "}
+            <Term id="chain" first>nearest-neighbour chain</Term>. The chain starts at one panel, steps to whichever
+            panel not yet placed is closest to it, and repeats from there. Panels side by side in the grid are close
+            by that method. The chain never looks back, though: its early stretch follows the best matches, and the
+            far end collects the panels left over, which are often only loosely related.
+          </p>
+          <p>
+            Color doesn't sort by its distance. It lines panels up around the color wheel, then puts the
+            black-and-white panels after them; the <GuideLink to="color" step="hue">Color lesson</GuideLink> shows
+            how. Its distance, like the models', picks the neighbours in the{" "}
+            <Term id="similarity-graph">similarity graph</Term>.
+          </p>
+          <p>
+            pHash is offered as a sort too, built the same way as the chain, but only its first links mean much. Two
+            copies of one picture land side by side; past that, the order is close to chance.
+          </p>
+        </Layer>
       </Section>
 
       <Section step="start">
-        <p>
-          The lessons run from the simplest method to the most involved, and the three neural-network lessons share
-          a short one on Vectors. Each opens at its essentials, like this page. Switch a step, or the whole lesson,
-          to <strong>In depth</strong> to go further.
-        </p>
-        <LessonCards />
+        <Layer>
+          <p>
+            The lessons run from the simplest method to the most involved, and the three neural-network lessons share
+            a short one on Vectors. Each opens at its essentials, like this page. Switch a step, or the whole lesson,
+            to <strong>In depth</strong> to go further.
+          </p>
+          <LessonCards />
+        </Layer>
+        <Layer>
+          <p>
+            The lessons go from the simplest method to the most involved. The three neural-network lessons all rely
+            on one idea, comparing lists of numbers as arrows, so that idea gets a short lesson of its own.
+          </p>
+          <p>
+            The Guide uses a method I'm working on that I call <Em>dimensional documentation</Em>: the same material
+            written at more than one depth, so you choose how far down to go, one step at a time. Each lesson opens
+            at its <strong>Essentials</strong>, and you can switch a single step to <strong>In depth</strong> or the
+            whole lesson. Underlined terms open their definitions when tapped, and a step's <strong>code</strong>{" "}
+            button shows the lines that do the work. Shuffling the anchor reruns every example on a different panel.
+            Each lesson ends with sources if you want to go further.
+          </p>
+          <LessonCards />
+        </Layer>
       </Section>
     </>
   );

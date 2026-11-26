@@ -1,8 +1,8 @@
 import type { LessonId, PageId } from "./lessons";
 
 /**
- * Where each lesson's claims come from, shown after its last step in both
- * its full and short versions, in two groups:
+ * Where each lesson's claims come from, shown after its last step at
+ * Essentials and In depth alike, in two groups:
  *
  * - `start`: plain-language explainers, mostly visual or interactive, for a
  *   reader meeting the idea for the first time.

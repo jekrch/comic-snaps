@@ -110,6 +110,11 @@ function subscribe(l: () => void) {
   };
 }
 
+/** Listen for any change to the Guide's route (for adapters outside React). */
+export function subscribeGuideRoute(l: () => void): () => void {
+  return subscribe(l);
+}
+
 export function useGuideRoute(): GuideState {
   return useSyncExternalStore(subscribe, () => state, () => state);
 }

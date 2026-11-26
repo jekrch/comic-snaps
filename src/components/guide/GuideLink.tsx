@@ -1,6 +1,5 @@
-import { useGuide } from "./guideContext";
 import type { PageId } from "./lessons";
-import { getGuideState, guideUrl } from "./useGuideRoute";
+import { getGuideState, guideUrl, navigateGuide } from "./useGuideRoute";
 
 /**
  * A link to another place in the Guide. A real href (so it can be opened in
@@ -17,7 +16,6 @@ export function GuideLink({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { goTo } = useGuide();
   const route = getGuideState().route;
   const href =
     typeof window === "undefined"
@@ -34,7 +32,10 @@ export function GuideLink({
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
-        goTo(to, step);
+        // Within the page: to the step. Another page: to its top, or the step.
+        const here = getGuideState().route;
+        if (here && to === here.page) navigateGuide({ step: step ?? null }, { scroll: true });
+        else navigateGuide({ page: to, step: step ?? null });
       }}
     >
       {children}

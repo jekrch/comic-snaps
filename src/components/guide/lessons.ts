@@ -42,11 +42,11 @@ export interface PageDef {
   /** Rough reading time. */
   minutes: number;
   /**
-   * The page's short version (its essentials): its reading time, and the one
+   * The page's Essentials: their reading time, and the one
    * sentence that stands in for the lede. The lessons and the overview; the
    * switch shows where it's set.
    */
-  tldr?: { minutes: number; gist: string };
+  essentials?: { minutes: number; gist: string };
   steps: StepDef[];
 }
 
@@ -66,7 +66,7 @@ export const PAGES: PageDef[] = [
     family: GUIDE_NAME,
     buildsOn: [],
     minutes: 4,
-    tldr: {
+    essentials: {
       minutes: 1,
       gist: "The gallery has five ways of deciding which panels are alike, and each one measures something different about a picture.",
     },
@@ -85,7 +85,7 @@ export const PAGES: PageDef[] = [
     metric: "color",
     buildsOn: [],
     minutes: 6,
-    tldr: {
+    essentials: {
       minutes: 2,
       gist: "Panels are lined up around the color wheel, and compared by how different their main colors look to a person.",
     },
@@ -107,7 +107,7 @@ export const PAGES: PageDef[] = [
     ownExample: true,
     buildsOn: [],
     minutes: 7,
-    tldr: {
+    essentials: {
       minutes: 2,
       gist: "A 64-bit fingerprint of where a panel is light and dark, used to catch the same picture posted twice.",
     },
@@ -128,7 +128,7 @@ export const PAGES: PageDef[] = [
     family: "Shared by every model",
     buildsOn: [],
     minutes: 5,
-    tldr: {
+    essentials: {
       minutes: 1,
       gist: "A model turns each panel into a long list of numbers, an arrow; two panels are alike when their arrows point the same way.",
     },
@@ -147,7 +147,7 @@ export const PAGES: PageDef[] = [
     metric: "embedding-siglip",
     buildsOn: ["vectors"],
     minutes: 9,
-    tldr: {
+    essentials: {
       minutes: 2,
       gist: "SigLIP learned from captions, so two panels sit close when they'd be described alike: same subject, mood or composition.",
     },
@@ -161,7 +161,7 @@ export const PAGES: PageDef[] = [
     metric: "embedding-dino",
     buildsOn: ["vectors"],
     minutes: 9,
-    tldr: {
+    essentials: {
       minutes: 2,
       gist: "DINOv2 learned from pictures alone, so two panels sit close when they look alike: shapes, layout and texture.",
     },
@@ -175,7 +175,7 @@ export const PAGES: PageDef[] = [
     metric: "embedding-gram",
     buildsOn: ["vectors"],
     minutes: 6,
-    tldr: {
+    essentials: {
       minutes: 1,
       gist: "The Gram model ignores what's drawn and where, and compares how it's drawn: line, hatching and ink.",
     },

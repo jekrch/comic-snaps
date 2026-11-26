@@ -1,3 +1,8 @@
+/* Layer order, fixed before Tailwind declares its own: the dimensional docs
+   framework (src/dimensional, `@layer dd`, loaded lazily) sits above the
+   base reset, so its text inherits colour, and below components and
+   utilities, so figures' own classes win over its prose defaults. */
+@layer theme, base, dd, components, utilities;
 @import "tailwindcss";
 @import "@jekrch/react-viewport-lightbox/styles.css";
 
@@ -1201,7 +1206,6 @@ button,
   }
 }
 
-
 /* Intro: bird descends from above in front of title, hops across to final spot */
 @keyframes bird-hop-intro {
   0% {
@@ -1261,7 +1265,6 @@ button,
 .bird-hop-intro {
   animation: bird-hop-intro 2.4s ease-in-out forwards;
 }
-
 
 @keyframes peck {
   0%, 100% {
@@ -2702,25 +2705,32 @@ button,
 }
 
 /* --- The Guide -------------------------------------------------------------
-   The vision-model explainers as a reading space of their own
-   (docs/explainer-guide-plan.md). A full-screen sheet that slides in over the
-   app, which stays mounted behind it. Documentation-site layout: a contents
-   rail, a ~65ch reading column, and a margin for the worked example, the code
-   and sidenotes. Collapses to one column below 1100px.
+   The lessons' own content: figures, the worked example and its picker, the
+   code view, the glossary. The shell around them (the sheet, rail, depth
+   switches, sections, terms, code pane, motion) is the dimensional
+   framework's, styled by src/dimensional/styles/dimensional.css on its
+   --dd-* tokens.
 
    In the components layer, so the Tailwind utilities still on the figures
    (margins, alignment) win over the prose defaults here. */
 @layer components {
   /* The base layer colours every element directly, which stops colour
      inheriting. Inside the Guide, text takes its colour from its block. */
-  .guide-layer :where(*),
-  .guide-sheet-layer :where(*),
   .guide-picker :where(*) {
     color: inherit;
   }
 
-  .guide-layer,
-  .guide-sheet-layer,
+  /* The Guide now runs on the dimensional framework (src/dimensional):
+     its content still reads these, so they follow the framework's tokens. */
+  .dd-root {
+    --guide-border: var(--dd-border);
+    --guide-ease-out: var(--dd-ease-out);
+    --guide-mast-h: var(--dd-mast-h);
+    --guide-rail-w: var(--dd-rail-w);
+    --guide-margin-w: var(--dd-margin-w);
+    --guide-gap: var(--dd-gap);
+  }
+
   .guide-picker {
     --guide-border: var(--color-border, rgba(74, 71, 69, 0.35));
     --guide-mast-h: 52px;
@@ -2732,174 +2742,6 @@ button,
     --guide-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     color: var(--color-ink-muted);
     font-family: var(--font-sans);
-  }
-
-  @media (max-width: 1299px) {
-    .guide-layer {
-      --guide-rail-w: 184px;
-      --guide-margin-w: 248px;
-      --guide-gap: 32px;
-    }
-  }
-
-  .guide-layer {
-    position: fixed;
-    inset: 0;
-  }
-
-  .guide-scrim {
-    position: absolute;
-    inset: 0;
-    background: #000;
-  }
-
-  .guide-sheet {
-    position: absolute;
-    inset: 0;
-    background: var(--color-surface);
-    box-shadow: -24px 0 48px rgba(0, 0, 0, 0.45);
-    outline: none;
-  }
-
-  .guide-scroll {
-    position: absolute;
-    inset: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-    outline: none;
-  }
-
-  /* Masthead */
-  .guide-masthead {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    height: var(--guide-mast-h);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 0 24px;
-    background: rgba(10, 10, 10, 0.94);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--guide-border);
-  }
-
-  .guide-masthead.is-phone {
-    --guide-mast-h: 48px;
-    gap: 4px;
-    padding: 0 6px;
-  }
-
-  .guide-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-    padding: 5px 10px;
-    font-family: var(--font-display);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-    background: transparent;
-    border: 1px solid var(--guide-border);
-    border-radius: 4px;
-    transition: color 150ms, border-color 150ms;
-  }
-
-  .guide-back:hover {
-    color: var(--color-ink);
-    border-color: rgba(232, 93, 58, 0.5);
-  }
-
-  .guide-crumb {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: var(--font-display);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-crumb-home {
-    color: var(--color-rust-ink);
-    text-decoration: none;
-  }
-
-  .guide-crumb-home:hover {
-    color: var(--color-accent);
-  }
-
-  .guide-pips {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .guide-pip {
-    width: 12px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .guide-pip {
-    transition: background-color 360ms var(--guide-ease-out);
-  }
-
-  .guide-pip.is-on {
-    background: var(--color-rust-ink);
-  }
-
-  .guide-pip-count {
-    margin-left: 8px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-phone-title {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: var(--font-display);
-    font-size: 14px;
-    color: var(--color-ink);
-  }
-
-  .guide-counter {
-    flex-shrink: 0;
-    padding: 2px 9px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-ink-muted);
-    background: transparent;
-    border: 1px solid var(--guide-border);
-    border-radius: 10px;
-  }
-
-  .guide-progress {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 2px;
-    pointer-events: none;
-  }
-
-  .guide-progress > div {
-    height: 100%;
-    background: var(--color-accent);
-    transform-origin: left center;
-    transition: transform 120ms linear;
   }
 
   .guide-icon-btn {
@@ -2922,183 +2764,6 @@ button,
     background: rgba(255, 255, 255, 0.05);
   }
 
-  /* Columns. Always at least a screen tall, so the Guide is always
-     scrollable and a wheel never chains through to the page behind. */
-  .guide-grid {
-    min-height: 100vh;
-    padding: 20px 20px 80px;
-  }
-
-  .guide-grid.is-desktop {
-    display: grid;
-    grid-template-columns: var(--guide-rail-w) minmax(0, var(--guide-col-w)) var(--guide-margin-w);
-    column-gap: var(--guide-gap);
-    justify-content: center;
-    padding: 40px 32px 112px;
-  }
-
-  .guide-rail {
-    position: sticky;
-    top: calc(var(--guide-mast-h) + 32px);
-    align-self: start;
-    max-height: calc(100vh - var(--guide-mast-h) - 48px);
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  /* Above the sidenotes and wide figures that pass under it, but only its
-     sticky contents take the pointer: the rest of the column is where wide
-     figures (some of them interactive) break out to. */
-  .guide-margin {
-    position: relative;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  .guide-margin-sticky {
-    pointer-events: auto;
-    position: sticky;
-    top: calc(var(--guide-mast-h) + 24px);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-height: calc(100vh - var(--guide-mast-h) - 40px);
-  }
-
-  /* Rail */
-  .guide-rail-list,
-  .guide-rail-steps {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .guide-rail-page > a {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    font-family: var(--font-display);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--color-ink-muted);
-    text-decoration: none;
-    border-left: 2px solid transparent;
-    transition: color 150ms;
-  }
-
-  .guide-rail-page > a:hover,
-  .guide-rail-steps a:hover {
-    color: var(--color-ink);
-  }
-
-  .guide-rail-page.is-current > a {
-    color: var(--color-ink);
-    border-left-color: var(--color-accent);
-  }
-
-  .guide-rail-page.is-glossary {
-    margin-top: 14px;
-    padding-top: 10px;
-    border-top: 1px solid var(--guide-border);
-  }
-
-  .guide-rail-tick {
-    color: var(--color-rust-ink);
-  }
-
-  .guide-rail-track {
-    position: relative;
-  }
-
-  .guide-rail-steps {
-    margin: 2px 0 10px 11px;
-    border-left: 1px solid var(--guide-border);
-  }
-
-  /* Centred on the list's 1px rule (11px in). */
-  .guide-rail-marker {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    width: 3px;
-    border-radius: 2px;
-    background: var(--color-accent);
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      transform 420ms var(--guide-ease-out),
-      height 420ms var(--guide-ease-out),
-      opacity 200ms ease-out;
-  }
-
-  .guide-rail-steps a {
-    display: flex;
-    gap: 8px;
-    padding: 4px 10px;
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--color-ink-faint);
-    text-decoration: none;
-    transition: color 150ms;
-  }
-
-  .guide-rail-steps li.is-current a {
-    color: var(--color-ink);
-  }
-
-  /* A lesson's sources, a section of their own under its steps */
-  .guide-rail-section {
-    margin: 0;
-    padding: 2px 10px 2px 21px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-rail-count {
-    margin-left: auto;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-rail-num {
-    min-width: 1em;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.7;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-rail-steps li.is-current .guide-rail-num {
-    color: var(--color-accent);
-  }
-
-  /* Reading column */
-  .guide-prose {
-    position: relative;
-    min-width: 0;
-    font-size: 16px;
-    line-height: 1.7;
-    color: rgba(232, 228, 223, 0.85);
-  }
-
-  .guide-grid.is-desktop .guide-prose {
-    font-size: 15px;
-  }
-
-  .guide-prose p {
-    margin: 0 0 1em;
-  }
-
-  .guide-lesson-head {
-    margin-bottom: 4px;
-  }
-
   .guide-eyebrow {
     font-family: var(--font-display);
     font-size: 11px;
@@ -3107,302 +2772,13 @@ button,
     color: var(--color-rust-ink);
   }
 
-  .guide-prose .guide-eyebrow {
-    margin: 0;
-  }
+  
 
-  .guide-title {
-    margin: 6px 0 14px;
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    color: var(--color-ink);
-  }
+  
 
-  .guide-grid.is-desktop .guide-title {
-    font-size: 31px;
-  }
+  
 
-  .guide-prose .guide-lede {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: var(--color-ink-muted);
-  }
-
-  .guide-prose .guide-meta {
-    margin: 0;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    color: var(--color-ink-faint);
-  }
-
-  /* The meta line and, on lessons, the Essentials / In depth switch at its end. */
-  .guide-meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px 16px;
-  }
-
-  .guide-mode {
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    flex-shrink: 0;
-    padding: 2px;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid var(--guide-border);
-    border-radius: 999px;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
-  }
-
-  .guide-mode > button {
-    position: relative;
-    z-index: 1;
-    min-width: 58px;
-    padding: 4px 12px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    color: var(--color-ink-faint);
-    background: none;
-    border: 0;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: color 200ms;
-  }
-
-  .guide-mode > button:hover {
-    color: var(--color-ink-muted);
-  }
-
-  .guide-mode > button[aria-pressed="true"] {
-    color: var(--color-ink);
-    cursor: default;
-  }
-
-  .guide-mode > button:focus-visible {
-    outline: 1px solid var(--color-accent);
-    outline-offset: 1px;
-  }
-
-  .guide-mode-thumb {
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    left: 2px;
-    width: calc(50% - 2px);
-    background: color-mix(in srgb, var(--color-accent) 16%, #1a1918);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
-    border-radius: 999px;
-    transition:
-      transform 320ms var(--guide-ease-out),
-      opacity 200ms ease-out;
-  }
-
-  .guide-mode[data-mode="full"] .guide-mode-thumb {
-    transform: translateX(100%);
-  }
-
-  /* Steps switched one by one into a mix: neither option holds. */
-  .guide-mode[data-mode="mixed"] .guide-mode-thumb {
-    opacity: 0;
-    transform: translateX(50%) scaleX(0.6);
-  }
-
-  /* A lesson's steps (the Guide's slots, Guide.tsx). Everything above a
-     step's heading is the same short or full, so the heading and its switch
-     never move when the step switches; a short step sits closer to the next
-     one by losing space at its bottom, inside the glide. */
-  .guide-step[data-slot] {
-    margin-top: 30px;
-    padding-bottom: 14px;
-  }
-
-  .guide-step[data-slot]:first-child {
-    margin-top: 44px;
-  }
-
-  .guide-step[data-slot].is-short {
-    padding-bottom: 0;
-  }
-
-  .guide-step.is-short::before {
-    width: 40px;
-  }
-
-  .guide-step.is-short .guide-step-heading {
-    margin-bottom: 8px;
-  }
-
-  /* Mid-switch (Guide.tsx sets the height): only the bottom edge clips, so
-     sidenotes in the margin still show. Opening, the edge fades rather than
-     cuts, and the fade closes to nothing as the box lands. Folding, it
-     cuts clean: the short text is already all there, and a fade would dim
-     its last lines. */
-  .guide-step.is-gliding {
-    clip-path: inset(-100vmax -100vmax 0 -100vmax);
-  }
-
-  .guide-step.is-gliding[data-glide="open"] {
-    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--guide-glide-fade, 0px)), transparent);
-    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--guide-glide-fade, 0px)), transparent);
-  }
-
-  /* The step's own switch: a quiet pill whose chevron points where the
-     step will go. */
-  .guide-code-btn.guide-more-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    /* Wide enough for either label ("Essentials" is the longer), so the
-       pill keeps its size. */
-    min-width: 108px;
-    padding: 3px 10px 3px 7px;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    color: var(--color-ink-faint);
-    background: rgba(255, 255, 255, 0.02);
-    border-color: var(--guide-border);
-    border-radius: 999px;
-    opacity: 1;
-    transition:
-      color 200ms,
-      border-color 200ms,
-      background-color 200ms,
-      box-shadow 200ms;
-  }
-
-  .guide-code-btn.guide-more-btn svg {
-    transition: transform 260ms var(--guide-ease-out);
-  }
-
-  .guide-code-btn.guide-more-btn:hover,
-  .guide-code-btn.guide-more-btn:focus-visible {
-    color: var(--color-accent);
-    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
-    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 7%, transparent);
-  }
-
-  .guide-code-btn.guide-more-btn:focus-visible {
-    outline: none;
-  }
-
-  .guide-code-btn.guide-more-btn[aria-expanded="false"]:hover svg {
-    transform: translateY(1.5px);
-  }
-
-  .guide-code-btn.guide-more-btn[aria-expanded="true"]:hover svg {
-    transform: translateY(-1.5px);
-  }
-
-  /* A step's new version, after its own switch or the lesson's. Transforms
-     and opacity only: the box is measured for the glide as it lands. The
-     chevron turns over and the body rises in a beat behind. */
-
-  .guide-step-heading.is-swapped .guide-more-btn svg {
-    animation: guideChevronFlip 520ms var(--guide-ease-out) backwards;
-  }
-
-  /* The code button goes with the full version: on folding it slides into
-     the switch beside it, shrinking, blurring and closing its gap; on
-     opening it slides back out a beat after the chevron turns. The switch
-     is rightmost, so it never moves. */
-  .guide-code-btn.is-leaving,
-  .guide-code-btn.is-entering {
-    overflow: hidden;
-    white-space: nowrap;
-    transform-origin: right center;
-  }
-
-  .guide-code-btn.is-leaving {
-    pointer-events: none;
-    animation: guideCodeBtnOut 420ms var(--guide-ease-out) forwards;
-  }
-
-  .guide-code-btn.is-entering {
-    animation: guideCodeBtnIn 520ms var(--guide-ease-out) 90ms backwards;
-  }
-
-  @keyframes guideCodeBtnIn {
-    from {
-      max-width: 0;
-      padding-left: 0;
-      padding-right: 0;
-      border-width: 0;
-      margin-right: -6px;
-      opacity: 0;
-      transform: translate3d(18px, 0, 0) scale(0.75);
-      filter: blur(3px);
-    }
-    35% {
-      opacity: 0;
-    }
-    to {
-      max-width: 120px;
-    }
-  }
-
-  @keyframes guideCodeBtnOut {
-    from {
-      max-width: 120px;
-    }
-    55% {
-      opacity: 0;
-    }
-    to {
-      max-width: 0;
-      padding-left: 0;
-      padding-right: 0;
-      border-width: 0;
-      margin-right: -6px;
-      opacity: 0;
-      transform: translate3d(18px, 0, 0) scale(0.75);
-      filter: blur(3px);
-      visibility: hidden;
-    }
-  }
-
-  .guide-step-body.is-swapped {
-    animation: guideSwapIn 560ms var(--guide-ease-out) 60ms backwards;
-  }
-
-  /* Folding, the short text is there at full strength from the first
-     frame and only settles; any fade would read as a dim. */
-  .guide-step.is-short .guide-step-body.is-swapped {
-    animation: guideSwapSettle 420ms var(--guide-ease-out) backwards;
-  }
-
-  @keyframes guideSwapSettle {
-    from {
-      transform: translate3d(0, 6px, 0);
-    }
-  }
-
-  @keyframes guideChevronFlip {
-    from {
-      transform: rotate(-180deg);
-    }
-  }
-
-  @keyframes guideSwapIn {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 12px, 0);
-    }
-  }
-
-  .guide-prose .guide-tldr-end {
-    margin: 0 0 22px;
-    font-size: 0.93em;
-    color: var(--color-ink-muted);
-  }
+  
 
   /* Guess first, then the numbers (Guess.tsx). */
   .guide-guess {
@@ -3452,8 +2828,8 @@ button,
     border-radius: 2px;
   }
 
-  .guide-grid.is-desktop .guide-guess-anchor img,
-  .guide-grid.is-desktop .guide-guess-choice img {
+  .dd-grid.is-desktop .guide-guess-anchor img,
+  .dd-grid.is-desktop .guide-guess-choice img {
     max-height: 140px;
   }
 
@@ -3531,7 +2907,7 @@ button,
     margin-top: 12px;
   }
 
-  .guide-prose .guide-guess-hint {
+  .dd-prose .guide-guess-hint {
     margin: 0;
     font-size: 0.88em;
     color: var(--color-ink-faint);
@@ -3541,7 +2917,7 @@ button,
     animation: guideRise 420ms var(--guide-ease-out) backwards;
   }
 
-  .guide-prose .guide-guess-reveal p {
+  .dd-prose .guide-guess-reveal p {
     margin-bottom: 10px;
     font-size: 0.95em;
   }
@@ -3624,93 +3000,6 @@ button,
     cursor: default;
   }
 
-  .guide-step {
-    margin-top: 44px;
-    scroll-margin-top: 72px;
-  }
-
-  .guide-step::before {
-    content: "";
-    display: block;
-    transition: width 480ms var(--guide-ease-out);
-    width: 72px;
-    height: 6px;
-    margin-bottom: 18px;
-    background: repeating-linear-gradient(-45deg, rgba(232, 93, 58, 0.45) 0 2px, transparent 2px 6px);
-  }
-
-  .guide-step-heading {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 4px 12px;
-    margin: 0 0 14px;
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.3;
-    color: var(--color-ink);
-  }
-
-  .guide-step-num {
-    min-width: 1.1em;
-    font-size: 14px;
-    color: var(--color-accent);
-  }
-
-  .guide-step-title {
-    flex: 0 1 auto;
-    min-width: 0;
-  }
-
-  .guide-step-link {
-    font-size: 15px;
-    color: var(--color-ink-faint);
-    text-decoration: none;
-    opacity: 0;
-    transition: opacity 150ms, color 150ms;
-  }
-
-  .guide-step-heading:hover .guide-step-link,
-  .guide-step-link:focus-visible {
-    opacity: 1;
-  }
-
-  .guide-step-link:hover {
-    color: var(--color-accent);
-  }
-
-  .guide-step-tools {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-
-  .guide-step-tools:empty {
-    display: none;
-  }
-
-  .guide-code-btn {
-    flex-shrink: 0;
-    padding: 3px 9px;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    color: var(--color-accent);
-    background: transparent;
-    border: 1px solid rgba(232, 93, 58, 0.35);
-    border-radius: 4px;
-    opacity: 0.85;
-    transition: opacity 150ms, background-color 150ms;
-  }
-
-  .guide-code-btn:hover,
-  .guide-code-btn[aria-pressed="true"] {
-    opacity: 1;
-    background: rgba(232, 93, 58, 0.14);
-  }
-
   .guide-em {
     color: var(--color-accent);
   }
@@ -3745,7 +3034,7 @@ button,
     color: var(--color-ink-faint);
   }
 
-  .guide-prose .guide-caption {
+  .dd-prose .guide-caption {
     margin: 6px 0 0;
   }
 
@@ -3759,16 +3048,16 @@ button,
   }
 
   /* Wide figures break out across the margin, unless the code is there. */
-  .guide-grid.is-desktop .guide-wide {
+  .dd-grid.is-desktop .guide-wide {
     margin-right: calc(-1 * (var(--guide-margin-w) + var(--guide-gap)));
   }
 
-  .guide-grid.is-desktop.has-code .guide-wide {
+  .dd-grid.is-desktop.has-facet .guide-wide {
     margin-right: 0;
   }
 
   /* Phones: edge to edge, past the gutter. */
-  .guide-grid:not(.is-desktop) .guide-wide {
+  .dd-grid:not(.is-desktop) .guide-wide {
     margin-left: -20px;
     margin-right: -20px;
     padding: 0 8px;
@@ -3788,7 +3077,7 @@ button,
     object-fit: contain;
   }
 
-  .guide-grid.is-desktop .guide-trio-img {
+  .dd-grid.is-desktop .guide-trio-img {
     max-height: 112px;
   }
 
@@ -4264,7 +3553,7 @@ button,
   }
 
   /* The figure's point in one sentence, above the plot. */
-  .guide-prose .cielab-takeaway,
+  .dd-prose .cielab-takeaway,
   .cielab-takeaway {
     margin: 0 0 10px;
     font-size: 14px;
@@ -4321,7 +3610,7 @@ button,
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
 
-  .guide-prose .palette-dist-sum,
+  .dd-prose .palette-dist-sum,
   .palette-dist-sum {
     display: flex;
     flex-wrap: wrap;
@@ -4426,7 +3715,7 @@ button,
     color: var(--color-ink-faint);
   }
 
-  .guide-prose .rgblab-verdict {
+  .dd-prose .rgblab-verdict {
     margin: 8px 0 6px;
     font-size: 13px;
     color: rgba(255, 255, 255, 0.85);
@@ -4461,7 +3750,7 @@ button,
     background: var(--color-accent);
   }
 
-  .guide-prose .guide-recap {
+  .dd-prose .guide-recap {
     padding: 10px 14px;
     font-size: 0.93em;
     color: var(--color-ink-muted);
@@ -4489,181 +3778,6 @@ button,
   .guide-notice {
     padding: 28px 0;
     color: var(--color-ink-muted);
-  }
-
-  /* Terms: the defining use, its sidenote or tap-to-open note, and later uses. */
-  .guide-term.is-defined {
-    font-style: normal;
-    font-weight: 500;
-    color: var(--color-ink);
-    border-bottom: 1px solid rgba(232, 93, 58, 0.6);
-  }
-
-  .guide-sidenote {
-    float: right;
-    clear: right;
-    width: var(--guide-margin-w);
-    margin: 0.25em calc(-1 * (var(--guide-margin-w) + var(--guide-gap))) 0.6em 0;
-    padding-left: 10px;
-    font-size: 12.5px;
-    line-height: 1.55;
-    color: var(--color-ink-muted);
-    border-left: 2px solid var(--color-rust);
-  }
-
-  .guide-sidenote-label {
-    display: block;
-    margin-bottom: 2px;
-    font-family: var(--font-display);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-rust-ink);
-  }
-
-  /* The phone's "?" beside a defining term. Opening it turns the "?" away
-     and draws a × in its place, while the button fills with the accent. */
-  .guide-note-toggle {
-    position: relative;
-    display: inline-grid;
-    place-items: center;
-    width: 18px;
-    height: 18px;
-    margin-left: 5px;
-    padding: 0;
-    vertical-align: 2px;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    line-height: 1;
-    color: var(--color-accent);
-    background: rgba(232, 93, 58, 0.08);
-    border: 1px solid rgba(232, 93, 58, 0.45);
-    border-radius: 50%;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition:
-      background-color 240ms var(--guide-ease-out),
-      border-color 240ms var(--guide-ease-out),
-      color 240ms var(--guide-ease-out),
-      transform 320ms var(--guide-ease-out);
-  }
-
-  /* A thumb-sized target around the small circle. */
-  .guide-note-toggle::after {
-    content: "";
-    position: absolute;
-    inset: -12px;
-  }
-
-  .guide-note-toggle:active {
-    transform: scale(0.88);
-  }
-
-  .guide-note-toggle-q,
-  .guide-note-toggle::before {
-    grid-area: 1 / 1;
-    transition:
-      opacity 180ms ease-out,
-      transform 360ms var(--guide-ease-out);
-  }
-
-  /* The ×: two hairlines drawn as one gradient, so it stays crisp. */
-  .guide-note-toggle::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    background:
-      linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
-      linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
-    opacity: 0;
-    transform: rotate(-45deg) scale(0.4);
-  }
-
-  .guide-note-toggle[aria-expanded="true"] {
-    color: #fff;
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-  }
-
-  .guide-note-toggle[aria-expanded="true"] .guide-note-toggle-q {
-    opacity: 0;
-    transform: rotate(90deg) scale(0.4);
-  }
-
-  .guide-note-toggle[aria-expanded="true"]::before {
-    opacity: 1;
-    transform: rotate(45deg) scale(1);
-  }
-
-  /* The note it opens: unfolds from zero height (a grid row easing from
-     0fr to 1fr), and the card inside rises into place and comes into
-     focus a beat behind, so the text never slides under a hard edge. */
-  .guide-inline-note {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 380ms var(--guide-ease-out);
-  }
-
-  .guide-inline-note[data-open] {
-    grid-template-rows: 1fr;
-  }
-
-  .guide-inline-note-clip {
-    display: block;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .guide-inline-note-card {
-    display: block;
-    margin: 10px 0 12px;
-    padding: 11px 13px 12px;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-style: normal;
-    line-height: 1.55;
-    color: var(--color-ink-muted);
-    background: #171615;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 10px;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.035),
-      0 10px 28px -16px rgba(0, 0, 0, 0.9);
-    opacity: 0;
-    filter: blur(4px);
-    transform: translate3d(0, -8px, 0) scale(0.98);
-    transform-origin: top left;
-    transition:
-      opacity 160ms ease-out,
-      filter 200ms ease-out,
-      transform 260ms var(--guide-ease-out);
-  }
-
-  .guide-inline-note[data-open] .guide-inline-note-card {
-    opacity: 1;
-    filter: none;
-    transform: none;
-    transition:
-      opacity 260ms ease-out 90ms,
-      filter 340ms ease-out 90ms,
-      transform 460ms var(--guide-ease-out) 60ms;
-  }
-
-  .guide-inline-note-label {
-    display: block;
-    margin-bottom: 4px;
-    font-family: var(--font-display);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-rust-ink);
-  }
-
-  .guide-term-ref {
-    position: relative;
-    cursor: help;
-    text-decoration: underline dotted rgba(232, 93, 58, 0.6);
-    text-underline-offset: 3px;
   }
 
   /* Popovers: a term's meaning in the prose, a name's in the code view.
@@ -4791,144 +3905,6 @@ button,
     background: var(--pop-foot-bg);
   }
 
-  /* The term's popover: placed by Term.tsx (--pop-x, --pop-caret,
-     data-side) as it's about to show, and eased in a beat after the
-     pointer arrives, so passing over a word doesn't flash it. */
-  .guide-term-pop {
-    position: absolute;
-    top: calc(100% + 9px);
-    left: var(--pop-x, 0px);
-    z-index: 10;
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transform: translate3d(0, 4px, 0) scale(0.98);
-    transform-origin: var(--pop-caret, 18px) top;
-    transition:
-      opacity 120ms ease-out,
-      transform 200ms var(--guide-ease-out),
-      visibility 0s linear 120ms;
-  }
-
-  .guide-term-pop[data-side="top"] {
-    top: auto;
-    bottom: calc(100% + 9px);
-    transform: translate3d(0, -4px, 0) scale(0.98);
-    transform-origin: var(--pop-caret, 18px) bottom;
-  }
-
-  /* Bridges the gap to the word, so the pointer can cross to the link. */
-  .guide-term-pop::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -11px;
-    height: 11px;
-  }
-
-  .guide-term-pop[data-side="top"]::before {
-    top: auto;
-    bottom: -11px;
-  }
-
-  @media (hover: hover) {
-    .guide-term-ref:hover .guide-term-pop {
-      visibility: visible;
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
-      transition:
-        opacity 160ms ease-out 70ms,
-        transform 280ms var(--guide-ease-out) 70ms,
-        visibility 0s linear 70ms;
-    }
-  }
-
-  .guide-term-ref:focus-visible .guide-term-pop,
-  .guide-term-ref[aria-expanded="true"] .guide-term-pop {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-    transition:
-      opacity 160ms ease-out,
-      transform 280ms var(--guide-ease-out),
-      visibility 0s;
-  }
-
-  /* Sources, after a lesson's last step */
-  .guide-sources {
-    clear: both;
-    margin-top: 56px;
-  }
-
-  .guide-sources-title {
-    margin: 0 0 10px;
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: normal;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-ink-muted);
-  }
-
-  .guide-sources-group + .guide-sources-group {
-    margin-top: 28px;
-  }
-
-  .guide-sources-group-title {
-    margin: 0 0 6px;
-    font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: normal;
-    color: var(--color-ink);
-  }
-
-  .guide-sources-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .guide-sources-list li {
-    padding: 12px 0;
-    border-top: 1px solid var(--guide-border);
-  }
-
-  .guide-sources .guide-source-ref {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--color-ink);
-    overflow-wrap: anywhere;
-  }
-
-  .guide-source-venue {
-    font-style: italic;
-    color: var(--color-ink-muted);
-  }
-
-  .guide-sources .guide-source-note {
-    margin: 4px 0 0;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--color-ink-faint);
-  }
-
-  .guide-sources + .guide-end {
-    margin-top: 32px;
-  }
-
-  /* End of a lesson */
-  .guide-end {
-    clear: both;
-    margin-top: 56px;
-    padding-top: 24px;
-    border-top: 1px solid var(--guide-border);
-  }
-
   .guide-sort-btn {
     display: inline-flex;
     margin-bottom: 28px;
@@ -4947,12 +3923,6 @@ button,
 
   .guide-sort-btn:hover {
     background: var(--color-accent-dim);
-  }
-
-  .guide-prevnext {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
   }
 
   .guide-card {
@@ -5001,7 +3971,7 @@ button,
     gap: 10px;
   }
 
-  .guide-grid.is-desktop .guide-compare {
+  .dd-grid.is-desktop .guide-compare {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
@@ -5034,14 +4004,14 @@ button,
     border-color: rgba(232, 93, 58, 0.5);
   }
 
-  .guide-prose .guide-compare-card .guide-caption {
+  .dd-prose .guide-compare-card .guide-caption {
     margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .guide-prose .guide-compare-card .guide-compare-dist {
+  .dd-prose .guide-compare-card .guide-compare-dist {
     color: var(--color-accent);
   }
 
@@ -5242,6 +4212,8 @@ button,
     }
   }
 
+  
+
   /* Anchor picker */
   .guide-picker {
     position: fixed;
@@ -5326,58 +4298,6 @@ button,
 
   .guide-picker .guide-caption {
     margin: 0;
-  }
-
-  /* Code beside the prose */
-  .guide-code-pane {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 220px;
-    overflow: hidden;
-    background: var(--color-surface-raised);
-    border: 1px solid var(--guide-border);
-    border-radius: 6px;
-  }
-
-  .guide-code-pane.is-expanded {
-    position: fixed;
-    top: calc(var(--guide-mast-h) + 16px);
-    bottom: 16px;
-    left: calc(var(--guide-rail-w) + 64px);
-    right: 32px;
-    z-index: 6;
-    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
-  }
-
-  .guide-code-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 10px 8px 8px 14px;
-    border-bottom: 1px solid var(--guide-border);
-  }
-
-  .guide-code-title {
-    margin: 2px 0 3px;
-    font-family: var(--font-display);
-    font-size: 13px;
-    color: var(--color-ink);
-  }
-
-  .guide-code-step {
-    padding: 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-accent);
-    background: none;
-    border: 0;
-    opacity: 0.8;
-    cursor: pointer;
-  }
-
-  .guide-code-step:hover {
-    opacity: 1;
   }
 
   .guide-code-body {
@@ -5568,68 +4488,30 @@ button,
     color: var(--color-ink-muted);
   }
 
-  /* Phone sheets: code from the bottom, contents from the left. */
-  .guide-sheet-layer {
-    position: fixed;
-    inset: 0;
-  }
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
 
-  .guide-sheet-scrim {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-  }
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
+  
 
-  .guide-code-sheet {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 85vh;
-    height: 85dvh;
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface-raised);
-    border-top: 1px solid var(--guide-border);
-    border-radius: 12px 12px 0 0;
-    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.5);
-  }
-
-  .guide-sheet-handle {
-    width: 36px;
-    height: 4px;
-    margin: 8px auto 0;
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 2px;
-  }
-
-  .guide-contents-sheet {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: min(320px, 86vw);
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface-raised);
-    border-right: 1px solid var(--guide-border);
-  }
-
-  .guide-toast {
-    position: absolute;
-    left: 50%;
-    bottom: 24px;
-    z-index: 7;
-    margin: 0;
-    padding: 8px 14px;
-    transform: translateX(-50%);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-ink);
-    background: var(--color-surface-raised);
-    border: 1px solid var(--guide-border);
-    border-radius: 16px;
-    animation: scrimIn 150ms ease-out forwards;
+  @keyframes guideRise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
   }
 
   /* --- Motion ---------------------------------------------------------------
@@ -5640,19 +4522,9 @@ button,
      nothing is left transformed afterwards: no lingering stacking contexts
      over the margin, and the jump-to-step arithmetic (which measures the
      steps) is never off by an offset. */
-  @keyframes guidePageIn {
-    from {
-      opacity: 0;
-      transform: translate3d(var(--guide-enter-x, 0), 0, 0);
-    }
-  }
+  
 
-  @keyframes guideRise {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 10px, 0);
-    }
-  }
+  
 
   @keyframes guideFadeIn {
     from {
@@ -5660,12 +4532,35 @@ button,
     }
   }
 
-  @keyframes guideRailIn {
-    from {
-      opacity: 0;
-      transform: translate3d(-6px, 0, 0);
-    }
-  }
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
+  
+
+  
+
+  
+
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
+  
+
+  
+
+  
+
+  
 
   @keyframes guidePopIn {
     from {
@@ -5674,304 +4569,104 @@ button,
     }
   }
 
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
+  
+
+  
+
+  
+
+  
+
+  
+
   /* The code pane: in from the margin's edge, out the same way. Growing
      over the column and settling back are flown in script (CodePane's
      useFlight) from wherever the pane actually sits. */
-  @keyframes guideCodeIn {
-    from {
-      opacity: 0;
-      transform: translate3d(18px, 0, 0);
-    }
-  }
 
-  @keyframes guideCodeOut {
-    to {
-      opacity: 0;
-      transform: translate3d(18px, 0, 0);
-    }
-  }
+  /* --- Motion ---------------------------------------------------------------
+     Moving between pages: the new page slides in from the side it lies on
+     in the contents (next from the right, previous from the left), its
+     heading lines rising one after another, the lesson following. Only
+     sideways for the page itself, and only `backwards` fill throughout, so
+     nothing is left transformed afterwards: no lingering stacking contexts
+     over the margin, and the jump-to-step arithmetic (which measures the
+     steps) is never off by an offset. */
+  
 
-  .guide-code-pane[data-motion="in"] {
-    animation: guideCodeIn 380ms var(--guide-ease-out) backwards;
-  }
+  
 
-  .guide-code-pane[data-motion="out"] {
-    animation: guideCodeOut 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
-    pointer-events: none;
-  }
+  
 
-  .guide-code-scrim {
-    position: fixed;
-    top: var(--guide-mast-h);
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 5;
-    background: rgba(0, 0, 0, 0.55);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-    animation: guideFadeIn 280ms ease-out backwards;
-  }
+  
+
+  
+
+  /* The code pane: in from the margin's edge, out the same way. Growing
+     over the column and settling back are flown in script (CodePane's
+     useFlight) from wherever the pane actually sits. */
+  
 
   .guide-code-body {
     animation: guideFadeIn 260ms ease-out backwards;
   }
 
-  .guide-code-title {
-    animation: guideRise 320ms var(--guide-ease-out) backwards;
-  }
+  
 
-  .guide-prose[data-enter] {
-    animation: guidePageIn 460ms var(--guide-ease-out) backwards;
-  }
+  
 
-  .guide-prose[data-enter="next"] {
-    --guide-enter-x: 28px;
-  }
-
-  .guide-prose[data-enter="prev"] {
-    --guide-enter-x: -28px;
-  }
-
-  .guide-prose[data-enter] .guide-lesson-head > * {
-    animation: guideRise 520ms var(--guide-ease-out) backwards;
-  }
-
-  .guide-prose[data-enter] .guide-lesson-head > :nth-child(2) {
-    animation-delay: 40ms;
-  }
-
-  .guide-prose[data-enter] .guide-lesson-head > :nth-child(3) {
-    animation-delay: 80ms;
-  }
-
-  .guide-prose[data-enter] .guide-lesson-head > :nth-child(n + 4) {
-    animation-delay: 120ms;
-  }
-
-  /* Opacity only: a vertical shift here would move the step being jumped to. */
-  .guide-body.is-arriving {
-    animation: guideFadeIn 520ms ease-out 120ms backwards;
-  }
-
-  .guide-phone-title {
-    animation: guideRise 360ms var(--guide-ease-out) backwards;
-  }
-
-  .guide-rail-steps > li {
-    animation: guideRailIn 380ms var(--guide-ease-out) backwards;
-    animation-delay: calc(min(var(--i, 0), 10) * 28ms);
-  }
-
-  /* Landing: the Guide opened from a link, with no gallery to slide over.
-     The sheet itself is the page's own colour and stays put; what's on it
-     arrives in order. The masthead settles from above while an accent line
-     draws across under it, the lesson heading rises a line at a time, the
-     rail's steps follow down the side, and the lesson fades up last. The
-     lesson is opacity only, as with any arrival, so a jump to a step lands
-     where it should. All `backwards` fills, so `.is-landing` can come off
-     (Guide.tsx, LAND_MS) without anything moving. */
-  @media (prefers-reduced-motion: no-preference) {
-    .guide-sheet.is-landing .guide-masthead > :not(.guide-progress) {
-      animation: guideLandDrop 560ms var(--guide-ease-out) backwards;
-    }
-
-    .guide-sheet.is-landing .guide-masthead > :nth-child(2) {
-      animation-delay: 50ms;
-    }
-
-    .guide-sheet.is-landing .guide-masthead > :nth-child(3) {
-      animation-delay: 100ms;
-    }
-
-    .guide-sheet.is-landing .guide-masthead > :nth-child(n + 4) {
-      animation-delay: 150ms;
-    }
-
-    .guide-sheet.is-landing .guide-progress::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--color-accent);
-      transform-origin: left center;
-      animation: guideLandSweep 1100ms 60ms both;
-    }
-
-    .guide-sheet.is-landing .guide-specimen {
-      animation: guideFadeIn 600ms ease-out 200ms backwards;
-    }
-
-    .guide-sheet.is-landing .guide-rail {
-      animation: guideFadeIn 480ms ease-out 100ms backwards;
-    }
-
-    .guide-sheet.is-landing .guide-rail-steps > li {
-      animation-duration: 520ms;
-      animation-delay: calc(180ms + min(var(--i, 0), 10) * 32ms);
-    }
-
-    .guide-sheet.is-landing .guide-lesson-head > * {
-      animation: guideLandRise 760ms var(--guide-ease-out) 140ms backwards;
-    }
-
-    .guide-sheet.is-landing .guide-lesson-head > :nth-child(2) {
-      animation-delay: 200ms;
-    }
-
-    .guide-sheet.is-landing .guide-lesson-head > :nth-child(3) {
-      animation-delay: 260ms;
-    }
-
-    .guide-sheet.is-landing .guide-lesson-head > :nth-child(n + 4) {
-      animation-delay: 320ms;
-    }
-
-    .guide-sheet.is-landing .guide-prose > :not(.guide-lesson-head) {
-      animation: guideFadeIn 720ms ease-out 380ms backwards;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .guide-sheet.is-landing .guide-scroll {
-      animation: guideFadeIn 200ms ease-out backwards;
-    }
-  }
-
-  @keyframes guideLandDrop {
-    from {
-      opacity: 0;
-      transform: translate3d(0, -6px, 0);
-    }
-  }
-
-  @keyframes guideLandRise {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 18px, 0);
-    }
-  }
+  
 
   /* Draws across fast and eases into the far edge, then dissolves. */
-  @keyframes guideLandSweep {
-    0% {
-      opacity: 0.85;
-      transform: scaleX(0);
-      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    55% {
-      opacity: 0.85;
-      transform: scaleX(1);
-      animation-timing-function: ease-in;
-    }
-    100% {
-      opacity: 0;
-      transform: scaleX(1);
-    }
-  }
+
+  
+
+  
+
+  /* Draws across fast and eases into the far edge, then dissolves. */
+  
 
   /* Steps below the fold rise into place as they're reached (useReveal).
      The step's own box stays put; its heading and body move, the body a
      beat behind, and the hatched rule above draws itself in. */
-  :is(.guide-step, .guide-glossary-entry)[data-reveal] > * {
+  .guide-glossary-entry[data-reveal] > * {
     transition:
       opacity 560ms ease-out,
       transform 720ms var(--guide-ease-out);
   }
 
-  :is(.guide-step, .guide-glossary-entry)[data-reveal] > :nth-child(2) {
+  .guide-glossary-entry[data-reveal] > :nth-child(2) {
     transition-delay: 70ms;
   }
 
-  :is(.guide-step, .guide-glossary-entry)[data-reveal="out"] > * {
+  .guide-glossary-entry[data-reveal="out"] > * {
     opacity: 0;
     transform: translate3d(0, 22px, 0);
   }
 
-  .guide-step[data-reveal]::before {
-    transform-origin: left center;
-    transition:
-      transform 640ms var(--guide-ease-out),
-      width 480ms var(--guide-ease-out);
-  }
-
-  .guide-step[data-reveal="out"]::before {
-    transform: scaleX(0);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .guide-specimen.is-compact,
-    .guide-progress > div,
-    .guide-rail-marker {
+    .guide-specimen.is-compact {
       transition: none;
     }
 
-    .guide-term-pop,
-    .guide-term-pop[data-side="top"] {
-      transform: none;
-    }
-
-    .guide-inline-note,
-    .guide-inline-note-card,
-    .guide-note-toggle,
-    .guide-note-toggle-q,
-    .guide-note-toggle::before {
-      transition: none;
-    }
-
-    .guide-inline-note-card {
-      filter: none;
-      transform: none;
-    }
-
-    .guide-prose[data-enter],
-    .guide-prose[data-enter] .guide-lesson-head > *,
-    .guide-code-pane[data-motion],
-    .guide-code-title,
     .guide-code-tool-icon,
     .guide-doc-pop,
-    .guide-phone-title,
-    .guide-rail-steps > li,
     .guide-guess-reveal {
       animation: none;
     }
 
-    .guide-mode-thumb,
     .guide-guess-choice {
       transition: none;
     }
-
-    .guide-body.is-arriving,
-    .guide-step-body.is-swapped {
-      animation-duration: 150ms;
-      animation-delay: 0ms;
-    }
-
-    .guide-step-body.is-swapped {
-      animation-name: guideFadeIn;
-    }
-
-    .guide-step-heading.is-swapped .guide-more-btn svg,
-    .guide-step.is-short .guide-step-body.is-swapped,
-    .guide-code-btn.is-entering {
-      animation: none;
-    }
-
-    .guide-code-btn.is-leaving {
-      display: none;
-    }
-
-    .guide-step::before,
-    .guide-more-btn svg {
-      transition: none;
-    }
   }
+
+  
 }
 
-/* The bottom fade on a step opening in the Guide, eased shut as the step
-   lands (Guide.tsx). Registered so it can transition; where it can't, the
-   fade simply stays until the glide ends. */
-@property --guide-glide-fade {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}

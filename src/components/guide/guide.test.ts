@@ -4,20 +4,16 @@ import { afterEach, describe, expect, it } from "vitest";
 import { makePanel } from "../../utils/testPanel";
 import {
   ColorExplanation,
-  ColorTldr,
   EmbeddingExplanation,
-  EmbeddingTldr,
   PhashExplanation,
-  PhashTldr,
   VectorsExplanation,
-  VectorsTldr,
 } from "../explainer/explanations";
 import { CONCEPTS } from "./concepts";
-import { Overview, OverviewEssentials } from "./pages/Overview";
-import { LessonSources } from "./LessonSources";
+import { Overview } from "./pages/Overview";
+import { GUIDE_TERMS, guideSources } from "./guideAdapters";
 import { SOURCE_GROUPS, SOURCES, isSourceStep } from "./sources";
-import { readingProgress } from "./useScrollSpy";
-import { GuideContext, VariantContext, type GuideContextValue } from "./guideContext";
+import { readingProgress } from "../../dimensional/core/scroll";
+import { DocContext, createDocStore, type DocContextValue } from "../../dimensional/react/context";
 import { LESSONS, PAGES, lessonForMetric, neighbours, pageDef, stepNumber, type PageId } from "./lessons";
 import { hasOverlays, isTopOverlay, popOverlay, pushOverlay, resetOverlays } from "./overlayStack";
 import { isUsableAnchor, pickAnchor, specimenPool } from "./specimen";
@@ -63,52 +59,45 @@ const LESSON_BODIES: Partial<Record<PageId, () => ReactElement>> = {
   gram: () => createElement(EmbeddingExplanation, { metric: "embedding-gram", ...specimen }),
 };
 
-/** Each page's essentials, the short version every lesson (and the overview) opens at. */
-const TLDR_BODIES: Partial<Record<PageId, () => ReactElement>> = {
-  overview: () => createElement(OverviewEssentials, { anchor, pool: [anchor, closest, furthest] }),
-  color: () => createElement(ColorTldr, specimen),
-  phash: () => createElement(PhashTldr),
-  vectors: () => createElement(VectorsTldr, specimen),
-  siglip: () => createElement(EmbeddingTldr, { metric: "embedding-siglip", ...specimen }),
-  dino: () => createElement(EmbeddingTldr, { metric: "embedding-dino", ...specimen }),
-  gram: () => createElement(EmbeddingTldr, { metric: "embedding-gram", ...specimen }),
-};
-
-function guideCtx(page: PageId, desktop = true, extra: Partial<GuideContextValue> = {}): GuideContextValue {
+/**
+ * What the dimensional framework's document gives a lesson, as `DimDoc`
+ * would: the page, the depth each step is asked for, and the Guide's terms.
+ */
+function docCtx(page: PageId, desktop: boolean, depth: (step: string) => number): DocContextValue {
   return {
     page,
+    levels: ["Essentials", "In depth"],
     desktop,
-    codeStep: null,
-    openCode: () => {},
+    reduced: true,
+    scroller: null,
+    requestedDepth: depth,
+    setSectionDepth: () => {},
+    swapped: new Set(),
+    sectionNumber: () => 0,
+    register: () => () => {},
+    openFacet: null,
+    toggleFacet: () => {},
     goTo: () => {},
-    copyStepLink: () => {},
-    setStepShort: () => {},
-    setAllShort: () => {},
-    ...extra,
+    copyLink: () => {},
+    term: (id) => GUIDE_TERMS[id] ?? null,
+    figures: {},
+    store: createDocStore(),
   };
 }
 
-function render(page: PageId, desktop = true, tldr = false): string {
-  const body = (tldr ? TLDR_BODIES : LESSON_BODIES)[page]!;
-  const tree = tldr ? createElement(VariantContext.Provider, { value: "short" }, body()) : body();
-  return renderToStaticMarkup(createElement(GuideContext.Provider, { value: guideCtx(page, desktop) }, tree));
+/**
+ * A page as the Guide renders it: every step In depth, or with
+ * `essentials`, every step at its Essentials (its first layer).
+ */
+function render(page: PageId, desktop = true, essentials = false): string {
+  const ctx = docCtx(page, desktop, () => (essentials ? 0 : 1));
+  return renderToStaticMarkup(createElement(DocContext.Provider, { value: ctx }, LESSON_BODIES[page]!()));
 }
 
-/**
- * Both versions mounted, as the Guide mounts them, with `short` steps
- * showing their short version. Without slots each Section renders in place,
- * so the short tree's steps come first.
- */
+/** A page with `short` steps at their Essentials and the rest In depth. */
 function renderMixed(page: PageId, short: (step: string) => boolean): string {
-  const ctx = guideCtx(page, true, { stepShort: short });
-  return renderToStaticMarkup(
-    createElement(
-      GuideContext.Provider,
-      { value: ctx },
-      createElement(VariantContext.Provider, { value: "short" }, TLDR_BODIES[page]!()),
-      createElement(VariantContext.Provider, { value: "full" }, LESSON_BODIES[page]!())
-    )
-  );
+  const ctx = docCtx(page, true, (step) => (short(step) ? 0 : 1));
+  return renderToStaticMarkup(createElement(DocContext.Provider, { value: ctx }, LESSON_BODIES[page]!()));
 }
 
 function attrs(html: string, name: string): string[] {
@@ -141,34 +130,35 @@ describe("lesson steps", () => {
   });
 });
 
-describe("the short versions", () => {
-  /** Every page with an essentials version: the lessons and the overview. */
+describe("the Essentials", () => {
+  /** Every page with Essentials: the lessons and the overview. */
   const SHORT_PAGES = PAGES.filter((p) => p.id !== "glossary");
 
   for (const lesson of SHORT_PAGES) {
-    it(`${lesson.id} has one, with the full page's steps in order`, () => {
-      expect(lesson.tldr, lesson.id).toBeDefined();
-      expect(lesson.tldr!.minutes).toBeLessThan(lesson.minutes);
+    it(`${lesson.id} has them, with the page's steps in order`, () => {
+      expect(lesson.essentials, lesson.id).toBeDefined();
+      expect(lesson.essentials!.minutes).toBeLessThan(lesson.minutes);
       const html = render(lesson.id, true, true);
       expect(attrs(html, "data-step")).toEqual(lesson.steps.map((s) => s.id));
     });
   }
 
-  it("point each step at the full lesson instead of the code", () => {
+  it("point every step In depth, and keep its code beside it at either depth", () => {
     const html = render("color", true, true);
-    expect(html).toContain("guide-more-btn");
-    expect(html).not.toContain("&lt;/&gt; code");
+    expect(html.match(/data-dir="down"/g)?.length).toBe(pageDef("color").steps.length);
+    expect(html).not.toContain('data-dir="up"');
+    expect(html).toContain("&lt;/&gt; code");
   });
 
-  it("can be mixed step by step: each step shows exactly one version", () => {
+  it("can be mixed step by step: each step shows exactly one layer", () => {
     for (const lesson of SHORT_PAGES) {
       const full = new Set([lesson.steps[0].id, lesson.steps[lesson.steps.length - 1].id]);
       const html = renderMixed(lesson.id, (step) => !full.has(step));
       const steps = attrs(html, "data-step");
       expect([...steps].sort(), lesson.id).toEqual(lesson.steps.map((s) => s.id).sort());
-      // The short steps open in full; the full ones fold back.
-      expect(html.match(/guide-more-btn" aria-expanded="false"/g)?.length, lesson.id).toBe(lesson.steps.length - full.size);
-      expect(html.match(/guide-more-btn" aria-expanded="true"/g)?.length, lesson.id).toBe(full.size);
+      // Essentials steps open In depth; In depth steps fold back.
+      expect(html.match(/data-dir="down"/g)?.length, lesson.id).toBe(lesson.steps.length - full.size);
+      expect(html.match(/data-dir="up"/g)?.length, lesson.id).toBe(full.size);
     }
   });
 
@@ -181,7 +171,7 @@ describe("the short versions", () => {
   });
 
   it("leave the glossary without one", () => {
-    expect(pageDef("glossary").tldr).toBeUndefined();
+    expect(pageDef("glossary").essentials).toBeUndefined();
   });
 });
 
@@ -222,10 +212,10 @@ describe("terms", () => {
   });
 
   it("put the definition beside the term on wide screens, behind a toggle on phones", () => {
-    expect(render("vectors", true)).toContain("guide-sidenote");
+    expect(render("vectors", true)).toContain("dd-sidenote");
     const phone = render("vectors", false);
-    expect(phone).not.toContain("guide-sidenote");
-    expect(phone).toContain("guide-note-toggle");
+    expect(phone).not.toContain("dd-sidenote");
+    expect(phone).toContain("dd-note-toggle");
   });
 });
 
@@ -249,14 +239,14 @@ describe("sources", () => {
     for (const g of SOURCE_GROUPS) expect(isSourceStep(g.id)).toBe(true);
   });
 
-  it("render as two groups at the end of a lesson, marked as the end of the reading", () => {
-    const html = renderToStaticMarkup(createElement(LessonSources, { page: "phash" }));
-    expect(html.match(/<li>/g)?.length).toBe(SOURCES.phash.start.length + SOURCES.phash.papers.length);
-    expect(attrs(html, "data-step")).toEqual(SOURCE_GROUPS.map((g) => g.id));
-    expect(html).toContain("data-progress-end");
+  it("go to the document as two groups at the end of a lesson, each source linked", () => {
+    const groups = guideSources("phash");
+    expect(groups.map((g) => g.id)).toEqual(SOURCE_GROUPS.map((g) => g.id));
+    expect(groups.reduce((n, g) => n + g.items.length, 0)).toBe(SOURCES.phash.start.length + SOURCES.phash.papers.length);
+    const html = renderToStaticMarkup(createElement("div", null, ...groups[0].items));
     expect(html).toContain('rel="noopener noreferrer"');
-    expect(renderToStaticMarkup(createElement(LessonSources, { page: "overview" }))).toBe("");
-    expect(renderToStaticMarkup(createElement(LessonSources, { page: "glossary" }))).toBe("");
+    expect(guideSources("overview")).toEqual([]);
+    expect(guideSources("glossary")).toEqual([]);
   });
 });
 
