@@ -42,8 +42,9 @@ export interface PageDef {
   /** Rough reading time. */
   minutes: number;
   /**
-   * The lesson's short version: its reading time, and the one sentence that
-   * stands in for the lede. Lessons only; the switch shows where it's set.
+   * The page's short version (its essentials): its reading time, and the one
+   * sentence that stands in for the lede. The lessons and the overview; the
+   * switch shows where it's set.
    */
   tldr?: { minutes: number; gist: string };
   steps: StepDef[];
@@ -64,10 +65,15 @@ export const PAGES: PageDef[] = [
     title: GUIDE_SUBTITLE,
     family: GUIDE_NAME,
     buildsOn: [],
-    minutes: 3,
+    minutes: 4,
+    tldr: {
+      minutes: 1,
+      gist: "The gallery has five ways of deciding which panels are alike, and each one measures something different about a picture.",
+    },
     steps: [
       { id: "alike", title: "One anchor, five neighbours", short: "Five neighbours" },
       { id: "methods", title: "The five methods side by side", short: "Side by side" },
+      { id: "order", title: "From distances to a sort order", short: "Sort order" },
       { id: "start", title: "Where to start", short: "Start here" },
     ],
   },
@@ -96,18 +102,18 @@ export const PAGES: PageDef[] = [
     id: "phash",
     label: "pHash",
     title: "Perceptual Hash",
-    family: "Luminance fingerprint",
+    family: "Duplicate finder",
     metric: "phash",
     ownExample: true,
     buildsOn: [],
     minutes: 7,
     tldr: {
       minutes: 2,
-      gist: "A 64-bit fingerprint of where a panel is light and dark: good at spotting the same picture twice, weak at ranking different ones.",
+      gist: "A 64-bit fingerprint of where a panel is light and dark, used to catch the same picture posted twice.",
     },
     steps: [
       { id: "pair", title: "One panel, two photos", short: "Two photos" },
-      { id: "luma", title: "Keep only the brightness", short: "Luminance" },
+      { id: "luma", title: "Keep only the brightness", short: "Brightness" },
       { id: "shrink", title: "Shrink to 32 × 32", short: "Shrink" },
       { id: "patterns", title: "Break it into patterns", short: "Patterns" },
       { id: "bits", title: "One bit per pattern", short: "Bits" },

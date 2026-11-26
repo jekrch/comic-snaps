@@ -446,10 +446,10 @@ export function LumaFigure({ example }: { example: PhashExample }) {
           onChange={(e) => setSplit(Number(e.target.value))}
           className="cielab-slider"
           style={{ background: "linear-gradient(90deg, #c98b5a, #7d9cc4 50%, #3a3836 50%, #c8c4bf)" }}
-          aria-label="How much of each image shows its luminance"
-          aria-valuetext={`${split}% luminance`}
+          aria-label="How much of each image shows its brightness"
+          aria-valuetext={`${split}% brightness`}
         />
-        <span className="phash-slider-label text-right">luminance</span>
+        <span className="phash-slider-label text-right">brightness</span>
       </div>
     </div>
   );
@@ -598,8 +598,8 @@ export function GridFigure({ example }: { example: PhashExample }) {
         ]}
       >
         {[
-          <CellCanvas key="b" n={32} paint={paintBefore} hover={hover} onHover={setHover} label="The photo's luminance at 32 by 32" />,
-          <CellCanvas key="a" n={32} paint={paintAfter} hover={hover} onHover={setHover} label="The restoration's luminance at 32 by 32" />,
+          <CellCanvas key="b" n={32} paint={paintBefore} hover={hover} onHover={setHover} label="The photo's brightness at 32 by 32" />,
+          <CellCanvas key="a" n={32} paint={paintAfter} hover={hover} onHover={setHover} label="The restoration's brightness at 32 by 32" />,
           <CellCanvas key="d" n={32} paint={paintDiff} hover={hover} onHover={setHover} label="How much each pixel changed" />,
         ]}
       </ThreeUp>

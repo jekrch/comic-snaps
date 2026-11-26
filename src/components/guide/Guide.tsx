@@ -16,7 +16,7 @@ import {
   VectorsTldr,
 } from "../explainer/explanations";
 import type { MetricKey } from "../graph/similarityConfig";
-import { APP_DIM, freezeApp, type AppBehind } from "./appBehind";
+import { APP_DIM, freezeApp, isGuideCovering, releaseGuideCover, type AppBehind } from "./appBehind";
 import { CODE_EXIT_MS, CodePane, CodeSheet, usePresence, type OpenCode } from "./CodePane";
 import { GuideContext, VariantContext, type GuideContextValue } from "./guideContext";
 import { GuideLink } from "./GuideLink";
@@ -24,7 +24,7 @@ import { ContentsSheet, GuideRail } from "./GuideRail";
 import { GUIDE_NAME, GUIDE_SUBTITLE, LESSONS, PAGES, neighbours, pageDef, stepNumber, type PageId } from "./lessons";
 import { GUIDE_Z, isTopOverlay, useOverlay } from "./overlayStack";
 import { Glossary } from "./pages/Glossary";
-import { Overview } from "./pages/Overview";
+import { Overview, OverviewEssentials } from "./pages/Overview";
 import { AnchorPicker, SpecimenBar } from "./SpecimenBar";
 import { LessonSources } from "./LessonSources";
 import { isSourceStep } from "./sources";
@@ -43,8 +43,8 @@ import {
   prefersReducedMotion,
   savePosition,
   savedPosition,
-  setTldrPreferred,
-  tldrPreferred,
+  setEssentialsPreferred,
+  essentialsPreferred,
   useMediaQuery,
   useScrollSpy,
 } from "./useScrollSpy";
@@ -57,6 +57,8 @@ const SLIDE_MS = 340;
 const EASE = "cubic-bezier(0.2, 0, 0, 1)";
 /** The crossfade that replaces it under reduced motion. */
 const FADE_MS = 150;
+/** The landing sequence on a cold load, end to end (see `.is-landing`). */
+const LAND_MS = 1400;
 /** Clearance for the sticky masthead (and the phone's specimen strip) when jumping to a step. */
 const JUMP_OFFSET_DESKTOP = 72;
 const JUMP_OFFSET_PHONE = 112;
@@ -110,6 +112,16 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [entered, setEntered] = useState(instant);
   const [drag, setDrag] = useState<number | null>(null);
+  // Opened from a link, with nothing to slide over: the sheet's contents
+  // land in a sequence instead (`.is-landing` in index.css). The class comes
+  // off once it's played; every part of it fills backwards only, so that's
+  // seamless.
+  const [landing, setLanding] = useState(isGuideCovering);
+  useEffect(() => {
+    if (!landing) return;
+    const t = window.setTimeout(() => setLanding(false), LAND_MS);
+    return () => window.clearTimeout(t);
+  }, [landing]);
 
   useLayoutEffect(() => {
     const behind = freezeApp();
@@ -118,6 +130,8 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
       behind.shift(reduced ? 0 : 1, null);
       behind.hide();
     }
+    // A cold load kept the app hidden until now; it's the Guide's to manage.
+    releaseGuideCover();
     // Focus on the scroller, so Space and the arrow keys scroll the Guide.
     scrollRef.current?.focus({ preventScroll: true });
     return () => {
@@ -250,12 +264,13 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
 
   // --- Short or full ---------------------------------------------------------
 
-  // Each step of a lesson shows its short or its full version. The lesson
-  // switch picks one for every step of every lesson, remembered; a step's
-  // own switch opens just that step in full (or folds it), for this visit.
+  // Each step of a lesson shows its essentials (the short version, which is
+  // where every lesson starts) or goes in depth. The lesson switch picks one
+  // for every step of every lesson, remembered; a step's own switch opens
+  // just that step in depth (or folds it), for this visit.
   // Pages without a short version (the overview, the glossary) just show
   // what they have.
-  const [shortChosen, setShortChosen] = useState(tldrPreferred);
+  const [shortChosen, setShortChosen] = useState(essentialsPreferred);
   /** Steps switched on their own, keyed `page:step`. */
   const [stepChoice, setStepChoice] = useState<Record<string, boolean>>({});
   const hasShort = !!page.tldr;
@@ -561,7 +576,7 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
   /** The lesson switch: every step one way, keeping the reader at `step` (default: where they are). */
   const switchAll = useCallback(
     (on: boolean, step?: string | null) => {
-      setTldrPreferred(on);
+      setEssentialsPreferred(on);
       const changing = page.steps.filter((s) => stepShort(s.id) !== on).map((s) => s.id);
       if (changing.length === 0) {
         if (step) goTo(r.page, step);
@@ -647,7 +662,7 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
       } else if (e.key === "ArrowRight" && next) {
         e.preventDefault();
         goTo(next.id);
-      } else if (e.key === "t" && page.tldr) {
+      } else if (e.key === "d" && page.tldr) {
         e.preventDefault();
         switchAll(lessonMode !== "short");
       } else if (e.key === "/" || e.key === "g") {
@@ -690,7 +705,8 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
   const body = useMemo((): LessonBody => {
     const both = (short: React.ReactNode, full: React.ReactNode): LessonBody =>
       page.tldr ? { short, full } : { node: full };
-    if (r.page === "overview") return { node: <Overview anchor={anchor} pool={pool} /> };
+    if (r.page === "overview")
+      return both(<OverviewEssentials anchor={anchor} pool={pool} />, <Overview anchor={anchor} pool={pool} />);
     if (r.page === "glossary") return { node: <Glossary /> };
     if (r.page === "phash") return both(<PhashTldr />, <PhashExplanation />);
     if (!anchor) return { node: <p className="guide-notice">Loading the gallery…</p> };
@@ -752,7 +768,7 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
         />
         <div
           ref={sheetRef}
-          className="guide-sheet"
+          className={`guide-sheet${landing && motion.current.dir === 0 ? " is-landing" : ""}`}
           role="dialog"
           aria-modal="true"
           aria-label={`${GUIDE_NAME}: ${page.title}`}
@@ -891,9 +907,9 @@ export default function Guide({ panels, state, onExited, onSortBy }: GuideProps)
                 <footer className="guide-end">
                   {lessonMode !== "full" && (
                     <p className="guide-tldr-end">
-                      {lessonMode === "short" ? "That's the short version." : "Some steps are still short."}{" "}
+                      {lessonMode === "short" ? "Those are the essentials." : "Some steps show only their essentials."}{" "}
                       <button type="button" className="guide-link" onClick={() => switchAll(false, null)}>
-                        Read the whole lesson
+                        Read the whole {r.page === "overview" ? "page" : "lesson"} in depth
                       </button>
                     </p>
                   )}
@@ -986,19 +1002,21 @@ type LessonMode = "full" | "short" | "mixed";
 type LessonBody = { node: React.ReactNode } | { short: React.ReactNode; full: React.ReactNode };
 
 /**
- * The lesson switch: every step full or every step short, two options in one
- * pill, the chosen one under a sliding thumb. When steps have been switched
- * one by one into a mix, neither is chosen and the thumb steps aside.
+ * The lesson switch: every step at its essentials or every step in depth, two
+ * options in one pill, the chosen one under a sliding thumb. Essentials sits
+ * first because lessons start there; In depth is the way further down. When
+ * steps have been switched one by one into a mix, neither is chosen and the
+ * thumb steps aside.
  */
 function ModeSwitch({ mode, onChange }: { mode: LessonMode; onChange: (short: boolean) => void }) {
   return (
-    <div className="guide-mode" role="group" aria-label="Lesson length" data-mode={mode}>
+    <div className="guide-mode" role="group" aria-label="Lesson depth" data-mode={mode}>
       <span className="guide-mode-thumb" aria-hidden="true" />
-      <button type="button" aria-pressed={mode === "full"} onClick={() => onChange(false)} title="Every step in full">
-        Full
+      <button type="button" aria-pressed={mode === "short"} onClick={() => onChange(true)} title="Every step, essentials only (D)">
+        Essentials
       </button>
-      <button type="button" aria-pressed={mode === "short"} onClick={() => onChange(true)} title="Every step short (T)">
-        TL;DR
+      <button type="button" aria-pressed={mode === "full"} onClick={() => onChange(false)} title="Every step in depth (D)">
+        In depth
       </button>
     </div>
   );

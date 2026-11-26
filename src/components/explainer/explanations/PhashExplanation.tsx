@@ -16,7 +16,8 @@ import {
 } from "../PhashFigures";
 
 /**
- * The pHash lesson. pHash says little about how two different panels
+ * The pHash lesson. pHash is the Guide's special case: a duplicate
+ * detector, not a ranking. It says little about how two different panels
  * relate (they all land near 32 bits), so rather than the Guide's anchor
  * and neighbours, it follows one panel photographed and then restored,
  * which is the job pHash is built for: recognising the same picture again.
@@ -44,11 +45,18 @@ export function PhashExplanation() {
           resized, recompressed or brightened.
         </p>
         <p>
+          That makes pHash a different kind of tool from the other methods in
+          this guide. They rank panels by how alike they are; pHash only
+          answers whether two images are the same picture. The gallery uses
+          it to catch duplicates and near-duplicates, such as a panel posted
+          twice.
+        </p>
+        <p>
           The gallery's restorations make a good test. Each example below is
           one panel twice: the phone photo as first posted, and the restored
           image that replaced it. The restoration evened out the lamp, lifted
-          the paper and seated the ink at black, and both were also cropped
-          tighter and straightened. The dashed outline shows where the
+          the paper and seated the ink at black. Both examples were also
+          cropped tighter and straightened along the way. The dashed outline shows where the
           restored frame sits in the photo.
         </p>
         {figure((e) => (
@@ -81,7 +89,7 @@ export function PhashExplanation() {
           <LumaFigure example={e} />
         ))}
         <p>
-          Drag the slider to trade color for luminance, and point at either
+          Drag the slider to trade color for brightness, and point at either
           image to watch the sum worked out for one spot. Hue drops out
           entirely here, so a color cast only matters as far as it made
           things lighter or darker. The restoration's other changes, whiter
@@ -91,10 +99,10 @@ export function PhashExplanation() {
 
       <Section step="shrink" code={PHASH_CODE.hash}>
         <p>
-          Next the luminance image is resized to 32 × 32 pixels, whatever its
+          Next the brightness image is resized to 32 × 32 pixels, whatever its
           shape. That keeps 1,024 numbers out of the photo's hundreds of
-          thousands of pixels and squashes the panel into a square. Fine detail is what resizing and
-          recompression disturb, so throwing it away is the point.
+          thousands of pixels and squashes the panel into a square. Resizing and recompression mostly
+          disturb fine detail, so throwing it away is deliberate.
         </p>
         {figure((e) => (
           <GridFigure example={e} />
@@ -139,8 +147,8 @@ export function PhashExplanation() {
           Each of the 64 numbers becomes one bit: 1 if it's above the{" "}
           <Term id="median" first>median</Term> of the 64, 0 if not. Splitting at the median makes the hash ignore
           two things restorations change most. Brightening the whole image
-          only moves the flat pattern's number, and that one is always far
-          above the median. Stretching the contrast evenly multiplies every
+          only moves the flat pattern's number, and that one, the image's
+          overall brightness, is always far above the median. Stretching the contrast evenly multiplies every
           other number by the same amount, which leaves their order alone.
         </p>
         {figure((e) => (
@@ -205,9 +213,12 @@ export function PhashExplanation() {
         <p>
           Unrelated panels cluster around 32 bits. With 32 ones in every hash,
           two hashes that have nothing in common still agree on about half
-          their positions by chance. That's why pHash makes a weak sort
-          order: it's good at finding the same picture again, but past the
-          first handful of bits the ranking is mostly chance.
+          their positions by chance. So only the low end of the scale carries
+          meaning. Under{" "}
+          {stats ? `about ${stats.nearest.min} bits` : "a dozen or so bits"},
+          two images are very likely the same picture. Above that, the number
+          says little about how two different panels relate, which is why
+          pHash is for catching duplicates and not for sorting.
         </p>
       </Section>
     </>

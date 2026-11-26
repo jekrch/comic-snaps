@@ -32,31 +32,31 @@ export const METRIC_INFO: Record<
     name: "SigLIP",
     family: "Vision-language embedding",
     oneLiner:
-      "SigLIP was trained to match images with their captions, so it converts each image into a list of numbers that captures what a caption would: what's depicted, the mood, the composition. Two images with similar meaning end up with similar lists.",
+      "SigLIP was trained to match images with their captions, so the list of numbers it makes for an image holds the kind of thing a caption would say: what's depicted, the mood, the composition. Images that would be described alike get similar lists.",
   },
   "embedding-dino": {
     name: "DINOv2",
     family: "Self-supervised vision embedding",
     oneLiner:
-      "DINOv2 learned from images alone, with no captions or labels, so it converts each image into a list of numbers that captures how it looks: shapes, spatial layout, and texture. It can tell that two things look alike without having words for them.",
+      "DINOv2 learned from images alone, with no captions or labels, so its list of numbers for an image is about how it looks: shapes, spatial layout and texture. It can tell that two things look alike without having words for either.",
   },
   "embedding-gram": {
     name: "VGG-16 Gram Matrix",
     family: "Style / texture embedding",
     oneLiner:
-      "A Gram matrix records which of VGG-16's texture detectors fire together across a panel, while ignoring where they fire. That turns each image into a list of numbers about style (line quality, hatching, ink texture, tonal rendering) rather than about what's drawn.",
+      "A Gram matrix records which of VGG-16's texture detectors fire together across a panel, while ignoring where they fire. The list of numbers that comes out is about how a panel is drawn (line quality, hatching, ink texture, tonal rendering) and says little about what's in it.",
   },
   color: {
     name: "Color Palette",
     family: "CIELAB dominant color",
     oneLiner:
-      "Color distance compares the dominant colors of two images using CIELAB, a color space designed to match how humans perceive color differences.",
+      "Color does two jobs with two different measurements. The sort lines panels up around the color wheel by the one color each reads as; the neighbours compare whole palettes. Both work in CIELAB, a color space built to match how people see color differences.",
   },
   phash: {
     name: "Perceptual Hash",
-    family: "Luminance fingerprint",
+    family: "Duplicate finder",
     oneLiner:
-      "pHash reduces each image to a compact fingerprint based on its brightness patterns, then counts how many bits differ between two fingerprints.",
+      "pHash boils each image down to a 64-bit fingerprint of where it's light and dark, then counts how many bits differ between two fingerprints. Unlike the other methods it isn't for ranking panels: a low count flags the same picture twice.",
   },
 };
 

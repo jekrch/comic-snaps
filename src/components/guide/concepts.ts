@@ -35,9 +35,17 @@ export const CONCEPTS: Concept[] = [
     step: "alike",
   },
   {
+    id: "chain",
+    label: "Nearest-neighbour chain",
+    short: "How the Sort tab orders panels by SigLIP, DINOv2 or Gram (and pHash, though there only the first links mean much): start at one panel, step to the closest panel not yet placed, repeat. Neighbours in the grid are close; the end collects the leftovers.",
+    lesson: "overview",
+    step: "order",
+    code: ["nearestNeighborChain"],
+  },
+  {
     id: "vector",
     label: "Vector (arrow)",
-    short: "A list of numbers read as an arrow from the origin. Its direction is what a model's numbers mean.",
+    short: "A list of numbers read as an arrow from the origin. What a model sees in an image is in the arrow's direction.",
     lesson: "vectors",
     step: "arrows",
   },
@@ -159,7 +167,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "vgg16",
     label: "VGG-16",
-    short: "A 2014 neural network built to name what's in a photo (trained on ImageNet's 1,000 categories). The Gram model ignores its answer and reads its filters instead.",
+    short: "A 2014 neural network built to name what's in a photo (trained on ImageNet's 1,000 categories). The Gram model ignores its answer and reads its filters' responses instead.",
     lesson: "gram",
     step: "prepare",
   },
@@ -187,7 +195,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "cielab",
     label: "CIELAB",
-    short: "A color space built so that equal distances look roughly like equal differences to the eye. Roughly: it's known to be uneven, especially among blues and vivid colors.",
+    short: "A color space built so that equal distances look like roughly equal differences to the eye. It's known to be uneven, especially among blues and vivid colors.",
     lesson: "color",
     step: "rgb",
   },
@@ -209,7 +217,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "chroma-share",
     label: "Chroma share",
-    short: "The fraction of a panel's pixels that are clearly colored once the paper's own tint is taken out. At 4% or more the panel sorts as color; below, as black-and-white.",
+    short: "The fraction of a panel's pixels that are clearly colored once the paper's own tint is taken out (measured in OKLab, a newer cousin of CIELAB). At 4% or more the panel sorts as color; below, as black-and-white.",
     lesson: "color",
     step: "split",
     code: ["compute_color_features", "isChromatic"],
@@ -232,7 +240,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "key-color",
     label: "Key color",
-    short: "The color a panel reads as: the most common hue among its colored pixels, averaged around that peak. The color sort places panels by it.",
+    short: "The color a panel reads as: the hue its colored pixels peak at, counting vivid pixels more, averaged over the pixels near that peak. The color sort places panels by it.",
     lesson: "color",
     step: "hue",
     code: ["compute_color_features", "sortColor"],
@@ -240,7 +248,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "delta-e",
     label: "ΔE (color distance)",
-    short: "The straight-line distance between two colors in CIELAB. About 2 is the smallest difference most people can see; under about 10, two colors still get the same name.",
+    short: "The straight-line distance between two colors in CIELAB. About 2 is the smallest difference most people can see; under about 10, two colors still get the same name. A panel's color distance is a weighted average of ΔE over its matched palette colors.",
     lesson: "color",
     step: "distance",
     code: ["labDistance"],
@@ -256,7 +264,7 @@ export const CONCEPTS: Concept[] = [
   {
     id: "phash",
     label: "Perceptual hash",
-    short: "A short fingerprint of an image's broad brightness pattern, built to survive resizing and small edits.",
+    short: "A short fingerprint of an image's broad brightness pattern, built to survive resizing and small edits. The gallery uses it to catch duplicates.",
     lesson: "phash",
     step: "pair",
   },

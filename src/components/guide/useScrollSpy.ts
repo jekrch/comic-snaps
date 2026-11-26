@@ -106,7 +106,7 @@ export function useMediaQuery(query: string): boolean {
 
 const POS_KEY = "comicSnaps.guide.positions";
 const DONE_KEY = "comicSnaps.guide.finished";
-const TLDR_KEY = "comicSnaps.guide.tldr";
+const DEPTH_KEY = "comicSnaps.guide.depth";
 
 function readJson<T>(key: string, fallback: T): T {
   try {
@@ -148,13 +148,16 @@ export function markFinished(page: string) {
   writeJson(DONE_KEY, [...all]);
 }
 
-/** Whether the reader last chose the lessons' short versions. */
-export function tldrPreferred(): boolean {
-  return readJson<boolean>(TLDR_KEY, false) === true;
+/**
+ * Whether lessons open at their essentials, which they do until the reader
+ * picks "In depth" on the lesson switch.
+ */
+export function essentialsPreferred(): boolean {
+  return readJson<string>(DEPTH_KEY, "essentials") !== "in-depth";
 }
 
-export function setTldrPreferred(on: boolean) {
-  writeJson(TLDR_KEY, on);
+export function setEssentialsPreferred(on: boolean) {
+  writeJson(DEPTH_KEY, on ? "essentials" : "in-depth");
 }
 
 export function prefersReducedMotion(): boolean {

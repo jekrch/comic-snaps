@@ -10,6 +10,7 @@ import { RgbVsLab } from "../RgbVsLab";
 import { PreprocessFigure } from "../PreprocessFigure";
 import { BitsGuess, NeighbourGuess } from "../Guess";
 import { bitDistance } from "../phashExamples";
+import { isChromatic } from "../../../utils/sorting";
 import { DistanceRanges, ExampleFigure, HammingFigure, PairFigure, usePhashExamples } from "../PhashFigures";
 import {
   ANGLE_WORDS,
@@ -21,8 +22,8 @@ import {
 } from "./EmbeddingExplanation";
 
 /**
- * The lessons' short versions, behind the TL;DR switch. Each keeps its full
- * lesson's steps (so the rail, step links and "in full →" line up) but says
+ * The lessons' essentials, which is where each lesson opens. Each keeps its
+ * full lesson's steps (so the rail, step links and "In depth" line up) but says
  * each in a sentence or two, keeps the one or two figures that carry the
  * idea, and ends on a guess the reader makes before seeing the numbers.
  * Terms are references only: their definitions open on tap, and the full
@@ -49,6 +50,7 @@ export function ColorTldr({
   all,
   pool,
 }: WorkedProps & { all?: NeighborInfo[]; pool?: Panel[] }) {
+  const chromatic = isChromatic(anchorPanel);
   const hasColors = !!(anchorPanel.dominantColors?.[0] && closest.panel.dominantColors?.[0] && furthest.panel.dominantColors?.[0]);
   return (
     <>
@@ -97,9 +99,18 @@ export function ColorTldr({
           furthest={furthest}
           method="the color measure"
           format={(d) => d.toFixed(1)}
-          why="Under about 10, the colors would get the same name; past 50 is far apart."
+          why={
+            chromatic
+              ? "Under about 10, the colors would get the same name; past 50 is far apart."
+              : "Black-and-white palettes differ mostly in lightness, so their distances run small. Compare them with each other, not with color panels'."
+          }
         >
-          <Bar anchor={anchorPanel} closest={closest} furthest={furthest} maxVal={Math.max(furthest.distance * 1.2, 80)} />
+          <Bar
+            anchor={anchorPanel}
+            closest={closest}
+            furthest={furthest}
+            maxVal={chromatic ? Math.max(furthest.distance * 1.2, 80) : furthest.distance * 1.2}
+          />
         </NeighbourGuess>
       </Section>
     </>
@@ -121,8 +132,10 @@ export function PhashTldr() {
     <>
       <Section step="pair">
         <p>
-          A <Term id="phash">perceptual hash</Term> is a fingerprint of how a picture looks at a glance. The test: one
-          panel, photographed and then restored. Anyone would call these the same picture. Does pHash?
+          A <Term id="phash">perceptual hash</Term> is a fingerprint of how a picture looks at a glance. The gallery
+          uses it for one job: catching duplicates and near-duplicates. To test it, here's one panel photographed
+          and then restored. Anyone would call these the same picture, and the steps
+          below check whether pHash does too.
         </p>
         {figure((e) => (
           <PairFigure example={e} />
@@ -147,7 +160,7 @@ export function PhashTldr() {
       </Section>
 
       <Section step="bits">
-        <p>Each pattern becomes one bit, 1 if it's stronger than the middle one, 0 if not. That's the fingerprint.</p>
+        <p>Each pattern becomes one bit of the fingerprint: 1 if its number is above the median of all 64, 0 if not.</p>
       </Section>
 
       <Section step="count">
@@ -163,15 +176,16 @@ export function PhashTldr() {
 
       <Section step="result">
         <p>
-          Is {pair ?? "that"} a lot? Here's this pair beside every restoration in the gallery, and beside panels that
-          have nothing to do with each other.
+          To judge whether {pair !== null ? `${pair} bits is` : "that's"} a lot, here's this pair beside every
+          restoration in the gallery and beside panels that have nothing to do with each other.
         </p>
         {figure((e, d) => (
           <DistanceRanges stats={d.stats} example={e} />
         ))}
         <p>
-          Relighting barely moves the hash; a new crop can move it as far as a different panel. And since any two
-          unrelated panels land near 32, pHash is good at finding the same picture again but makes a weak sort.
+          Relighting barely moves the hash, but a new crop can move it as far as a different panel would. Any two
+          unrelated panels land near 32, so only a low count means anything: it flags the same picture, and says
+          little about panels that differ.
         </p>
       </Section>
     </>
@@ -262,8 +276,8 @@ export function EmbeddingTldr({ metric, ...props }: { metric: EmbeddingMetric } 
         <Section step="attention">
           <p>
             Over 12 <Term id="layer">layers</Term>, every patch looks at every other and borrows from the ones that
-            matter to it (<Term id="attention">attention</Term>). By the end, a patch of ink knows which figure it's
-            part of.
+            matter to it (<Term id="attention">attention</Term>). By the end, a patch's numbers describe the figure it
+            belongs to as well as its own pixels.
           </p>
         </Section>
       )}

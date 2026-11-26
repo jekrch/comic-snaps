@@ -17,6 +17,27 @@ export const APP_SHIFT = 0.25;
 /** How dark the app gets under the Guide's scrim. */
 export const APP_DIM = 0.6;
 
+/**
+ * A cold load of a Guide link: the Guide is its own chunk, so the app would
+ * otherwise paint the gallery for as long as that chunk takes to arrive, and
+ * then be covered. Hidden from the first render instead (see `index.css`),
+ * and handed to the Guide to manage once it has mounted.
+ */
+const BOOT_ATTR = "data-guide-boot";
+
+export function coverAppForGuide(): void {
+  document.documentElement.setAttribute(BOOT_ATTR, "");
+}
+
+/** Whether the app is still hidden for a cold load: the Guide is landing. */
+export function isGuideCovering(): boolean {
+  return document.documentElement.hasAttribute(BOOT_ATTR);
+}
+
+export function releaseGuideCover(): void {
+  document.documentElement.removeAttribute(BOOT_ATTR);
+}
+
 export interface AppBehind {
   /** Move the app aside by `progress` (0 = in place, 1 = fully aside). */
   shift(progress: number, transition: string | null): void;

@@ -74,6 +74,11 @@
     scrollbar-gutter: stable;
   }
 
+  /* Opened on a Guide link: keep the gallery unpainted until the Guide is up. */
+  html[data-guide-boot] #root {
+    visibility: hidden;
+  }
+
   body {
     font-family: var(--font-body);
     background-color: var(--color-surface);
@@ -3134,7 +3139,7 @@ button,
     color: var(--color-ink-faint);
   }
 
-  /* The meta line and, on lessons, the Full / TL;DR switch at its end. */
+  /* The meta line and, on lessons, the Essentials / In depth switch at its end. */
   .guide-meta-row {
     display: flex;
     flex-wrap: wrap;
@@ -3199,7 +3204,7 @@ button,
       opacity 200ms ease-out;
   }
 
-  .guide-mode[data-mode="short"] .guide-mode-thumb {
+  .guide-mode[data-mode="full"] .guide-mode-thumb {
     transform: translateX(100%);
   }
 
@@ -3255,8 +3260,9 @@ button,
     align-items: center;
     justify-content: center;
     gap: 4px;
-    /* Wide enough for either label, so the pill keeps its size. */
-    min-width: 72px;
+    /* Wide enough for either label ("Essentials" is the longer), so the
+       pill keeps its size. */
+    min-width: 108px;
     padding: 3px 10px 3px 7px;
     font-size: 11px;
     letter-spacing: 0.04em;
@@ -4515,33 +4521,142 @@ button,
     color: var(--color-rust-ink);
   }
 
+  /* The phone's "?" beside a defining term. Opening it turns the "?" away
+     and draws a × in its place, while the button fills with the accent. */
   .guide-note-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 17px;
-    height: 17px;
-    margin-left: 4px;
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
     padding: 0;
     vertical-align: 2px;
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 10.5px;
     line-height: 1;
     color: var(--color-accent);
-    background: transparent;
-    border: 1px solid rgba(232, 93, 58, 0.5);
+    background: rgba(232, 93, 58, 0.08);
+    border: 1px solid rgba(232, 93, 58, 0.45);
     border-radius: 50%;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color 240ms var(--guide-ease-out),
+      border-color 240ms var(--guide-ease-out),
+      color 240ms var(--guide-ease-out),
+      transform 320ms var(--guide-ease-out);
   }
 
+  /* A thumb-sized target around the small circle. */
+  .guide-note-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+  }
+
+  .guide-note-toggle:active {
+    transform: scale(0.88);
+  }
+
+  .guide-note-toggle-q,
+  .guide-note-toggle::before {
+    grid-area: 1 / 1;
+    transition:
+      opacity 180ms ease-out,
+      transform 360ms var(--guide-ease-out);
+  }
+
+  /* The ×: two hairlines drawn as one gradient, so it stays crisp. */
+  .guide-note-toggle::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.4);
+  }
+
+  .guide-note-toggle[aria-expanded="true"] {
+    color: #fff;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .guide-note-toggle[aria-expanded="true"] .guide-note-toggle-q {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.4);
+  }
+
+  .guide-note-toggle[aria-expanded="true"]::before {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+
+  /* The note it opens: unfolds from zero height (a grid row easing from
+     0fr to 1fr), and the card inside rises into place and comes into
+     focus a beat behind, so the text never slides under a hard edge. */
   .guide-inline-note {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 380ms var(--guide-ease-out);
+  }
+
+  .guide-inline-note[data-open] {
+    grid-template-rows: 1fr;
+  }
+
+  .guide-inline-note-clip {
     display: block;
-    margin: 8px 0 10px;
-    padding: 8px 12px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .guide-inline-note-card {
+    display: block;
+    margin: 10px 0 12px;
+    padding: 11px 13px 12px;
+    font-family: var(--font-sans);
     font-size: 14px;
+    font-style: normal;
     line-height: 1.55;
     color: var(--color-ink-muted);
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 2px solid var(--color-rust);
+    background: #171615;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.035),
+      0 10px 28px -16px rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    filter: blur(4px);
+    transform: translate3d(0, -8px, 0) scale(0.98);
+    transform-origin: top left;
+    transition:
+      opacity 160ms ease-out,
+      filter 200ms ease-out,
+      transform 260ms var(--guide-ease-out);
+  }
+
+  .guide-inline-note[data-open] .guide-inline-note-card {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition:
+      opacity 260ms ease-out 90ms,
+      filter 340ms ease-out 90ms,
+      transform 460ms var(--guide-ease-out) 60ms;
+  }
+
+  .guide-inline-note-label {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-rust-ink);
   }
 
   .guide-term-ref {
@@ -5648,6 +5763,112 @@ button,
     animation-delay: calc(min(var(--i, 0), 10) * 28ms);
   }
 
+  /* Landing: the Guide opened from a link, with no gallery to slide over.
+     The sheet itself is the page's own colour and stays put; what's on it
+     arrives in order. The masthead settles from above while an accent line
+     draws across under it, the lesson heading rises a line at a time, the
+     rail's steps follow down the side, and the lesson fades up last. The
+     lesson is opacity only, as with any arrival, so a jump to a step lands
+     where it should. All `backwards` fills, so `.is-landing` can come off
+     (Guide.tsx, LAND_MS) without anything moving. */
+  @media (prefers-reduced-motion: no-preference) {
+    .guide-sheet.is-landing .guide-masthead > :not(.guide-progress) {
+      animation: guideLandDrop 560ms var(--guide-ease-out) backwards;
+    }
+
+    .guide-sheet.is-landing .guide-masthead > :nth-child(2) {
+      animation-delay: 50ms;
+    }
+
+    .guide-sheet.is-landing .guide-masthead > :nth-child(3) {
+      animation-delay: 100ms;
+    }
+
+    .guide-sheet.is-landing .guide-masthead > :nth-child(n + 4) {
+      animation-delay: 150ms;
+    }
+
+    .guide-sheet.is-landing .guide-progress::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent);
+      transform-origin: left center;
+      animation: guideLandSweep 1100ms 60ms both;
+    }
+
+    .guide-sheet.is-landing .guide-specimen {
+      animation: guideFadeIn 600ms ease-out 200ms backwards;
+    }
+
+    .guide-sheet.is-landing .guide-rail {
+      animation: guideFadeIn 480ms ease-out 100ms backwards;
+    }
+
+    .guide-sheet.is-landing .guide-rail-steps > li {
+      animation-duration: 520ms;
+      animation-delay: calc(180ms + min(var(--i, 0), 10) * 32ms);
+    }
+
+    .guide-sheet.is-landing .guide-lesson-head > * {
+      animation: guideLandRise 760ms var(--guide-ease-out) 140ms backwards;
+    }
+
+    .guide-sheet.is-landing .guide-lesson-head > :nth-child(2) {
+      animation-delay: 200ms;
+    }
+
+    .guide-sheet.is-landing .guide-lesson-head > :nth-child(3) {
+      animation-delay: 260ms;
+    }
+
+    .guide-sheet.is-landing .guide-lesson-head > :nth-child(n + 4) {
+      animation-delay: 320ms;
+    }
+
+    .guide-sheet.is-landing .guide-prose > :not(.guide-lesson-head) {
+      animation: guideFadeIn 720ms ease-out 380ms backwards;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .guide-sheet.is-landing .guide-scroll {
+      animation: guideFadeIn 200ms ease-out backwards;
+    }
+  }
+
+  @keyframes guideLandDrop {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+    }
+  }
+
+  @keyframes guideLandRise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0);
+    }
+  }
+
+  /* Draws across fast and eases into the far edge, then dissolves. */
+  @keyframes guideLandSweep {
+    0% {
+      opacity: 0.85;
+      transform: scaleX(0);
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    55% {
+      opacity: 0.85;
+      transform: scaleX(1);
+      animation-timing-function: ease-in;
+    }
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
   /* Steps below the fold rise into place as they're reached (useReveal).
      The step's own box stays put; its heading and body move, the body a
      beat behind, and the hatched rule above draws itself in. */
@@ -5686,6 +5907,19 @@ button,
 
     .guide-term-pop,
     .guide-term-pop[data-side="top"] {
+      transform: none;
+    }
+
+    .guide-inline-note,
+    .guide-inline-note-card,
+    .guide-note-toggle,
+    .guide-note-toggle-q,
+    .guide-note-toggle::before {
+      transition: none;
+    }
+
+    .guide-inline-note-card {
+      filter: none;
       transform: none;
     }
 

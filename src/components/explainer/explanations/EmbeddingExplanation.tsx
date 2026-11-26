@@ -13,6 +13,8 @@ import { panelImageUrl } from "../../../utils/imageUrl";
 import { EMBEDDING_CODE } from "../code/snippets";
 import { Term } from "../../guide/Term";
 import { GuideLink, Recap } from "../../guide/GuideLink";
+import { useAllEmbeddings } from "../../guide/specimen";
+import { percent, rangeText, useEmbeddingStats, type Spread } from "../../guide/galleryStats";
 
 export type EmbeddingMetric = "embedding-siglip" | "embedding-dino" | "embedding-gram";
 type EmbeddingMap = Record<string, number[]>;
@@ -31,10 +33,10 @@ const PREPARATION: Record<EmbeddingMetric, React.ReactNode> = {
   "embedding-dino": (
     <>
       DINOv2 is <Term id="self-supervised" first>self-supervised</Term>: it learned from pictures alone, with no
-      captions or labels. It gets each panel whole and at its own shape, scaled so the short side is 256 pixels and then cut
-      into a grid of 14-pixel <Term id="patch">patches</Term>, however many that takes, so a wide panel just gets a
-      longer grid. (Out of the box, DINOv2 would crop to the centre square instead, which cut off a third or more of
-      a typical panel.)
+      captions or labels. It gets each panel whole and at its own shape, scaled so the short side is about 256 pixels
+      (rounded to fit whole patches) and then cut into a grid of 14-pixel <Term id="patch">patches</Term>, however
+      many that takes, so a wide panel just gets a longer grid. (Out of the box, DINOv2 would crop to the centre
+      square instead, which would cut off a third or more of a typical panel.)
     </>
   ),
   "embedding-gram": (
@@ -60,15 +62,58 @@ const GRAM_REDUCTION = (
   </>
 );
 
-/** How the distances this model produces are spread out in practice. */
+/** How the distances this model produces are spread out in practice; the fallback for `distanceRange`. */
 const DISTANCE_RANGE: Record<EmbeddingMetric, string> = {
   "embedding-siglip":
-    "SigLIP's distances bunch up well below 1. Every image here is a comic panel, so even the least alike pair still has a lot in common as far as SigLIP is concerned.",
+    "SigLIP's distances bunch up well below 1. Partly that's the gallery: every image here is a comic panel, so even the least alike pair still has a lot in common as far as SigLIP is concerned. Partly it's the model: image-and-caption models are known to crowd all their arrows into a narrow cone, so even unrelated pictures never point far apart.",
   "embedding-dino":
     "DINOv2 spreads them wider, with its least alike pairs getting close to 1.",
   "embedding-gram":
-    "Gram distances regularly go past 1. PCA centres the arrows on the gallery's average style, so two panels that differ from that average in opposite ways point in roughly opposite directions.",
+    "About half of all Gram pairs are past 1, so a typical pair sits near 1, at right angles. PCA centres the arrows on the gallery's average style, so two panels that differ from that average in opposite ways point in roughly opposite directions.",
 };
+
+/** `DISTANCE_RANGE`, with the gallery's own numbers once they're measured. */
+function distanceRange(mode: EmbeddingMetric, s: Spread | undefined): string {
+  if (!s) return DISTANCE_RANGE[mode];
+  const most = rangeText(s);
+  switch (mode) {
+    case "embedding-siglip":
+      return `SigLIP's distances bunch up well below 1: most pairs fall between ${most}. Partly that's the gallery: every image here is a comic panel, so even the least alike pair still has a lot in common as far as SigLIP is concerned. Partly it's the model: image-and-caption models are known to crowd all their arrows into a narrow cone, so even unrelated pictures never point far apart.`;
+    case "embedding-dino":
+      return `DINOv2 spreads them wider, with most pairs between ${most} and its least alike getting close to 1.`;
+    case "embedding-gram":
+      return `Most Gram pairs fall between ${most}, and ${percent(s.overOne)} are past 1, so a typical pair sits near 1, at right angles. PCA centres the arrows on the gallery's average style, so two panels that differ from that average in opposite ways point in roughly opposite directions.`;
+  }
+}
+
+/**
+ * Why distances from different models can't be compared, with each model's
+ * median pair once the gallery is measured.
+ */
+function ModelScales() {
+  const maps = useAllEmbeddings(true);
+  const siglip = useEmbeddingStats(maps["embedding-siglip"]);
+  const dino = useEmbeddingStats(maps["embedding-dino"]);
+  const gram = useEmbeddingStats(maps["embedding-gram"]);
+  if (!siglip || !dino || !gram) {
+    return (
+      <p>
+        Each model spreads its distances differently, so a distance only means something next to other distances
+        from the same model: a <Mono>0.4</Mono> from SigLIP and a <Mono>0.4</Mono> from DINOv2 aren't the same
+        amount of alike.
+      </p>
+    );
+  }
+  return (
+    <p>
+      Each model spreads its distances differently. Across the gallery, a typical pair of panels sits{" "}
+      <Mono>{fmt(siglip.spread.mid, 2)}</Mono> apart by SigLIP, <Mono>{fmt(dino.spread.mid, 2)}</Mono> by DINOv2
+      and <Mono>{fmt(gram.spread.mid, 2)}</Mono> by the Gram model. So a distance only means something next to
+      other distances from the same model: the same number can be an ordinary pair from one and a close one from
+      another.
+    </p>
+  );
+}
 
 /** The two transformers get the "patches compare notes" section; VGG-16 isn't one. */
 const TRANSFORMER: Partial<Record<EmbeddingMetric, { key: PatchModel; name: string }>> = {
@@ -220,7 +265,7 @@ function fixedNote(w: Worked, what: string): string {
   if (w.fixed.length === 0) return "";
   const cells = w.fixed.length === 1 ? `cell (the ${ordinal(w.fixed[0])})` : "cells";
   const verb = w.fixed.length === 1 ? "is" : "are";
-  return ` The bright ${cells} in the same spot on every row ${verb} ${what} for every panel in the gallery: a quirk of the model, not something these panels share. It adds the same amount to every pair's similarity, which is part of why the distances bunch up.`;
+  return ` The bright ${cells} in the same spot on every row ${verb} ${what} for every panel in the gallery. That's a quirk of the model rather than anything these panels have in common, and it adds the same amount to every pair's similarity, which is part of why the distances bunch up.`;
 }
 
 export function ValueStrips({ w, anchorPanel, closest, furthest }: { w: Worked } & WorkedProps) {
@@ -341,9 +386,10 @@ export function VectorsExplanation(props: WorkedProps) {
         </p>
         <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
         <p>
-          These aren't just a list; they define an <Term id="vector" first>arrow</Term> (or vector) pointing from the
-          origin through {w.dim}-<Term id="dimension" first>dimensional</Term> space. Each arrow's direction encodes
-          what the model sees in that image, all compressed into orientation.
+          Read as coordinates, the {w.dim} numbers mark a point, and the <Term id="vector" first>arrow</Term> (or
+          vector) from the origin to that point stands for the panel. Nobody can picture {w.dim}{" "}
+          <Term id="dimension" first>dimensions</Term>, but the maths is the same as for arrows on paper. It's the
+          arrow's direction that holds what the model sees in the image.
         </p>
         {w.strips && (
           <>
@@ -359,7 +405,7 @@ export function VectorsExplanation(props: WorkedProps) {
       <Section step="normalize" code={code.direction}>
         <p>
           Before comparing, every arrow is scaled to the same length (a step called{" "}
-          <Term id="normalization" first>normalization</Term>). An arrow's length mostly reflects how strongly the
+          <Term id="normalization" first>normalization</Term>). An arrow's length partly reflects how strongly the
           network responded overall, which rises and falls with things like contrast and the amount of detail.
           Normalizing leaves only the direction: which features are present, and in what proportions.
         </p>
@@ -379,17 +425,16 @@ export function VectorsExplanation(props: WorkedProps) {
         </p>
         <p>
           As the arrows spread apart the angle grows and the cosine falls toward <Mono>0</Mono> (perpendicular)
-          or <Mono>−1</Mono> (opposite). This is why the technique is called{" "}
-          <Term id="cosine" first>cosine similarity</Term>: it uses the cosine to turn an angle into a single
-          similarity score.
+          or <Mono>−1</Mono> (opposite). Hence the name <Term id="cosine" first>cosine similarity</Term>: the
+          cosine turns the angle into a single score.
         </p>
         <Angle w={w} />
       </Section>
 
       <Section step="distance" code={code.distance}>
         <p>
-          A similarity score is convenient, but for sorting we want a <Term id="distance" first>distance</Term> where
-          smaller = more similar. The conversion is simple: subtract the similarity from 1.
+          Sorting is easier with a <Term id="distance" first>distance</Term>, where smaller means more similar, so
+          the similarity is subtracted from 1.
         </p>
         <DistanceSum w={w} />
         <p>
@@ -397,10 +442,7 @@ export function VectorsExplanation(props: WorkedProps) {
           model can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
           directions.
         </p>
-        <p>
-          So a distance only means something next to other distances from the same model: a <Mono>0.4</Mono> from
-          SigLIP and a <Mono>0.4</Mono> from DINOv2 aren't the same amount of alike.
-        </p>
+        <ModelScales />
         <NeighbourResult w={w} {...props} />
         <p>
           Each model lesson works the same steps through its own numbers:{" "}
@@ -429,6 +471,8 @@ export function EmbeddingExplanation({
   const info = METRIC_INFO[mode];
   const props = { anchorPanel, closest, furthest };
   const w = useWorkedNumbers(mode, props);
+  const maps = useAllEmbeddings(true);
+  const stats = useEmbeddingStats(maps[mode]);
   const transformer = TRANSFORMER[mode];
   const code = EMBEDDING_CODE[mode];
 
@@ -464,8 +508,8 @@ export function EmbeddingExplanation({
           ) : (
             `Each panel ends up as ${w.dim} numbers.`
           )}{" "}
-          They define an <Term id="vector">arrow</Term> through {w.dim}-dimensional space, and its direction encodes
-          what {info.name} sees in that image: {ANGLE_WORDS[mode]}, all compressed into orientation.
+          They define an <Term id="vector">arrow</Term> through {w.dim}-dimensional space, and its direction holds
+          what {info.name} picks up from the image: {ANGLE_WORDS[mode]}.
         </p>
         <VectorPreview w={w} anchorPanel={anchorPanel} closest={closest} />
         {w.strips && (
@@ -498,19 +542,16 @@ export function EmbeddingExplanation({
 
       <Section step="distance" code={code.distance}>
         <p>
-          For sorting, the similarity becomes a <Term id="distance">distance</Term> where smaller = more similar:
-          subtract it from 1.
+          For sorting, the similarity is turned into a <Term id="distance">distance</Term>, where smaller means more
+          similar, by subtracting it from 1.
         </p>
         <DistanceSum w={w} />
         <p>
           A distance of <Mono>0</Mono> means two arrows point the same way: the images are identical as far as{" "}
           {info.name} can tell. <Mono>1</Mono> means perpendicular, and <Mono>2</Mono> means they point in opposite
-          directions. {DISTANCE_RANGE[mode]}
+          directions. {distanceRange(mode, stats?.spread)}
         </p>
-        <p>
-          So a distance only means something next to other distances from the same model: a <Mono>0.4</Mono> from
-          SigLIP and a <Mono>0.4</Mono> from DINOv2 aren't the same amount of alike.
-        </p>
+        <ModelScales />
         <NeighbourResult w={w} {...props} />
       </Section>
     </>

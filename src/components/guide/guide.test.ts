@@ -13,7 +13,7 @@ import {
   VectorsTldr,
 } from "../explainer/explanations";
 import { CONCEPTS } from "./concepts";
-import { Overview } from "./pages/Overview";
+import { Overview, OverviewEssentials } from "./pages/Overview";
 import { LessonSources } from "./LessonSources";
 import { SOURCE_GROUPS, SOURCES, isSourceStep } from "./sources";
 import { readingProgress } from "./useScrollSpy";
@@ -63,8 +63,9 @@ const LESSON_BODIES: Partial<Record<PageId, () => ReactElement>> = {
   gram: () => createElement(EmbeddingExplanation, { metric: "embedding-gram", ...specimen }),
 };
 
-/** Each lesson's short version, behind the TL;DR switch. */
+/** Each page's essentials, the short version every lesson (and the overview) opens at. */
 const TLDR_BODIES: Partial<Record<PageId, () => ReactElement>> = {
+  overview: () => createElement(OverviewEssentials, { anchor, pool: [anchor, closest, furthest] }),
   color: () => createElement(ColorTldr, specimen),
   phash: () => createElement(PhashTldr),
   vectors: () => createElement(VectorsTldr, specimen),
@@ -141,8 +142,11 @@ describe("lesson steps", () => {
 });
 
 describe("the short versions", () => {
-  for (const lesson of LESSONS) {
-    it(`${lesson.id} has one, with the full lesson's steps in order`, () => {
+  /** Every page with an essentials version: the lessons and the overview. */
+  const SHORT_PAGES = PAGES.filter((p) => p.id !== "glossary");
+
+  for (const lesson of SHORT_PAGES) {
+    it(`${lesson.id} has one, with the full page's steps in order`, () => {
       expect(lesson.tldr, lesson.id).toBeDefined();
       expect(lesson.tldr!.minutes).toBeLessThan(lesson.minutes);
       const html = render(lesson.id, true, true);
@@ -157,7 +161,7 @@ describe("the short versions", () => {
   });
 
   it("can be mixed step by step: each step shows exactly one version", () => {
-    for (const lesson of LESSONS) {
+    for (const lesson of SHORT_PAGES) {
       const full = new Set([lesson.steps[0].id, lesson.steps[lesson.steps.length - 1].id]);
       const html = renderMixed(lesson.id, (step) => !full.has(step));
       const steps = attrs(html, "data-step");
@@ -168,16 +172,15 @@ describe("the short versions", () => {
     }
   });
 
-  it("refer to terms without defining them, so the full lesson stays their home", () => {
-    for (const lesson of LESSONS) {
+  it("refer to terms without defining them, so the full page stays their home", () => {
+    for (const lesson of SHORT_PAGES) {
       const html = render(lesson.id, true, true);
       expect(attrs(html, "data-term-unknown"), lesson.id).toEqual([]);
       expect(attrs(html, "data-term-define"), lesson.id).toEqual([]);
     }
   });
 
-  it("leave the overview and the glossary without one", () => {
-    expect(pageDef("overview").tldr).toBeUndefined();
+  it("leave the glossary without one", () => {
     expect(pageDef("glossary").tldr).toBeUndefined();
   });
 });

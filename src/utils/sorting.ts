@@ -177,13 +177,19 @@ export interface PalettePair {
   weight: number;
 }
 
-/** every ordering of `k` distinct indices drawn from 0..n-1. */
+const arrangementCache = new Map<string, number[][]>();
+
+/** every ordering of `k` distinct indices drawn from 0..n-1. cached: palettes are always the same few sizes. */
 function arrangements(n: number, k: number): number[][] {
   if (k === 0) return [[]];
+  const key = `${n},${k}`;
+  const hit = arrangementCache.get(key);
+  if (hit) return hit;
   const out: number[][] = [];
   for (const rest of arrangements(n, k - 1)) {
     for (let i = 0; i < n; i++) if (!rest.includes(i)) out.push([...rest, i]);
   }
+  arrangementCache.set(key, out);
   return out;
 }
 

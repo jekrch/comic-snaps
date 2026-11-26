@@ -15,7 +15,7 @@ import { stepDef, stepNumber } from "../guide/lessons";
 // On a lesson with a short version, both versions are mounted and each step
 // shows one of them: a Section renders only when its step is in its
 // version, into the step's slot (see `stepSlot`), so the reader can open
-// one step in full without leaving the short version, or the reverse.
+// one step in depth without leaving the essentials, or the reverse.
 
 export function Section({
   step,
@@ -81,10 +81,10 @@ export function Section({
               onClick={() => setStepShort(step, false)}
               className="guide-code-btn guide-more-btn"
               aria-expanded={false}
-              title="Open this step in full, here"
+              title="Go deeper into this step, here"
             >
               <ChevronDown size={13} strokeWidth={1.75} aria-hidden="true" />
-              <span>Full</span>
+              <span>In depth</span>
             </button>
           ) : (
             switchable && (
@@ -93,10 +93,10 @@ export function Section({
                 onClick={() => setStepShort(step, true)}
                 className="guide-code-btn guide-more-btn"
                 aria-expanded={true}
-                title="Fold this step back to its short version"
+                title="Fold this step back to its essentials"
               >
                 <ChevronUp size={13} strokeWidth={1.75} aria-hidden="true" />
-                <span>TL;DR</span>
+                <span>Essentials</span>
               </button>
             )
           )}

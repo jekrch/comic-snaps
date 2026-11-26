@@ -85,7 +85,7 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         title: "Color Spaces",
         venue: "ciechanow.ski",
         url: "https://ciechanow.ski/color-spaces/",
-        note: "An interactive tour of how screens make color and how color spaces describe it. The early sections are gentle; it gets mathematical later on.",
+        note: "An interactive tour of how screens make color from red, green and blue light, and why the same RGB numbers can mean different colors. Background for the first step: it stops short of CIELAB, and gets mathematical later on.",
       },
       {
         cite: "Harris (2014)",
@@ -111,11 +111,25 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         note: "The source of the often-quoted figure that a CIELAB distance of about 2.3 is just noticeable.",
       },
       {
+        cite: "Luo, Cui & Rigg (2001)",
+        title: "The Development of the CIE 2000 Colour-Difference Formula: CIEDE2000",
+        venue: "Color Research & Application 26(5), 340–350",
+        url: DOI("10.1002/col.1049"),
+        note: "Why CIELAB is only roughly even: the corrections a later distance formula makes where it's least even, among blues and vivid colors.",
+      },
+      {
         cite: "Sharma, Wu & Dalal (2005)",
         title: "The CIEDE2000 Color-Difference Formula: Implementation Notes, Supplementary Test Data, and Mathematical Observations",
         venue: "Color Research & Application 30(1), 21–30",
-        url: DOI("10.1002/col.20070"),
-        note: "Why CIELAB is only roughly even: the corrections a later distance formula makes, including for blues.",
+        url: "https://www.hajim.rochester.edu/ece/~gsharma/ciede2000/",
+        note: "A readable companion to that formula, free from the authors' page: how each correction is computed, with test data.",
+      },
+      {
+        cite: "Rubner, Tomasi & Guibas (2000)",
+        title: "The Earth Mover's Distance as a Metric for Image Retrieval",
+        venue: "International Journal of Computer Vision 40(2), 99–121",
+        url: DOI("10.1023/A:1026543900054"),
+        note: "Comparing images by their clustered CIELAB colors and how much of the picture each covers, the idea behind the palette distance. The gallery's version is simpler: each color gets one partner, where this lets coverage spread across several.",
       },
       {
         cite: "Ottosson (2020)",
@@ -141,14 +155,14 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         title: "Looks Like It",
         venue: "The Hacker Factor Blog, 26 May 2011",
         url: "https://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.html",
-        note: "The recipe this lesson follows, in a short plain blog post: shrink to 32 × 32, drop color, take the DCT, keep the top-left 8 × 8. It splits the bits at the mean; the imagehash library the gallery uses splits at the median.",
+        note: "The recipe this lesson follows, in a short plain blog post: shrink to 32 × 32, drop color, take the DCT, keep the top-left 8 × 8. It splits the bits at the mean and leaves the flat top-left pattern out of it; the imagehash library the gallery uses splits at the median and keeps that pattern in, where it always comes out a 1.",
       },
       {
         cite: "Shehata (2019)",
         title: "Unraveling the JPEG",
         venue: "Parametric Press, issue 1",
         url: "https://parametric.press/issue-01/unraveling-the-jpeg/",
-        note: "An interactive look inside a JPEG. Its middle section shows how any 8 × 8 block is a mix of 64 cosine patterns: the same patterns pHash keeps.",
+        note: "An interactive look inside a JPEG. Its middle section shows how any 8 × 8 block is a mix of 64 cosine patterns. pHash keeps the same 64 shapes, stretched across its 32 × 32 grid instead of an 8-pixel block.",
       },
       {
         cite: "Weitz",
@@ -172,6 +186,13 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         venue: "GitHub",
         url: "https://github.com/JohannesBuchner/imagehash",
         note: "The library that computes every panel's hash.",
+      },
+      {
+        cite: "Pillow",
+        title: "Image.convert",
+        venue: "Pillow documentation",
+        url: "https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.convert",
+        note: "Says convert(\"L\") turns color to gray with the BT.601 luma weights: the call the gallery's hashing code makes.",
       },
       {
         cite: "Ahmed, Natarajan & Rao (1974)",
@@ -214,11 +235,11 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         note: "Embeddings and cosine similarity explained with pictures, using people and words instead of panels. The later training sections are more technical.",
       },
       {
-        cite: "Sanderson (2016)",
-        title: "Dot products and duality",
-        venue: "3Blue1Brown, Essence of Linear Algebra chapter 9 (video and text)",
-        url: "https://www.3blue1brown.com/lessons/dot-products",
-        note: "Why multiplying and adding matching numbers measures how much two arrows line up. The first half stands on its own; the second builds on earlier chapters.",
+        cite: "Google",
+        title: "Candidate generation overview",
+        venue: "Google for Developers, Recommendation Systems course",
+        url: "https://developers.google.com/machine-learning/recommendation/overview/candidate-generation",
+        note: "Cosine, dot product and straight-line distance side by side, and how an arrow's length sways the dot product but not the cosine: why normalizing first makes the two agree.",
       },
     ],
     papers: [
@@ -235,6 +256,13 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         venue: "Communications of the ACM 18(11), 613–620",
         url: DOI("10.1145/361219.361220"),
         note: "The early, influential case for comparing things as vectors by the angle between them.",
+      },
+      {
+        cite: "Timkey & van Schijndel (2021)",
+        title: "All Bark and No Bite: Rogue Dimensions in Transformer Language Models Obscure Representational Quality",
+        venue: "EMNLP 2021",
+        url: ARXIV("2109.04404"),
+        note: "How a few dimensions that run high for everything can dominate cosine similarity and push every pair toward the same score. It studies language models; the fixed cells in this lesson's strips are the same effect.",
       },
     ],
   },
@@ -256,6 +284,13 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         venue: "OpenAI",
         url: "https://openai.com/index/clip/",
         note: "The announcement of CLIP, the image-and-caption training SigLIP refines. The opening explains the idea plainly; the rest is results.",
+      },
+      {
+        cite: "Goh et al. (2021)",
+        title: "Multimodal Neurons in Artificial Neural Networks",
+        venue: "Distill",
+        url: "https://distill.pub/2021/multimodal-neurons/",
+        note: "What single units inside CLIP respond to: one fires for Spider-Man whether he's photographed, drawn in a comic or just named in text. A look at why a caption-trained model groups panels by subject more than by look.",
       },
     ],
     papers: [
@@ -288,7 +323,17 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         url: ARXIV("2106.04560"),
         note: "The attention-pooling head (one learned question over every patch) that SigLIP ends with.",
       },
-      REGISTERS,
+      {
+        ...REGISTERS,
+        note: "Why a transformer turns some patches into scratch space, and the spare register tokens added to hold it instead. It tested DINOv2, OpenCLIP and DeiT-III rather than SigLIP, but the scratch patches in this lesson's figure look like the same effect.",
+      },
+      {
+        cite: "Liang, Zhang, Kwon, Yeung & Zou (2022)",
+        title: "Mind the Gap: Understanding the Modality Gap in Multi-modal Contrastive Representation Learning",
+        venue: "NeurIPS 2022",
+        url: ARXIV("2203.02053"),
+        note: "Why image-and-caption models crowd their arrows into a narrow cone, which is part of why SigLIP's distances bunch up well below 1.",
+      },
       {
         cite: "Google",
         title: "google/siglip-base-patch16-224",
@@ -301,6 +346,8 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
 
   dino: {
     start: [
+      NEURAL_NETWORKS,
+      ILLUSTRATED_TRANSFORMER,
       {
         cite: "The DINOv2 team (2023)",
         title: "DINOv2: State-of-the-art computer vision models with self-supervised learning",
@@ -308,8 +355,13 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         url: "https://ai.meta.com/blog/dino-v2-computer-vision-self-supervised-learning/",
         note: "The release post: what learning from pictures alone means and why it was worth doing, in plain prose.",
       },
-      ILLUSTRATED_TRANSFORMER,
-      NEURAL_NETWORKS,
+      {
+        cite: "Meta AI (2021)",
+        title: "Advancing the state of the art in computer vision with self-supervised Transformers and 10x more efficient training",
+        venue: "Meta AI blog",
+        url: "https://ai.meta.com/blog/dino-paws-computer-vision-with-self-supervised-transformers-and-10x-more-efficient-training/",
+        note: "The original DINO's release post. Its clips show the model's attention picking out objects with no labels at all, the same kind of map as this lesson's \"What CLS read\" figure.",
+      },
     ],
     papers: [
       {
@@ -352,7 +404,7 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         title: "Feature Visualization",
         venue: "Distill",
         url: "https://distill.pub/2017/feature-visualization/",
-        note: "Pictures of what individual filters respond to, from fine textures in early layers to whole objects later. Skim the images; the text goes deeper.",
+        note: "Pictures of what individual filters respond to, from fine textures in early layers to whole objects later. The network is GoogLeNet rather than VGG-16, but its layers build up the same way. Skim the images; the text goes deeper.",
       },
       {
         cite: "Powell & Lehe",
@@ -366,7 +418,7 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         title: "Neural style transfer",
         venue: "TensorFlow tutorials",
         url: "https://www.tensorflow.org/tutorials/generative/style_transfer",
-        note: "Gram matrices used to copy one picture's style onto another. Code-first, but the before-and-after images make the idea clear.",
+        note: "Gram matrices used to copy one picture's style onto another, read from VGG-19, a deeper sibling of VGG-16. Code-first, but the before-and-after images make the idea clear.",
       },
     ],
     papers: [
@@ -385,10 +437,10 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         note: "Gram matrices of VGG's filter responses as a description of texture, with layout thrown away.",
       },
       {
-        cite: "Gatys, Ecker & Bethge (2015)",
-        title: "A Neural Algorithm of Artistic Style",
-        venue: "arXiv preprint",
-        url: ARXIV("1508.06576"),
+        cite: "Gatys, Ecker & Bethge (2016)",
+        title: "Image Style Transfer Using Convolutional Neural Networks",
+        venue: "CVPR 2016, 2414–2423",
+        url: "https://openaccess.thecvf.com/content_cvpr_2016/html/Gatys_Image_Style_Transfer_CVPR_2016_paper.html",
         note: "The same Gram matrices used to separate an image's style from its content.",
       },
       {
@@ -396,7 +448,14 @@ export const SOURCES: Record<LessonId, LessonSourceList> = {
         title: "ImageNet: A Large-Scale Hierarchical Image Database",
         venue: "CVPR 2009",
         url: DOI("10.1109/CVPR.2009.5206848"),
-        note: "The labelled photos VGG-16 was trained on.",
+        note: "ImageNet, the labelled photo collection VGG-16's training set was drawn from.",
+      },
+      {
+        cite: "Russakovsky et al. (2015)",
+        title: "ImageNet Large Scale Visual Recognition Challenge",
+        venue: "International Journal of Computer Vision 115(3), 211–252",
+        url: DOI("10.1007/s11263-015-0816-y"),
+        note: "The challenge's 2012 set, about 1.3 million photos in 1,000 categories: the part of ImageNet VGG-16 was actually trained on.",
       },
       {
         cite: "Jolliffe & Cadima (2016)",
