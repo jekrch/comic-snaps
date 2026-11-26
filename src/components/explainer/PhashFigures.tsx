@@ -19,7 +19,7 @@ import {
  * one step of imagehash.phash, using the numbers the script recorded.
  */
 
-const ACCENT = "var(--color-accent, #e85d3a)";
+const ACCENT = "var(--dd-accent, var(--color-accent, #e85d3a))";
 const ACCENT_RGB = [232, 93, 58] as const;
 /** The diverging pair's cool pole, for negative DCT numbers. */
 const COOL_RGB = [110, 150, 205] as const;
@@ -29,7 +29,9 @@ const BIT_OFF = "#232120";
 
 const captionStyle: React.CSSProperties = {
   fontFamily: "var(--font-mono, monospace)",
-  color: "rgba(255,255,255,0.4)",
+  // The theme's faint ink: the same grey as before on the dark Guide, and dark
+  // enough to read on a light page.
+  color: "var(--dd-ink-faint, rgba(255,255,255,0.4))",
 };
 
 /** What each example's restoration did, keyed by panel id (EXAMPLES in the script). */
@@ -116,7 +118,7 @@ export function ExamplePicker({
           );
         })}
       </div>
-      <p className="guide-caption mt-2 mb-0 text-center" style={{ ...captionStyle, color: "rgba(255,255,255,0.6)" }}>
+      <p className="guide-caption mt-2 mb-0 text-center" style={{ ...captionStyle, color: "color-mix(in srgb, var(--dd-ink, #fff) 60%, transparent)" }}>
         {exampleLabel(current)}
         {current.artist ? `, ${current.artist}` : ""}
       </p>
@@ -153,7 +155,7 @@ function PairRow({
 function SideCaption({ title, detail }: { title: string; detail?: string }) {
   return (
     <figcaption className="guide-caption mt-1.5 text-center" style={captionStyle}>
-      <span style={{ color: "rgba(255,255,255,0.6)" }}>{title}</span>
+      <span style={{ color: "color-mix(in srgb, var(--dd-ink, #fff) 60%, transparent)" }}>{title}</span>
       {detail && (
         <>
           <br />
@@ -403,7 +405,7 @@ export function LumaFigure({ example }: { example: PhashExample }) {
                 {probe.side === "before" ? "Photo" : "Restored"}: R {probe.rgb[0]} · G {probe.rgb[1]} · B {probe.rgb[2]}
               </span>
               <span>
-                0.299·{probe.rgb[0]} + 0.587·{probe.rgb[1]} + 0.114·{probe.rgb[2]} = <span style={{ color: "rgba(255,255,255,0.85)" }}>L {L}</span>
+                0.299·{probe.rgb[0]} + 0.587·{probe.rgb[1]} + 0.114·{probe.rgb[2]} = <span style={{ color: "color-mix(in srgb, var(--dd-ink, #fff) 85%, transparent)" }}>L {L}</span>
               </span>
             </>
           ) : (
@@ -800,7 +802,7 @@ function BitGrid({ side, label, hover, onHover }: { side: HashSide; label: strin
         {/* Each row of 8 bits is two hex digits. */}
         <div className="grid shrink-0" style={{ gridTemplateRows: "repeat(8, 1fr)", gap: 1, fontFamily: "var(--font-mono, monospace)", fontSize: 12 }}>
           {Array.from({ length: 8 }, (_, r) => (
-            <span key={r} className="flex items-center" style={{ color: hover !== null && Math.floor(hover / 8) === r ? ACCENT : "rgba(255,255,255,0.6)" }}>
+            <span key={r} className="flex items-center" style={{ color: hover !== null && Math.floor(hover / 8) === r ? ACCENT : "color-mix(in srgb, var(--dd-ink, #fff) 60%, transparent)" }}>
               {side.hash.slice(r * 2, r * 2 + 2)}
             </span>
           ))}
@@ -846,7 +848,7 @@ function HexCompare({ a, b, which }: { a: string; b: string; which: "a" | "b" })
   return (
     <span style={{ letterSpacing: "0.08em" }}>
       {[...s].map((c, i) => (
-        <span key={i} style={{ color: c !== (which === "a" ? b : a)[i] ? ACCENT : "rgba(255,255,255,0.6)" }}>
+        <span key={i} style={{ color: c !== (which === "a" ? b : a)[i] ? ACCENT : "color-mix(in srgb, var(--dd-ink, #fff) 60%, transparent)" }}>
           {c}
         </span>
       ))}
@@ -881,7 +883,7 @@ export function HammingFigure({ example }: { example: PhashExample }) {
           <HexCompare a={before.hash} b={after.hash} which="a" />
           <div style={{ ...captionStyle, marginTop: 6 }}>Restored</div>
           <HexCompare a={before.hash} b={after.hash} which="b" />
-          <div className="mt-3" style={{ color: "rgba(255,255,255,0.85)", fontSize: 15 }}>
+          <div className="mt-3" style={{ color: "color-mix(in srgb, var(--dd-ink, #fff) 85%, transparent)", fontSize: 15 }}>
             <span style={{ color: ACCENT }}>{d}</span> of 64 bits differ
           </div>
           <div style={{ ...captionStyle, fontSize: 12 }}>orange: photo → restored</div>

@@ -159,6 +159,9 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
       host={host}
       figures={FIGURES}
       glossary="Glossary"
+      // The stand-in host is a light page, so the document takes the light
+      // ember theme rather than recoloring a few tokens by hand.
+      theme={mode === "embedded" ? "ember-light" : undefined}
       back={{ label: "Gallery", onClick: () => location.assign(BASE) }}
     >
       {pages}
@@ -216,14 +219,8 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
         .dd-host-demo.is-pane .dd-host-demo-cols { flex: 1; min-height: 0; padding: 0 0 0 24px; }
         .dd-host-demo.is-pane .dd-host-demo-side { top: 0; padding-top: 24px; }
         .dd-host-demo.is-pane .dd-host-demo-main { overflow-y: auto; padding: 24px 24px 0 0; }
-        .dd-host-demo-main .dd-root {
-          --dd-bg: #fffdf9; --dd-surface: #f6f2ec; --dd-pop-bg: #fff; --dd-pop-foot-bg: #f7f3ee;
-          --dd-ink: #1d1b19; --dd-ink-prose: #2b2825; --dd-ink-muted: #5d5853; --dd-ink-faint: #8a847e;
-          --dd-border: rgba(0,0,0,0.12); --dd-line: rgba(0,0,0,0.1);
-          --dd-code-bg: #f3efe9; --dd-code-ink: #3b3733; --dd-mono-bg: rgba(0,0,0,0.05); --dd-mono-ink: #3b3733;
-          padding: 24px 32px; border-radius: 8px;
-        }
-        @media (max-width: 900px) { .dd-host-demo-cols { grid-template-columns: 1fr; } .dd-host-demo-side { display: none; } }
+        .dd-host-demo-main .dd-root { padding: 24px 32px; border-radius: 8px; }
+        @media (max-width: 900px) { .dd-host-demo-cols { grid-template-columns: minmax(0, 1fr); } .dd-host-demo-side { display: none; } }
       `}</style>
     </div>
   );
