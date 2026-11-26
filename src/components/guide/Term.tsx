@@ -5,4 +5,4 @@
  * sidenote or a tap-to-open note, and every later use a popover with the way
  * back to where it's introduced.
  */
-export { Term } from "../../dimensional/react/Term";
+export { Term } from "@jekrch/dimensional-docs";

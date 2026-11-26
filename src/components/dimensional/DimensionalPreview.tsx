@@ -12,8 +12,8 @@ import {
   type Host,
   type LinkTarget,
   type RailState,
-} from "../../dimensional";
-import "../../dimensional/styles/dimensional.css";
+} from "@jekrch/dimensional-docs";
+import "@jekrch/dimensional-docs/styles.css";
 import {
   BitsFigure,
   DistanceRanges,
@@ -30,9 +30,12 @@ import type { PhashExample, PhashExamples } from "../explainer/phashExamples";
 /**
  * The framework's proving ground: the dimensional docs in `docs/` (the 0.4
  * spec, the portable and framework proposals, and the pHash lesson as a
- * dimensional document) rendered through `src/dimensional`, on a hidden
+ * dimensional document) rendered through `@jekrch/dimensional-docs`, on a hidden
  * route. `?dd` opens it in page mode; `&dd-host=overlay` slides it over the
- * gallery, `&dd-host=embedded` sets it inside a stand-in host layout.
+ * gallery, `&dd-host=embedded` sets it inline in a stand-in host's layout
+ * (a sticky header and its own nav, the page scrolling), and
+ * `&dd-host=embedded&dd-scroll=pane` in an app shell whose content pane
+ * scrolls instead.
  *
  * `docs/` is untracked, so a build without it (CI) has no documents and
  * says so.
@@ -102,6 +105,9 @@ const FIGURES: FigureRegistry = {
 
 export type PreviewMode = "page" | "overlay" | "embedded";
 
+/** The stand-in host's sticky header, which the document's jumps stop under. */
+const HOST_HEAD_H = 45;
+
 export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMode; onExited?: () => void }) {
   const route = useMemo(() => queryRoute("dd"), []);
   const storage = useMemo(() => localStore("comicSnaps.dd"), []);
@@ -117,6 +123,7 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
   );
   const [rail, setRail] = useState<RailState | null>(null);
   const sidebar = useCallback((s: RailState) => setRail(s), []);
+  const pane = useMemo(() => new URLSearchParams(location.search).get("dd-scroll") === "pane", []);
 
   const host = useMemo<Host>(() => {
     if (mode === "overlay") {
@@ -129,9 +136,10 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
         onExited,
       };
     }
-    if (mode === "embedded") return { mode: "embedded", sidebar };
+    // In the app shell the header sits above the scrolling pane, not over it.
+    if (mode === "embedded") return { mode: "embedded", sidebar, top: pane ? 0 : HOST_HEAD_H };
     return { mode: "page" };
-  }, [mode, onExited, sidebar]);
+  }, [mode, onExited, sidebar, pane]);
 
   if (docs.length === 0) {
     return (
@@ -151,7 +159,6 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
       host={host}
       figures={FIGURES}
       glossary="Glossary"
-      desktopMin={mode === "embedded" ? 1360 : 1100}
       back={{ label: "Gallery", onClick: () => location.assign(BASE) }}
     >
       {pages}
@@ -160,21 +167,36 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
 
   if (mode !== "embedded") return doc;
 
-  // A stand-in host: its own header and sidebar, with the document's rail
-  // handed to the sidebar and the document in the content column.
+  // A stand-in host: its own sticky header and nav, with the document's rail
+  // handed to the nav and the document inline in the content column.
+  const go = (e: React.MouseEvent, page: string, step?: string) => {
+    e.preventDefault();
+    rail?.onGo(page, step);
+  };
   return (
-    <div className="dd-host-demo">
-      <header className="dd-host-demo-head">Host site · embedded mode</header>
+    <div className={`dd-host-demo${pane ? " is-pane" : ""}`}>
+      <header className="dd-host-demo-head">Host site · embedded mode{pane ? " · scrolling pane" : ""}</header>
       <div className="dd-host-demo-cols">
         <nav className="dd-host-demo-side" aria-label="Host sidebar">
           {rail?.pages.map((p) => (
-            <a key={p.id} href={route.href({ page: p.id, step: null })}>
+            <a
+              key={p.id}
+              href={rail.href(p.id)}
+              className={p.id === rail.page ? "is-page" : undefined}
+              onClick={(e) => go(e, p.id)}
+            >
               {p.label}
+              {rail.finished.has(p.id) ? " ✓" : ""}
             </a>
           ))}
           <hr />
           {rail?.sections.map((s) => (
-            <a key={s.id} href={`#${s.id}`} className={s.id === rail.step ? "is-current" : undefined}>
+            <a
+              key={s.id}
+              href={rail.href(rail.page, s.id)}
+              className={s.id === rail.step ? "is-current" : undefined}
+              onClick={(e) => go(e, rail.page, s.id)}
+            >
               {s.label}
             </a>
           ))}
@@ -183,12 +205,17 @@ export default function DimensionalPreview({ mode, onExited }: { mode: PreviewMo
       </div>
       <style>{`
         .dd-host-demo { min-height: 100vh; background: #f4f1ec; color: #222; font-family: system-ui, sans-serif; }
-        .dd-host-demo-head { padding: 14px 24px; border-bottom: 1px solid #ddd; font-size: 13px; color: #555; }
+        .dd-host-demo-head { position: sticky; top: 0; z-index: 10; height: ${HOST_HEAD_H}px; box-sizing: border-box; padding: 14px 24px; border-bottom: 1px solid #ddd; background: #f4f1ec; font-size: 13px; color: #555; }
         .dd-host-demo-cols { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 32px; padding: 24px; }
-        .dd-host-demo-side { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+        .dd-host-demo-side { position: sticky; top: ${HOST_HEAD_H + 24}px; align-self: start; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
         .dd-host-demo-side a { color: #555; text-decoration: none; }
+        .dd-host-demo-side a.is-page { color: #222; font-weight: 600; }
         .dd-host-demo-side a.is-current { color: #c44d2f; }
         .dd-host-demo-side hr { border: 0; border-top: 1px solid #ddd; margin: 6px 0; }
+        .dd-host-demo.is-pane { height: 100vh; min-height: 0; display: flex; flex-direction: column; }
+        .dd-host-demo.is-pane .dd-host-demo-cols { flex: 1; min-height: 0; padding: 0 0 0 24px; }
+        .dd-host-demo.is-pane .dd-host-demo-side { top: 0; padding-top: 24px; }
+        .dd-host-demo.is-pane .dd-host-demo-main { overflow-y: auto; padding: 24px 24px 0 0; }
         .dd-host-demo-main .dd-root {
           --dd-bg: #fffdf9; --dd-surface: #f6f2ec; --dd-pop-bg: #fff; --dd-pop-foot-bg: #f7f3ee;
           --dd-ink: #1d1b19; --dd-ink-prose: #2b2825; --dd-ink-muted: #5d5853; --dd-ink-faint: #8a847e;

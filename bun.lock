@@ -7,6 +7,7 @@
       "dependencies": {
         "@jekrch/react-viewport-lightbox": "^1.0.2",
         "@xyflow/react": "^12.11.2",
+        "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#e71117df80e7cf345586a0b1b9050a5d8e629fe6",
         "lucide-react": "^0.575.0",
         "ogl": "^1.0.11",
         "react": "^19.2.8",
@@ -44,6 +45,8 @@
     "@emnapi/runtime": ["@emnapi/runtime@1.11.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-vgj7R3y3Wgx24IQaGPA/R6YFXLHVMOZ0uVEyIQPaWs+rd1AzfEMXlAC22FYwO1XkKR6NPsq7mUandH8oIRdZFw=="],
 
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@1.2.2", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA=="],
+
+    "@jekrch/dimensional-docs": ["@jekrch/dimensional-docs@git+ssh://git@github.com/jekrch/dimensional-docs.git#e71117df80e7cf345586a0b1b9050a5d8e629fe6", { "peerDependencies": { "react": ">=19", "react-dom": ">=19" } }, "e71117df80e7cf345586a0b1b9050a5d8e629fe6"],
 
     "@jekrch/react-viewport-lightbox": ["@jekrch/react-viewport-lightbox@1.0.2", "", { "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-trlQaV2EH6ETpqjoGQrZ9kj7FMs8M8zUc3+BjOwVYmQV/vb3x0+b0aWhi6A8LG8LeHDT83I3623uBvHo1yyUdw=="],
 

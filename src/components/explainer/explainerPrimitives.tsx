@@ -1,6 +1,5 @@
 import { Suspense, lazy, useId, useMemo } from "react";
-import { Layer, Section as DimSection } from "../../dimensional/react/Section";
-import { useDoc } from "../../dimensional/react/context";
+import { Layer, Section as DimSection, useDoc } from "@jekrch/dimensional-docs";
 import { createPortal } from "react-dom";
 import { useLightbox, type ViewerItem } from "@jekrch/react-viewport-lightbox";
 import { viewerIcons } from "../viewerIcons";

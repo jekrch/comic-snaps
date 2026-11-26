@@ -20,7 +20,7 @@ if (getGuideState().route) {
   import("./components/guide/Guide").catch(releaseGuideCover);
 }
 
-// `?dd`: the dimensional-docs framework's preview (src/dimensional), rendering
+// `?dd`: the dimensional-docs framework's preview (@jekrch/dimensional-docs), rendering
 // docs/dimensional-docs. Page and embedded modes stand alone; overlay mode
 // slides over the gallery.
 const ddMode = new URLSearchParams(location.search).has("dd")

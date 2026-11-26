@@ -1,6 +1,6 @@
 /**
  * The overlay stack now lives in the dimensional framework
- * (src/dimensional/core/overlayStack.ts), so the Guide, the framework's
+ * (@jekrch/dimensional-docs, core/overlayStack.ts), so the Guide, the framework's
  * documents and the app's own layers share one stack and agree on who is on
  * top for Escape. Re-exported here for the Guide's existing imports.
  */
@@ -11,8 +11,8 @@ export {
   popOverlay,
   pushOverlay,
   resetOverlays,
-} from "../../dimensional/core/overlayStack";
-export { useOverlay } from "../../dimensional/react/hooks";
+} from "@jekrch/dimensional-docs";
+export { useOverlay } from "@jekrch/dimensional-docs";
 
 /**
  * Z-order of the Guide and what opens over it. The Guide sits above

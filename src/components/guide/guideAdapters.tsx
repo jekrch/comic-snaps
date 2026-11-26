@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
-import { localStore, type RouteAdapter, type StorageAdapter } from "../../dimensional/core/adapters";
-import type { SourceGroupDef } from "../../dimensional/react/DimDoc";
-import type { TermDef } from "../../dimensional/react/context";
+import { localStore, type RouteAdapter, type SourceGroupDef, type StorageAdapter, type TermDef } from "@jekrch/dimensional-docs";
 import { CONCEPTS } from "./concepts";
 import { isPageId, pageDef, stepDef, type PageId } from "./lessons";
 import { SOURCE_GROUPS, sourcesFor, type Source } from "./sources";
@@ -15,7 +13,7 @@ import {
 } from "./useGuideRoute";
 
 /**
- * What the Guide hands the dimensional framework (src/dimensional) so that
+ * What the Guide hands the dimensional framework (@jekrch/dimensional-docs) so that
  * `DimDoc` can run it: its route, its storage, its terms and its sources,
  * each in the framework's shape and backed by what the Guide already had.
  */

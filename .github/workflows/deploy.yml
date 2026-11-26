@@ -47,6 +47,12 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
+      # @jekrch/dimensional-docs is a private repo, installed over SSH with a
+      # read-only deploy key.
+      - uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DIMENSIONAL_DOCS_DEPLOY_KEY }}
+
       - name: Install dependencies
         run: bun install
 

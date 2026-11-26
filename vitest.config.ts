@@ -1,3 +1,4 @@
+import { defaultServerConditions } from "vite";
 import { defineConfig } from "vitest/config";
 
 /**
@@ -8,8 +9,14 @@ import { defineConfig } from "vitest/config";
  */
 export default defineConfig({
   base: "/",
+  // @jekrch/dimensional-docs resolves to its TypeScript source (see
+  // vite.config.ts). Inlining it lets Vite compile it instead of Node
+  // importing a dist/ that a git install doesn't have.
+  resolve: { conditions: ["dimensional-source", ...defaultServerConditions] },
+  ssr: { resolve: { conditions: ["dimensional-source", ...defaultServerConditions] } },
   test: {
     environment: "node",
+    server: { deps: { inline: ["@jekrch/dimensional-docs"] } },
     include: ["{src,worker/src}/**/*.test.ts"],
     coverage: {
       provider: "v8",

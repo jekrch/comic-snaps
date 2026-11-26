@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Panel } from "../../types";
 import { peekEmbeddings } from "../../utils/sorting";
-import { DimDoc, Page, type SlotState } from "../../dimensional/react/DimDoc";
-import "../../dimensional/styles/dimensional.css";
+import { DimDoc, Page, type SlotState } from "@jekrch/dimensional-docs";
+import "@jekrch/dimensional-docs/styles.css";
 import { METRIC_INFO } from "../explainer/explainerConstants";
 import { ColorExplanation, EmbeddingExplanation, PhashExplanation, VectorsExplanation } from "../explainer/explanations";
 import type { MetricKey } from "../graph/similarityConfig";
@@ -19,7 +19,7 @@ import { IS_IOS, closeGuide, navigateGuide, type GuideState } from "./useGuideRo
 
 /**
  * The Guide: the gallery's lessons as a dimensional document
- * (src/dimensional), sliding over the app in overlay mode. `DimDoc` runs the
+ * (@jekrch/dimensional-docs), sliding over the app in overlay mode. `DimDoc` runs the
  * shell: the slide, the rail, the depth switches and the glide, terms, code
  * beside the prose, keys and history. What stays here is the gallery's part:
  * the worked example (the anchor panel, its strip and picker), the pages

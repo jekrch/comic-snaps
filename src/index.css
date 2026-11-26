@@ -1,5 +1,5 @@
 /* Layer order, fixed before Tailwind declares its own: the dimensional docs
-   framework (src/dimensional, `@layer dd`, loaded lazily) sits above the
+   framework (@jekrch/dimensional-docs, `@layer dd`, loaded lazily) sits above the
    base reset, so its text inherits colour, and below components and
    utilities, so figures' own classes win over its prose defaults. */
 @layer theme, base, dd, components, utilities;
@@ -2708,7 +2708,7 @@ button,
    The lessons' own content: figures, the worked example and its picker, the
    code view, the glossary. The shell around them (the sheet, rail, depth
    switches, sections, terms, code pane, motion) is the dimensional
-   framework's, styled by src/dimensional/styles/dimensional.css on its
+   framework's, styled by @jekrch/dimensional-docs/styles.css on its
    --dd-* tokens.
 
    In the components layer, so the Tailwind utilities still on the figures
@@ -2720,7 +2720,7 @@ button,
     color: inherit;
   }
 
-  /* The Guide now runs on the dimensional framework (src/dimensional):
+  /* The Guide now runs on the dimensional framework (@jekrch/dimensional-docs):
      its content still reads these, so they follow the framework's tokens. */
   .dd-root {
     --guide-border: var(--dd-border);
