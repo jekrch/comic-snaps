@@ -15,7 +15,7 @@ export default defineConfig({
 
 /**
  * Restarts the dev server when bun.lock changes. Vite caches what it served
- * from node_modules and doesn't watch it, so after `bun run dimd:update`
+ * from node_modules and doesn't watch it, so after `bun run dimdoc:update`
  * (or any install) a running server kept serving the old package until it
  * was restarted by hand. Watching the package itself doesn't work: bun swaps
  * the directory out rather than editing files in it.
