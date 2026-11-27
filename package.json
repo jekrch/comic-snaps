@@ -12,7 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "test:py": "pytest scripts/tests -q",
     "test:types": "tsc -p tsconfig.test.json --noEmit",
-    "dimensional:update": "node scripts/update-dimensional.mjs"
+    "dimd:update": "node scripts/update-dimensional.mjs"
   },
   "dependencies": {
     "@jekrch/dimensional-docs": "git+ssh://git@github.com/jekrch/dimensional-docs.git#02480c5915d820dc098773319927c54623cc9de2",

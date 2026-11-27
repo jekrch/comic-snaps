@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Re-pin @jekrch/dimensional-docs to the tip of its GitHub main branch.
 //
-//   bun run dimensional:update            # pin to origin/main
-//   bun run dimensional:update <ref>      # pin to a branch, tag or sha on GitHub
+//   bun run dimd:update            # pin to origin/main
+//   bun run dimd:update <ref>      # pin to a branch, tag or sha on GitHub
 //
 // The dependency is pinned to a commit sha, so `bun update` never moves it.
 // This resolves the ref on GitHub (not the local checkout), because CI installs
