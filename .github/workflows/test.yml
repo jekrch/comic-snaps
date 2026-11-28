@@ -23,11 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
 
       # @jekrch/dimensional-docs is a private repo, installed over SSH with a
       # read-only deploy key.
-      - uses: webfactory/ssh-agent@v0.9.1
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
           ssh-private-key: ${{ secrets.DIMENSIONAL_DOCS_DEPLOY_KEY }}
 
