@@ -56,11 +56,18 @@ async function send(e: Env, text: string, opts: { from?: number; secret?: string
 afterEach(() => vi.unstubAllGlobals());
 
 describe("the allowlisted commands", () => {
-  it("are off without a webhook secret, since the sender id could be forged", async () => {
-    for (const text of ["/ask hi", "/research Paul Pope", "/restore 7", "/approve 7", "/confirm"]) {
-      const { replies } = await send(env(), text);
-      expect(replies).toEqual([expect.stringContaining("WEBHOOK_SECRET")]);
+  it("are unreachable without a webhook secret, since the sender id could be forged", async () => {
+    for (const text of ["/ask hi", "/research Paul Pope", "/restore 7", "/approve 7", "/confirm", "/help"]) {
+      const { status, replies } = await send(env(), text, { secret: "anything" });
+      expect(status).toBe(500);
+      expect(replies).toEqual([]);
     }
+  });
+
+  it("reject a request with no secret header", async () => {
+    const { status, replies } = await send(env({ WEBHOOK_SECRET: "s" }), "/ask hi");
+    expect(status).toBe(403);
+    expect(replies).toEqual([]);
   });
 
   it("refuse a sender who isn't allowlisted", async () => {

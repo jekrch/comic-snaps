@@ -277,18 +277,17 @@ async function upsertAndDescribe(
 // Access
 // ---------------------------------------------------------------------------
 
-type AgentAccess = "ok" | "not-allowed" | "no-secret";
+type AgentAccess = "ok" | "not-allowed";
 
 /**
  * Whether this person may use the model-backed commands and restorations. Fails
  * closed: an unset ALLOWED_USER_IDS means nobody, since every call costs money.
- * So does an unset WEBHOOK_SECRET. The sender id is only as trustworthy as the
- * request it came in, and without the secret anyone can POST an update naming
- * an allowlisted id (they're public in wrangler.toml). The plain commands stay
- * open to the whole chat, as they always have been.
+ * The sender id is only as trustworthy as the request it came in; fetch()
+ * refuses every update until WEBHOOK_SECRET is set, so by the time this runs
+ * the update is known to be from Telegram. The plain commands stay open to the
+ * whole chat, as they always have been.
  */
 function agentAccess(message: TelegramMessage, env: Env): AgentAccess {
-  if (!env.WEBHOOK_SECRET) return "no-secret";
   const id = message.from?.id;
   if (id === undefined || !env.ALLOWED_USER_IDS) return "not-allowed";
   return env.ALLOWED_USER_IDS.split(",").some((s) => s.trim() === String(id))
@@ -298,8 +297,6 @@ function agentAccess(message: TelegramMessage, env: Env): AgentAccess {
 
 const ACCESS_DENIED: Record<Exclude<AgentAccess, "ok">, string> = {
   "not-allowed": "The agent commands are only enabled for allowlisted users.",
-  "no-secret":
-    "The agent commands are off until the webhook has a secret (WEBHOOK_SECRET), since without one the sender can't be trusted.",
 };
 const AGENT_NOT_CONFIGURED = "The agent isn't configured yet (no GEMINI_API_KEY).";
 
@@ -473,12 +470,15 @@ export default {
       return new Response("OK", { status: 200 });
     }
 
-    // Verify webhook secret (if configured)
-    if (env.WEBHOOK_SECRET) {
-      const secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token") ?? "";
-      if (!timingSafeEqual(secret, env.WEBHOOK_SECRET)) {
-        return new Response("Unauthorized", { status: 403 });
-      }
+    // Refuse to run without a webhook secret. Without one anyone could POST an
+    // update naming an allowlisted sender (the ids are public in wrangler.toml)
+    // and drive the bot's GitHub writes.
+    if (!env.WEBHOOK_SECRET) {
+      return new Response("Webhook secret not configured", { status: 500 });
+    }
+    const secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token") ?? "";
+    if (!timingSafeEqual(secret, env.WEBHOOK_SECRET)) {
+      return new Response("Unauthorized", { status: 403 });
     }
 
     const update: TelegramUpdate = await request.json();

@@ -33,7 +33,7 @@ The edit commands (`/update`, `/tag_*`, `/rename_series`, `/resolve`, `/describe
 
 ## Agent
 
-For the user ids in `ALLOWED_USER_IDS`, the bot runs a Gemini agent modelled on plantyJ's. These commands, and the restorations below, stay off until `WEBHOOK_SECRET` is set. Without it anyone can post an update to the Worker naming an allowlisted id, and those ids are public in `wrangler.toml`.
+For the user ids in `ALLOWED_USER_IDS`, the bot runs a Gemini agent modelled on plantyJ's. The Worker refuses every update until `WEBHOOK_SECRET` is set (and passed to Telegram's `setWebhook` as `secret_token`). Without it anyone could post an update to the Worker naming an allowlisted id, and those ids are public in `wrangler.toml`.
 
 - `/ask {question or request}` answers from a rollup of the whole collection, with Metron and Comic Vine lookup tools. When the answer implies changes, it proposes a numbered list of the edit commands above. `/ask1`, `/ask2` and `/ask3` pick the model tier (bare `/ask` is the strongest).
 - `/resp {follow-up}` continues the thread, `/confirm` runs every proposal (or `/confirm 1 3` runs some) as one commit, `/cancel` drops them, and `/cost` reports spend.
@@ -96,6 +96,7 @@ One-time setup for the agent, from `worker/`:
 bunx wrangler kv namespace create BOT_STATE            # id → wrangler.toml
 bunx wrangler kv namespace create BOT_STATE --preview  # preview_id → wrangler.toml
 bunx wrangler queues create comic-snaps-jobs
+bunx wrangler secret put WEBHOOK_SECRET             # required: the bot won't run without it
 bunx wrangler secret put GEMINI_API_KEY
 bunx wrangler secret put METRON_USERNAME
 bunx wrangler secret put METRON_PASSWORD
