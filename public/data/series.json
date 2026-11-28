@@ -3097,6 +3097,28 @@
       "issueCountInferred": true
     },
     {
+      "id": "mom-s-homemade-comics",
+      "name": "Mom\u2019s Homemade Comics",
+      "parentSeries": null,
+      "description": "",
+      "imageUrl": null,
+      "references": [],
+      "sources": [
+        "comicvine",
+        "metron",
+        "metron-series-lookup"
+      ],
+      "publisher": null,
+      "coverSources": {
+        "metron": [
+          3
+        ],
+        "comicvine": [
+          3
+        ]
+      }
+    },
+    {
       "id": "motor-city-comics",
       "name": "Motor City Comics",
       "parentSeries": null,
